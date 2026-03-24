@@ -2,8 +2,7 @@
 
 **Latest deposit (24 March 2026):**  
 **Biological Transitions as Multi-Agent Realisations … Fruit-Fly Connectome Toy Model**  
-Zenodo: [10.5281/zenodo.XXXXXXXX](https://zenodo.org/records/XXXXXXXX) (upload this JSON first, then replace XXXXXXXXX with the real Zenodo DOI)
-
+Zenodo: https://doi.org/10.5281/zenodo.19210137
 **Zenodo metadata file for this paper:**  
 [`metadata/zenodo_biology_paper_2.json`](metadata/zenodo_biology_paper_2.json)
 
