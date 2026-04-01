@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXLE Simulator — Operator Mode</title>
+
+<style>
+  :root {
+    --navy:  #1a2744;
+    --gold:  #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    --mid:   #3a4f7a;
+    --rule:  #8a7340;
+    --text:  #1c1c1c;
+    --green: #2d5a27;
+    --light: #e8e2d4;
+
+    --op-bg: #0d1117;
+    --op-panel: #161b22;
+    --op-border: #30363d;
+    --op-text: #c9d1d9;
+    --op-accent: #58a6ff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--op-bg); color: var(--op-text); font-family: 'Georgia', serif; }
+
+  /* NAVIGATION (same structure as index.html, dark mode styling) */
+  nav {
+    background: var(--navy);
+    padding: 0.75rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; font-family: sans-serif; }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* LAYOUT */
+  .container {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    height: calc(100vh - 60px);
+  }
+
+  /* CONTROL PANEL */
+  .panel {
+    background: var(--op-panel);
+    border-right: 1px solid var(--op-border);
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  .panel h2 {
+    font-size: 1rem;
+    font-family: sans-serif;
+    color: var(--op-accent);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+  .panel label {
+    display: block;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-family: sans-serif;
+    color: var(--op-text);
+  }
+  .panel select, .panel button {
+    width: 100%;
+    margin-top: 0.4rem;
+    padding: 0.5rem;
+    background: #0f141a;
+    border: 1px solid var(--op-border);
+    color: var(--op-text);
+    font-family: sans-serif;
+  }
+  .panel button:hover {
+    background: var(--op-accent);
+    color: black;
+    cursor: pointer;
+  }
+
+  /* CANVAS */
+  #simCanvas {
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: block;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: #999;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: sans-serif;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="index.html" class="nav-logo">PRINCIPIA ORTHOGONA</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="sim.html" style="color:var(--gold); font-weight:bold;">AXLE Simulator</a></li>
+    <li><a href="portal.html">Student Portal</a></li>
+    <li><a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="container">
+
+  <!-- CONTROL PANEL -->
+  <div class="panel">
+    <h2>AXLE — Operator Mode</h2>
+
+    <label>General Type</label>
+    <select id="typeSelect">
+      <option value="coverage">CoverageTopology</option>
+      <option value="intent">SharedIntent</option>
+      <option value="ring">RingAttractor</option>
+    </select>
+
+    <label>Agent Count</label>
+    <select id="agentCount">
+      <option>50</option>
+      <option>100</option>
+      <option>200</option>
+      <option>400</option>
+    </select>
+
+    <label>Human Mode</label>
+    <button id="humanBtn">Enable Human Control</button>
+
+    <label>Reset Simulation</label>
+    <button id="resetBtn">Reset</button>
+  </div>
+
+  <!-- CANVAS -->
+  <canvas id="simCanvas"></canvas>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  AXLE v6.1 — Operator Mode · G6 LLC · Newark, New Jersey
+</footer>
+
+<!-- SIMULATION SCRIPT -->
+<script>
+const canvas = document.getElementById("simCanvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+/* --- Agent Model --- */
+class Agent {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 2;
+    this.vy = (Math.random() - 0.5) * 2;
+  }
+  step() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+  }
+  draw() {
+    ctx.fillStyle = "#58a6ff";
+    ctx.fillRect(this.x, this.y, 3, 3);
+  }
+}
+
+/* --- Simulation State --- */
+let agents = [];
+let humanMode = false;
+let mouseX = 0, mouseY = 0;
+
+canvas.addEventListener("mousemove", e => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
+});
+
+/* --- Initialize Agents --- */
+function initAgents(n) {
+  agents = [];
+  for (let i = 0; i < n; i++) agents.push(new Agent());
+}
+
+/* --- General Types --- */
+function applyCoverage(a) {
+  a.vx += (Math.random() - 0.5) * 0.2;
+  a.vy += (Math.random() - 0.5) * 0.2;
+}
+
+function applyIntent(a) {
+  a.vx += (mouseX - a.x) * 0.0005;
+  a.vy += (mouseY - a.y) * 0.0005;
+}
+
+function applyRing(a) {
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const dx = a.x - cx;
+  const dy = a.y - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const target = 150;
+  a.vx += (dist - target) * 0.0005 * (dx / dist);
+  a.vy += (dist - target) * 0.0005 * (dy / dist);
+}
+
+/* --- Main Loop --- */
+function loop() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  const type = document.getElementById("typeSelect").value;
+
+  for (let a of agents) {
+    if (type === "coverage") applyCoverage(a);
+    if (type === "intent" && humanMode) applyIntent(a);
+    if (type === "ring") applyRing(a);
+
+    a.step();
+    a.draw();
+  }
+
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* --- Controls --- */
+document.getElementById("humanBtn").onclick = () => {
+  humanMode = !humanMode;
+  document.getElementById("humanBtn").innerText =
+    humanMode ? "Disable Human Control" : "Enable Human Control";
+};
+
+document.getElementById("resetBtn").onclick = () => {
+  const n = parseInt(document.getElementById("agentCount").value);
+  initAgents(n);
+};
+
+initAgents(100);
+</script>
+
+</body>
+</html>
