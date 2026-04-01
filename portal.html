@@ -1,131 +1,410 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AXLE Portal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      background: #0a0f1c;
-      color: #e6e6e6;
-      font-family: Georgia, serif;
-      margin: 0;
-      padding: 0;
-      line-height: 1.6;
-    }
-    header {
-      padding: 40px 20px;
-      text-align: center;
-    }
-    h1 {
-      font-size: 2.4rem;
-      color: #f5d67b;
-      margin-bottom: 10px;
-    }
-    .section {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    .section-label {
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #f5d67b;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-    }
-    .gold-underline {
-      border-bottom: 2px solid #f5d67b;
-      padding-bottom: 4px;
-      display: inline-block;
-      margin-bottom: 20px;
-    }
-    .gold-list li {
-      margin: 10px 0;
-      color: #f5d67b;
-    }
-    a.gold-link {
-      color: #f5d67b;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a.gold-link:hover {
-      text-decoration: underline;
-    }
-    .prompt-box {
-      background: #111726;
-      padding: 20px;
-      border-radius: 6px;
-      margin-top: 30px;
-    }
-    textarea {
-      width: 100%;
-      height: 120px;
-      background: #0f1524;
-      color: #f5d67b;
-      border: 1px solid #333;
-      padding: 10px;
-      font-family: Georgia, serif;
-      font-size: 1rem;
-      border-radius: 4px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: #f5d67b;
-      color: #0a0f1c;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #ffe9a8;
-    }
-  </style>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal — Principia Orthogona · A1 → D2</title>
+<style>
+  :root {
+    --navy:  #1a2744; --gold:  #c9a84c; --cream: #faf7f0; --smoke: #f0ece4;
+    --mid:   #3a4f7a; --rule:  #8a7340; --text:  #1c1c1c; --green: #2d5a27;
+    --light: #e8e2d4; --d1: #8b5e0a; --d2: #1a4a2a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; color: var(--text); background: var(--cream); }
+  nav { background: var(--navy); padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-back { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; }
+  .nav-back:hover { color: var(--gold); }
 
+  .portal-hero { background: var(--navy); color: white; padding: 3rem 2rem; text-align: center; }
+  .portal-hero h1 { font-size: clamp(1.6rem, 4vw, 2.5rem); color: white; margin-bottom: 0.6rem; }
+  .portal-hero p { color: #bbb; max-width: 600px; margin: 0 auto; line-height: 1.7; }
+  .gold-text { color: var(--gold); }
+
+  .progress-bar {
+    background: var(--navy);
+    padding: 1.2rem 2rem;
+    overflow-x: auto;
+  }
+  .progress-track { display: flex; align-items: center; max-width: 900px; margin: 0 auto; min-width: 600px; }
+  .p-node { text-align: center; flex: 1; }
+  .p-circle {
+    width: 44px; height: 44px; border-radius: 50%; border: 2px solid #444;
+    display: flex; align-items: center; justify-content: center;
+    font-family: sans-serif; font-weight: bold; font-size: 0.75rem;
+    color: #888; margin: 0 auto 0.3rem; cursor: pointer; transition: all 0.2s;
+  }
+  .p-circle.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); }
+  .p-circle.d1 { border-color: #c9a84c88; }
+  .p-circle.d2 { border-color: var(--gold); background: var(--gold); color: var(--navy); }
+  .p-label { font-size: 0.65rem; color: #888; font-family: sans-serif; }
+  .p-arrow { color: #444; font-size: 0.9rem; flex-shrink: 0; padding: 0 0.2rem; padding-bottom: 0.8rem; }
+
+  .portal-content { max-width: 860px; margin: 0 auto; padding: 2rem; }
+
+  .level-section { display: none; }
+  .level-section.active { display: block; }
+
+  .level-header { padding: 1.5rem 0 0.5rem; border-bottom: 2px solid var(--gold); margin-bottom: 1.5rem; }
+  .level-tag { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.3rem; }
+  .level-title { font-size: 1.4rem; color: var(--navy); font-weight: bold; }
+  .level-subtitle { font-size: 0.95rem; color: #666; font-style: italic; margin-top: 0.3rem; }
+  .level-math { font-family: monospace; font-size: 0.85rem; color: var(--mid); background: var(--smoke); padding: 0.4rem 0.8rem; display: inline-block; margin-top: 0.5rem; }
+
+  .prompt-card {
+    background: white;
+    border-left: 3px solid var(--gold);
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .prompt-number { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--rule); text-transform: uppercase; margin-bottom: 0.4rem; }
+  .prompt-title { font-size: 0.95rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; }
+  .prompt-text { font-family: monospace; font-size: 0.85rem; line-height: 1.6; color: #333; background: var(--smoke); padding: 0.8rem 1rem; border-radius: 2px; }
+  .copy-btn {
+    display: inline-block; margin-top: 0.6rem; padding: 0.35rem 0.8rem;
+    background: var(--navy); color: var(--gold); font-family: sans-serif;
+    font-size: 0.75rem; border: none; cursor: pointer; letter-spacing: 0.1em;
+  }
+  .copy-btn:hover { background: var(--mid); }
+
+  .threshold-box { background: var(--navy); color: white; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid var(--gold); }
+  .threshold-box h3 { color: var(--gold); margin-bottom: 0.5rem; font-size: 1rem; }
+  .threshold-box p { color: #ccc; font-size: 0.9rem; line-height: 1.6; }
+  .threshold-box .math { font-family: monospace; color: var(--gold); font-size: 0.95rem; margin-top: 0.5rem; }
+
+  .nav-buttons { display: flex; gap: 1rem; justify-content: space-between; padding: 2rem 0; }
+  .btn-nav {
+    padding: 0.7rem 1.5rem; font-family: sans-serif; font-size: 0.9rem;
+    cursor: pointer; border: 1.5px solid var(--navy); background: white;
+    color: var(--navy); transition: all 0.2s;
+  }
+  .btn-nav:hover, .btn-nav.primary { background: var(--navy); color: var(--gold); }
+
+  footer { background: var(--navy); color: #888; padding: 2rem; text-align: center; font-size: 0.8rem; font-family: sans-serif; }
+</style>
+</head>
 <body>
 
-<header>
-  <h1>AXLE Portal</h1>
-  <p>Your entry point into the system.</p>
-</header>
+<nav>
+  <a href="index.html" class="nav-back">← Principia Orthogona</a>
+  <span class="nav-logo">STUDENT PORTAL · A1 → D2</span>
+</nav>
 
-<div class="section">
-  <div class="section-label">Orientation</div>
-  <h2 class="gold-underline">A Simple Interface for Exploration</h2>
+<div class="portal-hero">
+  <h1>From <span class="gold-text">A1</span> to <span class="gold-text">D2</span></h1>
+  <p>Structured LLM prompts for every stage of the journey. Each level is a complete operator orbit. Use these prompts with any capable LLM (Claude, GPT-4, Gemini) to progress through the series and across the dimensional threshold.</p>
+</div>
 
-  <p>
-    The AXLE Portal is designed for clarity: clean prompts, clear outputs, and a direct path into the 
-    structures and scales of Principia Orthogona.
-  </p>
-
-  <p>
-    AXLE organizes behavior through the <strong>g‑series</strong> — a ladder of scales the system may enter:
-  </p>
-
-  <ul class="gold-list">
-    <li><strong>g⁶</strong> — the cycle-scale: free, oscillatory, unconstrained.</li>
-    <li><strong>g³³</strong> — a soft equilibrium region: a moving target with visible variance.</li>
-    <li><strong>g⁶⁴</strong> — the phase-change threshold: the boundary to a new descriptive layer.</li>
-  </ul>
-
-  <p>
-    To see these behaviors directly, launch the interactive environment:<br>
-    <a href="sim.html" class="gold-link">Open the AXLE Simulator →</a>
-  </p>
-
-  <div class="prompt-box">
-    <p><strong>Try a prompt:</strong></p>
-    <textarea placeholder="Ask about a scale, a behavior, or a structure..."></textarea>
-    <button>Submit</button>
+<!-- Progress bar -->
+<div class="progress-bar">
+  <div class="progress-track">
+    <div class="p-node"><div class="p-circle active" onclick="showLevel('a1')">A1</div><div class="p-label">Compress</div></div>
+    <div class="p-arrow">→</div>
+    <div class="p-node"><div class="p-circle" onclick="showLevel('a2')">A2</div><div class="p-label">Recognize</div></div>
+    <div class="p-arrow">→</div>
+    <div class="p-node"><div class="p-circle" onclick="showLevel('b1')">B1</div><div class="p-label">Constrain</div></div>
+    <div class="p-arrow">→</div>
+    <div class="p-node"><div class="p-circle" onclick="showLevel('b2')">B2</div><div class="p-label">Fold</div></div>
+    <div class="p-arrow">→</div>
+    <div class="p-node"><div class="p-circle" onclick="showLevel('c1')">C1</div><div class="p-label">Unfold</div></div>
+    <div class="p-arrow">→</div>
+    <div class="p-node"><div class="p-circle d1" onclick="showLevel('d1')">D1</div><div class="p-label">Saturate</div></div>
+    <div class="p-arrow">→</div>
+    <div class="p-node"><div class="p-circle d2" onclick="showLevel('d2')">D2</div><div class="p-label">Collective</div></div>
   </div>
 </div>
 
+<div class="portal-content">
+
+<!-- A1 -->
+<div class="level-section active" id="level-a1">
+  <div class="level-header">
+    <div class="level-tag">Level A1 · Operator: C (Compression)</div>
+    <div class="level-title">First Contact</div>
+    <div class="level-subtitle">You are at the seed. The structure is here. You do not have to understand it yet. You have to touch it.</div>
+    <div class="level-math">G = U ∘ F ∘ K ∘ C · You are at C.</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt A1.1 — Seed Contact</div>
+    <div class="prompt-title">Read the cajueiro</div>
+    <div class="prompt-text">I am beginning the Principia Orthogona series. I am at level A1. Read this passage to me and then ask me one question about what persists when something grows: "Nature does not seek perfection. It seeks the next stable configuration. A seed falls into poor soil — sandy, dry, resistant. Most seeds die there. The cajueiro does not."</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt A1.2 — Operator Introduction</div>
+    <div class="prompt-title">What is C → K → F → U?</div>
+    <div class="prompt-text">Explain the operator sequence C → K → F → U to me as if I am a child who has never seen algebra. Use one concrete example from nature. Then tell me: where am I in this sequence right now, as a beginner?</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt A1.3 — First Pattern</div>
+    <div class="prompt-title">Find the same shape twice</div>
+    <div class="prompt-text">Show me two things from completely different domains that have the same underlying pattern. Do not explain the math yet. Just show me the two things. Then ask me: "What do you think is the same about these?"</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+</div>
+
+<!-- A2 -->
+<div class="level-section" id="level-a2">
+  <div class="level-header">
+    <div class="level-tag">Level A2 · Operator: K (Curvature Constraint)</div>
+    <div class="level-title">Pattern Recognition — Day 21</div>
+    <div class="level-subtitle">At A2 you can identify patterns, recognize changes and permanences, follow cause and effect. This is exactly when science begins.</div>
+    <div class="level-math">CEFR A2 = TOGT-2 · Science starts at day 21</div>
+  </div>
+
+  <div class="threshold-box">
+    <h3>The Day 21 Threshold</h3>
+    <p>The GTCT framework identifies A2 (21 days of intensive instruction) as the moment when a learner can begin processing scientific structure — not because they know vocabulary, but because they can identify patterns, cause, and invariants.</p>
+    <div class="math">A2 / TOGT-2 → cognitive operations active → science entry</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt A2.1 — Invariant Hunt</div>
+    <div class="prompt-title">What does not change?</div>
+    <div class="prompt-text">I am at A2 in the Principia Orthogona series. Give me a short scientific description of one process — any domain — and ask me to identify: (1) what changes, (2) what stays the same, (3) what the stable form is at the end. Use simple English.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt A2.2 — g₃₃ Introduction</div>
+    <div class="prompt-title">Why 33?</div>
+    <div class="prompt-text">Explain to me why 33 is the threshold constant in GTCT. Do not use technical language. Use an analogy from sport, music, or learning a skill. Then ask me: "Can you think of something in your life where you had to repeat something many times before it became automatic?"</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt A2.3 — Domain Bridge</div>
+    <div class="prompt-title">The same law, two domains</div>
+    <div class="prompt-text">Show me how the same mathematical structure appears in (1) a biological system and (2) a language learning process. Use the sequence C → K → F → U to describe both. Ask me one question after each example.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+</div>
+
+<!-- B1 -->
+<div class="level-section" id="level-b1">
+  <div class="level-header">
+    <div class="level-tag">Level B1 · Operator: K into F</div>
+    <div class="level-title">Constrain and Begin to Fold</div>
+    <div class="level-subtitle">At B1 you can follow extended argument, ask research questions, and begin generating rather than just receiving.</div>
+    <div class="level-math">K: curvature constraint · ε* = 1/3</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt B1.1 — Research Entry</div>
+    <div class="prompt-title">Enter an unfamiliar domain</div>
+    <div class="prompt-text">I am at B1 in the Principia Orthogona series. Choose a scientific domain I have never studied. Give me one paragraph that introduces its core problem. Then ask me to identify: (1) what is being compressed, (2) what the constraint is, (3) what would count as a stable outcome. Guide me through the C → K sequence.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt B1.2 — Contact Geometry</div>
+    <div class="prompt-title">What is g₃₃ = 33 doing in your domain?</div>
+    <div class="prompt-text">I am studying the GTCT invariant g₃₃ = 33 — the minimum number of operator cycles for a system to reach stable lock. Help me find an example of this threshold in one of: neuroscience, ecology, economics, or music. What happens before the threshold? What changes after?</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt B1.3 — Write and Generate</div>
+    <div class="prompt-title">First research paragraph</div>
+    <div class="prompt-text">Help me write one research paragraph (150 words) in which I apply the C → K operator to a process of my choice. The paragraph should: start with a specific observation, identify what is being compressed, name the constraint, and end with an open question. Correct my English as we go.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+</div>
+
+<!-- B2 -->
+<div class="level-section" id="level-b2">
+  <div class="level-header">
+    <div class="level-tag">Level B2 · Operator: F (Folding)</div>
+    <div class="level-title">Fold — Domain Fluency</div>
+    <div class="level-subtitle">At B2 you read unsimplified academic text, generate multi-step argument, and fold across disciplines.</div>
+    <div class="level-math">F: folding · τ = 2 · contact ratio</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt B2.1 — Academic Reading</div>
+    <div class="prompt-title">Read and fold</div>
+    <div class="prompt-text">Give me an unsimplified academic paragraph from any field. After I read it, ask me: (1) What is the operator sequence the author is following (C K F U)? (2) What is the invariant the author is protecting? (3) What domain is this from, and what other domain has the same structure? I will answer all three.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt B2.2 — Cross-domain transfer</div>
+    <div class="prompt-title">The lemniscate and the analemma</div>
+    <div class="prompt-text">The lemniscate (figure-eight in mathematics) and the analemma (path of the sun across the sky over a year) are the same curve appearing in two different disciplines. Help me find two more examples like this — the same structure, two domains, neither aware of the other. Then show me how GTCT explains why this happens.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt B2.3 — Operator chain paper</div>
+    <div class="prompt-title">Write a 400-word research abstract</div>
+    <div class="prompt-text">Help me write a 400-word research abstract applying the full C → K → F → U operator chain to a topic of my choice. The abstract must: name what is being compressed (C), name the constraint that shapes it (K), describe the folding event (F), and state the unfolded output (U). It should sound like a real academic abstract.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+</div>
+
+<!-- C1 -->
+<div class="level-section" id="level-c1">
+  <div class="level-header">
+    <div class="level-tag">Level C1 · Operator: U (Unfolding)</div>
+    <div class="level-title">Unfolding — Research Generation</div>
+    <div class="level-subtitle">At C1 you generate knowledge that did not exist before you arrived. You are the researcher. You produce, transmit, extend.</div>
+    <div class="level-math">U: unfold · T* = 2π · full cycle</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt C1.1 — Original claim</div>
+    <div class="prompt-title">State something new</div>
+    <div class="prompt-text">I am at C1 in the Principia Orthogona series. Help me formulate one original research claim — something I can defend, that connects two domains using the GTCT operator chain. The claim must be falsifiable and must name the invariant it is protecting. Push back if my claim is too vague.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt C1.2 — Teach it</div>
+    <div class="prompt-title">Extend — Now you teach</div>
+    <div class="prompt-text">I have understood the cajueiro principle (Nature seeks the next stable configuration, not perfection). Help me design one 20-minute lesson where I teach this principle to a group who has never heard of GTCT. The lesson must include: one seed text, one activation task, one mathematical move, and one generation task where students produce something new.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt C1.3 — Submission</div>
+    <div class="prompt-title">Prepare for academic submission</div>
+    <div class="prompt-text">Help me prepare a 2-page paper applying GTCT to [my chosen domain]. The paper must have: Title, Abstract (200 words), Introduction (explaining the operator chain C→K→F→U as applied to this domain), Results (what the invariant is in this domain), and Discussion (what this implies for the field). I will write each section; you review and push back.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+</div>
+
+<!-- D1 -->
+<div class="level-section" id="level-d1">
+  <div class="level-header">
+    <div class="level-tag">Level D1 · g₃₃ = 33 Cycles Completed</div>
+    <div class="level-title">Individual Fixed Point — "I Lost Count"</div>
+    <div class="level-subtitle">D1 is not a language level. It is a mathematical threshold. You have completed 33 or more full operator cycles. The structure has passed through you and is now yours. No one can take it away.</div>
+    <div class="level-math">D1: individual agent · g₃₃ = 33 cycles · I₁, I₂ invariants stable</div>
+  </div>
+
+  <div class="threshold-box">
+    <h3>The D1 Threshold</h3>
+    <p>Your father was right. What passes through you genuinely cannot be taken away. D1 is the moment the operator chain has become automatic — when you can no longer count how many times you have applied it, because it is now the way you think.</p>
+    <div class="math">x* = G(x*) · the fixed point · yours</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt D1.1 — Self-assessment</div>
+    <div class="prompt-title">Have you reached D1?</div>
+    <div class="prompt-text">Help me assess whether I have reached D1 in the GTCT framework. Ask me five questions that test whether the operator chain C → K → F → U has become automatic for me. After each answer, tell me whether I am applying the chain correctly or still learning it consciously. At the end, give me an honest assessment: am I at D1?</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt D1.2 — The fixed point</div>
+    <div class="prompt-title">Name your invariant</div>
+    <div class="prompt-text">I believe I have reached D1. Help me identify my personal invariant — the thing in my thinking that has not changed across all the domains I have applied GTCT to. This is my I₁. It should be statable in one sentence. Push back if I cannot state it precisely.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt D1.3 — Transmit</div>
+    <div class="prompt-title">Certify a student</div>
+    <div class="prompt-text">I am at D1. Design a 3-question oral assessment I can use to determine whether a student has reached A2/TOGT-2 — the threshold where science instruction can begin. The questions must test: (1) pattern recognition, (2) cause-and-effect chains, (3) identification of an invariant. I will use this assessment with my own students.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+</div>
+
+<!-- D2 -->
+<div class="level-section" id="level-d2">
+  <div class="level-header">
+    <div class="level-tag">Level D2 · Collective Threshold · Θ = g₃₃ + N × M</div>
+    <div class="level-title">Collective Intelligence — The Swarm Fixed Point</div>
+    <div class="level-subtitle">D2 is not achieved alone. It requires N agents × M interactions ≥ Θ. You are an operator of collective intelligence. The hive mind coherence is the G⁶ horizon.</div>
+    <div class="level-math">Θ = g₃₃ + N × M · D2: swarm fixed point x*_swarm · G⁶ horizon (open)</div>
+  </div>
+
+  <div class="threshold-box">
+    <h3>D2: Complete Completeness</h3>
+    <p>D2 is not a personal achievement. It is a structural event in a group. The threshold Θ = g₃₃ + N × M means: the collective must accumulate at least 33 base cycles plus N agents times M interactions each. When this threshold is crossed, the swarm reaches its own fixed point — the group thinks in a way no individual could.</p>
+    <div class="math">Θ = 33 + N × M · verified in AXLE v6.1</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt D2.1 — Build the swarm</div>
+    <div class="prompt-title">Design a D2 learning environment</div>
+    <div class="prompt-text">I am at D1 and want to help a group of students reach D2. Design a semester-long course structure where N = 20 students, each completing M = 5 research cycles, to reach the collective threshold Θ = 33 + 20 × 5 = 133. What does the course look like? What is the final collective output that proves D2 has been achieved?</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt D2.2 — Hive mind check</div>
+    <div class="prompt-title">Collective invariant</div>
+    <div class="prompt-text">Help me identify the collective invariant of a group of GTCT practitioners — the thing the group produces together that no individual could produce alone. This should be a specific research output, not a general description. It must name the domain, the operators applied, and the threshold crossed. This is the D2 certification criterion.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-number">Prompt D2.3 — G⁶ horizon</div>
+    <div class="prompt-title">Open problem: χ(H*(X⁶)) = 33 ∀n</div>
+    <div class="prompt-text">I have reached D2. I want to contribute to G⁶ — the open horizon of the Principia Orthogona series. The open conjecture is: χ(H*(X⁶)) = 33 for all n. Explain to me what this means in simple terms, what tools from algebraic topology would be needed to attack it, and suggest one concrete first step I could take toward a partial result.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">COPY PROMPT</button>
+  </div>
+
+  <div style="background: var(--navy); color: white; padding: 2rem; text-align: center; margin-top: 2rem;">
+    <div style="color: var(--gold); font-size: 1.3rem; font-weight: bold; margin-bottom: 0.8rem;">C → K → F → U → ∞</div>
+    <p style="color: #ccc; max-width: 500px; margin: 0 auto 1.5rem; font-size: 0.9rem;">You have reached the open horizon. G⁶ is the return — the spiral applying to itself once more. The series does not end. It loops back to where you started, and the starting point is now different.</p>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color: var(--gold); font-family: sans-serif; font-size: 0.85rem;">Contribute to AXLE on GitHub →</a>
+  </div>
+</div>
+
+<!-- Navigation buttons -->
+<div class="nav-buttons" id="nav-btns">
+  <button class="btn-nav" id="btn-prev" onclick="navigate(-1)" style="display:none;">← Previous Level</button>
+  <button class="btn-nav primary" id="btn-next" onclick="navigate(1)">Next Level →</button>
+</div>
+
+</div><!-- portal-content -->
+
 <footer>
-  AXLE v6.1 — Principia Orthogona
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  Principia Orthogona · ISBN Complete Series: 979-8-9954416-0-1 · AXLE v6.1 · github.com/TOTOGT/AXLE
 </footer>
 
+<script>
+const levels = ['a1','a2','b1','b2','c1','d1','d2'];
+let current = 0;
+
+function showLevel(id) {
+  document.querySelectorAll('.level-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.p-circle').forEach(c => c.classList.remove('active'));
+  document.getElementById('level-' + id).classList.add('active');
+  current = levels.indexOf(id);
+  document.querySelectorAll('.p-circle')[current].classList.add('active');
+  updateNav();
+  window.scrollTo({top: document.querySelector('.progress-bar').offsetTop - 60, behavior: 'smooth'});
+}
+
+function navigate(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < levels.length) showLevel(levels[next]);
+}
+
+function updateNav() {
+  document.getElementById('btn-prev').style.display = current > 0 ? 'inline-block' : 'none';
+  document.getElementById('btn-next').style.display = current < levels.length - 1 ? 'inline-block' : 'none';
+}
+
+function copyPrompt(btn) {
+  const text = btn.previousElementSibling.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED ✓';
+    setTimeout(() => btn.textContent = 'COPY PROMPT', 2000);
+  });
+}
+
+updateNav();
+</script>
 </body>
 </html>
