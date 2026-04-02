@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StormManifold — AXLE SIM</title>
+<style>
+  :root {
+    --bg:      #090c10;
+    --panel:   #0d1117;
+    --border:  #30363d;
+    --text:    #c9d1d9;
+    --gold:    #c9a84c;
+    --dim:     #8b949e;
+    --navy:    #1a2744;
+    --accent:  #58a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Georgia', serif; height: 100vh; display: flex; flex-direction: column; }
+
+  nav {
+    background: var(--navy);
+    padding: 0.7rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+  }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .workspace {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── Side panel ── */
+  .panel {
+    width: 270px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 1.2rem 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .panel-title {
+    font-family: sans-serif;
+    font-size: 0.95rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+  }
+  .panel-section {
+    margin-top: 0.8rem;
+    font-family: sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 0.2rem;
+  }
+  .ctrl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.3rem 0;
+  }
+  .ctrl-row label {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    color: var(--text);
+    flex: 1;
+  }
+  .ctrl-row .val {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--gold);
+    width: 3.2rem;
+    text-align: right;
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--gold);
+    margin: 0.1rem 0 0.4rem;
+  }
+  .btn-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+  button {
+    flex: 1;
+    min-width: 3.5rem;
+    padding: 0.45rem 0.3rem;
+    background: #161b22;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: sans-serif;
+    font-size: 0.75rem;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s, color 0.15s;
+  }
+  button:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+  button.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+
+  /* Metrics */
+  .metrics {
+    margin-top: 0.6rem;
+    background: #0a0e14;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.6rem 0.7rem;
+    font-family: monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .metrics .lbl { color: var(--dim); }
+  .metrics .num { color: var(--gold); }
+
+  /* Doc block */
+  .doc-block {
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    color: var(--dim);
+    font-family: sans-serif;
+  }
+  .doc-block strong { color: var(--text); }
+
+  /* Canvas area */
+  .canvas-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    overflow: hidden;
+  }
+  canvas {
+    display: block;
+    image-rendering: pixelated;
+  }
+
+  footer {
+    background: var(--navy);
+    color: #666;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.7rem;
+    font-family: sans-serif;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">PRINCIPIA ORTHOGONA</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="sim.html">AXLE Simulator</a></li>
+    <li><a href="portal.html">Student Portal</a></li>
+    <li><a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="workspace">
+
+  <!-- PANEL -->
+  <div class="panel">
+    <div class="panel-title">StormManifold · SIM</div>
+
+    <div class="panel-section">Parameters</div>
+
+    <!-- k_manifold -->
+    <div class="ctrl-row">
+      <label>k_manifold</label>
+      <span class="val" id="v_km">4.0</span>
+    </div>
+    <input type="range" id="s_km" min="0" max="10" step="0.1" value="4">
+
+    <!-- A (amplitude) -->
+    <div class="ctrl-row">
+      <label>A (amplitude)</label>
+      <span class="val" id="v_A">0.15</span>
+    </div>
+    <input type="range" id="s_A" min="0" max="0.3" step="0.01" value="0.15">
+
+    <!-- k_swirl -->
+    <div class="ctrl-row">
+      <label>k_swirl</label>
+      <span class="val" id="v_ks">1.5</span>
+    </div>
+    <input type="range" id="s_ks" min="0" max="5" step="0.1" value="1.5">
+
+    <!-- gamma -->
+    <div class="ctrl-row">
+      <label>γ (drag)</label>
+      <span class="val" id="v_g">0.8</span>
+    </div>
+    <input type="range" id="s_g" min="0" max="3" step="0.1" value="0.8">
+
+    <!-- sigma -->
+    <div class="ctrl-row">
+      <label>σ (noise)</label>
+      <span class="val" id="v_s">0.020</span>
+    </div>
+    <input type="range" id="s_s" min="0" max="0.1" step="0.005" value="0.02">
+
+    <div class="panel-section">Controls</div>
+    <div class="btn-row">
+      <button id="btn_pause">Pause</button>
+      <button id="btn_step">Step</button>
+    </div>
+    <div class="btn-row">
+      <button id="btn_reset">Reset</button>
+      <button id="btn_rand">Randomize</button>
+    </div>
+
+    <div class="panel-section">Metrics</div>
+    <div class="metrics" id="metrics">
+      <span class="lbl">E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="num" id="m_E">—</span><br>
+      <span class="lbl">mean|m|</span><span class="num" id="m_M">—</span><br>
+      <span class="lbl">FPS&nbsp;&nbsp;&nbsp;</span><span class="num" id="m_fps">—</span>
+    </div>
+
+    <div class="doc-block">
+      <strong>StormManifold</strong> — Agent-based generative flow.<br><br>
+      N = 4000 agents drift on a sinusoidal manifold embedded in the torus [0,1]². Each agent feels a restoring force toward the curve y = 0.5 + A·sin(2πx), a swirl acceleration about the centre, viscous drag, and stochastic noise.<br><br>
+      <strong>Math:</strong> The signed manifold coordinate m = y − (0.5 + A sin 2πx) acts as a Lyapunov-like penalty; the normal restoring force collapses trajectories onto the manifold while the swirl term sustains perpetual circulation. Energy E = ½Σ|v|² and mean |m| quantify how tightly the swarm tracks the manifold.
+    </div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap">
+    <canvas id="simCanvas"></canvas>
+  </div>
+
+</div>
+
+<footer>
+  <span>AXLE SIM · StormManifold · G6 LLC · Newark, NJ</span>
+  <span><a href="sim.html">← All SIMs</a></span>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+//  CONFIGURATION
+// ─────────────────────────────────────────────
+const N_AGENTS    = 4000;
+const N_MAX       = 8000;
+const DT          = 0.02;
+const SUBSTEPS    = 2;
+const V_MAX       = 1.0;
+const EPS         = 1e-9;
+const TRAIL_MAX   = 60;
+const TARGET_FPS  = 30;
+const TARGET_MS   = 1000 / TARGET_FPS;
+const CANVAS_SIZE = 800;
+
+let SEED = 12345;
+
+// ─────────────────────────────────────────────
+//  RNG — mulberry32 (deterministic)
+// ─────────────────────────────────────────────
+function makeMulberry32(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s += 0x6D2B79F5;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+let rng = makeMulberry32(SEED);
+
+// ─────────────────────────────────────────────
+//  CANVAS SETUP — devicePixelRatio scaling
+// ─────────────────────────────────────────────
+const canvas = document.getElementById('simCanvas');
+const ctx    = canvas.getContext('2d');
+const dpr    = window.devicePixelRatio || 1;
+canvas.width  = CANVAS_SIZE * dpr;
+canvas.height = CANVAS_SIZE * dpr;
+canvas.style.width  = CANVAS_SIZE + 'px';
+canvas.style.height = CANVAS_SIZE + 'px';
+ctx.scale(dpr, dpr);
+
+// ─────────────────────────────────────────────
+//  AGENT STATE — Typed arrays for performance
+// ─────────────────────────────────────────────
+const ax  = new Float32Array(N_MAX);
+const ay  = new Float32Array(N_MAX);
+const avx = new Float32Array(N_MAX);
+const avy = new Float32Array(N_MAX);
+const am  = new Float32Array(N_MAX);
+
+// Trail storage: circular buffer per agent, stride = TRAIL_MAX
+// [agent * TRAIL_MAX * 2 + step * 2 + 0/1] = x/y
+const trails     = new Float32Array(N_MAX * TRAIL_MAX * 2);
+const trailLen   = new Uint8Array(N_MAX);   // current trail length
+const trailHead  = new Uint16Array(N_MAX);  // circular head index
+
+let nAgents = N_AGENTS;
+
+function initAgents() {
+  for (let i = 0; i < nAgents; i++) {
+    const x = rng();
+    const y = rng();
+    ax[i]  = x;
+    ay[i]  = y;
+    // small random velocity, |v| <= 0.01
+    const ang = rng() * 2 * Math.PI;
+    const spd = rng() * 0.01;
+    avx[i] = Math.cos(ang) * spd;
+    avy[i] = Math.sin(ang) * spd;
+    // manifold coordinate at init (A uses current param value, but use default 0.15 at init)
+    am[i]  = y - (0.5 + 0.15 * Math.sin(2 * Math.PI * x));
+    // clear trails
+    trailLen[i]  = 0;
+    trailHead[i] = 0;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  PARAMETERS (live from sliders)
+// ─────────────────────────────────────────────
+let p = {
+  k_manifold: 4.0,
+  A:          0.15,
+  k_swirl:    1.5,
+  gamma:      0.8,
+  sigma:      0.02,
+};
+
+function readSliders() {
+  p.k_manifold = parseFloat(document.getElementById('s_km').value);
+  p.A          = parseFloat(document.getElementById('s_A').value);
+  p.k_swirl    = parseFloat(document.getElementById('s_ks').value);
+  p.gamma      = parseFloat(document.getElementById('s_g').value);
+  p.sigma      = parseFloat(document.getElementById('s_s').value);
+}
+
+function bindSlider(sliderId, valId, fmt) {
+  const sl = document.getElementById(sliderId);
+  const vl = document.getElementById(valId);
+  sl.addEventListener('input', () => {
+    vl.textContent = fmt(parseFloat(sl.value));
+    readSliders();
+  });
+}
+bindSlider('s_km', 'v_km',  v => v.toFixed(1));
+bindSlider('s_A',  'v_A',   v => v.toFixed(2));
+bindSlider('s_ks', 'v_ks',  v => v.toFixed(1));
+bindSlider('s_g',  'v_g',   v => v.toFixed(1));
+bindSlider('s_s',  'v_s',   v => v.toFixed(3));
+
+// ─────────────────────────────────────────────
+//  COLOR PALETTES — |m| in [0, 0.3] → blue→purple→red
+// ─────────────────────────────────────────────
+const PALETTE_SIZE = 256;
+const palette      = [];
+const paletteDim   = [];  // same palette at 0.18 alpha for trails
+for (let i = 0; i < PALETTE_SIZE; i++) {
+  const absM = i / PALETTE_SIZE * 0.3;
+  const t    = Math.min(absM / 0.3, 1.0);
+  let r, g, b;
+  if (t < 0.5) {
+    const s = t * 2;
+    r = Math.round(s * 160);
+    g = Math.round(80 - s * 80);
+    b = Math.round(255 - s * 55);
+  } else {
+    const s = (t - 0.5) * 2;
+    r = Math.round(160 + s * 95);
+    g = 0;
+    b = Math.round(200 - s * 200);
+  }
+  palette.push(`rgb(${r},${g},${b})`);
+  paletteDim.push(`rgba(${r},${g},${b},0.18)`);
+}
+
+function paletteIndex(absM) {
+  return Math.min(Math.floor(absM / 0.3 * PALETTE_SIZE), PALETTE_SIZE - 1);
+}
+
+// ─────────────────────────────────────────────
+//  SIMULATION STEP
+// ─────────────────────────────────────────────
+function step() {
+  const km  = p.k_manifold;
+  const A   = p.A;
+  const ks  = p.k_swirl;
+  const gam = p.gamma;
+  const sig = p.sigma;
+  const cx  = 0.5, cy = 0.5;
+  const TWO_PI = 2 * Math.PI;
+
+  for (let sub = 0; sub < SUBSTEPS; sub++) {
+    for (let i = 0; i < nAgents; i++) {
+      let x  = ax[i], y  = ay[i];
+      let vx = avx[i], vy = avy[i];
+
+      // 1) Manifold attraction
+      const sinX  = Math.sin(TWO_PI * x);
+      const cosX  = Math.cos(TWO_PI * x);
+      const mVal  = y - (0.5 + A * sinX);
+
+      // normal n = (-2πA cos(2πx), 1), normalise
+      let nx = -TWO_PI * A * cosX;
+      let ny = 1.0;
+      const nMag = Math.sqrt(nx * nx + ny * ny) + EPS;
+      nx /= nMag; ny /= nMag;
+
+      const ax_m = -km * mVal * nx;
+      const ay_m = -km * mVal * ny;
+
+      // 2) Swirl about centre
+      const rx = x - cx, ry = y - cy;
+      const rMag = Math.sqrt(rx * rx + ry * ry) + EPS;
+      // perpendicular: rp = (-ry, rx)
+      const ax_s = ks * (-ry) / rMag;
+      const ay_s = ks * rx    / rMag;
+
+      // 3) Drag + noise (random unit vector)
+      const ax_d = -gam * vx;
+      const ay_d = -gam * vy;
+      const ang  = rng() * TWO_PI;
+      const ax_n = sig * Math.cos(ang);
+      const ay_n = sig * Math.sin(ang);
+
+      // 4) Total acceleration, semi-implicit Euler
+      const fax = ax_m + ax_s + ax_d + ax_n;
+      const fay = ay_m + ay_s + ay_d + ay_n;
+      vx += fax * DT;
+      vy += fay * DT;
+
+      // clamp speed
+      const spd = Math.sqrt(vx * vx + vy * vy);
+      if (spd > V_MAX) { const sc = V_MAX / spd; vx *= sc; vy *= sc; }
+
+      x += vx * DT;
+      y += vy * DT;
+
+      // 5) Wrap to [0, 1)
+      x = ((x % 1) + 1) % 1;
+      y = ((y % 1) + 1) % 1;
+
+      // Update manifold coordinate with current params
+      am[i]  = y - (0.5 + A * Math.sin(TWO_PI * x));
+      ax[i]  = x; ay[i]  = y;
+      avx[i] = vx; avy[i] = vy;
+
+      // Push to trail (circular buffer)
+      const head = trailHead[i];
+      const base = i * TRAIL_MAX * 2;
+      trails[base + head * 2]     = x;
+      trails[base + head * 2 + 1] = y;
+      trailHead[i] = (head + 1) % TRAIL_MAX;
+      if (trailLen[i] < TRAIL_MAX) trailLen[i]++;
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────
+function render() {
+  const W = CANVAS_SIZE, H = CANVAS_SIZE;
+
+  // Background fade (creates trail effect from previous frame too)
+  ctx.fillStyle = 'rgba(9,12,16,0.35)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw manifold curve y = 0.5 + A*sin(2πx)
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(201,168,76,0.55)';
+  ctx.lineWidth   = 1.0;
+  const steps = 400;
+  for (let k = 0; k <= steps; k++) {
+    const xN = k / steps;
+    const yN = 0.5 + p.A * Math.sin(2 * Math.PI * xN);
+    const px = xN * W, py = (1 - yN) * H;  // flip y for screen coords
+    if (k === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Draw trails + agent dots
+  for (let i = 0; i < nAgents; i++) {
+    const absM = Math.abs(am[i]);
+    const ci   = paletteIndex(absM);
+
+    const tLen  = trailLen[i];
+    const tHead = trailHead[i];
+    const base  = i * TRAIL_MAX * 2;
+
+    if (tLen > 1) {
+      ctx.beginPath();
+      ctx.strokeStyle = paletteDim[ci];
+      ctx.lineWidth   = 0.6;
+
+      for (let k = 0; k < tLen; k++) {
+        const idx = ((tHead - tLen + k + TRAIL_MAX) % TRAIL_MAX);
+        const tx  = trails[base + idx * 2] * W;
+        const ty  = (1 - trails[base + idx * 2 + 1]) * H;
+        if (k === 0) ctx.moveTo(tx, ty); else ctx.lineTo(tx, ty);
+      }
+      ctx.stroke();
+    }
+
+    // Agent dot
+    ctx.fillStyle = palette[ci];
+    const px = ax[i] * W;
+    const py = (1 - ay[i]) * H;
+    ctx.fillRect(px - 0.7, py - 0.7, 1.4, 1.4);
+  }
+}
+
+// ─────────────────────────────────────────────
+//  METRICS
+// ─────────────────────────────────────────────
+function computeMetrics() {
+  let E = 0, sumAbsM = 0;
+  for (let i = 0; i < nAgents; i++) {
+    E        += avx[i] * avx[i] + avy[i] * avy[i];
+    sumAbsM  += Math.abs(am[i]);
+  }
+  E *= 0.5;
+  return { E, meanAbsM: sumAbsM / nAgents };
+}
+
+// ─────────────────────────────────────────────
+//  MAIN LOOP
+// ─────────────────────────────────────────────
+let paused       = false;
+let stepOnce     = false;
+let lastTime     = 0;
+let frameCount   = 0;
+let lastFpsTime  = 0;
+let displayFps   = 0;
+
+function loop(now) {
+  requestAnimationFrame(loop);
+
+  const dt = now - lastTime;
+
+  // FPS counter
+  frameCount++;
+  if (now - lastFpsTime > 1000) {
+    displayFps  = frameCount;
+    frameCount  = 0;
+    lastFpsTime = now;
+  }
+
+  // Throttle to TARGET_FPS; -2 ms margin absorbs timer precision jitter
+  if (dt < TARGET_MS - 2) return;
+  lastTime = now;
+
+  if (!paused || stepOnce) {
+    step();
+    stepOnce = false;
+  }
+
+  render();
+
+  // Update metric readout every frame (cheap)
+  const { E, meanAbsM } = computeMetrics();
+  document.getElementById('m_E').textContent   = E.toFixed(2);
+  document.getElementById('m_M').textContent   = meanAbsM.toFixed(4);
+  document.getElementById('m_fps').textContent = displayFps;
+}
+
+// ─────────────────────────────────────────────
+//  CONTROLS
+// ─────────────────────────────────────────────
+document.getElementById('btn_pause').addEventListener('click', () => {
+  paused = !paused;
+  document.getElementById('btn_pause').textContent = paused ? 'Resume' : 'Pause';
+  document.getElementById('btn_pause').classList.toggle('active', paused);
+});
+
+document.getElementById('btn_step').addEventListener('click', () => {
+  if (!paused) {
+    paused = true;
+    document.getElementById('btn_pause').textContent = 'Resume';
+    document.getElementById('btn_pause').classList.add('active');
+  }
+  stepOnce = true;
+});
+
+document.getElementById('btn_reset').addEventListener('click', () => {
+  rng = makeMulberry32(SEED);
+  initAgents();
+});
+
+document.getElementById('btn_rand').addEventListener('click', () => {
+  SEED = (Math.random() * 0xFFFFFFFF) >>> 0;
+  rng  = makeMulberry32(SEED);
+  initAgents();
+});
+
+// ─────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────
+initAgents();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
