@@ -23,4 +23,7 @@ Bootstrapping: MIT licensed, foundations incoming from Principia Orthogona Vol. 
 - Zenodo: [add DOI/link after first version]
 - X: @unitedWeStreamU (search "AXLE" for threads, e.g., March 2026 foundations)
 
+## Contributing
+Want to add files to the community — including from your phone? See [CONTRIBUTING.md](CONTRIBUTING.md) for a step-by-step guide to uploading files via the GitHub mobile app.
+
 Contact: Pablo Grossi | PabloGrossi@hotmail.com | G6 LLC · Newark, NJ · 2026
