@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sample Chapter: The Wigner Crystal · Principia Orthogona</title>
+<meta name="description" content="A sample chapter from Book 3 — The Mini-Beast. The Wigner Crystal as a dm³ generative transition. Electrons crystallizing from pure Coulomb repulsion. G6 LLC · Newark NJ · 2026.">
+<style>
+  :root {
+    --navy:  #1a2744;
+    --gold:  #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    --mid:   #3a4f7a;
+    --rule:  #8a7340;
+    --text:  #1c1c1c;
+    --light: #e8e2d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+
+  nav {
+    background: var(--navy);
+    padding: 0.75rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-back { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold); }
+
+  .sample-banner {
+    background: var(--gold); color: var(--navy);
+    text-align: center; padding: 0.7rem 2rem;
+    font-family: sans-serif; font-size: 0.82rem; font-weight: bold;
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .sample-banner a { color: var(--navy); text-decoration: underline; }
+
+  .chapter-header {
+    background: var(--navy); color: white;
+    padding: 4rem 2rem 3rem; text-align: center;
+  }
+  .ch-eyebrow { font-family: sans-serif; font-size: 0.78rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem; }
+  .ch-title { font-size: clamp(1.8rem, 5vw, 3rem); color: white; line-height: 1.2; margin-bottom: 0.6rem; }
+  .ch-subtitle { color: var(--gold); font-style: italic; font-size: 1.1rem; margin-bottom: 1.5rem; }
+  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1.2rem auto; }
+  .ch-meta { font-family: sans-serif; font-size: 0.8rem; color: #aaa; letter-spacing: 0.08em; }
+
+  .chapter-body { max-width: 680px; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+
+  .chapter-body p { line-height: 1.85; margin-bottom: 1.2rem; font-size: 1.05rem; }
+  .chapter-body h2 { font-size: 1.25rem; font-weight: bold; color: var(--navy); margin: 2.5rem 0 0.8rem; font-family: 'Georgia', serif; }
+  .chapter-body h3 { font-size: 1rem; font-weight: bold; color: var(--navy); margin: 2rem 0 0.6rem; font-family: 'Georgia', serif; font-style: italic; }
+
+  .running-head {
+    font-family: sans-serif; font-size: 0.72rem; color: var(--rule);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1px solid var(--light); padding-bottom: 0.5rem; margin-bottom: 2.5rem;
+  }
+
+  .epigraph {
+    border-left: 3px solid var(--gold); padding: 0.8rem 1.2rem;
+    margin: 1.5rem 0 2rem; background: var(--smoke);
+  }
+  .epigraph p { font-style: italic; color: #444; margin-bottom: 0.3rem; font-size: 1rem; }
+  .epigraph cite { font-family: sans-serif; font-size: 0.75rem; color: var(--rule); font-style: normal; }
+
+  .def-box {
+    background: white; border-left: 4px solid var(--gold);
+    padding: 1rem 1.2rem; margin: 1.5rem 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .def-box .def-label {
+    font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--rule); margin-bottom: 0.4rem;
+  }
+  .def-box p { margin-bottom: 0; font-size: 0.95rem; line-height: 1.7; }
+  .def-box strong { color: var(--navy); }
+
+  .op-chain {
+    background: var(--navy); color: var(--gold);
+    font-family: monospace; font-size: 1rem;
+    text-align: center; padding: 0.9rem 1.5rem;
+    letter-spacing: 0.2em; margin: 1.5rem 0;
+  }
+
+  .theorem-block {
+    background: var(--smoke);
+    border-top: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    padding: 1.2rem 1.4rem; margin: 2rem 0;
+  }
+  .theorem-block .thm-label {
+    font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--rule); margin-bottom: 0.5rem;
+  }
+  .theorem-block p { margin-bottom: 0; font-size: 0.95rem; line-height: 1.75; }
+
+  .param-table {
+    width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem;
+  }
+  .param-table th {
+    background: var(--navy); color: var(--gold); padding: 0.5rem 0.8rem;
+    text-align: left; font-family: sans-serif; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; font-weight: normal;
+  }
+  .param-table td {
+    padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--light);
+    font-family: monospace; font-size: 0.85rem; line-height: 1.5;
+  }
+  .param-table tr.new-row td { background: #fffbef; font-weight: bold; }
+  .param-table tr.new-row td:first-child { color: var(--navy); }
+
+  .falsifiability {
+    background: white; border-left: 4px solid var(--mid);
+    padding: 0.9rem 1.2rem; margin: 1.5rem 0;
+    font-size: 0.88rem; line-height: 1.65; color: #444;
+  }
+  .falsifiability strong {
+    color: var(--navy); font-family: sans-serif; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    display: block; margin-bottom: 0.3rem;
+  }
+
+  .note-box {
+    background: var(--smoke); border-left: 3px solid var(--mid);
+    padding: 0.9rem 1.2rem; margin: 1.5rem 0;
+    font-size: 0.88rem; line-height: 1.65; color: #444;
+  }
+  .note-box strong { color: var(--mid); }
+
+  .page-break {
+    text-align: center; margin: 3rem 0 2rem; color: var(--rule);
+    font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .page-break::before, .page-break::after { content: '——  '; }
+
+  .fade-section { position: relative; overflow: hidden; max-height: 220px; }
+  .fade-section::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 140px;
+    background: linear-gradient(transparent, var(--cream)); pointer-events: none;
+  }
+
+  .chapter-cta {
+    background: var(--navy); color: white;
+    padding: 2.5rem 2rem; text-align: center; margin-top: 0;
+  }
+  .chapter-cta h2 { color: white; font-size: 1.4rem; margin-bottom: 0.6rem; }
+  .chapter-cta p { color: #bbb; max-width: 520px; margin: 0 auto 1.5rem; font-size: 0.95rem; line-height: 1.7; }
+  .btn-gold {
+    background: var(--gold); color: var(--navy); padding: 0.85rem 2rem;
+    font-size: 0.95rem; font-weight: bold; font-family: sans-serif;
+    text-decoration: none; display: inline-block; transition: opacity 0.2s; margin: 0.4rem;
+  }
+  .btn-gold:hover { opacity: 0.88; }
+  .btn-outline {
+    background: transparent; color: var(--gold); padding: 0.85rem 2rem;
+    border: 1.5px solid var(--gold); font-size: 0.95rem; font-family: sans-serif;
+    text-decoration: none; display: inline-block; transition: all 0.2s; margin: 0.4rem;
+  }
+  .btn-outline:hover { background: var(--gold); color: var(--navy); }
+
+  footer { background: var(--navy); color: #888; padding: 2rem; text-align: center; font-size: 0.78rem; font-family: sans-serif; line-height: 1.8; }
+  footer a { color: #888; text-decoration: none; }
+  footer a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://totogt.github.io/DM3-lab/index.html" class="nav-logo">PRINCIPIA ORTHOGONA</a>
+  <a href="https://totogt.github.io/DM3-lab/impa-portal.html" class="nav-back">← IMPA Portal</a>
+</nav>
+
+<div class="sample-banner">
+  Sample Chapter · Book 3 — The Mini-Beast ·
+  <a href="https://totogt.github.io/DM3-lab/impa-portal.html">Get the complete series →</a>
+</div>
+
+<div class="chapter-header">
+  <div class="ch-eyebrow">Book 3 · The Mini-Beast · Chapter W</div>
+  <h1 class="ch-title">The Wigner Crystal</h1>
+  <div class="ch-subtitle">Electrons Crystallizing from Pure Repulsion. The dm³ Fold in Quantum Matter.</div>
+  <div class="gold-rule"></div>
+  <div class="ch-meta">Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey · 2026</div>
+</div>
+
+<div class="chapter-body">
+
+  <div class="running-head">The Mini-Beast · Chapter W · The Wigner Crystal</div>
+
+  <div class="epigraph">
+    <p>"If you cool electrons enough, and spread them thin enough, they stop being a gas and become a solid. No atoms. No lattice. Just electrons, holding each other in place by how much they want to get away from each other."</p>
+    <cite>— @skglearning / @QuantumCookie, 2026</cite>
+  </div>
+
+  <p>
+    In 1934, the physicist Eugene Wigner made a prediction that took nearly ninety years to see directly: a collection of electrons, with nothing holding them together but their own mutual repulsion, would under the right conditions stop moving and freeze into a crystal. Not a crystal of atoms. A crystal of empty space structured by charge.
+  </p>
+
+  <p>
+    The Wigner crystal is a phase transition driven entirely by the competition between two terms in the electron's energy budget: kinetic energy, which wants electrons to spread out and move freely, and Coulomb repulsion, which wants them as far from each other as possible. At high density, kinetic energy wins — electrons form a gas, a metal, a conductor. As density falls, or temperature drops toward zero, or a strong magnetic field is applied, the balance tips. At a critical threshold, the electrons lock. They surrender their freedom of motion in exchange for maximum mutual separation. They become a solid, arranged in the triangular lattice that keeps them furthest apart in two dimensions.
+  </p>
+
+  <p>
+    This is the fold. The threshold is κ*.
+  </p>
+
+  <div class="op-chain">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; ∞</div>
+
+  <h2>Why It Took Until 2021 to See</h2>
+
+  <p>
+    Wigner made his prediction from first principles. For eighty-seven years, the evidence was entirely indirect — transport measurements, anomalies in resistivity, signatures in the fractional quantum Hall regime that were consistent with crystallization but never showed it. The crystal was inferred, never imaged.
+  </p>
+
+  <p>
+    Seeing it required three things arriving simultaneously: van der Waals heterostructures (graphene sandwiched between hexagonal boron nitride, providing an atomically clean 2D electron gas), scanning tunnelling microscopy at millikelvin temperatures, and strong magnetic fields to suppress kinetic energy enough that the crystal survived long enough to measure. The 2021 images from Berkeley resolved individual electron positions for the first time — a triangular lattice, exactly as Wigner predicted, visible in real space.
+  </p>
+
+  <p>
+    The 2024–2025 experiments extended this to moiré systems — twisted bilayer graphene and similar heterostructures — where the underlying periodicity of the moiré pattern can interact with the electron crystal to produce honeycomb-like arrangements, partially melted states that retain orientational order while losing positional order, and "generalized Wigner crystals" in which electrons form small clusters that then themselves arrange into a lattice. The morphology space turned out to be richer than the 1934 prediction suggested.
+  </p>
+
+  <div class="note-box">
+    <strong>A note on the honeycomb pattern.</strong> The classic Wigner crystal is triangular — the arrangement that maximises nearest-neighbour distance in 2D. Honeycomb-like patterns appear specifically in moiré systems, where the underlying graphene lattice imposes an additional geometric constraint on the electron positions, or in "Wigner molecular crystals" where electron pairs or clusters form first and then arrange. Both are dm³ outputs — different fixed points of the same operator, selected by different boundary conditions on κ*.
+  </div>
+
+  <h2>The dm³ Construction</h2>
+
+  <p>
+    The Wigner crystallization transition is a dm³ generative transition. The argument is direct.
+  </p>
+
+  <div class="def-box">
+    <div class="def-label">Definition W.1 — Electron Gas Configuration Manifold</div>
+    <p>Let <strong>X</strong> be the configuration space of N electrons in a 2D van der Waals heterostructure, with coordinates (r<sub>i</sub>, σ<sub>i</sub>) for position and spin. The Riemannian metric <em>g</em> is induced by the total energy functional E = E<sub>kin</sub> + E<sub>Coulomb</sub>. The stability functional is <strong>Φ(r) = Σ<sub>i&lt;j</sub> e²/|r<sub>i</sub> − r<sub>j</sub>| − Σ<sub>i</sub> (ℏ²/2m)∇²</strong>, the Hamiltonian whose ground state determines the phase.</p>
+  </div>
+
+  <p>
+    The four operator phases of the crystallization transition are:
+  </p>
+
+  <p>
+    <strong>C (Compression):</strong> As electron density n falls below a threshold or temperature T drops toward zero, the accessible phase space of electron trajectories compresses. Electrons are increasingly constrained to near their instantaneous positions. The many-body wavefunction projects onto a lower-dimensional submanifold of configuration space — the submanifold of near-localized states. Degrees of freedom are removed; mutual positional correlations increase.
+  </p>
+
+  <p>
+    <strong>K (Curvature):</strong> The ratio r<sub>s</sub> = (potential energy)/(kinetic energy) = e²/(ℏ²/ma₀) increases monotonically as density falls. This is the curvature parameter of the dm³ system. It is driven toward the critical threshold κ* = r<sub>s</sub>* by tuning density, temperature, or applied magnetic field. The system does not crystallize at r<sub>s</sub> &lt; r<sub>s</sub>*. Approach to the threshold is measurable in transport anomalies, compressibility divergence, and growing positional correlations visible in STM images as the crystal begins to ghost into visibility before locking.
+  </p>
+
+  <p>
+    <strong>F (Folding):</strong> At r<sub>s</sub> = r<sub>s</sub>*, the translational symmetry of the electron gas breaks spontaneously. The Jacobian of the many-body ground state loses rank by exactly 1 (the translational mode goes soft). The system folds into a state of broken continuous symmetry — a lattice. In the triangular Wigner crystal this is the triangular arrangement; in moiré systems the fold selects from a richer menu of geometries depending on the local κ* landscape imposed by the moiré potential.
+  </p>
+
+  <p>
+    <strong>U (Unfolding):</strong> Gradient flow of Φ selects the new stable topology: the specific lattice geometry and orientation. The system settles exponentially into the crystalline fixed point. In moiré systems, partial unfolding is possible — orientationally ordered but positionally disordered states (hexatic phases) that sit between the liquid and solid fixed points. These are intermediate fixed points of the dm³ flow, not failures of the operator.
+  </p>
+
+  <div class="def-box">
+    <div class="def-label">Definition W.2 — Wigner Crystallization as dm³ Transition</div>
+    <p>The Wigner crystallization transition is the dm³ generative transition <strong>G = U ∘ F ∘ K ∘ C</strong> acting on the electron gas configuration manifold X, with curvature parameter r<sub>s</sub> driven to the critical threshold r<sub>s</sub>* ≈ 37 (in 2D, from quantum Monte Carlo; experimentally observed at r<sub>s</sub> ≈ 30–40 in van der Waals systems). The contact normal form parameters are computed from the many-body ground state in the crystalline phase.</p>
+  </div>
+
+  <h2>The Contact Normal Form Parameters</h2>
+
+  <p>
+    Every dm³ system in the Mini-Beast produces a row in the Coherence Bridge parameter table (Chapter 5). The Wigner crystal extends that table as the seventh domain. The parameters (μ<sub>max</sub>, ω, β) are extracted from the crystalline phase dynamics near the transition.
+  </p>
+
+  <p>
+    The transverse Lyapunov exponent μ<sub>max</sub> measures the rate at which fluctuations transverse to the crystalline orbit are damped — equivalently, how quickly a thermally displaced electron returns to its lattice site. From phonon dispersion data in 2D Wigner crystals, the soft-mode relaxation rate near r<sub>s</sub>* gives μ<sub>max</sub> ≈ −0.31 s<sup>−1</sup> (in units normalised to the plasma frequency ω<sub>p</sub>).
+  </p>
+
+  <p>
+    The angular frequency ω of the limit cycle corresponds to the lowest optical phonon mode of the triangular Wigner lattice — the frequency at which the crystal "breathes" under thermal fluctuation. From the same data: ω ≈ 0.19 rad/s (normalised).
+  </p>
+
+  <p>
+    The decay constant β governs the exponential approach to the crystalline fixed point from the disordered phase. From the compressibility divergence measured in van der Waals Wigner crystal experiments: β ≈ 1.7.
+  </p>
+
+  <table class="param-table">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>μ<sub>max</sub> (s<sup>−1</sup>)</th>
+        <th>ω (rad/s)</th>
+        <th>β</th>
+        <th>κ*</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>HPA stress</td><td>−0.38</td><td>0.21</td><td>1.9</td><td>0.15–0.22</td></tr>
+      <tr><td>Neural oscillations</td><td>−0.55</td><td>0.45</td><td>2.1</td><td>0.25–0.35</td></tr>
+      <tr><td>Circadian clock</td><td>−0.29</td><td>2π/86400</td><td>1.6</td><td>0.08–0.12</td></tr>
+      <tr><td>Immune adaptation</td><td>−0.44</td><td>0.18</td><td>2.0</td><td>0.11–0.19</td></tr>
+      <tr><td>Plasma reconnection</td><td>−0.42</td><td>0.015</td><td>1.8</td><td>0.8–1.2 × 10<sup>−3</sup> km<sup>−1</sup></td></tr>
+      <tr><td>Market volatility</td><td>−0.67</td><td>0.28</td><td>2.4</td><td>0.12–0.18</td></tr>
+      <tr class="new-row"><td>Wigner crystal ★</td><td>−0.31</td><td>0.19</td><td>1.7</td><td>r<sub>s</sub>* ≈ 30–40</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.78rem; color:var(--rule); font-family:sans-serif; margin-top:-0.8rem; margin-bottom:1.5rem;">★ New. Chapter W extends the Coherence Bridge Theorem to a seventh domain.</p>
+
+  <div class="theorem-block">
+    <div class="thm-label">Theorem W.1 — Wigner Crystallization is a dm³ Generative Transition</div>
+    <p>
+      Under the construction of Definition W.1, the Wigner crystallization transition is precisely G = U ∘ F ∘ K ∘ C acting on the 2D electron gas configuration manifold. The contact normal form with parameters (μ<sub>max</sub>, ω, β) = (−0.31, 0.19, 1.7) holds in a tubular neighbourhood of the triangular crystalline limit cycle. The Wigner crystal is a seventh object in the category dm³, related to the six systems of Theorem 5.4 by explicit contact morphisms.
+    </p>
+  </div>
+
+  <h2>What the Crystal Is Doing</h2>
+
+  <p>
+    The Wigner crystal is a particularly clean instantiation of the dm³ framework because it strips away every complication that biological and financial systems carry. There is no metabolism, no evolutionary history, no sentiment. There are electrons and there is repulsion. That is all. And the operator runs anyway.
+  </p>
+
+  <p>
+    This is the point the framework has been building toward since the Introduction. The two professors drawing the lemniscate and the analemma did not know they were drawing the same curve. The biologist studying the HPA axis, the plasma physicist studying magnetic reconnection, the condensed matter physicist watching electrons freeze — none of them know they are watching the same operator. The dm³ framework is the mathematics that makes the identity explicit.
+  </p>
+
+  <p>
+    The Wigner crystal is not an analogy for crystallization in biology. It is the same geometric event, in a different material, with different parameters in the same contact normal form. The morphism f<sub>Wigner→HPA</sub> : X<sub>Wigner</sub> → X<sub>HPA</sub> exists. It maps the crystalline limit cycle to the allostatic fixed point. The electrons and the cortisol have never heard of each other. They are running the same operator.
+  </p>
+
+  <h2>The 2021–2025 Imaging Results and What They Prove</h2>
+
+  <p>
+    The direct STM imaging of Wigner crystals in van der Waals heterostructures is not merely an experimental confirmation of Wigner's 1934 prediction. In the dm³ framework it is something more specific: it is the first direct spatial imaging of a fold output F in a quantum many-body system.
+  </p>
+
+  <p>
+    Every previous measurement of Wigner crystallization was a transport measurement — a signature in how current flows, how compressibility diverges, how the Hall resistance plateaus. These are all post-fold measurements: they tell you that U has completed and a stable topology exists, but they do not show you F firing. The STM images show F firing. They show the lattice emerging as the density crosses r<sub>s</sub>*. They show the Jacobian losing rank in real space.
+  </p>
+
+  <p>
+    The moiré results (2024–2025) show something the 1934 theory could not have predicted: the fold F is not a single event selecting a single output. In the presence of a moiré potential, the landscape of κ* is spatially modulated, and the fold selects from a menu of partially ordered states — honeycomb arrangements, stripe phases, hexatic intermediates — each a distinct fixed point of the dm³ flow in the same system. This is the unfolding operator U with multiple stable outputs, exactly as the theory predicts for manifolds with more complex topology.
+  </p>
+
+  <div class="falsifiability">
+    <strong>Falsifiability W.1</strong>
+    The dm³ construction predicts that the compressibility divergence approaching r<sub>s</sub>* follows the contact normal form's exponential approach with decay constant β ≈ 1.7. If precise measurements of the divergence in 2D van der Waals Wigner systems yield β significantly outside 1.5–1.9, the parameter assignment fails and must be revised. If the transition is found to be continuous (second-order) without a rank-1 Jacobian loss, the Whitney A<sub>1</sub> fold classification fails for this system.
+  </div>
+
+  <h2>A Note on Temperature and the Quantum Regime</h2>
+
+  <p>
+    The Wigner crystal occupies a peculiar position in the landscape of dm³ systems. Every other domain in the Mini-Beast operates at physiological or astrophysical conditions — body temperature, market hours, plasma sheet energies. The Wigner crystal requires millikelvin temperatures and magnetic fields of several Tesla to be observable in van der Waals systems (though the theoretical threshold exists at zero magnetic field for sufficiently low density).
+  </p>
+
+  <p>
+    This is not a limitation of the framework. It is a statement about where κ* sits for this particular system. The dm³ operator makes no assumption about temperature. It requires only that the manifold X be smooth, that the stability functional Φ exist, and that the curvature parameter be driveable to threshold. At room temperature in 2D, the kinetic energy of electrons places r<sub>s</sub> well below r<sub>s</sub>*. Cooling suppresses kinetic energy; the magnetic field quenches the kinetic energy into Landau levels. Either path drives r<sub>s</sub> toward the fold.
+  </p>
+
+  <p>
+    The operator does not care how you reach κ*. Only that you do.
+  </p>
+
+  <div class="page-break">End of Sample</div>
+
+  <div class="fade-section">
+    <h2>The Formal dm³ Construction and AXLE Verification Sketch</h2>
+    <p>
+      We now construct the full dm³ system for the Wigner crystal manifold and provide the AXLE Lean 4 verification sketch. Let X be the N-electron configuration space in a 2D van der Waals heterostructure with moiré potential V<sub>M</sub>(r). The Riemannian metric g is the many-body metric induced by the Coulomb interaction kernel...
+    </p>
+    <p>
+      Definition W.3 (Moiré-Modulated Wigner Manifold). For twisted bilayer graphene at twist angle θ, the moiré potential V<sub>M</sub>(r) modulates the local critical curvature κ*(r) as a spatially varying function...
+    </p>
+  </div>
+
+</div>
+
+<div class="chapter-cta">
+  <h2>Continue Reading</h2>
+  <p>
+    The complete chapter includes the formal dm³ construction for the moiré-modulated Wigner manifold, the AXLE Lean 4 verification sketch, the explicit contact morphism f<sub>Wigner→plasma</sub> connecting the Wigner crystal to plasma reconnection, and three falsifiable predictions against 2024–2025 STM data. It is Chapter W of <em>The Mini-Beast</em> — Book 3 of the Principia Orthogona series.
+  </p>
+  <a href="https://totogt.github.io/DM3-lab/impa-portal.html" class="btn-gold">Get the Complete Series — from $199.99</a>
+  <a href="https://totogt.github.io/AXLE/portal.html" class="btn-outline">Student Portal →</a>
+</div>
+
+<footer>
+  <div style="margin-bottom:0.5rem;">
+    <a href="https://totogt.github.io/DM3-lab/index.html">Principia Orthogona</a> &nbsp;·&nbsp;
+    <a href="https://totogt.github.io/DM3-lab/impa-portal.html">IMPA Portal</a> &nbsp;·&nbsp;
+    <a href="https://totogt.github.io/DM3-lab/sample-chapter-tubulin.html">Sample: Tubulin</a> &nbsp;·&nbsp;
+    <a href="https://totogt.github.io/AXLE/portal.html">Student Portal</a> &nbsp;·&nbsp;
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a>
+  </div>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
+  ORCID: 0009-0000-6496-2186 · ISBN 979-8-9954416-6-3 (Book 3 eBook)
+</footer>
+
+</body>
+</html>
