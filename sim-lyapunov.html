@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lyapunov Exponent — Syracuse Return Map</title>
+<style>
+  :root {
+    --bg:     #090c10;
+    --panel:  #0d1117;
+    --border: #30363d;
+    --text:   #c9d1d9;
+    --gold:   #c9a84c;
+    --dim:    #8b949e;
+    --navy:   #1a2744;
+    --accent: #58a6ff;
+    --green:  #3fb950;
+    --red:    #f85149;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Georgia', serif;
+         height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── Navigation ── */
+  nav {
+    background: var(--navy);
+    padding: 0.7rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+  }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem;
+              letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.85rem;
+                 font-family: sans-serif; }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── Workspace ── */
+  .workspace { display: flex; flex: 1; min-height: 0; }
+
+  /* ── Side panel ── */
+  .panel {
+    width: 280px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 1.2rem 1rem;
+    overflow-y: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .panel-title {
+    font-family: sans-serif; font-size: 0.95rem; color: var(--gold);
+    letter-spacing: 0.08em; margin-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border); padding-bottom: 0.4rem;
+  }
+  .panel-section {
+    margin-top: 0.9rem; font-family: sans-serif; font-size: 0.68rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--dim);
+    margin-bottom: 0.2rem;
+  }
+  .ctrl-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 0.35rem 0;
+  }
+  .ctrl-row label { font-family: sans-serif; font-size: 0.8rem; color: var(--text); flex: 1; }
+  .ctrl-row .val  { font-family: monospace; font-size: 0.8rem; color: var(--accent);
+                    min-width: 45px; text-align: right; }
+  input[type=range] { width: 100%; accent-color: var(--gold); margin: 0.25rem 0 0; }
+  input[type=number], input[type=text] {
+    width: 100%; background: #0f141a; border: 1px solid var(--border);
+    color: var(--text); font-family: monospace; font-size: 0.82rem; padding: 0.35rem 0.5rem;
+    margin-top: 0.25rem;
+  }
+  .tab-row { display: flex; gap: 0; margin-bottom: 0.6rem; }
+  .tab-btn {
+    flex: 1; padding: 0.45rem 0.3rem; border: 1px solid var(--border);
+    background: #0f141a; color: var(--dim); font-family: sans-serif; font-size: 0.75rem;
+    cursor: pointer; letter-spacing: 0.05em;
+  }
+  .tab-btn.active { background: var(--gold); color: var(--navy); font-weight: bold; border-color: var(--gold); }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+  .run-btn {
+    width: 100%; margin-top: 0.8rem; padding: 0.55rem;
+    background: var(--accent); color: #000; border: none;
+    font-family: sans-serif; font-size: 0.85rem; font-weight: bold;
+    cursor: pointer; letter-spacing: 0.05em;
+  }
+  .run-btn:hover { background: var(--gold); }
+  .run-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+  /* ── Stats box ── */
+  .stats-box {
+    margin-top: 1rem; background: #0f141a; border: 1px solid var(--border);
+    padding: 0.75rem; border-radius: 2px;
+  }
+  .stat-row { display: flex; justify-content: space-between; margin: 0.3rem 0;
+              font-family: monospace; font-size: 0.8rem; }
+  .stat-label { color: var(--dim); }
+  .stat-val   { color: var(--green); font-weight: bold; }
+  .stat-val.neg { color: var(--gold); }
+
+  /* ── Formula box ── */
+  .formula-box {
+    margin-top: 1rem; background: #0f141a; border-left: 2px solid var(--gold);
+    padding: 0.65rem 0.75rem; font-family: monospace; font-size: 0.75rem;
+    color: var(--dim); line-height: 1.7;
+  }
+  .formula-box .hi { color: var(--accent); }
+
+  /* ── Main canvas area ── */
+  .canvas-area {
+    flex: 1; display: flex; flex-direction: column; min-width: 0;
+  }
+  .canvas-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .ctab {
+    padding: 0.5rem 1.2rem; border: none; background: transparent;
+    color: var(--dim); font-family: sans-serif; font-size: 0.8rem;
+    cursor: pointer; border-bottom: 2px solid transparent;
+  }
+  .ctab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .ctab:hover:not(.active) { color: var(--text); }
+  .canvas-wrap { flex: 1; position: relative; min-height: 0; }
+  canvas.main { width: 100%; height: 100%; display: block; }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy); color: #666; padding: 0.6rem 1.5rem;
+    text-align: center; font-size: 0.72rem; font-family: sans-serif;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <a href="index.html" class="nav-logo">PRINCIPIA ORTHOGONA</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="sim.html">AXLE Simulator</a></li>
+    <li><a href="sim-lyapunov.html" style="color:var(--gold); font-weight:bold;">Lyapunov</a></li>
+    <li><a href="portal.html">Student Portal</a></li>
+    <li><a href="https://github.com/TOTOGT/DM3-lab" target="_blank">GitHub</a></li>
+  </ul>
+</nav>
+
+<div class="workspace">
+
+  <!-- ── Side Panel ── -->
+  <div class="panel">
+    <div class="panel-title">λ — Lyapunov Exponent</div>
+
+    <!-- Mode tabs -->
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabEmp" onclick="setMode('empirical')">Trajectory</button>
+      <button class="tab-btn"        id="tabMod" onclick="setMode('modulus')">Modulus Sweep</button>
+    </div>
+
+    <!-- Empirical controls -->
+    <div id="empCtrl">
+      <div class="panel-section">Starting value n₀ (odd)</div>
+      <input type="number" id="n0Input" value="27" min="1" step="2"
+             title="Starting odd integer for the Syracuse orbit">
+
+      <div class="panel-section">Iterations N</div>
+      <div class="ctrl-row">
+        <label>N</label>
+        <span class="val" id="iterVal">5000</span>
+      </div>
+      <input type="range" id="iterSlider" min="500" max="50000" step="500" value="5000"
+             oninput="document.getElementById('iterVal').textContent=this.value">
+    </div>
+
+    <!-- Modulus controls -->
+    <div id="modCtrl" style="display:none">
+      <div class="panel-section">Modulus level M (mod 2^M)</div>
+      <div class="ctrl-row">
+        <label>M</label>
+        <span class="val" id="modVal">10</span>
+      </div>
+      <input type="range" id="modSlider" min="2" max="14" step="1" value="10"
+             oninput="document.getElementById('modVal').textContent=this.value">
+      <div style="font-family:sans-serif; font-size:0.72rem; color:var(--dim); margin-top:0.3rem;">
+        Averages log|T′| over all 2^(M−1) odd residues mod 2^M for each level 2…M.
+      </div>
+    </div>
+
+    <button class="run-btn" id="runBtn" onclick="runComputation()">▶ Compute λ</button>
+
+    <!-- Live stats -->
+    <div class="stats-box" id="statsBox">
+      <div class="stat-row"><span class="stat-label">λ estimate</span>   <span class="stat-val neg" id="sLambda">—</span></div>
+      <div class="stat-row"><span class="stat-label">avg halvings v̄₂</span><span class="stat-val"      id="sV2">—</span></div>
+      <div class="stat-row"><span class="stat-label">log(3/4)</span>      <span class="stat-val"      id="sRef">−0.287682</span></div>
+      <div class="stat-row"><span class="stat-label">|Δ from ref|</span>  <span class="stat-val"      id="sDiff">—</span></div>
+    </div>
+
+    <!-- Formula reminder -->
+    <div class="formula-box">
+      <span class="hi">T(n)</span> = (3n+1) / 2^v₂(3n+1)<br>
+      <span class="hi">|T′(n)|</span> = 3 / 2^v₂(3n+1)<br>
+      <span class="hi">λ</span> = log 3 − v̄₂ · log 2<br>
+      heuristic: λ ≈ <span class="hi">log(3/4)</span> ≈ −0.2877
+    </div>
+
+    <!-- Links to other sims -->
+    <div class="panel-section" style="margin-top:1.2rem;">Other Sims</div>
+    <a href="sim-stormmanifold.html"
+       style="color:var(--accent); text-decoration:none; font-size:0.82rem; font-family:sans-serif;">
+      → StormManifold</a>
+    <a href="sim.html"
+       style="color:var(--accent); text-decoration:none; font-size:0.82rem; font-family:sans-serif; margin-top:0.3rem;">
+      → AXLE Operator Mode</a>
+  </div>
+
+  <!-- ── Main Canvas Area ── -->
+  <div class="canvas-area">
+    <div class="canvas-tabs">
+      <button class="ctab active" id="ct0" onclick="setCanvasTab(0)">Convergence</button>
+      <button class="ctab"        id="ct1" onclick="setCanvasTab(1)">Halvings Histogram</button>
+      <button class="ctab"        id="ct2" onclick="setCanvasTab(2)">Orbit Trace</button>
+    </div>
+    <div class="canvas-wrap">
+      <canvas class="main" id="mainCanvas"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Syracuse Return-Map Lyapunov Exponent · dm³ + Crystal-Geometry Framework · AXLE v6.1 · G6 LLC
+</footer>
+
+<script>
+/* ================================================================
+   Syracuse Return-Map Lyapunov Exponent Widget
+   ================================================================ */
+
+// ── 2-adic valuation ────────────────────────────────────────────
+// Uses division (not bit-shift) to avoid 32-bit signed integer overflow
+// for orbit values that can exceed 2^31 during a long trajectory.
+function v2(n) {
+  if (n <= 0) return 0;
+  let k = 0;
+  while (n % 2 === 0) { n = n / 2; k++; }
+  return k;
+}
+
+// ── Syracuse return map for odd n ───────────────────────────────
+// Returns { next: odd integer, halvings: v2(3n+1) }
+function T(n) {
+  const m = 3 * n + 1;
+  const k = v2(m);
+  return { next: m / Math.pow(2, k), halvings: k };
+}
+
+// log(3) and log(2) as constants
+const LOG3 = Math.log(3);
+const LOG2 = Math.log(2);
+const REF_LAMBDA = Math.log(3 / 4); // ≈ −0.287682
+
+// ── Global state ────────────────────────────────────────────────
+let mode = 'empirical';   // 'empirical' | 'modulus'
+let canvasTab = 0;        // 0=convergence, 1=histogram, 2=orbit
+
+// Result storage
+let empData = null;   // { lambdas[], v2counts{}, orbit[], running[] }
+let modData = null;   // { levels[], lambdas[], v2avgs[] }
+
+// ── Mode / tab helpers ──────────────────────────────────────────
+function setMode(m) {
+  mode = m;
+  document.getElementById('empCtrl').style.display = m === 'empirical' ? '' : 'none';
+  document.getElementById('modCtrl').style.display = m === 'modulus'   ? '' : 'none';
+  document.getElementById('tabEmp').classList.toggle('active', m === 'empirical');
+  document.getElementById('tabMod').classList.toggle('active', m === 'modulus');
+  // reset canvas
+  empData = null; modData = null;
+  clearCanvas();
+}
+
+function setCanvasTab(t) {
+  canvasTab = t;
+  ['ct0','ct1','ct2'].forEach((id, i) =>
+    document.getElementById(id).classList.toggle('active', i === t));
+  drawAll();
+}
+
+// ── Main computation ────────────────────────────────────────────
+function runComputation() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Computing…';
+
+  // yield to browser to repaint, then compute
+  setTimeout(() => {
+    if (mode === 'empirical') runEmpirical();
+    else                      runModulus();
+    btn.disabled = false;
+    btn.textContent = '▶ Compute λ';
+  }, 20);
+}
+
+// Produce the k-th restart seed using a large prime stride so
+// successive restarts cover different residue classes.
+function freshSeed(idx) {
+  // stride by 2*large_prime to stay odd and spread across orbit space
+  return 1000003 + idx * 2 * 500009;
+}
+
+/* ── Empirical trajectory ─────────────────────────────────────── */
+function runEmpirical() {
+  let n0 = parseInt(document.getElementById('n0Input').value, 10);
+  if (isNaN(n0) || n0 < 1) n0 = 27;
+  if (n0 % 2 === 0) n0++;   // force odd
+  document.getElementById('n0Input').value = n0;
+
+  const N = parseInt(document.getElementById('iterSlider').value, 10);
+
+  let n = n0;
+  let restartIdx = 0;
+  let sumLog = 0;
+  const running = [];      // running average of λ
+  const v2counts = {};     // histogram of halvings
+  const orbit = [];        // log|T'| at each step
+
+  for (let k = 0; k < N; k++) {
+    while (n % 2 === 0) n = n / 2;
+    // When the orbit collapses to the trivial 4→2→1 cycle, restart
+    // from a fresh large odd seed so the sample covers the full orbit
+    // space rather than repeatedly replaying the same short trajectory.
+    if (n === 1) {
+      n = freshSeed(restartIdx++);
+    }
+
+    const { next, halvings } = T(n);
+    const lm = LOG3 - halvings * LOG2;   // log |T'(n)|
+
+    sumLog += lm;
+    running.push(sumLog / (k + 1));
+    orbit.push(lm);
+
+    v2counts[halvings] = (v2counts[halvings] || 0) + 1;
+    n = next;
+  }
+
+  const lambda = sumLog / N;
+  const avgV2  = (LOG3 - lambda) / LOG2;
+
+  empData = { lambda, avgV2, running, v2counts, orbit, N };
+
+  updateStats(lambda, avgV2);
+  drawAll();
+}
+
+/* ── Modulus sweep ────────────────────────────────────────────── */
+function runModulus() {
+  const Mmax = parseInt(document.getElementById('modSlider').value, 10);
+
+  const levels  = [];
+  const lambdas = [];
+  const v2avgs  = [];
+
+  for (let M = 2; M <= Mmax; M++) {
+    const count = 1 << (M - 1);  // 2^(M-1) odd residues mod 2^M
+    let sumV2 = 0;
+    for (let r = 1; r < (1 << M); r += 2) {
+      sumV2 += v2(3 * r + 1);
+    }
+    const avgV2 = sumV2 / count;
+    const lam   = LOG3 - avgV2 * LOG2;
+
+    levels.push(M);
+    v2avgs.push(avgV2);
+    lambdas.push(lam);
+  }
+
+  const lambda = lambdas[lambdas.length - 1];
+  const avgV2  = v2avgs[v2avgs.length - 1];
+
+  modData = { levels, lambdas, v2avgs, Mmax };
+
+  updateStats(lambda, avgV2);
+  drawAll();
+}
+
+// ── Update stats panel ──────────────────────────────────────────
+function updateStats(lambda, avgV2) {
+  document.getElementById('sLambda').textContent = lambda.toFixed(7);
+  document.getElementById('sV2').textContent     = avgV2.toFixed(6);
+  document.getElementById('sDiff').textContent   = Math.abs(lambda - REF_LAMBDA).toFixed(7);
+}
+
+// ── Canvas drawing ──────────────────────────────────────────────
+const canvas = document.getElementById('mainCanvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width  = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+  drawAll();
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function clearCanvas() {
+  canvas.width  = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+  ctx.fillStyle = '#090c10';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawIdleMessage();
+}
+
+function drawIdleMessage() {
+  ctx.fillStyle = '#30363d';
+  ctx.font = '14px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('Press ▶ Compute λ to start.', canvas.width / 2, canvas.height / 2);
+}
+
+function drawAll() {
+  canvas.width  = canvas.clientWidth;
+  canvas.height = canvas.clientHeight;
+
+  const hasData = (mode === 'empirical' && empData) || (mode === 'modulus' && modData);
+  if (!hasData) { clearCanvas(); return; }
+
+  if (canvasTab === 0) drawConvergence();
+  if (canvasTab === 1) drawHistogram();
+  if (canvasTab === 2) drawOrbit();
+}
+
+// ── Convergence plot ────────────────────────────────────────────
+function drawConvergence() {
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#090c10';
+  ctx.fillRect(0, 0, W, H);
+
+  let series, title, xLabel;
+
+  if (mode === 'empirical' && empData) {
+    series = empData.running;
+    title  = `Running average λ  (n₀ = ${document.getElementById('n0Input').value}, N = ${empData.N.toLocaleString()})`;
+    xLabel = 'Iteration k';
+  } else if (mode === 'modulus' && modData) {
+    series = modData.lambdas;
+    title  = 'λ_M  vs modulus level M  (uniform residue average)';
+    xLabel = 'Level M  (mod 2^M)';
+  } else return;
+
+  const pad = { top: 50, right: 30, bottom: 55, left: 70 };
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top  - pad.bottom;
+
+  // y-range: centre around series + reference
+  const allY = [...series, REF_LAMBDA];
+  const yMin = Math.min(...allY) - 0.05;
+  const yMax = Math.max(...allY) + 0.05;
+
+  const toX = i => pad.left + (i / (series.length - 1)) * pw;
+  const toY = v => pad.top  + (1 - (v - yMin) / (yMax - yMin)) * ph;
+
+  drawGrid(pad, pw, ph, yMin, yMax, series.length, xLabel, W, H);
+
+  // Reference line log(3/4)
+  const ry = toY(REF_LAMBDA);
+  ctx.beginPath();
+  ctx.strokeStyle = '#3fb950';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([6, 4]);
+  ctx.moveTo(pad.left, ry); ctx.lineTo(pad.left + pw, ry);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#3fb950';
+  ctx.font = '11px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('log(3/4) ≈ −0.2877', pad.left + 5, ry - 5);
+
+  // Reference line empirical −0.286288
+  const ey = toY(-0.286288);
+  ctx.beginPath();
+  ctx.strokeStyle = '#d2a679';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([3, 5]);
+  ctx.moveTo(pad.left, ey); ctx.lineTo(pad.left + pw, ey);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#d2a679';
+  ctx.fillText('empirical −0.286288', pad.left + 5, ey - 5);
+
+  // Main series
+  ctx.beginPath();
+  ctx.strokeStyle = '#58a6ff';
+  ctx.lineWidth   = 1.5;
+  for (let i = 0; i < series.length; i++) {
+    const x = toX(i), y = toY(series[i]);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Title
+  ctx.fillStyle = '#c9d1d9';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(title, W / 2, 22);
+
+  // Final value annotation
+  const lastY = series[series.length - 1];
+  ctx.fillStyle = '#58a6ff';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('λ = ' + lastY.toFixed(6), pad.left + pw - 5, toY(lastY) - 6);
+}
+
+// ── Halvings histogram ──────────────────────────────────────────
+function drawHistogram() {
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#090c10';
+  ctx.fillRect(0, 0, W, H);
+
+  let counts, title, total;
+
+  if (mode === 'empirical' && empData) {
+    counts = empData.v2counts;
+    total  = empData.N;
+    title  = `Halvings histogram  (N = ${total.toLocaleString()})`;
+  } else if (mode === 'modulus' && modData) {
+    // Build counts from residues at Mmax
+    const M    = modData.Mmax;
+    counts     = {};
+    total      = 0;
+    for (let r = 1; r < (1 << M); r += 2) {
+      const k = v2(3 * r + 1);
+      counts[k] = (counts[k] || 0) + 1;
+      total++;
+    }
+    title = `Halvings histogram  (all odd residues mod 2^${M})`;
+  } else return;
+
+  const keys   = Object.keys(counts).map(Number).sort((a, b) => a - b);
+  const maxK   = Math.max(...keys);
+  const pTheor = k => 1 / Math.pow(2, k);   // geometric P(v2=k) = 1/2^k
+
+  const pad = { top: 50, right: 30, bottom: 55, left: 70 };
+  const pw  = W - pad.left - pad.right;
+  const ph  = H - pad.top  - pad.bottom;
+
+  const maxFreq = Math.max(...keys.map(k => counts[k] / total));
+  const barW    = pw / (maxK + 1);
+
+  // Axes
+  ctx.strokeStyle = '#30363d'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top);
+  ctx.lineTo(pad.left, pad.top + ph);
+  ctx.lineTo(pad.left + pw, pad.top + ph);
+  ctx.stroke();
+
+  // Bars (empirical)
+  keys.forEach(k => {
+    const freq = counts[k] / total;
+    const x    = pad.left + (k - 1) * barW + barW * 0.15;
+    const bh   = (freq / (maxFreq * 1.1)) * ph;
+    const y    = pad.top + ph - bh;
+
+    ctx.fillStyle = '#58a6ff';
+    ctx.fillRect(x, y, barW * 0.5, bh);
+  });
+
+  // Theoretical geometric dots
+  for (let k = 1; k <= maxK; k++) {
+    const freq = pTheor(k);
+    const x    = pad.left + (k - 1) * barW + barW * 0.4;
+    const bh   = (freq / (maxFreq * 1.1)) * ph;
+    const y    = pad.top + ph - bh;
+
+    ctx.fillStyle = '#3fb950';
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+  // x-axis labels
+  ctx.fillStyle = '#8b949e'; ctx.font = '11px monospace'; ctx.textAlign = 'center';
+  for (let k = 1; k <= maxK; k++) {
+    const x = pad.left + (k - 1) * barW + barW * 0.4;
+    ctx.fillText(k, x, pad.top + ph + 18);
+  }
+  ctx.fillText('halvings  k = v₂(3n+1)', pad.left + pw / 2, pad.top + ph + 40);
+
+  // y-axis
+  ctx.textAlign = 'right';
+  for (let p = 0; p <= 1; p += 0.25) {
+    const y = pad.top + ph - p * ph;
+    ctx.fillText((p * maxFreq * 1.1).toFixed(2), pad.left - 5, y + 4);
+    ctx.beginPath(); ctx.strokeStyle = '#1c2230'; ctx.lineWidth = 1;
+    ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + pw, y); ctx.stroke();
+  }
+  ctx.save(); ctx.translate(18, pad.top + ph / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = '#8b949e'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('frequency', 0, 0); ctx.restore();
+
+  // Legend
+  ctx.fillStyle = '#58a6ff'; ctx.fillRect(pad.left + pw - 160, pad.top + 8, 12, 12);
+  ctx.fillStyle = '#c9d1d9'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('observed', pad.left + pw - 144, pad.top + 19);
+  ctx.fillStyle = '#3fb950';
+  ctx.beginPath(); ctx.arc(pad.left + pw - 154, pad.top + 34, 4, 0, 2 * Math.PI); ctx.fill();
+  ctx.fillStyle = '#c9d1d9';
+  ctx.fillText('geometric P=1/2^k', pad.left + pw - 144, pad.top + 38);
+
+  // Title
+  ctx.fillStyle = '#c9d1d9'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(title, W / 2, 22);
+}
+
+// ── Orbit trace (log|T'| per step) ─────────────────────────────
+function drawOrbit() {
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#090c10';
+  ctx.fillRect(0, 0, W, H);
+
+  let series, title;
+
+  if (mode === 'empirical' && empData) {
+    const maxShow = Math.min(empData.orbit.length, 2000);
+    series = empData.orbit.slice(0, maxShow);
+    title  = `log|T′(nₖ)|  per step  (first ${maxShow.toLocaleString()} steps)`;
+  } else if (mode === 'modulus' && modData) {
+    // Show how λ_M converges per level
+    series = modData.lambdas;
+    title  = 'λ_M  per level M  (modulus sweep — same as convergence view)';
+  } else return;
+
+  const pad = { top: 50, right: 30, bottom: 55, left: 70 };
+  const pw  = W - pad.left - pad.right;
+  const ph  = H - pad.top  - pad.bottom;
+
+  const yMin = Math.min(...series) - 0.1;
+  const yMax = Math.max(...series) + 0.1;
+
+  const toX = i => pad.left + (i / Math.max(series.length - 1, 1)) * pw;
+  const toY = v => pad.top  + (1 - (v - yMin) / (yMax - yMin)) * ph;
+
+  drawGrid(pad, pw, ph, yMin, yMax, series.length, mode === 'empirical' ? 'Step k' : 'Level M', W, H);
+
+  // Zero line
+  const zy = toY(0);
+  if (zy > pad.top && zy < pad.top + ph) {
+    ctx.beginPath(); ctx.strokeStyle = '#30363d'; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.moveTo(pad.left, zy); ctx.lineTo(pad.left + pw, zy);
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#8b949e'; ctx.font = '10px monospace'; ctx.textAlign = 'left';
+    ctx.fillText('0', pad.left - 25, zy + 4);
+  }
+
+  // Scatter / line
+  if (mode === 'empirical') {
+    // draw as semi-transparent dots for scatter feel
+    ctx.fillStyle = 'rgba(88,166,255,0.35)';
+    for (let i = 0; i < series.length; i++) {
+      ctx.beginPath();
+      ctx.arc(toX(i), toY(series[i]), 1.5, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+    // overlay mean line
+    const mean = series.reduce((a, b) => a + b, 0) / series.length;
+    const my   = toY(mean);
+    ctx.beginPath(); ctx.strokeStyle = '#c9a84c'; ctx.lineWidth = 1.5;
+    ctx.moveTo(pad.left, my); ctx.lineTo(pad.left + pw, my); ctx.stroke();
+    ctx.fillStyle = '#c9a84c'; ctx.font = '11px monospace'; ctx.textAlign = 'right';
+    ctx.fillText('mean λ = ' + mean.toFixed(5), pad.left + pw - 5, my - 5);
+  } else {
+    ctx.beginPath(); ctx.strokeStyle = '#58a6ff'; ctx.lineWidth = 2;
+    for (let i = 0; i < series.length; i++) {
+      const x = toX(i), y = toY(series[i]);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // dots
+    ctx.fillStyle = '#58a6ff';
+    for (let i = 0; i < series.length; i++) {
+      ctx.beginPath();
+      ctx.arc(toX(i), toY(series[i]), 3.5, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+  }
+
+  ctx.fillStyle = '#c9d1d9'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(title, W / 2, 22);
+}
+
+// ── Shared grid drawing helper ──────────────────────────────────
+function drawGrid(pad, pw, ph, yMin, yMax, nPts, xLabel, W, H) {
+  ctx.strokeStyle = '#1c2230'; ctx.lineWidth = 1;
+
+  // Horizontal gridlines
+  const steps = 5;
+  for (let i = 0; i <= steps; i++) {
+    const v = yMin + (yMax - yMin) * (i / steps);
+    const y = pad.top + ph - (v - yMin) / (yMax - yMin) * ph;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + pw, y); ctx.stroke();
+    ctx.fillStyle = '#8b949e'; ctx.font = '10px monospace'; ctx.textAlign = 'right';
+    ctx.fillText(v.toFixed(3), pad.left - 5, y + 4);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#30363d'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(pad.left, pad.top);
+  ctx.lineTo(pad.left, pad.top + ph);
+  ctx.lineTo(pad.left + pw, pad.top + ph);
+  ctx.stroke();
+
+  // x-axis ticks
+  const tickN = Math.min(nPts, 10);
+  ctx.fillStyle = '#8b949e'; ctx.font = '10px monospace'; ctx.textAlign = 'center';
+  for (let i = 0; i <= tickN; i++) {
+    const idx = Math.round((i / tickN) * (nPts - 1));
+    const x   = pad.left + (idx / (nPts - 1)) * pw;
+    ctx.beginPath(); ctx.strokeStyle = '#30363d'; ctx.lineWidth = 1;
+    ctx.moveTo(x, pad.top + ph); ctx.lineTo(x, pad.top + ph + 5); ctx.stroke();
+    ctx.fillText(idx, x, pad.top + ph + 18);
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#8b949e'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(xLabel, pad.left + pw / 2, H - 8);
+
+  ctx.save();
+  ctx.translate(14, pad.top + ph / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('λ value', 0, 0);
+  ctx.restore();
+}
+
+// ── Initial idle state ──────────────────────────────────────────
+clearCanvas();
+</script>
+
+</body>
+</html>
