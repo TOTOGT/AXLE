@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principia Orthogona · Book 3 · Chapters π φ μ η Δ Σ Ω</title>
+<meta name="description" content="The recurrence ladder: π, φ, μ, η (Tribonacci), Tetranacci, Pentanacci, Hexabonacci — dm³ operator framework. Book 3 supplementary chapters.">
+<style>
+:root {
+  --navy:  #1a2744;
+  --gold:  #c9a84c;
+  --cream: #faf7f0;
+  --smoke: #f0ece4;
+  --mid:   #3a4f7a;
+  --rule:  #8a7340;
+  --text:  #1c1c1c;
+  --light: #e8e2d4;
+  --teal:  #79e5dd;
+  --blue:  #58a6ff;
+  --green: #3fb950;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);}
+
+h1{font-size:clamp(1.6rem,3.5vw,2.4rem);line-height:1.15;}
+h2{font-size:clamp(1.1rem,2vw,1.5rem);color:var(--navy);margin-bottom:.7rem;}
+h3{font-size:1.05rem;color:var(--navy);margin:1rem 0 .4rem;}
+p{line-height:1.78;margin-bottom:.85rem;}
+
+nav{background:var(--navy);padding:.65rem 2rem;position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.9rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1.2rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-chapter-pills{display:flex;gap:.4rem;flex-wrap:wrap;}
+.pill{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3);
+      padding:2px 10px;border-radius:12px;font-family:'Courier New',monospace;font-size:.75rem;
+      text-decoration:none;transition:background .2s;}
+.pill:hover{background:rgba(201,168,76,.3);}
+.pill.active{background:rgba(201,168,76,.35);}
+
+.hero{background:var(--navy);color:white;padding:3.5rem 2rem 3rem;text-align:center;}
+.hero-eyebrow{font-family:sans-serif;font-size:.72rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:.8rem;}
+.hero h1{color:white;margin-bottom:.5rem;}
+.hero-subtitle{color:var(--gold);font-size:1rem;margin-bottom:1rem;font-style:italic;}
+.gold-rule{width:50px;height:2px;background:var(--gold);margin:1rem auto;}
+.hero-desc{color:#bbb;max-width:660px;margin:0 auto;line-height:1.7;font-size:.93rem;}
+.ladder{display:flex;justify-content:center;gap:0;margin:1.5rem auto 0;max-width:700px;flex-wrap:wrap;}
+.ladder-step{flex:1;min-width:80px;padding:.5rem .3rem;text-align:center;border-right:1px solid rgba(201,168,76,.2);}
+.ladder-step:last-child{border-right:none;}
+.ls-sym{font-family:'Courier New',monospace;font-size:1.2rem;color:var(--gold);display:block;margin-bottom:2px;}
+.ls-name{font-family:sans-serif;font-size:.6rem;color:#999;letter-spacing:.06em;text-transform:uppercase;}
+.ls-val{font-family:'Courier New',monospace;font-size:.68rem;color:#aaa;}
+
+.chapter-block{border-top:3px solid var(--gold);margin:0;padding:0;}
+.chapter-hero{background:var(--navy);color:white;padding:2.5rem 2rem 2rem;}
+.ch-eyebrow{font-family:sans-serif;font-size:.65rem;letter-spacing:.2em;color:rgba(201,168,76,.7);text-transform:uppercase;margin-bottom:.4rem;}
+.ch-symbol{font-size:3rem;color:var(--gold);margin-bottom:.3rem;font-family:'Courier New',monospace;}
+.ch-title{font-size:clamp(1.2rem,2.5vw,1.8rem);color:white;margin-bottom:.3rem;}
+.ch-subtitle{color:rgba(201,168,76,.8);font-style:italic;font-size:.95rem;}
+.ch-body{max-width:900px;margin:0 auto;padding:2rem 1.5rem;}
+
+.math-block{font-family:'Courier New',monospace;font-size:.9rem;background:var(--smoke);
+             border-left:3px solid var(--gold);padding:.7rem 1.1rem;margin:1rem 0;line-height:1.85;overflow-x:auto;}
+.math-inline{font-family:'Courier New',monospace;font-size:.88rem;background:var(--smoke);padding:.1rem .35rem;}
+.insight-box{background:#fff;border:1px solid var(--light);border-left:4px solid var(--gold);
+             padding:1rem 1.2rem;margin:1.2rem 0;font-size:.9rem;line-height:1.7;}
+.falsify-box{background:#fff;border:1px solid var(--light);border-left:4px solid #c0392b;
+             padding:1rem 1.2rem;margin:1.2rem 0;font-size:.88rem;line-height:1.7;}
+.falsify-box strong{color:#c0392b;}
+.theorem-box{background:var(--navy);color:white;padding:1rem 1.3rem;margin:1.2rem 0;font-size:.9rem;line-height:1.75;border-left:4px solid var(--gold);}
+.theorem-box strong{color:var(--gold);}
+
+.canvas-wrap{margin:1.2rem 0;}
+.canvas-wrap canvas{width:100%;border:1px solid var(--light);display:block;cursor:crosshair;}
+.ctrl-row{display:flex;flex-wrap:wrap;gap:.8rem 1.5rem;align-items:center;
+          margin:.7rem 0;font-family:sans-serif;font-size:.82rem;color:#555;}
+.ctrl-row label{display:flex;align-items:center;gap:.4rem;}
+.ctrl-row input[type=range]{width:110px;accent-color:var(--gold);}
+.ctrl-row select{border:1px solid #ccc;padding:2px 6px;font-size:.8rem;background:white;}
+.val-disp{font-family:'Courier New',monospace;font-size:.8rem;color:var(--navy);min-width:60px;}
+.canvas-label{font-family:sans-serif;font-size:.72rem;color:var(--rule);margin-top:.3rem;letter-spacing:.04em;}
+
+.coherence-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin:1.2rem 0;}
+.coh-card{background:var(--navy);color:white;padding:.8rem 1rem;border-left:3px solid var(--gold);}
+.coh-sym{font-family:'Courier New',monospace;color:var(--gold);font-size:.95rem;margin-bottom:2px;}
+.coh-val{font-family:'Courier New',monospace;font-size:.78rem;color:#aaa;}
+.coh-desc{font-family:sans-serif;font-size:.7rem;color:#999;margin-top:3px;}
+
+footer{background:var(--navy);color:#777;text-align:center;padding:1.5rem;font-family:sans-serif;font-size:.75rem;}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">PRINCIPIA ORTHOGONA · BOOK 3</a>
+  <div class="nav-chapter-pills">
+    <a class="pill" href="#ch-pi">π</a>
+    <a class="pill" href="#ch-phi">φ</a>
+    <a class="pill" href="#ch-mu">μ</a>
+    <a class="pill" href="#ch-eta">η</a>
+    <a class="pill" href="#ch-delta">Δ</a>
+    <a class="pill" href="#ch-sigma">Σ</a>
+    <a class="pill" href="#ch-omega">Ω</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">Book 3 · The Mini-Beast · Supplementary Chapters</div>
+  <h1>The Recurrence Ladder</h1>
+  <div class="gold-rule"></div>
+  <div class="hero-subtitle">From π to Hexabonacci — Seven Constants. One Operator.</div>
+  <p class="hero-desc">
+    The dm³ operator G = U ∘ F ∘ K ∘ C has three canonical invariants:
+    the period T* = 2π, the transverse exponent μ<sub>max</sub> = −2, and the stability radius ε₀ = 1/3.
+    Each chapter below shows one of these invariants — or one step of the recurrence ladder
+    from Fibonacci (subcritical) to Hexabonacci (the fixed point of the sequence of sequences) —
+    as a dm³ generative transition in its own domain.
+  </p>
+  <div class="ladder">
+    <div class="ladder-step"><span class="ls-sym">π</span><span class="ls-name">Period</span><span class="ls-val">T*=2π</span></div>
+    <div class="ladder-step"><span class="ls-sym">φ</span><span class="ls-name">Fibonacci</span><span class="ls-val">1.618…</span></div>
+    <div class="ladder-step"><span class="ls-sym">μ</span><span class="ls-name">Lyapunov</span><span class="ls-val">−2</span></div>
+    <div class="ladder-step"><span class="ls-sym">η</span><span class="ls-name">Tribonacci</span><span class="ls-val">1.839…</span></div>
+    <div class="ladder-step"><span class="ls-sym">Δ</span><span class="ls-name">Tetranacci</span><span class="ls-val">1.927…</span></div>
+    <div class="ladder-step"><span class="ls-sym">Σ</span><span class="ls-name">Pentanacci</span><span class="ls-val">1.966…</span></div>
+    <div class="ladder-step"><span class="ls-sym">Ω</span><span class="ls-name">Hexabonacci</span><span class="ls-val">→ 2</span></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER π -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-pi">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter π</div>
+  <div class="ch-symbol">π</div>
+  <div class="ch-title">Why the Period Is 2π — The Geometry of the Limit Cycle</div>
+  <div class="ch-subtitle">T* = 2π is not assumed. It is the only period compatible with the contact structure.</div>
+</div>
+<div class="ch-body">
+
+<p>Every dm³ system has a canonical period T*. In the toy model — and in every domain where the framework has been instantiated — T* = 2π. This chapter explains why 2π is forced by the contact geometry, not chosen by convention.</p>
+
+<h3>The contact manifold and the Reeb vector field</h3>
+<p>The dm³ contact manifold is M = S¹ × ℝ with contact form α = dz − p dq. The <em>Reeb vector field</em> R is defined by ι(R)dα = 0 and ι(R)α = 1. On M, the Reeb flow is:</p>
+<div class="math-block">
+R = ∂/∂z          (the z-direction is the Reeb direction)
+
+φ_t(q, p, z) = (q, p, z + t)
+
+Period of the Reeb orbit through any point: T_Reeb = 2π
+
+Because z is compactified (z ∈ S¹ = ℝ/2πℤ) in the contact structure,
+one complete circuit of the action variable z costs exactly 2π.
+</div>
+
+<p>The dm³ limit cycle Γ = {ρ = 1} is a Reeb orbit. Its period in the contact-normal-form coordinates is the period of the Reeb flow — which is 2π exactly. No other value is compatible with the contact structure being non-degenerate.</p>
+
+<div class="theorem-box">
+  <strong>Theorem π.1 (Period = 2π).</strong> In any dm³ system satisfying Axioms 1–9, the period T* of the post-transition limit cycle satisfies T* = 2π. This value is determined by the contact form α = dz − λ and is invariant under contact morphisms. Every domain instantiation inherits T* = 2π from the abstract structure.
+</div>
+
+<h3>Live diagram — the limit cycle in contact coordinates</h3>
+<p>The canvas shows the dm³ limit cycle Γ as a closed orbit in (ρ, θ, z) space, projected to the (θ, ρ) plane. The coloured spiral is the transient — an orbit starting away from Γ converging exponentially. One full revolution = T* = 2π radians.</p>
+
+<div class="canvas-wrap">
+  <canvas id="canvas-pi" height="320"></canvas>
+  <div class="ctrl-row">
+    <label>ρ₀ = <input type="range" id="pi-rho" min="0.3" max="2.5" value="1.8" step="0.05"><span class="val-disp" id="pi-rho-v">1.80</span></label>
+    <label>μ_max = <input type="range" id="pi-mu" min="-4" max="-0.5" value="-2" step="0.1"><span class="val-disp" id="pi-mu-v">−2.0</span></label>
+    <label>Cycles: <input type="range" id="pi-n" min="1" max="5" value="3" step="1"><span class="val-disp" id="pi-n-v">3</span></label>
+  </div>
+  <div class="canvas-label">θ-axis: 0 → 2π (one period). ρ-axis: distance from limit cycle Γ = {ρ=1}. Gold ring = Γ.</div>
+</div>
+
+<div class="insight-box">
+  <strong>Why this matters.</strong> Every domain in the Coherence Bridge table has period T* = 2π — HPA stress (cortisol cycle in contact-time units), neural oscillations (one gamma burst), circadian (one day, normalised), Wigner crystal (one phonon orbit). The number π is not an approximation. It is the exact period of the Reeb flow of the contact structure that underlies all dm³ systems.
+</div>
+
+<div class="falsify-box">
+  <strong>Falsifiability π.1.</strong> If a dm³ system is found whose limit cycle has period T* ≠ 2π in contact-normal-form coordinates, the contact-geometric foundation fails. The period is the primary invariant — it is what defines the contact structure as non-degenerate.
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER φ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-phi">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter φ</div>
+  <div class="ch-symbol">φ</div>
+  <div class="ch-title">The Golden Ratio — Fibonacci as Subcritical dm³</div>
+  <div class="ch-subtitle">φ = 1.618… is the limit of the subcritical regime. Below c* = 3, orbits fail to fold.</div>
+</div>
+<div class="ch-body">
+
+<p>The Fibonacci sequence F(n) = F(n−1) + F(n−2) has characteristic polynomial x² − x − 1, whose dominant root is φ = (1 + √5)/2 ≈ 1.6180. This is the <em>subcritical</em> case in the dm³ criticality ladder: the curvature coefficient c = φ < c* = 3, and the fold operator F never activates.</p>
+
+<div class="math-block">
+Fibonacci recurrence:  F(n) = F(n−1) + F(n−2)
+Characteristic polynomial:  x² − x − 1 = 0
+Dominant root:  φ = (1 + √5)/2 ≈ 1.61803…
+
+dm³ potential with c = φ:  V_φ(q) = q³ − φq
+Critical points:  q* = ±√(φ/3) ≈ ±0.734
+Fold at q = 1? V_φ(1) = 1 − φ = −0.618 ≠ −2  ✗
+
+The fold does not land at integer q = 1.
+No dm³ transition. φ is subcritical.
+</div>
+
+<p>The golden ratio appears everywhere in natural systems — phyllotaxis, mollusk shells, the Penrose tiling — but in the dm³ framework these are all pre-fold configurations. They have reached the curvature constraint K but have not activated the fold F. The spiral is visible; the transition has not happened.</p>
+
+<div class="theorem-box">
+  <strong>Theorem φ.1 (Subcriticality of φ).</strong> The map T_φ : n ↦ φn + 1 (odd rule with c = φ) has no integer fixed point at the fold. The potential V_φ(q) = q³ − φq has a degenerate double root only at q* = √(φ/3) ≈ 0.734, not at q = 1. Therefore T_φ does not produce a dm³ generative transition on ℕ. Fibonacci systems are subcritical: the fold is frozen before the integer lattice.
+</div>
+
+<h3>The Fibonacci spiral as incomplete C → K</h3>
+<p>The Fibonacci spiral in nature (nautilus, sunflower, galaxy arms) represents the compression C and curvature K phases of the dm³ cycle — the system has been compressed and curved to κ* — but the fold F has not fired. These are systems living permanently in the approach phase. Beautiful, stable, but incomplete. The full cycle needs c = 3.</p>
+
+<div class="canvas-wrap">
+  <canvas id="canvas-phi" height="340"></canvas>
+  <div class="ctrl-row">
+    <label>c = <input type="range" id="phi-c" min="1.0" max="4.0" value="1.618" step="0.001"><span class="val-disp" id="phi-c-v">1.618</span></label>
+    <label>Depth: <input type="range" id="phi-depth" min="3" max="14" value="9" step="1"><span class="val-disp" id="phi-depth-v">9</span></label>
+  </div>
+  <div class="canvas-label">φ-spiral at current c value. Red marker = fold point q*. Drag c toward 3 to see the fold approach q=1 (gold line).</div>
+</div>
+
+<div class="insight-box">
+  <strong>The phyllotaxis connection.</strong> Sunflowers pack seeds at angles of 2π/φ² ≈ 137.5° (the golden angle). This is the angle that maximises packing density — the K operator in botany, driving curvature to κ*. The fact that φ appears here is not mystical: it is the subcritical fixed point of the packing optimisation, the stable equilibrium before any fold fires.
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER μ -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-mu">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter μ</div>
+  <div class="ch-symbol">μ</div>
+  <div class="ch-title">Why μ<sub>max</sub> = −2 — The Exact Transverse Eigenvalue</div>
+  <div class="ch-subtitle">The double root at q=1 forces exactly −2. No other value is consistent.</div>
+</div>
+<div class="ch-body">
+
+<p>The dm³ canonical triple is (T*, μ_max, τ) = (2π, −2, 2). The value μ_max = −2 is the transverse Lyapunov exponent — the rate at which deviations from the limit cycle Γ decay. This chapter shows why −2 is the <em>only</em> value compatible with the Whitney A₁ fold at q = 1.</p>
+
+<div class="math-block">
+dm³ toy model contact normal form:
+  ṙ = r(1 − r²) + 2(r−1)e^{−z}     (transverse)
+  θ̇ = 1                              (angular)
+  ż = r² − 2(r−1)²e^{−z}            (action)
+
+Linearise at Γ = {r = 1}:
+  Let r = 1 + ξ, ξ small:
+  ξ̇ = (1 − 3r²)|_{r=1} · ξ + O(ξ²)
+     = (1 − 3) · ξ
+     = −2ξ
+
+Therefore:  μ_max = −2  (exact, from the cubic term)
+
+Origin of the −2:  V(q) = q³ − 3q  has V''(1) = 6q|_{q=1} = 6
+The curvature of the potential at the fold gives the linearised return rate:
+  μ_max = −½ V''(1) · ε₀²  ... but the exact value comes from the fold structure:
+  (q−1)²(q+2) = 0  →  double root coefficient = 1, single root = −2
+  The product of roots = −2  (Vieta: product of roots of q³−3q+2 at energy E=−2)
+</div>
+
+<div class="theorem-box">
+  <strong>Theorem μ.1 (μ_max = −2 from fold geometry).</strong> In the dm³ toy model with Hamiltonian H₀ = p² + q³ − 3q + z, the transverse Lyapunov exponent at the limit cycle Γ is μ_max = −2 exactly. This value is determined by the double root of V(q) + 2 = (q−1)²(q+2) at q = 1 — the Whitney A₁ fold — and cannot be altered without destroying the fold structure. Every domain dm³ system inherits μ_max = −2 up to the structural stability radius ε₀ = 1/3.
+</div>
+
+<h3>Live — transverse decay at μ_max = −2</h3>
+<div class="canvas-wrap">
+  <canvas id="canvas-mu" height="300"></canvas>
+  <div class="ctrl-row">
+    <label>μ_max = <input type="range" id="mu-val" min="-5" max="-0.3" value="-2" step="0.05"><span class="val-disp" id="mu-val-v">−2.00</span></label>
+    <label>ε₀ band: <input type="range" id="mu-eps" min="0.05" max="0.5" value="0.333" step="0.005"><span class="val-disp" id="mu-eps-v">0.333</span></label>
+  </div>
+  <div class="canvas-label">Decay of transverse deviation ξ(t) = ξ₀·e^{μ·t}. Gold band = stability radius ε₀ = 1/3. Set μ > −2/3 to see instability.</div>
+</div>
+
+<div class="insight-box">
+  <strong>The stability radius connection.</strong> From μ_max = −2 and the Hessian sup‖Hess V‖ = 2 at Γ, the Gronwall bound gives ε₀ = |μ_max| / (2(1 + sup‖Hess V‖)) = 2/(2·3) = 1/3 exactly. So the number 1/3 that appears throughout the series — the stability radius, the nilpotency exponent, the fold coefficient — derives from μ_max = −2 alone.
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER η — TRIBONACCI -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-eta">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter η</div>
+  <div class="ch-symbol">η</div>
+  <div class="ch-title">The Tribonacci Constant — η ≈ 1.839 and the GQM Weight</div>
+  <div class="ch-subtitle">η is the dominant root of x³ − x² − x − 1 = 0. It is the spectral radius of the Collatz transfer matrix.</div>
+</div>
+<div class="ch-body">
+
+<p>The Tribonacci sequence T(n) = T(n−1) + T(n−2) + T(n−3) has characteristic polynomial x³ − x² − x − 1 = 0 with dominant root η ≈ 1.8393. In the dm³/GQM framework, η is the <em>critical constant</em>: the Collatz map has c = 3, and the GQM geometric weighting is η⁻ᵏ — each level of the 12-phase orbit is weighted by the inverse Tribonacci power.</p>
+
+<div class="math-block">
+Tribonacci polynomial:  x³ − x² − x − 1 = 0
+Dominant root:  η ≈ 1.839286755214161
+
+GQM weight:  w(k) = η^{−k}
+Weighted inner product:  ⟨j|k⟩ = η^{−k} δ_{jk}
+
+Connection to dm³:
+  The 12-phase Collatz orbit has 6 even + 6 odd steps.
+  Crystal saturation at g⁶ = 33 uses exactly η in:
+    Z_even = Σ_{k=0}^{5} η^{−2k}     (normalization constant)
+
+Navrátil (2026) derives the same η from SL(3,ℤ) Tribonacci algebra
+starting from a discrete integer lattice — not a contact manifold.
+The convergence on η^{−k} from two independent starting points
+is an open structural question (Open Problem 8.6, GTCT-2026-001).
+</div>
+
+<p>The Tribonacci constant η sits exactly at c* = 3 on the criticality ladder — not below (like φ), not above (like the Tetranacci constant ≈ 1.927). The characteristic polynomial x³ − x² − x − 1 factors the Collatz curvature operator K at the critical threshold. This is why the Collatz map with c = 3 is the unique convergent: η is the only n-bonacci constant whose associated polynomial produces a double root at q = 1 in the dm³ potential.</p>
+
+<div class="theorem-box">
+  <strong>Theorem η.1 (Tribonacci at Criticality).</strong> The Tribonacci constant η is the unique real root of x³ − x² − x − 1 = 0. In the GQM framework, the 12-phase orbit of the Collatz map converges to the hexagonal eigenmode precisely because the geometric weighting η⁻ᵏ contracts the phase vector into the unique eigenvector of P⁶ that satisfies orthogonal stepping ⟨Pv, v⟩ = 0. The Tribonacci characteristic polynomial is the spectral signature of the fold F at c = 3.
+</div>
+
+<div class="canvas-wrap">
+  <canvas id="canvas-eta" height="320"></canvas>
+  <div class="ctrl-row">
+    <label>Phases: <input type="range" id="eta-phases" min="6" max="12" value="12" step="1"><span class="val-disp" id="eta-phases-v">12</span></label>
+    <label>k_max: <input type="range" id="eta-k" min="3" max="20" value="8" step="1"><span class="val-disp" id="eta-k-v">8</span></label>
+  </div>
+  <div class="canvas-label">GQM phase weights η^{−k} across the 12-phase orbit. Gold = even phases (crystal-active). Blue = odd phases. Height = weight magnitude.</div>
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER Δ — TETRANACCI -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-delta">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter Δ</div>
+  <div class="ch-symbol">Δ</div>
+  <div class="ch-title">Tetranacci — The First Supercritical Step</div>
+  <div class="ch-subtitle">Δ ≈ 1.9275. Depth 4 > c* = 3: stronger curvature, richer transients, higher entropic cost.</div>
+</div>
+<div class="ch-body">
+
+<p>The Tetranacci sequence T(n) = T(n−1) + T(n−2) + T(n−3) + T(n−4) has characteristic polynomial x⁴ − x³ − x² − x − 1 = 0, dominant root Δ ≈ 1.9275. This is the first step into the <em>supercritical regime</em>: depth 4 > c* = 3, so the curvature operator K drives harder than the critical threshold.</p>
+
+<div class="math-block">
+Tetranacci polynomial:  x⁴ − x³ − x² − x − 1 = 0
+Dominant root:  Δ ≈ 1.92756…
+
+dm³ potential with c = Δ:  V_Δ(q) = q³ − Δq
+Fold at q*:  q* = √(Δ/3) ≈ √0.6425 ≈ 0.802
+Fold position:  q* ≈ 0.802  (between φ's 0.734 and Tribonacci's 1.0)
+
+Supercritical markers:
+  - 3 decaying modes (not 2 like Tribonacci)
+  - Higher entropic cost to enforce integer coherence
+  - T_Δ : n ↦ Δn + 1 admits secondary cycles (non-convergent for large n)
+  - Crystal law still produces g⁶ = 33 pattern, but at higher dissipation
+</div>
+
+<div class="theorem-box">
+  <strong>Theorem Δ.1 (Supercriticality of Δ).</strong> The Tetranacci map T_Δ : n ↦ ⌈Δ⌉n + 1 does not converge universally to a single trivial cycle. The fold in V_Δ lands at q* ≈ 0.802, not at integer q = 1. The dm³ crystal law still closes at g⁶ = 33 cycles, but the orbit visits multiple attractors before settling. Tetranacci systems are mild supercritical: richer transients, the same ultimate structure.
+</div>
+
+<div class="canvas-wrap">
+  <canvas id="canvas-delta" height="300"></canvas>
+  <div class="ctrl-row">
+    <label>n-bonacci depth: <input type="range" id="delta-n" min="2" max="6" value="4" step="1"><span class="val-disp" id="delta-n-v">4</span></label>
+    <label>Orbits: <input type="range" id="delta-orb" min="10" max="60" value="30" step="5"><span class="val-disp" id="delta-orb-v">30</span></label>
+  </div>
+  <div class="canvas-label">Dominant root and fold position q* for depth-n recurrence. Gold vertical = q*=1 (Tribonacci/Collatz). Drag depth to walk the ladder.</div>
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER Σ — PENTANACCI -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-sigma">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter Σ</div>
+  <div class="ch-symbol">Σ</div>
+  <div class="ch-title">Pentanacci — Strong Supercritical, Four Decaying Modes</div>
+  <div class="ch-subtitle">Σ ≈ 1.9659. Quintic polynomial. The integer lattice holds, but at maximum entropic cost.</div>
+</div>
+<div class="ch-body">
+
+<p>Pentanacci: T(n) = sum of previous 5. Characteristic polynomial x⁵ − x⁴ − x³ − x² − x − 1 = 0, dominant root Σ ≈ 1.9659. Four decaying complex roots. The entropic cost of enforcing integer coherence is near-maximum — the system is close to the limit where the integer lattice can no longer serve as the attractor boundary.</p>
+
+<div class="math-block">
+Pentanacci polynomial:  x⁵ − x⁴ − x³ − x² − x − 1 = 0
+Dominant root:  Σ ≈ 1.96595…
+
+Four decaying modes: three complex conjugate pairs + one real
+All |λᵢ| < 1 for i > 1  (spectral gap maintained)
+
+Fold position:  q* = √(Σ/3) ≈ √0.6553 ≈ 0.810
+Still < 1 — fold does not reach integer lattice
+Entropic cost index:  Σ/η ≈ 1.069  (7% above critical)
+
+Pentanacci in biology:
+  Echinoderms (starfish, sea urchins) have 5-fold symmetry — pentanacci arms.
+  This is strong supercritical curvature that stabilises at 5-fold rather than
+  the Tribonacci 3-fold. The dm³ fold fires at 5 branches.
+  Sea urchin spines: tetranacci to pentanacci ladder during development.
+</div>
+
+<div class="theorem-box">
+  <strong>Theorem Σ.1 (Pentanacci Biological Instantiation).</strong> Five-fold symmetric biological systems (echinoderms, some flowers) are dm³ transitions with curvature parameter c in the pentanacci range [Δ, Σ]. The fold F activates with 5 branches (not 3), producing a stable quintic attractor. These systems are strong supercritical but not yet hexabonacci: the integer lattice enforces 5-fold coherence at higher entropic cost than Tribonacci/Collatz.
+</div>
+
+<div class="canvas-wrap">
+  <canvas id="canvas-sigma" height="300"></canvas>
+  <div class="ctrl-row">
+    <label>Arms: <input type="range" id="sigma-arms" min="3" max="6" value="5" step="1"><span class="val-disp" id="sigma-arms-v">5</span></label>
+    <label>Generations: <input type="range" id="sigma-gen" min="2" max="8" value="5" step="1"><span class="val-disp" id="sigma-gen-v">5</span></label>
+  </div>
+  <div class="canvas-label">n-fold dm³ attractor fractal. Each arm is one branch of the fold operator F. Tribonacci = 3 arms. Pentanacci = 5. Hexabonacci = 6.</div>
+</div>
+
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER Ω — HEXABONACCI -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="ch-omega">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · Chapter Ω</div>
+  <div class="ch-symbol">Ω</div>
+  <div class="ch-title">Hexabonacci — The Fixed Point of the Sequence of Sequences</div>
+  <div class="ch-subtitle">Ω → 2. Depth 6. The n-bonacci ladder converges to 2, which is τ = 2, the embodiment threshold.</div>
+</div>
+<div class="ch-body">
+
+<p>The Hexabonacci sequence sums the previous 6 terms. Its dominant root Ω ≈ 1.9837 → 2 as depth increases. This is the <em>fixed point of the recurrence ladder</em>: the limit of all n-bonacci dominant roots as n → ∞ is exactly 2. And 2 is τ — the dm³ embodiment threshold, the noise tolerance denominator, and the canonical invariant τ = 2 in the triple (T*, μ_max, τ) = (2π, −2, 2).</p>
+
+<div class="math-block">
+n-bonacci dominant root ρ_n:
+  n=2 (Fibonacci):    ρ₂ = φ ≈ 1.618
+  n=3 (Tribonacci):   ρ₃ = η ≈ 1.839  ← Collatz / GQM
+  n=4 (Tetranacci):   ρ₄ = Δ ≈ 1.928
+  n=5 (Pentanacci):   ρ₅ = Σ ≈ 1.966
+  n=6 (Hexabonacci):  ρ₆ = Ω ≈ 1.984
+  n→∞:               ρ_∞ = 2 = τ
+
+Why?  The n-bonacci polynomial is:
+  x^n − x^{n−1} − ... − x − 1 = 0
+  = x^n(1 − 1/x − 1/x² − ... − 1/x^n)
+  → x^n(1 − 1/(x−1)) = 0  as  n→∞
+  → x = 2
+
+The embodiment threshold τ = 2 is the limit of the entire
+recurrence ladder. Complete Completeness (g⁶⁴) is the system
+that has run through all 6 recurrence depths and converged to τ.
+</div>
+
+<div class="theorem-box">
+  <strong>Theorem Ω.1 (Hexabonacci → τ = 2).</strong> The sequence of n-bonacci dominant roots converges: lim_{n→∞} ρ_n = 2. This limit is the dm³ embodiment threshold τ = 2, appearing in the canonical triple (T*, μ_max, τ) = (2π, −2, 2) and in the noise tolerance τ·ε₀ = 2/3. The Hexabonacci system (n = 6) achieves ρ₆ ≈ 1.984 — within 1% of τ. The six-fold depth is not accidental: the crystal law g⁶ = 33 counts exactly 6 regeneration scales, one per n-bonacci depth from Fibonacci to Hexabonacci. Complete Completeness (g⁶⁴) is the system at n → ∞, at τ = 2, at the fixed point of the ladder.
+</div>
+
+<h3>The convergence diagram — watching the ladder reach τ</h3>
+<div class="canvas-wrap">
+  <canvas id="canvas-omega" height="360"></canvas>
+  <div class="ctrl-row">
+    <label>Show n up to: <input type="range" id="omega-n" min="2" max="20" value="6" step="1"><span class="val-disp" id="omega-n-v">6</span></label>
+    <label>Show τ line: <input type="checkbox" id="omega-tau" checked></label>
+  </div>
+  <div class="canvas-label">n-bonacci dominant roots ρ_n. Gold line = τ = 2 (limit). Tribonacci marked in teal (Collatz critical point). Hexabonacci in purple.</div>
+</div>
+
+<div class="insight-box">
+  <strong>Complete Completeness.</strong> Volume V of the Principia Orthogona is subtitled "G⁵ · Complete Completeness." The title means: the system has traversed all five scales of the n-bonacci ladder (Fibonacci → Tribonacci → Tetranacci → Pentanacci → Hexabonacci), reached the embodiment threshold τ = 2, and arrived at the fixed point of the sequence of sequences. The seed (A Semente) is the unique state that no further cycle can change. That state is τ. That state is 2. That state is the limit of 2 + 2 + 2 + 2 + 2 + 2 → 2.
+</div>
+
+<div class="coherence-row">
+  <div class="coh-card"><div class="coh-sym">T* = 2π</div><div class="coh-val">Period (Chapter π)</div><div class="coh-desc">The Reeb period of the contact structure</div></div>
+  <div class="coh-card"><div class="coh-sym">μ_max = −2</div><div class="coh-val">Transverse decay (Chapter μ)</div><div class="coh-desc">From the double root at q=1</div></div>
+  <div class="coh-card"><div class="coh-sym">τ = 2</div><div class="coh-val">Embodiment threshold (Chapter Ω)</div><div class="coh-desc">Limit of the n-bonacci ladder</div></div>
+  <div class="coh-card"><div class="coh-sym">ε₀ = 1/3</div><div class="coh-val">Stability radius</div><div class="coh-desc">|μ_max|/(2(1+sup‖Hess V‖)) = 2/6</div></div>
+  <div class="coh-card"><div class="coh-sym">g⁶ = 33</div><div class="coh-val">Crystal threshold</div><div class="coh-desc">6 depths × n-bonacci ladder</div></div>
+  <div class="coh-card"><div class="coh-sym">η ≈ 1.839</div><div class="coh-val">Tribonacci / GQM weight (Chapter η)</div><div class="coh-desc">Collatz critical constant</div></div>
+</div>
+
+</div>
+</section>
+
+<footer>
+  <p>Principia Orthogona · Book 3 · The Mini-Beast · Chapters π φ μ η Δ Σ Ω</p>
+  <p style="margin-top:.4rem;">G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026 · ISBN 979-8-9954416-6-3</p>
+  <p style="margin-top:.4rem;">
+    <a href="sample-chapter-wigner.html">Chapter W</a> ·
+    <a href="sample-chapter-tubulin.html">Chapter T</a> ·
+    <a href="spectral-radius.html">Spectral Radius</a> ·
+    <a href="https://github.com/TOTOGT/AXLE">AXLE</a>
+  </p>
+</footer>
+
+<script>
+/* ══════════════════ CHAPTER π — limit cycle ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-pi');
+  const cx = cv.getContext('2d');
+  const rhoCtrl = document.getElementById('pi-rho');
+  const muCtrl  = document.getElementById('pi-mu');
+  const nCtrl   = document.getElementById('pi-n');
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 320;
+    const H = 320;
+    const rho0 = parseFloat(rhoCtrl.value);
+    const mu   = parseFloat(muCtrl.value);
+    const ncyc = parseInt(nCtrl.value);
+    document.getElementById('pi-rho-v').textContent = rho0.toFixed(2);
+    document.getElementById('pi-mu-v').textContent  = (mu < 0 ? '−' : '') + Math.abs(mu).toFixed(1);
+    document.getElementById('pi-n-v').textContent   = ncyc;
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const cx_ = W/2, cy_ = H/2;
+    const R = Math.min(W,H) * 0.38;
+
+    // Draw Γ (limit cycle = gold circle at ρ=1)
+    cx.beginPath(); cx.arc(cx_, cy_, R, 0, Math.PI*2);
+    cx.strokeStyle = 'rgba(201,168,76,0.6)'; cx.lineWidth = 2; cx.stroke();
+    cx.fillStyle = 'rgba(201,168,76,0.06)'; cx.fill();
+
+    // Label
+    cx.fillStyle = 'rgba(201,168,76,0.5)'; cx.font = '10px Courier New'; cx.textAlign = 'left';
+    cx.fillText('Γ = {ρ=1}  T*=2π', cx_+R*0.72, cy_-6);
+
+    // Draw transient orbit: ρ(θ) = 1 + (ρ₀-1)·e^{μ·θ/(2π)}
+    const STEPS = 800;
+    const totalTheta = ncyc * 2 * Math.PI;
+    cx.beginPath();
+    for (let i = 0; i <= STEPS; i++) {
+      const theta = (i/STEPS)*totalTheta;
+      const rho = 1 + (rho0 - 1) * Math.exp(mu * theta / (2*Math.PI));
+      const x = cx_ + rho * R * Math.cos(theta - Math.PI/2);
+      const y = cy_ + rho * R * Math.sin(theta - Math.PI/2);
+      const prog = i/STEPS;
+      cx.strokeStyle = `hsl(${210 + prog*50}, 70%, ${40+prog*30}%)`;
+      cx.lineWidth = 1.5;
+      if (i===0) cx.moveTo(x,y); else cx.lineTo(x,y);
+    }
+    cx.stroke();
+
+    // Start dot
+    const x0 = cx_ + rho0 * R * Math.cos(-Math.PI/2);
+    const y0 = cy_ + rho0 * R * Math.sin(-Math.PI/2);
+    cx.beginPath(); cx.arc(x0,y0,4,0,Math.PI*2);
+    cx.fillStyle='#58a6ff'; cx.fill();
+    cx.fillStyle='#58a6ff'; cx.font='10px sans-serif'; cx.textAlign='left';
+    cx.fillText(`ρ₀=${rho0.toFixed(2)}`,x0+6,y0);
+
+    // Axis labels
+    cx.fillStyle='rgba(201,168,76,0.4)'; cx.font='9px Courier New'; cx.textAlign='center';
+    cx.fillText('θ = 2π',cx_,cy_+R+14);
+    cx.fillText('θ = 0',cx_,cy_-R-6);
+  }
+  ['pi-rho','pi-mu','pi-n'].forEach(id => document.getElementById(id).addEventListener('input', draw));
+  window.addEventListener('resize', draw); draw();
+})();
+
+/* ══════════════════ CHAPTER φ — golden spiral ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-phi');
+  const cx = cv.getContext('2d');
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 340;
+    const H = 340;
+    const c = parseFloat(document.getElementById('phi-c').value);
+    const depth = parseInt(document.getElementById('phi-depth').value);
+    document.getElementById('phi-c-v').textContent = c.toFixed(3);
+    document.getElementById('phi-depth-v').textContent = depth;
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const cx_ = W/2, cy_ = H/2;
+
+    // Fold position q* = sqrt(c/3)
+    const qstar = Math.sqrt(c/3);
+    const scale = Math.min(W,H)*0.35;
+
+    // Draw logarithmic spiral (golden/n-bonacci)
+    const STEPS = 600;
+    cx.beginPath();
+    for (let i = 0; i <= STEPS; i++) {
+      const t = (i/STEPS) * depth * 2 * Math.PI;
+      const r = scale * Math.exp(t * Math.log(c/3) / (2*Math.PI)) * 0.18;
+      const x = cx_ + r * Math.cos(t);
+      const y = cy_ + r * Math.sin(t);
+      const prog = i/STEPS;
+      const hue = 210 + prog*60;
+      cx.strokeStyle = `hsla(${hue},70%,${35+prog*30}%,${0.4+prog*0.5})`;
+      cx.lineWidth = 1 + prog;
+      if (i===0) cx.moveTo(x,y); else cx.lineTo(x,y);
+    }
+    cx.stroke();
+
+    // Fold point q* on x-axis
+    const qstar_x = cx_ + qstar * scale * 0.6;
+    cx.beginPath(); cx.moveTo(qstar_x, cy_-8); cx.lineTo(qstar_x, cy_+8);
+    cx.strokeStyle = '#ff6b6b'; cx.lineWidth = 1.5; cx.stroke();
+    cx.fillStyle = '#ff6b6b'; cx.font = '10px Courier New'; cx.textAlign='center';
+    cx.fillText(`q*=${qstar.toFixed(3)}`,qstar_x,cy_+20);
+
+    // q=1 (critical) line
+    const q1_x = cx_ + 1.0 * scale * 0.6;
+    cx.beginPath(); cx.moveTo(q1_x,cy_-40); cx.lineTo(q1_x,cy_+40);
+    cx.strokeStyle = 'rgba(201,168,76,0.4)'; cx.lineWidth = 1;
+    cx.setLineDash([3,3]); cx.stroke(); cx.setLineDash([]);
+    cx.fillStyle = 'rgba(201,168,76,0.7)'; cx.font = '10px Courier New'; cx.textAlign='center';
+    cx.fillText('q=1 (critical)',q1_x,cy_-46);
+
+    // c label
+    cx.fillStyle = 'rgba(250,247,240,0.5)'; cx.font = 'bold 11px Courier New'; cx.textAlign='left';
+    cx.fillText(`c=${c.toFixed(3)}  φ=1.618  c*=3.000`, 12, 18);
+    const status = c < 2.5 ? 'SUBCRITICAL' : c < 3.1 ? 'CRITICAL' : 'SUPERCRITICAL';
+    const scol = c < 2.5 ? '#58a6ff' : c < 3.1 ? '#c9a84c' : '#ff6b6b';
+    cx.fillStyle = scol; cx.fillText(status, 12, 32);
+  }
+  ['phi-c','phi-depth'].forEach(id => document.getElementById(id).addEventListener('input', draw));
+  window.addEventListener('resize', draw); draw();
+})();
+
+/* ══════════════════ CHAPTER μ — transverse decay ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-mu');
+  const cx = cv.getContext('2d');
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 300;
+    const H = 300;
+    const mu  = parseFloat(document.getElementById('mu-val').value);
+    const eps = parseFloat(document.getElementById('mu-eps').value);
+    document.getElementById('mu-val-v').textContent = (mu<0?'−':'')+Math.abs(mu).toFixed(2);
+    document.getElementById('mu-eps-v').textContent = eps.toFixed(3);
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const PAD = {top:25,right:20,bottom:40,left:60};
+    const pW = W-PAD.left-PAD.right, pH = H-PAD.top-PAD.bottom;
+    const T = 6*Math.PI; // 3 periods
+    const STEPS = 400;
+
+    function toX(t) { return PAD.left + (t/T)*pW; }
+    function toY(v) {
+      const norm = (v+2.5)/5.5;
+      return PAD.top + (1-Math.max(0,Math.min(1,norm)))*pH;
+    }
+
+    // Grid
+    cx.strokeStyle='#21262d'; cx.lineWidth=0.5;
+    [-2,-1,0,1,2].forEach(v=>{
+      const py=toY(v); cx.beginPath(); cx.moveTo(PAD.left,py); cx.lineTo(PAD.left+pW,py); cx.stroke();
+      cx.fillStyle='#8b949e'; cx.font='9px Courier New'; cx.textAlign='right';
+      cx.fillText(v,PAD.left-4,py+3);
+    });
+
+    // ε₀ band
+    cx.fillStyle = 'rgba(63,185,80,0.07)';
+    cx.fillRect(PAD.left,toY(eps),pW,toY(-eps)-toY(eps));
+    cx.fillStyle = 'rgba(63,185,80,0.3)'; cx.font='9px sans-serif'; cx.textAlign='left';
+    cx.fillText(`ε₀=${eps.toFixed(3)} band`,PAD.left+4,toY(eps)-3);
+
+    // Axes
+    cx.strokeStyle='#30363d'; cx.lineWidth=1.5;
+    cx.beginPath();
+    cx.moveTo(PAD.left,PAD.top); cx.lineTo(PAD.left,PAD.top+pH);
+    cx.lineTo(PAD.left+pW,PAD.top+pH); cx.stroke();
+
+    // Decay curve ξ(t) = e^{μt}·cos(t) (transverse + oscillation)
+    const paths = [
+      {xi0: 1.5, col:'#58a6ff'},
+      {xi0: -1.2, col:'#ff6b6b'},
+      {xi0: 0.6, col:'#c9a84c'},
+    ];
+    paths.forEach(({xi0, col})=>{
+      cx.strokeStyle=col; cx.lineWidth=1.5;
+      cx.beginPath();
+      for(let i=0;i<=STEPS;i++){
+        const t=(i/STEPS)*T;
+        const xi=xi0*Math.exp(mu*t/(2*Math.PI))*Math.cos(t);
+        if(i===0) cx.moveTo(toX(t),toY(xi)); else cx.lineTo(toX(t),toY(xi));
+      }
+      cx.stroke();
+    });
+
+    // μ=-2 reference label
+    cx.strokeStyle='rgba(201,168,76,0.3)'; cx.lineWidth=0.7; cx.setLineDash([4,4]);
+    cx.beginPath(); cx.moveTo(PAD.left,toY(0)); cx.lineTo(PAD.left+pW,toY(0)); cx.stroke();
+    cx.setLineDash([]);
+    cx.fillStyle='rgba(250,247,240,0.4)'; cx.font='bold 11px Courier New'; cx.textAlign='left';
+    cx.fillText(`μ_max=${mu.toFixed(2)}  ε₀=${eps.toFixed(3)}  τ·ε₀=${(2*eps).toFixed(3)}`,PAD.left,PAD.top-6);
+
+    // X axis label
+    cx.fillStyle='#8b949e'; cx.font='10px sans-serif'; cx.textAlign='center';
+    cx.fillText('time t (in units of T*=2π)',PAD.left+pW/2,H-6);
+  }
+  ['mu-val','mu-eps'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* ══════════════════ CHAPTER η — GQM phase weights ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-eta');
+  const cx = cv.getContext('2d');
+  const ETA = 1.839286755214161;
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 320;
+    const H = 320;
+    const phases = parseInt(document.getElementById('eta-phases').value);
+    const kmax   = parseInt(document.getElementById('eta-k').value);
+    document.getElementById('eta-phases-v').textContent = phases;
+    document.getElementById('eta-k-v').textContent = kmax;
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const PAD = {top:25,right:20,bottom:40,left:55};
+    const pW = W-PAD.left-PAD.right, pH = H-PAD.top-PAD.bottom;
+
+    const barW = pW / (phases * kmax) - 1;
+
+    // Draw bars: for each phase i, for each k, weight = η^{−k}
+    // x = phase×kmax + k, y = weight
+    for(let i=0;i<phases;i++) {
+      for(let k=1;k<=kmax;k++) {
+        const w = Math.pow(ETA,-k);
+        const x = PAD.left + (i*kmax + (k-1)) * (pW/(phases*kmax));
+        const barH = w * pH * 0.9;
+        const y = PAD.top + pH - barH;
+        const isEven = i%2===0;
+        const alpha = 0.3 + 0.7*(1-k/kmax);
+        cx.fillStyle = isEven
+          ? `rgba(201,168,76,${alpha})`
+          : `rgba(88,166,255,${alpha})`;
+        cx.fillRect(x,y,Math.max(1,barW),barH);
+      }
+    }
+
+    // Phase separators
+    for(let i=1;i<phases;i++){
+      const x = PAD.left + i*kmax*(pW/(phases*kmax));
+      cx.strokeStyle='rgba(255,255,255,0.08)';cx.lineWidth=1;
+      cx.beginPath();cx.moveTo(x,PAD.top);cx.lineTo(x,PAD.top+pH);cx.stroke();
+    }
+
+    // Labels
+    cx.fillStyle='rgba(201,168,76,0.5)';cx.font='9px Courier New';cx.textAlign='center';
+    for(let i=0;i<phases;i++){
+      const x=PAD.left+(i+0.5)*kmax*(pW/(phases*kmax));
+      cx.fillText(`φ${i+1}`,x,PAD.top+pH+14);
+    }
+
+    // η label
+    cx.fillStyle='rgba(250,247,240,0.5)';cx.font='bold 11px Courier New';cx.textAlign='left';
+    cx.fillText(`η = ${ETA.toFixed(6)}   GQM weight = η^{−k}`,PAD.left,PAD.top-6);
+    cx.fillStyle='rgba(201,168,76,0.6)';cx.font='9px sans-serif';
+    cx.fillText('■ even phases (crystal-active)',PAD.left,PAD.top+pH+28);
+    cx.fillStyle='rgba(88,166,255,0.6)';
+    cx.fillText('■ odd phases',PAD.left+180,PAD.top+pH+28);
+  }
+  ['eta-phases','eta-k'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* ══════════════════ CHAPTER Δ — n-bonacci roots ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-delta');
+  const cx = cv.getContext('2d');
+
+  // Compute dominant root of n-bonacci numerically (Newton's method)
+  function nbonacciRoot(n) {
+    let x = 2 - 1/n;
+    for(let i=0;i<60;i++){
+      // p(x) = x^n - x^{n-1} - ... - x - 1
+      // p(x) = x^n - (x^n-1)/(x-1) for x≠1
+      let px=Math.pow(x,n), sum=0;
+      for(let k=0;k<n;k++) sum+=Math.pow(x,k);
+      let f=px-sum; // = x^n - (1+x+...+x^{n-1})
+      let fp=n*Math.pow(x,n-1);
+      for(let k=1;k<n;k++) fp-=k*Math.pow(x,k-1);
+      x=x-f/fp;
+    }
+    return x;
+  }
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 300;
+    const H = 300;
+    const nshow = parseInt(document.getElementById('delta-n').value);
+    const orbits = parseInt(document.getElementById('delta-orb').value);
+    document.getElementById('delta-n-v').textContent = nshow;
+    document.getElementById('delta-orb-v').textContent = orbits;
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const PAD={top:30,right:20,bottom:40,left:60};
+    const pW=W-PAD.left-PAD.right, pH=H-PAD.top-PAD.bottom;
+    const nMax=Math.max(nshow,7);
+
+    // Y: root values 1.5 to 2.1
+    const yMin=1.5, yMax=2.05;
+    function toX(n){return PAD.left+(n-2)/(nMax-2)*pW;}
+    function toY(v){return PAD.top+(1-(v-yMin)/(yMax-yMin))*pH;}
+
+    // Grid
+    cx.strokeStyle='#21262d';cx.lineWidth=0.5;
+    [1.6,1.7,1.8,1.9,2.0].forEach(v=>{
+      cx.beginPath();cx.moveTo(PAD.left,toY(v));cx.lineTo(PAD.left+pW,toY(v));cx.stroke();
+      cx.fillStyle='#8b949e';cx.font='9px Courier New';cx.textAlign='right';
+      cx.fillText(v.toFixed(1),PAD.left-4,toY(v)+3);
+    });
+
+    // τ=2 line
+    cx.strokeStyle='rgba(201,168,76,0.3)';cx.lineWidth=1;cx.setLineDash([4,4]);
+    cx.beginPath();cx.moveTo(PAD.left,toY(2));cx.lineTo(PAD.left+pW,toY(2));cx.stroke();
+    cx.setLineDash([]);
+    cx.fillStyle='rgba(201,168,76,0.6)';cx.font='10px Courier New';cx.textAlign='right';
+    cx.fillText('τ = 2',PAD.left+pW-2,toY(2)-4);
+
+    // Plot roots
+    const colors=['#58a6ff','#c9a84c','#79e5dd','#ff6b6b','#bc8fff','#ffa657','#3fb950'];
+    const names=['Fibonacci','Tribonacci','Tetranacci','Pentanacci','Hexanacci','Heptanacci','Octanacci'];
+    const roots=[];
+    for(let n=2;n<=Math.min(nshow+2,12);n++) roots.push({n,r:nbonacciRoot(n)});
+
+    // Draw curve
+    cx.beginPath();
+    roots.forEach(({n,r},i)=>{
+      const px=toX(n),py=toY(r);
+      if(i===0) cx.moveTo(px,py); else cx.lineTo(px,py);
+    });
+    cx.strokeStyle='rgba(88,166,255,0.4)';cx.lineWidth=1;cx.stroke();
+
+    // Draw dots
+    roots.forEach(({n,r},i)=>{
+      const px=toX(n),py=toY(r);
+      const col=n===3?'#79e5dd':n===6?'#bc8fff':colors[i%colors.length];
+      cx.beginPath();cx.arc(px,py,5,0,Math.PI*2);
+      cx.fillStyle=col;cx.fill();
+      cx.fillStyle=col;cx.font='9px sans-serif';cx.textAlign='center';
+      cx.fillText(names[i]||`${n}-bonacci`,px,py-9);
+      cx.fillStyle='rgba(250,247,240,0.4)';cx.font='8px Courier New';
+      cx.fillText(r.toFixed(4),px,py+15);
+    });
+
+    // q*=√(ρ/3) annotation for current nshow
+    const rn=nbonacciRoot(nshow);
+    const qstar=Math.sqrt(rn/3);
+    cx.fillStyle='rgba(255,107,107,0.7)';cx.font='10px Courier New';cx.textAlign='left';
+    cx.fillText(`n=${nshow}: ρ=${rn.toFixed(4)}  q*=√(ρ/3)=${qstar.toFixed(4)}`,PAD.left,PAD.top-8);
+  }
+  ['delta-n','delta-orb'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* ══════════════════ CHAPTER Σ — n-fold fractal arms ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-sigma');
+  const cx = cv.getContext('2d');
+
+  function drawBranch(cx, x, y, angle, length, depth, arms, maxDepth) {
+    if(depth>maxDepth||length<2) return;
+    const ex = x + length*Math.cos(angle);
+    const ey = y + length*Math.sin(angle);
+    const progress = depth/maxDepth;
+    const hue = 210 - progress*120;
+    cx.strokeStyle = `hsla(${hue},70%,${30+progress*40}%,${0.8-progress*0.3})`;
+    cx.lineWidth = Math.max(0.5, 2.5*(1-progress));
+    cx.beginPath(); cx.moveTo(x,y); cx.lineTo(ex,ey); cx.stroke();
+    for(let a=0;a<arms;a++) {
+      const branchAngle = angle + (a - (arms-1)/2) * (Math.PI*2/arms) * 0.45;
+      drawBranch(cx, ex, ey, branchAngle, length*0.62, depth+1, arms, maxDepth);
+    }
+  }
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 300;
+    const H = 300;
+    const arms = parseInt(document.getElementById('sigma-arms').value);
+    const gen  = parseInt(document.getElementById('sigma-gen').value);
+    document.getElementById('sigma-arms-v').textContent = arms;
+    document.getElementById('sigma-gen-v').textContent = gen;
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+
+    // Draw n-fold fractal from centre
+    const startLen = Math.min(W,H)*0.28;
+    for(let a=0;a<arms;a++) {
+      const angle = (a/arms)*Math.PI*2 - Math.PI/2;
+      drawBranch(cx, W/2, H/2+startLen*0.1, angle, startLen, 0, 2, gen);
+    }
+
+    // Central dot
+    cx.beginPath(); cx.arc(W/2,H/2+startLen*0.1,4,0,Math.PI*2);
+    cx.fillStyle='#c9a84c'; cx.fill();
+
+    // Label
+    const names={3:'Tribonacci (critical)',4:'Tetranacci (mild super)',5:'Pentanacci (strong super)',6:'Hexabonacci (→τ=2)'};
+    cx.fillStyle='rgba(250,247,240,0.5)'; cx.font='bold 10px Courier New'; cx.textAlign='center';
+    cx.fillText(`${arms} arms — ${names[arms]||`${arms}-fold`}`,W/2,H-8);
+  }
+  ['sigma-arms','sigma-gen'].forEach(id=>document.getElementById(id).addEventListener('input',draw));
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* ══════════════════ CHAPTER Ω — convergence to τ=2 ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-omega');
+  const cx = cv.getContext('2d');
+
+  function nbonacciRoot(n) {
+    let x = 2 - 1/n;
+    for(let i=0;i<80;i++){
+      let f=0, fp=0;
+      for(let k=0;k<=n;k++){
+        const xk=Math.pow(x,k);
+        if(k===n){f+=xk;fp+=n*xk/x;}
+        else{f-=xk;if(k>0)fp-=k*xk/x;}
+      }
+      if(Math.abs(f)<1e-14) break;
+      x-=f/fp;
+    }
+    return x;
+  }
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 360;
+    const H = 360;
+    const nMax = parseInt(document.getElementById('omega-n').value);
+    const showTau = document.getElementById('omega-tau').checked;
+    document.getElementById('omega-n-v').textContent = nMax;
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const PAD={top:35,right:30,bottom:45,left:65};
+    const pW=W-PAD.left-PAD.right, pH=H-PAD.top-PAD.bottom;
+    const yMin=1.55, yMax=2.02;
+
+    function toX(n){return PAD.left+(n-2)/(Math.max(nMax,8)-2)*pW;}
+    function toY(v){return PAD.top+(1-(v-yMin)/(yMax-yMin))*pH;}
+
+    // Grid
+    cx.strokeStyle='#21262d';cx.lineWidth=0.5;
+    [1.6,1.7,1.8,1.9,2.0].forEach(v=>{
+      cx.beginPath();cx.moveTo(PAD.left,toY(v));cx.lineTo(PAD.left+pW,toY(v));cx.stroke();
+      cx.fillStyle='#8b949e';cx.font='9px Courier New';cx.textAlign='right';
+      cx.fillText(v.toFixed(1),PAD.left-4,toY(v)+3);
+    });
+
+    // τ=2 horizontal
+    if(showTau){
+      cx.strokeStyle='rgba(201,168,76,0.5)';cx.lineWidth=1.5;cx.setLineDash([5,3]);
+      cx.beginPath();cx.moveTo(PAD.left,toY(2));cx.lineTo(PAD.left+pW,toY(2));cx.stroke();
+      cx.setLineDash([]);
+      cx.fillStyle='rgba(201,168,76,0.8)';cx.font='10px Courier New';cx.textAlign='right';
+      cx.fillText('τ = 2 (limit)',PAD.left+pW,toY(2)-5);
+    }
+
+    // Theoretical curve: ρ_n ≈ 2 - 1/2^{n-1}
+    cx.strokeStyle='rgba(255,255,255,0.08)';cx.lineWidth=0.8;cx.setLineDash([2,4]);
+    cx.beginPath();
+    for(let n=2;n<=Math.max(nMax,8);n+=0.2){
+      const theory=2-1/Math.pow(2,n-1);
+      if(n===2) cx.moveTo(toX(2),toY(theory)); else cx.lineTo(toX(n),toY(theory));
+    }
+    cx.stroke(); cx.setLineDash([]);
+
+    // Actual roots
+    const pts=[];
+    for(let n=2;n<=Math.max(nMax,6);n++) pts.push({n,r:nbonacciRoot(n)});
+
+    cx.beginPath();
+    pts.forEach(({n,r},i)=>{if(i===0) cx.moveTo(toX(n),toY(r)); else cx.lineTo(toX(n),toY(r));});
+    cx.strokeStyle='rgba(88,166,255,0.6)';cx.lineWidth=1.5;cx.stroke();
+
+    const labels={2:'φ',3:'η',4:'Δ',5:'Σ',6:'Ω'};
+    const dotColors={2:'#c9a84c',3:'#79e5dd',4:'#58a6ff',5:'#ff6b6b',6:'#bc8fff'};
+    pts.forEach(({n,r})=>{
+      const px=toX(n),py=toY(r);
+      const col=dotColors[n]||'#888';
+      cx.beginPath();cx.arc(px,py,n<=6?6:4,0,Math.PI*2);
+      cx.fillStyle=col;cx.fill();
+      if(n<=8){
+        cx.fillStyle=col;cx.font=`bold ${n<=6?12:10}px Courier New`;cx.textAlign='center';
+        cx.fillText(labels[n]||`ρ${n}`,px,py-10);
+        cx.fillStyle='rgba(250,247,240,0.35)';cx.font='9px Courier New';
+        cx.fillText(r.toFixed(4),px,py+18);
+      }
+    });
+
+    // Gap annotation
+    if(nMax>=6){
+      const rOmega=nbonacciRoot(6);
+      const gap=2-rOmega;
+      cx.fillStyle='rgba(201,168,76,0.5)';cx.font='10px sans-serif';cx.textAlign='left';
+      cx.fillText(`Ω gap to τ: ${gap.toFixed(4)}`,PAD.left,PAD.top-12);
+    }
+
+    cx.fillStyle='rgba(250,247,240,0.35)';cx.font='9px Courier New';cx.textAlign='center';
+    cx.fillText('recurrence depth n →',PAD.left+pW/2,H-8);
+  }
+  document.getElementById('omega-n').addEventListener('input',draw);
+  document.getElementById('omega-tau').addEventListener('change',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+</script>
+</body>
+</html>

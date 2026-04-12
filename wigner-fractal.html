@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wigner Crystal — dm³ Fold Diagram · Book 3</title>
+<style>
+:root {
+  --navy:  #1a2744;
+  --gold:  #c9a84c;
+  --cream: #faf7f0;
+  --teal:  #79e5dd;
+  --mid:   #3a4f7a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--navy);
+  font-family: 'Georgia', serif;
+  color: var(--cream);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-header {
+  padding: 20px 32px 14px;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chapter-label {
+  font-family: sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.header-title {
+  font-size: 1.15rem;
+  color: var(--cream);
+}
+.header-sub {
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  color: rgba(201,168,76,0.7);
+  letter-spacing: 0.06em;
+}
+
+.main-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 0;
+}
+
+.canvas-wrap {
+  position: relative;
+  min-height: 500px;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.panel {
+  background: rgba(15,22,44,0.85);
+  border-left: 1px solid rgba(201,168,76,0.18);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.panel-section {}
+.panel-label {
+  font-family: sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
+.panel-title {
+  font-size: 0.95rem;
+  color: var(--cream);
+  margin-bottom: 6px;
+}
+.panel-body {
+  font-family: sans-serif;
+  font-size: 0.76rem;
+  line-height: 1.65;
+  color: rgba(250,247,240,0.7);
+}
+
+.param-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  margin-top: 4px;
+}
+.param-table th {
+  text-align: left;
+  color: var(--gold);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding-bottom: 4px;
+  font-family: sans-serif;
+}
+.param-table td {
+  padding: 3px 0;
+  color: rgba(250,247,240,0.75);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.param-table td:last-child {
+  color: var(--teal);
+  text-align: right;
+}
+
+.ctrl-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ctrl-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ctrl-label {
+  font-family: sans-serif;
+  font-size: 0.68rem;
+  color: rgba(250,247,240,0.6);
+  letter-spacing: 0.06em;
+  display: flex;
+  justify-content: space-between;
+}
+.ctrl-label span {
+  color: var(--gold);
+  font-family: 'Courier New', monospace;
+}
+input[type=range] {
+  width: 100%;
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+.phase-readout {
+  background: rgba(201,168,76,0.07);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-left: 3px solid var(--gold);
+  padding: 10px 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  line-height: 1.8;
+  color: rgba(250,247,240,0.85);
+}
+.phase-readout .phase-name {
+  color: var(--gold);
+  font-weight: bold;
+  font-size: 0.78rem;
+}
+
+.operator-chain {
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-align: center;
+  padding: 8px 0;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+.op-active {
+  color: var(--teal);
+  font-weight: bold;
+}
+
+.footer-bar {
+  padding: 10px 32px;
+  border-top: 1px solid rgba(201,168,76,0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 0.66rem;
+  color: rgba(250,247,240,0.4);
+}
+.isbn { color: rgba(201,168,76,0.5); }
+
+@media (max-width: 700px) {
+  .main-area { grid-template-columns: 1fr; }
+  .panel { border-left: none; border-top: 1px solid rgba(201,168,76,0.18); }
+  .canvas-wrap { min-height: 340px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div>
+    <div class="chapter-label">Book 3 · The Mini-Beast · Chapter W</div>
+    <div class="header-title">The Wigner Crystal — dm³ Fold Diagram</div>
+  </div>
+  <div class="header-sub">Electrons crystallizing from pure repulsion</div>
+</div>
+
+<div class="main-area">
+
+  <div class="canvas-wrap">
+    <canvas id="wigner"></canvas>
+  </div>
+
+  <div class="panel">
+
+    <div class="panel-section">
+      <div class="panel-label">Phase diagram</div>
+      <div class="operator-chain" id="op-chain">
+        <span id="op-C">C</span> → <span id="op-K">K</span> → <span id="op-F">F</span> → <span id="op-U">U</span>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="phase-readout" id="phase-readout">
+        <div class="phase-name" id="pname">C — Compression</div>
+        <div id="pdesc">Electron density n falling. Phase space of trajectories compresses. Positional correlations grow.</div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Drive parameter r_s</div>
+      <div class="ctrl-section">
+        <div class="ctrl-row">
+          <div class="ctrl-label">r<sub>s</sub> = potential/kinetic <span id="rs-val">12.0</span></div>
+          <input type="range" id="rs-ctrl" min="1" max="60" value="12" step="0.5">
+        </div>
+        <div class="ctrl-row">
+          <div class="ctrl-label">Temperature T (normalised) <span id="T-val">1.00</span></div>
+          <input type="range" id="T-ctrl" min="0.01" max="2" value="1" step="0.01">
+        </div>
+        <div class="ctrl-row">
+          <div class="ctrl-label">B field (Landau suppression) <span id="B-val">0.0</span></div>
+          <input type="range" id="B-ctrl" min="0" max="3" value="0" step="0.05">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Contact normal form · Chapter W</div>
+      <table class="param-table">
+        <thead>
+          <tr><th>Parameter</th><th>Symbol</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Transverse Lyapunov</td><td>μ<sub>max</sub></td><td>−0.31</td></tr>
+          <tr><td>Limit cycle freq.</td><td>ω</td><td>0.19</td></tr>
+          <tr><td>Decay constant</td><td>β</td><td>1.7</td></tr>
+          <tr><td>Critical threshold</td><td>r<sub>s</sub>*</td><td>≈ 30–40</td></tr>
+          <tr><td>Lattice geometry</td><td>—</td><td>Triangular / moiré</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Theorem W.1</div>
+      <div class="panel-body">
+        The Wigner crystallization is G = U∘F∘K∘C acting on the 2D electron gas manifold X. At r<sub>s</sub> = r<sub>s</sub>* ≈ 30–40, the Jacobian loses rank by 1 (translational mode softens). The triangular lattice is the stable fixed point of the dm³ flow.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-bar">
+  <span>© 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey</span>
+  <span class="isbn">ISBN 979-8-9954416-6-3 (Book 3 eBook)</span>
+</div>
+
+<script>
+const canvas = document.getElementById('wigner');
+const ctx = canvas.getContext('2d');
+
+const rsCtrl = document.getElementById('rs-ctrl');
+const TCtrl  = document.getElementById('T-ctrl');
+const BCtrl  = document.getElementById('B-ctrl');
+const rsVal  = document.getElementById('rs-val');
+const TVal   = document.getElementById('T-val');
+const BVal   = document.getElementById('B-val');
+const opC = document.getElementById('op-C');
+const opK = document.getElementById('op-K');
+const opF = document.getElementById('op-F');
+const opU = document.getElementById('op-U');
+const pname = document.getElementById('pname');
+const pdesc = document.getElementById('pdesc');
+
+const RS_STAR = 35;
+const TEAL = '#79e5dd';
+const GOLD = '#c9a84c';
+const NAVY = '#1a2744';
+
+let W, H, t = 0;
+let particles = [];
+const N_PARTICLES = 180;
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+  initParticles();
+}
+
+function getParams() {
+  const rs = parseFloat(rsCtrl.value);
+  const T  = parseFloat(TCtrl.value);
+  const B  = parseFloat(BCtrl.value);
+  // Effective rs including B field (Landau level suppression of kinetic energy)
+  const rs_eff = rs + B * 8;
+  const order = Math.max(0, Math.min(1, (rs_eff - 10) / (RS_STAR + 10)));
+  return { rs, rs_eff, T, B, order };
+}
+
+// Triangular lattice positions
+function triLattice(n, cx, cy, spacing) {
+  const pts = [];
+  const rows = Math.ceil(Math.sqrt(n) * 1.3);
+  for (let r = -rows; r <= rows; r++) {
+    for (let c = -rows; c <= rows; c++) {
+      const x = cx + spacing * (c + r * 0.5);
+      const y = cy + spacing * r * Math.sqrt(3) / 2;
+      if (Math.hypot(x - cx, y - cy) < Math.min(W, H) * 0.44) {
+        pts.push({ x, y });
+      }
+    }
+  }
+  return pts.slice(0, n);
+}
+
+function initParticles() {
+  const cx = W / 2, cy = H / 2;
+  const lattice = triLattice(N_PARTICLES, cx, cy, Math.min(W, H) * 0.062);
+  particles = [];
+  for (let i = 0; i < N_PARTICLES; i++) {
+    const lp = lattice[i] || { x: cx + (Math.random() - 0.5) * W * 0.7, y: cy + (Math.random() - 0.5) * H * 0.7 };
+    particles.push({
+      lx: lp.x, ly: lp.y,  // lattice target
+      x: cx + (Math.random() - 0.5) * W * 0.75,
+      y: cy + (Math.random() - 0.5) * H * 0.75,
+      vx: (Math.random() - 0.5) * 2,
+      vy: (Math.random() - 0.5) * 2,
+      charge: Math.random() > 0.5 ? 1 : -1,
+    });
+  }
+}
+
+function updatePhaseUI(order, rs_eff) {
+  const ops = [opC, opK, opF, opU];
+  ops.forEach(o => o.style.color = '');
+
+  if (order < 0.2) {
+    opC.style.color = TEAL;
+    pname.textContent = 'C — Compression';
+    pdesc.textContent = `r_s = ${rs_eff.toFixed(1)} (sub-threshold). Electron phase space compresses. Positional correlations growing. System approaching curvature threshold.`;
+  } else if (order < 0.5) {
+    opK.style.color = TEAL;
+    pname.textContent = 'K — Curvature threshold';
+    pdesc.textContent = `r_s = ${rs_eff.toFixed(1)} → r_s* ≈ 35. Potential/kinetic ratio driving toward κ*. Compressibility begins to diverge. Pre-fold STM signatures visible.`;
+  } else if (order < 0.75) {
+    opF.style.color = TEAL;
+    pname.textContent = 'F — Fold (symmetry breaking)';
+    pdesc.textContent = `r_s ≈ r_s* = ${RS_STAR}. Translational symmetry breaks spontaneously. Jacobian loses rank. Triangular lattice topology selected. Whitney A₁ fold.`;
+  } else {
+    opU.style.color = TEAL;
+    pname.textContent = 'U — Unfold (crystalline fixed point)';
+    pdesc.textContent = `r_s = ${rs_eff.toFixed(1)} > r_s*. Gradient flow selects triangular Wigner lattice. μ_max = −0.31 drives exponential convergence. Lattice is the fixed point x* = G(x*).`;
+  }
+}
+
+function draw() {
+  const { rs, rs_eff, T, B, order } = getParams();
+  const cx = W / 2, cy = H / 2;
+
+  ctx.fillStyle = `rgba(26,39,68,0.22)`;
+  ctx.fillRect(0, 0, W, H);
+
+  // Critical threshold ring
+  const ring_r = Math.min(W, H) * 0.42;
+  ctx.beginPath();
+  ctx.arc(cx, cy, ring_r, 0, Math.PI * 2);
+  ctx.strokeStyle = `rgba(201,168,76,${0.06 + 0.04 * Math.sin(t * 0.04)})`;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // rs* threshold indicator
+  const frac = Math.min(1, rs_eff / RS_STAR);
+  ctx.beginPath();
+  ctx.arc(cx, cy, ring_r * 0.15, -Math.PI / 2, -Math.PI / 2 + frac * Math.PI * 2);
+  ctx.strokeStyle = frac >= 1
+    ? `rgba(121,229,221,0.8)`
+    : `rgba(201,168,76,${0.4 + 0.3 * Math.sin(t * 0.06)})`;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // rs label
+  ctx.fillStyle = frac >= 1 ? TEAL : GOLD;
+  ctx.font = `bold 11px 'Courier New', monospace`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`r_s=${rs_eff.toFixed(0)}`, cx, cy);
+  ctx.font = `9px 'Courier New', monospace`;
+  ctx.fillStyle = 'rgba(250,247,240,0.35)';
+  ctx.fillText(`r_s*≈${RS_STAR}`, cx, cy + 14);
+
+  // Update particles — blend between gas and crystal based on order
+  const kappa = order;
+  const T_eff = T * (1 - order * 0.6);
+  const lattice = triLattice(N_PARTICLES, cx, cy, Math.min(W, H) * 0.062);
+
+  particles.forEach((p, i) => {
+    const lp = lattice[i] || { x: cx, y: cy };
+    p.lx = lp.x; p.ly = lp.y;
+
+    // Pull toward lattice site (fold + unfold)
+    const pull = kappa * 0.12;
+    p.vx += (p.lx - p.x) * pull;
+    p.vy += (p.ly - p.y) * pull;
+
+    // Thermal noise
+    p.vx += (Math.random() - 0.5) * T_eff * 1.2;
+    p.vy += (Math.random() - 0.5) * T_eff * 1.2;
+
+    // Repulsion from neighbours (Coulomb — simplified)
+    if (i % 6 === (t | 0) % 6) {
+      for (let j = 0; j < particles.length; j += 4) {
+        if (j === i) continue;
+        const dx = p.x - particles[j].x;
+        const dy = p.y - particles[j].y;
+        const d2 = dx * dx + dy * dy + 1;
+        if (d2 < 1800) {
+          const f = 0.4 / d2;
+          p.vx += dx * f;
+          p.vy += dy * f;
+        }
+      }
+    }
+
+    // Drag
+    p.vx *= 0.88;
+    p.vy *= 0.88;
+
+    // Boundary
+    if (Math.hypot(p.x - cx, p.y - cy) > ring_r * 0.95) {
+      p.vx -= (p.x - cx) * 0.02;
+      p.vy -= (p.y - cy) * 0.02;
+    }
+
+    p.x += p.vx;
+    p.y += p.vy;
+  });
+
+  // Draw Coulomb repulsion lines (pre-fold)
+  if (order < 0.6) {
+    const alpha = (1 - order) * 0.06;
+    for (let i = 0; i < particles.length; i += 3) {
+      for (let j = i + 1; j < particles.length; j += 3) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d = Math.hypot(dx, dy);
+        if (d < 90) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(201,168,76,${alpha * (1 - d / 90)})`;
+          ctx.lineWidth = 0.4;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Draw lattice bonds (post-fold)
+  if (order > 0.3) {
+    const bondAlpha = (order - 0.3) / 0.7;
+    const lattice_pts = triLattice(N_PARTICLES, cx, cy, Math.min(W, H) * 0.062);
+    for (let i = 0; i < lattice_pts.length; i++) {
+      for (let j = i + 1; j < lattice_pts.length; j++) {
+        const d = Math.hypot(lattice_pts[i].x - lattice_pts[j].x, lattice_pts[i].y - lattice_pts[j].y);
+        if (d < Math.min(W, H) * 0.075) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i]?.x || lattice_pts[i].x, particles[i]?.y || lattice_pts[i].y);
+          ctx.lineTo(particles[j]?.x || lattice_pts[j].x, particles[j]?.y || lattice_pts[j].y);
+          ctx.strokeStyle = `rgba(121,229,221,${bondAlpha * 0.18})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Draw electrons
+  particles.forEach((p, i) => {
+    const dist_to_site = Math.hypot(p.x - p.lx, p.y - p.ly);
+    const localOrder = Math.max(0, 1 - dist_to_site / 30);
+    const crystal_fraction = order * localOrder;
+
+    const r = 3.2 + crystal_fraction * 1.2;
+    const col = crystal_fraction > 0.5
+      ? TEAL
+      : `rgba(201,168,76,${0.7 + 0.3 * crystal_fraction})`;
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r * 2.8, 0, Math.PI * 2);
+    ctx.fillStyle = crystal_fraction > 0.5
+      ? `rgba(121,229,221,0.06)`
+      : `rgba(201,168,76,0.05)`;
+    ctx.fill();
+
+    // Electron
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = col;
+    ctx.fill();
+  });
+
+  // κ* threshold label
+  ctx.fillStyle = `rgba(201,168,76,0.45)`;
+  ctx.font = `10px sans-serif`;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.fillText(`κ* threshold`, cx - ring_r * 0.98, cy - 9);
+
+  updatePhaseUI(order, rs_eff);
+  t++;
+  requestAnimationFrame(draw);
+}
+
+// Controls
+function update() {
+  rsVal.textContent = parseFloat(rsCtrl.value).toFixed(1);
+  TVal.textContent  = parseFloat(TCtrl.value).toFixed(2);
+  BVal.textContent  = parseFloat(BCtrl.value).toFixed(1);
+}
+rsCtrl.addEventListener('input', update);
+TCtrl.addEventListener('input', update);
+BCtrl.addEventListener('input', update);
+
+resize();
+window.addEventListener('resize', () => { resize(); });
+draw();
+</script>
+</body>
+</html>
