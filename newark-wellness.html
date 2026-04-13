@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newark Wellness Center · G6 LLC · 229 Ballantine Pkwy</title>
+<meta name="description" content="Newark residents funding a community wellness center at 229 Ballantine Pkwy — ancient cures, free clinic, sound medicine. Every book sold goes toward the building.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=Source+Code+Pro:wght@300;400;500&display=swap');
+
+:root {
+  --bg:       #06050a;
+  --surface:  #0c0a10;
+  --surface2: #100e16;
+  --gold:     #c8a060;
+  --gold-dim: #604818;
+  --gold-pale:#e8d0a0;
+  --cream:    #e0d4c0;
+  --cream-dim:#7a6e58;
+  --red:      #c84030;
+  --red-dim:  #401010;
+  --green:    #408050;
+  --border:   rgba(200,160,96,0.12);
+  --border-s: rgba(200,160,96,0.35);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:'Cormorant Garamond',Georgia,serif;line-height:1.8}
+
+/* ── NAV ── */
+.nav{
+  padding:1.4rem 2rem;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  position:sticky;top:0;background:rgba(6,5,10,0.95);backdrop-filter:blur(8px);z-index:100;
+}
+.nav-logo{font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.3em;color:var(--gold);text-decoration:none;text-transform:uppercase}
+.nav-cta{
+  font-family:'Source Code Pro',monospace;font-size:0.52rem;letter-spacing:0.2em;
+  color:var(--bg);background:var(--gold);padding:0.5rem 1.2rem;text-decoration:none;
+  text-transform:uppercase;transition:opacity 0.2s;
+}
+.nav-cta:hover{opacity:0.85}
+
+/* ── HERO ── */
+.hero{
+  display:grid;grid-template-columns:1fr 1fr;
+  min-height:90vh;
+}
+.hero-left{
+  padding:5rem 3rem 4rem 3rem;
+  display:flex;flex-direction:column;justify-content:center;
+  border-right:1px solid var(--border);
+}
+.hero-eyebrow{
+  font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.35em;
+  color:var(--gold-dim);text-transform:uppercase;display:block;margin-bottom:1.8rem;
+}
+.hero-h1{
+  font-size:clamp(1.6rem,3.5vw,2.6rem);font-weight:300;line-height:1.15;
+  color:var(--cream);margin-bottom:1.8rem;letter-spacing:0.01em;
+}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-lede{font-size:1rem;color:var(--cream-dim);line-height:1.85;max-width:32rem}
+.hero-lede p+p{margin-top:1rem}
+.hero-actions{margin-top:2.5rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.btn-primary{
+  font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.25em;
+  color:var(--bg);background:var(--gold);padding:0.85rem 2rem;
+  text-decoration:none;text-transform:uppercase;transition:opacity 0.2s;border:none;cursor:pointer;
+}
+.btn-primary:hover{opacity:0.85}
+.btn-secondary{
+  font-family:'Source Code Pro',monospace;font-size:0.52rem;letter-spacing:0.2em;
+  color:var(--gold);border:1px solid var(--border-s);padding:0.8rem 1.5rem;
+  text-decoration:none;text-transform:uppercase;transition:all 0.2s;
+}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold-pale)}
+
+.hero-right{
+  position:relative;overflow:hidden;
+  background:var(--surface);
+}
+.hero-right img{
+  width:100%;height:100%;object-fit:cover;opacity:0.7;
+  filter:sepia(0.3) contrast(1.1);
+}
+.hero-right-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(6,5,10,0.6) 0%,rgba(6,5,10,0.2) 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:2rem;
+}
+.property-badge{
+  background:rgba(6,5,10,0.85);border:1px solid var(--border-s);
+  padding:1.2rem 1.5rem;backdrop-filter:blur(4px);
+}
+.property-price{
+  font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);
+  display:block;margin-bottom:0.3rem;letter-spacing:0.05em;
+}
+.property-address{
+  font-family:'Source Code Pro',monospace;font-size:0.52rem;
+  color:var(--cream-dim);letter-spacing:0.15em;text-transform:uppercase;
+  display:block;margin-bottom:0.8rem;
+}
+.property-stats{
+  display:flex;gap:1.5rem;flex-wrap:wrap;
+}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat-num{font-family:'Cinzel',serif;font-size:0.9rem;color:var(--cream)}
+.stat-label{font-family:'Source Code Pro',monospace;font-size:0.45rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase}
+
+/* ── FUND TICKER ── */
+.ticker{
+  background:var(--red-dim);border-bottom:2px solid var(--red);
+  padding:1rem 2rem;text-align:center;
+}
+.ticker-inner{
+  max-width:44rem;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.ticker-label{
+  font-family:'Cinzel',serif;font-size:0.52rem;letter-spacing:0.3em;
+  color:var(--red);text-transform:uppercase;
+}
+.ticker-amount{
+  font-family:'Cinzel',serif;font-size:1.1rem;color:var(--cream);letter-spacing:0.05em;
+}
+.ticker-goal{font-family:'Source Code Pro',monospace;font-size:0.52rem;color:var(--cream-dim);letter-spacing:0.1em}
+.ticker-bar-wrap{flex:1;min-width:120px;height:3px;background:rgba(200,64,48,0.2);border-radius:2px;overflow:hidden}
+.ticker-bar{height:100%;background:var(--red);width:0%;border-radius:2px;transition:width 1s ease}
+
+/* ── MAIN ── */
+main{max-width:44rem;margin:0 auto;padding:0 2rem 8rem}
+.divider{width:3rem;height:1px;background:var(--gold);opacity:0.25;margin:4rem 0}
+
+/* ── SECTIONS ── */
+.section{margin-bottom:5rem}
+.section-eyebrow{
+  font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.35em;
+  color:var(--gold-dim);text-transform:uppercase;display:block;
+  margin-bottom:1rem;padding-bottom:0.7rem;border-bottom:1px solid var(--border);
+}
+.section-h2{
+  font-size:1.4rem;font-weight:300;color:var(--cream);
+  margin-bottom:1.4rem;line-height:1.25;letter-spacing:0.01em;
+}
+.prose{font-size:0.95rem;color:var(--cream-dim);line-height:1.85}
+.prose p+p{margin-top:1rem}
+.prose strong{color:var(--cream);font-weight:500}
+
+/* ── BOOK BLOCK ── */
+.book-block{
+  display:grid;grid-template-columns:160px 1fr;gap:2rem;
+  background:var(--surface);border:1px solid var(--border-s);
+  border-top:3px solid var(--gold);padding:2rem;margin:2.5rem 0;
+}
+.book-cover-wrap img{width:100%;border-radius:2px;display:block}
+.book-meta{}
+.book-label{
+  font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.3em;
+  color:var(--gold);text-transform:uppercase;display:block;margin-bottom:0.6rem;
+}
+.book-title{font-size:1.1rem;color:var(--cream);font-weight:400;margin-bottom:0.4rem;line-height:1.3}
+.book-subtitle{font-size:0.85rem;color:var(--cream-dim);font-style:italic;margin-bottom:1rem;line-height:1.5}
+.book-desc{font-size:0.83rem;color:var(--cream-dim);line-height:1.75;margin-bottom:1.2rem}
+.book-isbn{
+  font-family:'Source Code Pro',monospace;font-size:0.48rem;
+  color:var(--gold-dim);letter-spacing:0.12em;display:block;margin-bottom:0.3rem;
+}
+.book-price-row{
+  display:flex;align-items:baseline;gap:1rem;margin:1rem 0;flex-wrap:wrap;
+}
+.book-price{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold)}
+.book-price-note{font-family:'Source Code Pro',monospace;font-size:0.5rem;color:var(--green);letter-spacing:0.15em;text-transform:uppercase}
+.book-actions{display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.8rem}
+
+/* ── PULL ── */
+.pull{border-left:2px solid var(--gold);padding:0.8rem 1.4rem;margin:2rem 0}
+.pull p{font-style:italic;font-size:1rem;color:var(--cream);line-height:1.75}
+.pull cite{
+  font-family:'Source Code Pro',monospace;font-size:0.48rem;
+  letter-spacing:0.18em;color:var(--gold-dim);text-transform:uppercase;
+  display:block;margin-top:0.5rem;font-style:normal;
+}
+
+/* ── PROPERTY DETAILS ── */
+.property-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--border);margin:2rem 0;
+}
+.pg-cell{background:var(--bg);padding:1.2rem 1.4rem}
+.pg-label{
+  font-family:'Source Code Pro',monospace;font-size:0.48rem;
+  letter-spacing:0.22em;color:var(--gold-dim);text-transform:uppercase;
+  display:block;margin-bottom:0.4rem;
+}
+.pg-value{font-size:0.95rem;color:var(--cream);line-height:1.5}
+.pg-note{font-size:0.78rem;color:var(--cream-dim);margin-top:0.2rem;font-style:italic}
+
+/* ── VISION ── */
+.vision-list{
+  margin:1.5rem 0;display:flex;flex-direction:column;gap:0;
+  border:1px solid var(--border);
+}
+.vision-row{
+  display:grid;grid-template-columns:8rem 1fr;
+  border-bottom:1px solid var(--border);
+}
+.vision-row:last-child{border-bottom:none}
+.vision-space{
+  padding:0.9rem 1rem;border-right:1px solid var(--border);
+  background:rgba(200,160,96,0.03);display:flex;align-items:center;
+}
+.vision-space span{
+  font-family:'Cinzel',serif;font-size:0.48rem;
+  letter-spacing:0.18em;color:var(--gold);text-transform:uppercase;
+}
+.vision-desc{
+  padding:0.9rem 1.1rem;font-size:0.82rem;
+  color:var(--cream-dim);line-height:1.65;
+}
+
+/* ── HOW IT WORKS ── */
+.how-steps{margin:1.5rem 0;display:flex;flex-direction:column;gap:1px;background:var(--border)}
+.how-step{background:var(--bg);padding:1.2rem 1.4rem;display:flex;gap:1.2rem;align-items:flex-start}
+.step-num{
+  font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);
+  opacity:0.4;flex-shrink:0;line-height:1;padding-top:0.1rem;
+}
+.step-body{}
+.step-title{font-size:0.95rem;color:var(--cream);margin-bottom:0.3rem;font-weight:400}
+.step-desc{font-size:0.82rem;color:var(--cream-dim);line-height:1.65}
+
+/* ── EVIDENCE ── */
+.ev-row{
+  display:grid;grid-template-columns:9rem 1fr;
+  border-bottom:1px solid var(--border);
+}
+.ev-row:last-child{border-bottom:none}
+.ev-site{
+  padding:0.85rem 1rem;border-right:1px solid var(--border);
+  background:rgba(200,160,96,0.03);
+}
+.ev-site-name{
+  font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.15em;
+  color:var(--gold);text-transform:uppercase;display:block;margin-bottom:2px;
+}
+.ev-site-date{font-family:'Source Code Pro',monospace;font-size:0.44rem;color:var(--gold-dim);letter-spacing:0.1em}
+.ev-data{padding:0.85rem 1.1rem;font-size:0.8rem;color:var(--cream-dim);line-height:1.65}
+.ev-hz{font-family:'Source Code Pro',monospace;font-size:0.78rem;color:var(--gold)}
+
+/* ── CONTRIBUTE ── */
+.contribute{
+  background:var(--surface2);border:1px solid var(--border-s);
+  border-top:3px solid var(--red);padding:2.5rem 2rem;margin:2.5rem 0;
+}
+.contribute-label{
+  font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.3em;
+  color:var(--red);text-transform:uppercase;display:block;margin-bottom:0.8rem;
+}
+.contribute-title{font-size:1.2rem;color:var(--cream);margin-bottom:1rem;font-weight:300;line-height:1.3}
+.contribute-body{font-size:0.88rem;color:var(--cream-dim);line-height:1.8;margin-bottom:1.5rem}
+.contribute-tiers{display:flex;flex-direction:column;gap:1px;background:var(--border);margin:1.5rem 0}
+.tier{background:var(--bg);padding:1rem 1.2rem;display:grid;grid-template-columns:6rem 1fr;gap:1rem;align-items:center}
+.tier-amount{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold)}
+.tier-desc{font-size:0.82rem;color:var(--cream-dim);line-height:1.55}
+.tier-desc strong{color:var(--cream);font-weight:400}
+
+/* ── CONTACT ── */
+.contact{border-top:1px solid var(--border);padding-top:2rem;margin-top:3rem}
+.contact-label{
+  font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.3em;
+  color:var(--gold-dim);text-transform:uppercase;display:block;margin-bottom:1rem;
+}
+.contact-email{
+  font-family:'Source Code Pro',monospace;font-size:0.88rem;color:var(--gold);
+  text-decoration:none;border-bottom:1px solid var(--border-s);padding-bottom:2px;
+  transition:border-color 0.2s;
+}
+.contact-email:hover{border-color:var(--gold)}
+.contact-note{font-size:0.85rem;color:var(--cream-dim);margin-top:0.8rem;font-style:italic}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);padding:2.5rem 2rem;
+  text-align:center;
+}
+.footer-op{
+  font-family:'Source Code Pro',monospace;font-size:0.52rem;
+  color:var(--gold);letter-spacing:0.2em;display:block;margin-bottom:0.5rem;
+}
+.footer-copy{font-family:'Source Code Pro',monospace;font-size:0.45rem;color:var(--gold-dim);letter-spacing:0.15em}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .hero{grid-template-columns:1fr}
+  .hero-right{height:300px}
+  .hero-left{padding:3rem 1.5rem 2.5rem}
+  .book-block{grid-template-columns:1fr}
+  .book-cover-wrap{max-width:160px}
+  .property-grid{grid-template-columns:1fr}
+  .vision-row{grid-template-columns:1fr}
+  .vision-space{border-right:none;border-bottom:1px solid var(--border)}
+  .ev-row{grid-template-columns:1fr}
+  .ev-site{border-right:none;border-bottom:1px solid var(--border)}
+  .tier{grid-template-columns:1fr}
+  main{padding:0 1.5rem 5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-logo">G6 LLC · Newark NJ</a>
+  <a href="https://www.ebay.com/itm/336530438926" target="_blank" class="nav-cta">Place a Bid on eBay</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <span class="hero-eyebrow">Newark Wellness Center · Community Campaign · 2026</span>
+    <h1 class="hero-h1">
+      229 Ballantine Pkwy —<br>
+      <em>Newark residents<br>
+      funding Newark health</em>
+    </h1>
+    <div class="hero-lede">
+      <p>A 15,000 sq ft historic estate in Forest Hill. A ballroom that becomes a resonant chamber. A carriage house that becomes a practitioner studio. A free clinic for the 311,000 people who live in this city.</p>
+      <p>G6 LLC builds whatever the clinic needs. Free of charge. Every copy of the Principia Orthogona Series sold goes toward the acquisition.</p>
+    </div>
+    <div class="hero-actions">
+      <a href="https://www.ebay.com/itm/336530438926" target="_blank" class="btn-primary">Place a Bid on eBay</a>
+      <a href="#contribute" class="btn-secondary">Other Ways to Help</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="width:100%;height:100%;background:var(--surface);display:flex;align-items:center;justify-content:center;padding:2rem">
+      <!-- Property visual placeholder — replace with actual photo -->
+      <div style="text-align:center">
+        <div style="font-family:'Cinzel',serif;font-size:3rem;color:var(--gold);opacity:0.15;line-height:1;margin-bottom:1rem">229</div>
+        <div style="font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase">Ballantine Pkwy</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:0.45rem;letter-spacing:0.2em;color:var(--gold-dim);opacity:0.5;margin-top:0.5rem">Forest Hill · Newark NJ 07104</div>
+      </div>
+    </div>
+    <div class="hero-right-overlay">
+      <div class="property-badge">
+        <span class="property-price">$2,000,000</span>
+        <span class="property-address">229 Ballantine Pkwy · Forest Hill · Newark NJ 07104</span>
+        <div class="property-stats">
+          <div class="stat"><span class="stat-num">15,000</span><span class="stat-label">sq ft</span></div>
+          <div class="stat"><span class="stat-num">26</span><span class="stat-label">rooms</span></div>
+          <div class="stat"><span class="stat-num">0.44</span><span class="stat-label">acres</span></div>
+          <div class="stat"><span class="stat-num">1</span><span class="stat-label">ballroom</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-label">Campaign Progress</span>
+    <div class="ticker-bar-wrap"><div class="ticker-bar" id="ticker-bar"></div></div>
+    <div style="text-align:right">
+      <span class="ticker-amount" id="ticker-amount">$0</span>
+      <span class="ticker-goal"> of $2,000,000</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <div class="divider"></div>
+
+  <!-- THE BOOK -->
+  <section class="section" id="book">
+    <span class="section-eyebrow">I · The Instrument</span>
+    <h2 class="section-h2">Buy the book. Fund the building.</h2>
+    <div class="prose">
+      <p>The Principia Orthogona Series is 25 years of work — operator algebra, contact geometry, biological adaptation, formal verification in Lean 4. Every copy sold goes directly toward the acquisition of 229 Ballantine Pkwy.</p>
+    </div>
+
+    <div class="book-block" id="book-block">
+      <div class="book-cover-wrap">
+        <img src="book-cover.jpg" alt="Principia Orthogona Series — Complete Edition cover" onerror="this.style.background='var(--surface)';this.style.minHeight='200px'">
+      </div>
+      <div class="book-meta">
+        <span class="book-label">Principia Orthogona Series · Complete Edition</span>
+        <div class="book-title">Applications of Generative Orthogonal Matrix Compression Science</div>
+        <div class="book-subtitle">Volumes I–III with Applications · Pablo Nogueira Grossi · G6 LLC</div>
+        <div class="book-desc">Three volumes establishing GOMC Science as a mathematically rigorous, empirically testable framework. Operator algebra, contact geometry, dm³ system, biological instantiations, and all core invariants formally verified in Lean 4 through the AXLE proof engine.</div>
+        <span class="book-isbn">Print ISBN: 979-8-9954416-0-1</span>
+        <span class="book-isbn">eBook ISBN: 979-8-9954416-1-8</span>
+        <span class="book-isbn">Zenodo DOI: 10.5281/zenodo.19117400</span>
+        <div class="book-price-row">
+          <span class="book-price">Auction · current bid $123</span>
+          <span class="book-price-note">100% → 229 Ballantine</span>
+        </div>
+        <p style="font-size:0.78rem;color:var(--cream-dim);line-height:1.65;margin-bottom:1rem;font-style:italic">Draft PDF — 379-page working manuscript, all three volumes, all proofs. Auction currently open — bid what you can. Buy It Now at $199.99. The hardcover print edition is published when the building is funded.</p>
+        <div class="book-actions">
+          <a href="https://www.ebay.com/itm/336530438926" target="_blank" class="btn-primary">Place a Bid on eBay</a>
+          <a href="https://deepwiki.com/TOTOGT/AXLE" target="_blank" class="btn-secondary">Verify the Research ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="pull">
+      <p>"We bow to the independent researchers whose names we have lost but whose structures we are still reading."</p>
+      <cite>Principia Orthogona Series · Dedication · G6 LLC · Newark NJ · 2026</cite>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- THE BUILDING -->
+  <section class="section" id="building">
+    <span class="section-eyebrow">II · The Building</span>
+    <h2 class="section-h2">229 Ballantine Pkwy — what it becomes</h2>
+    <div class="prose">
+      <p>The largest lot in Forest Hill. A historic estate on 0.44 acres, walking distance to Branch Brook Park and transit. 144 days on market. The seller is motivated. Redfin estimates $118K under list at $1.88M.</p>
+      <p>This is not a renovation project. The bones are already right.</p>
+    </div>
+
+    <div class="property-grid">
+      <div class="pg-cell">
+        <span class="pg-label">The Ballroom</span>
+        <div class="pg-value">Resonant Chamber</div>
+        <div class="pg-note">Sound medicine sessions, community gatherings, pranayama and breath work classes — free to Newark residents</div>
+      </div>
+      <div class="pg-cell">
+        <span class="pg-label">15 Bedrooms</span>
+        <div class="pg-value">Clinic + Research Rooms</div>
+        <div class="pg-note">Free consultation, practitioner studios, researcher residency, administrative space</div>
+      </div>
+      <div class="pg-cell">
+        <span class="pg-label">Carriage House</span>
+        <div class="pg-value">Practitioner Studio</div>
+        <div class="pg-note">Independent space with basement — visiting researchers, teaching space, or community apartment</div>
+      </div>
+      <div class="pg-cell">
+        <span class="pg-label">0.44 Acres</span>
+        <div class="pg-value">Community Grounds</div>
+        <div class="pg-note">Outdoor sessions, community garden, the largest private green space in the neighborhood</div>
+      </div>
+      <div class="pg-cell">
+        <span class="pg-label">8 Fireplaces</span>
+        <div class="pg-value">Year-Round Use</div>
+        <div class="pg-note">A building that holds community in every season</div>
+      </div>
+      <div class="pg-cell">
+        <span class="pg-label">$13,569/yr taxes</span>
+        <div class="pg-value">Nonprofit exemption path</div>
+        <div class="pg-note">Community health facility designation eliminates property tax — net operating cost drops significantly after acquisition</div>
+      </div>
+    </div>
+
+    <div class="vision-list">
+      <div class="vision-row">
+        <div class="vision-space"><span>Free Clinic</span></div>
+        <div class="vision-desc">G6 LLC builds whatever the clinic needs — intake software, scheduling, patient records, diagnostic tools — free of charge. We consult. The community runs it.</div>
+      </div>
+      <div class="vision-row">
+        <div class="vision-space"><span>Sound Medicine</span></div>
+        <div class="vision-desc">The ballroom becomes Newark's first dedicated archaeoacoustic healing space. 70 Hz. 114 Hz. 136.1 Hz. The same frequencies the Ħal Saflieni builders carved in stone 5,000 years ago. Peer-reviewed neuroscience. Free sessions.</div>
+      </div>
+      <div class="vision-row">
+        <div class="vision-space"><span>Open Research</span></div>
+        <div class="vision-desc">All software, all tools, all findings published openly. The Om Machine, Pranayama Machine, Śrī Yantra Machine, Hypogeum visualizer — live on-site and free to the world.</div>
+      </div>
+      <div class="vision-row">
+        <div class="vision-space"><span>Community Own.</span></div>
+        <div class="vision-desc">229 Ballantine belongs to Newark permanently. Community land trust or cooperative structure — it cannot be sold out from under the people who funded it.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- THE SCIENCE -->
+  <section class="section" id="science">
+    <span class="section-eyebrow">III · The Evidence</span>
+    <h2 class="section-h2">Ancient cures — documented, peer-reviewed, free</h2>
+    <div class="prose">
+      <p>This is not alternative medicine. This is archaeology, neurophysiology, and acoustical engineering converging on the same finding across five continents and five thousand years.</p>
+    </div>
+
+    <div style="border:1px solid var(--border);margin:2rem 0">
+      <div class="ev-row">
+        <div class="ev-site"><span class="ev-site-name">Ħal Saflieni</span><span class="ev-site-date">Malta · 3600 BCE</span></div>
+        <div class="ev-data">Double resonance at <span class="ev-hz">70 + 114 Hz</span> confirmed by University of Trieste. Language centre deactivates. Right hemisphere activates. Dr. Ian Cook, UCLA: effect not found at any other frequency. Paolo Debertolis: altered states without drugs or chemical substances.</div>
+      </div>
+      <div class="ev-row">
+        <div class="ev-site"><span class="ev-site-name">Newgrange</span><span class="ev-site-date">Ireland · 3200 BCE</span></div>
+        <div class="ev-data">Same <span class="ev-hz">90–120 Hz</span> band. Prof. Iegor Reznikoff documents an unbroken sonic lineage from Palaeolithic painted caves through Neolithic passage tombs to Romanesque chapels — thirty thousand years of the same technology.</div>
+      </div>
+      <div class="ev-row">
+        <div class="ev-site"><span class="ev-site-name">Turtle Shell</span><span class="ev-site-date">China · 1600 BCE</span></div>
+        <div class="ev-data">Alexander Lauterwasser's cymatic photography shows tortoise shell geometry matches Chladni figures at <span class="ev-hz">1021–2041 Hz</span>. The I-Ching hexagrams derived from turtle plastron crack patterns. The oracle bone — sound instrument, divination tool, and cymatic record — in one object.</div>
+      </div>
+      <div class="ev-row">
+        <div class="ev-site"><span class="ev-site-name">Vedic Temples</span><span class="ev-site-date">India · 1000 BCE+</span></div>
+        <div class="ev-data">Garbhagṛha proportions tuned to <span class="ev-hz">136.1 Hz</span> — the earth resonance frequency. Vāstu Śāstra encodes acoustic engineering as sacred geometry. The Om is the human voice computing its own fixed point in a chamber built to receive it.</div>
+      </div>
+    </div>
+
+    <div class="pull">
+      <p>"Ancient populations were able to obtain different states of consciousness without the use of drugs or other chemical substances."</p>
+      <cite>Paolo Debertolis · Clinical Neurophysiology Unit · University of Trieste · 2014</cite>
+    </div>
+
+    <div style="border:1px solid var(--border);background:var(--surface);padding:1.5rem 1.8rem;margin:2rem 0">
+      <span style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.3em;color:var(--gold-dim);text-transform:uppercase;display:block;margin-bottom:1rem">Verify the Research · Open Documentation · Indexed 12 April 2026</span>
+      <p style="font-size:0.85rem;color:var(--cream-dim);line-height:1.7;margin-bottom:1.2rem">All mathematics, proofs, and code are publicly indexed. DeepWiki generates a live technical wiki from every commit — Lean 4 proofs, operator algebra, Collatz conjecture as a dm³ system, Navier–Stokes pillar, fruit fly connectome simulations. Anyone can read it.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="https://deepwiki.com/TOTOGT/AXLE" target="_blank" style="font-family:'Source Code Pro',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--gold);border:1px solid var(--border-s);padding:0.5rem 1rem;text-decoration:none;text-transform:uppercase">AXLE · Lean 4 Proofs ↗</a>
+        <a href="https://deepwiki.com/TOTOGT/DM3-lab" target="_blank" style="font-family:'Source Code Pro',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--gold);border:1px solid var(--border-s);padding:0.5rem 1rem;text-decoration:none;text-transform:uppercase">DM3-lab · Research Lab ↗</a>
+        <a href="https://deepwiki.com/TOTOGT/book3-starter" target="_blank" style="font-family:'Source Code Pro',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--gold);border:1px solid var(--border-s);padding:0.5rem 1rem;text-decoration:none;text-transform:uppercase">Book 3 · Classroom ↗</a>
+        <a href="https://zenodo.org/records/19117400" target="_blank" style="font-family:'Source Code Pro',monospace;font-size:0.5rem;letter-spacing:0.18em;color:var(--gold);border:1px solid var(--border-s);padding:0.5rem 1rem;text-decoration:none;text-transform:uppercase">Zenodo DOI ↗</a>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <span class="section-eyebrow">IV · The Model</span>
+    <h2 class="section-h2">How book sales fund a building</h2>
+
+    <div class="how-steps">
+      <div class="how-step">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <div class="step-title">You buy the Principia Orthogona Series</div>
+          <div class="step-desc">Print ($65) or digital ($25). 379 pages. Three volumes. 25 years of mathematics. 100% of proceeds go toward 229 Ballantine. Every sale is a traceable contribution tracked publicly on this page.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <div class="step-title">The campaign reaches its target</div>
+          <div class="step-desc">$2M acquisition. Downpayment threshold triggers purchase. CDFI financing, NJ Historic Preservation Tax Credits, and NMTC eligibility cover the remainder — Newark is a qualifying low-income census tract for all three programs.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <div class="step-title">229 Ballantine becomes Newark's</div>
+          <div class="step-desc">Community land trust structure. Cannot be sold. Cannot be flipped. Permanently held for community health use. G6 LLC provides all software and technology consulting free of charge to whatever clinic operates here.</div>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="step-num">4</span>
+        <div class="step-body">
+          <div class="step-title">The clinic opens</div>
+          <div class="step-desc">Free consultations. Sound medicine sessions in the ballroom. Open-source patient software. Research published openly. Every tool G6 LLC builds — the machines, the course platform, the clinical software — runs here first.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CONTRIBUTE -->
+  <section class="section" id="contribute">
+    <span class="section-eyebrow">V · Contribute</span>
+    <h2 class="section-h2">Every contribution is tracked. Every dollar is public.</h2>
+
+    <div class="contribute">
+      <span class="contribute-label">Newark Wellness Center · Acquisition Fund</span>
+      <div class="contribute-title">Three ways to support 229 Ballantine</div>
+      <div class="contribute-body">
+        This is a community ownership campaign. Not a charity. Not a grant application. Newark residents deciding that their city deserves a wellness center — and funding it themselves.
+      </div>
+
+      <div class="contribute-tiers">
+        <div class="tier">
+          <span class="tier-amount">Current bid $123</span>
+          <div class="tier-desc"><strong>Draft edition — buy on eBay.</strong> 379-page PDF manuscript, all three volumes + AXLE proofs. Free Priority Mail shipping. Your name in the acknowledgments of the hardcover print edition, published when the building is funded.</div>
+        </div>
+        <div class="tier">
+          <span class="tier-amount">$199.99 · Buy It Now</span>
+          <div class="tier-desc"><strong>Buy It Now — eBay.</strong> Same draft PDF, immediate purchase, no waiting for auction close. Your name on the founding supporter wall at 229 Ballantine.</div>
+        </div>
+        <div class="tier">
+          <span class="tier-amount">$500+</span>
+          <div class="tier-desc"><strong>Room sponsor.</strong> One of the 26 rooms at 229 Ballantine carries your name or the name of someone you're honoring. Permanent — written into the deed of the community land trust. Email us directly.</div>
+        </div>
+        <div class="tier">
+          <span class="tier-amount">$5,000+</span>
+          <div class="tier-desc"><strong>Building partner.</strong> Seat on the community advisory council. Direct input on clinic programming, sound medicine offerings, and how the space serves Newark. G6 LLC software consultation included.</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap">
+        <a href="https://www.ebay.com/itm/336530438926" target="_blank" class="btn-primary">Place a Bid on eBay</a>
+        <a href="mailto:pablogrossi@hotmail.com?subject=229 Ballantine — I want to contribute&body=Name:%0AContribution level:%0AMessage for the wall:" class="btn-secondary">Email to Contribute</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <div class="contact">
+    <span class="contact-label">G6 LLC · Medical Software Consultancy · Newark NJ</span>
+    <a href="mailto:pablogrossi@hotmail.com" class="contact-email">pablogrossi@hotmail.com</a>
+    <p class="contact-note">Clinic directors, hospital administrators, community health centers, grant writers, neighborhood associations — if you operate in Newark and need software built, we build it free. That is the offer. No conditions.</p>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-op">C → K → F → U → ∞ · g⁶ = 33</span>
+  <span class="footer-copy">G6 LLC · Newark New Jersey · 2026 · ORCID 0009-0000-6496-2186 · Zenodo DOI 10.5281/zenodo.19117400</span>
+</footer>
+
+<script>
+// Ticker animation — replace 0 with actual raised amount
+const raised = 0;
+const goal = 2000000;
+const pct = Math.min((raised / goal) * 100, 100);
+document.getElementById('ticker-bar').style.width = pct + '%';
+document.getElementById('ticker-amount').textContent = '$' + raised.toLocaleString();
+</script>
+
+</body>
+</html>
