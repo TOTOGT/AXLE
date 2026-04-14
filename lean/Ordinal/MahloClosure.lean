@@ -1,12 +1,10 @@
 -- AXLE/lean/Ordinal/MahloClosure.lean
 -- Mahlo-like closure module: unconditional transfinite closure for G⁶
--- Completes the crystal-law saturation for ALL n
 -- Pablo Nogueira Grossi, G6 LLC, April 2026
 
 import Mathlib.SetTheory.Ordinal.Basic
 import Mathlib.SetTheory.Ordinal.Arithmetic
-import Mathlib.SetTheory.ClubFilter.Basic
-import Mathlib.SetTheory.StationarySet.Basic
+import Mathlib.SetTheory.Ordinal.CofinalityInf
 import AXLE.Crystal.G6
 import AXLE.Symmetry.D6
 
@@ -15,15 +13,16 @@ namespace AXLE.Ordinal
 /-- Mahlo-like closure operator for the G⁶ conjecture -/
 def MahloClosure (α : Ordinal) : Prop :=
   ∀ (β < α), ∃ (γ < α), β < γ ∧
-    (∀ (δ < γ), δ ∈ ClubSet α) ∧
-    (∀ (S : Set Ordinal), S.Stationary → (S ∩ γ).Nonempty)
+    (∀ (δ < γ), IsClubBelow Set.univ δ) ∧
+    (∀ (S : Set Ordinal), IsStationaryBelow S α → (S ∩ γ).Nonempty)
 
 -- The key closure property needed for G⁶
 def isMahloClosed (α : Ordinal) : Prop :=
   MahloClosure α ∧ α.IsRegular ∧ α.IsLimit
 
-/-- The specific ordinal we need for unconditional Collatz lock-in -/
-def G6Ordinal : Ordinal := Ordinal.omega ^ Ordinal.omega   -- ω^ω (the first Mahlo-like level)
+/-- The specific ordinal we need for unconditional Collatz lock-in
+    (countable ordinal used as a placeholder for the transfinite lift) -/
+def G6Ordinal : Ordinal := Ordinal.omega ^ Ordinal.omega
 
 -- Main theorem: unconditional closure under the dm³ operator chain
 theorem g6_unconditional_closure (v : Crystal.PhaseVector) :
@@ -36,14 +35,14 @@ theorem g6_unconditional_closure (v : Crystal.PhaseVector) :
   --   1. Crystal.G6 saturation after ≤ 33 steps
   --   2. Symmetry.D6 eigenmode locking
   --   3. MahloClosure to lift from finite to transfinite orbits
-  sorry   -- ← this is the LAST remaining sorry in the entire Collatz proof
+  sorry   -- ← genuine open analytic gap (requires full dm³ closure)
 
--- Supporting lemmas (provable with current Mathlib + the previous modules)
+-- Supporting lemmas (provable with current Mathlib)
 lemma omega_omega_is_limit : Ordinal.IsLimit G6Ordinal := by
   exact Ordinal.isLimit_pow_omega
 
 lemma club_filter_intersection_nonempty :
-  ∀ (S : Set Ordinal), S.Stationary → (S ∩ G6Ordinal).Nonempty := by
+  ∀ (S : Set Ordinal), IsStationaryBelow S G6Ordinal → (S ∩ G6Ordinal).Nonempty := by
   intro S hS
   -- Uses Mathlib's stationary set theory
   sorry  -- standard lemma; fill with existing club filter results
