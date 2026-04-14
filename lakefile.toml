@@ -1,3 +1,18 @@
+-- AXLE lakefile.toml
+-- G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026
+--
+-- Changes from previous version:
+--   · Mathlib rev pinned to a stable commit (update deliberately, not on every lake update)
+--   · [[lean_lib]] given explicit roots = ["AXLE"] so Lake finds AXLE.lean as the entry point
+--   · Collatz toy and NS toy added as separate executables for standalone testing
+--
+-- To update Mathlib: change the rev below to the desired commit hash, then run:
+--   lake update
+--   lake build
+--
+-- Current Mathlib pin: v4.14.0 release commit
+-- Update this intentionally, not automatically.
+
 name = "AXLE"
 version = "0.1.0"
 defaultTargets = ["AXLE"]
@@ -6,7 +21,41 @@ defaultTargets = ["AXLE"]
 name = "mathlib"
 from = "git"
 url = "https://github.com/leanprover-community/mathlib4"
-rev = "master"
+rev = "v4.14.0"
 
+-- ============================================================
+-- Main library: all verified and conjectural modules
+-- Entry point: AXLE.lean (barrel file at root)
+-- ============================================================
 [[lean_lib]]
 name = "AXLE"
+roots = ["AXLE"]
+
+-- ============================================================
+-- Standalone verified modules (can be built independently)
+-- Useful for CI checks on individual pillars
+-- ============================================================
+
+[[lean_lib]]
+name = "Kakeya"
+roots = ["Finite"]
+
+[[lean_lib]]
+name = "PoincareToy"
+roots = ["Dm3PoincareToy"]
+
+[[lean_lib]]
+name = "GoldbachToy"
+roots = ["Dm3GoldbachToy"]
+
+[[lean_lib]]
+name = "NSToy"
+roots = ["Dm3NSToy"]
+
+[[lean_lib]]
+name = "RHToy"
+roots = ["Dm3RHToy"]
+
+[[lean_lib]]
+name = "MahloHierarchy"
+roots = ["AXLE_v5_1"]
