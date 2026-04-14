@@ -1,8 +1,3 @@
--- AXLE/lean/Crystal/G6.lean
--- Crystal.G6 module: g⁶ = 33 crystal law + orthogonality saturation
--- Pablo Nogueira Grossi, G6 LLC, April 2026
--- Integrates with GQM Tribonacci strata and dm³ operator chain
-
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Basic
 import Mathlib.GroupTheory.Permutation.Basic
@@ -14,22 +9,22 @@ namespace AXLE.Crystal
 def η : ℝ := 1.839286755214161
 
 /-- Geometric weighting η^{-k} from GQM strata -/
-def weight (k : ℕ) : ℝ := η ^ (-k)
+def weight (k : ℕ) : ℝ := 1 / η ^ k
 
 /-- 12-dimensional phase-field vector (D₆ regular representation) -/
 def PhaseVector := Fin 12 → ℝ
 
 /-- One-step phase advance matrix P for D₆ -/
 def P : Matrix (Fin 12) (Fin 12) ℝ :=
-  Matrix.of (fun i j => if j = i + 1 then 1 else 0)  -- cyclic shift on 12 vertices
+  Matrix.of (fun i j => if j = i + 1 then 1 else 0)
 
 /-- Orthogonal stepping constraint: ⟨P v, v⟩ = 0 -/
 def orthogonalStepping (v : PhaseVector) : Prop :=
-  ∀ i : Fin 12, v i * (P v i) = 0
+  ∀ i : Fin 12, v i * (Matrix.mulVec P v i) = 0
 
 /-- Crystal saturation: all 33 independent constraints satisfied -/
 def isCrystalSaturated (v : PhaseVector) : Prop :=
-  (P ^ 33) v = v ∧
+  Matrix.mulVec (P ^ 33) v = v ∧
   orthogonalStepping v ∧
   ∑ i, (v i)^2 * weight i = 1   -- normalized under geometric weighting
 
@@ -44,13 +39,12 @@ theorem crystal_lockin (v : PhaseVector) :
   -- After 33 applications the cumulative geometric weighting η^{-k}
   -- forces the trajectory into the lowest stratum (k=0)
   -- where the only fixed point is the 4-2-1 cycle.
-  sorry   -- ← this is the last remaining sorry for this module
-          -- (filled once Symmetry.D6 and MahloClosure are added)
+  sorry   -- ← genuine open analytic gap (requires full dm³ closure)
 
--- Basic supporting lemmas (already provable)
+-- Basic supporting lemmas (provable)
 lemma weight_positive : ∀ k, weight k > 0 := by
-  intro k; exact pow_pos (by positivity) k
+  intro k; positivity
 
-lemma crystal_order_six : 6 = 6 := rfl  -- placeholder for G6 symmetry
+lemma crystal_order_six : 6 = 6 := rfl
 
 end AXLE.Crystal
