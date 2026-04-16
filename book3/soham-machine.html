@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>So-Haṃ Machine · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060810;color:#d0d8e8;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#8090c0}
+.sub{font-size:13px;color:#404858;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#506080;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#8090c0}
+.card{background:#0a0c14;border:0.5px solid #181c28;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:540px}
+.ct{font-size:11px;font-weight:600;color:#304060;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#506070;min-width:110px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#6080c0}
+.val{font-size:12px;font-weight:600;min-width:56px;text-align:right;color:#8090c0;flex-shrink:0}
+.breath-display{background:#080a12;border:0.5px solid #181c28;border-radius:10px;padding:1rem;margin-bottom:0.6rem;text-align:center}
+.breath-circle{width:80px;height:80px;border-radius:50%;border:2px solid #304060;margin:0 auto 0.5rem;display:flex;align-items:center;justify-content:center;font-size:18px;color:#6080c0;transition:all 0.5s ease}
+.breath-label{font-size:12px;color:#405060;font-style:italic}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:540px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #202838;background:transparent;color:#8090a0;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#0e1018}
+button.on{background:#081020;color:#6090d0;border-color:#305080}
+#viz{width:100%;height:64px;display:block;margin-top:0.6rem;border-radius:8px;background:#060810}
+.status{font-size:11px;color:#303848;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:540px}
+.footer{margin-top:2rem;font-size:11px;color:#202830;max-width:540px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>So-Haṃ Machine</h1>
+<p class="sub">The breath mantra · so = inhalation · haṃ = exhalation · the self is that</p>
+
+<div class="card">
+  <div class="ct">Breath cycle</div>
+  <div class="breath-display">
+    <div class="breath-circle" id="breathCircle">so</div>
+    <div class="breath-label" id="breathLabel">inhale</div>
+  </div>
+  <div class="row"><label>Inhale (so)</label><input type="range" id="inhale" min="2" max="10" step="0.5" value="4"><span class="val" id="inhalev">4.0 s</span></div>
+  <div class="row"><label>Hold in</label><input type="range" id="holdIn" min="0" max="8" step="0.5" value="1"><span class="val" id="holdInv">1.0 s</span></div>
+  <div class="row"><label>Exhale (haṃ)</label><input type="range" id="exhale" min="2" max="12" step="0.5" value="6"><span class="val" id="exhalev">6.0 s</span></div>
+  <div class="row"><label>Hold out</label><input type="range" id="holdOut" min="0" max="8" step="0.5" value="1"><span class="val" id="holdOutv">1.0 s</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">So tone (inhale) · rising</div>
+  <div class="row"><label>Frequency</label><input type="range" id="soF" min="80" max="200" step="1" value="126"><span class="val" id="soFv">126 Hz</span></div>
+  <div class="row"><label>Volume</label><input type="range" id="soV" min="0" max="1" step="0.01" value="0.5"><span class="val" id="soVv">50%</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">Haṃ tone (exhale) · descending</div>
+  <div class="row"><label>Frequency</label><input type="range" id="hamF" min="60" max="160" step="1" value="108"><span class="val" id="hamFv">108 Hz</span></div>
+  <div class="row"><label>Volume</label><input type="range" id="hamV" min="0" max="1" step="0.01" value="0.5"><span class="val" id="hamVv">50%</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">Ground drone</div>
+  <div class="row"><label>Base tone</label><input type="range" id="droneF" min="60" max="150" step="1" value="84"><span class="val" id="droneFv">84 Hz</span></div>
+  <div class="row"><label>Volume</label><input type="range" id="droneV" min="0" max="0.6" step="0.01" value="0.2"><span class="val" id="droneVv">20%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnSave">Save loop</button>
+</div>
+
+<p class="status" id="status">Ready — so (126 Hz) · haṃ (108 Hz) · ground (84 Hz)</p>
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+Principia Orthogona Series · github.com/TOTOGT/AXLE</div>
+
+<script>
+let ctx,master,analyser,raf;
+let droneOsc=null,droneGain=null,soOsc=null,soGain=null,hamOsc=null,hamGain=null;
+let breathRaf=null,playing=false,breathPhase='inhale',breathT=0;
+let recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+
+function buildDrone(){
+  if(!ctx)return;
+  if(droneOsc){try{droneOsc.stop()}catch(e){}}
+  droneOsc=ctx.createOscillator();droneOsc.type='sine';droneOsc.frequency.value=gv('droneF');
+  droneGain=ctx.createGain();droneGain.gain.value=gv('droneV');
+  const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=gv('droneF')*3;
+  droneOsc.connect(f);f.connect(droneGain);droneGain.connect(master);
+  droneOsc.start();
+}
+
+function buildVoices(){
+  if(!ctx)return;
+  if(soOsc){try{soOsc.stop()}catch(e){}}
+  if(hamOsc){try{hamOsc.stop()}catch(e){}}
+  soOsc=ctx.createOscillator();soOsc.type='sine';soOsc.frequency.value=gv('soF');
+  soGain=ctx.createGain();soGain.gain.value=0;
+  soOsc.connect(soGain);soGain.connect(master);soOsc.start();
+  hamOsc=ctx.createOscillator();hamOsc.type='sine';hamOsc.frequency.value=gv('hamF');
+  hamGain=ctx.createGain();hamGain.gain.value=0;
+  hamOsc.connect(hamGain);hamGain.connect(master);hamOsc.start();
+}
+
+let breathTimer=null;
+function runBreath(){
+  const inh=gv('inhale'),hIn=gv('holdIn'),exh=gv('exhale'),hOut=gv('holdOut');
+  const circle=document.getElementById('breathCircle'),label=document.getElementById('breathLabel');
+  const t=ctx.currentTime;
+  function doInhale(){
+    breathPhase='inhale';
+    circle.textContent='so';label.textContent='inhale';
+    circle.style.borderColor='#6090d0';circle.style.transform='scale(1.3)';
+    if(soGain){soGain.gain.cancelScheduledValues(t);soGain.gain.setTargetAtTime(gv('soV'),t,0.3);}
+    if(hamGain)hamGain.gain.setTargetAtTime(0,t,0.3);
+    if(soOsc)soOsc.frequency.setValueAtTime(gv('soF')*0.95,t),soOsc.frequency.linearRampToValueAtTime(gv('soF'),t+inh);
+    breathTimer=setTimeout(doHoldIn,inh*1000);
+  }
+  function doHoldIn(){
+    breathPhase='hold';circle.textContent='·';label.textContent='hold';
+    circle.style.borderColor='#8090a0';circle.style.transform='scale(1.3)';
+    breathTimer=setTimeout(doExhale,hIn*1000);
+  }
+  function doExhale(){
+    breathPhase='exhale';circle.textContent='haṃ';label.textContent='exhale';
+    circle.style.borderColor='#4060a0';circle.style.transform='scale(0.85)';
+    const now=ctx.currentTime;
+    if(hamGain){hamGain.gain.cancelScheduledValues(now);hamGain.gain.setTargetAtTime(gv('hamV'),now,0.3);}
+    if(soGain)soGain.gain.setTargetAtTime(0,now,0.3);
+    if(hamOsc)hamOsc.frequency.setValueAtTime(gv('hamF'),now),hamOsc.frequency.linearRampToValueAtTime(gv('hamF')*0.95,now+exh);
+    breathTimer=setTimeout(doHoldOut,exh*1000);
+  }
+  function doHoldOut(){
+    breathPhase='rest';circle.textContent='·';label.textContent='rest';
+    circle.style.borderColor='#304050';circle.style.transform='scale(0.85)';
+    const now=ctx.currentTime;
+    if(hamGain)hamGain.gain.setTargetAtTime(0,now,0.4);
+    breathTimer=setTimeout(doInhale,hOut*1000);
+  }
+  doInhale();
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#6080c0';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();master.gain.value=0.75;
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  master.connect(analyser);analyser.connect(ctx.destination);
+  buildDrone();buildVoices();playing=true;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='So-Haṃ breathing — '+gv('inhale').toFixed(1)+'s inhale · '+gv('exhale').toFixed(1)+'s exhale';
+  startViz();runBreath();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);clearTimeout(breathTimer);
+  if(droneOsc){try{droneOsc.stop()}catch(e){}}
+  if(soOsc){try{soOsc.stop()}catch(e){}}
+  if(hamOsc){try{hamOsc.stop()}catch(e){}}
+  ctx.close();playing=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('breathCircle').textContent='so';
+  document.getElementById('breathCircle').style.transform='scale(1)';
+  document.getElementById('breathLabel').textContent='inhale';
+  document.getElementById('status').textContent='Stopped';
+}
+
+function bind(id,outId,fmt,cb){
+  document.getElementById(id).addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    document.getElementById(outId).textContent=fmt(v);
+    if(playing&&cb)cb(v);
+  });
+}
+bind('soF','soFv',v=>Math.round(v)+' Hz');
+bind('hamF','hamFv',v=>Math.round(v)+' Hz');
+bind('inhale','inhalev',v=>v.toFixed(1)+' s');
+bind('holdIn','holdInv',v=>v.toFixed(1)+' s');
+bind('exhale','exhalev',v=>v.toFixed(1)+' s');
+bind('holdOut','holdOutv',v=>v.toFixed(1)+' s');
+bind('soV','soVv',v=>Math.round(v*100)+'%');
+bind('hamV','hamVv',v=>Math.round(v*100)+'%');
+bind('droneF','droneFv',v=>Math.round(v)+' Hz');
+bind('droneV','droneVv',v=>Math.round(v*100)+'%',v=>{if(droneGain)droneGain.gain.setTargetAtTime(v,ctx.currentTime,0.2)});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();master.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='soham_loop.webm';a.click();
+    document.getElementById('status').textContent='Saved — soham_loop.webm';
+    master.disconnect(dest);
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 60s...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},60000);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Śrī Yantra Śakti Machine · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#090608;color:#e0c8d8;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#c060a0}
+.sub{font-size:13px;color:#503040;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#804060;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#c060a0}
+.card{background:#0c080c;border:0.5px solid #281828;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:560px}
+.ct{font-size:11px;font-weight:600;color:#402030;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#604050;min-width:110px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#c04080}
+.val{font-size:12px;font-weight:600;min-width:60px;text-align:right;color:#c070a0;flex-shrink:0}
+.yantra{display:block;margin:0 auto 0.8rem;max-width:160px}
+.chakra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:0.7rem}
+.chakra-btn{font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid #281828;background:transparent;color:#806070;cursor:pointer;text-align:center;font-family:Georgia,serif}
+.chakra-btn:hover{background:#140c12}
+.chakra-btn.on{background:#1a0818;color:#e060a0;border-color:#602040}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:560px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #281828;background:transparent;color:#907080;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#100810}
+button.on{background:#160810;color:#e060a0;border-color:#601840}
+#viz{width:100%;height:64px;display:block;margin-top:0.6rem;border-radius:8px;background:#060408}
+.status{font-size:11px;color:#402030;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:560px}
+.footer{margin-top:2rem;font-size:11px;color:#201018;max-width:560px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>Śrī Yantra Śakti Machine</h1>
+<p class="sub">Nine interlocking triangles · 9 tones · the geometry of consciousness as sound</p>
+
+<div class="card">
+  <div class="ct">Nine triangles — tonal grid</div>
+  <div class="chakra-grid" id="triangleGrid"></div>
+  <div class="row"><label>Root (Śrī bīja)</label><input type="range" id="sriRoot" min="100" max="200" step="1" value="136"><span class="val" id="sriRootv">136 Hz</span></div>
+  <div class="row"><label>Tuning system</label>
+    <select id="tuning" style="flex:1;font-size:12px;background:#0c080c;color:#c070a0;border:0.5px solid #281828;border-radius:6px;padding:4px">
+      <option value="just">Just intonation</option>
+      <option value="pythagorean">Pythagorean</option>
+      <option value="equal">Equal temperament</option>
+    </select>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ct">Śakti modulation</div>
+  <div class="row"><label>Śrīṃ shimmer</label><input type="range" id="shimmer" min="0" max="1" step="0.01" value="0.3"><span class="val" id="shimmerv">30%</span></div>
+  <div class="row"><label>Rotation rate</label><input type="range" id="rotRate" min="0.01" max="0.5" step="0.01" value="0.07"><span class="val" id="rotRatev">0.07 Hz</span></div>
+  <div class="row"><label>Bindu pulse</label><input type="range" id="binduPulse" min="0" max="1" step="0.01" value="0.4"><span class="val" id="binduPulsev">40%</span></div>
+  <div class="row"><label>Master volume</label><input type="range" id="sriVol" min="0" max="1" step="0.01" value="0.65"><span class="val" id="sriVolv">65%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnAll">All 9 triangles</button>
+  <button id="btnBindu">Bindu (centre)</button>
+  <button id="btnSave">Save loop</button>
+</div>
+
+<p class="status" id="status">Ready — Śrī Yantra · 9 triangles · just intonation</p>
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+Principia Orthogona Series · github.com/TOTOGT/AXLE</div>
+
+<script>
+let ctx,master,analyser,raf;
+let triOscs=[],triGains=[],triActive=[];
+let rotLfo=null,binduOsc=null,binduGain=null,shimLfo=null;
+let playing=false,recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+
+const TRI_NAMES=['Sarva-saubhāgya','Sarva-ārthasādhaka','Sarva-rakṣākara','Sarva-rogahara','Sarva-siddhiprada','Sarva-ānandamaya','Sarva-rakṣākara','Sarva-roga-hara','Sarva-siddhi'];
+const TRI_SHORT=['T1','T2','T3','T4','T5','T6','T7','T8','T9'];
+
+function getFreqs(root,tuning){
+  const ratios={
+    just:[1,9/8,5/4,4/3,3/2,5/3,15/8,2,9/4],
+    pythagorean:[1,9/8,81/64,4/3,3/2,27/16,243/128,2,9/4],
+    equal:[1,Math.pow(2,2/12),Math.pow(2,4/12),Math.pow(2,5/12),Math.pow(2,7/12),Math.pow(2,9/12),Math.pow(2,11/12),2,Math.pow(2,14/12)]
+  };
+  return (ratios[tuning]||ratios.just).map(r=>root*r);
+}
+
+function buildGrid(){
+  const grid=document.getElementById('triangleGrid');
+  grid.innerHTML='';
+  TRI_SHORT.forEach((name,i)=>{
+    const btn=document.createElement('button');
+    btn.className='chakra-btn'+(triActive[i]?' on':'');
+    btn.textContent=name;
+    btn.title=TRI_NAMES[i];
+    btn.onclick=()=>{
+      triActive[i]=!triActive[i];
+      btn.classList.toggle('on');
+      if(playing&&triGains[i]){
+        triGains[i].gain.setTargetAtTime(triActive[i]?0.15:0,ctx.currentTime,0.3);
+      }
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function buildEngine(){
+  if(!ctx)return;
+  triOscs.forEach(o=>{try{o.stop()}catch(e){}});
+  if(rotLfo){try{rotLfo.stop()}catch(e){}}
+  if(binduOsc){try{binduOsc.stop()}catch(e){}}
+  if(shimLfo){try{shimLfo.stop()}catch(e){}}
+  triOscs=[];triGains=[];
+  if(master)master.disconnect();
+  master=ctx.createGain();master.gain.value=gv('sriVol');
+  master.connect(analyser);
+
+  const freqs=getFreqs(gv('sriRoot'),document.getElementById('tuning').value);
+
+  for(let i=0;i<9;i++){
+    const o=ctx.createOscillator();o.type=i===0?'sawtooth':'sine';
+    o.frequency.value=freqs[i]||freqs[0]*(i+1);
+    const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=(freqs[i]||200)*5;f.Q.value=1;
+    const g=ctx.createGain();g.gain.value=triActive[i]?0.15:0;
+    o.connect(f);f.connect(g);g.connect(master);
+    triOscs.push(o);triGains.push(g);o.start();
+  }
+
+  // rotation LFO across triangle gains
+  rotLfo=ctx.createOscillator();rotLfo.type='sine';
+  rotLfo.frequency.value=gv('rotRate');
+  triGains.forEach((g,i)=>{
+    const phase=i/9*Math.PI*2;
+    const rlg=ctx.createGain();rlg.gain.value=0.04;
+    rotLfo.connect(rlg);rlg.connect(g.gain);
+  });
+  rotLfo.start();
+
+  // bindu (centre point oscillator)
+  binduOsc=ctx.createOscillator();binduOsc.type='sine';
+  binduOsc.frequency.value=gv('sriRoot')*4;
+  binduGain=ctx.createGain();binduGain.gain.value=gv('binduPulse')*0.3;
+  binduOsc.connect(binduGain);binduGain.connect(master);binduOsc.start();
+
+  // shimmer LFO
+  shimLfo=ctx.createOscillator();shimLfo.type='sine';
+  shimLfo.frequency.value=gv('sriRoot')*gv('shimmer')*0.3;
+  const slg=ctx.createGain();slg.gain.value=gv('sriRoot')*gv('shimmer')*0.1;
+  shimLfo.connect(slg);slg.connect(triOscs[0].frequency);shimLfo.start();
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#c04080';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+// init active state
+for(let i=0;i<9;i++)triActive[i]=(i<5);
+buildGrid();
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  analyser.connect(ctx.destination);
+  buildEngine();playing=true;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='Śrī Yantra active — '+triActive.filter(Boolean).length+' triangles sounding · root '+gv('sriRoot').toFixed(0)+' Hz';
+  startViz();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);
+  triOscs.forEach(o=>{try{o.stop()}catch(e){}});
+  if(rotLfo){try{rotLfo.stop()}catch(e){}}
+  if(binduOsc){try{binduOsc.stop()}catch(e){}}
+  if(shimLfo){try{shimLfo.stop()}catch(e){}}
+  ctx.close();playing=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('status').textContent='Stopped';
+}
+
+function bind(id,outId,fmt,cb){
+  document.getElementById(id).addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    document.getElementById(outId).textContent=fmt(v);
+    if(playing&&cb)cb(v);
+  });
+}
+bind('sriRoot','sriRootv',v=>Math.round(v)+' Hz',()=>{if(playing)buildEngine()});
+bind('shimmer','shimmerv',v=>Math.round(v*100)+'%');
+bind('rotRate','rotRatev',v=>v.toFixed(2)+' Hz',v=>{if(rotLfo)rotLfo.frequency.value=v});
+bind('binduPulse','binduPulsev',v=>Math.round(v*100)+'%',v=>{if(binduGain)binduGain.gain.setTargetAtTime(v*0.3,ctx.currentTime,0.2)});
+bind('sriVol','sriVolv',v=>Math.round(v*100)+'%',v=>{if(master)master.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+document.getElementById('tuning').addEventListener('change',()=>{if(playing)buildEngine()});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnAll').onclick=()=>{
+  for(let i=0;i<9;i++){triActive[i]=true;if(playing&&triGains[i])triGains[i].gain.setTargetAtTime(0.15,ctx.currentTime,0.5);}
+  buildGrid();document.getElementById('status').textContent='All 9 triangles active';
+};
+document.getElementById('btnBindu').onclick=()=>{
+  for(let i=0;i<9;i++){triActive[i]=false;if(playing&&triGains[i])triGains[i].gain.setTargetAtTime(0,ctx.currentTime,0.5);}
+  if(playing&&binduGain)binduGain.gain.setTargetAtTime(0.6,ctx.currentTime,0.5);
+  buildGrid();document.getElementById('status').textContent='Bindu only — centre point · pure Śakti';
+};
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();master.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='sri_yantra_loop.webm';a.click();
+    document.getElementById('status').textContent='Saved — sri_yantra_loop.webm';
+    master.disconnect(dest);
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 30s...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},30000);
+};
+</script>
+</body>
+</html>

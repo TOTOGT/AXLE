@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G6 Drone Machine · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060808;color:#c8d8c0;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#60a870}
+.sub{font-size:13px;color:#304838;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#408050;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#60a870}
+.card{background:#080c08;border:0.5px solid #182018;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:560px}
+.ct{font-size:11px;font-weight:600;color:#284028;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#506050;min-width:110px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#40a060}
+.val{font-size:12px;font-weight:600;min-width:60px;text-align:right;color:#70a878;flex-shrink:0}
+.invariants{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:0.8rem}
+.inv-card{background:#060a06;border:0.5px solid #182018;border-radius:8px;padding:8px 10px;text-align:center}
+.inv-val{font-size:16px;font-weight:600;color:#60a870}
+.inv-name{font-size:10px;color:#405040;margin-top:2px;font-style:italic}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:560px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #202820;background:transparent;color:#607060;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#0c100c}
+button.on{background:#081408;color:#60c070;border-color:#30601}
+#viz{width:100%;height:64px;display:block;margin-top:0.6rem;border-radius:8px;background:#040804}
+.status{font-size:11px;color:#304030;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:560px}
+.footer{margin-top:2rem;font-size:11px;color:#202820;max-width:560px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>G6 Drone Machine</h1>
+<p class="sub">dm³ canonical invariants as sound · (T*, μmax, τ) = (2π, −2, 2) · ε₀ = 1/3 · C → K → F → U</p>
+
+<div class="card">
+  <div class="ct">Canonical invariants</div>
+  <div class="invariants">
+    <div class="inv-card"><div class="inv-val">2π</div><div class="inv-name">T* period</div></div>
+    <div class="inv-card"><div class="inv-val">−2</div><div class="inv-name">μmax exponent</div></div>
+    <div class="inv-card"><div class="inv-val">2</div><div class="inv-name">τ threshold</div></div>
+  </div>
+  <div class="row"><label>Root (C)</label><input type="range" id="rootF" min="40" max="120" step="0.5" value="63"><span class="val" id="rootFv">63.0 Hz</span></div>
+  <div class="row"><label>Curvature (K)</label><input type="range" id="kF" min="80" max="200" step="0.5" value="84"><span class="val" id="kFv">84.0 Hz</span></div>
+  <div class="row"><label>Fold (F)</label><input type="range" id="foldF" min="100" max="280" step="0.5" value="126"><span class="val" id="foldFv">126.0 Hz</span></div>
+  <div class="row"><label>Unfold (U)</label><input type="range" id="unfoldF" min="140" max="360" step="0.5" value="168"><span class="val" id="unfoldFv">168.0 Hz</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">Stability layer · ε₀ = 1/3</div>
+  <div class="row"><label>G6 resonance</label><input type="range" id="g6F" min="28" max="50" step="0.1" value="33"><span class="val" id="g6Fv">33.0 Hz</span></div>
+  <div class="row"><label>Schumann (n=1)</label><input type="range" id="schF" min="7" max="9" step="0.01" value="7.83"><span class="val" id="schFv">7.83 Hz</span></div>
+  <div class="row"><label>Pulse rate</label><input type="range" id="pulseRate" min="1" max="20" step="0.1" value="6"><span class="val" id="pulseRatev">6.0 s</span></div>
+  <div class="row"><label>Master volume</label><input type="range" id="masterV" min="0" max="1" step="0.01" value="0.65"><span class="val" id="masterVv">65%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnCanon">Reset canonical</button>
+  <button id="btnSave">Save loop</button>
+</div>
+
+<p class="status" id="status">Ready — C→K→F→U operator chain as harmonic series</p>
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+dm³ canonical: (T*,μmax,τ)=(2π,−2,2) · ε₀=1/3 · Principia Orthogona</div>
+
+<script>
+let ctx,master,analyser,raf;
+let oscs={},gains={};
+let pulseLfo=null,schumannLfo=null;
+let playing=false,recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+const LAYERS=['root','k','fold','unfold','g6'];
+const COLORS=['#40c060','#60a840','#80c050','#a0d060','#40906a'];
+
+function buildAll(){
+  if(!ctx)return;
+  LAYERS.forEach(k=>{if(oscs[k]){try{oscs[k].stop()}catch(e){}}});
+  if(pulseLfo){try{pulseLfo.stop()}catch(e){}}
+  if(schumannLfo){try{schumannLfo.stop()}catch(e){}}
+  if(master)master.disconnect();
+  master=ctx.createGain();master.gain.value=gv('masterV');
+  master.connect(analyser);
+
+  const freqs={root:gv('rootF'),k:gv('kF'),fold:gv('foldF'),unfold:gv('unfoldF'),g6:gv('g6F')};
+  const vols={root:0.6,k:0.45,fold:0.35,unfold:0.25,g6:0.3};
+  const types={root:'sawtooth',k:'sine',fold:'sine',unfold:'sine',g6:'sine'};
+
+  LAYERS.forEach(k=>{
+    const o=ctx.createOscillator();o.type=types[k];o.frequency.value=freqs[k];
+    const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=freqs[k]*4;f.Q.value=1.5;
+    const g=ctx.createGain();g.gain.value=vols[k];
+    o.connect(f);f.connect(g);g.connect(master);
+    oscs[k]=o;gains[k]=g;o.start();
+  });
+
+  // pulse envelope on g6 layer
+  pulseLfo=ctx.createOscillator();pulseLfo.type='sine';
+  pulseLfo.frequency.value=1/gv('pulseRate');
+  const plg=ctx.createGain();plg.gain.value=0.15;
+  pulseLfo.connect(plg);plg.connect(gains.g6.gain);pulseLfo.start();
+
+  // sub-threshold schumann modulation on root
+  schumannLfo=ctx.createOscillator();schumannLfo.type='sine';
+  schumannLfo.frequency.value=gv('schF');
+  const slg=ctx.createGain();slg.gain.value=0.8;
+  schumannLfo.connect(slg);slg.connect(oscs.root.frequency);schumannLfo.start();
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  let colorIdx=0;
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#40a060';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  analyser.connect(ctx.destination);
+  buildAll();playing=true;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='G6 Drone — C('+gv('rootF').toFixed(0)+'Hz) K('+gv('kF').toFixed(0)+'Hz) F('+gv('foldF').toFixed(0)+'Hz) U('+gv('unfoldF').toFixed(0)+'Hz)';
+  startViz();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);
+  LAYERS.forEach(k=>{if(oscs[k]){try{oscs[k].stop()}catch(e){}}});
+  if(pulseLfo){try{pulseLfo.stop()}catch(e){}}
+  if(schumannLfo){try{schumannLfo.stop()}catch(e){}}
+  ctx.close();playing=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('status').textContent='Stopped';
+}
+
+function bind(id,outId,fmt,cb){
+  document.getElementById(id).addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    document.getElementById(outId).textContent=fmt(v);
+    if(playing&&cb)cb(v);
+  });
+}
+bind('rootF','rootFv',v=>v.toFixed(1)+' Hz',v=>{if(oscs.root)oscs.root.frequency.setTargetAtTime(v,ctx.currentTime,0.3)});
+bind('kF','kFv',v=>v.toFixed(1)+' Hz',v=>{if(oscs.k)oscs.k.frequency.setTargetAtTime(v,ctx.currentTime,0.3)});
+bind('foldF','foldFv',v=>v.toFixed(1)+' Hz',v=>{if(oscs.fold)oscs.fold.frequency.setTargetAtTime(v,ctx.currentTime,0.3)});
+bind('unfoldF','unfoldFv',v=>v.toFixed(1)+' Hz',v=>{if(oscs.unfold)oscs.unfold.frequency.setTargetAtTime(v,ctx.currentTime,0.3)});
+bind('g6F','g6Fv',v=>v.toFixed(1)+' Hz',v=>{if(oscs.g6)oscs.g6.frequency.setTargetAtTime(v,ctx.currentTime,0.3)});
+bind('schF','schFv',v=>v.toFixed(2)+' Hz',v=>{if(schumannLfo)schumannLfo.frequency.value=v});
+bind('pulseRate','pulseRatev',v=>v.toFixed(1)+' s',v=>{if(pulseLfo)pulseLfo.frequency.value=1/v});
+bind('masterV','masterVv',v=>Math.round(v*100)+'%',v=>{if(master)master.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnCanon').onclick=()=>{
+  const canon={rootF:63,kF:84,foldF:126,unfoldF:168,g6F:33,schF:7.83,pulseRate:6};
+  Object.entries(canon).forEach(([id,v])=>{
+    document.getElementById(id).value=v;
+    const outId=id+'v';
+    const el=document.getElementById(outId);
+    if(el)el.textContent=id==='schF'?v.toFixed(2)+' Hz':id==='pulseRate'?v.toFixed(1)+' s':v.toFixed(id==='g6F'?1:1)+' Hz';
+  });
+  if(playing)buildAll();
+  document.getElementById('status').textContent='Canonical invariants restored';
+};
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();master.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='g6_drone_loop.webm';a.click();
+    document.getElementById('status').textContent='Saved — g6_drone_loop.webm';
+    master.disconnect(dest);
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 30s...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},30000);
+};
+</script>
+</body>
+</html>

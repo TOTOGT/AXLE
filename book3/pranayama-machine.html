@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pranayama Machine · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060808;color:#c8d8d0;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#60a890}
+.sub{font-size:13px;color:#304038;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#408060;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#60a890}
+.card{background:#080c0a;border:0.5px solid #182820;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:540px}
+.ct{font-size:11px;font-weight:600;color:#284038;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#506058;min-width:110px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#40a878}
+.val{font-size:12px;font-weight:600;min-width:56px;text-align:right;color:#70a888;flex-shrink:0}
+.breath-display{text-align:center;padding:1.5rem 1rem;background:#060a08;border-radius:10px;margin-bottom:0.8rem;position:relative}
+.big-circle{width:100px;height:100px;border-radius:50%;border:2px solid #284038;margin:0 auto 0.75rem;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.8s ease;position:relative}
+.phase-text{font-size:16px;color:#60a880;font-style:italic}
+.count-text{font-size:11px;color:#405048;margin-top:2px}
+.ratio-presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:0.6rem}
+.preset{font-size:11px;padding:3px 10px;border-radius:6px;border:0.5px solid #182820;background:transparent;color:#607068;cursor:pointer;font-family:Georgia,serif}
+.preset:hover{background:#0c1210}
+.preset.on{background:#0e1e18;color:#60c090;border-color:#306050}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:540px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #182820;background:transparent;color:#708070;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#0c1210}
+button.on{background:#081410;color:#60c090;border-color:#306050}
+#viz{width:100%;height:60px;display:block;margin-top:0.5rem;border-radius:8px;background:#060806}
+.status{font-size:11px;color:#304038;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:540px}
+.footer{margin-top:2rem;font-size:11px;color:#202820;max-width:540px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>Pranayama Machine</h1>
+<p class="sub">Breath regulation · tonal guidance · prana as the operator between compression and unfolding</p>
+
+<div class="card">
+  <div class="ct">Breath cycle</div>
+  <div class="breath-display">
+    <div class="big-circle" id="bigCircle">
+      <span class="phase-text" id="phaseText">inhale</span>
+      <span class="count-text" id="countText">0.0</span>
+    </div>
+    <div style="font-size:11px;color:#405048" id="cycleCount">cycle 0</div>
+  </div>
+  <div class="ratio-presets">
+    <button class="preset on" id="pre478" data-vals="4,0,7,8">4-7-8</button>
+    <button class="preset" id="pre124" data-vals="1,0,2,4">1-2 (box-light)</button>
+    <button class="preset" id="pre4444" data-vals="4,4,4,4">4-4-4-4 (box)</button>
+    <button class="preset" id="pre8816" data-vals="8,8,0,16">8-8-16</button>
+    <button class="preset" id="preNadi" data-vals="4,2,6,2">Nāḍī Śodhana</button>
+  </div>
+  <div class="row"><label>Inhale</label><input type="range" id="inh" min="1" max="12" step="0.5" value="4"><span class="val" id="inhv">4.0 s</span></div>
+  <div class="row"><label>Hold in</label><input type="range" id="hIn" min="0" max="16" step="0.5" value="0"><span class="val" id="hInv">0.0 s</span></div>
+  <div class="row"><label>Exhale</label><input type="range" id="exh" min="1" max="20" step="0.5" value="7"><span class="val" id="exhv">7.0 s</span></div>
+  <div class="row"><label>Hold out</label><input type="range" id="hOut" min="0" max="12" step="0.5" value="8"><span class="val" id="hOutv">8.0 s</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">Tonal guidance</div>
+  <div class="row"><label>Inhale tone</label><input type="range" id="inhTone" min="60" max="200" step="1" value="126"><span class="val" id="inhTonev">126 Hz</span></div>
+  <div class="row"><label>Exhale tone</label><input type="range" id="exhTone" min="40" max="160" step="1" value="84"><span class="val" id="exhTonev">84 Hz</span></div>
+  <div class="row"><label>Hold tone</label><input type="range" id="holdTone" min="30" max="120" step="1" value="63"><span class="val" id="holdTonev">63 Hz</span></div>
+  <div class="row"><label>Drone base</label><input type="range" id="droneBase" min="40" max="100" step="1" value="42"><span class="val" id="droneBasev">42 Hz</span></div>
+  <div class="row"><label>Volume</label><input type="range" id="pVol" min="0" max="1" step="0.01" value="0.6"><span class="val" id="pVolv">60%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnSave">Save 5-min loop</button>
+</div>
+
+<p class="status" id="status">Ready — 4-7-8 ratio · inhale 126 Hz · exhale 84 Hz</p>
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+Principia Orthogona Series · github.com/TOTOGT/AXLE</div>
+
+<script>
+let ctx,master,analyser,raf;
+let droneOsc=null,droneGain=null,guideOsc=null,guideGain=null;
+let playing=false,breathTimer=null,cycleNum=0,phaseCountRaf=null;
+let phaseStart=0,phaseDur=0,currentPhase='inhale';
+let recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+
+function buildAudio(){
+  if(!ctx)return;
+  if(droneOsc){try{droneOsc.stop()}catch(e){}}
+  if(guideOsc){try{guideOsc.stop()}catch(e){}}
+  if(master)master.disconnect();
+  master=ctx.createGain();master.gain.value=gv('pVol');
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  master.connect(analyser);analyser.connect(ctx.destination);
+
+  droneOsc=ctx.createOscillator();droneOsc.type='sine';droneOsc.frequency.value=gv('droneBase');
+  droneGain=ctx.createGain();droneGain.gain.value=0.3;
+  const df=ctx.createBiquadFilter();df.type='lowpass';df.frequency.value=gv('droneBase')*3;
+  droneOsc.connect(df);df.connect(droneGain);droneGain.connect(master);droneOsc.start();
+
+  guideOsc=ctx.createOscillator();guideOsc.type='sine';guideOsc.frequency.value=gv('inhTone');
+  guideGain=ctx.createGain();guideGain.gain.value=0;
+  guideOsc.connect(guideGain);guideGain.connect(master);guideOsc.start();
+}
+
+function setPhase(phase,dur){
+  currentPhase=phase;phaseDur=dur;phaseStart=Date.now();
+  const circle=document.getElementById('bigCircle');
+  const phaseEl=document.getElementById('phaseText');
+  const t=ctx?ctx.currentTime:0;
+  if(phase==='inhale'){
+    phaseEl.textContent='inhale';
+    circle.style.borderColor='#60a880';circle.style.transform='scale(1.35)';
+    if(guideOsc)guideOsc.frequency.setTargetAtTime(gv('inhTone'),t,0.3);
+    if(guideGain)guideGain.gain.setTargetAtTime(0.5,t,0.4);
+  } else if(phase==='hold-in'||phase==='hold-out'){
+    phaseEl.textContent=phase==='hold-in'?'hold':'rest';
+    circle.style.borderColor='#405048';circle.style.transform=phase==='hold-in'?'scale(1.35)':'scale(0.85)';
+    if(guideOsc)guideOsc.frequency.setTargetAtTime(gv('holdTone'),t,0.2);
+    if(guideGain)guideGain.gain.setTargetAtTime(0.2,t,0.3);
+  } else if(phase==='exhale'){
+    phaseEl.textContent='exhale';
+    circle.style.borderColor='#306050';circle.style.transform='scale(0.85)';
+    if(guideOsc)guideOsc.frequency.setTargetAtTime(gv('exhTone'),t,0.3);
+    if(guideGain)guideGain.gain.setTargetAtTime(0.4,t,0.4);
+  }
+}
+
+function runCount(){
+  const el=document.getElementById('countText');
+  const elapsed=(Date.now()-phaseStart)/1000;
+  const remaining=Math.max(0,phaseDur-elapsed);
+  el.textContent=remaining.toFixed(1);
+  phaseCountRaf=requestAnimationFrame(runCount);
+}
+
+function runBreath(){
+  const inh=gv('inh'),hIn=gv('hIn'),exh=gv('exh'),hOut=gv('hOut');
+  function doInh(){
+    setPhase('inhale',inh);
+    breathTimer=setTimeout(()=>{
+      if(hIn>0){setPhase('hold-in',hIn);breathTimer=setTimeout(doExh,hIn*1000);}
+      else doExh();
+    },inh*1000);
+  }
+  function doExh(){
+    setPhase('exhale',exh);
+    breathTimer=setTimeout(()=>{
+      if(hOut>0){setPhase('hold-out',hOut);breathTimer=setTimeout(()=>{cycleNum++;document.getElementById('cycleCount').textContent='cycle '+cycleNum;doInh();},hOut*1000);}
+      else{cycleNum++;document.getElementById('cycleCount').textContent='cycle '+cycleNum;doInh();}
+    },exh*1000);
+  }
+  doInh();
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#40a870';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  buildAudio();playing=true;cycleNum=0;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='Pranayama active — '+gv('inh').toFixed(0)+'-'+gv('hIn').toFixed(0)+'-'+gv('exh').toFixed(0)+'-'+gv('hOut').toFixed(0)+' ratio';
+  startViz();runBreath();runCount();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);cancelAnimationFrame(phaseCountRaf);clearTimeout(breathTimer);
+  if(droneOsc){try{droneOsc.stop()}catch(e){}}
+  if(guideOsc){try{guideOsc.stop()}catch(e){}}
+  ctx.close();playing=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('bigCircle').style.transform='scale(1)';
+  document.getElementById('bigCircle').style.borderColor='#284038';
+  document.getElementById('phaseText').textContent='inhale';
+  document.getElementById('countText').textContent='';
+  document.getElementById('status').textContent='Stopped — '+cycleNum+' cycles completed';
+}
+
+function bind(id,outId,fmt){
+  document.getElementById(id).addEventListener('input',function(){
+    document.getElementById(outId).textContent=fmt(parseFloat(this.value));
+  });
+}
+bind('inh','inhv',v=>v.toFixed(1)+' s');
+bind('hIn','hInv',v=>v.toFixed(1)+' s');
+bind('exh','exhv',v=>v.toFixed(1)+' s');
+bind('hOut','hOutv',v=>v.toFixed(1)+' s');
+bind('inhTone','inhTonev',v=>Math.round(v)+' Hz');
+bind('exhTone','exhTonev',v=>Math.round(v)+' Hz');
+bind('holdTone','holdTonev',v=>Math.round(v)+' Hz');
+bind('droneBase','droneBasev',v=>Math.round(v)+' Hz');
+bind('pVol','pVolv',v=>Math.round(v*100)+'%');
+
+document.querySelectorAll('.preset').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.preset').forEach(b=>b.classList.remove('on'));
+    this.classList.add('on');
+    const vals=this.dataset.vals.split(',').map(Number);
+    ['inh','hIn','exh','hOut'].forEach((id,i)=>{
+      document.getElementById(id).value=vals[i];
+      document.getElementById(id+'v').textContent=vals[i].toFixed(1)+' s';
+    });
+  });
+});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();master.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='pranayama_5min.webm';a.click();
+    document.getElementById('status').textContent='Saved — pranayama_5min.webm';
+    master.disconnect(dest);
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 5 min...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},300000);
+};
+</script>
+</body>
+</html>

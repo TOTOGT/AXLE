@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Om Machine · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080810;color:#e0e8f0;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#a0c8f0}
+.sub{font-size:13px;color:#607080;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#6080a0;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#90b0d0}
+.card{background:#0e0e1a;border:0.5px solid #1e2030;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:540px}
+.ct{font-size:11px;font-weight:600;color:#405070;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#607080;min-width:100px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#4080c0}
+.val{font-size:12px;font-weight:600;min-width:56px;text-align:right;color:#a0c0e0;flex-shrink:0}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:540px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #2a3040;background:transparent;color:#a0b0c0;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#141424}
+button.on{background:#001030;color:#60a0f0;border-color:#204080}
+#viz{width:100%;height:72px;display:block;margin-top:0.6rem;border-radius:8px;background:#060610}
+.status{font-size:11px;color:#405060;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:540px}
+.info{font-size:12px;color:#506070;line-height:1.7;margin-top:0.5rem;padding:0.75rem;background:#0a0a16;border-radius:8px;border:0.5px solid #1a1a28;max-width:540px}
+.footer{margin-top:2rem;font-size:11px;color:#303040;max-width:540px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>OM Machine</h1>
+<p class="sub">Fractal drone · 136 Hz earth year · non-repeating overtone field</p>
+
+<div class="card">
+  <div class="ct">Fundamental</div>
+  <div class="row"><label>Frequency</label><input type="range" id="omF" min="100" max="180" step="0.5" value="136"><span class="val" id="omFv">136.0 Hz</span></div>
+  <div class="row"><label>Harmonics</label><input type="range" id="omH" min="2" max="12" step="1" value="7"><span class="val" id="omHv">7</span></div>
+  <div class="row"><label>Harmonic decay</label><input type="range" id="omD" min="0.2" max="0.9" step="0.01" value="0.55"><span class="val" id="omDv">0.55</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">Breath cycle</div>
+  <div class="row"><label>Rate</label><input type="range" id="omB" min="2" max="30" step="0.5" value="8"><span class="val" id="omBv">8.0 s</span></div>
+  <div class="row"><label>Depth</label><input type="range" id="omBD" min="0.02" max="0.4" step="0.01" value="0.18"><span class="val" id="omBDv">18%</span></div>
+  <div class="row"><label>Shimmer</label><input type="range" id="omShim" min="0" max="0.003" step="0.0001" value="0.0006"><span class="val" id="omShimv">0.06%</span></div>
+</div>
+
+<div class="card">
+  <div class="ct">Output</div>
+  <div class="row"><label>Volume</label><input type="range" id="omV" min="0" max="1" step="0.01" value="0.7"><span class="val" id="omVv">70%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnInfo">About 136 Hz</button>
+  <button id="btnSave">Save loop</button>
+</div>
+
+<div class="info" id="infoText" style="display:none">
+  136.1 Hz is called the "Om" frequency — it corresponds to the period of Earth's orbit around the Sun, transposed up into the audible range by 32 octaves (136.1 = 365.25 days × some constant). It was identified by Joachim-Ernst Berendt and developed by Cousto in <em>The Cosmic Octave</em> (1984).<br><br>
+  The fractal structure here uses prime-ratio detuning between each harmonic and its ghost oscillator, so the composite waveform has no exact period at human timescales — it sounds like it breathes rather than loops.
+</div>
+
+<p class="status" id="status">Ready — 136 Hz · 7 harmonics · fractal shimmer</p>
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+Principia Orthogona Series · github.com/TOTOGT/AXLE</div>
+
+<script>
+let ctx,master,analyser,raf;
+let omOscs=[],omGain,breathLfo;
+let playing=false,recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+
+function buildOm(){
+  if(!ctx)return;
+  omOscs.forEach(o=>{try{o.stop()}catch(e){}});
+  if(breathLfo){try{breathLfo.stop()}catch(e){}}
+  omOscs=[];
+  if(omGain)omGain.disconnect();
+  omGain=ctx.createGain();omGain.gain.value=gv('omV');omGain.connect(master);
+  const freq=gv('omF'),nh=Math.round(gv('omH')),decay=gv('omD'),shim=gv('omShim');
+  for(let i=0;i<nh;i++){
+    const hf=freq*(i+1),weight=Math.pow(decay,i);
+    const o=ctx.createOscillator();o.type='sine';o.frequency.value=hf;
+    const g=ctx.createGain();g.gain.value=weight;
+    o.connect(g);g.connect(omGain);o.start();omOscs.push(o);
+    if(i>0){
+      const det=ctx.createOscillator();det.type='sine';
+      det.frequency.value=hf*(1+(Math.random()-0.5)*shim*2);
+      const dg=ctx.createGain();dg.gain.value=weight*0.3;
+      det.connect(dg);dg.connect(omGain);det.start();omOscs.push(det);
+    }
+  }
+  breathLfo=ctx.createOscillator();breathLfo.type='sine';
+  breathLfo.frequency.value=1/gv('omB');
+  const lg=ctx.createGain();lg.gain.value=gv('omBD');
+  breathLfo.connect(lg);lg.connect(omGain.gain);breathLfo.start();
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#4080c0';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();master.gain.value=0.75;
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  master.connect(analyser);analyser.connect(ctx.destination);
+  buildOm();playing=true;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='OM — '+gv('omF').toFixed(1)+' Hz · '+Math.round(gv('omH'))+' harmonics · breathing at '+gv('omB').toFixed(1)+'s';
+  startViz();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);
+  omOscs.forEach(o=>{try{o.stop()}catch(e){}});
+  if(breathLfo){try{breathLfo.stop()}catch(e){}}
+  ctx.close();playing=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('status').textContent='Stopped';
+}
+
+function bind(id,outId,fmt,cb){
+  document.getElementById(id).addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    document.getElementById(outId).textContent=fmt(v);
+    if(playing&&cb)cb(v);
+  });
+}
+bind('omF','omFv',v=>v.toFixed(1)+' Hz',()=>buildOm());
+bind('omH','omHv',v=>v.toFixed(0),()=>buildOm());
+bind('omD','omDv',v=>v.toFixed(2),()=>buildOm());
+bind('omB','omBv',v=>v.toFixed(1)+' s',v=>{if(breathLfo)breathLfo.frequency.value=1/v});
+bind('omBD','omBDv',v=>Math.round(v*100)+'%',v=>{});
+bind('omShim','omShimv',v=>(v*100).toFixed(2)+'%',()=>buildOm());
+bind('omV','omVv',v=>Math.round(v*100)+'%',v=>{if(omGain)omGain.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnInfo').onclick=()=>{
+  const el=document.getElementById('infoText'),btn=document.getElementById('btnInfo');
+  if(el.style.display==='none'||!el.style.display){el.style.display='block';btn.textContent='Hide';}
+  else{el.style.display='none';btn.textContent='About 136 Hz';}
+};
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();master.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='om_loop.webm';a.click();
+    document.getElementById('status').textContent='Saved — om_loop.webm';
+    master.disconnect(dest);
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 30s...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},30000);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ħal Saflieni Temple Resonance · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#080806;color:#e0d8c0;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#c0a060}
+.sub{font-size:13px;color:#706050;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#806040;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#b09060}
+.card{background:#0e0c08;border:0.5px solid #2a2418;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:560px}
+.ct{font-size:11px;font-weight:600;color:#604820;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#706050;min-width:110px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#c08030}
+.val{font-size:12px;font-weight:600;min-width:60px;text-align:right;color:#c0a060;flex-shrink:0}
+.sweep-indicator{background:#0a0806;border:0.5px solid #2a1808;border-radius:8px;padding:0.6rem 1rem;margin-bottom:0.6rem;display:flex;align-items:center;gap:12px}
+.sweep-bar-bg{flex:1;height:6px;background:#1a1408;border-radius:3px;overflow:hidden}
+.sweep-bar{height:100%;background:#c08030;border-radius:3px;width:50%;transition:width 0.1s}
+.sweep-hz{font-size:13px;font-weight:600;color:#e0a040;min-width:60px;text-align:right}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:560px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #2a2010;background:transparent;color:#a09070;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#120e06}
+button.on{background:#201400;color:#e0a030;border-color:#604010}
+#viz{width:100%;height:72px;display:block;margin-top:0.6rem;border-radius:8px;background:#060604}
+.status{font-size:11px;color:#504030;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:560px}
+.info{font-size:12px;color:#605040;line-height:1.7;margin-top:0.5rem;padding:0.75rem;background:#0c0a06;border-radius:8px;border:0.5px solid #201808;max-width:560px;display:none}
+.footer{margin-top:2rem;font-size:11px;color:#302818;max-width:560px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>Ħal Saflieni Temple Resonance</h1>
+<p class="sub">Oracle Chamber · 90–120 Hz resonant band · 110 Hz peak · 3600 BCE Malta</p>
+
+<div class="card">
+  <div class="ct">Resonant band sweep · 90–120 Hz</div>
+  <div class="sweep-indicator">
+    <span style="font-size:11px;color:#706050;min-width:36px">90 Hz</span>
+    <div class="sweep-bar-bg"><div class="sweep-bar" id="sweepBar"></div></div>
+    <span style="font-size:11px;color:#706050;min-width:36px;text-align:right">120 Hz</span>
+    <span class="sweep-hz" id="sweepHz">105.0 Hz</span>
+  </div>
+  <div class="row"><label>Sweep rate</label><input type="range" id="sweepRate" min="5" max="120" step="1" value="30"><span class="val" id="sweepRatev">30 s</span></div>
+  <div class="row"><label>Manual tune</label><input type="range" id="manualHz" min="90" max="120" step="0.5" value="110"><span class="val" id="manualHzv">110.0 Hz</span></div>
+  <div class="row" style="margin-bottom:0">
+    <label style="font-size:12px;color:#706050">Mode</label>
+    <button id="btnAuto" class="on" style="font-size:11px;padding:4px 12px">Auto sweep</button>
+    <button id="btnManual" style="font-size:11px;padding:4px 12px">Manual</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ct">Chamber acoustics</div>
+  <div class="row"><label>Room reverb</label><input type="range" id="reverbMix" min="0" max="0.9" step="0.01" value="0.6"><span class="val" id="reverbMixv">60%</span></div>
+  <div class="row"><label>Stone warmth</label><input type="range" id="stoneWarm" min="200" max="2000" step="10" value="600"><span class="val" id="stoneWarmv">600 Hz</span></div>
+  <div class="row"><label>Binaural beat</label><input type="range" id="binaural" min="0" max="12" step="0.1" value="4"><span class="val" id="binauralv">4.0 Hz</span></div>
+  <div class="row"><label>Volume</label><input type="range" id="vol" min="0" max="1" step="0.01" value="0.7"><span class="val" id="volv">70%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btn110">Lock 110 Hz</button>
+  <button id="btnInfo">Oracle Chamber</button>
+  <button id="btnSave">Save loop</button>
+</div>
+
+<div class="info" id="infoText">
+  The Ħal Saflieni Hypogeum in Malta (c. 3600–2500 BCE) is the only known prehistoric underground temple. Its Oracle Chamber exhibits a resonant peak at approximately 110 Hz — documented by archaeoacoustician Iegor Reznikoff and later measured by Cook, Ezra and Shearer (2008), who also recorded EEG shifts in subjects, specifically a shift from left to right prefrontal dominance associated with altered states and heightened receptivity.<br><br>
+  The full resonant band is 90–120 Hz. Sweeping through this band approximates the effect of a voice or instrument being moved through the chamber — each sub-frequency excites different standing wave nodes in the limestone walls. 110 Hz is the peak but not the whole experience.<br><br>
+  The binaural beat adds a second oscillator offset by the specified Hz, creating a perceived pulse in the difference frequency — 4 Hz corresponds to theta brainwaves (deep relaxation, meditation).
+</div>
+
+<p class="status" id="status">Ready — sweep mode · 90–120 Hz Oracle Chamber band</p>
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+Principia Orthogona Series · github.com/TOTOGT/AXLE</div>
+
+<script>
+let ctx,master,analyser,raf,convolver;
+let osc1=null,osc2=null,mainGain,filter,reverbGain,dryGain;
+let playing=false,autoMode=true,sweepPhase=0,sweepRaf=null;
+let recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+
+function currentHz(){
+  if(!autoMode)return gv('manualHz');
+  const rate=gv('sweepRate');
+  sweepPhase=(sweepPhase+0.001/rate)%1;
+  return 90+(Math.sin(sweepPhase*Math.PI*2)*0.5+0.5)*30;
+}
+
+function makeReverb(ctx,duration=2.5,decay=2){
+  const len=ctx.sampleRate*duration;
+  const buf=ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let c=0;c<2;c++){
+    const d=buf.getChannelData(c);
+    for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);
+  }
+  const cv=ctx.createConvolver();cv.buffer=buf;return cv;
+}
+
+function buildEngine(){
+  if(!ctx)return;
+  if(osc1){try{osc1.stop()}catch(e){}}
+  if(osc2){try{osc2.stop()}catch(e){}}
+  if(mainGain)mainGain.disconnect();
+
+  mainGain=ctx.createGain();mainGain.gain.value=gv('vol');
+  filter=ctx.createBiquadFilter();filter.type='bandpass';
+  filter.frequency.value=gv('stoneWarm');filter.Q.value=0.8;
+  convolver=makeReverb(ctx);
+  dryGain=ctx.createGain();dryGain.gain.value=1-gv('reverbMix');
+  reverbGain=ctx.createGain();reverbGain.gain.value=gv('reverbMix');
+
+  osc1=ctx.createOscillator();osc1.type='sine';
+  const hz=autoMode?105:gv('manualHz');
+  osc1.frequency.value=hz;
+  osc2=ctx.createOscillator();osc2.type='sine';
+  osc2.frequency.value=hz+gv('binaural');
+
+  const g1=ctx.createGain();g1.gain.value=0.6;
+  const g2=ctx.createGain();g2.gain.value=0.4;
+  osc1.connect(g1);osc2.connect(g2);
+  g1.connect(filter);g2.connect(filter);
+  filter.connect(dryGain);filter.connect(convolver);
+  dryGain.connect(mainGain);
+  convolver.connect(reverbGain);reverbGain.connect(mainGain);
+  mainGain.connect(analyser);
+  osc1.start();osc2.start();
+}
+
+function updateSweep(){
+  if(!playing)return;
+  const hz=currentHz();
+  if(osc1)osc1.frequency.value=hz;
+  if(osc2)osc2.frequency.value=hz+gv('binaural');
+  const pct=(hz-90)/30;
+  document.getElementById('sweepBar').style.width=Math.round(pct*100)+'%';
+  document.getElementById('sweepHz').textContent=hz.toFixed(1)+' Hz';
+  sweepRaf=requestAnimationFrame(updateSweep);
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#c08030';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();master.gain.value=1;
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  analyser.connect(ctx.destination);
+  buildEngine();playing=true;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='Playing — Oracle Chamber resonance · '+(autoMode?'sweeping 90–120 Hz':'locked at '+gv('manualHz').toFixed(1)+' Hz');
+  startViz();updateSweep();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);cancelAnimationFrame(sweepRaf);
+  if(osc1){try{osc1.stop()}catch(e){}}
+  if(osc2){try{osc2.stop()}catch(e){}}
+  ctx.close();playing=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('status').textContent='Stopped';
+}
+
+function bind(id,outId,fmt,cb){
+  document.getElementById(id).addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    document.getElementById(outId).textContent=fmt(v);
+    if(playing&&cb)cb(v);
+  });
+}
+bind('sweepRate','sweepRatev',v=>Math.round(v)+' s');
+bind('manualHz','manualHzv',v=>v.toFixed(1)+' Hz',v=>{if(!autoMode&&osc1){osc1.frequency.setTargetAtTime(v,ctx.currentTime,0.3);osc2.frequency.setTargetAtTime(v+gv('binaural'),ctx.currentTime,0.3);}});
+bind('reverbMix','reverbMixv',v=>Math.round(v*100)+'%',v=>{if(dryGain){dryGain.gain.value=1-v;reverbGain.gain.value=v;}});
+bind('stoneWarm','stoneWarmv',v=>Math.round(v)+' Hz',v=>{if(filter)filter.frequency.value=v;});
+bind('binaural','binauralv',v=>v.toFixed(1)+' Hz',v=>{if(osc2&&osc1)osc2.frequency.value=osc1.frequency.value+v;});
+bind('vol','volv',v=>Math.round(v*100)+'%',v=>{if(mainGain)mainGain.gain.setTargetAtTime(v,ctx.currentTime,0.1);});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnAuto').onclick=()=>{
+  autoMode=true;
+  document.getElementById('btnAuto').classList.add('on');
+  document.getElementById('btnManual').classList.remove('on');
+  document.getElementById('status').textContent='Auto sweep — 90–120 Hz Oracle Chamber band';
+};
+document.getElementById('btnManual').onclick=()=>{
+  autoMode=false;
+  document.getElementById('btnManual').classList.add('on');
+  document.getElementById('btnAuto').classList.remove('on');
+  if(playing&&osc1){const hz=gv('manualHz');osc1.frequency.setTargetAtTime(hz,ctx.currentTime,0.5);osc2.frequency.setTargetAtTime(hz+gv('binaural'),ctx.currentTime,0.5);}
+  document.getElementById('status').textContent='Manual — '+gv('manualHz').toFixed(1)+' Hz';
+};
+document.getElementById('btn110').onclick=()=>{
+  autoMode=false;
+  document.getElementById('btnManual').classList.add('on');
+  document.getElementById('btnAuto').classList.remove('on');
+  document.getElementById('manualHz').value=110;
+  document.getElementById('manualHzv').textContent='110.0 Hz';
+  if(playing&&osc1){osc1.frequency.setTargetAtTime(110,ctx.currentTime,0.5);osc2.frequency.setTargetAtTime(110+gv('binaural'),ctx.currentTime,0.5);}
+  document.getElementById('status').textContent='Locked — 110 Hz peak resonance · Oracle Chamber';
+};
+document.getElementById('btnInfo').onclick=()=>{
+  const el=document.getElementById('infoText'),btn=document.getElementById('btnInfo');
+  if(el.style.display==='none'||!el.style.display){el.style.display='block';btn.textContent='Hide';}
+  else{el.style.display='none';btn.textContent='Oracle Chamber';}
+};
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();analyser.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='hypogeum_loop.webm';a.click();
+    document.getElementById('status').textContent='Saved — hypogeum_loop.webm';
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 30s...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},30000);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swarnakarshana Bhairava Machine · Newark Wellness Soundworks</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a14;color:#e8e0d0;font-family:Georgia,serif;min-height:100vh;padding:2rem 1rem}
+h1{font-size:22px;font-weight:400;margin-bottom:4px;color:#f0d080}
+.sub{font-size:13px;color:#a09080;margin-bottom:1.5rem;font-style:italic}
+.back{font-size:12px;color:#6080a0;text-decoration:none;display:inline-block;margin-bottom:1.5rem}
+.back:hover{color:#90b0d0}
+.card{background:#12121e;border:0.5px solid #2a2a3a;border-radius:12px;padding:1rem 1.25rem;margin-bottom:0.85rem;max-width:580px}
+.ct{font-size:11px;font-weight:600;color:#806040;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:0.6rem}
+.row label{font-size:12px;color:#8090a0;min-width:84px;flex-shrink:0}
+.row input[type=range]{flex:1;min-width:0;accent-color:#c08040}
+.val{font-size:12px;font-weight:600;min-width:52px;text-align:right;color:#d0c090;flex-shrink:0}
+.bija-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:0.7rem}
+.bija-card{background:#0e0e18;border:0.5px solid #2a2a3a;border-radius:8px;padding:8px 10px}
+.bija-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.bija-desc{font-size:10px;color:#607080;margin-bottom:6px;font-style:italic}
+.bija-card .row{margin-bottom:3px}
+.bija-card .row label{min-width:28px;font-size:11px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:0.5rem;max-width:580px}
+button{font-size:12px;padding:6px 16px;border-radius:8px;border:0.5px solid #3a3a4a;background:transparent;color:#c0c0b0;cursor:pointer;font-family:Georgia,serif}
+button:hover{background:#1e1e2e}
+button.on{background:#2a1a00;color:#f0c040;border-color:#806020}
+#viz{width:100%;height:64px;display:block;margin-top:0.6rem;border-radius:8px;background:#0a0a10}
+.status{font-size:11px;color:#607060;margin-top:0.6rem;min-height:16px;font-style:italic;max-width:580px}
+.mantra-scroll{font-size:12px;color:#a09070;font-style:italic;line-height:1.9;margin-top:0.6rem;padding:1rem;background:#0e0e18;border-radius:8px;border:0.5px solid #2a2a3a;max-width:580px;display:none}
+.footer{margin-top:2rem;font-size:11px;color:#404050;max-width:580px}
+</style>
+</head>
+<body>
+<a class="back" href="wellness-soundworks.html">← Newark Wellness Soundworks</a>
+<h1>Swarnakarshana Bhairava Machine</h1>
+<p class="sub">ōṃ aiṃ hrīṃ śrīṃ · hrāṃ hrīṃ hrūṃ · svarṇākarṣaṇa bhairavāya namaḥ</p>
+
+<div class="card">
+  <div class="ct">Om — fractal ground · 136 Hz earth year</div>
+  <div class="row"><label>Fundamental</label><input type="range" id="omF" min="100" max="180" step="0.5" value="136"><span class="val" id="omFv">136.0 Hz</span></div>
+  <div class="row"><label>Harmonics</label><input type="range" id="omH" min="2" max="9" step="1" value="6"><span class="val" id="omHv">6</span></div>
+  <div class="row"><label>Breathe</label><input type="range" id="omB" min="3" max="24" step="0.5" value="8"><span class="val" id="omBv">8.0 s</span></div>
+  <div class="row"><label>Volume</label><input type="range" id="omV" min="0" max="1" step="0.01" value="0.65"><span class="val" id="omVv">65%</span></div>
+  <canvas id="viz"></canvas>
+</div>
+
+<div class="card">
+  <div class="ct">Bīja triad — Hrāṃ · Hrīṃ · Hrūṃ</div>
+  <div class="bija-grid">
+    <div class="bija-card">
+      <div class="bija-name" style="color:#c04040">Hrāṃ</div>
+      <div class="bija-desc">root · earth · Bhairava floor</div>
+      <div class="row"><label>Hz</label><input type="range" id="h1F" min="40" max="120" step="0.5" value="72"><span class="val" id="h1Fv">72</span></div>
+      <div class="row"><label>Vol</label><input type="range" id="h1V" min="0" max="1" step="0.01" value="0"><span class="val" id="h1Vv">0%</span></div>
+    </div>
+    <div class="bija-card">
+      <div class="bija-name" style="color:#c0a030">Hrīṃ</div>
+      <div class="bija-desc">māyā · gold shimmer · Śrī</div>
+      <div class="row"><label>Hz</label><input type="range" id="h2F" min="80" max="200" step="0.5" value="108"><span class="val" id="h2Fv">108</span></div>
+      <div class="row"><label>Vol</label><input type="range" id="h2V" min="0" max="1" step="0.01" value="0"><span class="val" id="h2Vv">0%</span></div>
+    </div>
+    <div class="bija-card">
+      <div class="bija-name" style="color:#4080c0">Hrūṃ</div>
+      <div class="bija-desc">liberation · upper · Aiṃ</div>
+      <div class="row"><label>Hz</label><input type="range" id="h3F" min="120" max="320" step="0.5" value="216"><span class="val" id="h3Fv">216</span></div>
+      <div class="row"><label>Vol</label><input type="range" id="h3V" min="0" max="1" step="0.01" value="0"><span class="val" id="h3Vv">0%</span></div>
+    </div>
+  </div>
+  <div class="row"><label>Śrīṃ shimmer</label><input type="range" id="shrimMod" min="0" max="1" step="0.01" value="0.25"><span class="val" id="shrimModv">25%</span></div>
+  <div class="row"><label>Klīṃ pull</label><input type="range" id="klimDepth" min="0" max="40" step="0.5" value="8"><span class="val" id="klimDepthv">8 Hz</span></div>
+  <div class="row"><label>Bhairava vol</label><input type="range" id="bTot" min="0" max="1" step="0.01" value="0"><span class="val" id="bTotv">0%</span></div>
+</div>
+
+<div class="btn-row">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnInvoke">Invoke Bhairava</button>
+  <button id="btnFull">Full stotra</button>
+  <button id="btnSave">Save loop</button>
+</div>
+
+<div class="mantra-scroll" id="mantraText">
+  <strong>Mūla mantra</strong><br>
+  Oṃ Aiṃ Hrīṃ Śrīṃ · Aiṃ Śrīṃ Āpaduddhāraṇāya<br>
+  Hrāṃ Hrīṃ Hrūṃ · Ajāmalavadyāya Lokeśvarāya<br>
+  Swarnakarshana Bhairavāya · Mama Dāridrya Vidveṣaṇāya<br>
+  Mahābhairavāya Namaḥ · Śrīṃ Hrīṃ Aiṃ<br><br>
+  <strong>Dhāraṇī</strong><br>
+  Oṃ Namo Bhagavate Swarnakarshana Bhairavāya<br>
+  Dhana Dhānya Vṛddhikarāya · Śīghraṃ Vasyaṃ Kuru Kuru Svāhā<br><br>
+  <strong>Stotra — opening verses</strong><br>
+  Namaste'stu Bhairavāya Brahmaviṣṇuśivātmane |<br>
+  Namastrailokyavandyāya Varadāya Parātmane ||<br>
+  Ratnasiṃhāsanasthāya Divyābharaṇaśobhine |<br>
+  Divyamālyavibhūṣāya Namaste Divyamūrtaye ||<br>
+  Namo Dāridryakālāya Mahāsampatpradāyine |<br>
+  Śrībhairavīprayuktāya Trilokeśāya Te Namaḥ ||
+</div>
+
+<p class="status" id="status">Ready — Om 136 Hz · Hrāṃ 72 · Hrīṃ 108 · Hrūṃ 216</p>
+
+<div class="footer">Newark Wellness Soundworks · G6 LLC · Pablo Nogueira Grossi · 2026<br>
+Principia Orthogona Series · github.com/TOTOGT/AXLE</div>
+
+<script>
+let ctx,master,analyser,raf;
+let omOscs=[],omGain,breathLfo;
+let bijaOscs={h1:null,h2:null,h3:null},bijaGains={h1:null,h2:null,h3:null};
+let shimOsc=null,shimGain=null,klimOsc=null,klimGain=null,bMaster=null;
+let playing=false,bActive=false,recorder=null,chunks=[];
+const gv=id=>parseFloat(document.getElementById(id).value);
+
+function buildOm(){
+  if(!ctx)return;
+  omOscs.forEach(o=>{try{o.stop()}catch(e){}});
+  if(breathLfo){try{breathLfo.stop()}catch(e){}}
+  omOscs=[];
+  if(omGain)omGain.disconnect();
+  omGain=ctx.createGain();omGain.gain.value=gv('omV');omGain.connect(master);
+  const freq=gv('omF'),nh=Math.round(gv('omH'));
+  const hw=[1,0.52,0.32,0.2,0.13,0.08,0.05,0.03,0.02];
+  for(let i=0;i<nh;i++){
+    const hf=freq*(i+1);
+    for(let d=0;d<(i===0?1:2);d++){
+      const o=ctx.createOscillator();o.type='sine';
+      o.frequency.value=hf*(1+(d===1?(Math.random()-0.5)*0.0006:0));
+      const g=ctx.createGain();g.gain.value=(hw[i]||0.015)*(d===1?0.28:1);
+      o.connect(g);g.connect(omGain);o.start();omOscs.push(o);
+    }
+  }
+  breathLfo=ctx.createOscillator();breathLfo.type='sine';
+  breathLfo.frequency.value=1/gv('omB');
+  const lg=ctx.createGain();lg.gain.value=0.16;
+  breathLfo.connect(lg);lg.connect(omGain.gain);breathLfo.start();
+}
+
+function buildBija(){
+  if(!ctx)return;
+  ['h1','h2','h3'].forEach(k=>{if(bijaOscs[k]){try{bijaOscs[k].stop()}catch(e){}}});
+  if(shimOsc){try{shimOsc.stop()}catch(e){}}
+  if(klimOsc){try{klimOsc.stop()}catch(e){}}
+  if(bMaster)bMaster.disconnect();
+  bMaster=ctx.createGain();bMaster.gain.value=0;bMaster.connect(master);
+  const freqs={h1:gv('h1F'),h2:gv('h2F'),h3:gv('h3F')};
+  const vols={h1:gv('h1V'),h2:gv('h2V'),h3:gv('h3V')};
+  const types={h1:'sawtooth',h2:'sine',h3:'sine'};
+  ['h1','h2','h3'].forEach(k=>{
+    const o=ctx.createOscillator();o.type=types[k];o.frequency.value=freqs[k];
+    const f=ctx.createBiquadFilter();f.type='lowpass';
+    f.frequency.value=freqs[k]*(k==='h1'?3:5);f.Q.value=k==='h1'?3:1.5;
+    const g=ctx.createGain();g.gain.value=vols[k];
+    o.connect(f);f.connect(g);g.connect(bMaster);
+    bijaOscs[k]=o;bijaGains[k]=g;o.start();
+  });
+  shimOsc=ctx.createOscillator();shimOsc.type='sine';
+  shimOsc.frequency.value=freqs.h2*gv('shrimMod')*0.5;
+  shimGain=ctx.createGain();shimGain.gain.value=freqs.h2*gv('shrimMod')*0.15;
+  shimOsc.connect(shimGain);shimGain.connect(bijaOscs.h2.frequency);shimOsc.start();
+  klimOsc=ctx.createOscillator();klimOsc.type='sine';klimOsc.frequency.value=0.12;
+  klimGain=ctx.createGain();klimGain.gain.value=gv('klimDepth');
+  klimOsc.connect(klimGain);klimGain.connect(bijaOscs.h1.frequency);klimOsc.start();
+}
+
+function startViz(){
+  const cv=document.getElementById('viz'),c=cv.getContext('2d');
+  cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2;
+  const buf=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    raf=requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(buf);
+    c.clearRect(0,0,cv.width,cv.height);
+    c.strokeStyle='#c08020';c.lineWidth=1.5;c.beginPath();
+    const sl=cv.width/buf.length;
+    for(let i=0;i<buf.length;i++){
+      const x=i*sl,y=(buf[i]/128)*cv.height/2;
+      i===0?c.moveTo(x,y):c.lineTo(x,y);
+    }
+    c.stroke();
+  }
+  draw();
+}
+
+function start(){
+  if(playing)return;
+  ctx=new(window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();master.gain.value=0.72;
+  analyser=ctx.createAnalyser();analyser.fftSize=1024;
+  master.connect(analyser);analyser.connect(ctx.destination);
+  buildOm();buildBija();playing=true;
+  document.getElementById('btnPlay').classList.add('on');
+  document.getElementById('status').textContent='Playing — Om '+gv('omF').toFixed(1)+' Hz · bīja triad ready';
+  startViz();
+}
+
+function stop(){
+  if(!playing)return;
+  cancelAnimationFrame(raf);
+  omOscs.forEach(o=>{try{o.stop()}catch(e){}});
+  if(breathLfo){try{breathLfo.stop()}catch(e){}}
+  ['h1','h2','h3'].forEach(k=>{if(bijaOscs[k]){try{bijaOscs[k].stop()}catch(e){}}});
+  if(shimOsc){try{shimOsc.stop()}catch(e){}}
+  if(klimOsc){try{klimOsc.stop()}catch(e){}}
+  ctx.close();playing=false;bActive=false;
+  document.getElementById('btnPlay').classList.remove('on');
+  document.getElementById('btnInvoke').classList.remove('on');
+  document.getElementById('btnInvoke').textContent='Invoke Bhairava';
+  document.getElementById('status').textContent='Stopped';
+}
+
+function invoke(){
+  if(!playing)start();
+  bActive=!bActive;
+  const btn=document.getElementById('btnInvoke'),t=ctx.currentTime;
+  if(bActive){
+    bMaster.gain.setTargetAtTime(0.6,t,2);
+    bijaGains.h1.gain.setTargetAtTime(0.5,t,2.5);
+    bijaGains.h2.gain.setTargetAtTime(0.4,t,3);
+    bijaGains.h3.gain.setTargetAtTime(0.25,t,4);
+    ['h1V','h2V','h3V','bTot'].forEach((id,i)=>{
+      const vals=[0.5,0.4,0.25,0.6];
+      document.getElementById(id).value=vals[i];
+      document.getElementById(id+'v').textContent=Math.round(vals[i]*100)+'%';
+    });
+    btn.classList.add('on');btn.textContent='Bhairava invoked';
+    document.getElementById('status').textContent='ōṃ hrāṃ hrīṃ hrūṃ — Svarṇākarṣaṇa Bhairavāya Namaḥ';
+  } else {
+    bMaster.gain.setTargetAtTime(0,t,2);
+    btn.classList.remove('on');btn.textContent='Invoke Bhairava';
+    document.getElementById('status').textContent='Bhairava layer releasing...';
+  }
+}
+
+function bind(id,outId,fmt,cb){
+  document.getElementById(id).addEventListener('input',function(){
+    const v=parseFloat(this.value);
+    document.getElementById(outId).textContent=fmt(v);
+    if(playing&&cb)cb(v);
+  });
+}
+bind('omF','omFv',v=>v.toFixed(1)+' Hz',()=>buildOm());
+bind('omH','omHv',v=>v.toFixed(0),()=>buildOm());
+bind('omB','omBv',v=>v.toFixed(1)+' s',v=>{if(breathLfo)breathLfo.frequency.value=1/v});
+bind('omV','omVv',v=>Math.round(v*100)+'%',v=>{if(omGain)omGain.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+bind('h1F','h1Fv',v=>v.toFixed(0),v=>{if(bijaOscs.h1)bijaOscs.h1.frequency.setTargetAtTime(v,ctx.currentTime,0.2)});
+bind('h2F','h2Fv',v=>v.toFixed(0),v=>{if(bijaOscs.h2)bijaOscs.h2.frequency.setTargetAtTime(v,ctx.currentTime,0.2)});
+bind('h3F','h3Fv',v=>v.toFixed(0),v=>{if(bijaOscs.h3)bijaOscs.h3.frequency.setTargetAtTime(v,ctx.currentTime,0.2)});
+bind('h1V','h1Vv',v=>Math.round(v*100)+'%',v=>{if(bijaGains.h1)bijaGains.h1.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+bind('h2V','h2Vv',v=>Math.round(v*100)+'%',v=>{if(bijaGains.h2)bijaGains.h2.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+bind('h3V','h3Vv',v=>Math.round(v*100)+'%',v=>{if(bijaGains.h3)bijaGains.h3.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+bind('shrimMod','shrimModv',v=>Math.round(v*100)+'%',v=>{if(shimOsc&&bijaOscs.h2){shimOsc.frequency.value=bijaOscs.h2.frequency.value*v*0.5;shimGain.gain.value=bijaOscs.h2.frequency.value*v*0.15}});
+bind('klimDepth','klimDepthv',v=>v.toFixed(0)+' Hz',v=>{if(klimGain)klimGain.gain.value=v});
+bind('bTot','bTotv',v=>Math.round(v*100)+'%',v=>{if(bMaster&&bActive)bMaster.gain.setTargetAtTime(v,ctx.currentTime,0.1)});
+
+document.getElementById('btnPlay').onclick=start;
+document.getElementById('btnStop').onclick=stop;
+document.getElementById('btnInvoke').onclick=invoke;
+document.getElementById('btnFull').onclick=()=>{
+  const el=document.getElementById('mantraText'),btn=document.getElementById('btnFull');
+  if(el.style.display==='none'||el.style.display===''){el.style.display='block';btn.textContent='Hide stotra';}
+  else{el.style.display='none';btn.textContent='Full stotra';}
+};
+document.getElementById('btnSave').onclick=()=>{
+  if(!playing){document.getElementById('status').textContent='Press Play first';return;}
+  const dest=ctx.createMediaStreamDestination();master.connect(dest);chunks=[];
+  recorder=new MediaRecorder(dest.stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{
+    const blob=new Blob(chunks,{type:'audio/webm'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='bhairava_loop.webm';a.click();
+    document.getElementById('status').textContent='Saved — bhairava_loop.webm';
+    master.disconnect(dest);
+  };
+  recorder.start();
+  document.getElementById('status').textContent='Recording 30s...';
+  setTimeout(()=>{try{recorder.stop()}catch(e){}},30000);
+};
+</script>
+</body>
+</html>
