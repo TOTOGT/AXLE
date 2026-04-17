@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mini-Beast · Principia Orthogona · Book 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #0a0e1a;
+  --navy-light: #111827;
+  --surface2:   #1a2235;
+  --gold:       #c9a84c;
+  --gold-dim:   #8a6f2e;
+  --gold-bright:#e8c96a;
+  --cream:      #f5f0e8;
+  --cream-dim:  #b8b0a0;
+  --accent-c:   #4fc3f7;  /* Compression – ice blue */
+  --accent-k:   #81c784;  /* Curvature – green */
+  --accent-f:   #ff8a65;  /* Folding – ember */
+  --accent-u:   #ce93d8;  /* Unfolding – violet */
+  --plasma:     #29b6f6;
+  --market:     #66bb6a;
+  --neural:     #ab47bc;
+  --bio:        #ef5350;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ── HERO ─────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+}
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+  color: var(--gold);
+  margin-bottom: 2rem;
+}
+
+.hero-equation {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.9rem, 2vw, 1.3rem);
+  color: var(--cream-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+}
+
+.hero-equation .op-c { color: var(--accent-c); }
+.hero-equation .op-k { color: var(--accent-k); }
+.hero-equation .op-f { color: var(--accent-f); }
+.hero-equation .op-u { color: var(--accent-u); }
+
+.scroll-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+/* ── NAV ──────────────────────────────────────────────── */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,14,26,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  gap: 1rem;
+}
+
+.nav-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--cream-dim);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--gold); }
+
+/* ── LAYOUT ───────────────────────────────────────────── */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.wide-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+section {
+  padding: 5rem 0;
+}
+
+section + section {
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────── */
+h2 {
+  font-family: 'IM Fell English', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  color: var(--cream);
+  margin-bottom: 0.3rem;
+}
+
+h2 .ch-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--gold-dim);
+  display: block;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 2.5rem 0 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+p { margin-bottom: 1.2rem; color: var(--cream-dim); }
+p strong { color: var(--cream); font-weight: 600; }
+
+.lead {
+  font-size: 1.15rem;
+  color: var(--cream);
+  font-style: italic;
+  margin-bottom: 2rem;
+  border-left: 3px solid var(--gold);
+  padding-left: 1.5rem;
+}
+
+/* ── THEOREM BLOCK ────────────────────────────────────── */
+.theorem {
+  background: var(--surface2);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-left: 4px solid var(--gold);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.theorem-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.5rem;
+}
+
+.theorem p { color: var(--cream); margin-bottom: 0; }
+
+.math {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--gold-bright);
+  background: rgba(0,0,0,0.3);
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  overflow-x: auto;
+  line-height: 1.8;
+}
+
+/* ── OPERATOR CHAIN ───────────────────────────────────── */
+.operator-chain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 2.5rem 0;
+  flex-wrap: wrap;
+}
+
+.op-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.op-node:hover { transform: translateY(-4px); }
+
+.op-badge {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 400;
+  border: 2px solid;
+  transition: box-shadow 0.2s;
+}
+
+.op-badge.c { background: rgba(79,195,247,0.12); border-color: var(--accent-c); color: var(--accent-c); }
+.op-badge.k { background: rgba(129,199,132,0.12); border-color: var(--accent-k); color: var(--accent-k); }
+.op-badge.f { background: rgba(255,138,101,0.12); border-color: var(--accent-f); color: var(--accent-f); }
+.op-badge.u { background: rgba(206,147,216,0.12); border-color: var(--accent-u); color: var(--accent-u); }
+
+.op-node:hover .op-badge { box-shadow: 0 0 20px currentColor; }
+
+.op-label {
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.op-arrow {
+  font-size: 1.5rem;
+  color: var(--gold-dim);
+  margin-top: -1rem;
+}
+
+.op-desc {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface2);
+  border: 1px solid var(--gold-dim);
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: var(--cream);
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.op-desc.visible { opacity: 1; }
+
+/* ── DOMAIN CARDS ─────────────────────────────────────── */
+.domain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.domain-card {
+  background: var(--surface2);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 6px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.domain-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--card-color, var(--gold));
+  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.domain-card.bio   { --card-color: var(--bio); }
+.domain-card.plasma { --card-color: var(--plasma); }
+.domain-card.market { --card-color: var(--market); }
+.domain-card.neural { --card-color: var(--neural); }
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-title {
+  font-family: 'IM Fell English', serif;
+  font-size: 1.1rem;
+  color: var(--cream);
+  margin-bottom: 0.4rem;
+}
+
+.card-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--card-color, var(--gold-dim));
+  margin-bottom: 0.75rem;
+}
+
+.card-params {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--cream-dim);
+  line-height: 1.8;
+}
+
+/* ── PARAMETER TABLE ─────────────────────────────────── */
+.param-table-wrap {
+  overflow-x: auto;
+  margin: 2rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  padding: 0.6rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: var(--cream-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+}
+
+tr:hover td { background: rgba(255,255,255,0.03); }
+
+td:first-child { color: var(--cream); font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; }
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* ── DM3 MACHINE ─────────────────────────────────────── */
+.machine-section {
+  background: var(--navy-light);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 8px;
+  padding: 2rem;
+  margin: 2.5rem 0;
+}
+
+.machine-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 1rem;
+}
+
+#sim-canvas {
+  width: 100%;
+  border-radius: 4px;
+  display: block;
+  background: var(--navy);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  align-items: center;
+}
+
+.ctrl-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.ctrl-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--surface2);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+}
+
+.ctrl-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gold);
+  text-align: right;
+}
+
+.domain-select {
+  background: var(--surface2);
+  border: 1px solid var(--gold-dim);
+  color: var(--cream);
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-reset:hover { background: rgba(201,168,76,0.1); }
+
+.phase-indicator {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.phase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.3;
+  transition: opacity 0.3s, box-shadow 0.3s;
+}
+
+.phase-dot.active {
+  opacity: 1;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.phase-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--cream-dim);
+  letter-spacing: 0.08em;
+}
+
+/* ── PEDAGOGY WEEK STRIP ─────────────────────────────── */
+.week-strip {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin: 2rem 0;
+}
+
+.week-block {
+  background: var(--surface2);
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 4px;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+  position: relative;
+}
+
+.week-block:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.week-block .wk-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--gold-dim);
+  letter-spacing: 0.1em;
+}
+
+.week-block .wk-level {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cream);
+  margin: 0.2rem 0;
+}
+
+.week-block .wk-topic {
+  font-size: 0.6rem;
+  color: var(--cream-dim);
+  line-height: 1.3;
+}
+
+.cefr-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  transition: width 0.4s;
+}
+
+/* ── FALSIFIABILITY ──────────────────────────────────── */
+.falsify-box {
+  border: 1px solid rgba(255,138,101,0.3);
+  background: rgba(255,138,101,0.05);
+  border-left: 4px solid var(--accent-f);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.falsify-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-f);
+  margin-bottom: 0.5rem;
+}
+
+.falsify-box p { color: var(--cream-dim); margin: 0; font-size: 0.9rem; }
+
+/* ── FOOTER ──────────────────────────────────────────── */
+footer {
+  background: var(--navy-light);
+  border-top: 1px solid rgba(201,168,76,0.12);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+footer p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--gold-dim);
+  line-height: 2;
+}
+
+footer a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.divider {
+  width: 60px;
+  height: 1px;
+  background: var(--gold-dim);
+  margin: 3rem auto;
+  opacity: 0.4;
+}
+
+/* ── QUOTE PULL ──────────────────────────────────────── */
+blockquote {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  color: var(--cream);
+  text-align: center;
+  padding: 2rem;
+  margin: 2rem 0;
+  position: relative;
+}
+
+blockquote::before {
+  content: '"';
+  font-size: 5rem;
+  color: var(--gold-dim);
+  position: absolute;
+  top: -1rem;
+  left: 1rem;
+  opacity: 0.3;
+  line-height: 1;
+}
+
+.attribution {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  display: block;
+  margin-top: 0.75rem;
+}
+
+/* ── SEED SENTENCES ──────────────────────────────────── */
+.seed-card {
+  background: var(--surface2);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 6px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.seed-card::before {
+  content: attr(data-num);
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3rem;
+  color: rgba(201,168,76,0.08);
+  font-weight: bold;
+  line-height: 1;
+}
+
+.seed-card p { color: var(--cream); margin: 0; font-style: italic; font-size: 0.95rem; }
+
+</style>
+</head>
+<body>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="eyebrow">G6 LLC · Principia Orthogona · Book 3</div>
+    <h1 class="hero-title">The Mini-Beast</h1>
+    <div class="hero-subtitle">One equation. Many rooms.</div>
+    <div class="hero-equation">
+      G = <span class="op-u">U</span> ∘ <span class="op-f">F</span> ∘ <span class="op-k">K</span> ∘ <span class="op-c">C</span> : X → X
+    </div>
+    <div class="scroll-hint">▼ &nbsp; scroll to enter &nbsp; ▼</div>
+  </div>
+</section>
+
+<!-- ── NAV ───────────────────────────────────────────── -->
+<nav class="top-nav">
+  <span class="nav-brand">Mini-Beast · B3</span>
+  <div class="nav-links">
+    <a href="#intro">Intro</a>
+    <a href="#operators">Operators</a>
+    <a href="#domains">Domains</a>
+    <a href="#machine">Machine</a>
+    <a href="#bridge">Bridge</a>
+    <a href="#pedagogy">Pedagogy</a>
+  </div>
+</nav>
+
+<!-- ── INTRO ─────────────────────────────────────────── -->
+<section id="intro">
+  <div class="container">
+    <h2><span class="ch-num">Introduction</span>One Equation, Many Rooms</h2>
+
+    <p class="lead">Two professors. Two classrooms. One shape — and the student sitting in both rooms knew.</p>
+
+    <p>In one room: a mathematician drawing the lemniscate — the figure-eight curve of infinite return, the formal object at the heart of the operator sequence <strong>C → K → F → U</strong>. In another: a geologist drawing the analemma — the figure-eight path the sun traces in the sky over the course of a year.</p>
+
+    <p>Neither professor knew the other was drawing the same curve. That student eventually built the mathematics to prove it. This book is the proof — applied. Not to one system. To all of them.</p>
+
+    <div class="theorem">
+      <div class="theorem-label">Core Claim</div>
+      <p>The dm3 contact normal form is identical across biological oscillatory systems, plasma-sheet reconnection, market volatility manifolds, and neural embedding geometry. This is not analogy. It is <strong>exact mathematical identity</strong>.</p>
+    </div>
+
+    <p>The Mini-Beast delivers the complete dm3 operator framework to four classes of systems that have never been unified before. The mathematics is the same in all four rooms. The contact normal form is identical. The operator sequence G = U ∘ F ∘ K ∘ C is identical.</p>
+  </div>
+</section>
+
+<!-- ── OPERATORS ──────────────────────────────────────── -->
+<section id="operators">
+  <div class="container">
+    <h2><span class="ch-num">Chapter 1 · The dm3 Framework</span>The Operator Sequence</h2>
+
+    <p>Let (X, g) be a smooth Riemannian manifold. A generative transition is a localized event along a trajectory γ : [0,T] → X governed by the composite operator:</p>
+
+    <div class="math">G = U ∘ F ∘ K ∘ C : X → X</div>
+
+    <div class="operator-chain" id="op-chain">
+      <div class="op-node" data-op="C" data-desc="Compression · Projects onto lower-dimensional submanifold. Reduces degrees of freedom.">
+        <div class="op-badge c">C</div>
+        <div class="op-label">Compress</div>
+      </div>
+      <div class="op-arrow">→</div>
+      <div class="op-node" data-op="K" data-desc="Curvature · Drives |κ| → κ* via gain α(s). Never triggers folding alone.">
+        <div class="op-badge k">K</div>
+        <div class="op-label">Curvature</div>
+      </div>
+      <div class="op-arrow">→</div>
+      <div class="op-node" data-op="F" data-desc="Folding · Activates exactly at |κ| = κ*. Jacobian loses rank by 1 (Whitney A1). Topological change.">
+        <div class="op-badge f">F</div>
+        <div class="op-label">Fold</div>
+      </div>
+      <div class="op-arrow">→</div>
+      <div class="op-node" data-op="U" data-desc="Unfolding · Gradient flow of Φ selects new stable topology exponentially.">
+        <div class="op-badge u">U</div>
+        <div class="op-label">Unfold</div>
+      </div>
+    </div>
+
+    <h3>Critical Curvature Threshold</h3>
+
+    <div class="math">κ*(x) = 1/foc(x) = min{ ‖II_x‖,  √K_sec(x) }</div>
+
+    <p>The focal radius foc(x) determines when curvature is sufficient to trigger a fold. With positive sectional curvature, the threshold is bounded by both the second fundamental form and the sectional curvature.</p>
+
+    <h3>Contact Normal Form</h3>
+
+    <p>In a tubular neighborhood of the post-transition limit cycle Γ, every dm3 system is locally equivalent to:</p>
+
+    <div class="math">ρ̇ = μ_max(1 − e^{−βz})ρ + O(ρ²)
+θ̇ = ω + O(ρ)
+ż = ω − |μ_max|ρ²e^{−βz} + O(ρ³)</div>
+
+    <p>The three parameters <strong>(μ_max, ω, β)</strong> are the canonical invariants of any dm3 system. Every instantiation — biological, plasma, financial, neural — reduces to this form.</p>
+  </div>
+</section>
+
+<!-- ── DOMAINS ────────────────────────────────────────── -->
+<section id="domains">
+  <div class="wide-container">
+    <div class="container" style="max-width:800px">
+      <h2><span class="ch-num">Chapters 2–5 · Instantiations</span>Four Rooms, One Shape</h2>
+      <p>The Mini-Beast delivers the dm3 construction across four domains. Click any card to see the contact normal form parameters for that domain.</p>
+    </div>
+
+    <div class="domain-grid">
+      <div class="domain-card bio" onclick="selectDomain('bio')">
+        <div class="card-icon">🧬</div>
+        <div class="card-title">Biological Instantiations</div>
+        <div class="card-subtitle">Ch. 2 · HPA · Neural · Circadian · Immune</div>
+        <div class="card-params">
+          μ_max = −0.38 s⁻¹<br>
+          ω = 0.21 rad/s<br>
+          β = 1.9<br>
+          κ* = 0.15–0.22
+        </div>
+      </div>
+
+      <div class="domain-card plasma" onclick="selectDomain('plasma')">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Plasma Reconnection</div>
+        <div class="card-subtitle">Ch. 3 · Dusty Plasmas · MMS · Cluster</div>
+        <div class="card-params">
+          μ_max = −0.42 s⁻¹<br>
+          ω = 0.015 rad/s<br>
+          β = 1.8<br>
+          κ* = 0.8–1.2 × 10⁻³ km⁻¹
+        </div>
+      </div>
+
+      <div class="domain-card market" onclick="selectDomain('market')">
+        <div class="card-icon">📈</div>
+        <div class="card-title">Market Volatility</div>
+        <div class="card-subtitle">Ch. 4 · NYSE TAQ · Binance · Flash Crash</div>
+        <div class="card-params">
+          μ_max = −0.67 s⁻¹<br>
+          ω = 0.28 rad/s<br>
+          β = 2.4<br>
+          κ* = 0.12–0.18
+        </div>
+      </div>
+
+      <div class="domain-card neural" onclick="selectDomain('neural')">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Neural Embedding</div>
+        <div class="card-subtitle">Ch. 5 · Theta–Gamma · Coherence Bridge</div>
+        <div class="card-params">
+          μ_max = −0.55 s⁻¹<br>
+          ω = 0.45 rad/s<br>
+          β = 2.1<br>
+          κ* = 0.25–0.35
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="max-width:800px">
+      <div class="falsify-box">
+        <div class="falsify-label">Falsifiability Protocol</div>
+        <p>Every domain has three conditions that would falsify the model: (1) a transition occurring at κ &lt; κ*, (2) post-transition topology not selected by gradient descent on Φ, (3) fractal dimension deviating from the predicted scaling df = 1 + log μ / log λ.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MACHINE ────────────────────────────────────────── -->
+<section id="machine">
+  <div class="container">
+    <h2><span class="ch-num">Interactive Machine</span>dm3 Phase Portrait</h2>
+    <p>Explore the dm3 contact normal form. Each domain has different parameters (μ_max, ω, β) but the same geometric structure — the fold at κ* is universal. Watch the trajectory approach, reach critical curvature, and unfold to the new attractor.</p>
+
+    <div class="machine-section">
+      <div class="machine-title">dm3 · Contact Normal Form · Phase Portrait</div>
+
+      <div class="controls" style="margin-bottom:1rem">
+        <div class="ctrl-group" style="flex:0">
+          <div class="ctrl-label">Domain</div>
+          <select class="domain-select" id="domainSelect" onchange="loadDomainPreset()">
+            <option value="bio">Biological</option>
+            <option value="plasma">Plasma</option>
+            <option value="market">Market</option>
+            <option value="neural">Neural</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <div class="phase-indicator" id="phaseIndicator">
+          <span class="phase-label">Phase:</span>
+          <div class="phase-dot" id="pd-c" style="background:var(--accent-c);color:var(--accent-c)" title="C"></div>
+          <span class="phase-label" style="font-size:0.55rem">C</span>
+          <div class="phase-dot" id="pd-k" style="background:var(--accent-k);color:var(--accent-k)" title="K"></div>
+          <span class="phase-label" style="font-size:0.55rem">K</span>
+          <div class="phase-dot" id="pd-f" style="background:var(--accent-f);color:var(--accent-f)" title="F"></div>
+          <span class="phase-label" style="font-size:0.55rem">F</span>
+          <div class="phase-dot" id="pd-u" style="background:var(--accent-u);color:var(--accent-u)" title="U"></div>
+          <span class="phase-label" style="font-size:0.55rem">U</span>
+        </div>
+        <button class="btn-reset" onclick="resetSim()">↺ Reset</button>
+      </div>
+
+      <canvas id="sim-canvas" height="380"></canvas>
+
+      <div class="controls">
+        <div class="ctrl-group">
+          <div class="ctrl-label">μ_max <span class="ctrl-val" id="v-mu">−0.38</span></div>
+          <input type="range" id="sl-mu" min="-1.0" max="-0.1" step="0.01" value="-0.38" oninput="updateParam('mu',this.value)">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">ω <span class="ctrl-val" id="v-omega">0.21</span></div>
+          <input type="range" id="sl-omega" min="0.01" max="1.0" step="0.01" value="0.21" oninput="updateParam('omega',this.value)">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">β <span class="ctrl-val" id="v-beta">1.9</span></div>
+          <input type="range" id="sl-beta" min="0.5" max="4.0" step="0.05" value="1.9" oninput="updateParam('beta',this.value)">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">κ* threshold <span class="ctrl-val" id="v-kappa">0.18</span></div>
+          <input type="range" id="sl-kappa" min="0.05" max="0.5" step="0.005" value="0.18" oninput="updateParam('kappa',this.value)">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BRIDGE ─────────────────────────────────────────── -->
+<section id="bridge">
+  <div class="container">
+    <h2><span class="ch-num">Chapter 5 · Coherence Bridge</span>Exact Mathematical Identity</h2>
+
+    <div class="theorem">
+      <div class="theorem-label">Theorem 5.4 · Coherence Bridge</div>
+      <p>The following six dm3 systems are objects in the same category <strong>dm3</strong> and are related by explicit contact morphisms. They are not analogies. They are <strong>exact mathematical identities</strong>.</p>
+    </div>
+
+    <div class="param-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>μ_max (s⁻¹)</th>
+            <th>ω (rad/s)</th>
+            <th>β</th>
+            <th>κ*</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="dot" style="background:var(--bio)"></span>HPA stress</td>
+            <td>−0.38</td><td>0.21</td><td>1.9</td><td>0.15–0.22</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:var(--bio)"></span>Neural oscillations</td>
+            <td>−0.55</td><td>0.45</td><td>2.1</td><td>0.25–0.35</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:var(--bio)"></span>Circadian clock</td>
+            <td>−0.29</td><td>2π/86400</td><td>1.6</td><td>0.08–0.12</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:var(--bio)"></span>Immune adaptation</td>
+            <td>−0.44</td><td>0.18</td><td>2.0</td><td>0.11–0.19</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:var(--plasma)"></span>Plasma reconnection</td>
+            <td>−0.42</td><td>0.015</td><td>1.8</td><td>0.8–1.2 × 10⁻³ km⁻¹</td>
+          </tr>
+          <tr>
+            <td><span class="dot" style="background:var(--market)"></span>Market volatility</td>
+            <td>−0.67</td><td>0.28</td><td>2.4</td><td>0.12–0.18</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <blockquote>
+      The parameters differ. The structure is identical. This table is the Mini-Beast in one page.
+      <span class="attribution">— Principia Orthogona, Book 3</span>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ── PEDAGOGY ───────────────────────────────────────── -->
+<section id="pedagogy">
+  <div class="container">
+    <h2><span class="ch-num">Chapter 6 · Pedagogy</span>CEFR → TO/TOGT · 14-Week Program</h2>
+
+    <p>The pedagogical layer maps CEFR language levels to TOGT structural levels, ensuring cognitive demand never exceeds linguistic capacity.</p>
+
+    <div class="week-strip" id="weekStrip"></div>
+
+    <h3>The Three Seed Sentences</h3>
+    <p>A student who completes this program can say — and defend with the full mathematical apparatus:</p>
+
+    <div class="seed-card" data-num="1">
+      <p>"In dusty plasmas, magnetic reconnection is a precise generative transition governed by C → K → F → U. The dm3 contact geometry predicts the exact reconnection rate and fractal current-sheet structure that standard MHD cannot resolve."</p>
+    </div>
+
+    <div class="seed-card" data-num="2">
+      <p>"Market price trajectories are generative transitions on a volatility manifold. The dm3 operator algebra predicts regime shifts before they happen, turning crashes into predictable unfolding events rather than black swans."</p>
+    </div>
+
+    <div class="seed-card" data-num="3">
+      <p>"Neural oscillations, plasma reconnection, market regime shifts, and biological allostasis are not analogies — they are different orbits of the same dm3 system. The G6:33 crystal is the common substrate. Coherence across domains is exact mathematical identity."</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="text-align:center; font-style:italic; color:var(--cream)">These three sentences carry the full weight of the 18,000-page Codex without requiring the private pages.<br><span style="color:var(--gold-dim); font-size:0.85rem">The seed is planted. The fixed point exists. It is theirs.</span></p>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <p>
+    Principia Orthogona · Book 3 · The Mini-Beast<br>
+    Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey · 2026<br>
+    ISBN 979-8-9954416-6-3 (eBook PDF) · ORCID: 0009-0000-6496-2186<br>
+    Zenodo: 10.5281/zenodo.19117400<br>
+    <br>
+    <a href="living-book.html">☰ All Chapters</a> &nbsp;·&nbsp;
+    MSC 2020: 37C10, 37C75, 53D10, 92C20, 91B55, 53Z99
+  </p>
+</footer>
+
+<div class="op-desc" id="opDesc"></div>
+
+<script>
+(function() {
+
+// ── HERO CANVAS ───────────────────────────────────────
+const hc = document.getElementById('hero-canvas');
+const hctx = hc.getContext('2d');
+let W, H, dpr;
+
+function resizeHero() {
+  dpr = window.devicePixelRatio || 1;
+  W = hc.offsetWidth; H = hc.offsetHeight;
+  hc.width = W * dpr; hc.height = H * dpr;
+  hctx.scale(dpr, dpr);
+}
+
+resizeHero();
+window.addEventListener('resize', resizeHero);
+
+// Lemniscate / figure-8 orbit paths for each operator
+let t = 0;
+
+const ORBITS = [
+  { a: 0.28, b: 0.14, phase: 0,       color: '#4fc3f7', r: 2.5 },
+  { a: 0.22, b: 0.22, phase: Math.PI/3, color: '#81c784', r: 2   },
+  { a: 0.35, b: 0.10, phase: Math.PI*2/3, color: '#ff8a65', r: 3 },
+  { a: 0.18, b: 0.30, phase: Math.PI,  color: '#ce93d8', r: 2   },
+];
+
+const TRAILS = ORBITS.map(() => []);
+const TRAIL_LEN = 120;
+
+function lemniscate(a, b, theta) {
+  // Bernoulli lemniscate parametric: x = a·cos(t)/(1+sin²(t)), y = a·sin(t)cos(t)/(1+sin²(t))
+  const s = Math.sin(theta), c = Math.cos(theta);
+  const d = 1 + s * s;
+  return { x: a * c / d, y: b * s * c / d };
+}
+
+function drawHero() {
+  hctx.clearRect(0, 0, W, H);
+
+  // dark vignette
+  const vg = hctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W,H)*0.7);
+  vg.addColorStop(0, 'rgba(10,14,26,0)');
+  vg.addColorStop(1, 'rgba(10,14,26,0.85)');
+  hctx.fillStyle = vg;
+  hctx.fillRect(0, 0, W, H);
+
+  const cx = W / 2, cy = H / 2;
+  const scale = Math.min(W, H) * 0.38;
+
+  t += 0.008;
+
+  ORBITS.forEach((orb, i) => {
+    const theta = t + orb.phase;
+    const pos = lemniscate(orb.a, orb.b, theta);
+    const px = cx + pos.x * scale;
+    const py = cy + pos.y * scale;
+
+    TRAILS[i].push({ x: px, y: py });
+    if (TRAILS[i].length > TRAIL_LEN) TRAILS[i].shift();
+
+    // draw trail
+    for (let j = 1; j < TRAILS[i].length; j++) {
+      const alpha = j / TRAIL_LEN;
+      hctx.beginPath();
+      hctx.moveTo(TRAILS[i][j-1].x, TRAILS[i][j-1].y);
+      hctx.lineTo(TRAILS[i][j].x, TRAILS[i][j].y);
+      hctx.strokeStyle = orb.color + Math.round(alpha * 180).toString(16).padStart(2,'0');
+      hctx.lineWidth = orb.r * alpha;
+      hctx.stroke();
+    }
+
+    // head dot
+    hctx.beginPath();
+    hctx.arc(px, py, orb.r + 1, 0, Math.PI * 2);
+    hctx.fillStyle = orb.color;
+    hctx.shadowColor = orb.color;
+    hctx.shadowBlur = 12;
+    hctx.fill();
+    hctx.shadowBlur = 0;
+  });
+
+  // central glow
+  const cg = hctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+  cg.addColorStop(0, 'rgba(201,168,76,0.12)');
+  cg.addColorStop(1, 'rgba(201,168,76,0)');
+  hctx.fillStyle = cg;
+  hctx.beginPath();
+  hctx.arc(cx, cy, 60, 0, Math.PI * 2);
+  hctx.fill();
+
+  requestAnimationFrame(drawHero);
+}
+
+drawHero();
+
+// ── OPERATOR TOOLTIPS ─────────────────────────────────
+const opDesc = document.getElementById('opDesc');
+document.querySelectorAll('.op-node').forEach(node => {
+  node.addEventListener('mouseenter', () => {
+    opDesc.textContent = node.dataset.desc;
+    opDesc.classList.add('visible');
+  });
+  node.addEventListener('mouseleave', () => opDesc.classList.remove('visible'));
+});
+
+// ── DOMAIN PRESETS ────────────────────────────────────
+const PRESETS = {
+  bio:    { mu: -0.38, omega: 0.21, beta: 1.9, kappa: 0.18, color: '#ef5350' },
+  plasma: { mu: -0.42, omega: 0.015, beta: 1.8, kappa: 0.10, color: '#29b6f6' },
+  market: { mu: -0.67, omega: 0.28,  beta: 2.4, kappa: 0.15, color: '#66bb6a' },
+  neural: { mu: -0.55, omega: 0.45,  beta: 2.1, kappa: 0.30, color: '#ab47bc' },
+  custom: { mu: -0.38, omega: 0.21,  beta: 1.9, kappa: 0.18, color: '#c9a84c' },
+};
+
+let params = { ...PRESETS.bio };
+
+function loadDomainPreset() {
+  const key = document.getElementById('domainSelect').value;
+  const p = PRESETS[key];
+  params = { ...p };
+  document.getElementById('sl-mu').value    = p.mu;
+  document.getElementById('sl-omega').value = p.omega;
+  document.getElementById('sl-beta').value  = p.beta;
+  document.getElementById('sl-kappa').value = p.kappa;
+  document.getElementById('v-mu').textContent    = p.mu.toFixed(2);
+  document.getElementById('v-omega').textContent = p.omega.toFixed(3);
+  document.getElementById('v-beta').textContent  = p.beta.toFixed(2);
+  document.getElementById('v-kappa').textContent = p.kappa.toFixed(3);
+  resetSim();
+}
+
+function updateParam(key, val) {
+  const map = { mu:'mu', omega:'omega', beta:'beta', kappa:'kappa' };
+  params[map[key]] = parseFloat(val);
+  const fmt = { mu:2, omega:3, beta:2, kappa:3 };
+  document.getElementById('v-'+key).textContent = parseFloat(val).toFixed(fmt[key]);
+  document.getElementById('domainSelect').value = 'custom';
+}
+
+window.loadDomainPreset = loadDomainPreset;
+window.updateParam = updateParam;
+
+// ── SIM CANVAS ────────────────────────────────────────
+const sc = document.getElementById('sim-canvas');
+const sctx = sc.getContext('2d');
+let SW, SH, sdpr;
+
+function resizeSim() {
+  sdpr = window.devicePixelRatio || 1;
+  SW = sc.offsetWidth; SH = sc.offsetHeight;
+  sc.width = SW * sdpr; sc.height = SH * sdpr;
+  sctx.scale(sdpr, sdpr);
+}
+
+resizeSim();
+window.addEventListener('resize', resizeSim);
+
+// dm3 state
+let rho, theta_s, z, simT, trajectory, phaseIdx;
+const PHASES = ['c','k','f','u'];
+
+function resetSim() {
+  rho = 0.05; theta_s = 0; z = 0.01;
+  simT = 0; trajectory = []; phaseIdx = 0;
+  PHASES.forEach(p => document.getElementById('pd-'+p).classList.remove('active'));
+  document.getElementById('pd-c').classList.add('active');
+}
+
+resetSim();
+window.resetSim = resetSim;
+
+function getCurrentPhase(rho_, kappa) {
+  if (rho_ < kappa * 0.3) return 0;       // C
+  if (rho_ < kappa * 0.85) return 1;      // K
+  if (Math.abs(rho_ - kappa) < kappa * 0.2) return 2; // F
+  return 3;                                // U
+}
+
+const PHASE_COLORS = ['#4fc3f7','#81c784','#ff8a65','#ce93d8'];
+
+function stepSim() {
+  const { mu, omega, beta, kappa } = params;
+  const dt = 0.04;
+
+  // Euler integration of contact normal form
+  const drho = mu * (1 - Math.exp(-beta * z)) * rho;
+  const dtheta = omega;
+  const dz = omega - Math.abs(mu) * rho * rho * Math.exp(-beta * z);
+
+  rho    += drho * dt;
+  theta_s += dtheta * dt;
+  z      += dz * dt;
+  simT   += dt;
+
+  // keep bounded
+  rho = Math.max(0.001, Math.min(rho, 1.2));
+  z   = Math.max(-2, Math.min(z, 4));
+
+  phaseIdx = getCurrentPhase(rho, kappa);
+  PHASES.forEach((p,i) => {
+    const el = document.getElementById('pd-'+p);
+    if (i === phaseIdx) el.classList.add('active');
+    else el.classList.remove('active');
+  });
+
+  // convert to 2D for display: (rho, theta) polar in xy, z as vertical distortion
+  trajectory.push({ rho, theta: theta_s, z, phase: phaseIdx });
+  if (trajectory.length > 800) trajectory.shift();
+}
+
+function drawSim() {
+  if (!SW || !SH) { resizeSim(); }
+  sctx.clearRect(0, 0, SW, SH);
+
+  const cx = SW / 2, cy = SH / 2;
+  const SCALE = Math.min(SW, SH) * 0.38;
+
+  // grid
+  sctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  sctx.lineWidth = 1;
+  for (let r = 0.2; r <= 1.0; r += 0.2) {
+    sctx.beginPath();
+    sctx.arc(cx, cy, r * SCALE, 0, Math.PI * 2);
+    sctx.stroke();
+  }
+
+  // κ* circle
+  sctx.strokeStyle = 'rgba(255,138,101,0.35)';
+  sctx.lineWidth = 1.5;
+  sctx.setLineDash([4,4]);
+  sctx.beginPath();
+  sctx.arc(cx, cy, params.kappa * SCALE, 0, Math.PI * 2);
+  sctx.stroke();
+  sctx.setLineDash([]);
+
+  sctx.fillStyle = 'rgba(255,138,101,0.6)';
+  sctx.font = '10px JetBrains Mono, monospace';
+  sctx.fillText('κ*', cx + params.kappa * SCALE + 4, cy - 4);
+
+  // trajectory
+  for (let i = 1; i < trajectory.length; i++) {
+    const pt = trajectory[i];
+    const alpha = i / trajectory.length;
+    const zShift = pt.z * 0.04 * SCALE;
+    const px = cx + pt.rho * SCALE * Math.cos(pt.theta) + zShift * 0.3;
+    const py = cy + pt.rho * SCALE * Math.sin(pt.theta) - zShift * 0.15;
+
+    const prev = trajectory[i-1];
+    const ppx = cx + prev.rho * SCALE * Math.cos(prev.theta) + prev.z * 0.04 * SCALE * 0.3;
+    const ppy = cy + prev.rho * SCALE * Math.sin(prev.theta) - prev.z * 0.04 * SCALE * 0.15;
+
+    sctx.beginPath();
+    sctx.moveTo(ppx, ppy);
+    sctx.lineTo(px, py);
+    sctx.strokeStyle = PHASE_COLORS[pt.phase] + Math.round(alpha * 200).toString(16).padStart(2,'0');
+    sctx.lineWidth = 1.5;
+    sctx.stroke();
+  }
+
+  // current point
+  if (trajectory.length > 0) {
+    const pt = trajectory[trajectory.length - 1];
+    const zShift = pt.z * 0.04 * SCALE;
+    const px = cx + pt.rho * SCALE * Math.cos(pt.theta) + zShift * 0.3;
+    const py = cy + pt.rho * SCALE * Math.sin(pt.theta) - zShift * 0.15;
+    sctx.beginPath();
+    sctx.arc(px, py, 5, 0, Math.PI * 2);
+    sctx.fillStyle = PHASE_COLORS[pt.phase];
+    sctx.shadowColor = PHASE_COLORS[pt.phase];
+    sctx.shadowBlur = 14;
+    sctx.fill();
+    sctx.shadowBlur = 0;
+  }
+
+  // labels
+  const domainKey = document.getElementById('domainSelect').value;
+  const domainNames = { bio:'Biological', plasma:'Plasma', market:'Market', neural:'Neural', custom:'Custom' };
+  sctx.fillStyle = 'rgba(201,168,76,0.4)';
+  sctx.font = '10px JetBrains Mono, monospace';
+  sctx.fillText('ρ', cx + SCALE + 6, cy + 4);
+  sctx.fillText(domainNames[domainKey], 8, 16);
+  sctx.fillText('t = ' + simT.toFixed(1), 8, 30);
+  sctx.fillText('ρ = ' + trajectory.slice(-1)[0]?.rho.toFixed(3), 8, 44);
+}
+
+function simLoop() {
+  for (let i = 0; i < 3; i++) stepSim();
+  drawSim();
+  requestAnimationFrame(simLoop);
+}
+
+simLoop();
+
+// ── WEEK STRIP ────────────────────────────────────────
+const WEEKS = [
+  { num:'1–2', level:'A2', topic:'Operators\nin daily life', color:'#4fc3f7', w:0.1 },
+  { num:'3–4', level:'B1', topic:'Biological\norbit', color:'#ef5350', w:0.25 },
+  { num:'5–6', level:'B1–B2', topic:'Plasma\nX-point', color:'#29b6f6', w:0.45 },
+  { num:'7–8', level:'B2', topic:'Market\nvolatility', color:'#66bb6a', w:0.6 },
+  { num:'9–10', level:'B2–C1', topic:'Neural\nembedding', color:'#ab47bc', w:0.75 },
+  { num:'11–12', level:'C1', topic:'Coherence\nBridge Thm', color:'#c9a84c', w:0.88 },
+  { num:'13–14', level:'C1–C2', topic:'Student\nresearch', color:'#e8c96a', w:1.0 },
+];
+
+const strip = document.getElementById('weekStrip');
+WEEKS.forEach(wk => {
+  const d = document.createElement('div');
+  d.className = 'week-block';
+  d.innerHTML = `<div class="wk-num">WK ${wk.num}</div><div class="wk-level">${wk.level}</div><div class="wk-topic">${wk.topic.replace('\n','<br>')}</div><div class="cefr-bar" style="background:${wk.color};width:${wk.w*100}%"></div>`;
+  strip.appendChild(d);
+});
+
+// ── DOMAIN CARD HIGHLIGHT ─────────────────────────────
+window.selectDomain = function(key) {
+  document.getElementById('domainSelect').value = key;
+  loadDomainPreset();
+  document.getElementById('machine').scrollIntoView({ behavior:'smooth' });
+};
+
+})();
+</script>
+</body>
+</html>
