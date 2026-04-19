@@ -3,600 +3,1345 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IMPA Edition — Purchase Portal · Principia Orthogona</title>
-<meta name="description" content="Purchase the Principia Orthogona IMPA Edition. Complete series hardcover and eBook. G6 LLC · Newark NJ · 2026.">
+<title>dm³ Soundworks · Chladni · Sacred Resonance · G6 LLC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Source+Code+Pro:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy:  #1a2744;
-    --gold:  #c9a84c;
-    --cream: #faf7f0;
-    --smoke: #f0ece4;
-    --mid:   #3a4f7a;
-    --rule:  #8a7340;
-    --text:  #1c1c1c;
-    --light: #e8e2d4;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+:root{
+  --bg:#05080f;--bg2:#0a1018;--bg3:#0f1520;
+  --gold:#c8a96e;--gl:#dfc08a;--gp:#f0deb4;
+  --bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.4);
+  --cream:#f0ebe0;--dim:rgba(240,235,224,.38);
+  --teal:#2dd4bf;--rose:#f472b6;--sage:#86efac;
+  --sky:#7dd3fc;--lav:#c084fc;--amb:#fb923c;--crim:#f87171;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.72;overflow-x:hidden;}
 
-  /* ── Navigation ── */
-  nav {
-    background: var(--navy);
-    padding: 0.75rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 0.5rem;
-  }
-  .nav-logo { color: var(--gold); font-weight: bold; font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
-  .nav-links { display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
-  .nav-back { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; transition: color 0.2s; }
-  .nav-back:hover { color: var(--gold); }
-  .nav-nws { color: var(--gold); text-decoration: none; font-size: 0.85rem; font-family: sans-serif; font-weight: bold; border: 1px solid var(--gold); padding: 0.3rem 0.8rem; transition: all 0.2s; }
-  .nav-nws:hover { background: var(--gold); color: var(--navy); }
+/* NAV */
+nav{background:rgba(5,8,15,.96);border-bottom:1px solid var(--bd);padding:.5rem 1.75rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem;position:sticky;top:0;z-index:300;backdrop-filter:blur(14px);}
+.nlogo{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:var(--gold);text-decoration:none;}
+.nlinks{display:flex;gap:.9rem;flex-wrap:wrap;}
+.nlinks a{font-family:'Source Code Pro',monospace;font-size:.6rem;letter-spacing:.07em;color:rgba(200,169,110,.55);text-decoration:none;transition:color .2s;}
+.nlinks a:hover{color:var(--gold);}
 
-  /* ── Hero ── */
-  .hero {
-    background: var(--navy); color: white;
-    padding: 4rem 2rem 3rem; text-align: center;
-  }
-  .hero-eyebrow { font-family: sans-serif; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
-  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: white; margin-bottom: 0.6rem; }
-  .hero-sub { color: var(--gold); font-style: italic; font-size: 1.1rem; margin-bottom: 1.2rem; }
-  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden;}
+#cosmosCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+.hero-content{position:relative;z-index:2;}
+.eyebrow{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;opacity:.8;margin-bottom:1rem;}
+h1.ht{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5.5vw,4rem);font-weight:300;color:var(--cream);line-height:1.08;margin-bottom:.5rem;}
+h1.ht em{font-style:italic;color:var(--gp);}
+.hsub{font-style:italic;font-size:.95rem;color:var(--dim);max-width:38rem;margin:0 auto 2rem;}
+.scroll-hint{font-family:'Source Code Pro',monospace;font-size:.58rem;letter-spacing:.14em;color:rgba(200,169,110,.35);animation:bob 2s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(6px);}}
 
-  /* ── NWS Hero Section ── */
-  .nws-section {
-    background: #0e1220;
-    border-bottom: 3px solid var(--gold);
-    padding: 3rem 2rem;
-  }
-  .nws-inner { max-width: 700px; margin: 0 auto; }
-  .nws-eyebrow {
-    font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.25em;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 0.6rem;
-  }
-  .nws-title {
-    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-    color: #f0e8c0;
-    margin-bottom: 0.3rem;
-    font-weight: normal;
-  }
-  .nws-address {
-    font-family: sans-serif; font-size: 0.8rem;
-    color: #8a7a50; letter-spacing: 0.1em; margin-bottom: 1.2rem;
-  }
-  .nws-mission {
-    font-size: 0.95rem; line-height: 1.85;
-    color: #a09880;
-    border-left: 2px solid var(--gold);
-    padding-left: 1.2rem;
-    margin-bottom: 1.8rem;
-  }
-  .nws-mission strong { color: #c0b060; font-weight: normal; }
-  .nws-math {
-    font-family: monospace; font-size: 0.82rem;
-    color: #706850; margin-top: 0.6rem;
-  }
+/* LAYOUT */
+.wrap{max-width:1200px;margin:0 auto;padding:0 1.5rem;}
+.sec{padding:4rem 0;}
+.slabel{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.26em;color:var(--gold);text-transform:uppercase;opacity:.75;margin-bottom:.4rem;}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:clamp(1.4rem,3vw,2.1rem);font-weight:300;color:var(--cream);margin-bottom:.8rem;}
+p{margin-bottom:.85rem;color:var(--cream);}
+strong{color:var(--gl);font-weight:500;}
 
-  /* ── NWS Link Grid ── */
-  .nws-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-  .nws-card {
-    display: block; text-decoration: none;
-    background: #141824;
-    border: 1px solid #2a2a3a;
-    padding: 1.1rem 1.25rem;
-    transition: border-color 0.2s;
-    color: inherit;
-  }
-  .nws-card:hover { border-color: var(--gold); }
-  .nws-card.primary {
-    background: #120e06;
-    border-color: #4a3418;
-  }
-  .nws-card.primary:hover { border-color: var(--gold); }
-  .nws-card-label {
-    font-family: sans-serif; font-size: 0.68rem;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--rule); margin-bottom: 0.35rem;
-  }
-  .nws-card-title {
-    font-size: 1rem; color: #d0c080;
-    margin-bottom: 0.25rem;
-  }
-  .nws-card.primary .nws-card-title { color: var(--gold); }
-  .nws-card-sub {
-    font-family: sans-serif; font-size: 0.78rem;
-    color: #5a5040; line-height: 1.5;
-  }
-  .nws-card-arrow { color: var(--gold); float: right; font-size: 0.9rem; margin-top: 0.1rem; }
+/* ═══ CHLADNI MODULE ═══ */
+.chladni-module{background:var(--bg2);border:1px solid var(--bd);border-radius:3px;overflow:hidden;margin:1.5rem 0;}
+.cm-header{background:var(--bg3);border-bottom:1px solid var(--bd);padding:.85rem 1.3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;}
+.cm-title{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;}
+.cm-info{font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);}
+.cm-info span{color:var(--teal);}
 
-  /* NWS Machines row */
-  .nws-machines {
-    display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0;
-  }
-  .nws-machine-pill {
-    display: inline-block; text-decoration: none;
-    font-family: sans-serif; font-size: 0.72rem;
-    color: #707060; border: 1px solid #2a2820;
-    padding: 0.3rem 0.75rem; background: #0e0e14;
-    transition: all 0.2s;
-  }
-  .nws-machine-pill:hover { border-color: var(--gold); color: #c0b060; }
+.cm-body{display:grid;grid-template-columns:1fr 280px;gap:0;}
+#chladniCanvas{display:block;width:100%;aspect-ratio:1;background:#020408;cursor:crosshair;}
+.cm-panel{background:var(--bg3);border-left:1px solid var(--bd);padding:1.2rem 1rem;display:flex;flex-direction:column;gap:.9rem;overflow-y:auto;max-height:520px;}
+.panel-sec{border-bottom:1px solid var(--bd);padding-bottom:.85rem;}
+.panel-sec:last-child{border-bottom:none;}
+.panel-label{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem;opacity:.8;}
 
-  /* ── Sections ── */
-  section { padding: 3rem 2rem; }
-  .section-inner { max-width: 700px; margin: 0 auto; }
-  .section-label { font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.5rem; }
+.mode-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;}
+.mode-btn{font-family:'Source Code Pro',monospace;font-size:.58rem;padding:.3rem .2rem;background:transparent;border:1px solid var(--bd);color:var(--dim);cursor:pointer;transition:all .15s;text-align:center;border-radius:2px;}
+.mode-btn:hover,.mode-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(45,212,191,.06);}
 
-  /* ── Sample chapter teaser ── */
-  .sample-section { background: var(--smoke); }
-  .sample-card {
-    background: white;
-    border-top: 3px solid var(--gold);
-    padding: 1.8rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    display: flex; gap: 1.5rem; align-items: flex-start;
-    flex-wrap: wrap;
-  }
-  .sample-icon {
-    background: var(--navy);
-    color: var(--gold);
-    font-family: sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.6rem 0.9rem;
-    flex-shrink: 0;
-    align-self: flex-start;
-    margin-top: 0.2rem;
-  }
-  .sample-content { flex: 1; min-width: 200px; }
-  .sample-content h3 { font-size: 1.15rem; color: var(--navy); margin-bottom: 0.4rem; }
-  .sample-content .sample-meta { font-family: sans-serif; font-size: 0.75rem; color: var(--rule); margin-bottom: 0.7rem; letter-spacing: 0.05em; }
-  .sample-content p { font-size: 0.92rem; line-height: 1.7; color: #444; margin-bottom: 1rem; }
-  .btn-sample {
-    background: var(--gold); color: var(--navy);
-    padding: 0.65rem 1.4rem; font-size: 0.88rem; font-weight: bold;
-    font-family: sans-serif; text-decoration: none;
-    display: inline-block; transition: opacity 0.2s;
-  }
-  .btn-sample:hover { opacity: 0.85; }
+.ctrl{margin-bottom:.55rem;}
+.ctrl-label{display:flex;justify-content:space-between;font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);margin-bottom:.28rem;}
+.ctrl-label span{color:var(--gold);}
+input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer;-webkit-appearance:none;height:2px;border-radius:2px;background:rgba(255,255,255,.07);}
 
-  /* ── Book 3 Materials Section ── */
-  .book3-section { background: white; border-top: 4px solid var(--navy); }
-  .book3-header { text-align: center; padding-bottom: 1.8rem; border-bottom: 1px solid var(--light); margin-bottom: 2rem; }
-  .book3-header h2 { font-size: clamp(1.3rem, 3vw, 1.9rem); color: var(--navy); margin-bottom: 0.35rem; }
-  .book3-header .book3-subtitle { font-style: italic; color: var(--rule); font-size: 0.95rem; margin-bottom: 0.6rem; }
-  .book3-header .book3-domains { font-family: sans-serif; font-size: 0.78rem; color: #777; letter-spacing: 0.04em; }
-  .book3-isbn { font-family: monospace; font-size: 0.75rem; color: var(--rule); margin-top: 0.5rem; display: block; }
+.color-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;}
+.col-btn{height:20px;border-radius:2px;border:1px solid transparent;cursor:pointer;transition:all .15s;}
+.col-btn.active{border-color:var(--cream);transform:scale(1.08);}
 
-  /* ── Materials subsections ── */
-  .materials-block { margin-bottom: 2rem; }
-  .materials-block-label { font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--light); }
+/* ═══ BINAURAL MODULE ═══ */
+.bm-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:3px;overflow:hidden;margin:1.5rem 0;}
+.bm-header{background:var(--bg3);border-bottom:1px solid var(--bd);padding:.85rem 1.3rem;display:flex;justify-content:space-between;align-items:center;}
+.bm-body{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--bd);}
+.bm-left,.bm-right{background:var(--bg2);padding:1rem;}
+#binauralCanvas{display:block;width:100%;height:160px;background:#020408;}
+.lissajous-wrap{display:flex;gap:1rem;align-items:stretch;}
+#lissajousCanvas{display:block;background:#020408;border-radius:2px;flex-shrink:0;}
+#beatCanvas{display:block;width:100%;height:120px;background:#020408;border-radius:2px;}
+.beat-readout{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd);margin-top:1.5px;}
+.br-cell{background:var(--bg3);padding:.55rem .8rem;}
+.br-label{font-family:'Source Code Pro',monospace;font-size:.54rem;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;}
+.br-val{font-family:'Source Code Pro',monospace;font-size:1rem;color:var(--teal);margin-top:.15rem;}
 
-  /* ── Material rows ── */
-  .material-row {
-    display: flex; align-items: center; gap: 1rem;
-    padding: 0.85rem 1rem; background: var(--smoke);
-    margin-bottom: 0.5rem; text-decoration: none;
-    color: var(--text); border-left: 3px solid transparent;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .material-row:hover { border-left-color: var(--gold); background: #ece8df; }
-  .material-badge { font-family: sans-serif; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.55rem; flex-shrink: 0; font-weight: bold; }
-  .badge-pdf  { background: #e8f0e8; color: #2d5a27; border: 1px solid #b8d4b8; }
-  .badge-html { background: #e8ecf4; color: var(--navy); border: 1px solid #b8c4d8; }
-  .badge-svg  { background: #f4ede8; color: #7a3a1a; border: 1px solid #d4b8a8; }
-  .material-info { flex: 1; }
-  .material-title { font-size: 0.95rem; color: var(--navy); font-weight: bold; margin-bottom: 0.15rem; }
-  .material-desc  { font-size: 0.78rem; color: #666; font-family: sans-serif; line-height: 1.5; }
-  .material-arrow { color: var(--gold); font-size: 1rem; flex-shrink: 0; }
+/* ═══ MACHINES GRID ═══ */
+.machines-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:var(--bd);margin:1.5rem 0;}
+.machine{background:var(--bg2);padding:1rem .9rem;display:flex;flex-direction:column;gap:.5rem;position:relative;transition:background .2s;}
+.machine:hover{background:var(--bg3);}
+.machine::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.m0::before{background:var(--gold);} .m1::before{background:var(--teal);} .m2::before{background:var(--sage);}
+.m3::before{background:var(--amb);} .m4::before{background:var(--rose);} .m5::before{background:var(--sky);}
+.m6::before{background:var(--lav);} .m7::before{background:var(--crim);}
 
-  /* ── Chapter table ── */
-  .chapter-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; font-size: 0.88rem; }
-  .chapter-table th { font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--rule); text-align: left; padding: 0.5rem 0.8rem; border-bottom: 2px solid var(--light); background: var(--smoke); }
-  .chapter-table td { padding: 0.7rem 0.8rem; border-bottom: 1px solid var(--light); vertical-align: top; }
-  .chapter-table tr:hover td { background: var(--smoke); }
-  .ch-sym { font-family: 'Georgia', serif; font-size: 1.05rem; color: var(--navy); font-weight: bold; }
-  .ch-name { color: var(--navy); font-weight: bold; }
-  .ch-topic { color: #555; font-size: 0.82rem; font-family: sans-serif; margin-top: 0.15rem; }
-  .ch-link { text-align: right; white-space: nowrap; }
-  .ch-link a { font-family: sans-serif; font-size: 0.75rem; font-weight: bold; color: var(--navy); text-decoration: none; background: var(--gold); padding: 0.3rem 0.7rem; transition: opacity 0.2s; display: inline-block; }
-  .ch-link a:hover { opacity: 0.8; }
-  .ch-gated { font-family: sans-serif; font-size: 0.72rem; font-weight: bold; color: var(--rule); letter-spacing: 0.08em; text-transform: uppercase; background: var(--light); padding: 0.25rem 0.6rem; white-space: nowrap; }
+/* symbol */
+.m-symbol{font-size:1.6rem;text-align:center;line-height:1;margin-bottom:.2rem;filter:drop-shadow(0 0 8px currentColor);}
+.m0 .m-symbol{color:var(--gold);}  .m1 .m-symbol{color:var(--teal);}
+.m2 .m-symbol{color:var(--sage);}  .m3 .m-symbol{color:var(--amb);}
+.m4 .m-symbol{color:var(--rose);}  .m5 .m-symbol{color:var(--sky);}
+.m6 .m-symbol{color:var(--lav);}   .m7 .m-symbol{color:var(--crim);}
 
-  /* ── Purchase-included list ── */
-  .purchase-included { border: 1px solid var(--light); }
-  .pi-row { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; border-bottom: 1px solid var(--light); background: var(--smoke); }
-  .pi-lock { font-size: 0.85rem; flex-shrink: 0; opacity: 0.5; }
-  .pi-delivery { display: flex; align-items: flex-start; gap: 0.8rem; padding: 1rem 1.1rem; background: #f0ece4; font-size: 0.85rem; line-height: 1.7; color: #444; font-family: sans-serif; }
-  .pi-delivery-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
-  .repo-link { color: var(--navy); font-weight: bold; text-decoration: underline; }
-  .repo-link:hover { color: var(--rule); }
+.m-name{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;text-align:center;}
+.m0 .m-name{color:var(--gold);}  .m1 .m-name{color:var(--teal);}
+.m2 .m-name{color:var(--sage);}  .m3 .m-name{color:var(--amb);}
+.m4 .m-name{color:var(--rose);}  .m5 .m-name{color:var(--sky);}
+.m6 .m-name{color:var(--lav);}   .m7 .m-name{color:var(--crim);}
 
-  /* ── Format cards ── */
-  .format-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-  .format-card { background: white; border: 1px solid var(--light); padding: 1.8rem; }
-  .format-card.featured { border: 2px solid var(--gold); }
-  .format-label { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; background: var(--gold); color: var(--navy); padding: 0.2rem 0.6rem; display: inline-block; margin-bottom: 1rem; }
-  .format-title { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.4rem; line-height: 1.4; }
-  .format-desc { font-size: 0.85rem; color: #555; margin-bottom: 1rem; line-height: 1.6; }
-  .format-price { font-size: 1.9rem; font-weight: bold; color: var(--navy); font-family: sans-serif; }
-  .format-tax { font-size: 0.8rem; color: #777; margin: 0.3rem 0 0.8rem; line-height: 1.5; }
-  .format-isbn { font-family: monospace; font-size: 0.75rem; color: var(--rule); margin-bottom: 1.2rem; display: block; }
-  .btn-pay { display: block; text-align: center; background: var(--gold); color: var(--navy); padding: 0.75rem; font-size: 0.9rem; font-weight: bold; font-family: sans-serif; text-decoration: none; transition: opacity 0.2s; margin-bottom: 0.5rem; }
-  .btn-pay:hover { opacity: 0.88; }
-  .btn-pay-custom { display: block; text-align: center; background: transparent; color: var(--mid); padding: 0.6rem; font-size: 0.8rem; font-family: sans-serif; text-decoration: none; border: 1px solid var(--light); transition: all 0.2s; }
-  .btn-pay-custom:hover { border-color: var(--gold); color: var(--navy); }
-  .custom-note { font-size: 0.75rem; color: #888; margin-top: 0.5rem; line-height: 1.5; font-family: sans-serif; }
+.m-hz{font-family:'Source Code Pro',monospace;font-size:.56rem;color:var(--dim);text-align:center;}
+.m-cite{font-size:.7rem;font-style:italic;color:var(--dim);line-height:1.42;text-align:center;min-height:2.2rem;}
+.m-culture{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;opacity:.5;margin-top:-.2rem;}
 
-  /* ── Divider ── */
-  hr { border: none; border-top: 1px solid var(--light); margin: 2rem 0; }
+.mplay{width:34px;height:34px;border-radius:50%;background:transparent;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .18s;border:1.5px solid;margin:0 auto;}
+.m0 .mplay{border-color:var(--gold);color:var(--gold);}    .m1 .mplay{border-color:var(--teal);color:var(--teal);}
+.m2 .mplay{border-color:var(--sage);color:var(--sage);}    .m3 .mplay{border-color:var(--amb);color:var(--amb);}
+.m4 .mplay{border-color:var(--rose);color:var(--rose);}    .m5 .mplay{border-color:var(--sky);color:var(--sky);}
+.m6 .mplay{border-color:var(--lav);color:var(--lav);}      .m7 .mplay{border-color:var(--crim);color:var(--crim);}
+.mplay.on,.mplay:hover{background:currentColor;color:var(--bg)!important;}
 
-  /* ── Info blocks ── */
-  .info-block { background: var(--smoke); padding: 1.4rem 1.6rem; margin: 1.5rem 0; }
-  .info-block h3 { font-size: 1rem; color: var(--navy); margin-bottom: 0.5rem; }
-  .info-block p { font-size: 0.88rem; line-height: 1.7; color: #444; }
-  .code-block { background: var(--navy); color: var(--gold); font-family: monospace; font-size: 0.82rem; padding: 0.8rem 1rem; margin-top: 0.6rem; line-height: 1.6; word-break: break-all; }
+.mvol-row{display:flex;align-items:center;gap:.4rem;}
+.mvl{font-family:'Source Code Pro',monospace;font-size:.52rem;color:var(--dim);width:1.2rem;}
+.mvol{flex:1;cursor:pointer;-webkit-appearance:none;height:2px;border-radius:2px;background:rgba(255,255,255,.07);outline:none;}
+.m0 .mvol{accent-color:var(--gold);}  .m1 .mvol{accent-color:var(--teal);}
+.m2 .mvol{accent-color:var(--sage);}  .m3 .mvol{accent-color:var(--amb);}
+.m4 .mvol{accent-color:var(--rose);}  .m5 .mvol{accent-color:var(--sky);}
+.m6 .mvol{accent-color:var(--lav);}   .m7 .mvol{accent-color:var(--crim);}
 
-  /* ── Footer ── */
-  footer { background: var(--navy); color: #888; padding: 2.5rem 2rem; text-align: center; font-size: 0.78rem; font-family: sans-serif; line-height: 1.9; }
-  footer a { color: #888; text-decoration: none; }
-  footer a:hover { color: var(--gold); }
+.mwave-c{height:22px;background:#020408;border-radius:2px;overflow:hidden;}
+.mwave-c canvas{width:100%;height:100%;display:block;}
+
+/* master viz */
+.master-bar{background:var(--bg3);border:1px solid var(--bd);padding:.5rem 1rem;margin-bottom:1.5px;}
+#masterViz{width:100%;height:52px;display:block;border-radius:2px;}
+
+/* STUDIO */
+.studio{background:var(--bg3);border:1px solid var(--bd);padding:1rem 1.3rem;margin-top:1.5px;}
+.studio-title{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.75rem;opacity:.8;}
+.s-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.6rem;}
+.sbtn{font-family:'Source Code Pro',monospace;font-size:.62rem;letter-spacing:.07em;padding:.38rem .85rem;background:transparent;border:1px solid var(--bd2);color:var(--cream);cursor:pointer;transition:all .18s;border-radius:2px;display:flex;align-items:center;gap:.3rem;}
+.sbtn:hover{border-color:var(--gold);color:var(--gold);}
+.sbtn.on{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+.sbtn.rec{border-color:var(--crim);color:var(--crim);}
+.sbtn.rec.on{background:var(--crim);color:#fff;border-color:var(--crim);animation:pr 1s infinite;}
+@keyframes pr{0%,100%{opacity:1;}50%{opacity:.55;}}
+.sbtn.dl{border-color:var(--teal);color:var(--teal);}
+.sbtn.dl:hover,.sbtn.dl.on{background:var(--teal);color:var(--bg);border-color:var(--teal);}
+.rec-bar{flex:1;height:28px;background:#020408;border:1px solid var(--bd);border-radius:2px;overflow:hidden;min-width:100px;}
+#recViz{width:100%;height:100%;display:block;}
+.rec-t{font-family:'Source Code Pro',monospace;font-size:.66rem;color:var(--dim);min-width:3rem;}
+.loop-s{font-family:'Source Code Pro',monospace;font-size:.6rem;color:var(--dim);}
+.loop-s span{color:var(--teal);}
+.preset-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.pinput{background:#020408;border:1px solid var(--bd);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:.9rem;padding:.3rem .7rem;border-radius:2px;flex:1;min-width:120px;outline:none;}
+.pinput:focus{border-color:var(--gold);}
+.pinput::placeholder{color:var(--dim);font-style:italic;}
+.pchips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem;}
+.pchip{font-family:'Source Code Pro',monospace;font-size:.58rem;padding:.25rem .6rem;border:1px solid var(--bd);color:var(--dim);cursor:pointer;border-radius:2px;display:flex;align-items:center;gap:.3rem;transition:all .18s;}
+.pchip:hover{border-color:var(--gold);color:var(--gold);}
+
+/* GENERATE CTA */
+.gen-cta{background:linear-gradient(135deg,rgba(200,169,110,.07),rgba(45,212,191,.04));border:1px solid var(--bd2);border-top:2px solid var(--gold);padding:2rem;text-align:center;margin:1.5rem 0;}
+.gen-cta h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;margin-bottom:.4rem;}
+.gen-cta h3 em{font-style:italic;color:var(--gp);}
+.gen-cta p{font-size:.88rem;color:var(--dim);max-width:36rem;margin:0 auto .85rem;}
+.gcta-btn{display:inline-block;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;padding:.65rem 1.8rem;background:var(--gold);color:var(--bg);text-decoration:none;cursor:pointer;border:none;transition:all .2s;margin:.25rem;}
+.gcta-btn:hover{background:var(--gl);}
+.gcta-btn.ol{background:transparent;color:var(--gold);border:1px solid var(--gold);}
+.gcta-btn.ol:hover{background:var(--gold);color:var(--bg);}
+
+/* FUND */
+.fund-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:2rem;margin:1.5rem 0;}
+.prop-img{width:100%;border:1px solid var(--bd2);display:block;filter:sepia(.08) contrast(1.04);}
+.fund-text p{font-size:.92rem;line-height:1.72;margin-bottom:.75rem;}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--bd);margin:1.5rem 0;}
+.tier{background:var(--bg2);padding:1.5rem 1.2rem;display:flex;flex-direction:column;}
+.tier.ft{background:var(--bg3);border-top:2px solid var(--gold);}
+.tier-p{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);}
+.tier-n{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gl);margin:.2rem 0 .8rem;}
+.tier p{font-size:.84rem;color:var(--dim);line-height:1.58;flex:1;}
+a.tbtn{display:inline-block;margin-top:1rem;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;padding:.45rem 1rem;border:1px solid var(--gold);color:var(--gold);text-decoration:none;transition:all .2s;}
+a.tbtn:hover{background:var(--gold);color:var(--bg);}
+
+/* CULTURE SYMBOLS display */
+.culture-band{overflow:hidden;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:1.2rem 0;position:relative;margin:2rem 0;}
+.culture-scroll{display:flex;gap:3rem;align-items:center;animation:scroll-l 40s linear infinite;width:max-content;padding:0 2rem;}
+@keyframes scroll-l{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.cult-sym{font-size:1.8rem;opacity:.3;transition:opacity .3s;cursor:default;filter:drop-shadow(0 0 6px var(--gold));}
+.cult-sym:hover{opacity:.8;}
+.cult-label{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);opacity:.3;margin-top:.2rem;text-align:center;}
+
+/* CHAPTERS */
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5px;background:var(--bd);margin:1.5rem 0;}
+.ch-lnk{background:var(--bg2);padding:1rem 1.2rem;text-decoration:none;display:flex;justify-content:space-between;align-items:center;transition:background .2s;}
+.ch-lnk:hover{background:var(--bg3);}
+.ch-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);}
+.ch-ttl{font-size:.9rem;color:var(--cream);margin-top:.15rem;}
+.ch-arr{color:var(--gold);opacity:.5;}
+
+/* RESEARCH TABLE */
+.rt{width:100%;border-collapse:collapse;font-size:.82rem;margin:1.2rem 0;}
+.rt th{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);padding:.5rem .7rem;border-bottom:2px solid var(--bd2);text-align:left;}
+.rt td{padding:.55rem .7rem;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.48;}
+.rt tr:last-child td{border-bottom:none;}
+.site{font-weight:500;color:var(--gp);}
+.hzb{font-family:'Source Code Pro',monospace;font-size:.72rem;color:var(--gold);background:rgba(200,169,110,.1);padding:.08rem .3rem;border-radius:2px;}
+
+footer{border-top:1px solid var(--bd);padding:2rem 1.5rem;text-align:center;font-family:'Source Code Pro',monospace;font-size:.6rem;color:rgba(200,169,110,.35);line-height:2.1;}
+footer a{color:rgba(200,169,110,.45);text-decoration:none;}footer a:hover{color:var(--gold);}
+
+@media(max-width:900px){
+  .cm-body{grid-template-columns:1fr;}
+  .cm-panel{max-height:none;border-left:none;border-top:1px solid var(--bd);}
+  .bm-body{grid-template-columns:1fr;}
+  .machines-grid{grid-template-columns:repeat(2,1fr);}
+  .fund-grid,.tiers{grid-template-columns:1fr;}
+  .ch-grid{grid-template-columns:1fr;}
+}
+@media(max-width:520px){
+  .machines-grid{grid-template-columns:1fr;}
+  .mode-grid{grid-template-columns:repeat(3,1fr);}
+  .s-row{flex-direction:column;align-items:stretch;}
+}
 </style>
 </head>
 <body>
 
-<!-- Nav -->
 <nav>
-  <a href="https://totogt.github.io/DM3-lab/index.html" class="nav-logo">PRINCIPIA ORTHOGONA</a>
-  <div class="nav-links">
-    <a href="wellness-soundworks.html" class="nav-nws">Newark Wellness Soundworks</a>
-    <a href="https://totogt.github.io/DM3-lab/index.html" class="nav-back">← Back to Homepage</a>
+  <a class="nlogo" href="https://totogt.github.io/AXLE">PRINCIPIA ORTHOGONA · G6 LLC</a>
+  <div class="nlinks">
+    <a href="#machines">Machines</a>
+    <a href="#chladni">Chladni</a>
+    <a href="#binaural">Binaural</a>
+    <a href="#fund">Fund</a>
+    <a href="https://totogt.github.io/3M/">Chapter 10</a>
+    <a href="https://totogt.github.io/3M/chE-gtct.html">Chapter E</a>
+    <a href="https://brodanova6.gumroad.com/l/soundworks">Buy →</a>
   </div>
 </nav>
 
-<!-- Hero -->
+<!-- HERO -->
 <div class="hero">
-  <div class="hero-eyebrow">Principia Orthogona · G¹–G⁵</div>
-  <h1>IMPA Edition</h1>
-  <div class="hero-sub">Complete Series · Distributed via IMPA Portal</div>
-  <div class="gold-rule"></div>
-</div>
-
-<!-- ═══════════════════════════════════════════════
-     NEWARK WELLNESS SOUNDWORKS — PRIMARY SECTION
-     ═══════════════════════════════════════════════ -->
-<div class="nws-section" id="nws">
-  <div class="nws-inner">
-    <div class="nws-eyebrow">Newark Wellness Soundworks · G6 LLC · First Priority</div>
-    <h2 class="nws-title">Free Clinic · Sound Medicine · 229 Ballantine Pkwy</h2>
-    <div class="nws-address">Newark, New Jersey · G6 LLC · Pablo Nogueira Grossi</div>
-    <div class="nws-mission">
-      One year. Six volumes. All the machines. Your membership funds a <strong>free clinic</strong>
-      at 229 Ballantine Pkwy — open to all Newark residents, no fees, no insurance required.
-      <strong>G6 LLC builds whatever the clinic needs, free of charge.</strong>
-      Every membership, every book sale, every class registration goes directly toward acquiring
-      and opening 229 Ballantine.<br><br>
-      Classes with the teacher in Newark NJ — 16 weeks each cohort:
-      May 1 · November 1, 2026 · February 1, 2027.<br>
-      Entry point: <strong>English for Researchers</strong> — designed for everyone,
-      no prerequisites (though you may want a PhD at times).<br><br>
-      Start reading at <strong>github.com/TOTOGT/AXLE</strong> — your purchase will be confirmed
-      and we will send you a link to get started.
-      <div class="nws-math">C → K → F → U → T → source &nbsp;·&nbsp; g⁶ = 33 &nbsp;·&nbsp; ε₀ = 1/3 &nbsp;·&nbsp; η ≈ 1.839</div>
-    </div>
-
-    <div class="nws-grid">
-      <a href="229-ballantine.html" class="nws-card primary">
-        <span class="nws-card-arrow">→</span>
-        <div class="nws-card-label">Join · Fund the clinic</div>
-        <div class="nws-card-title">Membership &amp; 229 Ballantine</div>
-        <div class="nws-card-sub">$33 supporter · $199 member · $247 patron · hardcover acknowledgment · print copy when the building opens</div>
-      </a>
-      <a href="wellness-soundworks.html" class="nws-card">
-        <span class="nws-card-arrow">→</span>
-        <div class="nws-card-label">Seven sound machines</div>
-        <div class="nws-card-title">Newark Wellness Soundworks Hub</div>
-        <div class="nws-card-sub">All machines live in your browser · Om · Pranayama · So-Haṃ · G6 Drone · Śrī Yantra · Ħal Saflieni · Bhairava</div>
-      </a>
-    </div>
-
-    <div class="nws-machines">
-      <a href="om-machine.html" class="nws-machine-pill">OM Machine</a>
-      <a href="pranayama-machine.html" class="nws-machine-pill">Pranayama</a>
-      <a href="soham-machine.html" class="nws-machine-pill">So-Haṃ</a>
-      <a href="g6-drone-machine.html" class="nws-machine-pill">G6 Drone</a>
-      <a href="sri-yantra-sakti-machine.html" class="nws-machine-pill">Śrī Yantra Śakti</a>
-      <a href="hal-saflieni-resonance.html" class="nws-machine-pill">Ħal Saflieni · 90–120 Hz</a>
-      <a href="swarnakarshana-bhairava-machine.html" class="nws-machine-pill">Swarnakarshana Bhairava</a>
-    </div>
+  <canvas id="cosmosCanvas"></canvas>
+  <div class="hero-content">
+    <div class="eyebrow">Newark Wellness Soundworks Hub · 229 Ballantine Pkway · G6 LLC · 2026</div>
+    <h1 class="ht">Seven Sound Machines.<br><em>Sand, Stone & Resonance.</em></h1>
+    <p class="hsub">Chladni plates. Binaural waves. Eight archaeoacoustic frequencies from Malta to Malta, Giza to Chartres. Mix your resonance. Save your dm³Machine.</p>
+    <div class="scroll-hint">↓ Enter the Chamber ↓</div>
   </div>
 </div>
 
-<!-- Sample Chapters -->
-<section class="sample-section">
-  <div class="section-inner">
-    <div class="section-label">Read Before You Buy</div>
-    <div class="sample-card" style="margin-bottom:1rem;">
-      <div class="sample-icon">Free<br>Sample</div>
-      <div class="sample-content">
-        <h3>Tubulin as Computronium</h3>
-        <div class="sample-meta">Book 3 · The Mini-Beast · Chapter T · Biological Instantiations</div>
-        <p>
-          In 1964, Stanisław Ulam asked what the optimal physical substrate for computation would be.
-          Biology answered 500 million years ago — with a single 110-kiloDalton protein that
-          self-assembles into fifteen radically different architectures from one molecular grammar,
-          in ordinary water, at room temperature. This chapter applies the dm³ operator framework
-          to tubulin: C → K → F → U running continuously in every eukaryotic cell alive right now.
-        </p>
-        <a href="https://totogt.github.io/DM3-lab/sample-chapter-tubulin.html" class="btn-sample">Read the Sample Chapter →</a>
-      </div>
-    </div>
+<!-- CULTURE SYMBOL BAND -->
+<div class="culture-band">
+  <div class="culture-scroll" id="cultScroll"></div>
+</div>
 
-    <div class="sample-card">
-      <div class="sample-icon">Free<br>Sample</div>
-      <div class="sample-content">
-        <h3>The Wigner Crystal</h3>
-        <div class="sample-meta">Book 3 · The Mini-Beast · Chapter W · Physical Instantiations</div>
-        <p>
-          Eugene Wigner predicted in 1934 that electrons — with nothing holding them together but
-          their own mutual repulsion — would freeze into a crystal at low enough density or
-          temperature. It took until 2021 to see it directly. This chapter shows that Wigner
-          crystallization is a dm³ generative transition, extends the Coherence Bridge parameter
-          table to a seventh domain, and explains what the 2024–2025 moiré imaging results
-          are actually showing.
-        </p>
-        <a href="https://totogt.github.io/AXLE/wigner-fractal.html" class="btn-sample">Read the Sample Chapter →</a>
+<!-- ═══ CHLADNI ═══ -->
+<div class="wrap" id="chladni">
+<div class="sec">
+  <div class="slabel">Chladni Sand Plates · Nodal Pattern Simulator</div>
+  <div class="stitle">Form Emerges from Frequency</div>
+  <p style="font-size:.9rem;color:var(--dim);max-width:44rem;">Sprinkle sand on a plate. Drive it at a resonant frequency. The sand migrates to the nodal lines — the places that do not move. The pattern is <em>selected</em> by the mathematics, not drawn. Every sacred mandala is a Chladni figure. Every temple proportion encodes one.</p>
+
+  <div class="chladni-module">
+    <div class="cm-header">
+      <div class="cm-title">Chladni Figure Generator · Real-time Nodal Patterns</div>
+      <div class="cm-info">Mode: <span id="cmodeLabel">(2,1)</span> · Freq: <span id="cfreqLabel">—</span> · <span id="csymLabel">—</span></div>
+    </div>
+    <div class="cm-body">
+      <canvas id="chladniCanvas"></canvas>
+      <div class="cm-panel">
+        <div class="panel-sec">
+          <div class="panel-label">Resonant Mode (m, n)</div>
+          <div class="mode-grid" id="modeGrid"></div>
+        </div>
+        <div class="panel-sec">
+          <div class="panel-label">Parameters</div>
+          <div class="ctrl"><div class="ctrl-label">Frequency <span id="freqVal">111 Hz</span></div><input type="range" id="cfreq" min="50" max="1000" value="111" oninput="onFreqChange(this.value)"></div>
+          <div class="ctrl"><div class="ctrl-label">Sand density <span id="densVal">0.60</span></div><input type="range" id="cdens" min="0.1" max="1" step="0.01" value="0.6" oninput="updateChladni()"></div>
+          <div class="ctrl"><div class="ctrl-label">Grain size <span id="grainVal">2.0</span></div><input type="range" id="cgrain" min="0.5" max="5" step="0.1" value="2" oninput="updateChladni()"></div>
+          <div class="ctrl"><div class="ctrl-label">Noise <span id="noiseVal">0.08</span></div><input type="range" id="cnoise" min="0" max="0.3" step="0.01" value="0.08" oninput="updateChladni()"></div>
+        </div>
+        <div class="panel-sec">
+          <div class="panel-label">Color palette</div>
+          <div class="color-grid" id="colorGrid"></div>
+        </div>
+        <div class="panel-sec">
+          <div class="panel-label">Sacred correlates</div>
+          <div id="sacredNote" style="font-size:.75rem;font-style:italic;color:var(--dim);line-height:1.6;"></div>
+        </div>
+        <div class="panel-sec">
+          <div class="panel-label">Animate</div>
+          <button class="sbtn" id="animBtn" onclick="toggleAnim()" style="width:100%;justify-content:center;">▶ Animate Pattern</button>
+        </div>
       </div>
     </div>
   </div>
-</section>
+</div>
+</div>
 
-<!-- Book 3 Materials -->
-<section class="book3-section">
-  <div class="section-inner">
+<!-- ═══ BINAURAL ═══ -->
+<div class="wrap" id="binaural">
+<div class="sec">
+  <div class="slabel">Binaural Wave Module · Real-time Interference</div>
+  <div class="stitle">Two Frequencies, One Perception</div>
+  <p style="font-size:.9rem;color:var(--dim);max-width:44rem;">A binaural beat occurs when two slightly different frequencies reach separate ears. The brain constructs the difference frequency — which is not in the air, only in the nervous system. At 6 Hz: theta. At 10 Hz: alpha. At 40 Hz: gamma. The Hypogeum was tuned to produce this effect in stone.</p>
 
-    <div class="book3-header">
-      <div class="section-label">Book 3</div>
-      <h2>The Mini-Beast</h2>
-      <div class="book3-subtitle">A Pilot for ESL Students, STEM Teachers, and Everyone Who Suspects the Universe Runs on One Equation</div>
-      <div class="book3-domains">Biological Instantiations · Plasma Reconnection · Market Volatility Manifolds · Neural Embedding Geometry · The 14-Week Program</div>
-      <span class="book3-isbn">ISBN 979-8-9954416-6-3 (eBook PDF) · Zenodo: 10.5281/zenodo.19117400</span>
+  <div class="bm-wrap">
+    <div class="bm-header">
+      <div class="cm-title" style="font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;">Binaural Beat Generator · Lissajous · Interference</div>
+      <div class="cm-info" style="font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);">Beat: <span id="beatHz" style="color:var(--teal);">6.0 Hz</span> · State: <span id="brainState" style="color:var(--teal);">Theta</span></div>
     </div>
-
-    <div class="materials-block">
-      <div class="materials-block-label">Included with Purchase — Full Documents</div>
-      <div class="purchase-included">
-        <div class="pi-row">
-          <span class="material-badge badge-pdf">PDF</span>
-          <div class="material-info">
-            <div class="material-title">The Mini-Beast — Complete Living Book</div>
-            <div class="material-desc">Principia Orthogona · Book 3 · Full eBook · ISBN 979-8-9954416-6-3 · Updated as the pilot expands</div>
-          </div>
-          <span class="pi-lock">🔒</span>
+    <div style="background:var(--bg3);border-bottom:1px solid var(--bd);padding:.85rem 1.2rem;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.85rem;align-items:end;">
+      <div class="ctrl"><div class="ctrl-label" style="font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:.28rem;">Left Hz <span style="color:var(--sky);" id="leftHz">100</span></div><input type="range" id="bleft" min="50" max="500" value="100" oninput="updateBinaural()" style="accent-color:var(--sky);"></div>
+      <div class="ctrl"><div class="ctrl-label" style="font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:.28rem;">Right Hz <span style="color:var(--rose);" id="rightHz">106</span></div><input type="range" id="bright" min="50" max="500" value="106" oninput="updateBinaural()" style="accent-color:var(--rose);"></div>
+      <div class="ctrl"><div class="ctrl-label" style="font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:.28rem;">Beat target <span style="color:var(--teal);" id="beatTarget">6</span> Hz</div><input type="range" id="bbeat" min="1" max="40" value="6" oninput="setBeatTarget(this.value)" style="accent-color:var(--teal);"></div>
+      <div class="ctrl"><div class="ctrl-label" style="font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);display:flex;justify-content:space-between;margin-bottom:.28rem;">Volume <span style="color:var(--gold);" id="bvolv">0.5</span></div><input type="range" id="bvol" min="0" max="1" step="0.01" value="0.5" oninput="setBVol(this.value)" style="accent-color:var(--gold);"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:1.5px;background:var(--bd);">
+      <div style="background:var(--bg2);padding:.75rem;display:flex;flex-direction:column;gap:.5rem;">
+        <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.2rem;">Lissajous</div>
+        <canvas id="lissajousCanvas" width="180" height="180" style="display:block;background:#020408;border-radius:2px;width:100%;max-width:180px;aspect-ratio:1;"></canvas>
+        <div style="font-family:'Source Code Pro',monospace;font-size:.54rem;color:var(--dim);text-align:center;" id="lissLabel">1:1.06</div>
+      </div>
+      <div style="background:var(--bg2);padding:.75rem;display:flex;flex-direction:column;gap:.5rem;">
+        <div style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:.2rem;">Wave Interference · Left (blue) · Right (rose) · Beat envelope (gold)</div>
+        <canvas id="beatCanvas" style="display:block;width:100%;height:130px;background:#020408;border-radius:2px;"></canvas>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:var(--bd);">
+          <div style="background:var(--bg3);padding:.45rem .7rem;"><div style="font-family:'Source Code Pro',monospace;font-size:.52rem;color:var(--dim);">Left</div><div style="font-family:'Source Code Pro',monospace;font-size:.88rem;color:var(--sky);" id="br1">100 Hz</div></div>
+          <div style="background:var(--bg3);padding:.45rem .7rem;"><div style="font-family:'Source Code Pro',monospace;font-size:.52rem;color:var(--dim);">Right</div><div style="font-family:'Source Code Pro',monospace;font-size:.88rem;color:var(--rose);" id="br2">106 Hz</div></div>
+          <div style="background:var(--bg3);padding:.45rem .7rem;"><div style="font-family:'Source Code Pro',monospace;font-size:.52rem;color:var(--dim);">Beat</div><div style="font-family:'Source Code Pro',monospace;font-size:.88rem;color:var(--teal);" id="br3">6 Hz</div></div>
+          <div style="background:var(--bg3);padding:.45rem .7rem;"><div style="font-family:'Source Code Pro',monospace;font-size:.52rem;color:var(--dim);">State</div><div style="font-family:'Source Code Pro',monospace;font-size:.88rem;color:var(--sage);" id="br4">Theta</div></div>
         </div>
-        <div class="pi-row">
-          <span class="material-badge badge-pdf">PDF</span>
-          <div class="material-info">
-            <div class="material-title">The Mini-Beast — Chapter 6</div>
-            <div class="material-desc">Book 3 · Chapter 6 standalone supplement</div>
-          </div>
-          <span class="pi-lock">🔒</span>
-        </div>
-        <div class="pi-row">
-          <span class="material-badge badge-pdf">PDF</span>
-          <div class="material-info">
-            <div class="material-title">The Mini-Beast — Chapter E · GTCT</div>
-            <div class="material-desc">Book 3 · Chapter E · Generalized Trajectory &amp; Cycle Theory supplement</div>
-          </div>
-          <span class="pi-lock">🔒</span>
-        </div>
-        <div class="pi-delivery">
-          <span class="pi-delivery-icon">📦</span>
-          <div>
-            <strong>Delivery:</strong> After payment verification, you will receive access to the
-            <a href="https://github.com/TOTOGT/book3-starter" target="_blank" class="repo-link">TOTOGT/book3-starter</a>
-            GitHub repository — the full living Book 3 document, updated continuously as the pilot expands.
-            An NDA process applies.
-          </div>
-        </div>
+        <div style="background:rgba(45,212,191,.04);border:1px solid rgba(45,212,191,.15);padding:.6rem .8rem;border-radius:2px;font-size:.75rem;font-style:italic;color:var(--dim);" id="brainNote"></div>
       </div>
     </div>
-
-    <div class="materials-block">
-      <div class="materials-block-label">Interactive Chapters — HTML</div>
-
-      <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html" class="material-row" target="_blank">
-        <span class="material-badge badge-html">HTML</span>
-        <div class="material-info">
-          <div class="material-title">Chapters π · φ · μ · η · Δ · Σ · Ω</div>
-          <div class="material-desc">The recurrence ladder — π, φ, μ, η (Tribonacci), Tetranacci, Pentanacci, Hexabonacci — dm³ operator framework</div>
-        </div>
-        <span class="material-arrow">↗</span>
-      </a>
-
-      <a href="https://totogt.github.io/AXLE/spectral-radius-v2.html" class="material-row" target="_blank">
-        <span class="material-badge badge-html">HTML</span>
-        <div class="material-info">
-          <div class="material-title">Spectral Radius Asymptotics — Transfer Operator</div>
-          <div class="material-desc">Book 3 · Collatz Supplement · Syracuse return map · Probability matrix PM · Ruelle–Perron–Frobenius operator</div>
-        </div>
-        <span class="material-arrow">↗</span>
-      </a>
-
-      <a href="https://totogt.github.io/AXLE/wigner-fractal.html" class="material-row" target="_blank">
-        <span class="material-badge badge-html">HTML</span>
-        <div class="material-info">
-          <div class="material-title">Wigner Crystal — dm³ Fold Diagram</div>
-          <div class="material-desc">Book 3 · Interactive diagram · Crystal-Geometry framework · Physical instantiations</div>
-        </div>
-        <span class="material-arrow">↗</span>
-      </a>
-
-      <a href="wellness-soundworks.html" class="material-row">
-        <span class="material-badge badge-html">HTML</span>
-        <div class="material-info">
-          <div class="material-title">Newark Wellness Soundworks — Seven Sound Machines</div>
-          <div class="material-desc">Om · Pranayama · So-Haṃ · G6 Drone · Śrī Yantra Śakti · Ħal Saflieni Temple Resonance · Swarnakarshana Bhairava</div>
-        </div>
-        <span class="material-arrow">↗</span>
-      </a>
+    <div style="background:var(--bg3);border-top:1px solid var(--bd);padding:.65rem 1.2rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+      <button class="sbtn" onclick="setBeat(1,'Delta')">1 Hz · Delta</button>
+      <button class="sbtn" onclick="setBeat(4,'Theta–low')">4 Hz · Theta</button>
+      <button class="sbtn" onclick="setBeat(6,'Theta–Hypogeum')">6 Hz · Hypogeum</button>
+      <button class="sbtn" onclick="setBeat(10,'Alpha')">10 Hz · Alpha</button>
+      <button class="sbtn" onclick="setBeat(40,'Gamma')">40 Hz · Gamma</button>
+      <button class="sbtn" id="bplayBtn" onclick="toggleBinaural()" style="margin-left:auto;border-color:var(--teal);color:var(--teal);">▶ Play Binaural</button>
     </div>
-
-    <div class="materials-block">
-      <div class="materials-block-label">Series Overview</div>
-      <a href="https://totogt.github.io/AXLE/axle_sorry_roadmap.svg" class="material-row" target="_blank">
-        <span class="material-badge badge-svg">SVG</span>
-        <div class="material-info">
-          <div class="material-title">AXLE Roadmap</div>
-          <div class="material-desc">Complete series overview — G¹ through G⁵ · Book structure and progression map</div>
-        </div>
-        <span class="material-arrow">↗</span>
-      </a>
-    </div>
-
-    <div class="materials-block">
-      <div class="materials-block-label">Chapter Index — Book 3 · The Mini-Beast</div>
-      <table class="chapter-table">
-        <thead>
-          <tr><th>Ch.</th><th>Title &amp; Topic</th><th></th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span class="ch-sym">T</span></td>
-            <td>
-              <div class="ch-name">Tubulin as Computronium</div>
-              <div class="ch-topic">Biological Instantiations · dm³ in eukaryotic cells · C → K → F → U</div>
-            </td>
-            <td class="ch-link"><a href="https://totogt.github.io/DM3-lab/sample-chapter-tubulin.html" target="_blank">Read</a></td>
-          </tr>
-          <tr>
-            <td><span class="ch-sym">W</span></td>
-            <td>
-              <div class="ch-name">The Wigner Crystal</div>
-              <div class="ch-topic">Physical Instantiations · Wigner crystallization as dm³ generative transition · Coherence Bridge (7th domain)</div>
-            </td>
-            <td class="ch-link"><a href="https://totogt.github.io/AXLE/wigner-fractal.html" target="_blank">Read</a></td>
-          </tr>
-          <tr>
-            <td><span class="ch-sym">E</span></td>
-            <td>
-              <div class="ch-name">Chapter E · GTCT</div>
-              <div class="ch-topic">Generalized Trajectory &amp; Cycle Theory</div>
-            </td>
-            <td class="ch-link"><span class="ch-gated">Purchase</span></td>
-          </tr>
-          <tr>
-            <td><span class="ch-sym">6</span></td>
-            <td>
-              <div class="ch-name">Chapter 6</div>
-              <div class="ch-topic">Book 3 supplement</div>
-            </td>
-            <td class="ch-link"><span class="ch-gated">Purchase</span></td>
-          </tr>
-          <tr>
-            <td><span class="ch-sym">π φ μ η</span></td>
-            <td>
-              <div class="ch-name">The Recurrence Ladder</div>
-              <div class="ch-topic">Chapters π · φ · μ · η · Δ · Σ · Ω · Tribonacci through Hexabonacci · dm³ operator framework</div>
-            </td>
-            <td class="ch-link"><a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html" target="_blank">Read</a></td>
-          </tr>
-          <tr>
-            <td><span class="ch-sym">ρ</span></td>
-            <td>
-              <div class="ch-name">Spectral Radius Asymptotics</div>
-              <div class="ch-topic">Transfer Operator · Collatz Supplement · Syracuse return map · Ruelle–Perron–Frobenius</div>
-            </td>
-            <td class="ch-link"><a href="https://totogt.github.io/AXLE/spectral-radius-v2.html" target="_blank">Read</a></td>
-          </tr>
-          <tr>
-            <td><span class="ch-sym">♪</span></td>
-            <td>
-              <div class="ch-name">Newark Wellness Soundworks</div>
-              <div class="ch-topic">Seven sound machines · Om · Pranayama · So-Haṃ · G6 Drone · Śrī Yantra · Ħal Saflieni · Bhairava</div>
-            </td>
-            <td class="ch-link"><a href="wellness-soundworks.html">Open</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
   </div>
-</section>
+</div>
+</div>
 
-<!-- Pricing -->
-<section>
-  <div class="section-inner">
-    <div class="section-label">Available Formats</div>
-    <div class="format-grid">
+<!-- ═══ MACHINES ═══ -->
+<div class="wrap" id="machines">
+<div class="sec">
+  <div class="slabel">dm³ Sound Machines · Eight Archaeoacoustic Frequencies</div>
+  <div class="stitle">The Sacred Frequencies, Live</div>
+  <p style="font-size:.9rem;color:var(--dim);max-width:44rem;">Each machine synthesizes its frequency in real time — no samples. All eight can run simultaneously. Mix them, record your resonance, save your personal <strong>dm³Machine</strong>.</p>
 
-      <div class="format-card featured">
-        <div class="format-label">Hardcover</div>
-        <div class="format-title">Principia Orthogona — Complete Series<br>Hardback · IMPA</div>
-        <div class="format-desc">Distributed via IMPA portal</div>
-        <span class="format-isbn">ISBN 979-8-9954416-8-7</span>
-        <div class="format-price">$247.00</div>
-        <div class="format-tax">NJ max tax (6.625%): $16.36 · Total w/ NJ tax: <strong>$263.36</strong></div>
-        <a href="https://www.paypal.com/paypalme/pgrossi/263.36" class="btn-pay">Pay $263.36 via PayPal (NJ max tax included)</a>
-        <a href="https://www.paypal.com/paypalme/pgrossi" class="btn-pay-custom">Pay custom amount via PayPal<br>Tax-exempt · Diplomatic · Other rate</a>
-        <p class="custom-note">Custom total = 247.00 + (247.00 × yourTaxRate)<br>Tax-exempt (rate = 0): total = $247.00</p>
+  <div class="master-bar"><canvas id="masterViz"></canvas></div>
+  <div class="machines-grid" id="machGrid"></div>
+
+  <div class="studio">
+    <div class="studio-title">Studio · Record · Loop · Download · Generate dm³Machine</div>
+    <div class="s-row">
+      <button class="sbtn rec" id="recBtn" onclick="toggleRec()">⏺ Record</button>
+      <button class="sbtn" id="loopBtn" onclick="toggleLoop()" disabled>⟳ Loop</button>
+      <button class="sbtn" onclick="stopAll()" style="border-color:rgba(255,255,255,.2);">■ Stop All</button>
+      <div class="rec-bar"><canvas id="recViz"></canvas></div>
+      <div class="rec-t" id="recTime">0:00</div>
+      <div class="loop-s" id="loopStatus">Ready</div>
+    </div>
+    <div class="s-row">
+      <button class="sbtn dl" id="dlBtn" onclick="downloadRec()" disabled>↓ Download Loop</button>
+      <div style="flex:1;"></div>
+      <div class="preset-row" style="flex:2;">
+        <input class="pinput" id="pname" placeholder="Name your machine…" maxlength="32">
+        <button class="sbtn" onclick="savePreset()" style="border-color:var(--gl);color:var(--gl);">✦ Save Preset</button>
+        <button class="sbtn" onclick="generateMachine()" style="border-color:var(--gold);color:var(--gold);">⬇ Generate dm³Machine</button>
       </div>
-
-      <div class="format-card">
-        <div class="format-label">Ebook</div>
-        <div class="format-title">Principia Orthogona — Complete Series<br>Digital Edition</div>
-        <div class="format-desc">Purchase + verification + contact instructions</div>
-        <span class="format-isbn">ISBN 979-8-9954416-1-8</span>
-        <div class="format-price">$199.99</div>
-        <div class="format-tax">NJ max tax (6.625%): $13.25 · Total w/ NJ tax: <strong>$213.24</strong></div>
-        <a href="https://www.paypal.com/paypalme/pgrossi/213.24" class="btn-pay">Pay $213.24 via PayPal (NJ max tax included)</a>
-        <a href="https://www.paypal.com/paypalme/pgrossi" class="btn-pay-custom">Pay custom amount via PayPal<br>Tax-exempt · Diplomatic · Other rate</a>
-        <p class="custom-note">Custom total = 199.99 + (199.99 × yourTaxRate)<br>Tax-exempt (rate = 0): total = $199.99</p>
-      </div>
-
     </div>
-
-    <hr>
-
-    <div class="info-block">
-      <h3>Zelle (Alternative Payment)</h3>
-      <p>We also accept Zelle to: <strong>+1 (646) 342‑3751</strong><br>
-      Same number for inquiries — <strong>text messages only</strong>.<br>
-      Please allow <strong>24 hours</strong> for a response.</p>
-    </div>
-
-    <div class="info-block">
-      <h3>After You Pay</h3>
-      <p>Please include the following in your <strong>PayPal note</strong>, or send it by text to <strong>+1 (646) 342‑3751</strong> right after payment:</p>
-      <div class="code-block">IMPA Edition — Full name — WhatsApp +[your number] — Email [your email] — Tax rate [x%] — Format [Hardcover/Ebook]</div>
-      <p style="margin-top:0.8rem;">
-        Upon payment verification you will be granted access to the
-        <strong><a href="https://github.com/TOTOGT/book3-starter" target="_blank" style="color:var(--gold);text-decoration:none;">TOTOGT/book3-starter</a></strong>
-        GitHub repository — the full living Book 3 (PDFs + supplements), updated continuously as the pilot expands.<br>
-        An NDA process applies — details will be provided upon contact.
-      </p>
-    </div>
-
+    <div class="pchips" id="pchips"></div>
   </div>
-</section>
 
-<!-- Footer -->
+  <div class="gen-cta">
+    <h3>Save Your <em>dm³Machine</em></h3>
+    <p>Name your mix and click Generate. You receive a standalone HTML instrument — your personal resonance, G6 LLC branded, runs offline forever.</p>
+    <button class="gcta-btn" onclick="generateMachine()">⬇ Generate My dm³Machine</button>
+    <a class="gcta-btn ol" href="https://brodanova6.gumroad.com/l/soundworks">Join & Fund the Clinic →</a>
+  </div>
+</div>
+</div>
+
+<!-- ═══ FUND ═══ -->
+<div class="wrap" id="fund">
+<div class="sec">
+  <div class="slabel">Fund the Clinic · 229 Ballantine Pkway · Newark NJ</div>
+  <div class="stitle">Join · Fund the Building · For Us All</div>
+  <div class="fund-grid">
+    <div>
+      <img src="229_Ballantine_Pkway.webp" class="prop-img" alt="229 Ballantine Pkway Newark NJ" onerror="this.style.background='#0d1520';this.style.minHeight='220px'">
+    </div>
+    <div class="fund-text">
+      <p>229 Ballantine Pkway is a classical stone building in Newark, New Jersey — the future home of the <strong>Newark Wellness Soundworks Hub</strong>. A clinic, a drum circle room, a resonant chamber, a living chapter of Principia Orthogona.</p>
+      <p style="font-size:.88rem;color:var(--dim);">The builders of the Ħal Saflieni Hypogeum left no weapons. Their bones show a healthy population. They built a resonant chamber in limestone and used it for 2,500 years. We are building the next one — in Newark, in the 21st century, for everyone.</p>
+      <p style="font-size:.86rem;color:var(--dim);"><strong style="color:var(--gold);">Zelle:</strong> +1 (646) 342-3751 (text only) · 24h response</p>
+    </div>
+  </div>
+  <div class="tiers">
+    <div class="tier"><div class="tier-p">$33</div><div class="tier-n">Supporter · g₃₃</div><p>Name in the building's acknowledgments. Soundworks digital archive. One dm³Machine preset gift.</p><a href="https://www.paypal.com/paypalme/pgrossi/33" class="tbtn">Give $33 via PayPal</a></div>
+    <div class="tier ft"><div class="tier-p">$199</div><div class="tier-n">Member</div><p>Complete Series eBook (Vols I–VI, living updates) · Founding member status · Name on the wall · Priority access when the building opens.</p><a href="https://www.paypal.com/paypalme/pgrossi/213.24" class="tbtn">Give $199 via PayPal</a><a href="https://brodanova6.gumroad.com/l/soundworks" class="tbtn" style="margin-top:.4rem;">Or via Gumroad</a></div>
+    <div class="tier"><div class="tier-p">$247</div><div class="tier-n">Patron · Hardcover</div><p>Signed hardcover series delivered when the building opens. Name in the dedication. Patron-level forever.</p><a href="https://www.paypal.com/paypalme/pgrossi/263.36" class="tbtn">Give $247 via PayPal</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══ RESEARCH ═══ -->
+<div class="wrap">
+<div class="sec">
+  <div class="slabel">Peer-Reviewed Archaeoacoustics</div>
+  <div class="stitle">The Science</div>
+  <table class="rt">
+    <thead><tr><th>Site</th><th>Date</th><th>Hz</th><th>Effect</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td><span class="site">Ħal Saflieni, Malta</span></td><td>3600 BCE</td><td><span class="hzb">70+114</span></td><td>EEG: left temporal deactivation, prefrontal right-shift; 13-sec echo; felt crossing body</td><td>Cook et al. 2008, JASA; Debertolis, U. Trieste</td></tr>
+      <tr><td><span class="site">Newgrange & Irish cairns</span></td><td>3200 BCE</td><td><span class="hzb">111</span></td><td>All cairns resonate at 111 Hz regardless of material or size; MRI: language centre off</td><td>Devereux & Jahn 1996; Devereux, Cambridge</td></tr>
+      <tr><td><span class="site">UK megaliths</span></td><td>3000 BCE</td><td><span class="hzb">95–120</span></td><td>Consistent resonance across unrelated structures; 111 Hz as attractor</td><td>Jahn, Princeton PEAR lab</td></tr>
+      <tr><td><span class="site">King's Chamber, Giza</span></td><td>2560 BCE</td><td><span class="hzb">~440</span></td><td>Cymatic standing waves; Reid: chronic pain resolution during experiments</td><td>Reid 2000; Hakim</td></tr>
+      <tr><td><span class="site">Chavín de Huántar, Peru</span></td><td>900 BCE</td><td><span class="hzb">multiple</span></td><td>Strombus shell horns; gallery acoustics for trance; Stanford archaeoacoustics confirmed</td><td>Kolar et al. 2006, JASA</td></tr>
+      <tr><td><span class="site">Drum Circle (clinical)</span></td><td>2001–2016</td><td><span class="hzb">4–7</span></td><td>NK cells ↑; cortisol/DHEA reversed; anxiety/depression ↓ = clinical intervention</td><td>Bittman 2001, 2003 Alt.Therapies; Fancourt 2016 PLOS ONE</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- CHAPTERS -->
+<div class="wrap">
+<div class="sec">
+  <div class="slabel">Principia Orthogona · Free to Read</div>
+  <div class="stitle">The Chapters Behind the Machines</div>
+  <div class="ch-grid">
+    <a href="https://totogt.github.io/3M/" class="ch-lnk"><div><div class="ch-tag">Chapter 10 · Vol. IV</div><div class="ch-ttl">Helical Attractors on Contact 3-Manifolds</div></div><div class="ch-arr">→</div></a>
+    <a href="https://totogt.github.io/3M/chE-gtct.html" class="ch-lnk"><div><div class="ch-tag">Bonus Chapter E</div><div class="ch-ttl">GTCT for Everyone — Nine Axioms</div></div><div class="ch-arr">→</div></a>
+    <a href="https://totogt.github.io/AXLE/wigner-fractal.html" class="ch-lnk"><div><div class="ch-tag">Bonus Chapter W</div><div class="ch-ttl">The Wigner Crystal</div></div><div class="ch-arr">→</div></a>
+    <a href="https://totogt.github.io/DM3-lab/sample-chapter-tubulin.html" class="ch-lnk"><div><div class="ch-tag">Chapter T</div><div class="ch-ttl">Tubulin as Computronium</div></div><div class="ch-arr">→</div></a>
+    <a href="https://totogt.github.io/AXLE/spectral-radius-v2.html" class="ch-lnk"><div><div class="ch-tag">Chapter ρ</div><div class="ch-ttl">Spectral Radius · Collatz</div></div><div class="ch-arr">→</div></a>
+    <a href="https://totogt.github.io/DM3-lab/portal.html" class="ch-lnk"><div><div class="ch-tag">Student Portal · A1→D2</div><div class="ch-ttl">Structured LLM Prompts</div></div><div class="ch-arr">→</div></a>
+  </div>
+</div>
+</div>
+
 <footer>
-  <a href="https://totogt.github.io/DM3-lab/index.html">Principia Orthogona Homepage</a> &nbsp;·&nbsp;
-  <a href="wellness-soundworks.html">Newark Wellness Soundworks</a> &nbsp;·&nbsp;
-  <a href="229-ballantine.html">229 Ballantine · Free Clinic</a> &nbsp;·&nbsp;
-  <a href="https://totogt.github.io/AXLE/portal.html">Student Portal</a> &nbsp;·&nbsp;
-  <a href="https://totogt.github.io/DM3-lab/sample-chapter-tubulin.html">Sample Chapter</a><br>
-  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
-  ORCID: 0009-0000-6496-2186
+  <div>Newark Wellness Soundworks Hub · 229 Ballantine Pkway · Newark, New Jersey · 2026</div>
+  <div>Principia Orthogona · G6 LLC · Pablo Nogueira Grossi · ORCID 0009-0000-6496-2186</div>
+  <div><a href="https://brodanova6.gumroad.com/l/soundworks">Gumroad</a> · <a href="https://www.paypal.com/paypalme/pgrossi">PayPal</a> · <a href="https://totogt.github.io/AXLE">Principia Orthogona</a> · <a href="https://github.com/TOTOGT/AXLE">AXLE GitHub</a> · <a href="https://github.com/TOTOGT/GTCT">GTCT GitHub</a></div>
+  <div style="color:rgba(200,169,110,.2);">© 2026 Pablo Nogueira Grossi — G6 LLC · MIT License for open components</div>
 </footer>
 
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  ALL SCRIPTS                                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── CULTURE SYMBOLS ──────────────────────────────────────────
+const CULT_SYMBOLS = [
+  {sym:'ॐ',label:'Om · Sanskrit'},
+  {sym:'☸',label:'Dharma · Buddhist'},
+  {sym:'✡',label:'Star of David · Hebrew'},
+  {sym:'☪',label:'Crescent · Islam'},
+  {sym:'☦',label:'Orthodox Cross'},
+  {sym:'𓂀',label:'Eye of Ra · Egypt'},
+  {sym:'𓇳',label:'Ra · Egypt'},
+  {sym:'⚜',label:'Fleur-de-lis · Chartres'},
+  {sym:'𖡄',label:'Hypogeum · Malta'},
+  {sym:'卍',label:'Manji · Buddhist'},
+  {sym:'⊕',label:'Earth · Contact Manifold'},
+  {sym:'∞',label:'Infinity · G-chain'},
+  {sym:'Δ',label:'Delta · Change'},
+  {sym:'Σ',label:'Sigma · Sum'},
+  {sym:'Ω',label:'Omega · Fixed Point'},
+  {sym:'φ',label:'Phi · Golden Ratio'},
+  {sym:'π',label:'Pi · Circle'},
+  {sym:'μ',label:'Mu · Decay Rate'},
+  {sym:'🪬',label:'Hamsa · Protection'},
+  {sym:'᛭',label:'Norse Cross'},
+  {sym:'꩜',label:'Swirl · dm³'},
+  {sym:'⋯',label:'G6 Chain'},
+  {sym:'⌘',label:'Command · Operators'},
+  {sym:'⁂',label:'Asterism · Triple'},
+];
+
+(function buildCult(){
+  const el = document.getElementById('cultScroll');
+  const doubled = [...CULT_SYMBOLS, ...CULT_SYMBOLS];
+  doubled.forEach(c => {
+    const d = document.createElement('div');
+    d.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:.2rem;min-width:60px;';
+    d.innerHTML = `<div class="cult-sym" title="${c.label}">${c.sym}</div><div class="cult-label">${c.label}</div>`;
+    el.appendChild(d);
+  });
+})();
+
+// ── COSMOS BACKGROUND ────────────────────────────────────────
+(function cosmos(){
+  const cv = document.getElementById('cosmosCanvas');
+  const ctx = cv.getContext('2d');
+  let W, H, particles = [], t = 0;
+
+  function resize(){
+    W = cv.width = cv.offsetWidth;
+    H = cv.height = cv.offsetHeight;
+  }
+  window.addEventListener('resize', resize); resize();
+
+  // Generate sacred geometry particles
+  for(let i=0; i<120; i++){
+    particles.push({
+      x: Math.random(), y: Math.random(),
+      vx: (Math.random()-.5)*0.0002, vy: (Math.random()-.5)*0.0002,
+      r: Math.random()*1.5+0.3,
+      a: Math.random()*Math.PI*2,
+      sym: CULT_SYMBOLS[Math.floor(Math.random()*CULT_SYMBOLS.length)].sym,
+      fontSize: Math.random()*14+8,
+      opacity: Math.random()*0.15+0.03
+    });
+  }
+
+  // Yantra lines
+  function drawYantra(ctx, cx, cy, r, t){
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(t*0.1);
+    ctx.strokeStyle = `rgba(200,169,110,0.04)`;
+    ctx.lineWidth = 0.5;
+    for(let i=0; i<9; i++){
+      const a = (i/9)*Math.PI*2;
+      const a2 = ((i+4)/9)*Math.PI*2;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r);
+      ctx.lineTo(Math.cos(a2)*r, Math.sin(a2)*r);
+      ctx.stroke();
+    }
+    // inner triangles
+    for(let tri=0; tri<3; tri++){
+      ctx.beginPath();
+      for(let i=0; i<3; i++){
+        const a = (i/3)*Math.PI*2 + (tri/3)*Math.PI*2*0.1 + t*0.05;
+        const rr = r*(0.3+tri*0.2);
+        if(i===0) ctx.moveTo(Math.cos(a)*rr, Math.sin(a)*rr);
+        else ctx.lineTo(Math.cos(a)*rr, Math.sin(a)*rr);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function frame(){
+    requestAnimationFrame(frame);
+    t += 0.008;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#05080f';
+    ctx.fillRect(0,0,W,H);
+
+    // Background yantra patterns
+    drawYantra(ctx, W*0.5, H*0.5, Math.min(W,H)*0.42, t);
+    drawYantra(ctx, W*0.2, H*0.3, Math.min(W,H)*0.15, -t*0.7);
+    drawYantra(ctx, W*0.8, H*0.7, Math.min(W,H)*0.18, t*0.5);
+
+    // Radial lines from center
+    for(let i=0; i<12; i++){
+      const a = (i/12)*Math.PI*2 + t*0.02;
+      const grad = ctx.createLinearGradient(W/2, H/2, W/2+Math.cos(a)*W, H/2+Math.sin(a)*H);
+      grad.addColorStop(0,'rgba(200,169,110,0.05)');
+      grad.addColorStop(1,'transparent');
+      ctx.beginPath();
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 0.5;
+      ctx.moveTo(W/2, H/2);
+      ctx.lineTo(W/2+Math.cos(a)*W, H/2+Math.sin(a)*H);
+      ctx.stroke();
+    }
+
+    // Floating symbols
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0)p.x=1; if(p.x>1)p.x=0;
+      if(p.y<0)p.y=1; if(p.y>1)p.y=0;
+      ctx.save();
+      ctx.globalAlpha = p.opacity + Math.sin(t+p.a)*0.02;
+      ctx.font = `${p.fontSize}px Cinzel, serif`;
+      ctx.fillStyle = '#c8a96e';
+      ctx.textAlign = 'center';
+      ctx.fillText(p.sym, p.x*W, p.y*H);
+      ctx.restore();
+    });
+
+    // Chladni-like wave overlay
+    const id = ctx.getImageData(0,0,W,H);
+    // keep it light — just radial pulse
+    const R = (Math.min(W,H)*0.1)*Math.abs(Math.sin(t*0.3));
+    const grd = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,R);
+    grd.addColorStop(0,'rgba(200,169,110,0.04)');
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
+  }
+  frame();
+})();
+
+// ── CHLADNI FIGURES ──────────────────────────────────────────
+const MODES = [
+  {m:1,n:0,name:'(1,0)',freq:111,sacred:'Irish cairns, Newgrange, Ħal Saflieni Oracle Room — 111 Hz. All Neolithic cairns resonate here. (Devereux 1996)'},
+  {m:2,n:0,name:'(2,0)',freq:136,sacred:'Om — 136.1 Hz, Earth orbital frequency. The Vedic Ṣaḍja (Sa) — root of the raga system.'},
+  {m:2,n:1,name:'(2,1)',freq:220,sacred:'Pythagorean A (220 Hz). Chartres Cathedral nave resonance. Gregorian chant fundamental.'},
+  {m:3,n:0,name:'(3,0)',freq:333,sacred:'Solfège Mi (528 Hz harmonic). DNA repair frequency. Vedic temple garbhagṛha resonance.'},
+  {m:2,n:2,name:'(2,2)',freq:396,sacred:'Solfège Ut — 396 Hz. Liberation from guilt. Karnak Hypostyle Hall column resonance range. (Reid 2000)'},
+  {m:3,n:1,name:'(3,1)',freq:440,sacred:'King\'s Chamber, Giza — ~440 Hz. John Stuart Reid cymatic experiments; standing waves measured. (2000)'},
+  {m:3,n:2,name:'(3,2)',freq:528,sacred:'Solfège Mi — Transformation frequency. Śrī Yantra inner triangle resonance. (Rife 1930s)'},
+  {m:4,n:0,name:'(4,0)',freq:594,sacred:'Solfège Fa — Connecting / spiritual family. Rosslyn Chapel acoustic analysis. (Stuart Mitchell)'},
+  {m:3,n:3,name:'(3,3)',freq:639,sacred:'Solfège Sol — Connection, relationships. Gothic cathedral choir resonance. Chartres stone response.'},
+  {m:4,n:1,name:'(4,1)',freq:741,sacred:'Solfège Sol 741 Hz — Ḍamaru of Bhairava. Awakening intuition. All 14 Sanskrit phonemes. Tantric tradition.'},
+  {m:4,n:2,name:'(4,2)',freq:852,sacred:'Solfège La — Returning to spiritual order. Hagia Sophia dome resonance (~852 Hz). Byzantine chant.'},
+  {m:4,n:3,name:'(4,3)',freq:963,sacred:'Solfège Si — Oneness with all. Pantheon oculus resonance. Crown chakra Sahasrāra activation.'},
+  {m:5,n:0,name:'(5,0)',freq:70,sacred:'Ħal Saflieni low resonance — 70 Hz. Felt crossing the body. Oracle Room double resonance. (Debertolis)'},
+  {m:5,n:2,name:'(5,2)',freq:114,sacred:'Ħal Saflieni high resonance — 114 Hz. Double resonance with 70 Hz. 13-second echo. (Cook 2008)'},
+  {m:6,n:0,name:'(6,0)',freq:432,sacred:'Concert pitch 432 Hz — Verdi tuning, harmonic with Earth. Crystals and water structure studies.'},
+  {m:6,n:3,name:'(6,3)',freq:33,sacred:'g₃₃ = 33 — The GTCT threshold constant. 33 operator cycles → D1 fixed point. Brunelleschi\'s g⁶.'},
+];
+
+const PALETTES = [
+  {name:'Sand',bg:'#020408',sand:'#d4b483',node:'#1a0a00'},
+  {name:'Gold',bg:'#040205',sand:'#c8a96e',node:'#0a0614'},
+  {name:'Malta',bg:'#050a0f',sand:'#7dd3fc',node:'#020408'},
+  {name:'Egypt',bg:'#060400',sand:'#fb923c',node:'#020100'},
+  {name:'Yantra',bg:'#060010',sand:'#f472b6',node:'#02000a'},
+  {name:'Bhairava',bg:'#080010',sand:'#c084fc',node:'#030008'},
+  {name:'Drum',bg:'#0a0000',sand:'#f87171',node:'#040000'},
+  {name:'Sage',bg:'#000a05',sand:'#86efac',node:'#000402'},
+  {name:'White',bg:'#f5f0e8',sand:'#1a1a2e',node:'#c8a96e'},
+];
+
+let curMode = MODES[0];
+let palette = PALETTES[0];
+let chladniAnimating = false;
+let chladniFrame = 0;
+
+(function buildChladniUI(){
+  const mg = document.getElementById('modeGrid');
+  MODES.forEach((m,i)=>{
+    const b = document.createElement('button');
+    b.className = 'mode-btn' + (i===0?' active':'');
+    b.textContent = m.name;
+    b.onclick = () => {
+      document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      curMode = m;
+      document.getElementById('cfreq').value = m.freq;
+      onFreqChange(m.freq);
+      updateChladni();
+    };
+    mg.appendChild(b);
+  });
+
+  const cg = document.getElementById('colorGrid');
+  PALETTES.forEach((p,i)=>{
+    const b = document.createElement('div');
+    b.className = 'col-btn' + (i===0?' active':'');
+    b.style.background = `linear-gradient(135deg,${p.sand},${p.bg})`;
+    b.title = p.name;
+    b.onclick = () => {
+      document.querySelectorAll('.col-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      palette = p;
+      updateChladni();
+    };
+    cg.appendChild(b);
+  });
+})();
+
+function onFreqChange(hz){
+  document.getElementById('freqVal').textContent = Math.round(hz) + ' Hz';
+  document.getElementById('cfreqLabel').textContent = Math.round(hz) + ' Hz';
+  // Find closest mode
+  const closest = MODES.reduce((a,b)=>Math.abs(b.freq-hz)<Math.abs(a.freq-hz)?b:a);
+  document.getElementById('cmodeLabel').textContent = closest.name;
+  document.getElementById('csymLabel').textContent = getFreqName(hz);
+  document.getElementById('sacredNote').textContent = closest.sacred;
+  updateChladni();
+}
+
+function getFreqName(hz){
+  const names=[
+    {f:33,n:'g₃₃ threshold'},{f:70,n:'Hypogeum low'},{f:111,n:'Cairn resonance'},
+    {f:114,n:'Hypogeum high'},{f:136,n:'Om / Earth'},{f:396,n:'Solfège Ut'},
+    {f:432,n:'Verdi pitch'},{f:440,n:'Giza / Concert'},{f:528,n:'Solfège Mi'},
+    {f:741,n:'Bhairava / Damaru'},{f:963,n:'Solfège Si'}
+  ];
+  const c = names.reduce((a,b)=>Math.abs(b.f-hz)<Math.abs(a.f-hz)?b:a);
+  return Math.abs(c.f-hz)<20?c.n:'custom';
+}
+
+function chladniValue(x, y, m, n, noise){
+  // Chladni: Z = cos(m*pi*x)*cos(n*pi*y) - cos(n*pi*x)*cos(m*pi*y)
+  const nv = noise * (Math.random()-.5);
+  return Math.cos(m*Math.PI*x + nv)*Math.cos(n*Math.PI*y + nv)
+       - Math.cos(n*Math.PI*x + nv)*Math.cos(m*Math.PI*y + nv);
+}
+
+function updateChladni(){
+  const cv = document.getElementById('chladniCanvas');
+  const ctx = cv.getContext('2d');
+  const size = cv.offsetWidth;
+  cv.width = size; cv.height = size;
+  const N = Math.min(size, 400);
+
+  const m = curMode.m, n = curMode.n;
+  const density = +document.getElementById('cdens').value;
+  const grain = +document.getElementById('cgrain').value;
+  const noise = +document.getElementById('cnoise').value;
+  document.getElementById('densVal').textContent = density.toFixed(2);
+  document.getElementById('grainVal').textContent = grain.toFixed(1);
+  document.getElementById('noiseVal').textContent = noise.toFixed(2);
+
+  // Background
+  ctx.fillStyle = palette.bg;
+  ctx.fillRect(0,0,size,size);
+
+  // Draw sand particles
+  const step = grain * 0.8;
+  const thresh = 0.12 + (1-density)*0.3;
+
+  for(let py=0; py<size; py+=step){
+    for(let px=0; px<size; px+=step){
+      const x = (px/size)*2 - 1;
+      const y = (py/size)*2 - 1;
+      const z = chladniValue(x, y, m, n, noise*0.05);
+
+      if(Math.abs(z) < thresh){
+        // Sand grain at nodal line
+        const jitter = (Math.random()-.5)*grain*0.4;
+        const alpha = (1 - Math.abs(z)/thresh) * 0.85 + 0.15;
+        ctx.globalAlpha = alpha * density;
+        ctx.fillStyle = palette.sand;
+        const r = (grain*0.35 + Math.random()*grain*0.15);
+        ctx.beginPath();
+        ctx.arc(px+jitter, py+jitter, r, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Overlay sacred symbol faintly in center
+  const sym = getSacredSymbol();
+  if(sym){
+    ctx.save();
+    ctx.globalAlpha = 0.06;
+    ctx.fillStyle = palette.sand;
+    ctx.font = `${size*0.5}px 'Cinzel', serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(sym, size/2, size/2);
+    ctx.restore();
+  }
+}
+
+function getSacredSymbol(){
+  const hz = +document.getElementById('cfreq').value;
+  if(hz < 80) return '𖡄'; // Hypogeum
+  if(hz < 140) return 'ॐ'; // Om range
+  if(hz < 200) return '☸'; // Buddhist
+  if(hz < 400) return '✡'; // Hexagram
+  if(hz < 500) return '⊕'; // Earth
+  if(hz < 600) return 'Δ'; // Delta
+  if(hz < 750) return '卍'; // Manji
+  return 'Ω'; // Omega
+}
+
+function toggleAnim(){
+  chladniAnimating = !chladniAnimating;
+  const btn = document.getElementById('animBtn');
+  btn.textContent = chladniAnimating ? '⏸ Pause Animation' : '▶ Animate Pattern';
+  if(chladniAnimating) animateChladni();
+}
+
+function animateChladni(){
+  if(!chladniAnimating) return;
+  chladniFrame++;
+  // oscillate noise to simulate vibration
+  const baseNoise = +document.getElementById('cnoise').value;
+  const animNoise = baseNoise + Math.abs(Math.sin(chladniFrame*0.1))*0.15;
+  const el = document.getElementById('cnoise');
+  const origV = el.value;
+  el.value = animNoise;
+  updateChladni();
+  el.value = origV;
+  setTimeout(()=>requestAnimationFrame(animateChladni), 80);
+}
+
+// Initial render
+onFreqChange(111);
+
+// ── BINAURAL ENGINE ──────────────────────────────────────────
+let bCtx=null, bLeft=null, bRight=null, bMerger=null, bGain=null, bPlaying=false;
+let binauralFrame=0;
+
+const BRAIN_STATES = [
+  {max:4, state:'Delta', note:'Deep sleep, healing, unconscious processing. Used in sleep therapy. (0.5–4 Hz)', color:'#7dd3fc'},
+  {max:8, state:'Theta', note:'Meditation, creativity, memory consolidation. The Hypogeum frequency. (4–8 Hz)', color:'#c084fc'},
+  {max:13,state:'Alpha', note:'Relaxed awareness, calm focus, light meditation. Bridge between conscious and subconscious. (8–13 Hz)', color:'#86efac'},
+  {max:30,state:'Beta', note:'Active thinking, focus, alertness. Normal waking consciousness. (13–30 Hz)', color:'#fb923c'},
+  {max:100,state:'Gamma', note:'High-level cognition, peak awareness. Tibetan monks in meditation show 40 Hz gamma. (30–100 Hz)', color:'#f472b6'},
+];
+
+function getBrainState(hz){
+  return BRAIN_STATES.find(s=>hz<=s.max) || BRAIN_STATES[BRAIN_STATES.length-1];
+}
+
+function updateBinaural(){
+  const L = +document.getElementById('bleft').value;
+  const R = +document.getElementById('bright').value;
+  const beat = Math.abs(R-L);
+  document.getElementById('leftHz').textContent = L;
+  document.getElementById('rightHz').textContent = R;
+  document.getElementById('beatHz').textContent = beat.toFixed(1)+' Hz';
+  document.getElementById('bbeat').value = Math.min(beat,40);
+  document.getElementById('beatTarget').textContent = beat.toFixed(1);
+  document.getElementById('br1').textContent = L+' Hz';
+  document.getElementById('br2').textContent = R+' Hz';
+  document.getElementById('br3').textContent = beat.toFixed(1)+' Hz';
+  document.getElementById('lissLabel').textContent = '1:'+(R/L).toFixed(3);
+  const bs = getBrainState(beat);
+  document.getElementById('brainState').textContent = bs.state;
+  document.getElementById('brainState').style.color = bs.color;
+  document.getElementById('br4').textContent = bs.state;
+  document.getElementById('br4').style.color = bs.color;
+  document.getElementById('brainNote').textContent = bs.note;
+  if(bPlaying){ updateBOscillators(L,R); }
+  drawBinauralViz(L,R,beat);
+}
+
+function setBeatTarget(val){
+  document.getElementById('beatTarget').textContent = val;
+  const L = +document.getElementById('bleft').value;
+  document.getElementById('bright').value = L + +val;
+  updateBinaural();
+}
+function setBeat(hz, label){
+  document.getElementById('bbeat').value = hz;
+  setBeatTarget(hz);
+}
+function setBVol(v){ document.getElementById('bvolv').textContent = (+v).toFixed(2); if(bGain) bGain.gain.value=+v; }
+
+function toggleBinaural(){
+  const btn=document.getElementById('bplayBtn');
+  if(bPlaying){
+    bPlaying=false;
+    if(bLeft){try{bLeft.stop();}catch(e){}} if(bRight){try{bRight.stop();}catch(e){}}
+    bLeft=bRight=null;
+    btn.textContent='▶ Play Binaural'; btn.style.color='var(--teal)'; btn.style.background='';
+  } else {
+    if(!bCtx) bCtx=new(window.AudioContext||window.webkitAudioContext)();
+    bMerger=bCtx.createChannelMerger(2);
+    bGain=bCtx.createGain(); bGain.gain.value=+document.getElementById('bvol').value;
+    bMerger.connect(bGain); bGain.connect(bCtx.destination);
+    const L=+document.getElementById('bleft').value, R=+document.getElementById('bright').value;
+    bLeft=bCtx.createOscillator(); bRight=bCtx.createOscillator();
+    bLeft.type='sine'; bRight.type='sine';
+    bLeft.frequency.value=L; bRight.frequency.value=R;
+    const gl=bCtx.createGain(); gl.gain.value=0.5;
+    const gr=bCtx.createGain(); gr.gain.value=0.5;
+    bLeft.connect(gl); gl.connect(bMerger,0,0);
+    bRight.connect(gr); gr.connect(bMerger,0,1);
+    bLeft.start(); bRight.start();
+    bPlaying=true;
+    btn.textContent='⏹ Stop Binaural'; btn.style.color='var(--bg)'; btn.style.background='var(--teal)';
+  }
+}
+function updateBOscillators(L,R){
+  if(bLeft) bLeft.frequency.value=L;
+  if(bRight) bRight.frequency.value=R;
+}
+
+function drawBinauralViz(Lhz,Rhz,beat){
+  // Lissajous
+  const lc=document.getElementById('lissajousCanvas');
+  const lx=lc.getContext('2d');
+  const S=lc.width;
+  lx.fillStyle='#020408'; lx.fillRect(0,0,S,S);
+  lx.beginPath();
+  const steps=1000;
+  const ratio=Rhz/Lhz;
+  for(let i=0;i<=steps;i++){
+    const t=(i/steps)*Math.PI*2*Math.max(Lhz,Rhz)/Math.min(Lhz,Rhz);
+    const x=(Math.cos(t)+1)/2*S;
+    const y=(Math.sin(t*ratio)+1)/2*S;
+    if(i===0) lx.moveTo(x,y); else lx.lineTo(x,y);
+  }
+  lx.strokeStyle='rgba(45,212,191,0.7)'; lx.lineWidth=1.2; lx.stroke();
+
+  // Beat canvas
+  const bc=document.getElementById('beatCanvas');
+  const bx=bc.getContext('2d');
+  const W=bc.offsetWidth||400, H=bc.height||130;
+  bc.width=W; bc.height=H;
+  bx.fillStyle='#020408'; bx.fillRect(0,0,W,H);
+  const t0=Date.now()/1000;
+  const pts=200;
+  // Left wave
+  bx.beginPath();
+  for(let i=0;i<pts;i++){
+    const t=t0+(i/pts)*4;
+    const x=(i/pts)*W;
+    const y=H/2 - Math.sin(t*Lhz*0.3)*(H*0.35);
+    if(i===0)bx.moveTo(x,y);else bx.lineTo(x,y);
+  }
+  bx.strokeStyle='rgba(125,211,252,0.6)'; bx.lineWidth=1.2; bx.stroke();
+  // Right wave
+  bx.beginPath();
+  for(let i=0;i<pts;i++){
+    const t=t0+(i/pts)*4;
+    const x=(i/pts)*W;
+    const y=H/2 - Math.sin(t*Rhz*0.3)*(H*0.35);
+    if(i===0)bx.moveTo(x,y);else bx.lineTo(x,y);
+  }
+  bx.strokeStyle='rgba(244,114,182,0.6)'; bx.lineWidth=1.2; bx.stroke();
+  // Beat envelope
+  bx.beginPath();
+  for(let i=0;i<pts;i++){
+    const t=t0+(i/pts)*4;
+    const x=(i/pts)*W;
+    const y=H/2 - Math.abs(Math.sin(t*beat*0.15))*(H*0.3);
+    if(i===0)bx.moveTo(x,y);else bx.lineTo(x,y);
+  }
+  bx.strokeStyle='rgba(200,169,110,0.5)'; bx.lineWidth=1.5; bx.stroke();
+}
+
+// Animate binaural viz
+(function binauralLoop(){
+  requestAnimationFrame(binauralLoop);
+  const L=+document.getElementById('bleft').value;
+  const R=+document.getElementById('bright').value;
+  drawBinauralViz(L,R,Math.abs(R-L));
+})();
+
+// ── AUDIO ENGINE ─────────────────────────────────────────────
+const MACHINES = [
+  {id:'om',name:'Om',cls:'m0',symbol:'ॐ',culture:'Vedic · Sanskrit',hz:'136.1 Hz',color:'#c8a96e',
+   cite:'Earth orbital frequency. Cosmic Om. Ṣaḍja (Sa) — root of all rāgas.',
+   build(ac,g){const o=ac.createOscillator();o.type='sine';o.frequency.value=136.1;const o2=ac.createOscillator();o2.type='sine';o2.frequency.value=272.2;const gx=ac.createGain();gx.gain.value=0.18;o2.connect(gx);gx.connect(g);const lfo=ac.createOscillator();lfo.frequency.value=0.12;const ld=ac.createGain();ld.gain.value=0.08;lfo.connect(ld);ld.connect(g.gain);o.connect(g);return[o,o2,lfo];}},
+  {id:'prana',name:'Pranayama',cls:'m1',symbol:'☽',culture:'Yogic · Universal',hz:'6 Hz theta · 0.1 Hz breath',color:'#2dd4bf',
+   cite:'Theta binaural 6 Hz — prefrontal coherence. 0.1 Hz breath syncs HRV. (Bittman 2003)',
+   build(ac,g){const mg=ac.createChannelMerger(2);mg.connect(g);const L=ac.createOscillator();L.type='sine';L.frequency.value=100;const R=ac.createOscillator();R.type='sine';R.frequency.value=106;const gl=ac.createGain();gl.gain.value=0.4;const gr=ac.createGain();gr.gain.value=0.4;L.connect(gl);gl.connect(mg,0,0);R.connect(gr);gr.connect(mg,0,1);const b=ac.createOscillator();b.frequency.value=0.1;const be=ac.createGain();be.gain.value=0.22;b.connect(be);be.connect(g.gain);return[L,R,b];}},
+  {id:'soham',name:'So-Haṃ',cls:'m2',symbol:'∞',culture:'Vedic · Kashmir Śaiva',hz:'111 Hz',color:'#86efac',
+   cite:'Cairn resonance — Devereux: all Irish cairns at 111 Hz. Cook 2008 EEG: left temporal off.',
+   build(ac,g){const o=ac.createOscillator();o.type='sine';o.frequency.value=111;const lfo=ac.createOscillator();lfo.frequency.value=0.083;const ld=ac.createGain();ld.gain.value=0.18;lfo.connect(ld);ld.connect(g.gain);o.connect(g);return[o,lfo];}},
+  {id:'g6',name:'G6 Drone',cls:'m3',symbol:'⊕',culture:'Gregorian · Solfège',hz:'396 Hz · Solfège Ut',color:'#fb923c',
+   cite:'Ancient Solfège Ut — liberation from guilt and fear. Karnak Hypostyle resonant column range.',
+   build(ac,g){const o=ac.createOscillator();o.type='sawtooth';o.frequency.value=396;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=800;const o2=ac.createOscillator();o2.type='sine';o2.frequency.value=198;const gx=ac.createGain();gx.gain.value=0.4;o.connect(lp);lp.connect(g);o2.connect(gx);gx.connect(g);return[o,o2];}},
+  {id:'sri',name:'Śrī Yantra',cls:'m4',symbol:'꩜',culture:'Tantric · Śrīvidyā',hz:'111 + 528 Hz',color:'#f472b6',
+   cite:'43-triangle geometry generates standing wave. 528 Hz — Solfège Mi, transformation frequency.',
+   build(ac,g){const fs=[111,222,528,333];const ws=[0.35,0.12,0.25,0.08];return fs.map((f,i)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=f;const gx=ac.createGain();gx.gain.value=ws[i];o.connect(gx);gx.connect(g);return o;});}},
+  {id:'hal',name:'Ħal Saflieni',cls:'m5',symbol:'𖡄',culture:'Neolithic Malta · 3600 BCE',hz:'70 + 114 Hz · Oracle Room',color:'#7dd3fc',
+   cite:'Double resonance. 13-sec echo. EEG: prefrontal right-shift. Felt crossing body. (Cook 2008)',
+   build(ac,g){const o1=ac.createOscillator();o1.type='sine';o1.frequency.value=70;const o2=ac.createOscillator();o2.type='sine';o2.frequency.value=114;const g1=ac.createGain();g1.gain.value=0.45;const g2=ac.createGain();g2.gain.value=0.35;o1.connect(g1);g1.connect(g);o2.connect(g2);g2.connect(g);const d=ac.createDelay(8);d.delayTime.value=0.8;const fb=ac.createGain();fb.gain.value=0.45;g.connect(d);d.connect(fb);fb.connect(d);d.connect(ac.destination);const lfo=ac.createOscillator();lfo.frequency.value=0.15;const ld=ac.createGain();ld.gain.value=0.14;lfo.connect(ld);ld.connect(g.gain);return[o1,o2,lfo];}},
+  {id:'bhai',name:'Swarnakarshana Bhairava',cls:'m6',symbol:'卍',culture:'Tantric · Rudrayāmala',hz:'741 + 111 Hz · Ḍamaru',color:'#c084fc',
+   cite:'Ḍamaru generates 14 Sanskrit phonemes. Bīja: hrīm̐. 741 Hz — awakening intuition.',
+   build(ac,g){const o1=ac.createOscillator();o1.type='sine';o1.frequency.value=111;const o2=ac.createOscillator();o2.type='sine';o2.frequency.value=741;const g1=ac.createGain();g1.gain.value=0.3;const g2=ac.createGain();g2.gain.value=0.25;const lfo=ac.createOscillator();lfo.frequency.value=3.5;const ld=ac.createGain();ld.gain.value=0.2;lfo.connect(ld);ld.connect(g.gain);o1.connect(g1);g1.connect(g);o2.connect(g2);g2.connect(g);return[o1,o2,lfo];}},
+  {id:'drum',name:'Drum Circle',cls:'m7',symbol:'☯',culture:'Universal · Clinical',hz:'60 Hz body · 1.2 Hz rhythm · 6 Hz theta',color:'#f87171',
+   cite:'Bittman 2001: NK cells ↑, cortisol reversed. Fancourt 2016 PLOS ONE: anxiety ↓ = clinical.',
+   build(ac,g){const b=ac.createOscillator();b.type='sine';b.frequency.value=60;const at=ac.createGain();at.gain.value=0;b.connect(at);at.connect(g);const lfo=ac.createOscillator();lfo.type='square';lfo.frequency.value=1.2;const ld=ac.createGain();ld.gain.value=0.5;lfo.connect(ld);ld.connect(at.gain);const dr=ac.createOscillator();dr.type='sine';dr.frequency.value=40;const dg=ac.createGain();dg.gain.value=0.15;dr.connect(dg);dg.connect(g);const th=ac.createOscillator();th.type='sine';th.frequency.value=6;const tg=ac.createGain();tg.gain.value=0.07;th.connect(tg);tg.connect(g);return[b,lfo,dr,th];}},
+];
+
+let actx=null,masterGain=null,masterAnalyser=null;
+let mState={};
+let recording=false,looping=false,chunks=[],recBlob=null,mr=null,loopAudio=null,recTimer=null,recStart=0;
+
+function getActx(){
+  if(!actx){
+    actx=new(window.AudioContext||window.webkitAudioContext)();
+    masterGain=actx.createGain();masterGain.gain.value=0.7;
+    masterAnalyser=actx.createAnalyser();masterAnalyser.fftSize=512;
+    masterGain.connect(masterAnalyser);masterAnalyser.connect(actx.destination);
+    masterVizLoop();
+  }
+  return actx;
+}
+
+function buildMachGrid(){
+  const grid=document.getElementById('machGrid');
+  MACHINES.forEach((m,i)=>{
+    const div=document.createElement('div');
+    div.className=`machine ${m.cls}`;
+    div.innerHTML=`
+      <div class="m-symbol">${m.symbol}</div>
+      <div class="m-name">${m.name}</div>
+      <div class="m-hz">${m.hz}</div>
+      <div class="m-culture">${m.culture}</div>
+      <div class="m-cite">${m.cite}</div>
+      <button class="mplay" id="mp-${m.id}" onclick="toggleM('${m.id}')">▶</button>
+      <div class="mvol-row">
+        <span class="mvl">vol</span>
+        <input type="range" class="mvol" id="mv-${m.id}" min="0" max="1" step="0.01" value="0.7" oninput="setVol('${m.id}',this.value)">
+      </div>
+      <div class="mwave-c"><canvas id="mw-${m.id}" width="160" height="22"></canvas></div>`;
+    grid.appendChild(div);
+    mState[m.id]={nodes:null,gn:null,an:null,active:false};
+  });
+}
+
+function toggleM(id){
+  const ac=getActx(),s=mState[id],m=MACHINES.find(x=>x.id===id);
+  const btn=document.getElementById('mp-'+id);
+  if(s.active){
+    if(s.nodes)s.nodes.forEach(n=>{try{n.stop();}catch(e){}});
+    s.active=false;btn.textContent='▶';btn.classList.remove('on');
+  } else {
+    const gn=ac.createGain();gn.gain.value=+document.getElementById('mv-'+id).value;
+    const an=ac.createAnalyser();an.fftSize=256;
+    gn.connect(an);an.connect(masterGain);
+    const nodes=m.build(ac,gn);
+    nodes.forEach(n=>{try{n.start();}catch(e){}});
+    s.nodes=nodes;s.gn=gn;s.an=an;s.active=true;
+    btn.textContent='⏸';btn.classList.add('on');
+    waveLoop(id,an,m.color);
+  }
+  document.getElementById('activeCount')||updateStatus();
+}
+
+function setVol(id,v){const s=mState[id];if(s.gn)s.gn.gain.value=+v;}
+
+function stopAll(){
+  MACHINES.forEach(m=>{if(mState[m.id].active)toggleM(m.id);});
+  if(recording)stopRec();
+}
+
+function waveLoop(id,an,col){
+  const cv=document.getElementById('mw-'+id);if(!cv)return;
+  const ctx=cv.getContext('2d');cv.width=cv.offsetWidth||160;
+  function f(){
+    if(!mState[id].active)return;requestAnimationFrame(f);
+    const W=cv.width,H=cv.height;
+    const buf=new Uint8Array(an.frequencyBinCount);an.getByteTimeDomainData(buf);
+    ctx.fillStyle='#020408';ctx.fillRect(0,0,W,H);
+    ctx.beginPath();ctx.strokeStyle=col;ctx.lineWidth=1.2;
+    const sl=W/buf.length;let x=0;
+    buf.forEach((v,i)=>{const y=(v/128)*H/2;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);x+=sl;});
+    ctx.stroke();
+  }f();
+}
+
+function masterVizLoop(){
+  const cv=document.getElementById('masterViz');
+  const ctx=cv.getContext('2d');
+  function f(){
+    requestAnimationFrame(f);
+    const W=cv.offsetWidth||600,H=52;cv.width=W;cv.height=H;
+    if(!masterAnalyser){ctx.fillStyle='#020408';ctx.fillRect(0,0,W,H);return;}
+    const buf=new Uint8Array(masterAnalyser.frequencyBinCount);
+    masterAnalyser.getByteFrequencyData(buf);
+    ctx.fillStyle='rgba(2,4,8,.5)';ctx.fillRect(0,0,W,H);
+    const bw=W/buf.length;
+    buf.forEach((v,i)=>{
+      const h=(v/255)*H;
+      const hue=200+i*0.5;
+      ctx.fillStyle=`hsla(${hue},70%,62%,.85)`;
+      ctx.fillRect(i*bw,H-h,bw-.5,h);
+    });
+  }f();
+}
+
+// RECORDING
+function toggleRec(){if(!recording)startRec();else stopRec();}
+function startRec(){
+  const ac=getActx();
+  const active=MACHINES.filter(m=>mState[m.id].active).length;
+  if(!active){alert('Start at least one machine first.');return;}
+  const dest=ac.createMediaStreamDestination();
+  masterGain.connect(dest);
+  chunks=[];
+  mr=new MediaRecorder(dest.stream,{mimeType:'audio/webm;codecs=opus'});
+  mr.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  mr.onstop=()=>{
+    recBlob=new Blob(chunks,{type:'audio/webm'});
+    document.getElementById('loopBtn').disabled=false;
+    document.getElementById('dlBtn').disabled=false;
+    document.getElementById('loopStatus').innerHTML='Ready — <span>loop or download</span>';
+    recVizDone();
+  };
+  mr.start(100);recording=true;recStart=Date.now();
+  recTimer=setInterval(()=>{
+    const s=Math.floor((Date.now()-recStart)/1000);
+    document.getElementById('recTime').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;
+    recVizProgress((Date.now()-recStart)/1000);
+  },250);
+  document.getElementById('recBtn').classList.add('on');
+  document.getElementById('recBtn').textContent='⏹ Stop';
+  document.getElementById('loopStatus').textContent='Recording…';
+}
+function stopRec(){
+  if(!recording)return;recording=false;
+  if(mr&&mr.state!=='inactive')mr.stop();
+  clearInterval(recTimer);
+  document.getElementById('recBtn').classList.remove('on');
+  document.getElementById('recBtn').textContent='⏺ Record';
+}
+function recVizProgress(secs){
+  const cv=document.getElementById('recViz');
+  const ctx=cv.getContext('2d');
+  const W=cv.offsetWidth||300,H=cv.height||28;cv.width=W;cv.height=H;
+  ctx.fillStyle='#020408';ctx.fillRect(0,0,W,H);
+  const pct=Math.min((secs%30)/30,1);
+  const grad=ctx.createLinearGradient(0,0,W*pct,0);
+  grad.addColorStop(0,'rgba(248,113,113,.8)');grad.addColorStop(1,'rgba(248,113,113,.2)');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,W*pct,H);
+}
+function recVizDone(){
+  const cv=document.getElementById('recViz');const ctx=cv.getContext('2d');
+  const W=cv.offsetWidth||300,H=28;cv.width=W;cv.height=H;
+  ctx.fillStyle='rgba(45,212,191,.15)';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(45,212,191,.8)';ctx.fillRect(0,0,W,2);
+  ctx.font='9px Source Code Pro,monospace';ctx.fillStyle='rgba(45,212,191,.6)';
+  ctx.textAlign='center';ctx.fillText('loop ready',W/2,H/2+4);
+}
+
+function toggleLoop(){
+  if(!recBlob)return;
+  if(looping){
+    looping=false;if(loopAudio){loopAudio.pause();loopAudio=null;}
+    document.getElementById('loopBtn').classList.remove('on');
+    document.getElementById('loopBtn').textContent='⟳ Loop';
+    document.getElementById('loopStatus').innerHTML='Loop stopped';
+  } else {
+    looping=true;
+    loopAudio=new Audio(URL.createObjectURL(recBlob));
+    loopAudio.loop=true;loopAudio.play();
+    document.getElementById('loopBtn').classList.add('on');
+    document.getElementById('loopBtn').textContent='⏹ Stop Loop';
+    document.getElementById('loopStatus').innerHTML='<span>Looping your resonance…</span>';
+  }
+}
+
+function downloadRec(){
+  if(!recBlob)return;
+  const name=document.getElementById('pname').value.trim()||'dm3machine';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(recBlob);
+  a.download=`dm3Machine_${name.replace(/\s+/g,'_')}.webm`;a.click();
+}
+
+// PRESETS
+function savePreset(){
+  const name=document.getElementById('pname').value.trim();
+  if(!name){alert('Name your machine first.');return;}
+  const mix={};
+  MACHINES.forEach(m=>{mix[m.id]={active:mState[m.id].active,vol:+document.getElementById('mv-'+m.id).value};});
+  const p=JSON.parse(localStorage.getItem('dm3p')||'{}');p[name]=mix;
+  localStorage.setItem('dm3p',JSON.stringify(p));renderPresets();
+}
+function loadPreset(name){
+  const p=JSON.parse(localStorage.getItem('dm3p')||'{}');const mix=p[name];if(!mix)return;
+  MACHINES.forEach(m=>{if(mState[m.id].active)toggleM(m.id);});
+  MACHINES.forEach(m=>{const v=mix[m.id];if(!v)return;document.getElementById('mv-'+m.id).value=v.vol;if(v.active)setTimeout(()=>toggleM(m.id),100);});
+  document.getElementById('pname').value=name;
+}
+function delPreset(name){const p=JSON.parse(localStorage.getItem('dm3p')||'{}');delete p[name];localStorage.setItem('dm3p',JSON.stringify(p));renderPresets();}
+function renderPresets(){
+  const p=JSON.parse(localStorage.getItem('dm3p')||'{}');
+  const el=document.getElementById('pchips');el.innerHTML='';
+  Object.keys(p).forEach(name=>{
+    const d=document.createElement('div');d.className='pchip';
+    d.innerHTML=`<span onclick="loadPreset('${name}')" style="cursor:pointer">✦ ${name}</span><span style="color:var(--crim);cursor:pointer;margin-left:.3rem" onclick="delPreset('${name}')">✕</span>`;
+    el.appendChild(d);
+  });
+}
+
+// GENERATE dm³Machine
+function generateMachine(){
+  const name=document.getElementById('pname').value.trim()||'My dm³Machine';
+  const mix={};
+  MACHINES.forEach(m=>{mix[m.id]={active:mState[m.id].active,vol:+document.getElementById('mv-'+m.id).value};});
+  const activeNames=MACHINES.filter(m=>mix[m.id]&&mix[m.id].active).map(m=>m.name).join(', ')||'custom';
+
+  const html=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>dm³Machine · ${name} · G6 LLC</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Source+Code+Pro:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05080f;--bg2:#0a1018;--gold:#c8a96e;--gl:#dfc08a;--gp:#f0deb4;--bd:rgba(200,169,110,.18);--cream:#f0ebe0;--dim:rgba(240,235,224,.4);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.7;min-height:100vh;display:flex;flex-direction:column;}
+header{background:var(--bg2);border-bottom:1px solid var(--bd);padding:1.4rem 2rem;text-align:center;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(200,169,110,.06) 0%,transparent 70%);pointer-events:none;}
+.brand{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;opacity:.75;margin-bottom:.3rem;}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,4vw,2.4rem);font-weight:300;}
+h1 em{font-style:italic;color:var(--gp);}
+.sub{font-style:italic;font-size:.86rem;color:var(--dim);}
+#mv{display:block;width:100%;height:52px;background:#020408;}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5px;background:var(--bd);flex:1;}
+@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr);}}
+.m{background:var(--bg2);padding:.85rem .8rem;display:flex;flex-direction:column;gap:.4rem;position:relative;align-items:center;}
+.m::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+${MACHINES.map((m,i)=>`.m${i}::before{background:${m.color};}`).join('')}
+.sym{font-size:1.5rem;line-height:1;}
+${MACHINES.map((m,i)=>`.m${i} .sym{color:${m.color};}`).join('')}
+.mn{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;text-align:center;}
+${MACHINES.map((m,i)=>`.m${i} .mn{color:${m.color};}`).join('')}
+.mh{font-family:'Source Code Pro',monospace;font-size:.54rem;color:var(--dim);text-align:center;}
+.mc{font-size:.68rem;font-style:italic;color:var(--dim);line-height:1.4;text-align:center;}
+.mcu{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.09em;text-transform:uppercase;opacity:.4;text-align:center;}
+.mp{width:30px;height:30px;border-radius:50%;background:transparent;cursor:pointer;font-size:.76rem;display:flex;align-items:center;justify-content:center;transition:all .18s;border:1.5px solid;}
+.mp.on,.mp:hover{background:currentColor;color:#05080f!important;}
+${MACHINES.map((m,i)=>`.m${i} .mp{border-color:${m.color};color:${m.color};}`).join('')}
+.vr{display:flex;align-items:center;gap:.4rem;width:100%;}
+.vl{font-family:'Source Code Pro',monospace;font-size:.5rem;color:var(--dim);width:1.1rem;}
+input[type=range]{flex:1;cursor:pointer;-webkit-appearance:none;height:2px;border-radius:2px;background:rgba(255,255,255,.07);outline:none;}
+${MACHINES.map((m,i)=>`.m${i} input{accent-color:${m.color};}`).join('')}
+.wc{height:18px;background:#020408;border-radius:2px;overflow:hidden;width:100%;}
+.wc canvas{width:100%;height:100%;display:block;}
+.ctrl{background:var(--bg2);border-top:1px solid var(--bd);padding:.75rem 1.3rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;}
+.cb{font-family:'Source Code Pro',monospace;font-size:.6rem;letter-spacing:.07em;padding:.32rem .75rem;background:transparent;border:1px solid rgba(200,169,110,.3);color:rgba(200,169,110,.65);cursor:pointer;border-radius:2px;transition:all .18s;}
+.cb:hover{border-color:var(--gold);color:var(--gold);}
+.cb.on{background:var(--gold);color:#05080f;border-color:var(--gold);}
+.cb.rec{border-color:#f87171;color:#f87171;}
+.cb.rec.on{background:#f87171;color:#fff;border-color:#f87171;animation:pr 1s infinite;}
+@keyframes pr{0%,100%{opacity:1;}50%{opacity:.5;}}
+.cb.dl{border-color:var(--teal,#2dd4bf);color:var(--teal,#2dd4bf);}
+.cb.dl:hover,.cb.dl.on{background:#2dd4bf;color:#05080f;}
+.rt{font-family:'Source Code Pro',monospace;font-size:.63rem;color:var(--dim);}
+.ls{font-family:'Source Code Pro',monospace;font-size:.58rem;color:var(--dim);flex:1;}
+.ls span{color:#2dd4bf;}
+footer{background:#020408;border-top:1px solid var(--bd);padding:.85rem 1.5rem;text-align:center;font-family:'Source Code Pro',monospace;font-size:.58rem;color:rgba(200,169,110,.3);line-height:1.9;}
+footer a{color:rgba(200,169,110,.4);text-decoration:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">dm³Machine · G6 LLC · Newark Wellness Soundworks Hub · 229 Ballantine Pkway</div>
+  <h1><em>${name}</em></h1>
+  <div class="sub">Personal resonance · ${activeNames}</div>
+</header>
+<canvas id="mv"></canvas>
+<div class="grid" id="mg"></div>
+<div class="ctrl">
+  <button class="cb rec" id="rb" onclick="tr()">⏺ Rec</button>
+  <button class="cb" id="lb" onclick="tl()" disabled>⟳ Loop</button>
+  <button class="cb dl" id="db" onclick="dl()" disabled>↓ Download</button>
+  <button class="cb" onclick="sa()">■ Stop All</button>
+  <span class="rt" id="rt">0:00</span>
+  <span class="ls" id="ls">Your dm³Machine · generated by <span>Newark Wellness Soundworks Hub</span></span>
+  <a href="https://totogt.github.io/AXLE/impa-portal.html" style="font-family:'Source Code Pro',monospace;font-size:.56rem;color:rgba(200,169,110,.35);text-decoration:none;margin-left:auto;">Fund the clinic →</a>
+</div>
+<footer>
+  dm³Machine · <em>${name}</em> · Newark Wellness Soundworks Hub · <a href="https://totogt.github.io/AXLE/impa-portal.html">totogt.github.io/AXLE/impa-portal.html</a><br>
+  © 2026 Pablo Nogueira Grossi — G6 LLC · <a href="https://totogt.github.io/AXLE">Principia Orthogona</a>
+</footer>
+<script>
+const MIX=${JSON.stringify(mix)};
+const DEF=${JSON.stringify(MACHINES.map(m=>({id:m.id,name:m.name,hz:m.hz,color:m.color,cite:m.cite,symbol:m.symbol,culture:m.culture,cls:m.cls})))};
+let ctx,mg,ma,st={};let rec=false,loop=false,chunks=[],blob=null,mr=null,la=null,ri,rs=0;
+const teal='#2dd4bf';
+function gc(){if(!ctx){ctx=new(window.AudioContext||window.webkitAudioContext)();mg=ctx.createGain();mg.gain.value=0.7;ma=ctx.createAnalyser();ma.fftSize=512;mg.connect(ma);ma.connect(ctx.destination);viz();}return ctx;}
+const builders={
+  om:(ac,g)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=136.1;const lfo=ac.createOscillator();lfo.frequency.value=0.12;const ld=ac.createGain();ld.gain.value=0.08;lfo.connect(ld);ld.connect(g.gain);o.connect(g);return[o,lfo];},
+  prana:(ac,g)=>{const mm=ac.createChannelMerger(2);mm.connect(g);const L=ac.createOscillator();L.type='sine';L.frequency.value=100;const R=ac.createOscillator();R.type='sine';R.frequency.value=106;const gl=ac.createGain();gl.gain.value=0.4;const gr=ac.createGain();gr.gain.value=0.4;L.connect(gl);gl.connect(mm,0,0);R.connect(gr);gr.connect(mm,0,1);return[L,R];},
+  soham:(ac,g)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=111;o.connect(g);return[o];},
+  g6:(ac,g)=>{const o=ac.createOscillator();o.type='sawtooth';o.frequency.value=396;const lp=ac.createBiquadFilter();lp.type='lowpass';lp.frequency.value=800;o.connect(lp);lp.connect(g);return[o];},
+  sri:(ac,g)=>{return[111,222,528,333].map((f,i)=>{const o=ac.createOscillator();o.type='sine';o.frequency.value=f;const gx=ac.createGain();gx.gain.value=[.35,.12,.25,.08][i];o.connect(gx);gx.connect(g);return o;});},
+  hal:(ac,g)=>{const o1=ac.createOscillator();o1.type='sine';o1.frequency.value=70;const o2=ac.createOscillator();o2.type='sine';o2.frequency.value=114;const g1=ac.createGain();g1.gain.value=0.45;const g2=ac.createGain();g2.gain.value=0.35;o1.connect(g1);g1.connect(g);o2.connect(g2);g2.connect(g);return[o1,o2];},
+  bhai:(ac,g)=>{const o1=ac.createOscillator();o1.type='sine';o1.frequency.value=111;const o2=ac.createOscillator();o2.type='sine';o2.frequency.value=741;const lfo=ac.createOscillator();lfo.frequency.value=3.5;const ld=ac.createGain();ld.gain.value=0.2;lfo.connect(ld);ld.connect(g.gain);o1.connect(g);o2.connect(g);return[o1,o2,lfo];},
+  drum:(ac,g)=>{const b=ac.createOscillator();b.type='sine';b.frequency.value=60;const at=ac.createGain();at.gain.value=0;b.connect(at);at.connect(g);const lfo=ac.createOscillator();lfo.type='square';lfo.frequency.value=1.2;const ld=ac.createGain();ld.gain.value=0.5;lfo.connect(ld);ld.connect(at.gain);return[b,lfo];}
+};
+function init(){
+  gc();
+  DEF.forEach((m,i)=>{
+    const mix=MIX[m.id]||{active:false,vol:0.7};
+    const d=document.createElement('div');
+    d.className='m m'+i;
+    d.innerHTML='<div class="sym">'+m.symbol+'</div><div class="mn">'+m.name+'</div><div class="mh">'+m.hz+'</div><div class="mcu">'+m.culture+'</div><div class="mc">'+m.cite+'</div>'
+      +'<button class="mp" id="p'+i+'" onclick="tog('+i+')">▶</button>'
+      +'<div class="vr"><span class="vl">vol</span><input type="range" id="v'+i+'" min="0" max="1" step="0.01" value="'+mix.vol+'" oninput="sv('+i+',this.value)"></div>'
+      +'<div class="wc"><canvas id="w'+i+'" width="140" height="18"></canvas></div>';
+    document.getElementById('mg').appendChild(d);
+    st[i]={nodes:null,gn:null,an:null,active:false};
+    if(mix.active)setTimeout(()=>tog(i),200+i*60);
+  });
+}
+function tog(i){
+  const s=st[i];const m=DEF[i];const btn=document.getElementById('p'+i);
+  if(s.active){if(s.nodes)s.nodes.forEach(n=>{try{n.stop();}catch(e){}});s.active=false;btn.textContent='▶';btn.classList.remove('on');}
+  else{
+    const gn=ctx.createGain();gn.gain.value=+document.getElementById('v'+i).value;
+    const an=ctx.createAnalyser();an.fftSize=256;gn.connect(an);an.connect(mg);
+    const nodes=(builders[m.id]||((a,g)=>[]))(ctx,gn);nodes.forEach(n=>{try{n.start();}catch(e){}});
+    s.nodes=nodes;s.gn=gn;s.an=an;s.active=true;btn.textContent='⏸';btn.classList.add('on');
+    wv(i,an,m.color);
+  }
+}
+function sv(i,v){const s=st[i];if(s.gn)s.gn.gain.value=+v;}
+function sa(){DEF.forEach((_,i)=>{if(st[i].active)tog(i);});}
+function wv(i,an,col){
+  const c=document.getElementById('w'+i);if(!c)return;
+  const x=c.getContext('2d');c.width=c.offsetWidth||140;
+  function f(){if(!st[i].active)return;requestAnimationFrame(f);const W=c.width,H=c.height;const b=new Uint8Array(an.frequencyBinCount);an.getByteTimeDomainData(b);x.fillStyle='#020408';x.fillRect(0,0,W,H);x.beginPath();x.strokeStyle=col;x.lineWidth=1.1;const sl=W/b.length;let px=0;b.forEach((v,j)=>{const y=(v/128)*H/2;if(j===0)x.moveTo(px,y);else x.lineTo(px,y);px+=sl;});x.stroke();}f();
+}
+function viz(){
+  const c=document.getElementById('mv');if(!c)return;const x=c.getContext('2d');
+  function f(){requestAnimationFrame(f);const W=c.offsetWidth||600,H=52;c.width=W;c.height=H;
+    if(!ma){x.fillStyle='#020408';x.fillRect(0,0,W,H);return;}
+    const b=new Uint8Array(ma.frequencyBinCount);ma.getByteFrequencyData(b);
+    x.fillStyle='rgba(2,4,8,.5)';x.fillRect(0,0,W,H);
+    const bw=W/b.length;b.forEach((v,i)=>{const h=(v/255)*H;x.fillStyle='hsla('+(200+i*.5)+',70%,62%,.85)';x.fillRect(i*bw,H-h,bw-.5,h);});}f();
+}
+function tr(){if(!rec)sr();else stop();}
+function sr(){
+  const dest=ctx.createMediaStreamDestination();mg.connect(dest);chunks=[];
+  mr=new MediaRecorder(dest.stream,{mimeType:'audio/webm;codecs=opus'});
+  mr.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  mr.onstop=()=>{blob=new Blob(chunks,{type:'audio/webm'});document.getElementById('lb').disabled=false;document.getElementById('db').disabled=false;document.getElementById('ls').innerHTML='<span>Recording ready</span>';};
+  mr.start(100);rec=true;rs=Date.now();
+  ri=setInterval(()=>{const s=Math.floor((Date.now()-rs)/1000);document.getElementById('rt').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60;},250);
+  document.getElementById('rb').classList.add('on');document.getElementById('rb').textContent='⏹ Stop';
+}
+function stop(){if(!rec)return;rec=false;if(mr&&mr.state!=='inactive')mr.stop();clearInterval(ri);document.getElementById('rb').classList.remove('on');document.getElementById('rb').textContent='⏺ Rec';}
+function tl(){if(!blob)return;if(loop){loop=false;if(la){la.pause();la=null;}document.getElementById('lb').classList.remove('on');document.getElementById('lb').textContent='⟳ Loop';}else{loop=true;la=new Audio(URL.createObjectURL(blob));la.loop=true;la.play();document.getElementById('lb').classList.add('on');document.getElementById('lb').textContent='⏹ Stop Loop';}}
+function dl(){if(!blob)return;const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='dm3Machine_${name.replace(/\s+/g,'_')}.webm';a.click();}
+init();
+<\/script>
+</body>
+</html>`;
+
+  const blob2=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob2);
+  a.download=`dm3Machine_${name.replace(/\s+/g,'_')}.html`;a.click();
+  document.getElementById('loopStatus').innerHTML=`<span>${name}</span> — dm³Machine generated ↓`;
+}
+
+// INIT
+buildMachGrid();
+renderPresets();
+document.addEventListener('click',()=>{if(!actx)getActx();},{once:true});
+updateBinaural();
+</script>
 </body>
 </html>
