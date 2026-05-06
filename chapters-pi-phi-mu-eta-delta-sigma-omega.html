@@ -91,6 +91,18 @@ nav{background:var(--navy);padding:.65rem 2rem;position:sticky;top:0;z-index:100
 
 footer{background:var(--navy);color:#777;text-align:center;padding:1.5rem;font-family:sans-serif;font-size:.75rem;}
 footer a{color:var(--gold);text-decoration:none;}
+
+.glossary{background:var(--smoke);border:1px solid var(--light);border-left:4px solid var(--mid);
+          padding:1.2rem 1.5rem;margin:1.5rem 0;font-size:.88rem;line-height:1.75;}
+.glossary h3{color:var(--navy);margin-bottom:.6rem;font-size:.95rem;}
+.glossary dt{font-family:'Courier New',monospace;color:var(--navy);font-weight:bold;margin-top:.5rem;}
+.glossary dd{margin-left:1.2rem;color:#444;}
+
+.ch-nav{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1.5rem;
+        background:var(--smoke);border-top:1px solid var(--light);font-family:sans-serif;font-size:.78rem;}
+.ch-nav a{color:var(--mid);text-decoration:none;padding:.3rem .7rem;border-radius:4px;transition:background .2s;}
+.ch-nav a:hover{background:var(--light);color:var(--navy);}
+.ch-nav .ch-nav-center{color:#999;font-size:.72rem;letter-spacing:.05em;}
 </style>
 </head>
 <body>
@@ -103,8 +115,11 @@ footer a{color:var(--gold);text-decoration:none;}
     <li><a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a></li>
   </ul>
   <div class="nav-chapter-pills">
+    <a class="pill" href="#em-diagram" style="background:rgba(121,229,221,.18);color:#79e5dd;border-color:rgba(121,229,221,.35);">3D EM</a>
+    <a class="pill" href="#glossary">glossary</a>
     <a class="pill" href="#ch-pi">π</a>
     <a class="pill" href="#ch-phi">φ</a>
+    <a class="pill" href="#criticality" style="background:rgba(201,168,76,.35);font-weight:bold;">c*=3</a>
     <a class="pill" href="#ch-mu">μ</a>
     <a class="pill" href="#ch-eta">η</a>
     <a class="pill" href="#ch-delta">Δ</a>
@@ -124,10 +139,15 @@ footer a{color:var(--gold);text-decoration:none;}
     Each chapter below shows one of these invariants — or one step of the recurrence ladder
     from Fibonacci (subcritical) to Hexabonacci (the fixed point of the sequence of sequences) —
     as a dm³ generative transition in its own domain.
+    The threshold <strong style="color:var(--gold);">c* = 3</strong> divides the ladder into three regimes;
+    see the <a href="#criticality" style="color:var(--gold);">Criticality Bridge</a> section between φ and μ.
   </p>
   <div class="ladder">
     <div class="ladder-step"><span class="ls-sym">π</span><span class="ls-name">Period</span><span class="ls-val">T*=2π</span></div>
     <div class="ladder-step"><span class="ls-sym">φ</span><span class="ls-name">Fibonacci</span><span class="ls-val">1.618…</span></div>
+    <div class="ladder-step" style="border-left:1px solid rgba(201,168,76,.5);border-right:1px solid rgba(201,168,76,.5);background:rgba(201,168,76,.08);">
+      <span class="ls-sym" style="font-size:.9rem;">c*=3</span><span class="ls-name">Threshold</span><span class="ls-val">critical</span>
+    </div>
     <div class="ladder-step"><span class="ls-sym">μ</span><span class="ls-name">Lyapunov</span><span class="ls-val">−2</span></div>
     <div class="ladder-step"><span class="ls-sym">η</span><span class="ls-name">Tribonacci</span><span class="ls-val">1.839…</span></div>
     <div class="ladder-step"><span class="ls-sym">Δ</span><span class="ls-name">Tetranacci</span><span class="ls-val">1.927…</span></div>
@@ -135,6 +155,461 @@ footer a{color:var(--gold);text-decoration:none;}
     <div class="ladder-step"><span class="ls-sym">Ω</span><span class="ls-name">Hexabonacci</span><span class="ls-val">→ 2</span></div>
   </div>
 </header>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- THREE.JS HELICAL EM DIAGRAM                                 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="em-diagram" style="background:#0d1117;padding:0;">
+<div class="chapter-hero" style="background:#0d1117;border-bottom:1px solid rgba(201,168,76,.2);">
+  <div class="ch-eyebrow">Book 3 · Interactive · Helical Electromagnetics in dm³</div>
+  <div class="ch-symbol" style="font-size:1.6rem;letter-spacing:.05em;">E × B · Γ · c*=3</div>
+  <div class="ch-title" style="color:white;">Helical EM as Contact Attractor</div>
+  <div class="ch-subtitle">The helical wave, the limit cycle Γ, and the n-bonacci criticality ladder — one interactive scene.</div>
+</div>
+
+<div style="position:relative;width:100%;background:#0d1117;">
+  <canvas id="em-three" style="width:100%;height:520px;display:block;"></canvas>
+  <noscript><div style="color:#c9a84c;padding:2rem;text-align:center;font-family:sans-serif;">JavaScript required for the 3D diagram.</div></noscript>
+  <div id="em-webgl-fallback" style="display:none;color:#aaa;padding:2rem;text-align:center;font-family:sans-serif;font-size:.85rem;">
+    WebGL not available in this browser. The 3D helical EM diagram requires a WebGL-capable browser (Chrome, Firefox, Safari 15+).
+  </div>
+
+  <!-- overlay controls -->
+  <div id="em-controls" style="position:absolute;top:12px;right:12px;background:rgba(26,39,68,.88);
+       border:1px solid rgba(201,168,76,.25);border-radius:8px;padding:10px 14px;
+       font-family:sans-serif;font-size:.75rem;color:#ccc;min-width:190px;backdrop-filter:blur(4px);">
+    <div style="color:#c9a84c;font-weight:bold;letter-spacing:.08em;margin-bottom:8px;font-size:.72rem;text-transform:uppercase;">Controls</div>
+
+    <label style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px;">
+      <span>Chirality θ</span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <input type="range" id="em-twist" min="5" max="85" value="45" step="1"
+               title="Derived: tan α = ż/(r·θ̇) = r at Γ → α=45° when r=1"
+               style="width:80px;accent-color:#c9a84c;">
+        <span id="em-twist-v" style="color:#c9a84c;min-width:26px;">45°</span>
+      </span>
+    </label>
+
+    <label style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px;">
+      <span>n-bonacci n</span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <input type="range" id="em-n" min="2" max="6" value="3" step="1"
+               style="width:80px;accent-color:#c9a84c;">
+        <span id="em-n-v" style="color:#79e5dd;min-width:26px;">η=1.839</span>
+      </span>
+    </label>
+
+    <label style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px;">
+      <span>ε (deviation)</span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <input type="range" id="em-eps" min="0.0" max="1.2" value="0.5" step="0.05"
+               style="width:80px;accent-color:#c9a84c;">
+        <span id="em-eps-v" style="color:#c9a84c;min-width:26px;">0.50</span>
+      </span>
+    </label>
+
+    <label style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px;">
+      <span>Speed</span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <input type="range" id="em-speed" min="0.2" max="3.0" value="1.0" step="0.1"
+               style="width:80px;accent-color:#c9a84c;">
+        <span id="em-speed-v" style="color:#c9a84c;min-width:26px;">1.0×</span>
+      </span>
+    </label>
+
+    <div style="border-top:1px solid rgba(201,168,76,.15);margin:8px 0;"></div>
+
+    <label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;cursor:pointer;">
+      <input type="checkbox" id="em-show-b" checked style="accent-color:#c9a84c;">
+      <span>Show B field</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;cursor:pointer;">
+      <input type="checkbox" id="em-show-gamma" checked style="accent-color:#c9a84c;">
+      <span>Show Γ attractor</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;cursor:pointer;">
+      <input type="checkbox" id="em-show-basin" checked style="accent-color:#c9a84c;">
+      <span>Show basin r*=0.80</span>
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <input type="checkbox" id="em-show-ladder" checked style="accent-color:#c9a84c;">
+      <span>Show n-bonacci tubes</span>
+    </label>
+  </div>
+
+  <!-- overlay legend -->
+  <div style="position:absolute;bottom:12px;left:12px;background:rgba(26,39,68,.82);
+       border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:8px 12px;
+       font-family:'Courier New',monospace;font-size:.68rem;color:#aaa;backdrop-filter:blur(4px);">
+    <span style="color:#ff6b6b;">━</span> E field &nbsp;
+    <span style="color:#58a6ff;">━</span> B field &nbsp;
+    <span style="color:#c9a84c;">━</span> Γ (r=1) &nbsp;
+    <span style="color:#79e5dd;">━</span> Poynting S &nbsp;
+    <span style="color:rgba(201,168,76,.35);">○</span> basin r*=0.80
+  </div>
+
+  <!-- overlay formula -->
+  <div style="position:absolute;bottom:12px;right:12px;background:rgba(26,39,68,.82);
+       border:1px solid rgba(201,168,76,.2);border-radius:6px;padding:7px 11px;
+       font-family:'Courier New',monospace;font-size:.65rem;color:#888;backdrop-filter:blur(4px);max-width:220px;">
+    <div style="color:#c9a84c;margin-bottom:2px;">dm³ · ε=2</div>
+    <div>ṙ = r(1−r²)+2(r−1)e⁻ᶻ</div>
+    <div>θ̇ = 1 &nbsp;·&nbsp; ż = r²−2(r−1)²e⁻ᶻ</div>
+    <div style="margin-top:3px;color:#c9a84c;">μ_max=−2 · ε₀=1/3 · r*≈0.80</div>
+  </div>
+</div>
+
+<div style="background:#0d1117;padding:1rem 1.5rem;font-family:sans-serif;font-size:.8rem;
+     color:#888;border-top:1px solid rgba(201,168,76,.1);line-height:1.6;">
+  <strong style="color:#c9a84c;">How to read this diagram.</strong>
+  The gold helix is the limit cycle Γ (r=1) — the helical attractor of the dm³ contact flow.
+  Red arrows = rotating E field. Blue arrows = rotating B field, 90° behind E. Teal ribbon = Poynting vector S = E×B (energy spirals along the axis).
+  <br><br>
+  <strong style="color:#c9a84c;">Chirality default = 45°.</strong>
+  The pitch angle α of Γ is derived from the dm³ contact flow directly:
+  <span style="font-family:'Courier New',monospace;color:#aaa;">tan α = ż / (r·θ̇) = r²/r·1 = r</span>.
+  At the attractor r=1: <span style="font-family:'Courier New',monospace;color:#c9a84c;">α = arctan(1) = 45°</span> exactly —
+  forced by the contact structure, not chosen. Drag the slider to explore other pitches;
+  the helix drifts away from the contact-geometric ground state.
+  <br><br>
+  The translucent tube shows the basin boundary r*≈0.80 — trajectories inside escape; outside converge to Γ.
+  The <em>n-bonacci n</em> slider walks the recurrence ladder φ→η→Δ→Σ→Ω: tube radius and colour shift through subcritical (red), critical (gold), supercritical (blue).
+  Drag the scene to orbit. Scroll to zoom.
+</div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+
+/* ── WebGL check ── */
+(function() {
+  const test = document.createElement('canvas');
+  const gl = test.getContext('webgl') || test.getContext('experimental-webgl');
+  if (!gl) {
+    document.getElementById('em-three').style.display = 'none';
+    document.getElementById('em-webgl-fallback').style.display = 'block';
+    return;
+  }
+})();
+
+/* ── constants ── */
+const GOLD = 0xc9a84c, TEAL = 0x79e5dd, BLUE = 0x58a6ff,
+      RED  = 0xff6b6b, NAVY = 0x1a2744, CREAM = 0xfaf7f0;
+
+const canvas = document.getElementById('em-three');
+const W = () => canvas.offsetWidth, H = () => canvas.offsetHeight;
+
+/* ── renderer ── */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(W(), H());
+renderer.setClearColor(0x0d1117, 1);
+
+/* ── scene / camera ── */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, W() / H(), 0.1, 100);
+camera.position.set(5, 2.5, 7);
+camera.lookAt(0, 0, 0);
+
+/* ── orbit-like drag ── */
+let isDrag = false, lastX = 0, lastY = 0, rotY = 0.3, rotX = 0.15, zoom = 7;
+canvas.addEventListener('mousedown', e => { isDrag = true; lastX = e.clientX; lastY = e.clientY; });
+canvas.addEventListener('touchstart', e => { isDrag = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }, { passive: true });
+window.addEventListener('mouseup', () => isDrag = false);
+window.addEventListener('touchend', () => isDrag = false);
+window.addEventListener('mousemove', e => {
+  if (!isDrag) return;
+  rotY += (e.clientX - lastX) * 0.008; rotX += (e.clientY - lastY) * 0.008;
+  lastX = e.clientX; lastY = e.clientY;
+});
+window.addEventListener('touchmove', e => {
+  if (!isDrag) return;
+  rotY += (e.touches[0].clientX - lastX) * 0.008; rotX += (e.touches[0].clientY - lastY) * 0.008;
+  lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+}, { passive: true });
+canvas.addEventListener('wheel', e => { zoom = Math.max(3, Math.min(16, zoom + e.deltaY * 0.01)); e.preventDefault(); }, { passive: false });
+
+/* ── groups ── */
+const grpMain = new THREE.Group();
+const grpGamma = new THREE.Group();
+const grpEM    = new THREE.Group();
+const grpBasin = new THREE.Group();
+const grpLadder= new THREE.Group();
+scene.add(grpMain);
+grpMain.add(grpGamma, grpEM, grpBasin, grpLadder);
+
+/* ── helpers ── */
+function nbRoot(n) {
+  let x = 2 - 1/n;
+  for (let i = 0; i < 80; i++) {
+    let f = 0, fp = 0;
+    for (let k = 0; k <= n; k++) {
+      const xk = Math.pow(x, k);
+      if (k === n) { f += xk; fp += n * xk / x; }
+      else { f -= xk; if (k > 0) fp -= k * xk / x; }
+    }
+    if (Math.abs(f) < 1e-14) break;
+    x -= f / fp;
+  }
+  return x;
+}
+
+const nbNames = ['', '', 'φ=1.618', 'η=1.839', 'Δ=1.928', 'Σ=1.966', 'Ω=1.984'];
+const nbColors = [0, 0, 0xc0392b, 0xc9a84c, 0x58a6ff, 0x8855ff, 0xbc8fff];
+
+function makeTubePath(radiusFn, colorFn, zMin, zMax, N, tubeR) {
+  /* generate helical tube of radius=radiusFn(t) along z-axis */
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const z = zMin + t * (zMax - zMin);
+    const r = radiusFn(t, z);
+    const theta = t * Math.PI * 8; /* 4 full turns */
+    pts.push(new THREE.Vector3(r * Math.cos(theta), r * Math.sin(theta), z));
+  }
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const geo = new THREE.TubeGeometry(curve, N, tubeR, 8, false);
+  const mat = new THREE.MeshBasicMaterial({ color: colorFn, transparent: true, opacity: 0.18, side: THREE.DoubleSide });
+  return new THREE.Mesh(geo, mat);
+}
+
+/* ── Γ helix (gold, r=1) ── */
+function buildGamma(twist) {
+  while (grpGamma.children.length) grpGamma.remove(grpGamma.children[0]);
+
+  const N = 300, zMin = -3, zMax = 3;
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const z = zMin + t * (zMax - zMin);
+    const theta = z * (1 / Math.tan(twist * Math.PI / 180)); /* pitch from chirality */
+    pts.push(new THREE.Vector3(Math.cos(theta), Math.sin(theta), z));
+  }
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const geo = new THREE.TubeGeometry(curve, N, 0.025, 12, false);
+  const mat = new THREE.MeshBasicMaterial({ color: GOLD });
+  grpGamma.add(new THREE.Mesh(geo, mat));
+
+  /* z-axis */
+  const axGeo = new THREE.CylinderGeometry(0.008, 0.008, 6.5, 8);
+  const axMat = new THREE.MeshBasicMaterial({ color: 0x444466, transparent: true, opacity: 0.5 });
+  const ax = new THREE.Mesh(axGeo, axMat);
+  ax.rotation.x = Math.PI / 2;
+  grpGamma.add(ax);
+}
+
+/* ── EM field arrows ── */
+const arrowsE = [], arrowsB = [], arrowsS = [];
+const N_ARROWS = 14;
+
+function makeArrow(color, len) {
+  const g = new THREE.Group();
+  const shaft = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.018, 0.018, len * 0.75, 6),
+    new THREE.MeshBasicMaterial({ color })
+  );
+  shaft.position.y = len * 0.375;
+  const head = new THREE.Mesh(
+    new THREE.ConeGeometry(0.045, len * 0.25, 6),
+    new THREE.MeshBasicMaterial({ color })
+  );
+  head.position.y = len * 0.875;
+  g.add(shaft, head);
+  return g;
+}
+
+(function buildArrows() {
+  for (let i = 0; i < N_ARROWS; i++) {
+    const aE = makeArrow(RED,  0.7); grpEM.add(aE); arrowsE.push(aE);
+    const aB = makeArrow(BLUE, 0.7); grpEM.add(aB); arrowsB.push(aB);
+    const aS = makeArrow(TEAL, 0.35); grpEM.add(aS); arrowsS.push(aS);
+  }
+})();
+
+/* ── basin cylinder (translucent, r*=0.80) ── */
+function buildBasin() {
+  while (grpBasin.children.length) grpBasin.remove(grpBasin.children[0]);
+  const geo = new THREE.CylinderGeometry(0.80, 0.80, 6, 64, 1, true);
+  const mat = new THREE.MeshBasicMaterial({
+    color: GOLD, transparent: true, opacity: 0.07,
+    side: THREE.DoubleSide, wireframe: false
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.x = Math.PI / 2;
+  grpBasin.add(mesh);
+
+  /* ring outlines top & bottom */
+  for (const z of [-3, 3]) {
+    const pts = [];
+    for (let i = 0; i <= 64; i++) {
+      const a = i / 64 * Math.PI * 2;
+      pts.push(new THREE.Vector3(0.80 * Math.cos(a), 0.80 * Math.sin(a), z));
+    }
+    const lGeo = new THREE.BufferGeometry().setFromPoints(pts);
+    const lMat = new THREE.LineBasicMaterial({ color: GOLD, transparent: true, opacity: 0.25 });
+    grpBasin.add(new THREE.Line(lGeo, lMat));
+  }
+}
+
+/* ── n-bonacci ladder tubes ── */
+function buildLadder(nVal) {
+  while (grpLadder.children.length) grpLadder.remove(grpLadder.children[0]);
+  for (let n = 2; n <= 6; n++) {
+    const rn = nbRoot(n);
+    const col = nbColors[n];
+    const alpha = n === nVal ? 0.22 : 0.05;
+    const geo = new THREE.CylinderGeometry(rn * 0.5, rn * 0.5, 6, 48, 1, true);
+    const mat = new THREE.MeshBasicMaterial({
+      color: col, transparent: true, opacity: alpha,
+      side: THREE.DoubleSide
+    });
+    const m = new THREE.Mesh(geo, mat);
+    m.rotation.x = Math.PI / 2;
+    grpLadder.add(m);
+  }
+}
+
+/* ── state ── */
+let twist = 45, nVal = 3, eps = 0.5, speed = 1.0;
+let showB = true, showGamma = true, showBasin = true, showLadder = true;
+
+buildGamma(twist);
+buildBasin();
+buildLadder(nVal);
+
+/* ── controls wiring ── */
+document.getElementById('em-twist').addEventListener('input', function() {
+  twist = +this.value;
+  document.getElementById('em-twist-v').textContent = twist + '°';
+  buildGamma(twist);
+});
+document.getElementById('em-n').addEventListener('input', function() {
+  nVal = +this.value;
+  const r = nbRoot(nVal);
+  document.getElementById('em-n-v').textContent = nbNames[nVal];
+  document.getElementById('em-n-v').style.color = '#' + nbColors[nVal].toString(16).padStart(6,'0');
+  buildLadder(nVal);
+});
+document.getElementById('em-eps').addEventListener('input', function() {
+  eps = +this.value;
+  document.getElementById('em-eps-v').textContent = eps.toFixed(2);
+});
+document.getElementById('em-speed').addEventListener('input', function() {
+  speed = +this.value;
+  document.getElementById('em-speed-v').textContent = speed.toFixed(1) + '×';
+});
+document.getElementById('em-show-b').addEventListener('change', function() {
+  showB = this.checked;
+  arrowsB.forEach(a => a.visible = showB);
+});
+document.getElementById('em-show-gamma').addEventListener('change', function() {
+  showGamma = this.checked; grpGamma.visible = showGamma;
+});
+document.getElementById('em-show-basin').addEventListener('change', function() {
+  showBasin = this.checked; grpBasin.visible = showBasin;
+});
+document.getElementById('em-show-ladder').addEventListener('change', function() {
+  showLadder = this.checked; grpLadder.visible = showLadder;
+});
+
+/* ── resize ── */
+window.addEventListener('resize', () => {
+  renderer.setSize(W(), H());
+  camera.aspect = W() / H();
+  camera.updateProjectionMatrix();
+});
+
+/* ── animation ── */
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.016 * speed;
+
+  /* camera orbit */
+  const r0 = zoom;
+  camera.position.set(
+    r0 * Math.cos(rotX) * Math.sin(rotY),
+    r0 * Math.sin(rotX),
+    r0 * Math.cos(rotX) * Math.cos(rotY)
+  );
+  camera.lookAt(0, 0, 0);
+
+  /* place EM arrows along z-axis */
+  const pitchFactor = 1 / Math.tan(twist * Math.PI / 180);
+  for (let i = 0; i < N_ARROWS; i++) {
+    const frac = i / N_ARROWS;
+    const z = -3 + frac * 6;
+    const phase = z * pitchFactor + t;
+    const phaseE = phase;
+    const phaseB = phase - Math.PI / 2; /* B lags E by 90° */
+
+    /* dm³ radial deviation — Gronwall spiral converging to r=1 */
+    const rDev = 1 + eps * Math.exp(-2 * (frac - 0.5) * (frac - 0.5) * 4) * Math.sin(frac * Math.PI * 3 + t * 0.3);
+
+    /* E arrow */
+    arrowsE[i].position.set(0, 0, z);
+    arrowsE[i].rotation.z = phaseE;
+    arrowsE[i].rotation.x = Math.PI / 2;
+    arrowsE[i].scale.setScalar(rDev * 0.9);
+
+    /* B arrow */
+    arrowsB[i].position.set(0, 0, z);
+    arrowsB[i].rotation.z = phaseB;
+    arrowsB[i].rotation.x = Math.PI / 2;
+    arrowsB[i].scale.setScalar(rDev * 0.9);
+    arrowsB[i].visible = showB;
+
+    /* Poynting S — along z-axis, pulsing */
+    const sScale = 0.5 + 0.25 * Math.sin(t * 2 + frac * Math.PI * 4);
+    arrowsS[i].position.set(0, 0, z - 0.1);
+    arrowsS[i].rotation.x = Math.PI / 2; /* point along +z */
+    arrowsS[i].scale.setScalar(sScale);
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- GLOSSARY                                                    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="glossary">
+<div class="ch-body">
+<div class="glossary">
+<h3>Key terms — quick reference for new readers</h3>
+<dl>
+  <dt>dm³</dt>
+  <dd>The three-dimensional contact flow system at the core of the framework. Variables: r (radial), θ (angular), z (action). Attractor Γ lives at r = 1.</dd>
+  <dt>Contact manifold / contact form α</dt>
+  <dd>A manifold with a maximally non-integrable hyperplane distribution. Here α = dz − r²dθ. The non-integrability condition α ∧ dα ≠ 0 forces helical (not planar) orbits.</dd>
+  <dt>Reeb vector field</dt>
+  <dd>The unique vector field R satisfying ι(R)dα = 0 and ι(R)α = 1. Its flow gives the canonical period T* = 2π.</dd>
+  <dt>Limit cycle Γ</dt>
+  <dd>The helical attractor at r = 1 in the dm³ flow. Orbits outside the inner basin r* ≈ 0.80 converge to Γ; orbits inside escape to z → −∞.</dd>
+  <dt>Whitney A₁ fold</dt>
+  <dd>The generic singularity of a smooth map where a double root appears. In dm³: V(q) + 2 = (q−1)²(q+2) at q = 1. This forces μ_max = −2.</dd>
+  <dt>Lyapunov exponent μ_max</dt>
+  <dd>The rate of transverse attraction to Γ. μ_max = −2 means deviations decay as e^{−2t}. Derived from the A₁ fold, not assumed.</dd>
+  <dt>Gronwall bound / stability radius ε₀</dt>
+  <dd>A conservative analytical estimate of the basin of attraction. ε₀ = 1/3 is the symmetric Gronwall bound. The actual numerical inner boundary is r* ≈ 0.80 (asymmetric — open problem AXLE Issue #13).</dd>
+  <dt>n-bonacci constant ρ_n</dt>
+  <dd>Dominant root of x^n − x^{n−1} − ⋯ − x − 1 = 0. For n=2: φ (Fibonacci). For n=3: η (Tribonacci). Limit as n→∞: τ = 2.</dd>
+  <dt>Criticality threshold c* = 3</dt>
+  <dd>The unique curvature coefficient at which the dm³ fold fires at the integer lattice point q = 1. The Collatz map 3n+1 has c = 3.</dd>
+  <dt>GQM / Geometric Quantum Mechanics weighting</dt>
+  <dd>The η⁻ᵏ geometric weighting used in the 12-phase Collatz orbit analysis. Derived from the Tribonacci spectral radius.</dd>
+  <dt>GTCT / Generative Time Circuit Theorem</dt>
+  <dd>The main theorem of the Principia Orthogona series (Vol. IV). States that spiral return maps under the five-operator chain C → K → F → U → T satisfy x₀′ ≠ x₀ with z increasing monotonically. Working paper: GTCT-2026-001. Formal verification: AXLE repo (Lean 4 / Mathlib4).</dd>
+  <dt>sorry (Lean 4)</dt>
+  <dd>A placeholder in a formal proof that marks an obligation not yet discharged. Every sorry in the AXLE repo is tracked as a GitHub issue. "Honestly marked sorry" means the claim is believed true but unproven.</dd>
+</dl>
+</div>
+</div>
+</section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
 <!-- CHAPTER π -->
@@ -183,7 +658,7 @@ one complete circuit of the action variable z costs exactly 2π.
 </div>
 
 <div class="insight-box">
-  <strong>Why this matters.</strong> Every domain in the Coherence Bridge table has period T* = 2π — HPA stress (cortisol cycle in contact-time units), neural oscillations (one gamma burst), circadian (one day, normalised), Wigner crystal (one phonon orbit). The number π is not an approximation. It is the exact period of the Reeb flow of the contact structure that underlies all dm³ systems.
+  <strong>Why this matters.</strong> Every domain in the <a href="ch-e-gtct.html" style="color:var(--mid);">Coherence Bridge table</a> has period T* = 2π — HPA stress (cortisol cycle in contact-time units), neural oscillations (one gamma burst), circadian (one day, normalised), Wigner crystal (one phonon orbit). The number π is not an approximation. It is the exact period of the Reeb flow of the contact structure that underlies all dm³ systems.
 </div>
 
 <div class="falsify-box">
@@ -191,6 +666,7 @@ one complete circuit of the action variable z costs exactly 2π.
 </div>
 
 </div>
+<div class="ch-nav"><a href="#em-diagram">← 3D EM diagram</a><span class="ch-nav-center">Chapter π · Period = 2π</span><a href="#ch-phi">Chapter φ →</a></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -243,6 +719,98 @@ No dm³ transition. φ is subcritical.
 </div>
 
 </div>
+<div class="ch-nav"><a href="#ch-pi">← Chapter π</a><span class="ch-nav-center">Chapter φ · Fibonacci</span><a href="#criticality">c*=3 Bridge →</a></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CRITICALITY BRIDGE — standalone section, no Greek symbol  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter-block" id="criticality">
+<div class="chapter-hero">
+  <div class="ch-eyebrow">Book 3 · The Recurrence Ladder · Structural Bridge</div>
+  <div class="ch-symbol" style="font-size:2rem;letter-spacing:.05em;">c* = 3</div>
+  <div class="ch-title">Criticality, Subcriticality, and Supercriticality in dm³</div>
+  <div class="ch-subtitle">The threshold c* = 3 divides the recurrence ladder into three regimes. Every constant in this chapter is a marker of one regime.</div>
+</div>
+<div class="ch-body">
+
+<p>The dm³ curvature coefficient c controls whether the fold operator F activates. It is the coefficient in the potential V(q) = q³ − cq. The <em>criticality threshold</em> c* = 3 is the unique value at which V has a double root at q = 1 — the Whitney A₁ fold. Every n-bonacci constant is associated with a curvature regime relative to c* = 3.</p>
+
+<h3>The three regimes</h3>
+
+<div class="math-block">
+dm³ potential:   V(q) = q³ − c·q
+Critical points: q* = ±√(c/3)
+Fold condition:  q* = 1  ⟺  c = 3   ← the threshold
+
+SUBCRITICAL   c &lt; 3:
+  q* = √(c/3) &lt; 1
+  The fold does not reach the integer lattice (q=1).
+  No dm³ generative transition on ℕ.
+  Attractor: approach to curvature without activation.
+  Prototype: φ ≈ 1.618   (Fibonacci, n=2 recurrence)
+
+CRITICAL      c = 3:
+  q* = 1 exactly.
+  V(1) = 1 − 3 = −2.   V(q)+2 = (q−1)²(q+2).
+  Whitney A₁ fold fires. Double root forces μ_max = −2.
+  Unique integer-coherent dm³ transition.
+  Prototype: η ≈ 1.839  (Tribonacci, Collatz, n=3)
+
+SUPERCRITICAL c &gt; 3:
+  q* = √(c/3) &gt; 1  (but the fold overshoots q=1)
+  The fold fires but at a non-integer value.
+  Richer transients, higher entropic cost, multiple stable branches.
+  Prototypes: Δ ≈ 1.928 (Tetranacci, n=4)
+              Σ ≈ 1.966 (Pentanacci, n=5)
+              Ω ≈ 1.984 (Hexabonacci, n=6)
+              τ = 2     (limit n→∞, embodiment threshold)
+</div>
+
+<div class="theorem-box">
+  <strong>Theorem C.1 (Criticality at c* = 3).</strong> The dm³ potential V(q) = q³ − cq has a Whitney A₁ fold at q = 1 if and only if c = 3. At this value V(1) = −2, V′(1) = 0, V″(1) = 6 ≠ 0, and V(q) + 2 = (q−1)²(q+2). The double root at q = 1 forces the linearised transverse eigenvalue μ_max = −2 and the Gronwall stability radius ε₀ = 1/3. No other value of c produces an integer-coherent fold. The Collatz map T : n ↦ 3n + 1 (odd branch) has c = 3 — it is the unique integer map at criticality.
+</div>
+
+<h3>Why this organises the entire chapter</h3>
+<p>The seven Greek-letter constants in this file are not chosen for aesthetic reasons. They are the <em>spectral signatures</em> of the seven positions on the n-bonacci recurrence ladder, each sitting in one of the three regimes:</p>
+
+<div class="coherence-row">
+  <div class="coh-card" style="border-left-color:#c0392b;">
+    <div class="coh-sym" style="color:#c0392b;">SUBCRITICAL</div>
+    <div class="coh-val">c &lt; 3 · fold frozen</div>
+    <div class="coh-desc">φ = 1.618 (Fibonacci). Spiral visible, transition absent. Natural growth patterns.</div>
+  </div>
+  <div class="coh-card" style="border-left-color:var(--gold);">
+    <div class="coh-sym">CRITICAL</div>
+    <div class="coh-val">c = 3 · fold fires at q=1</div>
+    <div class="coh-desc">η = 1.839 (Tribonacci). Unique integer coherence. Collatz, GQM, dm³ core.</div>
+  </div>
+  <div class="coh-card" style="border-left-color:#58a6ff;">
+    <div class="coh-sym" style="color:#58a6ff;">SUPERCRITICAL</div>
+    <div class="coh-val">c &gt; 3 · fold overshoots</div>
+    <div class="coh-desc">Δ, Σ, Ω → τ=2. Richer structure, higher entropic cost, convergence to embodiment threshold.</div>
+  </div>
+</div>
+
+<h3>The potential V(q) = q³ − cq — live</h3>
+<p>Drag c across the threshold c* = 3. Watch the fold point q* cross q = 1 (gold line). Below 3: fold left of the integer. At 3: fold lands exactly at 1. Above 3: fold overshoots.</p>
+
+<div class="canvas-wrap">
+  <canvas id="canvas-crit" height="300"></canvas>
+  <div class="ctrl-row">
+    <label>c = <input type="range" id="crit-c" min="1.0" max="4.5" value="3.0" step="0.01">
+      <span class="val-disp" id="crit-c-v">3.00</span></label>
+    <label>Show regimes: <input type="checkbox" id="crit-zones" checked></label>
+  </div>
+  <div class="canvas-label">V(q) = q³ − cq. Red dot = fold point q* = √(c/3). Gold vertical = q = 1. Green dot = V(1) = 1−c. At c=3: V(1) = −2, double root, fold fires.</div>
+</div>
+
+<div class="falsify-box">
+  <strong>Falsifiability C.1.</strong> If any domain dm³ instantiation is found that produces a genuine generative transition with c ≠ 3 (i.e., the fold fires at a non-integer value and still produces universal convergence on ℕ), the integer-criticality condition fails and the Collatz uniqueness claim in GTCT-2026-001 must be revised.
+</div>
+
+</div>
+<div class="ch-nav"><a href="#ch-phi">← Chapter φ</a><span class="ch-nav-center">c* = 3 · Criticality</span><a href="#ch-mu">Chapter μ →</a></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -291,7 +859,7 @@ The curvature of the potential at the fold gives the linearised return rate:
     <label>μ_max = <input type="range" id="mu-val" min="-5" max="-0.3" value="-2" step="0.05"><span class="val-disp" id="mu-val-v">−2.00</span></label>
     <label>ε₀ band: <input type="range" id="mu-eps" min="0.05" max="0.5" value="0.333" step="0.005"><span class="val-disp" id="mu-eps-v">0.333</span></label>
   </div>
-  <div class="canvas-label">Decay of transverse deviation ξ(t) = ξ₀·e^{μ·t}. Gold band = stability radius ε₀ = 1/3. Set μ > −2/3 to see instability.</div>
+  <div class="canvas-label">Decay of transverse deviation ξ(t) = ξ₀·e^{μ·t}. Gold band = stability radius ε₀ = 1/3. Drag μ toward 0 to slow convergence; at μ = 0 the attractor vanishes.</div>
 </div>
 
 <div class="insight-box">
@@ -299,6 +867,7 @@ The curvature of the potential at the fold gives the linearised return rate:
 </div>
 
 </div>
+<div class="ch-nav"><a href="#criticality">← c*=3 Bridge</a><span class="ch-nav-center">Chapter μ · Lyapunov μ=−2</span><a href="#ch-eta">Chapter η →</a></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -354,6 +923,7 @@ see also AXLE Issue #13 for the formal proof obligation).
 </div>
 
 </div>
+<div class="ch-nav"><a href="#ch-mu">← Chapter μ</a><span class="ch-nav-center">Chapter η · Tribonacci 1.839</span><a href="#ch-delta">Chapter Δ →</a></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -368,7 +938,7 @@ see also AXLE Issue #13 for the formal proof obligation).
 </div>
 <div class="ch-body">
 
-<p>The Tetranacci sequence T(n) = T(n−1) + T(n−2) + T(n−3) + T(n−4) has characteristic polynomial x⁴ − x³ − x² − x − 1 = 0, dominant root Δ ≈ 1.9275. This is the first step into the <em>supercritical regime</em>: depth 4 > c* = 3, so the curvature operator K drives harder than the critical threshold.</p>
+<p>The Tetranacci sequence T(n) = T(n−1) + T(n−2) + T(n−3) + T(n−4) has characteristic polynomial x⁴ − x³ − x² − x − 1 = 0, dominant root Δ ≈ 1.9275. This is the first step into the <em>supercritical regime of the recurrence ladder</em> — meaning depth n = 4 > 3, one step beyond Tribonacci criticality. Note carefully: the curvature coefficient c = Δ ≈ 1.928 is still less than c* = 3 in the potential V(q) = q³ − cq sense; the supercriticality here is in the <em>recurrence depth</em> (n > 3 summands), not in the fold-potential sense. The two uses of "supercritical" are distinct and both appear in the literature.</p>
 
 <div class="math-block">
 Tetranacci polynomial:  x⁴ − x³ − x² − x − 1 = 0
@@ -399,6 +969,7 @@ Supercritical markers:
 </div>
 
 </div>
+<div class="ch-nav"><a href="#ch-eta">← Chapter η</a><span class="ch-nav-center">Chapter Δ · Tetranacci 1.928</span><a href="#ch-sigma">Chapter Σ →</a></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -419,8 +990,9 @@ Supercritical markers:
 Pentanacci polynomial:  x⁵ − x⁴ − x³ − x² − x − 1 = 0
 Dominant root:  Σ ≈ 1.96595…
 
-Four decaying modes: three complex conjugate pairs + one real
-All |λᵢ| < 1 for i > 1  (spectral gap maintained)
+Four decaying modes: two complex conjugate pairs + zero extra real
+(Pentanacci polynomial degree 5: 1 dominant real root + 4 non-dominant roots
+ forming 2 complex conjugate pairs. All |λᵢ| < 1 for i > 1 — spectral gap maintained.)
 
 Fold position:  q* = √(Σ/3) ≈ √0.6553 ≈ 0.810
 Still < 1 — fold does not reach integer lattice
@@ -447,6 +1019,7 @@ Pentanacci in biology:
 </div>
 
 </div>
+<div class="ch-nav"><a href="#ch-delta">← Chapter Δ</a><span class="ch-nav-center">Chapter Σ · Pentanacci 1.966</span><a href="#ch-omega">Chapter Ω →</a></div>
 </section>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -511,21 +1084,128 @@ that has run through all 6 recurrence depths and converged to τ.
 </div>
 
 </div>
+<div class="ch-nav"><a href="#ch-sigma">← Chapter Σ</a><span class="ch-nav-center">Chapter Ω · Hexabonacci → τ=2</span><a href="#glossary">Glossary ↑</a></div>
 </section>
 
 <footer>
   <p>Principia Orthogona · Book 3 · The Mini-Beast · Chapters π φ μ η Δ Σ Ω</p>
   <p style="margin-top:.4rem;">G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026 · ISBN 979-8-9954416-6-3</p>
   <p style="margin-top:.4rem;">
+    ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> ·
+    Zenodo <a href="https://doi.org/10.5281/zenodo.19117400" target="_blank">doi:10.5281/zenodo.19117400</a>
+  </p>
+  <p style="margin-top:.4rem;">
+    <a href="#glossary">Glossary</a> ·
+    <a href="sample-chapter-autophagy.html">Chapter A · Autophagy</a> ·
     <a href="sample-chapter-wigner.html">Chapter W</a> ·
     <a href="sample-chapter-tubulin.html">Chapter T</a> ·
+    <a href="ch-e-gtct.html">Chapter E · GTCT</a> ·
     <a href="spectral-radius.html">Spectral Radius</a> ·
-    <a href="https://github.com/TOTOGT/AXLE">AXLE</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub</a>
   </p>
 </footer>
 
 <script>
-/* ══════════════════ CHAPTER π — limit cycle ══════════════════ */
+/* ══════════════════ CRITICALITY BRIDGE — V(q) = q³ − cq ══════════════════ */
+(function() {
+  const cv = document.getElementById('canvas-crit');
+  const cx = cv.getContext('2d');
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 300;
+    const H = 300;
+    const c = parseFloat(document.getElementById('crit-c').value);
+    const zones = document.getElementById('crit-zones').checked;
+    document.getElementById('crit-c-v').textContent = c.toFixed(2);
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const PAD = {top:30,right:30,bottom:40,left:55};
+    const pW = W-PAD.left-PAD.right, pH = H-PAD.top-PAD.bottom;
+
+    // domain q ∈ [−0.3, 2.2], range V ∈ [−3.5, 2.5]
+    const qMin=-0.3, qMax=2.2, vMin=-3.5, vMax=2.5;
+    function toX(q){return PAD.left+(q-qMin)/(qMax-qMin)*pW;}
+    function toY(v){return PAD.top+(1-(v-vMin)/(vMax-vMin))*pH;}
+    function V(q){return q*q*q - c*q;}
+
+    // regime shading
+    if(zones){
+      const x1=toX(qMin), xCrit=toX(1), x2=toX(qMax);
+      cx.fillStyle='rgba(192,57,43,0.08)'; cx.fillRect(x1,PAD.top,xCrit-x1,pH); // subcrit left of q=1
+      cx.fillStyle='rgba(88,166,255,0.06)'; cx.fillRect(xCrit,PAD.top,x2-xCrit,pH); // supercrit right
+    }
+
+    // axes
+    cx.strokeStyle='#30363d'; cx.lineWidth=1;
+    cx.beginPath(); cx.moveTo(PAD.left,toY(0)); cx.lineTo(PAD.left+pW,toY(0)); cx.stroke();
+    cx.beginPath(); cx.moveTo(toX(0),PAD.top); cx.lineTo(toX(0),PAD.top+pH); cx.stroke();
+
+    // q=1 gold vertical
+    cx.strokeStyle='rgba(201,168,76,0.7)'; cx.lineWidth=1.5; cx.setLineDash([5,3]);
+    cx.beginPath(); cx.moveTo(toX(1),PAD.top); cx.lineTo(toX(1),PAD.top+pH); cx.stroke();
+    cx.setLineDash([]);
+    cx.fillStyle='rgba(201,168,76,0.8)'; cx.font='10px Courier New'; cx.textAlign='center';
+    cx.fillText('q = 1',toX(1),PAD.top-6);
+
+    // V=−2 horizontal (critical energy)
+    cx.strokeStyle='rgba(201,168,76,0.25)'; cx.lineWidth=1; cx.setLineDash([3,5]);
+    cx.beginPath(); cx.moveTo(PAD.left,toY(-2)); cx.lineTo(PAD.left+pW,toY(-2)); cx.stroke();
+    cx.setLineDash([]);
+    cx.fillStyle='rgba(201,168,76,0.4)'; cx.font='9px Courier New'; cx.textAlign='right';
+    cx.fillText('V=−2',PAD.left-3,toY(-2)+3);
+
+    // V(q) curve
+    cx.beginPath();
+    let first=true;
+    for(let i=0;i<=pW;i++){
+      const q=qMin+(i/pW)*(qMax-qMin);
+      const v=V(q);
+      if(v<vMin-0.5||v>vMax+0.5){first=true;continue;}
+      if(first){cx.moveTo(PAD.left+i,toY(v));first=false;}
+      else cx.lineTo(PAD.left+i,toY(v));
+    }
+    // color by regime
+    const regime = c < 2.95 ? '#c0392b' : c > 3.05 ? '#58a6ff' : '#c9a84c';
+    cx.strokeStyle=regime; cx.lineWidth=2.5; cx.stroke();
+
+    // fold point q* = sqrt(c/3)
+    const qStar = Math.sqrt(c/3);
+    const vStar = V(qStar);
+    if(qStar>=qMin&&qStar<=qMax&&vStar>=vMin&&vStar<=vMax){
+      cx.beginPath(); cx.arc(toX(qStar),toY(vStar),6,0,Math.PI*2);
+      cx.fillStyle='#ff6b6b'; cx.fill();
+      cx.fillStyle='rgba(250,247,240,0.8)'; cx.font='bold 10px Courier New'; cx.textAlign='left';
+      cx.fillText(`q*=${qStar.toFixed(3)}`,toX(qStar)+9,toY(vStar)+4);
+    }
+
+    // V(1) green dot
+    const v1=V(1);
+    if(v1>=vMin&&v1<=vMax){
+      cx.beginPath(); cx.arc(toX(1),toY(v1),5,0,Math.PI*2);
+      cx.fillStyle='#3fb950'; cx.fill();
+      cx.fillStyle='rgba(63,185,80,0.8)'; cx.font='10px Courier New'; cx.textAlign='right';
+      cx.fillText(`V(1)=${v1.toFixed(2)}`,toX(1)-9,toY(v1)-7);
+    }
+
+    // regime label
+    const label = c<2.95?'SUBCRITICAL — fold left of q=1':c>3.05?'SUPERCRITICAL — fold right of q=1':'CRITICAL — fold at q=1 exactly';
+    const col = c<2.95?'#c0392b':c>3.05?'#58a6ff':'#c9a84c';
+    cx.fillStyle=col; cx.font='bold 11px sans-serif'; cx.textAlign='center';
+    cx.fillText(label,PAD.left+pW/2,H-8);
+
+    // axis labels
+    cx.fillStyle='#8b949e'; cx.font='9px Courier New'; cx.textAlign='center';
+    cx.fillText('q',PAD.left+pW+12,toY(0)+3);
+    cx.fillStyle='#8b949e'; cx.textAlign='right';
+    cx.fillText('V',toX(0)-4,PAD.top-4);
+  }
+
+  document.getElementById('crit-c').addEventListener('input', draw);
+  document.getElementById('crit-zones').addEventListener('change', draw);
+  window.addEventListener('resize', draw); draw();
+})();
+
+
 (function() {
   const cv = document.getElementById('canvas-pi');
   const cx = cv.getContext('2d');
