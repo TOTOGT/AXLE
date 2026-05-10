@@ -209,7 +209,7 @@
   /* ── TRIO CANVAS PANEL ── */
   .trio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 2px;
     margin: 3rem 0;
     background: var(--gold-dim);
@@ -405,7 +405,7 @@
   /* ── EPISTEMIC STATUS TAGS ── */
   .status-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin: 2rem 0;
   }
@@ -510,7 +510,7 @@
 
   .hire-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     max-width: 900px;
     margin: 3rem auto;
@@ -610,7 +610,7 @@
   /* ── VERIFY GRID ── */
   .verify-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 2px;
     margin: 2.5rem 0;
     background: var(--gold-dim);
@@ -839,6 +839,15 @@
   @media (max-width: 600px) {
     .nav-links { display: none; }
     .trio-grid { grid-template-columns: 1fr; }
+    .verify-grid { grid-template-columns: repeat(2, 1fr); }
+    .status-grid { grid-template-columns: 1fr; }
+    .hire-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) and (min-width: 601px) {
+    .trio-grid { grid-template-columns: repeat(2, 1fr); }
+    .verify-grid { grid-template-columns: repeat(2, 1fr); }
+    .hire-grid { grid-template-columns: repeat(2, 1fr); }
+    .status-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 </head>
@@ -856,6 +865,7 @@
     <li><a href="#verify">Verify</a></li>
     <li><a href="#singularity">Singularity</a></li>
     <li><a href="#explorer">Explorer</a></li>
+    <li><a href="#infinities">Many Infinities</a></li>
     <li><a href="#hire">About</a></li>
   </ul>
 </nav>
@@ -894,48 +904,46 @@
 ═══════════════════════════════════════════════════════ -->
 <section class="section reveal" id="opening">
   <span class="sec-tag">§ 1 · Opening</span>
-  <h2>One Node at the Origin.<br>Infinitely Many Ways to Get There.</h2>
+  <h2>Four Equations.<br>One Crossing.</h2>
 
   <p>
-    Three objects arrive from entirely different directions — one from 17th-century algebraic
-    geometry, one from observational astronomy, one from the formal proof assistant Lean 4 —
-    and they all draw the same shape: a curve that crosses itself exactly once, tracing two
-    closed lobes around a single node. But three is the wrong number to stop at.
+    Four objects arrive from entirely different directions — two from algebraic geometry,
+    two from observational astronomy — and they all draw the same shape: a curve that
+    crosses itself exactly once, tracing two closed lobes around a single node.
   </p>
 
   <p>
-    The <em>Lemniscate of Gerono</em> is the algebraic quartic x⁴ = x² − y².
-    The <em>Lemniscate of Bernoulli</em> is a different quartic: (x²+y²)² = 2(x²−y²).
-    The <em>solar analemma</em> is a Lissajous curve at frequency ratio 2∶1, traced by the sun
-    each year. The <em>lunar analemma</em> is its narrower cousin, traced by the Moon each month.
-    Every planet with both orbital eccentricity and axial tilt draws its own version.
-    Every amplitude pair (a, b) with a, b > 0 gives another. The Chenciner–Montgomery
-    three-body choreography (2000) gives one more — transcendental, isolated, unreachable
-    by algebra. The Lissajous 2∶1 family alone is uncountably infinite.
+    The <em>Lemniscate of Gerono</em> is the quartic x⁴ = x² − y², a figure-eight
+    that fits inside the unit square. The <em>Lemniscate of Bernoulli</em> is a different
+    quartic, (x²+y²)² = 2(x²−y²), wider by a factor of √2 and carrying a richer
+    arc-length structure connecting to the transcendental constant Λ ≈ 2.6221.
+    The <em>solar analemma</em> is the figure-eight traced by the sun at the same clock time
+    each day over one year, produced by the superposition of two independent effects —
+    orbital eccentricity and axial tilt — at frequency ratio 2∶1.
+    The <em>lunar analemma</em> is its narrower cousin, traced by the Moon each month.
   </p>
 
   <p>
-    And above all of these, in the transfinite hierarchy of Cantor's cardinals, the dm³
-    operator grammar G = U∘F∘K∘C generates regeneration levels that climb through
-    inaccessible and Mahlo cardinals — the <em>nested infinities</em> of the TOGT framework,
-    formalized in <code>AXLE_v5_1.lean</code>, where each level is itself an infinity larger
-    than the last. The figure-eight is the visible signature of a folding operation that
-    recurs at every scale, from the unit square to the hyper-Mahlo hierarchy.
+    These four curves are formally different. They have different equations, different
+    symmetries, different bounding boxes. This chapter proves all of that rigorously
+    in <strong>Lean 4 / Mathlib</strong> — every theorem checked by machine, every
+    gap named honestly. But it also identifies the one thing they share: a single
+    geometric invariant at the crossing point, which singularity theory classifies
+    precisely and which Lean verifies in each file.
   </p>
 
   <p>
-    This chapter formalizes four of these curves in <strong>Lean 4 / Mathlib</strong>,
-    proves every theorem without <code>sorry</code>, names the gaps that remain open,
-    and traces the single geometric invariant that unites them all: the <em>ordinary double
-    point</em> — the A₁ singularity — the crossing at the origin where two smooth branches
-    meet transversally. One node. Many infinities.
+    Once the reader has seen the four curves and understood what they share, §8 asks
+    the deeper question: how many curves share this structure? The answer, it turns out,
+    is not three or four. It is infinitely many — in several different senses of infinite.
+    But that question earns its answer. For now, here are the four curves.
   </p>
 
   <div class="pullquote reveal">
     <p>The lemniscate is the first curve in mathematical history whose arc length connects
-    to something genuinely transcendental — the lemniscate constant Λ ≈ 2.6221. Gauss
-    recognized this. Euler computed it. Cantor later showed there are infinitely many
-    infinities above it. The figure-eight sits at the bottom of a tower that has no top.</p>
+    to something genuinely transcendental — the lemniscate constant Λ ≈ 2.6221, the real
+    analogue of π for the Bernoulli curve. Gauss recognized this. Euler computed it.
+    Neither needed Lean. But Lean is here now, and the proof is three lines.</p>
     <cite>— Research log, G6 LLC · Newark NJ · 2026</cite>
   </div>
 </section>
@@ -947,12 +955,13 @@
 ═══════════════════════════════════════════════════════ -->
 <section class="section-wide reveal" id="curves">
   <div style="padding: 0 var(--margin) 2rem">
-    <span class="sec-tag">§ 2 · Four Instances of an Infinite Family</span>
-    <h2>Four Curves, Formally Defined.<br>Infinitely Many More Await.</h2>
+    <span class="sec-tag">§ 2 · The Four Curves</span>
+    <h2>Four Curves, Formally Defined.</h2>
     <p style="max-width: 60ch; color: var(--silver);">
-      The four panels below are four points in an infinite family. Each is machine-verified
-      in Lean 4. The family they belong to — all plane curves with an A₁ node — is uncountably
-      infinite. We prove four; we name the structure that generates infinitely many.
+      Each panel draws the curve in real time and links directly to the machine-verified
+      Lean 4 source file. Every theorem listed has been proved without <code>sorry</code>.
+      The curves are geometrically distinct — different equations, different symmetries,
+      different bounding boxes. What they share is in §5.
     </p>
   </div>
 
@@ -1372,40 +1381,103 @@ lake build</pre>
 ═══════════════════════════════════════════════════════ -->
 <section class="section reveal" id="log">
   <span class="sec-tag">§ 7 · Research Log (B2 Academic English)</span>
-  <h2>One Node, Many Infinities:<br>What the Formalization Shows</h2>
+  <h2>What the Formalization<br>Actually Shows</h2>
 
   <p>
     The lemniscate of Bernoulli and the lunar analemma both produce a figure-eight curve
-    through entirely different mechanisms — one algebraic, one astronomical — and this raises
-    a genuine mathematical question. Both curves possess a transverse self-intersection,
-    known in singularity theory as an <em>ordinary double point</em> or A₁ node. At this
-    point, two smooth branches of the curve cross at a nonzero angle. The local structure
-    has a precise normal form: x² − y² = 0, meaning two straight lines crossing transversally.
+    through entirely different mechanisms — one algebraic, one astronomical. Both curves
+    possess a transverse self-intersection at the origin, known in singularity theory as
+    an <em>ordinary double point</em> or A₁ node. At this point, two smooth branches of
+    the curve cross at a nonzero angle. The local structure has a precise normal form:
+    x² − y² = 0, meaning two straight lines crossing transversally.
   </p>
 
   <p>
-    What makes this observation significant is not that two curves share it, but that
-    <em>infinitely many</em> do — across algebra, astronomy, dynamical systems, and the
-    transfinite hierarchy of large cardinals. The Lissajous 2∶1 family is parameterized
-    by an uncountable set. Every planet with orbital eccentricity and axial tilt traces
-    its own instance. The Chenciner–Montgomery three-body choreography adds one more that
-    is transcendental and isolated. And in the dm³ framework, the regeneration levels that
-    climb through the Mahlo hierarchy carry this same folding structure at every ordinal stage.
+    This invariant is not a vague visual resemblance. It is a statement about the
+    contact-equivalence class of the singularity — how the curve looks locally up to
+    smooth coordinate change. The four Lean files in this chapter each contain a
+    self-intersection theorem proving that the crossing at the origin has two genuinely
+    distinct parameter preimages. That is the machine-verified content of the claim.
   </p>
 
   <p>
-    The four Lean files produced in this chapter formalize what can be proved now,
-    label what remains open, and provide the infrastructure for the deeper investigation
-    to follow. The connection between the figure-eight and the operator grammar
-    G = U∘F∘K∘C is stated as a conjecture — a research program, not a conclusion —
-    and the formalization is designed to survive exactly the kind of skeptical cold
-    reading that every good reviewer applies.
+    The connection between the figure-eight and the dm³ operator grammar G = U∘F∘K∘C
+    is stated as a conjecture — a research direction, not a conclusion. The formalization
+    is designed to survive a skeptical cold reading: every claim is tagged by its actual
+    proof status, every gap is named rather than smoothed over, and the distinction
+    between what Lean verified and what remains open is never blurred.
   </p>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     MANY INFINITIES
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="infinities">
+  <span class="sec-tag">§ 8 · One Shape, Many Infinities</span>
+  <h2>How Many Curves<br>Share This Structure?</h2>
+
+  <p>
+    Having seen the four curves and understood what they share — the A₁ node,
+    the transverse crossing, the ordinary double point — a natural question arises:
+    are these four special cases, or representatives of a much larger family?
+  </p>
+
+  <p>
+    The answer is the latter, and the family is large in several precise senses.
+  </p>
+
+  <p>
+    Within algebraic geometry, the Lissajous 2∶1 family — parametrized by
+    α(t) = (a·sin(2t+φ), b·sin t) for any a, b > 0 and phase φ — produces
+    a distinct figure-eight for every choice of parameters. That is an uncountably
+    infinite family, each member with the same A₁ node at the origin.
+    Every planet with both orbital eccentricity and axial tilt produces its own
+    analemma instance: Mars, Jupiter, Saturn, Uranus, Neptune each trace a
+    figure-eight above their surfaces. Every algebraic curve of degree 4 with a
+    node at the origin is another member.
+  </p>
+
+  <p>
+    There is also an isolated transcendental example. In 2000, Chenciner and Montgomery
+    proved the existence of a figure-eight <em>choreography</em> in the gravitational
+    three-body problem: three equal masses chasing each other along a single
+    transcendental figure-eight curve, with no closed-form algebraic equation.
+    It shares the A₁ topology with the Gerono lemniscate but belongs to no algebraic
+    family — it is an island in the space of curves.
+    <a href="cm-choreography.html" style="color:var(--teal);font-family:'DM Mono',monospace;font-size:0.8em;white-space:nowrap;">→ Full case study</a>
+  </p>
+
+  <p>
+    And in the dm³ framework, the regeneration levels generated by the operator grammar
+    G = U∘F∘K∘C climb through Cantor's transfinite hierarchy — through inaccessible
+    cardinals, through Mahlo cardinals, through the hyper-Mahlo levels formalized in
+    <code>AXLE_v5_1.lean</code>. Each level is itself an infinity larger than the last.
+    Whether the figure-eight is the visible signature of this climbing operation is
+    the conjecture that motivates the research program. It is not yet a theorem.
+    But the question is now precise enough to be asked correctly.
+  </p>
+
+  <div class="status-grid reveal">
+    <div class="status-card" style="--card-color: #3db88a; --card-border: #1a3a2e; --card-bg: #060e0a;">
+      <span class="s-label">PROVED</span>
+      <p>Four specific curves share the A₁ node at the origin. All four Lean files verify this without sorry.</p>
+    </div>
+    <div class="status-card" style="--card-color: #c8a84b; --card-border: #2a1e0a; --card-bg: #080a04;">
+      <span class="s-label">COMPUTED</span>
+      <p>The Lissajous 2∶1 family is uncountably infinite. Planetary analemmas are countably infinite. All share the A₁ structure.</p>
+    </div>
+    <div class="status-card" style="--card-color: #9b8bdb; --card-border: #1e1a3a; --card-bg: #080810;">
+      <span class="s-label">CONJECTURAL</span>
+      <p>The dm³ operator grammar generates the figure-eight at every level of the transfinite hierarchy. This is the open research problem.</p>
+    </div>
+  </div>
 
   <div class="pullquote reveal">
     <p>Mathematics does not ask whether a connection is poetic. It asks whether it can be proved.
-    We prove what we can prove, name what we cannot, and work forward — from the unit square
-    to the hyper-Mahlo hierarchy, one node at a time.</p>
+    We prove what we can prove, name what we cannot, and work forward —
+    from the unit square to the hyper-Mahlo hierarchy, one node at a time.</p>
     <cite>— Principia Orthogona, Volume I · G6 LLC · Newark NJ</cite>
   </div>
 </section>
@@ -1413,10 +1485,10 @@ lake build</pre>
 <div class="rule"></div>
 
 <!-- ══════════════════════════════════════════════════════
-     HIRE SECTION
+     HIRE
 ═══════════════════════════════════════════════════════ -->
 <section class="hire-section" id="hire">
-  <span class="sec-tag" style="display:block; text-align:center; margin-bottom:1rem;">§ 8 · The Researcher</span>
+  <span class="sec-tag" style="display:block; text-align:center; margin-bottom:1rem;">§ 9 · The Researcher</span>
   <h2>This Work Was Built<br>by <em>One Person</em></h2>
 
   <p style="max-width: 55ch; margin: 0 auto; color: var(--silver); font-size: 1.05rem;">
