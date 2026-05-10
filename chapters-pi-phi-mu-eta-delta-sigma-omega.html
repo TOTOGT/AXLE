@@ -48,11 +48,7 @@ nav{background:var(--navy);padding:.65rem 2rem;position:sticky;top:0;z-index:100
 .gold-rule{width:50px;height:2px;background:var(--gold);margin:1rem auto;}
 .hero-desc{color:#bbb;max-width:660px;margin:0 auto;line-height:1.7;font-size:.93rem;}
 .ladder{display:flex;justify-content:center;gap:0;margin:1.5rem auto 0;max-width:700px;flex-wrap:wrap;}
-.ladder-step{flex:1;min-width:80px;padding:.5rem .3rem;text-align:center;border-right:1px solid rgba(201,168,76,.2);}
-.ladder-step:last-child{border-right:none;}
-.ls-sym{font-family:'Courier New',monospace;font-size:1.2rem;color:var(--gold);display:block;margin-bottom:2px;}
-.ls-name{font-family:sans-serif;font-size:.6rem;color:#999;letter-spacing:.06em;text-transform:uppercase;}
-.ls-val{font-family:'Courier New',monospace;font-size:.68rem;color:#aaa;}
+
 
 .chapter-block{border-top:3px solid var(--gold);margin:0;padding:0;}
 .chapter-hero{background:var(--navy);color:white;padding:2.5rem 2rem 2rem;}
@@ -103,6 +99,23 @@ footer a{color:var(--gold);text-decoration:none;}
 .ch-nav a{color:var(--mid);text-decoration:none;padding:.3rem .7rem;border-radius:4px;transition:background .2s;}
 .ch-nav a:hover{background:var(--light);color:var(--navy);}
 .ch-nav .ch-nav-center{color:#999;font-size:.72rem;letter-spacing:.05em;}
+
+/* ── TICKER ── */
+.ticker-band{background:#0d1117;border-bottom:1px solid rgba(201,168,76,.25);
+             overflow:hidden;padding:0;height:36px;display:flex;align-items:center;}
+.ticker-track{display:flex;gap:0;width:max-content;
+              animation:ticker-scroll 28s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+@keyframes ticker-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ticker-item{display:flex;align-items:center;gap:.55rem;padding:0 1.6rem;
+             border-right:1px solid rgba(201,168,76,.18);white-space:nowrap;cursor:pointer;
+             text-decoration:none;transition:background .15s;}
+.ticker-item:hover{background:rgba(201,168,76,.1);}
+.ticker-item.crit{background:rgba(201,168,76,.12);border-left:2px solid rgba(201,168,76,.6);}
+.ticker-sym{font-family:'Courier New',monospace;font-size:1rem;color:var(--gold);line-height:1;}
+.ticker-label{font-family:sans-serif;font-size:.58rem;color:#666;
+              text-transform:uppercase;letter-spacing:.07em;line-height:1;}
+.ticker-val{font-family:'Courier New',monospace;font-size:.75rem;color:#ccc;line-height:1;}
 </style>
 </head>
 <body>
@@ -128,6 +141,54 @@ footer a{color:var(--gold);text-decoration:none;}
   </div>
 </nav>
 
+<!-- ── RECURRENCE LADDER TICKER ── -->
+<div class="ticker-band" id="ticker-band">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+<script>
+(function(){
+  var items = [
+    {sym:'π', label:'Period',      val:'T*=2π',   href:'#ch-pi',         crit:false},
+    {sym:'φ', label:'Fibonacci',   val:'1.61803…', href:'#ch-phi',        crit:false},
+    {sym:'c*=3', label:'Threshold', val:'critical', href:'#criticality',  crit:true},
+    {sym:'μ', label:'Lyapunov',    val:'−2',       href:'#ch-mu',         crit:false},
+    {sym:'ε₀', label:'Stability',  val:'1/3',      href:'#ch-mu',         crit:false},
+    {sym:'τ',  label:'Threshold',  val:'2',        href:'#ch-mu',         crit:false},
+    {sym:'η', label:'Tribonacci',  val:'1.83929…', href:'#ch-eta',        crit:false},
+    {sym:'Δ', label:'Tetranacci',  val:'1.92756…', href:'#ch-delta',      crit:false},
+    {sym:'Σ', label:'Pentanacci',  val:'1.96595…', href:'#ch-sigma',      crit:false},
+    {sym:'Ω', label:'Hexabonacci', val:'→ 2',      href:'#ch-omega',      crit:false},
+    {sym:'∞', label:'Limit',       val:'τ = 2',    href:'#ch-omega',      crit:false},
+  ];
+  // duplicate for seamless loop
+  var doubled = items.concat(items);
+  var track = document.getElementById('ticker-track');
+  doubled.forEach(function(it) {
+    var a = document.createElement('a');
+    a.href = it.href;
+    a.className = 'ticker-item' + (it.crit ? ' crit' : '');
+    a.innerHTML =
+      '<span class="ticker-sym">' + it.sym + '</span>' +
+      '<span style="display:flex;flex-direction:column;gap:1px;">' +
+        '<span class="ticker-label">' + it.label + '</span>' +
+        '<span class="ticker-val">' + it.val + '</span>' +
+      '</span>';
+    track.appendChild(a);
+  });
+  // pause on hover (already done via CSS), but also let clicks work
+  track.querySelectorAll('.ticker-item').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      var href = el.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        var target = document.querySelector(href);
+        if (target) target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+})();
+</script>
+
 <header class="hero">
   <div class="hero-eyebrow">Book 3 · The Mini-Beast · Supplementary Chapters</div>
   <h1>The Recurrence Ladder</h1>
@@ -142,18 +203,7 @@ footer a{color:var(--gold);text-decoration:none;}
     The threshold <strong style="color:var(--gold);">c* = 3</strong> divides the ladder into three regimes;
     see the <a href="#criticality" style="color:var(--gold);">Criticality Bridge</a> section between φ and μ.
   </p>
-  <div class="ladder">
-    <div class="ladder-step"><span class="ls-sym">π</span><span class="ls-name">Period</span><span class="ls-val">T*=2π</span></div>
-    <div class="ladder-step"><span class="ls-sym">φ</span><span class="ls-name">Fibonacci</span><span class="ls-val">1.618…</span></div>
-    <div class="ladder-step" style="border-left:1px solid rgba(201,168,76,.5);border-right:1px solid rgba(201,168,76,.5);background:rgba(201,168,76,.08);">
-      <span class="ls-sym" style="font-size:.9rem;">c*=3</span><span class="ls-name">Threshold</span><span class="ls-val">critical</span>
-    </div>
-    <div class="ladder-step"><span class="ls-sym">μ</span><span class="ls-name">Lyapunov</span><span class="ls-val">−2</span></div>
-    <div class="ladder-step"><span class="ls-sym">η</span><span class="ls-name">Tribonacci</span><span class="ls-val">1.839…</span></div>
-    <div class="ladder-step"><span class="ls-sym">Δ</span><span class="ls-name">Tetranacci</span><span class="ls-val">1.927…</span></div>
-    <div class="ladder-step"><span class="ls-sym">Σ</span><span class="ls-name">Pentanacci</span><span class="ls-val">1.966…</span></div>
-    <div class="ladder-step"><span class="ls-sym">Ω</span><span class="ls-name">Hexabonacci</span><span class="ls-val">→ 2</span></div>
-  </div>
+  <!-- ticker replaces static ladder -->
 </header>
 
 <!-- ═══════════════════════════════════════════════════════════ -->
@@ -600,7 +650,7 @@ animate();
   <dd>Dominant root of x^n − x^{n−1} − ⋯ − x − 1 = 0. For n=2: φ (Fibonacci). For n=3: η (Tribonacci). Limit as n→∞: τ = 2.</dd>
   <dt>Criticality threshold c* = 3</dt>
   <dd>The unique curvature coefficient at which the dm³ fold fires at the integer lattice point q = 1. The Collatz map 3n+1 has c = 3.</dd>
-  <dt>GQM / Geometric Quantum Mechanics weighting</dt>
+  <dt>dm³ geometric weighting</dt>
   <dd>The η⁻ᵏ geometric weighting used in the 12-phase Collatz orbit analysis. Derived from the Tribonacci spectral radius.</dd>
   <dt>GTCT / Generative Time Circuit Theorem</dt>
   <dd>The main theorem of the Principia Orthogona series (Vol. IV). States that spiral return maps under the five-operator chain C → K → F → U → T satisfy x₀′ ≠ x₀ with z increasing monotonically. Working paper: GTCT-2026-001. Formal verification: AXLE repo (Lean 4 / Mathlib4).</dd>
@@ -783,7 +833,7 @@ SUPERCRITICAL c &gt; 3:
   <div class="coh-card" style="border-left-color:var(--gold);">
     <div class="coh-sym">CRITICAL</div>
     <div class="coh-val">c = 3 · fold fires at q=1</div>
-    <div class="coh-desc">η = 1.839 (Tribonacci). Unique integer coherence. Collatz, GQM, dm³ core.</div>
+    <div class="coh-desc">η = 1.839 (Tribonacci). Unique integer coherence. Collatz, dm³ core.</div>
   </div>
   <div class="coh-card" style="border-left-color:#58a6ff;">
     <div class="coh-sym" style="color:#58a6ff;">SUPERCRITICAL</div>
@@ -877,18 +927,18 @@ The curvature of the potential at the fold gives the linearised return rate:
 <div class="chapter-hero">
   <div class="ch-eyebrow">Book 3 · Chapter η</div>
   <div class="ch-symbol">η</div>
-  <div class="ch-title">The Tribonacci Constant — η ≈ 1.839 and the GQM Weight</div>
+  <div class="ch-title">The Tribonacci Constant — η ≈ 1.839 and the dm³ Amplitude Envelope</div>
   <div class="ch-subtitle">η is the dominant root of x³ − x² − x − 1 = 0. It is the spectral radius of the Collatz transfer matrix.</div>
 </div>
 <div class="ch-body">
 
-<p>The Tribonacci sequence T(n) = T(n−1) + T(n−2) + T(n−3) has characteristic polynomial x³ − x² − x − 1 = 0 with dominant root η ≈ 1.8393. In the dm³/GQM framework, η is the <em>critical constant</em>: the Collatz map has c = 3, and the GQM geometric weighting is η⁻ᵏ — each level of the 12-phase orbit is weighted by the inverse Tribonacci power.</p>
+<p>The Tribonacci sequence T(n) = T(n−1) + T(n−2) + T(n−3) has characteristic polynomial x³ − x² − x − 1 = 0 with dominant root η ≈ 1.8393. In the dm³ framework, η is the <em>critical constant</em>: the Collatz map has c = 3, and the amplitude envelope is η⁻ᵏ — each level of the 12-phase orbit is weighted by the inverse Tribonacci power. The strict antitonicity of this sequence is machine-verified in Lean 4 (TribonacciMeasure.lean, sorry_count: 0).</p>
 
 <div class="math-block">
 Tribonacci polynomial:  x³ − x² − x − 1 = 0
 Dominant root:  η ≈ 1.839286755214161
 
-GQM weight:  w(k) = η^{−k}
+dm³ weight:  w(k) = η^{−k}
 Weighted inner product:  ⟨j|k⟩ = η^{−k} δ_{jk}
 
 Connection to dm³:
@@ -906,7 +956,7 @@ see also AXLE Issue #13 for the formal proof obligation).
 <p>The Tribonacci constant η sits exactly at c* = 3 on the criticality ladder — not below (like φ), not above (like the Tetranacci constant ≈ 1.927). The characteristic polynomial x³ − x² − x − 1 factors the Collatz curvature operator K at the critical threshold. This is why the Collatz map with c = 3 is the unique convergent: η is the only n-bonacci constant whose associated polynomial produces a double root at q = 1 in the dm³ potential.</p>
 
 <div class="theorem-box">
-  <strong>Theorem η.1 (Tribonacci at Criticality).</strong> The Tribonacci constant η is the unique real root of x³ − x² − x − 1 = 0. In the GQM framework, the 12-phase orbit of the Collatz map converges to the hexagonal eigenmode precisely because the geometric weighting η⁻ᵏ contracts the phase vector into the unique eigenvector of P⁶ that satisfies orthogonal stepping ⟨Pv, v⟩ = 0. The Tribonacci characteristic polynomial is the spectral signature of the fold F at c = 3.
+  <strong>Theorem η.1 (Tribonacci at Criticality).</strong> The Tribonacci constant η is the unique real root of x³ − x² − x − 1 = 0. In the dm³ framework, the 12-phase orbit of the Collatz map converges to the hexagonal eigenmode precisely because the amplitude envelope η⁻ᵏ contracts the phase vector into the unique eigenvector of P⁶ that satisfies orthogonal stepping ⟨Pv, v⟩ = 0. The Tribonacci characteristic polynomial is the spectral signature of the fold F at c = 3.
 </div>
 
 <div class="insight-box">
@@ -919,7 +969,7 @@ see also AXLE Issue #13 for the formal proof obligation).
     <label>Phases: <input type="range" id="eta-phases" min="6" max="12" value="12" step="1"><span class="val-disp" id="eta-phases-v">12</span></label>
     <label>k_max: <input type="range" id="eta-k" min="3" max="20" value="8" step="1"><span class="val-disp" id="eta-k-v">8</span></label>
   </div>
-  <div class="canvas-label">GQM phase weights η^{−k} across the 12-phase orbit. Gold = even phases (crystal-active). Blue = odd phases. Height = weight magnitude.</div>
+  <div class="canvas-label">dm³ amplitude weights η^{−k} across the 12-phase orbit. Gold = even phases (crystal-active). Blue = odd phases. Height = weight magnitude.</div>
 </div>
 
 </div>
@@ -1039,7 +1089,7 @@ Pentanacci in biology:
 <div class="math-block">
 n-bonacci dominant root ρ_n:
   n=2 (Fibonacci):    ρ₂ = φ ≈ 1.618
-  n=3 (Tribonacci):   ρ₃ = η ≈ 1.839  ← Collatz / GQM
+  n=3 (Tribonacci):   ρ₃ = η ≈ 1.839  ← Collatz / dm³
   n=4 (Tetranacci):   ρ₄ = Δ ≈ 1.928
   n=5 (Pentanacci):   ρ₅ = Σ ≈ 1.966
   n=6 (Hexabonacci):  ρ₆ = Ω ≈ 1.984
@@ -1080,7 +1130,7 @@ that has run through all 6 recurrence depths and converged to τ.
   <div class="coh-card"><div class="coh-sym">τ = 2</div><div class="coh-val">Embodiment threshold (Chapter Ω)</div><div class="coh-desc">Limit of the n-bonacci ladder</div></div>
   <div class="coh-card"><div class="coh-sym">ε₀ = 1/3</div><div class="coh-val">Gronwall basin (symmetric)</div><div class="coh-desc">|μ_max|/(2(1+sup‖Hess V‖)) = 2/6. Numerical inner boundary r* ≈ 0.80 (asymmetric — open, AXLE Issue #13)</div></div>
   <div class="coh-card"><div class="coh-sym">g⁶ = 33</div><div class="coh-val">Crystal threshold</div><div class="coh-desc">6 depths × n-bonacci ladder</div></div>
-  <div class="coh-card"><div class="coh-sym">η ≈ 1.839</div><div class="coh-val">Tribonacci / GQM weight (Chapter η)</div><div class="coh-desc">Collatz critical constant</div></div>
+  <div class="coh-card"><div class="coh-sym">η ≈ 1.839</div><div class="coh-val">Tribonacci / dm³ amplitude envelope (Chapter η)</div><div class="coh-desc">Collatz critical constant</div></div>
 </div>
 
 </div>
@@ -1097,8 +1147,9 @@ that has run through all 6 recurrence depths and converged to τ.
   <p style="margin-top:.4rem;">
     <a href="#glossary">Glossary</a> ·
     <a href="sample-chapter-autophagy.html">Chapter A · Autophagy</a> ·
-    <a href="sample-chapter-wigner.html">Chapter W</a> ·
-    <a href="sample-chapter-tubulin.html">Chapter T</a> ·
+    <a href="https://totogt.github.io/DM3-lab/chW-wigner.html">Chapter W</a> ·
+    <a href="https://totogt.github.io/DM3-lab/sample-chapter-tubulin.html">Chapter T</a> ·
+    <a href="https://totogt.github.io/DM3-lab/ch01-one-equation.html">Ch. 1: One Shape, Many Infinities</a> ·
     <a href="ch-e-gtct.html">Chapter E · GTCT</a> ·
     <a href="spectral-radius.html">Spectral Radius</a> ·
     <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub</a>
@@ -1408,7 +1459,7 @@ that has run through all 6 recurrence depths and converged to τ.
   window.addEventListener('resize',draw); draw();
 })();
 
-/* ══════════════════ CHAPTER η — GQM phase weights ══════════════════ */
+/* ══════════════════ CHAPTER η — dm³ amplitude weights ══════════════════ */
 (function() {
   const cv = document.getElementById('canvas-eta');
   const cx = cv.getContext('2d');
@@ -1461,7 +1512,7 @@ that has run through all 6 recurrence depths and converged to τ.
 
     // η label
     cx.fillStyle='rgba(250,247,240,0.5)';cx.font='bold 11px Courier New';cx.textAlign='left';
-    cx.fillText(`η = ${ETA.toFixed(6)}   GQM weight = η^{−k}`,PAD.left,PAD.top-6);
+    cx.fillText(`η = ${ETA.toFixed(6)}   dm³ weight = η^{−k}`,PAD.left,PAD.top-6);
     cx.fillStyle='rgba(201,168,76,0.6)';cx.font='9px sans-serif';
     cx.fillText('■ even phases (crystal-active)',PAD.left,PAD.top+pH+28);
     cx.fillStyle='rgba(88,166,255,0.6)';
