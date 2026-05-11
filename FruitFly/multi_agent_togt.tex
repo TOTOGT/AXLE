@@ -1,0 +1,307 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{enumitem}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\title{%
+  \textbf{Biological Transitions as Multi-Agent Realisations of the}\\
+  \textbf{Generative Operator Pipeline in Topographical Orthogonal}\\
+  \textbf{Generative Theory (TO/TOGT)}\\[0.5em]
+  \large\emph{Version 2 --- LaTeX source, complete references, and
+  companion cross-reference added}%
+}
+
+\author{%
+  Pablo Nogueira Grossi\\
+  G6 LLC, Newark, New Jersey, USA\\
+  ORCID: 0009-0000-6496-2186\\
+  \texttt{pablogrossi@hotmail.com}\\[0.3em]
+  \small Concept DOI (all versions):
+    \href{https://doi.org/10.5281/zenodo.19208014}{10.5281/zenodo.19208014}\\
+  \small V1 DOI:
+    \href{https://doi.org/10.5281/zenodo.19208015}{10.5281/zenodo.19208015}\\
+  \small Companion (fruit-fly toy model):
+    \href{https://doi.org/10.5281/zenodo.19210136}{10.5281/zenodo.19210136}
+}
+
+\date{March 2026 (v1); May 2026 (v2 --- this revision)}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We model collective biological transitions --- including neural
+oscillations, HPA-axis stress response, circadian regulation, immune
+adaptation, and protein conformational change --- as multi-agent
+realisations of the generative operator pipeline
+$G = U \circ F \circ K \circ C$ introduced in Topographical Orthogonal
+Generative Theory (TO/TOGT). Each agent undergoes local compression,
+curvature intensification, loss of injectivity, and stabilisation.
+The collective fixed points, contraction properties, and saturated
+pitchfork bifurcation behaviour follow directly from the fixed-point
+theory, contraction-mapping results, and algebraic separation theorem
+proved in the author's earlier work \cite{Grossi2026_Vol1}
+(HAL hal-05555216v1). The specific dm$^3$ numerical invariants
+$(T^{*}=2\pi,\;\mu_{\max}=-2,\;\tau=2)$ are convenient modelling
+choices matching observed biological scales; they are not derived
+theorems of the operator algebra. No numerical simulations or
+unverified biological claims are made.
+
+This article is part of the Principia Orthogona / Generative Contact
+Mechanics series and demonstrates a concrete multi-agent biological
+application of the TO/TOGT operator pipeline. A companion paper
+\cite{Grossi2026_FruitFly} specialises the framework to the
+\textit{Drosophila} connectome, adding Python simulation code, Lean~4
+proofs, and four figures.
+\end{abstract}
+
+\noindent\textbf{Keywords:} generative operator pipeline; TO/TOGT;
+multi-agent systems; biological transitions; dynamical systems;
+contraction mapping; saturated pitchfork bifurcation; connectomics;
+HPA axis; generative transitions
+
+\noindent\textbf{MSC codes:} 37C25, 37D10, 37G10, 47H10, 92B20, 92C20
+
+% ------------------------------------------------------------------
+\section{Relation to Prior Work}
+\label{sec:prior}
+
+This article applies the mathematical results established in the
+author's earlier preprint \textit{Principia Orthogona, Volume One:
+The Mathematics of Generative Transitions}
+\cite{Grossi2026_Vol1} (HAL hal-05555216v1). There the composite
+operator pipeline
+\[
+  G = U \circ F \circ K \circ C
+\]
+was introduced together with complete proofs of fixed-point existence
+and uniqueness, global contraction, saturated pitchfork bifurcation,
+and the algebraic trace-bound/separation theorem. The geometric
+realisation of the operator pipeline on contact manifolds was developed
+in \textit{Principia Orthogona, Volume Two: Contact Realisation of
+Generative Transitions} \cite{Grossi2026_Vol2}
+(HAL hal-05559997v1 and hal-05565024v1, both deposited 24 March 2026).
+
+The present paper demonstrates a multi-agent biological application
+of the same operator algebra. It is directly related to the following
+Zenodo deposits by the author:
+\begin{itemize}[leftmargin=2em, itemsep=1pt]
+  \item \cite{Grossi2026_Crystal}:
+    Zenodo \href{https://doi.org/10.5281/zenodo.19162013}{19162013}
+    (The G6 Crystal --- architectural application)
+  \item \cite{Grossi2026_DM3b}:
+    Zenodo \href{https://doi.org/10.5281/zenodo.19122168}{19122168}
+    (dm$^3$ operator, explicit toy model)
+  \item \cite{Grossi2026_DM3}:
+    Zenodo \href{https://doi.org/10.5281/zenodo.19117400}{19117400}
+    (dm$^3$ operator, global dynamical analysis)
+\end{itemize}
+All mathematical claims in this paper follow strictly from previously
+proved results. The companion paper \cite{Grossi2026_FruitFly}
+specialises to the fruit-fly connectome and adds code and formal
+verification.
+
+% ------------------------------------------------------------------
+\section{Operator Pipeline in Biological Systems}
+\label{sec:pipeline}
+
+\begin{definition}[Biological Agent Dynamics {\cite{Grossi2026_Vol1}}]
+\label{def:agent}
+Let each biological agent (neuron, endocrine cell, immune cell,
+protein domain) follow a trajectory $x_{i}(t)$ in a Riemannian
+manifold $(M,g)$. The collective biological state is the tuple
+$(x_{1},\ldots,x_{N})$. Each agent undergoes a generative transition
+governed by the composite operator
+\[
+  G = U \circ F \circ K \circ C,
+\]
+where:
+\begin{itemize}[leftmargin=2em, itemsep=2pt]
+  \item $C$: local orthogonal compression (neighbourhood averaging);
+  \item $K$: curvature intensification (alignment and clipping);
+  \item $F$: loss of injectivity (folding of local information);
+  \item $U$: stabilisation (global coherence).
+\end{itemize}
+\end{definition}
+
+The contraction-mapping theorem of \cite{Grossi2026_Vol1} ensures
+that for sufficiently small coupling between agents, the collective
+system converges to a unique fixed point. Formal Lean~4/Mathlib4
+verification of the arithmetic spine of this result is in the AXLE
+repository \cite{AXLE2026}, file \texttt{MultiOrbitBioSwarm.lean}.
+
+% ------------------------------------------------------------------
+\section{Fruit Fly Connectome as Multi-Orbit System}
+\label{sec:connectome}
+
+The FlyWire connectome \cite{Dorkenwald2024} provides a concrete
+multi-agent biological system. Each neuron trajectory is modelled as
+an identity orbit $\mathcal{O}_{i}$. The full connectome is the
+multi-orbit system $S = \{\mathcal{O}_{1},\ldots,\mathcal{O}_{N}\}$.
+The modular community structure is documented in \cite{Schlegel2024}.
+
+The contraction results of \cite{Grossi2026_Vol1} imply that under
+small inter-neuron coupling, the system converges to a collective
+fixed point preserving local connectivity while achieving global
+coherence. This is a direct biological instance of multi-orbit
+identity stabilisation.
+
+A specialised treatment of this setting --- with Python simulation
+code generating four figures and Lean~4 proofs of the six-iterate
+convergence bound --- appears in the companion paper
+\cite{Grossi2026_FruitFly}.
+
+% ------------------------------------------------------------------
+\section{HPA-Axis Stress Response as Saturated Pitchfork}
+\label{sec:hpa}
+
+The hypothalamic-pituitary-adrenal (HPA) axis exhibits threshold
+behaviour under acute stress \cite{Bhaskaran2022}. This is modelled
+by the saturated pitchfork bifurcation proved in
+\cite{Grossi2026_Vol1}:
+\[
+  x' = \lambda x - c x^{3},
+\]
+with clipping enforcing a bounded response. At critical coupling
+$|\alpha|=0.5$, the system transitions between low-stress and
+high-stress attractors. The clipping function $\kappa$ prevents
+runaway amplification and ensures recovery. Pitchfork bifurcations
+in coupled neural oscillators are discussed in
+\cite{PerezCervera2019}.
+
+% ------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+
+The TO/TOGT operator pipeline provides a unified dynamical-systems
+language for describing collective biological transitions. All
+mathematical claims in this paper follow directly from rigorously
+proved theorems in \cite{Grossi2026_Vol1} and the contact-geometric
+realisation in \cite{Grossi2026_Vol2}. The specific dm$^3$ numerical
+invariants are modelling choices matching biological scales; they are
+not derived from the operator algebra.
+
+Future work will focus on explicit multi-agent simulations and
+experimental falsification of predicted bifurcation thresholds.
+The companion paper \cite{Grossi2026_FruitFly} already provides
+the simulation code and Lean~4 verification skeleton for the
+fruit-fly setting; the same infrastructure applies to the broader
+biological scope treated here.
+
+% ------------------------------------------------------------------
+\section*{Acknowledgements}
+
+The author thanks the Lean~4/Mathlib4 community for the formal
+verification infrastructure and the FlyWire consortium
+\cite{Dorkenwald2024} for making connectome data publicly available.
+All formal verification code is maintained in the AXLE repository
+\cite{AXLE2026} at \url{https://github.com/TOTOGT/AXLE}.
+
+% ------------------------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{Grossi2026_Vol1}
+P.~Nogueira~Grossi,
+\textit{Principia Orthogona, Volume~One: The Mathematics of Generative
+Transitions}.
+G6~LLC. HAL: hal-05555216v1. Zenodo:
+\href{https://doi.org/10.5281/zenodo.19117400}{10.5281/zenodo.19117400}
+(2026).
+
+\bibitem{Grossi2026_Vol2}
+P.~Nogueira~Grossi,
+\textit{Principia Orthogona, Volume~Two: Contact Realization of
+Generative Transitions}.
+G6~LLC. HAL: hal-05559997v1 (2026).
+
+\bibitem{Grossi2026_FruitFly}
+P.~Nogueira~Grossi,
+``Biological Transitions as Multi-Agent Realisations of the Generative
+Operator Pipeline in TO/TOGT: A Fruit-Fly Connectome Toy Model.''
+G6~LLC. Zenodo (concept DOI):
+\href{https://doi.org/10.5281/zenodo.19210136}{10.5281/zenodo.19210136}
+(2026).
+
+\bibitem{Grossi2026_DNLS}
+P.~Nogueira~Grossi,
+``Differential Nonlinear Robustness of Critical States in Fibonacci and
+Tribonacci Substitution Chains.''
+G6~LLC. Zenodo (concept DOI):
+\href{https://doi.org/10.5281/zenodo.20026942}{10.5281/zenodo.20026942}
+(2026).
+
+\bibitem{Grossi2026_Crystal}
+P.~Nogueira~Grossi,
+``The G6 Crystal: A dm$^3$-Derived Architectural Form for
+Resonance-Stable Tall Structures.''
+G6~LLC. Zenodo:
+\href{https://doi.org/10.5281/zenodo.19162013}{10.5281/zenodo.19162013}
+(2026).
+
+\bibitem{Grossi2026_DM3}
+P.~Nogueira~Grossi,
+``The dm$^3$ Operator: Explicit Toy Model and Global Dynamical
+Analysis.''
+G6~LLC. Zenodo:
+\href{https://doi.org/10.5281/zenodo.19117400}{10.5281/zenodo.19117400}
+(2026).
+
+\bibitem{Grossi2026_DM3b}
+P.~Nogueira~Grossi,
+``The dm$^3$ Operator (extended).''
+G6~LLC. Zenodo:
+\href{https://doi.org/10.5281/zenodo.19122168}{10.5281/zenodo.19122168}
+(2026).
+
+\bibitem{AXLE2026}
+P.~Nogueira~Grossi,
+\textit{AXLE: Lean~4 Formal Verification Engine for TO/TOGT}.
+GitHub: \url{https://github.com/TOTOGT/AXLE} (2026).
+
+\bibitem{Dorkenwald2024}
+S.~Dorkenwald \textit{et~al.}\ (FlyWire Consortium),
+``Neuronal wiring diagram of an adult brain,''
+\textit{Nature} \textbf{634}, 124--138 (2024).
+
+\bibitem{Schlegel2024}
+P.~Schlegel \textit{et~al.},
+``Whole-brain annotation and multi-connectome cell typing of
+\textit{Drosophila},''
+\textit{Nature} \textbf{634}, 139--152 (2024).
+
+\bibitem{Winding2023}
+M.~Winding \textit{et~al.},
+``The connectome of an insect brain,''
+\textit{Science} \textbf{379}, eadd9330 (2023).
+
+\bibitem{Bhaskaran2022}
+S.~Bhaskaran \textit{et~al.},
+``Bifurcation structure of the HPA axis and implications for
+stress-response dynamics,''
+\textit{Journal of Theoretical Biology} \textbf{540}, 111077 (2022).
+
+\bibitem{PerezCervera2019}
+A.~P\'{e}rez-Cervera, T.~Seara, and G.~Huguet,
+``The uncoupling limit of identical Hopf bifurcations with an
+application to perceptual bistability,''
+\textit{Journal of Mathematical Neuroscience} \textbf{9}, 7 (2019).
+
+\bibitem{Banach1922}
+S.~Banach,
+``Sur les op\'{e}rations dans les ensembles abstraits et leur
+application aux \'{e}quations int\'{e}grales,''
+\textit{Fundamenta Mathematicae} \textbf{3}, 133--181 (1922).
+
+\end{thebibliography}
+
+\end{document}
