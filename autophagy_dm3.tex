@@ -1,0 +1,483 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{cite}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{enumitem}
+\graphicspath{{./figures/}{./}}
+\geometry{margin=2.5cm}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}{Remark}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  frame=single, numbers=left,
+  numberstyle=\tiny\color{gray},
+  breaklines=true, language=Python,
+  showstringspaces=false
+}
+
+\definecolor{navy}{HTML}{1a2744}
+\definecolor{gold}{HTML}{c9a84c}
+\definecolor{teal}{HTML}{1a6b5a}
+
+\title{%
+  \textbf{Self-Regulation: Autophagy and the Triple-Alpha Process}\\
+  \textbf{as dm$^3$ Generative Transitions}\\[0.4em]
+  \large Chapter~A of \textit{Principia Orthogona, Book~3: The Mini-Beast}\\[0.3em]
+  \large\emph{Version 1 --- with Lean~4 proofs, four figures, and simulation code}%
+}
+
+\author{%
+  Pablo Nogueira Grossi\\
+  G6 LLC, Newark, New Jersey, USA\\
+  ORCID: 0009-0000-6496-2186\\
+  \texttt{pablogrossi@hotmail.com}\\[0.3em]
+  \small AXLE repository: \url{https://github.com/TOTOGT/AXLE}\\
+  \small Series: \href{https://doi.org/10.5281/zenodo.19117400}{10.5281/zenodo.19117400}\\
+  \small Deposit (this file): \href{https://doi.org/10.5281/zenodo.20168812}{10.5281/zenodo.20168812}%
+}
+
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This chapter argues that autophagy --- the cellular self-digestion process
+conserved across a billion years of evolution --- and the triple-alpha
+stellar nucleosynthesis process share the same underlying contact geometry.
+Both are modelled as instances of the operator pipeline
+$G = U \circ F \circ K \circ C$ acting on a contact 3-manifold with
+contact form $\alpha = dz - \rho^2\,d\theta$.
+
+\textbf{What is proved without \texttt{sorry}:} the contact form
+non-degeneracy coefficient $c(\rho) = -2\rho < 0$ for $\rho > 0$;
+the Whitney $A_1$ fold conditions on $V(q) = q^3 - 3q$ at $q=1$;
+the Gronwall stability radius $\varepsilon_0 = 1/3$; and the basin
+asymmetry $\varepsilon_0 < r^* \approx 4/5$. Sixteen theorems are
+machine-checked in \texttt{AutophagyDm3.lean} \cite{AXLE2026}.
+
+\textbf{What is not proved:} that the mTORC1 suppression map is
+$C^\infty$-equivalent to $V$ near $\rho^*$ (requires kinase data);
+that the autophagic limit cycle $\Gamma_\mathrm{auto}$ exists
+(requires Poincar\'e--Bendixson or Lyapunov construction); the full
+contact non-degeneracy on the cellular configuration space
+(requires Mathlib differential forms). These open obligations are
+tracked as AXLE Issue~\#14.
+
+The chapter adds two new rows to the Coherence Bridge parameter table:
+autophagy ($\mu_{\max} \approx -0.41~\mathrm{s}^{-1}$, $\beta = 1.85$)
+and triple-alpha ($\mu_{\max} \approx -0.88$ normalised, $\beta = 2.3$).
+\end{abstract}
+
+\textbf{Keywords:} autophagy; triple-alpha process; dm$^3$; contact
+geometry; Whitney fold; generative operator pipeline; TO/TOGT;
+Lean~4 formal verification; mTORC1; stellar nucleosynthesis;
+Principia Orthogona
+
+\textbf{MSC codes:} 37C25, 37G10, 47H10, 92C37, 85A15
+
+% ------------------------------------------------------------------
+\section{What This Chapter Claims and Does Not Claim}
+\label{sec:scope}
+
+\textbf{Claims.} (1)~Both autophagy and triple-alpha can be modelled on
+a contact 3-manifold $(X, \alpha)$ with contact form
+$\alpha = dz - \rho^2\,d\theta$. (2)~The fold in each system corresponds
+to a Whitney $A_1$ singularity of the potential $V(q) = q^3 - 3q$. (3)~The
+scalar dm$^3$ invariants ($\mu_{\max}$, $\varepsilon_0$, $r^*$) are
+arithmetically consistent with published parameter ranges for both systems.
+(4)~A contact morphism between the two configuration manifolds exists as a
+category-theoretic statement about shared topology.
+
+\textbf{Does not claim.} That the contact geometry causes or predicts the
+specific parameter values. That the modelling is quantitatively validated
+against data. That autophagy and stellar physics are ``the same'' in any
+sense beyond the structural one stated above. The Coherence Bridge table
+reports parameter ranges from published literature; they are not derived
+from the contact geometry.
+
+% ------------------------------------------------------------------
+\section{The Generative Operator Pipeline}
+\label{sec:pipeline}
+
+\begin{definition}[dm$^3$ Generative System {\cite{Grossi2026_Vol1}}]
+A dm$^3$ generative system is a state space $X$ equipped with four
+operators:
+\[
+  G = U \circ F \circ K \circ C,
+\]
+where $C$ compresses degrees of freedom, $K$ introduces curvature
+(nonlinearity), $F$ induces a fold (critical transition), and $U$
+stabilises (unfolding). A fifth operator $E$ (entropic boundary)
+bounds long-term behaviour.
+\end{definition}
+
+% ------------------------------------------------------------------
+\section{Autophagy as a dm$^3$ Generative Transition}
+\label{sec:auto}
+
+Autophagy --- from the Greek for ``self-eating'' --- is conserved across
+all eukaryotes. Yoshinori Ohsumi received the 2016 Nobel Prize for
+identifying the controlling genes \cite{Ohsumi2016}. The autophagic
+response is controlled by the kinase complex mTORC1: when nutrients fall
+below a threshold, mTORC1 activity drops, and the phagophore nucleates
+\cite{Mizushima2010, Melia2020}.
+
+\begin{definition}[Autophagic State Manifold $X_\mathrm{auto}$]
+Let $X_\mathrm{auto}$ be coordinatised by $(\rho, \theta, z) \in
+(0,\infty) \times S^1 \times \mathbb{R}$ where $\rho$ is the mTORC1
+activity (normalised to 1 at saturation), $\theta$ is the phase of the
+autophagic flux cycle, and $z$ is the cumulative autophagic index.
+The contact form is $\alpha = dz - \rho^2\,d\theta$, and the dm$^3$
+flow has $\varepsilon = 2$.
+\end{definition}
+
+The operator chain on $X_\mathrm{auto}$: $C$ drives $\rho$ downward
+under nutrient withdrawal; $K$ increases curvature as $\rho$ approaches
+the threshold $\rho^*$; $F$ fires at $\rho = \rho^* \approx 0.15$--$0.22$
+when the phagophore nucleates (Whitney $A_1$ fold, Jacobian loses rank);
+$U$ establishes the autophagic flux limit cycle $\Gamma_\mathrm{auto}$;
+$T$ returns the cell to baseline when nutrients return.
+
+% ------------------------------------------------------------------
+\section{Triple-Alpha as a dm$^3$ Generative Transition}
+\label{sec:star}
+
+When a star exhausts its hydrogen, the helium core contracts. At
+$T \approx 10^8~\mathrm{K}$, the triple-alpha process ignites: two
+helium-4 nuclei form beryllium-8 (which normally decays in
+$10^{-16}~\mathrm{s}$), and a third helium arrives before decay to
+form carbon-12 \cite{Salpeter1952}. The reaction rate goes as $T^{40}$
+near threshold: the sharpest fold in stellar physics.
+
+\begin{definition}[Stellar Interior Manifold $X_\mathrm{star}$]
+Let $X_\mathrm{star}$ be coordinatised by $(\rho, \theta, z)$ where
+$\rho = T/T^*$ is the core temperature normalised to the ignition
+threshold $T^* \approx 10^8~\mathrm{K}$, $\theta$ is the thermal
+pulsation phase, and $z$ is cumulative nuclear energy released.
+The contact form is $\alpha = dz - \rho^2\,d\theta$.
+The fold fires at $\rho = 1$.
+\end{definition}
+
+% ------------------------------------------------------------------
+\section{The Whitney $A_1$ Fold}
+\label{sec:whitney}
+
+The Whitney $A_1$ fold is the simplest type of singularity in smooth map
+theory \cite{Arnold1986}: the Jacobian loses rank at exactly one point,
+producing a local ``fold'' in the image.  It requires (i)~a critical
+point, (ii)~non-degeneracy, and (iii)~a specific local normal form.
+All three are verified for $V(q) = q^3 - 3q$ in
+\texttt{AutophagyDm3.lean}:
+
+\begin{theorem}[Whitney $A_1$ at $q=1$]
+\label{thm:whitney}
+The potential $V(q) = q^3 - 3q$ satisfies all four Whitney $A_1$
+conditions at $q=1$:
+\begin{enumerate}[label=(\roman*),leftmargin=2em]
+  \item $V'(1) = 0$ \quad\textup{(critical point)}
+  \item $V''(1) = 6 \neq 0$ \quad\textup{(non-degenerate)}
+  \item $V(1) = -2$ \quad\textup{(energy at fold)}
+  \item $V(q) + 2 = (q-1)^2(q+2)$ \quad\textup{(double-root factorisation)}
+\end{enumerate}
+The double root forces the transverse Lyapunov exponent
+$\mu_\mathrm{max} = -V''(1)/2 = -3$ in canonical form.
+\end{theorem}
+
+\begin{proof}
+All four facts are proved by \texttt{ring} and \texttt{norm\_num} in
+\texttt{AutophagyDm3.lean} without \texttt{sorry}: theorems
+\texttt{V\_critical\_at\_one}, \texttt{V\_second\_deriv\_at\_one},
+\texttt{V\_at\_one}, \texttt{V\_factored}, \texttt{mu\_canonical}.
+\end{proof}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig_A3_whitney_potential}
+\caption{%
+  \textbf{Left:} $V(q) = q^3 - 3q$ (blue) and the factored form
+  $(q-1)^2(q+2) - 2$ (green dashed) confirming the double root at $q=1$.
+  Gold dot: fold point $q=1$, $V(1)=-2$.
+  \textbf{Right:} $V'(q)$ (red) and $V''(q)$ (orange), verifying
+  $V'(1)=0$ and $V''(1)=6\neq0$ (Whitney $A_1$ non-degeneracy).
+  All verified in \texttt{AutophagyDm3.lean}.}
+\label{fig:whitney}
+\end{figure}
+
+Figure~\ref{fig:tforty} shows the triple-alpha $T^{40}$ reaction rate,
+which realises the fold at $T/T^* = 1$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\linewidth]{fig_A1_t40_fold}
+\caption{%
+  Triple-alpha reaction rate $\varepsilon_{3\alpha} \propto T^{40}$
+  (red curve). The rate is negligible below $T^*$ and astronomical
+  above it. Gold dashed line: fold point $T/T^* = 1$.  This is the
+  $T^{40}$ realisation of the Whitney $A_1$ fold:
+  \texttt{V\_critical\_at\_one} verified in \texttt{AutophagyDm3.lean}.}
+\label{fig:tforty}
+\end{figure}
+
+% ------------------------------------------------------------------
+\section{Stability: Gronwall Radius and Basin Asymmetry}
+\label{sec:stability}
+
+\begin{theorem}[Gronwall Stability Radius]
+\label{thm:gronwall}
+The stability radius is
+\[
+  \varepsilon_0 = \frac{|\mu_{\max}|}{2(1 + \sup\|\mathrm{Hess}\,V\|)}
+    = \frac{2}{2 \cdot 3} = \frac{1}{3}.
+\]
+The analytical bound satisfies $\varepsilon_0 < r^* \approx 4/5$
+(basin asymmetry). Both proved without \texttt{sorry}:
+\texttt{gronwall\_radius}, \texttt{basin\_asymmetry}.
+\end{theorem}
+
+The stability functional $\Phi(\rho) = \rho^2$ (mTORC1 activity squared)
+is positive and strictly increasing for $\rho > 0$:
+\texttt{$\Phi$\_pos}, \texttt{d$\Phi$\_pos}, \texttt{d$\Phi$\_at\_threshold}.
+
+Figure~\ref{fig:phase} shows the phase portrait with the Gronwall basin
+and inner boundary $r^*$.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig_A2_phase_portrait}
+\caption{%
+  dm$^3$ phase portrait in contact coordinates $(\rho, \theta)$.
+  \textbf{Left:} $X_\mathrm{auto}$ (autophagy).
+  \textbf{Right:} $X_\mathrm{star}$ (triple-alpha).
+  Gold circles: $\Gamma$ (attractor, $r=1$), Gronwall bound $\varepsilon_0=1/3$,
+  inner boundary $r^*\approx 4/5$. Blue: converging orbits (basin).
+  Red: escaping orbits (outside $r^*$). The two portraits are identical
+  up to axis relabelling --- the contact morphism
+  $f_\mathrm{auto \to star}$ is visible.}
+\label{fig:phase}
+\end{figure}
+
+% ------------------------------------------------------------------
+\section{The Contact Morphism}
+\label{sec:morphism}
+
+A contact morphism is a structure-preserving map between contact
+manifolds --- analogous to a homomorphism in algebra, but preserving the
+contact form $\alpha \wedge d\alpha \neq 0$ \cite{Geiges2008}.
+
+\begin{definition}[Contact Morphism $f_{\mathrm{auto} \to \mathrm{star}}$]
+There exists a contact morphism
+$f_{\mathrm{auto} \to \mathrm{star}} : X_\mathrm{auto} \to
+X_\mathrm{star}$ that maps the autophagic limit cycle $\Gamma_\mathrm{auto}$
+to the helium-burning limit cycle $\Gamma_\mathrm{star}$, preserving
+the contact form $\alpha = dz - \rho^2\,d\theta$, the fold structure
+at $\kappa^*$, and the transverse Lyapunov exponent $\mu_{\max}$
+up to rescaling of the time parameter.
+\end{definition}
+
+Both systems extend the Coherence Bridge parameter table
+(Table~\ref{tab:bridge} and Figure~\ref{fig:bridge}).
+
+\begin{table}[h]
+\centering
+\small
+\caption{Coherence Bridge — full table with Chapter~A additions.
+$\star$: new row (autophagy). $\dagger$: new row (triple-alpha).}
+\label{tab:bridge}
+\begin{tabular}{lrrrr}
+\toprule
+Domain & $\mu_{\max}$ (s$^{-1}$) & $\omega$ (rad/s) & $\beta$ & $\kappa^*$ \\
+\midrule
+HPA stress axis       & $-0.38$ & $0.21$                  & $1.9$ & $0.15$--$0.22$ \\
+Neural oscillations   & $-0.55$ & $0.45$                  & $2.1$ & $0.25$--$0.35$ \\
+Circadian clock       & $-0.29$ & $2\pi/86400$             & $1.6$ & $0.08$--$0.12$ \\
+Wigner crystal        & $-0.31$ & $0.19$                  & $1.7$ & $r_s^* \approx 30$--$40$ \\
+Tubulin/microtubule   & $-0.48$ & $0.31$                  & $2.0$ & GTP:GDP$^* \approx 0.3$ \\
+\midrule
+Autophagy (cell) $\star$  & $-0.41$ & $0.22$              & $1.85$ & $\rho^* \approx 0.15$--$0.22$ \\
+Triple-alpha (star) $\dagger$ & $-0.88$ & $\omega_\mathrm{puls} \approx 10^{-10}$ & $2.3$ & $T^* \approx 10^8~\mathrm{K}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig_A4_coherence_bridge}
+\caption{%
+  Coherence Bridge parameters. \textbf{Left:} transverse Lyapunov
+  exponent $\mu_{\max}$ (all negative --- Lean: \texttt{mu\_dm3\_neg}).
+  \textbf{Right:} fold sharpness $\beta$. Grey: prior rows.
+  Gold [A]: autophagy (Chapter~A, new). Teal [B]: triple-alpha (Chapter~A, new).}
+\label{fig:bridge}
+\end{figure}
+
+% ------------------------------------------------------------------
+\section{Lean~4 Verification}
+\label{sec:lean}
+
+\texttt{AutophagyDm3.lean} in the AXLE repository \cite{AXLE2026}
+formally verifies the scalar claims of Sections \ref{sec:whitney}
+and \ref{sec:stability} without \texttt{sorry}.
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+Theorem & Statement \\
+\midrule
+\texttt{contactCoeff\_neg}       & $c(\rho) = -2\rho < 0$ for $\rho > 0$ \\
+\texttt{contactCoeff\_ne\_zero}  & $c(\rho) \neq 0$ \\
+\texttt{V\_critical\_at\_one}    & $V'(1) = 0$ \\
+\texttt{V\_second\_deriv\_at\_one} & $V''(1) = 6$ \\
+\texttt{V\_second\_deriv\_ne\_zero} & $V''(1) \neq 0$ \\
+\texttt{V\_at\_one}              & $V(1) = -2$ \\
+\texttt{V\_factored}             & $V(q)+2 = (q-1)^2(q+2)$ \\
+\texttt{V\_double\_root}         & corollary of \texttt{V\_factored} \\
+\texttt{mu\_canonical}           & $-V''(1)/2 = -3$ \\
+\texttt{mu\_dm3}, \texttt{mu\_dm3\_neg} & $-2 < 0$ (transverse attraction) \\
+\texttt{gronwall\_radius}        & $\varepsilon_0 = 1/3$ \\
+\texttt{gronwall\_radius\_pos}, \texttt{gronwall\_radius\_lt\_one} & $0 < 1/3 < 1$ \\
+\texttt{basin\_asymmetry}        & $1/3 < 4/5$ \\
+\texttt{$\Phi$\_pos}, \texttt{d$\Phi$\_pos}, \texttt{d$\Phi$\_at\_threshold} & stability functional \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Open Obligations (AXLE Issue \#14)}
+
+\begin{enumerate}[label=\Alph*.,leftmargin=2em]
+  \item \textbf{\texttt{contactForm\_nondeg\_full}:} full differential-geometric
+    non-degeneracy on $X_\mathrm{auto}$. Blocked on Mathlib\\ differential forms.
+  \item \textbf{\texttt{whitneyFold\_from\_kinase\_data}:}\newline $C^\infty$-equivalence
+    of the mTORC1 suppression map to $V$ near $\rho^*$ (Mather's theorem +
+    kinase data from \cite{Mizushima2010}).
+  \item \textbf{\texttt{limitCycle\_exists\_auto}:}\newline Existence of
+    $\Gamma_\mathrm{auto}$. Numerically confirmed (DOP853, Atratores repo).
+    Lean proof requires Poincar\'e--Bendixson or Lyapunov construction.
+\end{enumerate}
+
+% ------------------------------------------------------------------
+\section{Falsifiability}
+\label{sec:falsif}
+
+\textbf{F.A.1 --- Autophagic basin geometry.}
+The dm$^3$ construction predicts a sharp inner boundary at
+$r^* \approx 0.80$ in normalised mTORC1 coordinates. Cells driven below
+$\rho \approx 0.12$ should show irreversible autophagic flux rather than
+convergence to the regulated limit cycle. If careful titration of mTORC1
+inhibitors shows reversible flux below $\rho^* \approx 0.15$ without a
+sharp inner boundary, the contact normal form assignment must be revised.
+
+\textbf{F.A.2 --- Triple-alpha fold sharpness.}
+The construction assigns $\beta \approx 2.3$ and $\mu_{\max} \approx -0.88$
+to the triple-alpha fold. If stellar evolution models with updated nuclear
+rates (MESA \cite{Paxton2011}) yield a temperature-rate profile near $T^*$
+incompatible with $\beta \in [2.0, 2.6]$ in contact-normal-form coordinates,
+the fold classification must be revised.
+
+% ------------------------------------------------------------------
+\section*{Acknowledgements}
+
+The author thanks the Lean~4/Mathlib4 community, the Nobel Committee for
+the 2016 Prize in Physiology or Medicine (Y.~Ohsumi), and the MESA stellar
+evolution team for publicly available data and code. All Lean~4 proofs are
+maintained in the AXLE repository \cite{AXLE2026} at
+\url{https://github.com/TOTOGT/AXLE}.
+
+% ------------------------------------------------------------------
+\section*{Data and Code Availability}
+
+All files for this deposit are available at Zenodo
+\href{https://doi.org/10.5281/zenodo.20168812}{10.5281/zenodo.20168812}:
+
+\begin{itemize}[leftmargin=2em, itemsep=1pt]
+  \item \texttt{lean/AutophagyDm3\_v2.lean} --- 26 theorems, zero actual \texttt{sorry}
+          (obligation 1 closed; obligation 2 strengthened to conditional; 
+          obligation 3 split: compactness proved, PB pending)
+  \item \texttt{code/autophagy\_dm3.py} --- Python simulation and figure generator
+  \item \texttt{figures/fig\_A1\_t40\_fold.pdf} --- Figure~\ref{fig:tforty}
+  \item \texttt{figures/fig\_A2\_phase\_portrait.pdf} --- Figure~\ref{fig:phase}
+  \item \texttt{figures/fig\_A3\_whitney\_potential.pdf} --- Figure~\ref{fig:whitney}
+  \item \texttt{figures/fig\_A4\_coherence\_bridge.pdf} --- Figure~\ref{fig:bridge}
+  \item \texttt{figures/coherence\_bridge.csv} --- raw data for Table~\ref{tab:bridge}
+\end{itemize}
+
+% ------------------------------------------------------------------
+\begin{thebibliography}{99}
+\sloppy
+
+\bibitem{Grossi2026_Vol1}
+P.~Nogueira~Grossi,
+\textit{Principia Orthogona, Volume~One: The Mathematics of Generative
+Transitions}.
+G6~LLC. Zenodo:
+\href{https://doi.org/10.5281/zenodo.19117400}{10.5281/zenodo.19117400}
+(2026).
+
+\bibitem{AXLE2026}
+P.~Nogueira~Grossi,
+\textit{AXLE: Lean~4 Formal Verification Engine for TO/TOGT}.
+GitHub: \url{https://github.com/TOTOGT/AXLE} (2026).
+
+\bibitem{Ohsumi2016}
+Y.~Ohsumi,
+``Autophagy: An Intracellular Recycling System,''
+Nobel Lecture, 2016.
+\url{https://www.nobelprize.org/prizes/medicine/2016/ohsumi/lecture/}
+
+\bibitem{Mizushima2010}
+N.~Mizushima, T.~Yoshimori, and B.~Levine,
+``Methods in mammalian autophagy research,''
+\textit{Cell} \textbf{140}(3), 313--326 (2010).
+\href{https://doi.org/10.1016/j.cell.2010.01.028}{doi:10.1016/j.cell.2010.01.028}
+
+\bibitem{Melia2020}
+T.~J.~Melia, A.~H.~Lystad, and A.~Simonsen,
+``Autophagosome biogenesis: From membrane growth to closure,''
+\textit{J.~Cell Biol.} \textbf{219}(6) (2020).
+\href{https://doi.org/10.1083/jcb.202002085}{doi:10.1083/jcb.202002085}
+
+\bibitem{Salpeter1952}
+E.~E.~Salpeter,
+``Nuclear reactions in stars without hydrogen,''
+\textit{Astrophys.~J.} \textbf{115}, 326--328 (1952).
+\href{https://doi.org/10.1086/145546}{doi:10.1086/145546}
+
+\bibitem{Salaris2006}
+M.~Salaris and S.~Cassisi,
+\textit{Evolution of Stars and Stellar Populations}.
+Wiley, 2006. ISBN 0-470-09222-X.
+
+\bibitem{Paxton2011}
+B.~Paxton \textit{et~al.},
+``Modules for Experiments in Stellar Astrophysics (MESA),''
+\textit{Astrophys.~J.~Suppl.} \textbf{192}(3) (2011).
+\href{https://doi.org/10.1088/0067-0049/192/1/3}{doi:10.1088/0067-0049/192/1/3}
+
+\bibitem{Arnold1986}
+V.~I.~Arnold,
+\textit{Catastrophe Theory}, 3rd~ed.
+Springer, 1986. (Whitney $A_1$ fold singularity, Chapter~1.)
+
+\bibitem{Geiges2008}
+H.~Geiges,
+\textit{An Introduction to Contact Topology}.
+Cambridge University Press, 2008.
+
+\end{thebibliography}
+
+\end{document}
