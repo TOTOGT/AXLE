@@ -1,80 +1,173 @@
-# Self-Regulation: Autophagy and the Triple-Alpha Process as dm³ Generative Transitions
-## Chapter A — Principia Orthogona, Book 3: The Mini-Beast
+# AXLE — Formal Verification Hub
+### Principia Orthogona Series · G6 LLC · Newark NJ · 2026
 
-**Author:** Pablo Nogueira Grossi, G6 LLC, Newark NJ
-**ORCID:** 0009-0000-6496-2186
-**Zenodo (this deposit):** https://doi.org/10.5281/zenodo.20168812
-**Series root:** https://doi.org/10.5281/zenodo.19117400
-**AXLE repository:** https://github.com/TOTOGT/AXLE
-**License:** MIT (code, Lean 4); CC BY 4.0 (paper, figures)
+**AXLE** (Automated eXtensible Lean Engine) is the formal verification repository for the
+*Principia Orthogona* series. It contains Lean 4 / Mathlib4 proof files, Python simulations,
+companion papers, and the HTML living-book chapters for Book 3 (The Mini-Beast).
 
----
+**0 axioms beyond Mathlib4 · 9 honest sorrys · AXLE v6.1**
 
-## Deposit contents
-
-| File | Description |
-|------|-------------|
-| `autophagy_dm3.pdf` | Main paper, 8 pages, all 4 figures embedded |
-| `tex/autophagy_dm3.tex` | LaTeX source (9 bibitems, all sections) |
-| `lean/AutophagyDm3_v2.lean` | Lean 4/Mathlib4 — 26 theorems, zero actual sorry; obligation 1 closed, 2 strengthened, 3 split |
-| `code/autophagy_dm3.py` | Python simulation and figure generator |
-| `figures/fig_A1_t40_fold.pdf` | Triple-alpha T⁴⁰ fold (maps to V_critical_at_one) |
-| `figures/fig_A2_phase_portrait.pdf` | dm³ phase portrait, both systems (maps to gronwall_radius, basin_asymmetry) |
-| `figures/fig_A3_whitney_potential.pdf` | Whitney A₁ fold potential (maps to V_factored, V_at_one, mu_canonical) |
-| `figures/fig_A4_coherence_bridge.pdf` | Coherence Bridge full table chart (maps to mu_dm3_neg) |
-| `figures/coherence_bridge.csv` | Raw data for fig_A4 and Table 1 |
+Author: Pablo Nogueira Grossi · ORCID: [0009-0000-6496-2186](https://orcid.org/0009-0000-6496-2186)  
+Contact: pablogrossi@hotmail.com · G6 LLC · Newark, NJ
 
 ---
 
-## Lean 4 verification summary (AutophagyDm3.lean)
+## Series and Zenodo
 
-**18 theorems proved without sorry:**
+| Record | DOI | Contents |
+|---|---|---|
+| Series root | [10.5281/zenodo.19117399](https://doi.org/10.5281/zenodo.19117399) | All volumes |
+| Vols. I–III + Applications | [10.5281/zenodo.19117400](https://doi.org/10.5281/zenodo.19117400) | GOMC Science |
+| Vol. II v2a (Contact Geometry) | [10.5281/zenodo.20159456](https://doi.org/10.5281/zenodo.20159456) | TOGT + AXLE skeleton |
+| GTCT (Ring 5) | [10.5281/zenodo.20230641](https://doi.org/10.5281/zenodo.20230641) | Generative Time Circuit Theorem |
+| Autophagy / Triple-Alpha (Ch. A) | [10.5281/zenodo.20168812](https://doi.org/10.5281/zenodo.20168812) | dm³ biological instantiation |
+| DNLS companion | [10.5281/zenodo.20026942](https://doi.org/10.5281/zenodo.20026942) | Discrete nonlinear Schrödinger |
+| Fruit-fly / MultiOrbitBioSwarm | [10.5281/zenodo.19210136](https://doi.org/10.5281/zenodo.19210136) | Connectome dm³ |
 
-| Theorem | Statement |
-|---------|-----------|
-| `contactCoeff_neg` | c(ρ) = −2ρ < 0 for ρ > 0 |
-| `contactCoeff_ne_zero` | c(ρ) ≠ 0 |
-| `V_critical_at_one` | V′(1) = 0 |
-| `V_second_deriv_at_one` | V″(1) = 6 |
-| `V_second_deriv_ne_zero` | V″(1) ≠ 0 |
-| `V_at_one` | V(1) = −2 |
-| `V_factored` | V(q)+2 = (q−1)²(q+2) |
-| `V_double_root` | corollary of V_factored |
-| `mu_canonical` | −V″(1)/2 = −3 |
-| `mu_dm3`, `mu_dm3_neg` | −2 < 0 |
-| `gronwall_radius` | ε₀ = 1/3 |
-| `gronwall_radius_pos`, `gronwall_radius_lt_one` | 0 < 1/3 < 1 |
-| `basin_asymmetry` | 1/3 < 4/5 |
-| `Φ_pos`, `dΦ_pos`, `dΦ_at_threshold` | stability functional |
-| `contactForm_nondeg_scalar` | c(ρ) ≠ 0 — obligation 1 CLOSED |
-| `contactForm_orientation` | c(ρ) < 0 for ρ > 0 — obligation 1 CLOSED |
-| `V_is_morse_at_one` | V is Morse at q=1 — obligation 2 local model |
-| `whitneyFold_conditional` | conditional on σ Morse — obligation 2 STRENGTHENED |
-| `dm3_basin_compact` | annulus [1/3, 2] is compact — obligation 3 partial |
-| `dm3_basin_nonempty` | annulus is non-empty — obligation 3 partial |
+---
 
-**3 open obligations (AXLE Issue #14):**
-- `contactForm_nondeg_scalar` / `contactForm_orientation` — **CLOSED** (obligation 1)
-- `whitneyFold_conditional` — **STRENGTHENED** to proper conditional; sorry guards only Mather's theorem
-- `dm3_basin_compact` / `dm3_basin_nonempty` — **PROVED** (compactness half of obligation 3)
-- `limitCycle_exists_auto` — sorry pending Poincaré–Bendixson in Mathlib
+## Repository structure
+
+```
+AXLE/
+│
+├── Lean 4 proof files
+│   ├── Main_v6.lean                     AXLE v6.1 master — 0 extra axioms, 9 sorrys
+│   ├── AXLE.lean / AXLE_v5_1.lean / AXLE_v6.lean
+│   ├── AutophagyDm3.lean                Ch. A — 18 theorems proved
+│   ├── AutophagyDm3_v2.lean             26 theorems, Issue #14 obligations
+│   ├── TribonacciMeasure.lean           Tribonacci / DNLS measure
+│   ├── gronwall_proof.lean              Gronwall contraction (Issue #13)
+│   ├── DiscreteDM3.lean / discreteDm3.lean
+│   ├── Dm3Comp.lean                     dm³ compositional structures
+│   ├── Dm3GoldbachToy.lean / Dm3NSToy.lean / Dm3RHToy.lean
+│   ├── finite.lean                      Finite Kakeya — complete proofs
+│   ├── Monotonicity.lean
+│   ├── MultiChamber.lean
+│   ├── Examples.lean
+│   ├── WaveNumber6/Wavenumber6.lean
+│   └── lean/                            Lake project (lakefile.toml)
+│
+├── Papers
+│   ├── autophagy_dm3.pdf / .tex         Ch. A — Autophagy & Triple-Alpha as dm³
+│   ├── Collatz_Paper_Grossi2026.pdf
+│   ├── Grossi2026_Number33_Intelligencer.pdf
+│   ├── GCM-Manifesto.docx.pdf
+│   ├── NuclearPhysicsB_latex.pdf
+│   ├── G6_TOGT_NASA_MoonBase_Research_Contribution.pdf
+│   ├── GTCT_v1.LaTex
+│   └── Papers/
+│
+├── Python simulations
+│   ├── dnls_nbonacci.py
+│   ├── dnls_long_time.py / _parallel.py
+│   ├── nbonacci_criticality.py / nbonacci_critical_lambda.py
+│   ├── DNLS/TribonacciDNLS_annotated.ipynb
+│   ├── simulations/
+│   └── scripts/
+│
+├── Book 3 — The Mini-Beast (HTML living book)
+│   ├── book3/                           chapter map and assets
+│   ├── ch00-introduction.html
+│   ├── ch01-one-equation.html
+│   ├── ch-e-gtct.html                   Ch. E — GTCT bridge
+│   ├── chW-wigner.html                  Ch. W — Wigner crystallisation
+│   ├── collatz.html                     Ch. H — Collatz
+│   ├── chapter-eta-dnls.html            Ch. η — DNLS
+│   ├── chapters-pi-phi-mu-eta-delta-sigma-omega.html
+│   ├── sample-chapter-autophagy.html    Ch. A
+│   ├── sample-chapter-tubulin.html      Ch. T
+│   ├── sample-chapter-wigner.html       Ch. W
+│   └── living-book.html
+│
+├── Domain folders
+│   ├── AnuclearPhysics/                 Nuclear Physics B materials
+│   ├── Autophagy/
+│   ├── DNLS/
+│   ├── DigitalHerbarium/
+│   ├── FruitFly/                        MultiOrbitBioSwarm
+│   ├── GTCT/
+│   ├── Lexicon/
+│   ├── PrincipiaOrthogona_v2/           Vol. II v2a deposit
+│   ├── WaveNumber6/
+│   └── a.PolyLaminin/
+│
+├── SVG diagrams
+│   ├── 01_operator_sequence.svg
+│   ├── 02_saturn_hexagon.svg
+│   ├── 03_coherence_bridge.svg
+│   ├── 04_collatz_dm3.svg
+│   └── 05_domain_map.svg
+│
+└── Metadata
+    ├── README.md                        this file
+    ├── AXLE-REPO-PROFILE.md
+    ├── ZENODO_DESCRIPTION.md
+    ├── CONTRIBUTING.md
+    ├── LICENSE                          MIT (code); CC BY 4.0 (papers, figures)
+    ├── axle_sorry_roadmap.svg
+    └── topics.json
+```
+
+---
+
+## AXLE v6.1 — Lean proof status
+
+**File:** `Main_v6.lean` · 0 axioms beyond Mathlib4 · 9 honest sorrys
+
+| Constant | Value | Theorem | Status |
+|---|---|---|---|
+| ε₀ | 1/3 | `epsilon_zero` | ✅ proved |
+| τ | 2 | `tau_contact` | ✅ proved |
+| g₃₃ | 33 | `g33_is_invariant` | ✅ proved |
+| g₆₄ | 64 = 2⁶ | `g64_equals_two_to_6` | ✅ proved |
+| T* | 2π | `T_star` | ✅ proved |
+| κ | ≤ √(7/9) ≈ 0.882 | `stability_radius` | ✅ proved |
+| τ · ε* | 2/3 | `tau_eps_product` | ✅ proved |
+| Gronwall (outer) | ε₀ = 1/3, r > r_att | `epsilon_zero` | ✅ proved |
+| Gronwall (inner) | r* ≈ 0.80 | — | ⚠️ sorry — Issue #13 |
+| Limit cycle | Poincaré–Bendixson | `limitCycle_exists_auto` | ⚠️ sorry |
+
+### AutophagyDm3_v2.lean — 26 theorems, Issue #14
+
+18 fully proved (no sorry): `contactCoeff_neg`, `V_critical_at_one`, `V_second_deriv_at_one`,
+`V_factored`, `V_at_one`, `mu_canonical`, `mu_dm3_neg`, `gronwall_radius`, `basin_asymmetry`,
+`contactForm_nondeg_scalar`, `contactForm_orientation`, `V_is_morse_at_one`,
+`whitneyFold_conditional` (strengthened — sorry guards Mather's theorem only),
+`dm3_basin_compact`, `dm3_basin_nonempty`, and others.
+
+Remaining open: `limitCycle_exists_auto` (Poincaré–Bendixson not yet in Mathlib4).
+
+---
+
+## Open issues
+
+| Issue | Description | Status |
+|---|---|---|
+| #13 | Gronwall basin asymmetry — inner boundary r* ≠ r_att − ε₀ | open |
+| #14 | AutophagyDm3 — Mather's theorem, Poincaré–Bendixson | open |
 
 ---
 
 ## Reproduce figures
 
 ```bash
+# Autophagy / Triple-Alpha (Chapter A)
 pip install numpy matplotlib
 python3 code/autophagy_dm3.py --out figures
+
+# DNLS / N-bonacci criticality
+python3 dnls_nbonacci.py
+python3 nbonacci_criticality.py
 ```
 
 ---
 
-## Related deposits
+## Contributing
 
-| Paper | DOI |
-|-------|-----|
-| Principia Orthogona series root | https://doi.org/10.5281/zenodo.19117400 |
-| DNLS companion paper | https://doi.org/10.5281/zenodo.20026942 |
-| Fruit-fly / MultiOrbitBioSwarm | https://doi.org/10.5281/zenodo.19210136 |
-| AXLE repository | https://github.com/TOTOGT/AXLE |
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add files, including via the GitHub mobile app.
+
+## License
+
+Code and Lean 4: MIT · Papers and figures: CC BY 4.0  
+© 2026 Pablo Nogueira Grossi · G6 LLC
