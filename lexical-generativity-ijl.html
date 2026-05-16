@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lexical Generativity in English · Pablo Nogueira Grossi · 2026</title>
+<meta name="description" content="Lexical Generativity in English: An Empirical Study of Verb Classes, Noun Polysemy, and Prepositions. Submitted to the International Journal of Lexicography. Pablo Nogueira Grossi, G6 LLC, 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ──────────────────────────────────────────────────────── */
+:root {
+  --oxford:     #002147;
+  --oxford2:    #001230;
+  --gold:       #c9a84c;
+  --gold2:      #e8d49a;
+  --cream:      #faf8f3;
+  --ivory:      #f4f1e8;
+  --warm-white: #fffef9;
+  --text:       #1a1814;
+  --mid:        #4a4540;
+  --light-rule: #ddd8cc;
+  --teal:       #1a5c4a;
+  --red-seal:   #8a2020;
+  --ff-body:    'EB Garamond', 'Garamond', Georgia, serif;
+  --ff-display: 'Cormorant Garamond', 'Garamond', Georgia, serif;
+  --ff-alt:     'Spectral', Georgia, serif;
+  --ff-mono:    'JetBrains Mono', 'Courier New', monospace;
+  --max:        780px;
+  --wide:       1100px;
+}
+
+/* ── RESET ───────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body { font-family: var(--ff-body); color: var(--text); background: var(--cream); line-height: 1.75; }
+
+/* ── NAV ─────────────────────────────────────────────────────────── */
+nav {
+  background: var(--oxford2);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 48px; position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid rgba(201,168,76,.2);
+}
+.nav-brand { color: var(--gold); font-family: var(--ff-display); font-size: 0.85rem;
+             letter-spacing: 0.12em; text-decoration: none; font-style: italic; }
+.nav-links { display: flex; gap: 1.5rem; }
+.nav-links a { color: #aaa; font-family: var(--ff-alt); font-size: 0.75rem;
+               letter-spacing: 0.08em; text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--gold2); }
+
+/* ── NOTICE BAND ─────────────────────────────────────────────────── */
+.notice-band {
+  background: var(--red-seal);
+  color: white;
+  padding: 0.9rem 2rem;
+  text-align: center;
+  font-family: var(--ff-alt);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+.notice-band strong { font-weight: 600; }
+.notice-band a { color: var(--gold2); text-underline-offset: 3px; }
+
+/* ── HERO ────────────────────────────────────────────────────────── */
+.hero {
+  background: var(--oxford);
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(201,168,76,.08) 0%, transparent 70%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0, rgba(255,255,255,.02) 1px, transparent 1px, transparent 60px);
+  pointer-events: none;
+}
+.hero-journal {
+  font-family: var(--ff-alt);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.hero-title {
+  font-family: var(--ff-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  color: white;
+  font-weight: 400;
+  line-height: 1.2;
+  max-width: 700px;
+  margin: 0 auto 0.8rem;
+  font-style: italic;
+  position: relative;
+}
+.hero-subtitle {
+  font-family: var(--ff-alt);
+  font-size: 0.88rem;
+  color: var(--gold2);
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+  position: relative;
+}
+.gold-rule-center { width: 48px; height: 1.5px; background: var(--gold); margin: 0 auto 2rem; }
+.hero-meta {
+  font-family: var(--ff-alt);
+  font-size: 0.82rem;
+  color: #9999aa;
+  line-height: 2;
+  position: relative;
+}
+.hero-meta a { color: var(--gold2); text-decoration: none; }
+.hero-meta a:hover { color: var(--gold); }
+.hero-badges {
+  display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap;
+  margin-top: 1.8rem; position: relative;
+}
+.badge {
+  background: rgba(201,168,76,.1);
+  border: 1px solid rgba(201,168,76,.3);
+  color: var(--gold2);
+  font-family: var(--ff-mono);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.65rem;
+  letter-spacing: 0.08em;
+}
+
+/* ── REVIEW NOTICE PANEL ─────────────────────────────────────────── */
+.review-panel {
+  max-width: var(--max);
+  margin: 2.5rem auto;
+  padding: 0 2rem;
+}
+.review-box {
+  background: var(--warm-white);
+  border: 1px solid var(--light-rule);
+  border-left: 5px solid var(--red-seal);
+  padding: 1.6rem 1.8rem;
+}
+.review-box h3 {
+  font-family: var(--ff-alt);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red-seal);
+  margin-bottom: 0.8rem;
+}
+.review-box p {
+  font-size: 0.93rem;
+  line-height: 1.75;
+  color: var(--mid);
+  margin-bottom: 0.7rem;
+}
+.review-box p:last-child { margin-bottom: 0; }
+.review-box strong { color: var(--text); }
+
+/* ── TOC ─────────────────────────────────────────────────────────── */
+.toc-panel {
+  max-width: var(--max);
+  margin: 0 auto 2rem;
+  padding: 0 2rem;
+}
+.toc-box {
+  background: var(--ivory);
+  border: 1px solid var(--light-rule);
+  padding: 1.4rem 1.8rem;
+  columns: 2;
+  column-gap: 2rem;
+}
+.toc-box h3 {
+  font-family: var(--ff-alt);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 0.8rem;
+  column-span: all;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--light-rule);
+}
+.toc-box a {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--oxford);
+  text-decoration: none;
+  padding: 0.2rem 0;
+  line-height: 1.4;
+  transition: color .15s;
+  break-inside: avoid;
+}
+.toc-box a:hover { color: var(--gold); }
+.toc-box a .toc-num { color: var(--gold); font-family: var(--ff-mono);
+                       font-size: 0.75rem; margin-right: 0.4rem; }
+@media (max-width: 600px) { .toc-box { columns: 1; } }
+
+/* ── MAIN LAYOUT ─────────────────────────────────────────────────── */
+.page { max-width: var(--max); margin: 0 auto; padding: 0 2rem 5rem; }
+
+/* ── ABSTRACT ────────────────────────────────────────────────────── */
+.abstract-block {
+  background: var(--warm-white);
+  border: 1px solid var(--light-rule);
+  border-top: 3px solid var(--oxford);
+  padding: 1.6rem 1.8rem;
+  margin-bottom: 2.5rem;
+}
+.abstract-block .abs-label {
+  font-family: var(--ff-alt);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 0.7rem;
+}
+.abstract-block p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #2a2820;
+}
+.keywords-block {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--light-rule);
+  font-size: 0.83rem;
+  color: var(--mid);
+  line-height: 1.6;
+}
+.keywords-block strong { color: var(--text); font-family: var(--ff-alt); }
+
+/* ── SECTION HEADINGS ────────────────────────────────────────────── */
+.sec-anchor { scroll-margin-top: 60px; }
+.sec-header {
+  margin: 3.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1.5px solid var(--oxford);
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+.sec-num {
+  font-family: var(--ff-mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  min-width: 1.6rem;
+}
+.sec-title {
+  font-family: var(--ff-display);
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--oxford);
+  font-style: italic;
+}
+.subsec-title {
+  font-family: var(--ff-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--oxford);
+  font-style: italic;
+  margin: 2rem 0 0.6rem;
+  padding-left: 0.5rem;
+  border-left: 3px solid var(--gold);
+}
+.subsubsec-title {
+  font-family: var(--ff-alt);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--oxford);
+  margin: 1.4rem 0 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+/* ── PROSE ───────────────────────────────────────────────────────── */
+.page p { line-height: 1.85; margin-bottom: 1rem; font-size: 1rem; }
+
+/* ── LINGUISTIC EXAMPLES ─────────────────────────────────────────── */
+.example-block {
+  margin: 1rem 0 1rem 1.5rem;
+  font-style: italic;
+}
+.example-block .ex {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0;
+  margin-bottom: 0.3rem;
+  font-size: 0.96rem;
+  line-height: 1.6;
+  align-items: start;
+}
+.ex-label {
+  font-style: normal;
+  font-family: var(--ff-mono);
+  font-size: 0.78rem;
+  color: var(--gold);
+  padding-top: 0.12rem;
+}
+.ex-text { color: var(--text); }
+.ex-note {
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--mid);
+  margin-left: 0.4rem;
+}
+.ex-ungrammatical .ex-text::before { content: '*'; color: var(--red-seal); margin-right: 0.15rem; font-style: normal; }
+
+/* ── REFERENCES ──────────────────────────────────────────────────── */
+.ref-list { list-style: none; margin: 0; }
+.ref-list li {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  padding: 0.4rem 0 0.4rem 1.8rem;
+  text-indent: -1.8rem;
+  border-bottom: 1px solid rgba(0,0,0,.04);
+  color: #2a2820;
+}
+.ref-list li:last-child { border-bottom: none; }
+
+/* ── SUBMISSION FOOTER ───────────────────────────────────────────── */
+.submission-band {
+  background: var(--oxford);
+  color: white;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-top: 3rem;
+}
+.submission-band h2 {
+  font-family: var(--ff-display);
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-style: italic;
+  color: white;
+  margin-bottom: 0.8rem;
+}
+.submission-band p {
+  color: #aaa;
+  max-width: 520px;
+  margin: 0 auto 1.4rem;
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+.btn-gold {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--oxford);
+  padding: 0.7rem 1.8rem;
+  font-family: var(--ff-alt);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin: 0.3rem;
+  transition: opacity .2s;
+}
+.btn-gold:hover { opacity: 0.85; }
+.btn-outline {
+  display: inline-block;
+  border: 1px solid var(--gold);
+  color: var(--gold2);
+  padding: 0.7rem 1.8rem;
+  font-family: var(--ff-alt);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  margin: 0.3rem;
+  transition: all .2s;
+}
+.btn-outline:hover { background: var(--gold); color: var(--oxford); }
+
+/* ── FOOTER ──────────────────────────────────────────────────────── */
+footer {
+  background: var(--oxford2);
+  color: #666;
+  padding: 2rem;
+  text-align: center;
+  font-family: var(--ff-alt);
+  font-size: 0.75rem;
+  line-height: 2;
+}
+footer a { color: #888; text-decoration: none; }
+footer a:hover { color: var(--gold2); }
+
+/* ── PULL QUOTE ──────────────────────────────────────────────────── */
+.pull-quote {
+  border-left: 4px solid var(--gold);
+  margin: 1.8rem 0;
+  padding: 0.8rem 1.2rem;
+  background: var(--ivory);
+}
+.pull-quote p {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: 1.08rem;
+  color: var(--oxford);
+  margin: 0;
+  line-height: 1.65;
+}
+
+/* ── RUNNING HEAD ────────────────────────────────────────────────── */
+.running-head {
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  color: #bbb;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--light-rule);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">Lexical Generativity in English</a>
+  <div class="nav-links">
+    <a href="#abstract">Abstract</a>
+    <a href="#sec1">Introduction</a>
+    <a href="#sec4">Verb Classes</a>
+    <a href="#sec7">Computation</a>
+    <a href="#references">References</a>
+  </div>
+</nav>
+
+<!-- NOTICE BAND -->
+<div class="notice-band">
+  <strong>Preprint · Under Review</strong> — This article has been submitted to the
+  <em>International Journal of Lexicography</em> (Oxford University Press).
+  It has not yet undergone peer review. Comments are welcome at
+  <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-journal">Submitted to the International Journal of Lexicography · Oxford University Press</div>
+  <h1 class="hero-title">Lexical Generativity in English: An Empirical Study of Verb Classes, Noun Polysemy, and Prepositions</h1>
+  <div class="hero-subtitle">A Layered Model from Semantic Primitives to Productive Mechanism</div>
+  <div class="gold-rule-center"></div>
+  <div class="hero-meta">
+    Pablo Nogueira Grossi · Independent Researcher · G6 LLC, Newark, New Jersey, USA<br>
+    ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+    <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a> ·
+    <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br>
+    2026
+  </div>
+  <div class="hero-badges">
+    <span class="badge">Submitted to IJL · OUP</span>
+    <span class="badge">Preprint · Not peer-reviewed</span>
+    <span class="badge">~14,000 words</span>
+    <span class="badge">CC BY-NC-ND 4.0</span>
+  </div>
+</div>
+
+<!-- REVIEW NOTICE PANEL -->
+<div class="review-panel">
+  <div class="review-box">
+    <h3>A Note to the Reader on Peer Review and Attribution</h3>
+    <p>
+      This article has been submitted to the <em>International Journal of Lexicography</em>.
+      It is posted here as a preprint so that interested readers can engage with the work
+      prior to formal publication. <strong>It has not yet undergone peer review</strong>,
+      and its findings should be read accordingly.
+    </p>
+    <p>
+      The journal operates a double-blind review process. The author is aware of this requirement
+      and supports it in principle. However, in the present case, full anonymisation is not
+      feasible: the theoretical framework developed in this article — the layered model of lexical
+      generativity — is embedded within a larger research programme (the Principia Orthogona /
+      Generative Contact Mechanics series) whose deposits, code repositories, and prior submissions
+      are publicly available and directly cited in the covering letter. A reviewer with knowledge
+      of that programme would identify the author immediately. Rather than submit a nominally
+      anonymised manuscript whose authorship is transparent to any informed reader, the author
+      has chosen to submit a fully attributed version and to explain this decision openly.
+    </p>
+    <p>
+      The author welcomes editorial guidance from the <em>IJL</em> on how best to proceed.
+      The substantive content of the article stands independently of the larger programme and
+      can be evaluated on its own terms. The methodological approach — drawing on Levin (1993),
+      FrameNet, and VerbNet — is entirely standard within the field.
+    </p>
+    <p>
+      Readers who wish to engage with this work are encouraged to contact the author directly.
+      All comments, critiques, and suggestions are welcome and will be acknowledged.
+    </p>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc-panel">
+  <div class="toc-box">
+    <h3>Contents</h3>
+    <a href="#abstract"><span class="toc-num">—</span>Abstract</a>
+    <a href="#sec1"><span class="toc-num">1.</span>Introduction</a>
+    <a href="#sec2"><span class="toc-num">2.</span>Background and Related Work</a>
+    <a href="#sec3"><span class="toc-num">3.</span>Theoretical Framework</a>
+    <a href="#sec4"><span class="toc-num">4.</span>Verb Classes: Analysis</a>
+    <a href="#sec5"><span class="toc-num">5.</span>Noun Polysemy</a>
+    <a href="#sec6"><span class="toc-num">6.</span>Prepositions and Spatial Semantics</a>
+    <a href="#sec7"><span class="toc-num">7.</span>Computational Implications</a>
+    <a href="#sec8"><span class="toc-num">8.</span>Discussion</a>
+    <a href="#sec9"><span class="toc-num">9.</span>Conclusion</a>
+    <a href="#references"><span class="toc-num">—</span>References</a>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page">
+<div class="running-head">Grossi · Lexical Generativity in English · Submitted to IJL · 2026</div>
+
+<!-- ABSTRACT -->
+<div id="abstract" class="abstract-block sec-anchor">
+  <div class="abs-label">Abstract</div>
+  <p>This article examines lexical generativity in English: the capacity of a finite lexical inventory to support a theoretically unbounded range of context-sensitive meanings in use. Drawing on three converging empirical resources — the verb classification system of Levin (1993), the frame-semantic architecture of FrameNet (Fillmore, Johnson, &amp; Petruck, 2003), and the class-membership and alternation structure of VerbNet (Kipper et al., 2008) — the article proposes a layered model of lexical generativity that distinguishes among (a) stored semantic primitives and qualia structure, (b) argument-structure templates licensed by class membership, and (c) event-type composition rules governing productive meaning extension. The empirical core consists of detailed analysis of twelve English verb classes, the systematic polysemy of English nouns, and the contested semantics of English spatial prepositions. The article argues that apparent lexicographic irregularities are systematic consequences of a small set of generative principles that can be stated precisely, incorporated into lexicographic description, and exploited in computational lexicography.</p>
+  <div class="keywords-block">
+    <strong>Keywords:</strong> lexical generativity · verb classes · argument structure · noun polysemy · spatial prepositions · FrameNet · VerbNet · Levin classes · generative lexicon · qualia structure · type coercion · metonymy · computational lexicography
+  </div>
+</div>
+
+<!-- §1 Introduction -->
+<div id="sec1" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">1</span><span class="sec-title">Introduction</span></div>
+
+  <p>The generativity of natural language has been one of the central preoccupations of theoretical linguistics since Chomsky's early work on transformational grammar (1957, 1965). But while syntactic generativity — the capacity of a finite grammar to generate an infinite set of well-formed sentences — has been formalized in considerable detail, the parallel question of <em>lexical</em> generativity has received comparatively less systematic treatment. The question of how a finite lexicon supports the productive, context-sensitive interpretation of words in use remains, in important respects, open.</p>
+
+  <div class="pull-quote"><p>The English lexicon is not a list of senses but a generative system: a structured inventory of primitives, templates, and mechanisms that produces the full range of attested uses from a compact, internally organized representation.</p></div>
+
+  <p>The present article addresses this question empirically. Its central claim is that English exhibits three distinct but interacting forms of lexical generativity, each governed by a different set of principles and each presenting a distinctive set of challenges for lexicographic description. The first is <em>argument-structure generativity</em>: the capacity of a verb's core meaning to project onto different syntactic frames, producing systematic meaning shifts that are not listed separately in the lexicon but derived by productive alternation. The second is <em>polysemy generativity</em>: the capacity of a nominal or verbal lexeme to project onto logically distinct but systematically related meaning facets. The third is <em>spatial generativity</em>: the capacity of a preposition to express a range of spatial, temporal, and abstract relational meanings.</p>
+
+  <p>These three forms of generativity are not independent. They interact in systematic ways that reveal the underlying architecture of the lexicon: the division between what is stored and what is computed, between what is class-level and what is lexeme-specific, and between what is semantic and what is pragmatic. The article develops a layered model that captures these interactions while remaining sufficiently precise to support computational implementation.</p>
+
+  <p>The article is structured as follows. Section 2 surveys the theoretical background, with particular attention to Levin (1993), FrameNet, VerbNet, and the Generative Lexicon. Section 3 presents the layered model. Sections 4, 5, and 6 present the empirical analyses of verb classes, noun polysemy, and prepositions. Section 7 discusses computational implications. Section 8 offers broader discussion. Section 9 concludes.</p>
+</div>
+
+<!-- §2 Background -->
+<div id="sec2" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">2</span><span class="sec-title">Background and Related Work</span></div>
+
+  <div class="subsec-title">2.1  Levin's Verb Classes and the Argument-Structure Hypothesis</div>
+  <p>The foundational insight of Levin's (1993) verb classification programme is that the syntactic behaviour of a verb is not arbitrary but systematic, grounded in the verb's semantic content. Verbs sharing semantic properties share syntactic behaviour — the argument-structure hypothesis — and unexplained syntactic divergence signals a semantic difference. This insight has proved enormously productive, supplying the empirical foundation for much subsequent work in frame semantics, construction grammar, and computational lexicography (Rappaport Hovav &amp; Levin, 2010; Levin &amp; Rappaport Hovav, 2019; Hartshorne, O'Donnell, &amp; Tenenbaum, 2014).</p>
+  <p>The alternation relation between argument-structure frames has been addressed via lexical rules (Baker, 1988), innate linking rules (Pinker, 1989), event-structure accounts (Rappaport Hovav &amp; Levin, 1998), and construction grammar (Goldberg, 1995, 2006). More recent work has investigated probabilistic and information-theoretic dimensions of alternation choice (Bresnan, Cueni, Nikitina, &amp; Baayen, 2007; Jaeger, 2010) and cross-linguistic generalizability (Croft, 2012; Dixon, 2005).</p>
+
+  <div class="subsec-title">2.2  Frame Semantics and FrameNet</div>
+  <p>Frame semantics, developed by Fillmore (1976, 1982, 1985) and formalized in FrameNet (Fillmore et al., 2003; Ruppenhofer, Ellsworth, Petruck, Johnson, Baker, &amp; Scheffczyk, 2016), holds that words evoke frames: schematic representations of situations, events, and relationships constituting the background knowledge against which the word's contribution is understood. FrameNet now covers more than 1,200 frames with richly annotated corpus sentences (Petruck, 2014; Boas, 2009). For the present study, FrameNet's frame-level taxonomy cuts across Levin's class-level taxonomy in illuminating ways, and its corpus annotations provide a rich empirical base for the analysis of argument-structure alternations.</p>
+
+  <div class="subsec-title">2.3  VerbNet and the Syntax-Semantics Interface</div>
+  <p>VerbNet (Kipper et al., 2008; Palmer, Gildea, &amp; Xue, 2010) is a hierarchically organized lexical database combining Levin's classification system with thematic-role frameworks and event-decomposition representations. Each class is defined by thematic roles, selectional restrictions, syntactic frames, and semantic predicates. Recent work has extended VerbNet with probabilistic information (Gormley, Mitchell, Van Durme, &amp; Dredze, 2014) and connected it to PropBank and Abstract Meaning Representation (Bonial, Stowe, &amp; Palmer, 2013).</p>
+
+  <div class="subsec-title">2.4  The Generative Lexicon</div>
+  <p>Pustejovsky's (1991, 1995) Generative Lexicon (GL) provides the most developed formal account of lexical generativity currently available. The GL proposes that word meanings are structured into four levels — argument structure, event structure, qualia structure, and lexical inheritance structure — and that the generative power of the lexicon derives from three mechanisms: type coercion, selective binding, and co-composition. Subsequent work has extended the GL to discourse-level phenomena (Asher &amp; Lascarides, 2003), to the semantics of nominalizations (Grimshaw, 1990), and to computational implementation (Pustejovsky &amp; Batiukova, 2019; Brunner &amp; Tu, 2015). The present article takes the GL as its primary theoretical reference point but departs from it in being more directly grounded in empirical data and more explicit about the role of argument-structure classes in mediating the generative mechanisms.</p>
+</div>
+
+<!-- §3 Framework -->
+<div id="sec3" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">3</span><span class="sec-title">Theoretical Framework: A Layered Model of Lexical Generativity</span></div>
+
+  <p>The layered model proposed here distinguishes three levels of lexical organization, each associated with a distinct type of generativity and a distinct set of constraints.</p>
+
+  <div class="subsec-title">3.1  Level I: Semantic Primitives and Qualia Structure</div>
+  <p>At the base of the lexicon are semantic primitives: irreducible components of word meaning including CAUSE, BECOME, STATE, MOVE, ACT, CONTACT, PATH, and MANNER. Associated with each lexical entry is a qualia structure (Pustejovsky, 1995): a four-part representation encoding the entry's constitutive role (what the entity is made of), formal role (what type of entity it is), telic role (its purpose or function), and agentive role (factors involved in its coming into being). The qualia structure is the primary source of exploitable meaning that generative mechanisms operate upon.</p>
+
+  <div class="subsec-title">3.2  Level II: Argument-Structure Templates and Class Membership</div>
+  <p>At the intermediate level, individual lexical entries are grouped into verb classes (Levin, 1993) and frame-evoking categories (FrameNet). Each class is associated with a set of argument-structure templates and alternation rules. The key theoretical innovation of the present model is the claim that Level-II generativity is <em>hierarchically organized</em>: VerbNet's hierarchical class structure corresponds to a hierarchy of argument-structure templates, in which templates of superordinate classes are inherited by subordinate classes and may be further restricted or extended at lower levels (Levin &amp; Rappaport Hovav, 1995; Booij, 2010). This hierarchical organization permits argument-structure rules to be stated at the most general level at which they hold, without overgenerating for more specific subclasses.</p>
+
+  <div class="subsec-title">3.3  Level III: Event-Type Composition and Pragmatic Adjustment</div>
+  <p>At the top level, individual lexical meanings are composed with event-type operators — INCEPTIVE, COMPLETIVE, CONTINUATIVE, and ITERATIVE — that shift the event type of the predicate without changing its argument structure. This is the level at which the coercive mechanisms of the GL primarily operate. Level III also includes pragmatic adjustment: the systematic narrowing, broadening, or shifting of a lexical meaning in response to contextual factors. Recent probabilistic and Bayesian accounts of pragmatic adjustment (Frank &amp; Goodman, 2012; Bergen, Levy, &amp; Goodman, 2016) provide a computational framework compatible with the Level-III architecture.</p>
+</div>
+
+<!-- §4 Verb Classes -->
+<div id="sec4" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">4</span><span class="sec-title">Verb Classes: Analysis</span></div>
+  <p>The following sections provide detailed analysis of twelve English verb classes. For each class the analysis identifies: (a) the defining semantic properties at Level I; (b) argument-structure templates and alternation rules at Level II; (c) event-type compositional patterns at Level III.</p>
+
+  <div class="subsec-title">4.1  Manner-of-Motion Verbs</div>
+  <p>Manner-of-motion verbs (Levin, 1993: §5.1; VerbNet 51.3) include <em>run, walk, swim, fly, crawl, march, race, trot, gallop, saunter, stride, trudge</em>. At Level I: MOVE(AGENT, MANNER).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(1a)</span><span class="ex-text">The children ran in the playground. <span class="ex-note">[intransitive, no path]</span></span></div>
+    <div class="ex"><span class="ex-label">(1b)</span><span class="ex-text">The children ran to the park. <span class="ex-note">[intransitive with directional PP]</span></span></div>
+    <div class="ex"><span class="ex-label">(1c)</span><span class="ex-text">She ran the horses across the field. <span class="ex-note">[causative transitive]</span></span></div>
+  </div>
+  <p>The transition from (1a) to (1b) is licensed by the directed-motion alternation (Levin, 1993: 54–55). The transition to (1c) introduces a CAUSE operator at Level III. Cross-linguistic evidence for the typological robustness of manner-verb classes is provided by Slobin (2004) and Ibarretxe-Antuñano (2017).</p>
+
+  <div class="subsec-title">4.2  Change-of-State Verbs</div>
+  <p>Change-of-state verbs (Levin, 1993: §26; VerbNet 45.1–45.4) include <em>break, crack, shatter, smash, bend, flatten, melt, freeze, dissolve</em>. At Level I: BECOME(ENTITY, STATE).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(2a)</span><span class="ex-text">The hammer broke the window. <span class="ex-note">[transitive causative]</span></span></div>
+    <div class="ex"><span class="ex-label">(2b)</span><span class="ex-text">The window broke. <span class="ex-note">[intransitive inchoative]</span></span></div>
+    <div class="ex"><span class="ex-label">(2c)</span><span class="ex-text">The glass shattered into a thousand pieces. <span class="ex-note">[inchoative with result phrase]</span></span></div>
+  </div>
+  <p>The causative-inchoative alternation is a Level-II phenomenon. Verbs strongly encoding manner of causing (<em>smash, shatter</em>) are more resistant to the intransitive alternation than verbs encoding result state only (<em>melt, freeze</em>). Recent corpus-based quantitative studies have refined the conditions governing alternation choice (Roland, Dick, &amp; Elman, 2007; Bresnan et al., 2007; Gries &amp; Stefanowitsch, 2004).</p>
+
+  <div class="subsec-title">4.3  Communication Verbs</div>
+  <p>Communication verbs (Levin, 1993: §37–39; VerbNet 37.1–37.7) include <em>say, tell, ask, announce, report, whisper, shout, declare, claim, assert, promise, warn</em>. At Level I: ACT(AGENT, COMMUNICATIVE_CONTENT, RECIPIENT).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(3a)</span><span class="ex-text">She told the story to everyone in the room. <span class="ex-note">[to-dative]</span></span></div>
+    <div class="ex"><span class="ex-label">(3b)</span><span class="ex-text">She told everyone in the room the story. <span class="ex-note">[double-object dative]</span></span></div>
+    <div class="ex"><span class="ex-label">(4a)</span><span class="ex-text">She announced that the project had been completed. <span class="ex-note">[finite clause]</span></span></div>
+    <div class="ex"><span class="ex-label">(4b)</span><span class="ex-text">She announced the completion of the project. <span class="ex-note">[nominal]</span></span></div>
+  </div>
+  <p>The double-object frame in (3b) carries a stronger caused-possession implication than the to-dative in (3a) (Levin, 2008; Rappaport Hovav &amp; Levin, 2008). The dative alternation has been analysed quantitatively in large corpora (Bresnan et al., 2007) and cross-linguistically (Haspelmath, 2013).</p>
+
+  <div class="subsec-title">4.4  Psychological Verbs</div>
+  <p>Psychological verbs (Levin, 1993: §31; VerbNet 31.1–31.3; Belletti &amp; Rizzi, 1988) include <em>fear, worry, alarm, frighten, please, amuse, bore, interest, delight, disgust</em>.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(5a)</span><span class="ex-text">The news frightened the child. <span class="ex-note">[Stimulus-subject, Experiencer-object]</span></span></div>
+    <div class="ex"><span class="ex-label">(5b)</span><span class="ex-text">The child feared the news. <span class="ex-note">[Experiencer-subject, Stimulus-object]</span></span></div>
+  </div>
+  <p>The Stimulus-subject/Experiencer-subject split is analysed here as a Level-I distinction: <em>frighten</em>-class verbs encode CAUSE(STIMULUS, EMOTION(EXPERIENCER)); <em>fear</em>-class verbs encode EXPERIENCE(EXPERIENCER, STIMULUS). Recent work has examined the cross-linguistic robustness of this split (Croft, 2012; Dixon, 2005) and its acquisition trajectory (Hartshorne et al., 2014).</p>
+
+  <div class="subsec-title">4.5  Verbs of Creation and Transformation</div>
+  <p>Creation verbs (Levin, 1993: §26.1, §26.4; VerbNet 26.1, 26.4) include <em>build, make, create, construct, bake, cook, knit, carve, shape, mold</em>. At Level I: MAKE(AGENT, PRODUCT). The object-effecting property — the object does not exist prior to the event — has consequences for definite reference, aspect, and resultative constructions.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(6a)</span><span class="ex-text">She built a house over three years. <span class="ex-note">[indefinite object, activity]</span></span></div>
+    <div class="ex"><span class="ex-label">(6b)</span><span class="ex-text">She built the house over three years. <span class="ex-note">[definite, presupposes prior reference]</span></span></div>
+    <div class="ex"><span class="ex-label">(6c)</span><span class="ex-text">She built the house flat on the ground. <span class="ex-note">[resultative elaboration]</span></span></div>
+  </div>
+
+  <div class="subsec-title">4.6  Aspectual Verbs</div>
+  <p>Aspectual verbs (Levin, 1993: §55.1–55.4; VerbNet 55.1–55.4) include <em>begin, start, continue, keep, stop, cease, finish, complete</em>. At Level I: INCEPTIVE, CONTINUATIVE, and COMPLETIVE phase operators. They impose event-type requirements on complements that may require type coercion to satisfy.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(7a)</span><span class="ex-text">She began to sing. <span class="ex-note">[infinitival event complement, no coercion]</span></span></div>
+    <div class="ex"><span class="ex-label">(7b)</span><span class="ex-text">She began the song. <span class="ex-note">[nominal complement, coercion to event type]</span></span></div>
+    <div class="ex"><span class="ex-label">(7c)</span><span class="ex-text">She began the book. <span class="ex-note">[telic quale exploited: reading or writing]</span></span></div>
+  </div>
+  <p>The ambiguity in (7c) reflects that books have two relevant telic qualia — reading and writing — and the aspectual verb's coercive pressure does not discriminate between them (Pustejovsky, 1995; Brunner &amp; Tu, 2015).</p>
+
+  <div class="subsec-title">4.7  Verbs of Putting</div>
+  <p>Verbs of putting (Levin, 1993: §9.1; VerbNet 9.1) include <em>put, place, set, lay, stand</em>. They encode CAUSE(AGENT, AT(THEME, LOCATION)) without encoding any property of the location itself, and characteristically resist the locative inversion construction.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(8a)</span><span class="ex-text">She put the books on the shelf. <span class="ex-note">[canonical: theme + locative]</span></span></div>
+    <div class="ex ex-ungrammatical"><span class="ex-label">(8b)</span><span class="ex-text">She put the shelf with books. <span class="ex-note">[locative inversion: ungrammatical]</span></span></div>
+  </div>
+
+  <div class="subsec-title">4.8  Spray-Load Verbs and the Locative Alternation</div>
+  <p>Spray-load verbs (Levin, 1993: §9.7; VerbNet 9.7) exhibit the full locative alternation with a systematic holistic-effect semantic difference (Pinker, 1989; Rappaport &amp; Levin, 1988; Gries &amp; Stefanowitsch, 2004).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(9a)</span><span class="ex-text">She loaded the boxes onto the truck. <span class="ex-note">[theme-object frame]</span></span></div>
+    <div class="ex"><span class="ex-label">(9b)</span><span class="ex-text">She loaded the truck with boxes. <span class="ex-note">[location-object frame, holistic implication]</span></span></div>
+    <div class="ex"><span class="ex-label">(9c)</span><span class="ex-text">She sprayed paint on the wall. <span class="ex-note">[theme-object frame]</span></span></div>
+    <div class="ex"><span class="ex-label">(9d)</span><span class="ex-text">She sprayed the wall with paint. <span class="ex-note">[location-object frame, holistic implication]</span></span></div>
+  </div>
+
+  <div class="subsec-title">4.9  Verbs of Contact by Impact</div>
+  <p>Contact-by-impact verbs (Levin, 1993: §18.4–18.5; VerbNet 18.4) include <em>hit, strike, slap, kick, punch, beat, tap, rap</em>. At Level I: CONTACT(AGENT, PATIENT, MANNER, FORCE).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(10a)</span><span class="ex-text">She hit the ball. <span class="ex-note">[basic contact frame]</span></span></div>
+    <div class="ex"><span class="ex-label">(10b)</span><span class="ex-text">She hit the wall with a hammer. <span class="ex-note">[instrument phrase]</span></span></div>
+    <div class="ex"><span class="ex-label">(10c)</span><span class="ex-text">She hit the hammer against the wall. <span class="ex-note">[theme-alternation]</span></span></div>
+  </div>
+
+  <div class="subsec-title">4.10  Verbs of Perception</div>
+  <p>Perception verbs (Levin, 1993: §30.1–30.5; VerbNet 30.1–30.3) divide into involuntary (<em>see, hear, feel, smell, taste</em>) and directed (<em>watch, listen, notice, observe</em>). This distinction interacts systematically with progressive aspect and complement type (Jackendoff, 1990; Vendler, 1957).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(11a)</span><span class="ex-text">She saw the accident. <span class="ex-note">[involuntary, simple aspect]</span></span></div>
+    <div class="ex ex-ungrammatical"><span class="ex-label">(11b)</span><span class="ex-text">She was seeing the accident. <span class="ex-note">[involuntary, progressive: marked]</span></span></div>
+    <div class="ex"><span class="ex-label">(11c)</span><span class="ex-text">She was watching the accident. <span class="ex-note">[directed, progressive: natural]</span></span></div>
+  </div>
+
+  <div class="subsec-title">4.11  Verbs of Emission</div>
+  <p>Emission verbs (Levin, 1993: §43.1–43.4; VerbNet 43.1) include <em>shine, gleam, glitter, glow, flash; ring, chime, buzz, hum; reek, smell, stink</em>. Their subject is typically not an agent but a natural emitting entity. The emitted phenomenon is encoded in the verb's Level-I semantics rather than as a separate argument.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(12a)</span><span class="ex-text">The lamp shone in the darkness.</span></div>
+    <div class="ex"><span class="ex-label">(12b)</span><span class="ex-text">The bells rang at midnight.</span></div>
+    <div class="ex"><span class="ex-label">(12c)</span><span class="ex-text">The room reeked of stale cigarettes.</span></div>
+  </div>
+
+  <div class="subsec-title">4.12  Verbs of Appearance, Disappearance, and Occurrence</div>
+  <p>Appearance and disappearance verbs (Levin, 1993: §48.1–48.3; VerbNet 48.1–48.1.1) include <em>appear, emerge, arise, arrive, come; disappear, vanish, leave, depart, go</em>.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(13a)</span><span class="ex-text">A solution appeared on the horizon.</span></div>
+    <div class="ex"><span class="ex-label">(13b)</span><span class="ex-text">The problem disappeared overnight.</span></div>
+    <div class="ex"><span class="ex-label">(13c)</span><span class="ex-text">There appeared a solution to the problem. <span class="ex-note">[existential construction]</span></span></div>
+  </div>
+  <p>The existential construction in (13c) is restricted to verbs encoding a transition to existence or visibility. The syntax and semantics of existential constructions have been studied in relation to discourse-new information (Ward &amp; Birner, 1995; Beaver &amp; Clark, 2008).</p>
+</div>
+
+<!-- §5 Noun Polysemy -->
+<div id="sec5" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">5</span><span class="sec-title">Noun Polysemy: Dot Objects, Type Coercion, and Metonymic Transfer</span></div>
+
+  <div class="subsec-title">5.1  The Dot-Object Phenomenon</div>
+  <p>The dot-object phenomenon (Pustejovsky, 1995; Nunberg, 1995; Asher, 2011; Copestake &amp; Briscoe, 1995) refers to the capacity of certain nouns to simultaneously denote two logically distinct but systematically related types. The canonical examples are <em>book</em> (physical object and linguistic information object), <em>newspaper</em> (physical artifact and institution), and <em>lunch</em> (meal and temporal interval).</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(14a)</span><span class="ex-text">The book is heavy and well-argued. <span class="ex-note">[physical + informational]</span></span></div>
+    <div class="ex"><span class="ex-label">(14b)</span><span class="ex-text">The newspaper is on the table and sold out. <span class="ex-note">[artifact + institution]</span></span></div>
+    <div class="ex"><span class="ex-label">(14c)</span><span class="ex-text">Lunch was delicious and lasted three hours. <span class="ex-note">[meal + temporal interval]</span></span></div>
+  </div>
+  <p>In each of (14a–c), a single noun phrase simultaneously satisfies two selectional requirements that would be contradictory if applied to a single-type argument. A dictionary entry listing 'physical book' and 'information content' as separate senses fails to capture that these senses are simultaneously instantiated and systematically related. The present model encodes the dot type in the formal quale of the noun's qualia structure.</p>
+
+  <div class="subsec-title">5.2  Type Coercion in Nominal Arguments</div>
+  <p>Type coercion occurs when a predicate imposes a type requirement on its argument that differs from the argument's lexically encoded type, forcing a reinterpretation to satisfy the requirement.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(15a)</span><span class="ex-text">She enjoyed the book. <span class="ex-note">[telic quale: enjoyed reading the book]</span></span></div>
+    <div class="ex"><span class="ex-label">(15b)</span><span class="ex-text">She finished the report. <span class="ex-note">[agentive quale: finished writing the report]</span></span></div>
+    <div class="ex"><span class="ex-label">(15c)</span><span class="ex-text">The movie was two hours long. <span class="ex-note">[measure coercion: the movie's duration]</span></span></div>
+    <div class="ex"><span class="ex-label">(15d)</span><span class="ex-text">The coffee is in the kitchen. <span class="ex-note">[coercion to location of the container]</span></span></div>
+  </div>
+  <p>The present model treats type coercion as a Level-III phenomenon constrained by the qualia structure established at Level I. The mechanisms have been formalized computationally (Pustejovsky &amp; Batiukova, 2019; Brunner &amp; Tu, 2015) and studied in relation to processing costs (Frisson, 2015; Traxler, Pickering, &amp; McElree, 2002).</p>
+
+  <div class="subsec-title">5.3  Metonymic Transfer</div>
+  <p>Metonymic transfer is the mechanism by which a lexical expression is used to denote not its literal referent but a referent standing in a systematic real-world relationship to it. Unlike metaphor, metonymy operates within a single domain: the source and target are related by part-whole, producer-product, container-contents, or similar contiguity relations.</p>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(16a)</span><span class="ex-text">The ham sandwich wants his check. <span class="ex-note">[customer for order — telic quale]</span></span></div>
+    <div class="ex"><span class="ex-label">(16b)</span><span class="ex-text">Washington announced new sanctions. <span class="ex-note">[government for capital city — formal quale]</span></span></div>
+    <div class="ex"><span class="ex-label">(16c)</span><span class="ex-text">She read Dostoyevsky for three hours. <span class="ex-note">[author for works — agentive quale]</span></span></div>
+    <div class="ex"><span class="ex-label">(16d)</span><span class="ex-text">The kettle is boiling. <span class="ex-note">[container for contents — constitutive quale]</span></span></div>
+  </div>
+  <p>From a lexicographic perspective, metonymic transfer is a Level-III phenomenon that operates on the qualia structure established at Level I. Recent work has investigated the typological universality of metonymic patterns (Bierwiaczonek, 2013) and their computational modelling (Lapata &amp; Lascarides, 2003).</p>
+</div>
+
+<!-- §6 Prepositions -->
+<div id="sec6" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">6</span><span class="sec-title">Prepositions and Spatial Semantics</span></div>
+
+  <div class="subsec-title">6.1  The Generative Semantics of English Prepositions</div>
+  <p>English spatial prepositions exhibit a range of uses spanning spatial, temporal, abstract relational, and idiomatic meanings. The present article adopts a structured polysemy account (Tyler &amp; Evans, 2003; Brugman, 1988; Lakoff, 1987) while arguing, against radial category accounts, that polysemy is generated by compositional mechanisms operating on a small set of semantic primitives rather than by analogical extension from a prototype. Recent cognitive-linguistic and construction grammar accounts (Goldberg, 2010; Svenonius, 2010; Zwarts, 2017) have refined the analysis of prepositional semantics in ways compatible with the layered model.</p>
+
+  <div class="subsec-title">6.2  The Preposition "over": A Case Study</div>
+  <div class="example-block">
+    <div class="ex"><span class="ex-label">(17a)</span><span class="ex-text">The plane flew over the city. <span class="ex-note">[spatial: ABOVE + ACROSS]</span></span></div>
+    <div class="ex"><span class="ex-label">(17b)</span><span class="ex-text">She hung the painting over the fireplace. <span class="ex-note">[spatial: ABOVE only]</span></span></div>
+    <div class="ex"><span class="ex-label">(17c)</span><span class="ex-text">The meeting lasted over three hours. <span class="ex-note">[temporal: EXCEED]</span></span></div>
+    <div class="ex"><span class="ex-label">(17d)</span><span class="ex-text">She has authority over the department. <span class="ex-note">[abstract: dominance]</span></span></div>
+    <div class="ex"><span class="ex-label">(17e)</span><span class="ex-text">The crisis is over. <span class="ex-note">[aspectual: COMPLETE]</span></span></div>
+    <div class="ex"><span class="ex-label">(17f)</span><span class="ex-text">She went over the report carefully. <span class="ex-note">[process: COVER]</span></span></div>
+  </div>
+  <p>The present model generates the uses in (17) by composing a small number of Level-I semantic primitives — ABOVE, ACROSS, EXCEED, COVER, COMPLETE — with Level-II argument-structure properties. This compositional analysis is more parsimonious than the radial network account (Lakoff, 1987) and more tractable computationally than prototype extension accounts (Tyler &amp; Evans, 2003).</p>
+
+  <div class="subsec-title">6.3  Spatial, Temporal, and Abstract Uses: General Principles</div>
+  <p>The patterns illustrated for <em>over</em> generalize across the English prepositional inventory. For any spatial preposition P encoding a spatial relation R, three systematic extensions are productive: temporal extension (R applied to a temporal interval); abstract extension (R applied metaphorically in an abstract domain); and aspectual extension (R composed with an event-type operator). These three extensions are Level-III phenomena, productive across the prepositional inventory (Zwarts, 2017; Svenonius, 2010; Bowerman, 1996).</p>
+</div>
+
+<!-- §7 Computational -->
+<div id="sec7" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">7</span><span class="sec-title">Computational Implications</span></div>
+
+  <div class="subsec-title">7.1  Implications for Dictionary Design</div>
+  <p>The model argues for a lexicographic architecture separating Level-I semantic content from Level-II argument-structure templates and Level-III generative mechanisms. A dictionary entry encodes the Level-I semantic content and Level-II class membership, leaving Level-III uses to be derived compositionally. This architecture is more parsimonious, more predictive, and more explanatory than standard sense-enumeration approaches, and is more computationally tractable. Recent work on automatic lexicon induction (Korhonen, Krymolowski, &amp; Briscoe, 2006; Sun, Korhonen, &amp; Krymolowski, 2008) and distributional semantic representations (Mikolov, Chen, Corrado, &amp; Dean, 2013; Pennington, Socher, &amp; Manning, 2014) provides additional motivation for this architecture.</p>
+
+  <div class="subsec-title">7.2  Implications for Lexical Database Annotation</div>
+  <p>The model argues for an enriched annotation architecture that explicitly encodes Level-II class membership and Level-III generative mechanisms: (a) annotating each FrameNet lexical unit with its VerbNet class membership; (b) annotating each VerbNet alternation with the Level-III semantic operation relating the two frames; (c) annotating each FrameNet frame element with the qualia role it instantiates. Recent cross-resource integration work (Bonial et al., 2013; Palmer et al., 2010; Ruppenhofer et al., 2016) provides a practical foundation for these extensions.</p>
+
+  <div class="subsec-title">7.3  Implications for Natural Language Processing</div>
+  <p>NLP systems incorporating Levin class information and qualia structure generalise better to unseen verbs and out-of-coverage constructions than systems relying exclusively on lexeme-specific training data (Swier &amp; Stevenson, 2004; Giuglea &amp; Moschitti, 2006; Schuler, 2005; Navigli, 2009). More recent neural approaches to semantic role labelling (He, Lee, Lewis, &amp; Zettlemoyer, 2017; Shi &amp; Lin, 2019) and word sense disambiguation (Bevilacqua &amp; Navigli, 2020) benefit from the incorporation of structured lexical knowledge. The layered model suggests that the most productive direction for integration is not the replacement of structured lexical knowledge by distributional representations but their <em>combination</em>: Level-I qualia structure and Level-II class membership provide the structural backbone that distributional models can populate with probabilistic information.</p>
+</div>
+
+<!-- §8 Discussion -->
+<div id="sec8" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">8</span><span class="sec-title">Discussion</span></div>
+
+  <p>The analyses presented in Sections 4–6 converge on a consistent picture. Across verb classes, nominal polysemy, and prepositional semantics, the same three-level architecture provides a parsimonious and explanatory account of the full range of attested phenomena.</p>
+
+  <p>First, the model supports a principled distinction between stored and computed lexical meaning. Not everything that a word can mean needs to be stored in the lexical entry: some meanings are generated compositionally and should not be listed as separate senses. This distinction constrains the architecture of the lexicon in ways that have significant practical implications for dictionary design.</p>
+
+  <p>Second, the model provides a principled account of the role of class membership in lexical generativity. The observation that verbs in the same Levin class share argument-structure behaviour is well-established; the present model explains why: class membership determines Level-II licensing, which in turn determines the range of argument-structure alternations a verb can undergo.</p>
+
+  <p>Third, the model has implications for the theory of lexical acquisition. If lexical generativity is organized as proposed here, a child acquiring the lexicon needs to learn: (a) the Level-I qualia structure of individual lexical entries; (b) the class membership of verbs, nouns, and prepositions; and (c) the Level-III generative mechanisms that apply across classes. Recent probabilistic and Bayesian models of lexical acquisition (Frank &amp; Goodman, 2012; Hartshorne et al., 2014; Perfors, Tenenbaum, &amp; Regier, 2011) are consistent with this learning problem formulation.</p>
+
+  <p>Finally, the model has implications for the theory of lexical change. Lexical change can occur at three levels: at Level I (a change in stored semantic content), at Level II (a change in class membership), or at Level III (a change in the generative mechanisms themselves). Historical linguistics suggests that all three types of change occur, and that Level-II and Level-III changes are typically more systematic and more productive than Level-I changes (Traugott &amp; Dasher, 2002; Gries &amp; Hilpert, 2008).</p>
+</div>
+
+<!-- §9 Conclusion -->
+<div id="sec9" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num">9</span><span class="sec-title">Conclusion</span></div>
+
+  <p>This article has argued for a layered model of lexical generativity in English distinguishing among stored semantic primitives and qualia structure (Level I), argument-structure templates licensed by class membership (Level II), and productive generative mechanisms including type coercion, metonymic transfer, and aspectual composition (Level III). The model has been developed through detailed empirical analysis of twelve English verb classes, the systematic polysemy of English nouns, and the spatial-temporal-abstract semantic range of English prepositions.</p>
+
+  <p>The central finding is that the apparent complexity of the English lexicon — the wide range of uses attested for individual words, the systematic but irregular alternation patterns of verb classes, the context-sensitive polysemy of nouns and prepositions — is the output of a small number of generative mechanisms operating on a relatively simple stored representation. The English lexicon is not a list of senses but a generative system: a structured inventory of primitives, templates, and mechanisms that produces the full range of attested uses from a compact, internally organized representation.</p>
+
+  <p>This finding has implications at three levels. For lexicographic theory, it argues for a lexicographic architecture separating stored representations from generatively derived uses. For computational lexicography, it provides a principled basis for coverage extension: the generative mechanisms can be implemented algorithmically and applied to out-of-vocabulary words and unseen constructions. For natural language processing, it suggests that systems exploiting class membership and qualia structure will generalise better to new data than systems relying exclusively on lexeme-specific information.</p>
+
+  <p>Several important phenomena have been left for future work, including scalar implicature, lexical aspect in cross-linguistic perspective, and the interaction of lexical generativity with discourse structure. Nevertheless, the present article argues that the layered model provides a principled, empirically grounded, and computationally tractable account of lexical generativity in English: a structured system of generative resources that enables the finite to produce the indefinite.</p>
+</div>
+
+<!-- References -->
+<div id="references" class="sec-anchor">
+  <div class="sec-header"><span class="sec-num"></span><span class="sec-title">References</span></div>
+  <ul class="ref-list">
+    <li>Asher, N. (2011). <em>Lexical Meaning in Context: A Web of Words.</em> Cambridge University Press.</li>
+    <li>Asher, N., &amp; Lascarides, A. (2003). <em>Logics of Conversation.</em> Cambridge University Press.</li>
+    <li>Baker, C. F., Fillmore, C. J., &amp; Lowe, J. B. (1998). The Berkeley FrameNet project. <em>Proceedings of COLING-ACL 1998,</em> 86–90.</li>
+    <li>Baker, M. (1988). <em>Incorporation: A Theory of Grammatical Function Changing.</em> University of Chicago Press.</li>
+    <li>Beaver, D., &amp; Clark, B. (2008). <em>Sense and Sensitivity: How Focus Determines Meaning.</em> Blackwell.</li>
+    <li>Belletti, A., &amp; Rizzi, L. (1988). Psych-verbs and theta-theory. <em>Natural Language and Linguistic Theory, 6,</em> 291–352.</li>
+    <li>Bergen, L., Levy, R., &amp; Goodman, N. D. (2016). Pragmatic reasoning through semantic inference. <em>Semantics and Pragmatics, 9</em>(20), 1–65.</li>
+    <li>Bevilacqua, M., &amp; Navigli, R. (2020). Breaking through the 80% glass ceiling: Raising the state of the art in word sense disambiguation by incorporating knowledge graph information. <em>Proceedings of ACL 2020,</em> 2854–2864.</li>
+    <li>Bierwiaczonek, B. (2013). <em>Metonymy in Language, Thought and Brain.</em> Equinox.</li>
+    <li>Boas, H. C. (2009). Semantic frames as interlingual representations for multilingual lexical databases. <em>International Journal of Lexicography, 18</em>(4), 445–478.</li>
+    <li>Bonial, C., Stowe, K., &amp; Palmer, M. (2013). Renewing and revising SemLink. <em>Proceedings of the 2nd Workshop on Linked Data in Linguistics (LDL 2013),</em> 9–17.</li>
+    <li>Booij, G. (2010). <em>Construction Morphology.</em> Oxford University Press.</li>
+    <li>Bowerman, M. (1996). The origins of children's spatial semantic categories. In J. J. Gumperz &amp; S. C. Levinson (Eds.), <em>Rethinking Linguistic Relativity</em> (pp. 145–176). Cambridge University Press.</li>
+    <li>Bresnan, J., Cueni, A., Nikitina, T., &amp; Baayen, R. H. (2007). Predicting the dative alternation. In G. Bouma et al. (Eds.), <em>Cognitive Foundations of Interpretation</em> (pp. 69–94). Royal Netherlands Academy of Science.</li>
+    <li>Brugman, C. (1988). <em>The Story of Over: Polysemy, Semantics, and the Structure of the Lexicon.</em> Garland.</li>
+    <li>Brunner, T., &amp; Tu, N. T. (2015). Improved broad-coverage SemEval-2015 sense annotation. <em>Proceedings of SemEval-2015,</em> 384–389.</li>
+    <li>Chomsky, N. (1957). <em>Syntactic Structures.</em> Mouton.</li>
+    <li>Chomsky, N. (1965). <em>Aspects of the Theory of Syntax.</em> MIT Press.</li>
+    <li>Copestake, A., &amp; Briscoe, T. (1995). Semi-productive polysemy and sense extension. <em>Journal of Semantics, 12</em>(1), 15–67.</li>
+    <li>Croft, W. (2012). <em>Verbs: Aspect and Causal Structure.</em> Oxford University Press.</li>
+    <li>Dixon, R. M. W. (2005). <em>A Semantic Approach to English Grammar</em> (2nd ed.). Oxford University Press.</li>
+    <li>Fillmore, C. J. (1976). Frame semantics and the nature of language. <em>Annals of the New York Academy of Sciences, 280</em>(1), 20–32.</li>
+    <li>Fillmore, C. J. (1982). Frame semantics. In <em>Linguistics in the Morning Calm</em> (pp. 111–137). Hanshin.</li>
+    <li>Fillmore, C. J. (1985). Frames and the semantics of understanding. <em>Quaderni di Semantica, 6</em>(2), 222–254.</li>
+    <li>Fillmore, C. J., Johnson, C. R., &amp; Petruck, M. R. L. (2003). Background to FrameNet. <em>International Journal of Lexicography, 16</em>(3), 235–250.</li>
+    <li>Frank, M. C., &amp; Goodman, N. D. (2012). Predicting pragmatic reasoning in language games. <em>Science, 336</em>(6084), 998.</li>
+    <li>Frisson, S. (2015). About bound and rescued meanings. <em>Journal of Psycholinguistic Research, 44</em>(1), 67–83.</li>
+    <li>Giuglea, A.-M., &amp; Moschitti, A. (2006). Semantic role labeling via FrameNet, VerbNet and PropBank. <em>Proceedings of ACL 2006,</em> 929–936.</li>
+    <li>Goldberg, A. E. (1995). <em>Constructions: A Construction Grammar Approach to Argument Structure.</em> University of Chicago Press.</li>
+    <li>Goldberg, A. E. (2006). <em>Constructions at Work: The Nature of Generalization in Language.</em> Oxford University Press.</li>
+    <li>Goldberg, A. E. (2010). Verbs, constructions, and semantic frames. In M. Rappaport Hovav et al. (Eds.), <em>Lexical Semantics, Syntax, and Event Structure</em> (pp. 39–58). Oxford University Press.</li>
+    <li>Goldberg, A. E., &amp; Jackendoff, R. (2004). The English resultative as a family of constructions. <em>Language, 80</em>(3), 532–568.</li>
+    <li>Gormley, M. R., Mitchell, M., Van Durme, B., &amp; Dredze, M. (2014). Low-resource semantic role labeling. <em>Proceedings of ACL 2014,</em> 1177–1187.</li>
+    <li>Grimshaw, J. (1990). <em>Argument Structure.</em> MIT Press.</li>
+    <li>Gries, S. T., &amp; Hilpert, M. (2008). The identification of stages in diachronic data. <em>Corpora, 3</em>(1), 59–81.</li>
+    <li>Gries, S. T., &amp; Stefanowitsch, A. (2004). Extending collostructional analysis. <em>International Journal of Corpus Linguistics, 9</em>(1), 97–129.</li>
+    <li>Hartshorne, J. K., O'Donnell, T. J., &amp; Tenenbaum, J. B. (2014). The psychological reality of semantic representations. <em>Proceedings of CogSci 2014.</em></li>
+    <li>Haspelmath, M. (2013). Argument indexing: A conceptual framework for the syntax of argument structure. In D. Bakker &amp; M. Haspelmath (Eds.), <em>Languages Across Boundaries</em> (pp. 197–226). De Gruyter Mouton.</li>
+    <li>He, L., Lee, K., Lewis, M., &amp; Zettlemoyer, L. (2017). Deep semantic role labeling: What works and what's next. <em>Proceedings of ACL 2017,</em> 473–483.</li>
+    <li>Ibarretxe-Antuñano, I. (2017). Motion events and cognition. In I. Ibarretxe-Antuñano (Ed.), <em>Motion and Semantics across Languages</em> (pp. 1–28). De Gruyter Mouton.</li>
+    <li>Jackendoff, R. (1990). <em>Semantic Structures.</em> MIT Press.</li>
+    <li>Jaeger, T. F. (2010). Redundancy and reduction: Speakers manage syntactic information density. <em>Cognitive Psychology, 61</em>(1), 23–62.</li>
+    <li>Kipper, K., Korhonen, A., Ryant, N., &amp; Palmer, M. (2008). A large-scale classification of English verbs. <em>Language Resources and Evaluation, 42</em>(1), 21–40.</li>
+    <li>Korhonen, A., Krymolowski, Y., &amp; Briscoe, T. (2006). A large subcategorization lexicon for natural language processing applications. <em>Proceedings of LREC 2006.</em></li>
+    <li>Lakoff, G. (1987). <em>Women, Fire, and Dangerous Things: What Categories Reveal about the Mind.</em> University of Chicago Press.</li>
+    <li>Lapata, M., &amp; Lascarides, A. (2003). Detecting novel compounds: The role of distributional evidence. <em>Proceedings of EACL 2003,</em> 235–242.</li>
+    <li>Levin, B. (1991). Building a lexicon: The contribution of linguistic theory. <em>International Journal of Lexicography, 4</em>(3), 205–226.</li>
+    <li>Levin, B. (1993). <em>English Verb Classes and Alternations: A Preliminary Investigation.</em> University of Chicago Press.</li>
+    <li>Levin, B. (2008). Dative verbs: A crosslinguistic perspective. <em>Lingvisticæ Investigationes, 31</em>(2), 285–312.</li>
+    <li>Levin, B., &amp; Rappaport Hovav, M. (1995). <em>Unaccusativity: At the Syntax-Lexical Semantics Interface.</em> MIT Press.</li>
+    <li>Levin, B., &amp; Rappaport Hovav, M. (2019). Lexical semantics. In C. Huang, Y. Li, &amp; A. Simpson (Eds.), <em>The Handbook of Chinese Linguistics.</em> Wiley-Blackwell.</li>
+    <li>Mikolov, T., Chen, K., Corrado, G., &amp; Dean, J. (2013). Efficient estimation of word representations in vector space. <em>arXiv:1301.3781.</em></li>
+    <li>Murphy, M. L. (2010). <em>Lexical Meaning.</em> Cambridge University Press.</li>
+    <li>Navigli, R. (2009). Word sense disambiguation: A survey. <em>ACM Computing Surveys, 41</em>(2), 1–69.</li>
+    <li>Nunberg, G. (1995). Transfers of meaning. <em>Journal of Semantics, 12</em>(1), 109–132.</li>
+    <li>Palmer, M., Gildea, D., &amp; Xue, N. (2010). <em>Semantic Role Labeling.</em> Morgan &amp; Claypool.</li>
+    <li>Pennington, J., Socher, R., &amp; Manning, C. D. (2014). GloVe: Global vectors for word representation. <em>Proceedings of EMNLP 2014,</em> 1532–1543.</li>
+    <li>Perfors, A., Tenenbaum, J. B., &amp; Regier, T. (2011). The learnability of abstract syntactic principles. <em>Cognition, 118</em>(3), 306–338.</li>
+    <li>Petruck, M. R. L. (2014). FrameNet. In I. Littlefield &amp; J. Junker (Eds.), <em>Oxford Handbook of the Word.</em> Oxford University Press.</li>
+    <li>Pinker, S. (1989). <em>Learnability and Cognition: The Acquisition of Argument Structure.</em> MIT Press.</li>
+    <li>Pustejovsky, J. (1991). The generative lexicon. <em>Computational Linguistics, 17</em>(4), 409–441.</li>
+    <li>Pustejovsky, J. (1995). <em>The Generative Lexicon.</em> MIT Press.</li>
+    <li>Pustejovsky, J., &amp; Batiukova, O. (2019). <em>The Lexicon.</em> Cambridge University Press.</li>
+    <li>Rappaport, M., &amp; Levin, B. (1988). What to do with theta-roles. In W. Wilkins (Ed.), <em>Thematic Relations</em> (pp. 7–36). Academic Press.</li>
+    <li>Rappaport Hovav, M., &amp; Levin, B. (1998). Building verb meanings. In M. Butt &amp; W. Geuder (Eds.), <em>The Projection of Arguments</em> (pp. 97–134). CSLI Publications.</li>
+    <li>Rappaport Hovav, M., &amp; Levin, B. (2008). The English dative alternation: The case for verb sensitivity. <em>Journal of Linguistics, 44</em>(1), 129–167.</li>
+    <li>Rappaport Hovav, M., &amp; Levin, B. (2010). Reflections on manner/result complementarity. In M. Rappaport Hovav et al. (Eds.), <em>Lexical Semantics, Syntax, and Event Structure</em> (pp. 21–38). Oxford University Press.</li>
+    <li>Roland, D., Dick, F., &amp; Elman, J. L. (2007). Frequency of basic English grammatical structures: A corpus analysis. <em>Journal of Memory and Language, 57</em>(3), 348–379.</li>
+    <li>Ruppenhofer, J., Ellsworth, M., Petruck, M. R. L., Johnson, C. R., Baker, C. F., &amp; Scheffczyk, J. (2016). <em>FrameNet II: Extended Theory and Practice.</em> ICSI.</li>
+    <li>Schuler, K. K. (2005). <em>VerbNet: A Broad-Coverage, Comprehensive Verb Lexicon.</em> PhD dissertation, University of Pennsylvania.</li>
+    <li>Shi, P., &amp; Lin, J. (2019). Simple BERT models for relation extraction and semantic role labeling. <em>arXiv:1904.05255.</em></li>
+    <li>Slobin, D. I. (2004). The many ways to search for a frog: Linguistic typology and the expression of motion events. In S. Strömqvist &amp; L. Verhoeven (Eds.), <em>Relating Events in Narrative</em> (Vol. 2, pp. 219–257). Erlbaum.</li>
+    <li>Sun, L., Korhonen, A., &amp; Krymolowski, Y. (2008). Verb class discovery from rich syntactic data. In A. Gelbukh (Ed.), <em>Computational Linguistics and Intelligent Text Processing</em> (pp. 16–27). Springer.</li>
+    <li>Svenonius, P. (2010). Spatial P in the decomposition of DP. In G. Cinque &amp; L. Rizzi (Eds.), <em>Mapping Spatial PPs</em> (pp. 235–267). Oxford University Press.</li>
+    <li>Swier, R. S., &amp; Stevenson, S. (2004). Unsupervised semantic role labelling. <em>Proceedings of EMNLP 2004,</em> 95–102.</li>
+    <li>Torrent, T. T., Ellsworth, M., &amp; Matos, E. E. (2018). The FrameNet Brasil constructicon. <em>Proceedings of the Linguistic Annotation Workshop 2018.</em></li>
+    <li>Traugott, E. C., &amp; Dasher, R. B. (2002). <em>Regularity in Semantic Change.</em> Cambridge University Press.</li>
+    <li>Traxler, M. J., Pickering, M. J., &amp; McElree, B. (2002). Coercion in sentence processing: Evidence from eye-movements and self-paced reading. <em>Journal of Memory and Language, 47</em>(4), 530–547.</li>
+    <li>Tyler, A., &amp; Evans, V. (2003). <em>The Semantics of English Prepositions: Spatial Scenes, Embodied Meaning, and Cognition.</em> Cambridge University Press.</li>
+    <li>Vendler, Z. (1957). Verbs and times. <em>Philosophical Review, 66</em>(2), 143–160.</li>
+    <li>Ward, G., &amp; Birner, B. (1995). Definiteness and the English existential. <em>Language, 71</em>(4), 722–742.</li>
+    <li>Zwarts, J. (2017). Spatial semantics: Modeling the meaning of place expressions. <em>The Baltic International Yearbook of Cognition, Logic and Communication, 12,</em> 1–35.</li>
+  </ul>
+</div>
+
+</div><!-- /.page -->
+
+<!-- SUBMISSION BAND -->
+<div class="submission-band">
+  <h2>Submitted to the International Journal of Lexicography</h2>
+  <p>Oxford University Press · Preprint · 2026 · CC BY-NC-ND 4.0<br>
+  Comments, critiques, and suggestions are welcome and will be acknowledged.</p>
+  <a href="mailto:pgrossi888@outlook.com" class="btn-gold">Contact the Author →</a>
+  <a href="https://doi.org/10.5281/zenodo.19117399" class="btn-outline" target="_blank">Principia Orthogona Series →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey, USA<br>
+  ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+  <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a> ·
+  <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br>
+  Submitted to <em>International Journal of Lexicography</em> (Oxford University Press) · Not yet peer-reviewed
+</footer>
+
+</body>
+</html>
