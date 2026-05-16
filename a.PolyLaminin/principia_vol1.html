@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principia Orthogona · Volume I · The Mathematics of Generative Transitions</title>
+<meta name="description" content="Volume I of Principia Orthogona. A unified mathematical framework for generative transitions on contact 3-manifolds. Six assumptions, five operators, Whitney A₁–A₃ classification, symplectic geometry, Perelman correspondence. G6 LLC · Pablo Nogueira Grossi · 2026.">
+<meta name="author" content="Pablo Nogueira Grossi · G6 LLC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    tags: 'ams'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────── */
+:root {
+  --navy:   #1a2744;
+  --navy2:  #0f1a30;
+  --gold:   #c9a84c;
+  --gold2:  #e8d49a;
+  --cream:  #faf7f0;
+  --smoke:  #f0ece4;
+  --mid:    #3a4f7a;
+  --rule:   #8a7340;
+  --text:   #1c1c1c;
+  --light:  #e8e2d4;
+  --teal:   #1a6b5a;
+  --teal2:  #d0ece5;
+  --red:    #8a2a2a;
+  --ff-serif: 'Crimson Pro', 'Georgia', serif;
+  --ff-sans:  'Outfit', system-ui, sans-serif;
+  --ff-mono:  'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ── RESET ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--ff-serif); color: var(--text); background: var(--cream);
+       line-height: 1.7; }
+
+/* ── NAV ───────────────────────────────────────────────────────── */
+nav {
+  background: var(--navy2); padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200; height: 52px;
+  border-bottom: 1px solid rgba(201,168,76,.2);
+}
+.nav-logo { color: var(--gold); font-family: var(--ff-sans); font-weight: 600;
+            font-size: 0.85rem; letter-spacing: 0.18em; text-decoration: none;
+            text-transform: uppercase; }
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.nav-links a { color: #aaa; font-family: var(--ff-sans); font-size: 0.8rem;
+               text-decoration: none; letter-spacing: 0.06em; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+.nav-toc-btn { background: none; border: 1px solid rgba(201,168,76,.4);
+               color: var(--gold); font-family: var(--ff-sans); font-size: 0.75rem;
+               padding: 0.3rem 0.8rem; cursor: pointer; letter-spacing: 0.1em;
+               text-transform: uppercase; transition: all .2s; }
+.nav-toc-btn:hover { background: var(--gold); color: var(--navy); }
+
+/* ── TOC DRAWER ────────────────────────────────────────────────── */
+#toc-drawer {
+  position: fixed; top: 52px; right: 0; width: 300px; height: calc(100vh - 52px);
+  background: var(--navy2); border-left: 1px solid rgba(201,168,76,.2);
+  overflow-y: auto; z-index: 190; transform: translateX(100%);
+  transition: transform .3s ease; padding: 1.5rem 1.2rem;
+}
+#toc-drawer.open { transform: translateX(0); }
+#toc-drawer h3 { color: var(--gold); font-family: var(--ff-sans); font-size: 0.75rem;
+                 letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem;
+                 padding-bottom: 0.5rem; border-bottom: 1px solid rgba(201,168,76,.2); }
+.toc-item { display: block; color: #aaa; font-family: var(--ff-sans); font-size: 0.8rem;
+            text-decoration: none; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,.04);
+            transition: color .2s; line-height: 1.3; }
+.toc-item:hover { color: var(--gold); }
+.toc-sub { padding-left: 1rem; font-size: 0.75rem; color: #777; }
+.toc-sub:hover { color: var(--gold2); }
+
+/* ── HERO ──────────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(160deg, var(--navy2) 0%, var(--navy) 60%, #1a3a2a 100%);
+  padding: 5rem 2rem 4rem; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    90deg, rgba(201,168,76,.03) 0, rgba(201,168,76,.03) 1px, transparent 1px, transparent 80px
+  ),
+  repeating-linear-gradient(
+    0deg, rgba(201,168,76,.03) 0, rgba(201,168,76,.03) 1px, transparent 1px, transparent 80px
+  );
+}
+.hero-eyebrow { font-family: var(--ff-sans); font-size: 0.75rem; letter-spacing: 0.3em;
+                color: var(--gold); text-transform: uppercase; margin-bottom: 1.2rem;
+                position: relative; }
+.hero-title { font-family: var(--ff-serif); font-size: clamp(2rem, 5vw, 3.4rem);
+              color: white; font-weight: 300; line-height: 1.15; margin-bottom: 0.5rem;
+              position: relative; }
+.hero-title strong { font-weight: 600; }
+.hero-subtitle { font-family: var(--ff-serif); font-size: 1.15rem; color: var(--gold2);
+                 font-style: italic; margin-bottom: 2rem; position: relative; }
+.gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1.5rem auto; }
+.hero-meta { font-family: var(--ff-sans); font-size: 0.8rem; color: #999;
+             letter-spacing: 0.06em; position: relative; line-height: 2; }
+.hero-meta a { color: var(--gold2); text-decoration: none; }
+.hero-meta a:hover { color: var(--gold); }
+.hero-badges { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;
+               margin-top: 1.5rem; position: relative; }
+.badge { background: rgba(201,168,76,.12); border: 1px solid rgba(201,168,76,.3);
+         color: var(--gold2); font-family: var(--ff-sans); font-size: 0.72rem;
+         padding: 0.25rem 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ── ABSTRACT BAND ─────────────────────────────────────────────── */
+.abstract-band {
+  background: white; border-left: 5px solid var(--gold);
+  max-width: 760px; margin: 2.5rem auto; padding: 1.8rem 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,.06);
+}
+.abstract-band .abs-label { font-family: var(--ff-sans); font-size: 0.7rem;
+                             letter-spacing: 0.2em; text-transform: uppercase;
+                             color: var(--rule); margin-bottom: 0.8rem; }
+.abstract-band p { font-size: 1rem; line-height: 1.8; color: #333; }
+
+/* ── LAYOUT ────────────────────────────────────────────────────── */
+.page { max-width: 760px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ── SECTION HEADINGS ──────────────────────────────────────────── */
+.sec-header {
+  margin: 3.5rem 0 1.2rem; padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--light);
+  display: flex; align-items: baseline; gap: 0.8rem;
+}
+.sec-num { font-family: var(--ff-sans); font-size: 0.75rem; color: var(--gold);
+           letter-spacing: 0.15em; font-weight: 500; min-width: 2rem; }
+.sec-title { font-family: var(--ff-serif); font-size: 1.4rem; font-weight: 600;
+             color: var(--navy); }
+.subsec-header { margin: 2rem 0 0.8rem; }
+.subsec-title { font-family: var(--ff-serif); font-size: 1.05rem; font-weight: 600;
+                color: var(--navy); font-style: italic; }
+
+/* ── PROSE ─────────────────────────────────────────────────────── */
+.page p { line-height: 1.85; margin-bottom: 1.1rem; font-size: 1.02rem; }
+.page ul, .page ol { margin: 0.8rem 0 1rem 1.8rem; }
+.page li { line-height: 1.75; margin-bottom: 0.4rem; font-size: 1rem; }
+
+/* ── MATH ENVIRONMENTS ─────────────────────────────────────────── */
+.env-box {
+  margin: 1.4rem 0; border-left: 4px solid var(--gold);
+  background: white; padding: 1rem 1.2rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,.05);
+}
+.env-box.assumption { border-color: var(--mid); background: #f4f6fb; }
+.env-box.theorem    { border-color: var(--navy); background: var(--smoke); }
+.env-box.conjecture { border-color: var(--teal); background: var(--teal2); }
+.env-box.remark     { border-color: var(--light); background: white; }
+.env-box.falsif     { border-color: var(--mid); background: white; }
+.env-label {
+  font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--rule); margin-bottom: 0.4rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.env-label .lean-tag {
+  background: var(--navy); color: var(--gold); font-size: 0.6rem;
+  padding: 0.1rem 0.4rem; letter-spacing: 0.05em; border-radius: 2px;
+}
+.env-box p { margin-bottom: 0.5rem; font-size: 0.97rem; line-height: 1.75; }
+.env-box p:last-child { margin-bottom: 0; }
+.env-proof { font-style: italic; color: #555; font-size: 0.93rem; }
+.env-proof::before { content: 'Proof sketch. '; font-weight: 600; font-style: normal; color: var(--navy); }
+
+/* ── OPERATOR CHAIN ────────────────────────────────────────────── */
+.op-chain {
+  background: var(--navy); color: var(--gold);
+  font-family: var(--ff-mono); font-size: 1.05rem;
+  text-align: center; padding: 1rem 1.5rem; letter-spacing: 0.2em;
+  margin: 1.5rem 0; display: flex; align-items: center; justify-content: center;
+  gap: 0.6rem; flex-wrap: wrap;
+}
+.op-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 4px;
+  font-weight: 700; font-size: 1rem;
+}
+.op-C { background: var(--mid); color: white; }
+.op-K { background: var(--teal); color: white; }
+.op-F { background: var(--red); color: white; }
+.op-U { background: #5a7a3a; color: white; }
+.op-E { background: #7a5a1a; color: white; }
+.op-arrow { color: var(--gold); opacity: 0.7; }
+
+/* ── MATH DISPLAY ──────────────────────────────────────────────── */
+.math-display {
+  background: var(--smoke); border-left: 3px solid var(--gold);
+  padding: 0.9rem 1.2rem; margin: 1rem 0; overflow-x: auto;
+  font-size: 1.05rem;
+}
+.math-inline code { font-family: var(--ff-mono); background: var(--smoke);
+                    padding: 0.1em 0.35em; font-size: 0.88em; color: var(--navy); }
+
+/* ── TABLES ────────────────────────────────────────────────────── */
+.math-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+              font-size: 0.88rem; }
+.math-table th { background: var(--navy); color: var(--gold); padding: 0.55rem 0.9rem;
+                 text-align: left; font-family: var(--ff-sans); font-size: 0.7rem;
+                 letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+.math-table td { padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--light);
+                 line-height: 1.5; vertical-align: top; }
+.math-table tr:nth-child(even) td { background: rgba(0,0,0,.018); }
+.math-table tr.new-A td { background: #fffbef; font-weight: 500; }
+.math-table tr.new-B td { background: #f0fff4; font-weight: 500; }
+.math-table .mono { font-family: var(--ff-mono); font-size: 0.83rem; }
+
+/* ── PERELMAN DIAGRAM ──────────────────────────────────────────── */
+.perelman-diagram {
+  margin: 2rem 0; border: 1px solid var(--light);
+  background: var(--cream); overflow: hidden;
+}
+.perelman-header {
+  background: var(--navy); color: var(--gold); padding: 0.9rem 1.2rem;
+  font-family: var(--ff-sans); font-size: 0.78rem; letter-spacing: 0.15em;
+  text-transform: uppercase; text-align: center;
+}
+.perelman-subtitle {
+  background: rgba(26,39,68,.85); color: #aaa; padding: 0.4rem 1.2rem;
+  font-family: var(--ff-sans); font-size: 0.72rem; text-align: center;
+  letter-spacing: 0.05em; font-style: italic;
+}
+.perelman-row {
+  display: grid; grid-template-columns: 3rem 7rem 1fr 2rem 1fr;
+  align-items: center; gap: 0; border-bottom: 1px solid var(--light);
+  min-height: 3.8rem;
+}
+.perelman-row:last-child { border-bottom: none; }
+.perelman-row:nth-child(odd) { background: var(--smoke); }
+.perelman-row:nth-child(even) { background: white; }
+.perelman-op {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; font-weight: 700; font-size: 1.1rem;
+  font-family: var(--ff-mono); color: white; padding: 0.5rem 0;
+}
+.perelman-name {
+  font-family: var(--ff-sans); font-size: 0.8rem; font-weight: 600;
+  color: var(--navy); padding: 0.5rem 0.6rem; border-right: 1px solid var(--light);
+}
+.perelman-cell {
+  padding: 0.7rem 0.8rem; font-size: 0.88rem; line-height: 1.5; color: #333;
+  font-family: var(--ff-serif);
+}
+.perelman-arrow {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 1.1rem; padding: 0 0.2rem;
+}
+.perelman-footer {
+  background: var(--smoke); padding: 0.7rem 1.2rem; border-top: 1px solid var(--light);
+  font-family: var(--ff-sans); font-size: 0.73rem; color: #666;
+  text-align: center; font-style: italic;
+}
+.perelman-lean {
+  background: rgba(26,39,68,.06); border-top: 1px solid var(--light);
+  padding: 0.4rem 1.2rem; font-family: var(--ff-mono); font-size: 0.7rem;
+  color: var(--teal); text-align: center;
+}
+
+/* ── INTERACTIVE CANVAS ────────────────────────────────────────── */
+.sim-wrap { margin: 2rem 0; background: #0d1117; border: 1px solid var(--light); }
+.sim-wrap canvas { width: 100%; display: block; }
+.sim-controls {
+  padding: 0.7rem 1rem; background: #0d1117;
+  border-top: 1px solid rgba(201,168,76,.15);
+  display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem;
+  font-family: var(--ff-sans); font-size: 0.78rem; color: #aaa; align-items: center;
+}
+.sim-controls label { display: flex; align-items: center; gap: 0.4rem; }
+.sim-controls input[type=range] { width: 80px; accent-color: var(--gold); }
+.sim-val { color: var(--gold); font-family: var(--ff-mono); min-width: 36px; }
+.sim-label {
+  font-family: var(--ff-sans); font-size: 0.7rem; color: #555;
+  padding: 0.3rem 1rem; background: #0d1117;
+  border-top: 1px solid rgba(201,168,76,.08);
+}
+
+/* ── COHERENCE BRIDGE CANVAS ───────────────────────────────────── */
+#bridge-canvas-wrap { margin: 2rem 0; background: white; border: 1px solid var(--light); padding: 1rem; }
+
+/* ── SINGULARITY TABLE ─────────────────────────────────────────── */
+.sing-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+.sing-table th { background: var(--mid); color: white; padding: 0.45rem 0.8rem;
+                 font-family: var(--ff-sans); font-size: 0.7rem; letter-spacing: 0.1em;
+                 text-transform: uppercase; font-weight: 500; }
+.sing-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light); }
+.sing-table .A1 { color: var(--teal); font-weight: 600; font-family: var(--ff-mono); }
+.sing-table .A2 { color: var(--mid); font-weight: 600; font-family: var(--ff-mono); }
+.sing-table .A3 { color: var(--rule); font-weight: 600; font-family: var(--ff-mono); }
+
+/* ── CORPUS TABLE ──────────────────────────────────────────────── */
+.corpus-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+.corpus-table th { background: var(--navy); color: var(--gold); padding: 0.5rem 0.8rem;
+                   font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.12em;
+                   text-transform: uppercase; font-weight: 400; }
+.corpus-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--light);
+                   vertical-align: top; line-height: 1.4; }
+.corpus-table .doi { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--mid); }
+.corpus-table .status-s { color: var(--teal); font-weight: 500; }
+.corpus-table .status-d { color: var(--rule); }
+.corpus-table .status-p { color: var(--navy); font-weight: 600; }
+.corpus-table tr.highlight td { background: #fffbef; }
+
+/* ── REFERENCES ────────────────────────────────────────────────── */
+.ref-list { list-style: none; margin: 1rem 0; }
+.ref-list li {
+  display: flex; gap: 0.8rem; padding: 0.6rem 0;
+  border-bottom: 1px solid var(--light); font-size: 0.9rem; line-height: 1.6;
+}
+.ref-num { font-family: var(--ff-mono); color: var(--gold); font-size: 0.8rem;
+           min-width: 2rem; padding-top: 0.1rem; font-weight: 500; }
+.ref-list a { color: var(--teal); }
+.ref-list a:hover { color: var(--navy); }
+
+/* ── FALSIF BLOCK ──────────────────────────────────────────────── */
+.falsif-block {
+  background: white; border-left: 4px solid var(--mid);
+  padding: 0.9rem 1.2rem; margin: 1rem 0;
+  font-size: 0.93rem; line-height: 1.65;
+}
+.falsif-block strong {
+  display: block; font-family: var(--ff-sans); font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy);
+  margin-bottom: 0.4rem;
+}
+
+/* ── STATUS GRID ───────────────────────────────────────────────── */
+.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.status-card { background: white; border: 1px solid var(--light); padding: 1rem; }
+.status-card h4 { font-family: var(--ff-sans); font-size: 0.72rem; letter-spacing: 0.15em;
+                  text-transform: uppercase; color: var(--rule); margin-bottom: 0.6rem; }
+.status-card ul { list-style: none; margin: 0; }
+.status-card li { font-size: 0.88rem; padding: 0.2rem 0; border-bottom: 1px solid var(--smoke);
+                  line-height: 1.4; display: flex; gap: 0.5rem; }
+.check { color: var(--teal); font-size: 0.85rem; }
+.open  { color: var(--rule); font-size: 0.85rem; }
+@media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
+
+/* ── CTA ───────────────────────────────────────────────────────── */
+.cta-band {
+  background: var(--navy); color: white;
+  padding: 3rem 2rem; text-align: center; margin-top: 3rem;
+}
+.cta-band h2 { font-family: var(--ff-serif); font-size: 1.6rem; font-weight: 300;
+               margin-bottom: 0.6rem; color: white; }
+.cta-band p { color: #aaa; max-width: 520px; margin: 0 auto 1.8rem;
+              font-size: 0.97rem; line-height: 1.75; }
+.btn-gold { background: var(--gold); color: var(--navy); padding: 0.8rem 2rem;
+            font-family: var(--ff-sans); font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; display: inline-block; margin: 0.4rem;
+            transition: opacity .2s; letter-spacing: 0.04em; }
+.btn-gold:hover { opacity: 0.88; }
+.btn-outline { background: transparent; color: var(--gold); padding: 0.8rem 2rem;
+               border: 1.5px solid var(--gold); font-family: var(--ff-sans);
+               font-size: 0.9rem; text-decoration: none; display: inline-block;
+               margin: 0.4rem; transition: all .2s; }
+.btn-outline:hover { background: var(--gold); color: var(--navy); }
+
+/* ── FOOTER ────────────────────────────────────────────────────── */
+footer { background: var(--navy2); color: #666; padding: 2rem; text-align: center;
+         font-family: var(--ff-sans); font-size: 0.75rem; line-height: 2; }
+footer a { color: #777; text-decoration: none; }
+footer a:hover { color: var(--gold); }
+
+/* ── UTILITIES ─────────────────────────────────────────────────── */
+.gold-text { color: var(--gold); }
+.teal-text { color: var(--teal); }
+.navy-text { color: var(--navy); }
+.small-caps { font-variant: small-caps; letter-spacing: 0.05em; }
+.running-head {
+  font-family: var(--ff-sans); font-size: 0.68rem; color: var(--rule);
+  letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid var(--light);
+  padding-bottom: 0.5rem; margin-bottom: 2.5rem; margin-top: 2rem;
+}
+.section-anchor { scroll-margin-top: 64px; }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav>
+  <a href="index.html" class="nav-logo">Principia Orthogona</a>
+  <div class="nav-links">
+    <a href="sample-chapter-autophagy.html">Chapter A</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a>
+    <a href="https://doi.org/10.5281/zenodo.19117400" target="_blank">Zenodo</a>
+    <button class="nav-toc-btn" onclick="document.getElementById('toc-drawer').classList.toggle('open')">Contents</button>
+  </div>
+</nav>
+
+<!-- ── TOC DRAWER ───────────────────────────────────────────── -->
+<div id="toc-drawer">
+  <h3>Table of Contents</h3>
+  <a class="toc-item" href="#abstract">Abstract</a>
+  <a class="toc-item" href="#sec1">1 · Introduction</a>
+  <a class="toc-item" href="#sec2">2 · Minimal Assumptions</a>
+  <a class="toc-item" href="#sec3">3 · Operator Definitions</a>
+  <a class="toc-item" href="#sec4">4 · Falsifiability Conditions</a>
+  <a class="toc-item" href="#sec5">5 · Structural Theorems</a>
+  <a class="toc-item" href="#sec6">6 · Canonical Examples</a>
+  <a class="toc-item" href="#sec7">7 · Analytical Invariants</a>
+  <a class="toc-item" href="#sec8">8 · Normal Forms</a>
+  <a class="toc-item" href="#sec9">9 · Singularity Classification</a>
+  <a class="toc-item" href="#sec10">10 · Metric Geometry of κ*</a>
+  <a class="toc-item" href="#sec11">11 · Variational Principles</a>
+  <a class="toc-item" href="#sec12">12 · Hamiltonian Structure</a>
+  <a class="toc-item" href="#sec13">13 · Connection to dm³</a>
+  <a class="toc-item" href="#sec14">14 · Fifth Operator: Entropy</a>
+  <a class="toc-item" href="#sec15">15 · Perelman Correspondence</a>
+  <a class="toc-item" href="#sec16">16 · Dimensional Threshold</a>
+  <a class="toc-item" href="#sec17">17 · Formal Status</a>
+  <a class="toc-item" href="#sec18">18 · Corpus</a>
+  <a class="toc-item" href="#references">References</a>
+</div>
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-eyebrow">Principia Orthogona · Volume I · Second Edition · April 2026</div>
+  <h1 class="hero-title"><strong>The Mathematics of</strong><br>Generative Transitions</h1>
+  <div class="hero-subtitle">A unified framework for threshold events on contact 3-manifolds</div>
+  <div class="gold-rule"></div>
+  <div class="hero-meta">
+    Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey, USA<br>
+    ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+    <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a> · <a href="mailto:g6llc@proton.me">g6llc@proton.me</a> ·
+    <a href="mailto:"></a>
+  </div>
+  <div class="hero-badges">
+    <span class="badge">Lean 4 · Zero sorry</span>
+    <span class="badge">Zenodo 10.5281/zenodo.19117400</span>
+    <span class="badge">ISBN 979-8-9954416-0-1</span>
+    <span class="badge">CC BY-NC-ND 4.0</span>
+    <span class="badge">MSC 37C25 · 37G10 · 53D10 · 57M27</span>
+  </div>
+</div>
+
+<!-- ── ABSTRACT ─────────────────────────────────────────────── -->
+<div id="abstract" class="section-anchor" style="max-width:760px;margin:0 auto;padding:0 2rem;">
+  <div class="abstract-band">
+    <div class="abs-label">Abstract</div>
+    <p>
+      This volume develops a unified mathematical framework for generative transitions:
+      localised geometric events in which a trajectory undergoes compression, curvature
+      intensification, loss of injectivity, and stabilisation, governed by the operator
+      sequence \(G = U \circ F \circ K \circ C\).
+      The framework rests on six minimal assumptions and produces constructive operator
+      definitions, five structural theorems, seven analytical invariants, four normal forms,
+      a singularity classification restricted to the Whitney \(A_1\)–\(A_3\) hierarchy,
+      a free-discontinuity variational principle, and a symplectic Hamiltonian structure
+      with a distributional generator at the fold.
+    </p>
+    <p>
+      The second edition adds a fifth operator \(E\) (Generative Time Circuit) with
+      \(\dot{z} \geq 0\), establishes a term-by-term structural correspondence with
+      Perelman's proof of the Poincaré conjecture via Ricci flow with surgery
+      (Conjecture 15.1), and identifies the dimensional threshold \(N = 3\) as the minimum
+      dimension for non-trivial contact geometry, connecting it to \(c = 3\) in the Collatz
+      map (Conjecture 16.1). Theorems A–D are machine-checked in Lean 4 with zero axioms
+      beyond Mathlib4.
+    </p>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ──────────────────────────────────────────── -->
+<div class="page">
+
+<!-- §1 Introduction -->
+<div id="sec1" class="section-anchor">
+  <div class="sec-header">
+    <span class="sec-num">1</span>
+    <span class="sec-title">Introduction</span>
+  </div>
+  <div class="running-head">Volume I · The Mathematics of Generative Transitions</div>
+
+  <p>A generative transition is what happens when a system crosses a threshold it cannot uncross. The cell that begins to digest itself under nutrient stress. The star that ignites helium when its hydrogen is exhausted. The elastic rod that buckles under axial load. The 3-manifold that develops a geometric singularity under Ricci flow. In each case, a compression drives the system toward a critical point, a curvature instability makes the approach inevitable, a fold commits the system irreversibly to a new branch, and an unfolding establishes the new stable state.</p>
+
+  <p>This volume formalises that sequence as four operators acting on trajectories in a Riemannian manifold. The second edition adds a fifth operator <em>E</em> (Entropy / Generative Time Circuit), whose action variable accumulates the irreversible cost:</p>
+
+  <div class="op-chain" aria-label="Operator chain C K F U E">
+    <span class="op-badge op-C">C</span>
+    <span class="op-arrow">→</span>
+    <span class="op-badge op-K">K</span>
+    <span class="op-arrow">→</span>
+    <span class="op-badge op-F">F</span>
+    <span class="op-arrow">→</span>
+    <span class="op-badge op-U">U</span>
+    <span class="op-arrow">→</span>
+    <span class="op-badge op-E">E</span>
+    <span class="op-arrow">→</span>
+    <span style="color:#888;font-size:.9rem">C′ → ···</span>
+  </div>
+
+  <p>The central mathematical claim is that this operator sequence is not an analogy: it is a precise structure admitting constructive definitions, analytical invariants, a variational principle, and a Hamiltonian formulation. The framework is placed within established mathematical traditions: comparison geometry, singularity theory, geometric flows, variational mechanics, and impulsive Hamiltonian systems.</p>
+
+  <p>All new second-edition material is explicitly marked as argued or conjectured. Nothing new is claimed as proved beyond what Lean 4 verifies.</p>
+</div>
+
+<!-- §2 Assumptions -->
+<div id="sec2" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">2</span><span class="sec-title">Minimal Mathematical Assumptions</span></div>
+
+  <div class="env-box assumption">
+    <div class="env-label">Assumption 2.1 · Manifold Structure</div>
+    <p>The state space \(X\) is a smooth, finite-dimensional Riemannian manifold, locally compact and second-countable.</p>
+  </div>
+
+  <div class="env-box assumption">
+    <div class="env-label">Assumption 2.2 · Trajectory Regularity</div>
+    <p>A system trajectory \(\gamma : [0,T] \to X\) is piecewise \(C^2\), locally non-degenerate (\(\|\dot\gamma(t)\| \neq 0\) a.e.), and has bounded curvature on compact intervals prior to folding events.</p>
+  </div>
+
+  <div class="env-box assumption">
+    <div class="env-label">Assumption 2.3 · Compression Feasibility</div>
+    <p>There exists a lower-dimensional submanifold \(X_C \subset X\) and a Lipschitz projection \(C : X \to X_C\) satisfying the bi-Lipschitz non-collapse condition \(d(C(x_1), C(x_2)) \geq \delta\, d(x_1, x_2)\) for some \(\delta > 0\) and all \(x_1, x_2\) in a compact neighbourhood. This ensures distinct trajectories remain distinguishable after compression.</p>
+  </div>
+
+  <div class="env-box assumption">
+    <div class="env-label">Assumption 2.4 · Curvature Threshold</div>
+    <p>The critical curvature is defined intrinsically by the focal radius: \(\kappa^*(x) = 1/\mathrm{foc}(x)\). In the presence of positive sectional curvature, the Rauch comparison theorem gives \(\kappa^*(x) = \min(\|\mathrm{II}_x\|, \sqrt{K_\mathrm{sec}(x)})\). For \(K_\mathrm{sec} \leq 0\): \(\kappa^*(x) = \|\mathrm{II}_x\|\).</p>
+  </div>
+
+  <div class="env-box assumption">
+    <div class="env-label">Assumption 2.5 · Folding Well-Posedness</div>
+    <p>The folding operator \(F : X_C \to X_F\) satisfies: the Jacobian \(dF\) loses rank by exactly 1 at fold points; the fold is local; and the fold produces a finite number of branches.</p>
+  </div>
+
+  <div class="env-box assumption">
+    <div class="env-label">Assumption 2.6 · Morse Stability Functional</div>
+    <p>The stability functional \(\Phi : X \to \mathbb{R}\) is \(C^2\), bounded below on compact subsets, and Morse: \(\nabla^2\Phi(x^*) \succ 0\) at every local minimum \(x^*\).</p>
+  </div>
+</div>
+
+<!-- §3 Operators -->
+<div id="sec3" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">3</span><span class="sec-title">Operator Definitions</span></div>
+
+  <div class="env-box">
+    <div class="env-label"><span class="op-badge op-C" style="width:1.4rem;height:1.4rem;font-size:.8rem">C</span> Definition 3.1 · Compression Operator</div>
+    <p>A <em>compression operator</em> is a map \(C : X \to X_C\) with \(\dim(X_C) < \dim(X)\) satisfying Assumption 2.3. \(C\) reduces degrees of freedom while retaining essential local structure.</p>
+  </div>
+
+  <div class="env-box">
+    <div class="env-label"><span class="op-badge op-K" style="width:1.4rem;height:1.4rem;font-size:.8rem">K</span> Definition 3.2 · Curvature Operator</div>
+    <p>Given a compressed trajectory \(\gamma_C : [0,T] \to X_C\), the <em>curvature operator</em> \(K : X_C \to X_C\) modifies the tangent field by</p>
+    <div class="math-display">\[ \frac{d}{ds}[K(\gamma_C)(s)] = \dot\gamma_C(s) + \alpha(s)\,\mathbf{n}(s), \qquad \alpha(s) = \lambda\bigl(\kappa^*(\gamma_C(s)) - \kappa(s)\bigr)_+,\quad \lambda > 0. \]</div>
+    <p>\(K\) drives curvature monotonically toward \(\kappa^*\) but never beyond it; the sequence is a hybrid dynamical system with a switching condition at \(\kappa^*\).</p>
+  </div>
+
+  <div class="env-box">
+    <div class="env-label"><span class="op-badge op-F" style="width:1.4rem;height:1.4rem;font-size:.8rem">F</span> Definition 3.3 · Folding Operator</div>
+    <p>Let \(\gamma_K = K(\gamma_C)\). A fold occurs at \(s_0\) when \(|\kappa_K(s_0)| = \kappa^*(\gamma_K(s_0))\). The <em>folding operator</em> \(F : X_C \to X_F\) acts by \(F(\gamma_K(s)) = \gamma_K(s) - \beta(s)\,\mathbf{n}(s)\), where</p>
+    <div class="math-display">\[ \beta(s) = \begin{cases} 0 & |\kappa_K(s)| < \kappa^*, \\ \mu\bigl(|\kappa_K(s)| - \kappa^*\bigr) & |\kappa_K(s)| \geq \kappa^*. \end{cases} \]</div>
+    <p>At a fold point \(s_0\): \(\mathrm{rank}(dF_{\gamma_K(s_0)}) = \dim(X_C) - 1\).</p>
+  </div>
+
+  <div class="env-box">
+    <div class="env-label"><span class="op-badge op-U" style="width:1.4rem;height:1.4rem;font-size:.8rem">U</span> Definition 3.4 · Unfolding Operator</div>
+    <p>The <em>unfolding operator</em> \(U : X_F \to X\) is \(U(x_F) = \arg\min_{y \in \mathcal{N}(x_F)} \Phi(y)\), realised by the gradient flow \(\dot{y} = -\nabla\Phi(y)\), \(y(0) = x_F\), converging to a non-degenerate local minimum \(x^*\).</p>
+  </div>
+
+  <div class="env-box theorem">
+    <div class="env-label">Theorem 3.1 · Sequential Consistency</div>
+    <p>If \(K\) is applied until curvature reaches \(\kappa^*\), then \(F\) is well-defined, produces a finite branch set, and induces a rank-deficient Jacobian at fold points.</p>
+    <p class="env-proof">\(K\) drives curvature monotonically to \(\kappa^*\) via \(\alpha(s)\). At \(\kappa^*\), \(\beta(s)\) becomes nonzero, introducing local non-injectivity. The normal direction collapses, reducing Jacobian rank by 1. The Morse condition on \(\Phi\) implies finitely many branches.</p>
+  </div>
+</div>
+
+<!-- §4 Falsifiability -->
+<div id="sec4" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">4</span><span class="sec-title">Falsifiability Conditions</span></div>
+  <div class="falsif-block"><strong>F1 · Compression</strong>If empirical data show expansion under \(C\), or collapse of distinct trajectories, the model fails.</div>
+  <div class="falsif-block"><strong>F2 · Curvature</strong>If a fold occurs strictly below \(\kappa^*\), or curvature exceeds \(\kappa^*\) without folding. (\(\kappa^*\) is computed independently via the focal radius — not post-hoc.)</div>
+  <div class="falsif-block"><strong>F3 · Folding</strong>If empirical fold events do not correspond to Jacobian rank loss, or produce infinitely many branches.</div>
+  <div class="falsif-block"><strong>F4 · Sequence order</strong>If transitions occur in a different order, or stabilisation occurs without folding.</div>
+</div>
+
+<!-- §5 Structural Theorems -->
+<div id="sec5" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">5</span><span class="sec-title">Structural Theorems</span></div>
+
+  <div class="env-box theorem"><div class="env-label">Theorem 5.1 · Existence and Well-Posedness</div><p>Under Assumptions 2.1–2.6, the composite operator \(G = U \circ F \circ K \circ C\) is well-defined on any piecewise \(C^2\) trajectory.</p></div>
+  <div class="env-box theorem"><div class="env-label">Theorem 5.2 · Local Determination</div><p>The action of \(G\) on \(\gamma\) is determined entirely by the local geometry of \(\gamma\) in a neighbourhood of the fold point.</p></div>
+  <div class="env-box theorem"><div class="env-label">Theorem 5.3 · Non-Commutativity</div><p>The operators \(C, K, F, U\) do not commute; the sequence is order-dependent.</p></div>
+  <div class="env-box theorem"><div class="env-label">Theorem 5.4 · Irreducibility</div><p>No operator in the sequence \(C \to K \to F \to U\) can be removed without altering the qualitative structure of the transition.</p></div>
+  <div class="env-box theorem"><div class="env-label">Theorem 5.5 · Finite Branching</div><p>The branch set \(\mathcal{B} = \{F(\gamma_K(s_i)) : |\kappa_K(s_i)| = \kappa^*(\gamma_K(s_i))\}\) is finite. (Follows from the Morse condition on \(\Phi\) and transversality of \(\gamma\) to the fold locus.)</p></div>
+</div>
+
+<!-- §6 Examples -->
+<div id="sec6" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">6</span><span class="sec-title">Canonical Examples</span></div>
+  <p><strong>Planar curve with curvature-driven flow.</strong> \(\gamma : [0,T] \to \mathbb{R}^2\), with \(C\) an orthogonal projection, \(K\) the curvature-inducing flow, \(F\) activated at \(\kappa^*\), and \(U\) gradient descent on a local \(\Phi\). The simplest non-trivial realisation.</p>
+  <p><strong>Elastic rod under compression.</strong> Minimising Euler–Bernoulli energy \(E[\gamma] = \int \kappa(s)^2\,ds\). Axial loading provides \(C\); buckling provides \(K\); the critical load is \(\kappa^*\); post-buckling configuration provides \(U\). The cleanest physical realisation of the curvature threshold.</p>
+  <p><strong>Gradient flow on a double-well potential.</strong> \(\Phi(x) = (x^2-1)^2\). The unstable equilibrium at \(x=0\) is the fold point; gradient flow selects \(x = \pm 1\). Illustrates finite branching and stability selection.</p>
+  <p><strong>Saddle-node bifurcation.</strong> \(\dot{x} = \mu - x^2\), \(\dot{y} = -y\). Projection onto the slow manifold provides \(C\); approach to the fold provides \(K\); loss of the slow manifold at \(\mu = 0\) provides \(F\); flow to the stable branch provides \(U\).</p>
+  <p><strong>dm³ toy model</strong> (canonical contact-geometric realisation, §14 and the live diagram below). \(\dot{r} = r(1-r^2)+2(r-1)e^{-z}\), \(\dot\theta=1\), \(\dot{z}=r^2-2(r-1)^2e^{-z}\). The limit cycle \(\Gamma\) at \(r=1\) is the post-fold stabilised state; \(\dot{z}|_\Gamma = 1 > 0\) is the entropy operator \(E\) in action.</p>
+</div>
+
+<!-- §7 Invariants -->
+<div id="sec7" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">7</span><span class="sec-title">Analytical Invariants</span></div>
+  <table class="math-table">
+    <thead><tr><th>#</th><th>Invariant</th><th>Statement</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">I1</td><td>Ambient dimension</td><td>\(\dim(X)\) is preserved by \(G\)</td></tr>
+      <tr><td class="mono">I2</td><td>Codimension of fold</td><td>\(\mathrm{codim}(F(\gamma)) = 1\)</td></tr>
+      <tr><td class="mono">I3</td><td>Critical threshold</td><td>\(\kappa^*(x)\) is a geometric invariant of the manifold</td></tr>
+      <tr><td class="mono">I4</td><td>Curvature sign</td><td>\(\mathrm{sgn}(\kappa(s))\) preserved under \(K\) and \(F\)</td></tr>
+      <tr><td class="mono">I5</td><td>Injectivity before threshold</td><td>For \(|\kappa(s)| < \kappa^*(s)\), trajectory is injective</td></tr>
+      <tr><td class="mono">I6</td><td>Rank deficiency at fold</td><td>\(\mathrm{rank}(dF) = \dim(X_C) - 1\) at every fold point</td></tr>
+      <tr><td class="mono">I7</td><td>Energy monotonicity</td><td>\(\Phi(U(x)) \leq \Phi(x)\), strict unless \(x\) is a local minimum</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- §8 Normal Forms -->
+<div id="sec8" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">8</span><span class="sec-title">Normal Forms</span></div>
+  <p>Two transitions \(G_1, G_2\) are <em>equivalent</em> if there exists a diffeomorphism \(\psi : X \to X\) with \(G_2 = \psi \circ G_1 \circ \psi^{-1}\).</p>
+  <table class="math-table">
+    <thead><tr><th>NF</th><th>Name</th><th>Normal Form</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">NF1</td><td>Compression</td><td>\(C_\mathrm{NF} = \pi_k : \mathbb{R}^n \to \mathbb{R}^k\) (coordinate projection)</td></tr>
+      <tr><td class="mono">NF2</td><td>Curvature</td><td>\(K_\mathrm{NF}(s) = (s, \alpha s^2)\), \(\alpha > 0\)</td></tr>
+      <tr><td class="mono">NF3</td><td>Folding — Whitney fold</td><td>\(F_\mathrm{NF}(u,v) = (u, v^2)\) — unique up to diffeomorphism</td></tr>
+      <tr><td class="mono">NF4</td><td>Unfolding</td><td>\(U_\mathrm{NF}(x) = 0\) from \(\Phi_\mathrm{NF}(x) = x^2\)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- §9 Singularity Classification -->
+<div id="sec9" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">9</span><span class="sec-title">Singularity Classification</span></div>
+  <p>Given rank-1 loss, finite branching, and the Morse condition on \(\Phi\), the admissible singularities are precisely:</p>
+  <table class="sing-table">
+    <thead><tr><th>Type</th><th>Conditions on \(\Delta(s) = \kappa(s) - \kappa^*(s)\)</th><th>Normal Form</th></tr></thead>
+    <tbody>
+      <tr><td class="A1">A₁ fold</td><td>\(\Delta(s_0)=0\), \(\Delta'(s_0)\neq 0\)</td><td>\((u, v^2)\)</td></tr>
+      <tr><td class="A2">A₂ cusp</td><td>\(\Delta=\Delta'=0\), \(\Delta''\neq 0\)</td><td>\((u, v^3+uv)\)</td></tr>
+      <tr><td class="A3">A₃ swallowtail</td><td>\(\Delta=\Delta'=\Delta''=0\), \(\Delta'''\neq 0\)</td><td>\((u, v^4+uv^2+\beta v)\)</td></tr>
+    </tbody>
+  </table>
+  <div class="env-box theorem">
+    <div class="env-label">Theorem 9.1 · Classification of Generative Transitions</div>
+    <p>Every admissible generative transition \(G = U \circ F \circ K \circ C\) is \(\mathcal{A}\)-equivalent to exactly one of \(A_1\), \(A_2\), \(A_3\).</p>
+    <p class="env-proof">Rank loss is exactly 1 → restricts to \(A_k\) series. Morse condition on \(\Phi\) limits unfolding to ≤ 3 parameters. Transversality of \(\gamma\) to fold locus ensures isolated fold points → \(k \leq 3\).</p>
+  </div>
+  <p>Parameter space \(\Theta \subset \mathbb{R}^p\), \(p \leq 3\): stratified as \(\Theta_1\) (generic fold, codim 0), \(\Theta_2\) (cusp stratum, codim 1), \(\Theta_3\) (swallowtail, codim 2; a point when \(p=3\)).</p>
+</div>
+
+<!-- §10 Metric Geometry of κ* -->
+<div id="sec10" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">10</span><span class="sec-title">Metric Geometry of κ*</span></div>
+  <p>The critical curvature \(\kappa^*(x) = 1/\mathrm{foc}(x)\) is defined intrinsically by the focal radius. For \(K_\mathrm{sec} \leq 0\): \(\kappa^*(x) = \|\mathrm{II}_x\|\).</p>
+  <p><strong>Rauch correction.</strong> For positive sectional curvature: \(\kappa^*(x) = \min(\|\mathrm{II}_x\|, \sqrt{K_\mathrm{sec}(x)})\). Positive ambient curvature <em>lowers</em> the threshold for folding.</p>
+  <p><strong>Computability.</strong> (1) Compute \(\|\mathrm{II}_x\|\) from the second fundamental form. (2) Compute \(K_\mathrm{sec}(x)\) from the curvature tensor. (3) Apply the formula. Stability: \(\delta\kappa^* = O(\delta g) + O(\delta\mathrm{II}) + O(\delta K_\mathrm{sec})\).</p>
+</div>
+
+<!-- §11 Variational Principles -->
+<div id="sec11" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">11</span><span class="sec-title">Variational Principles</span></div>
+  <p>The action functional for a generative transition is:</p>
+  <div class="math-display">\[ S[\gamma] = \int_0^T \!\Bigl[ \tfrac{1}{2}\|P^\perp \dot\gamma\|^2 + \tfrac{\lambda}{2}(\kappa^* - \kappa)_+^2 + \mu\,\delta(|\kappa| - \kappa^*) + \Phi(\gamma) \Bigr]\,ds. \]</div>
+  <p>Each term corresponds to one operator: \(L_C\) (minimise orthogonal kinetic energy), \(L_K\) (minimise curvature deficit), \(L_F\) (singular activation at threshold), \(L_U\) (minimise stability potential).</p>
+  <p>The delta term places this framework in the class of <em>free-discontinuity variational problems</em> (cf. Ambrosio–Tortorelli, Mumford–Shah, Francfort–Marigo). It produces the jump condition \(\bigl[\partial L/\partial\dot\gamma\bigr]_{s_0^-}^{s_0^+} = \mu\,\mathbf{n}(s_0)\), the variational counterpart of the fold map. The full generative transition is a piecewise-smooth extremal of \(S\).</p>
+</div>
+
+<!-- §12 Hamiltonian Structure -->
+<div id="sec12" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">12</span><span class="sec-title">Hamiltonian Discontinuities and Symplectic Geometry</span></div>
+  <p>The phase space is \(T^*X\) with canonical coordinates \((\gamma, p)\) and symplectic form \(\omega = d\gamma \wedge dp\). For \(s \neq s_0\), the flow is symplectic: \(\Phi_t^*\omega = \omega\). The delta Lagrangian produces the impulse \(p(s_0^+) - p(s_0^-) = \mu\,\mathbf{n}(s_0)\). Configuration \(\gamma\) is continuous; momentum \(p\) has a jump.</p>
+  <div class="env-box theorem">
+    <div class="env-label"><span class="lean-tag">PROVED</span> Theorem 12.1 · Symplectic Preservation</div>
+    <p>The fold map \(\mathcal{F} : (\gamma, p) \mapsto (\gamma, p + \mu\mathbf{n})\) satisfies \(\mathcal{F}^*\omega = \omega\).</p>
+    <p class="env-proof">\(d\gamma \wedge d(p+\mu\mathbf{n}) = d\gamma \wedge dp + \mu\,d\gamma \wedge d\mathbf{n} = d\gamma \wedge dp\), since \(\mathbf{n}\) depends only on \(\gamma\). □</p>
+  </div>
+  <p>The fold is generated by \(S(\gamma) = \mu\,\Theta(|\kappa(\gamma)| - \kappa^*)\), so \(p^+ = p^- + \partial S/\partial\gamma\). The full transition \(H = \Psi_t \circ \mathcal{F} \circ \Phi_t\) is a piecewise-smooth symplectic map. Momentum structure: \(A_1\) → single jump; \(A_2\) → jump with first-order tangency; \(A_3\) → jump with second-order tangency.</p>
+</div>
+
+<!-- §13 Connection to dm³ -->
+<div id="sec13" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">13</span><span class="sec-title">Connection to the dm³ Framework</span></div>
+  <p>Every admissible generative transition induces a locally attracting invariant set; conversely, every dm³ limit cycle admits a neighbourhood whose formation is governed by a fold-type transition. The link between the curvature threshold \(\kappa^*\) and the embodiment threshold \(\tau = \sqrt{c/\kappa}\) is that as \(\kappa \uparrow \kappa^*\), the post-fold orbit \(\Gamma\) has Floquet exponent \(\mu_{\max} < 0\), and \(\tau\) is finite precisely when \(\mu_{\max} < 0\). Thus \(\kappa^*\) is the geometric precursor of \(\tau\).</p>
+  <table class="math-table">
+    <thead><tr><th>This Volume</th><th>dm³ Framework</th></tr></thead>
+    <tbody>
+      <tr><td>Compression \(C\)</td><td>Basin contraction</td></tr>
+      <tr><td>Curvature flow \(K\)</td><td>Lyapunov descent \(\dot{V} \leq -cV\)</td></tr>
+      <tr><td>Fold \(F\)</td><td>Whitney \(A_1\) at \(q^*=1\); contact bifurcation</td></tr>
+      <tr><td>Unfolding \(U\)</td><td>Gradient flow to \(\Gamma\)</td></tr>
+      <tr><td>Entropy \(E\) (2nd ed.)</td><td>Entropy operator \(\dot{z} \geq 0\)</td></tr>
+    </tbody>
+  </table>
+  <p>The \(A_1\)–\(A_3\) singularities classify the local geometry of dm³ bifurcations under the projection \(M = S \times \mathbb{R} \to S\): \(A_1\) → contact Hopf and saddle-node; \(A_2\) → Neimark–Sacker; \(A_3\) → slow-fast crossover.</p>
+</div>
+
+<!-- §14 Entropy Operator -->
+<div id="sec14" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">14</span><span class="sec-title">The Fifth Operator: Entropy and the Generative Time Circuit</span></div>
+  <p>The contact manifold \(M = S \times \mathbb{R}\) carries a coordinate \(z \in \mathbb{R}\) satisfying \(\dot{z} = f(x) \geq 0\) near \(\Gamma\). The form \(\alpha = dz - \lambda\) encodes both the first and second laws: \(dz\) is entropy production, \(\lambda\) is reversible work. The condition \(\dot{z} \geq 0\) is the second law on \(M\).</p>
+
+  <div class="env-box">
+    <div class="env-label"><span class="op-badge op-E" style="width:1.4rem;height:1.4rem;font-size:.8rem">E</span> Definition 14.1 · Generative Time Circuit</div>
+    <p>The operator \(E : \Gamma \to \Gamma'\) maps \(z(T^*) \mapsto \kappa' = \phi(z(T^*))\) where \(\phi' < 0\) (accumulated entropy increases compression in the next cycle) and \(\phi(0) = \kappa_0\). The chain closes as a spiral: \(C \to K \to F \to U \to E \to C' \to \cdots\)</p>
+  </div>
+
+  <div class="env-box theorem">
+    <div class="env-label">Theorem T1 · Entropy Monotonicity <span style="color:var(--rule);font-size:.7rem;letter-spacing:.05em">[OPEN OBLIGATION — AXLE #15]</span></div>
+    <p>Along trajectories of the dm³ toy model in the Gronwall basin, \(z(t)\) is monotonically non-decreasing for all \(t > 0\), with \(\dot{z}|_\Gamma = 1 > 0\).</p>
+    <p style="font-size:.85rem;color:#777;margin-top:.5rem;">The scalar claim \(\dot{z}|_\Gamma = 1 > 0\) is immediate from the ODE at \(r=1\), \(z \to \infty\). Global monotonicity in the basin is the open obligation.</p>
+  </div>
+
+  <p>The live dm³ phase portrait — two systems (autophagy and triple-alpha), one attractor:</p>
+
+  <div class="sim-wrap">
+    <canvas id="canvas-dm3" height="320"></canvas>
+    <div class="sim-controls">
+      <label>\(\rho_0\) = <input type="range" id="rho0" min="0.2" max="2.2" value="1.6" step="0.05"><span class="sim-val" id="rho0-v">1.60</span></label>
+      <label>\(\varepsilon\) = <input type="range" id="eps" min="0.5" max="4" value="2" step="0.1"><span class="sim-val" id="eps-v">2.0</span></label>
+      <label>Domain: <select id="domain" style="font-size:.78rem;padding:2px 5px;background:#0d1117;color:#aaa;border:1px solid #333;">
+        <option value="auto">Autophagy (X_auto)</option>
+        <option value="star">Triple-alpha (X_star)</option>
+        <option value="both">Both superimposed</option>
+      </select></label>
+      <label><input type="checkbox" id="show-esc" checked> Escape paths</label>
+    </div>
+    <div class="sim-label">Contact normal form (ρ, θ). Gold = Γ (r=1). Dashed = ε₀=1/3 and r*≈0.80. Blue = converging. Red = escaping. Lean: gronwall_radius, basin_asymmetry.</div>
+  </div>
+</div>
+
+<!-- §15 Perelman -->
+<div id="sec15" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">15</span><span class="sec-title">The Perelman Structural Correspondence</span></div>
+  <p>Perelman's proof of the Poincaré conjecture [1–3] proceeds through Ricci flow with surgery, the \(\mathcal{F}\)-functional, and the \(\mathcal{W}\)-entropy. The dm³ framework identifies a term-by-term structural correspondence. This correspondence does not re-prove the Poincaré conjecture; Perelman's proof stands independently.</p>
+
+  <div class="perelman-diagram">
+    <div class="perelman-header">Figure 1A.1 — The dm³ / Perelman Structural Correspondence</div>
+    <div class="perelman-subtitle">C → K → F → U → E &nbsp;&nbsp;maps onto&nbsp;&nbsp; metric → Ricci flow → surgery → convergence → W-entropy</div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:var(--mid)">C</div>
+      <div class="perelman-name">Compress</div>
+      <div class="perelman-cell">Drives \(\kappa \to \kappa^*\); selects active oscillatory mode</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">Initial Riemannian metric; selection of geometric starting state</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:var(--teal)">K</div>
+      <div class="perelman-name">Curvature</div>
+      <div class="perelman-cell">Lyapunov descent toward \(\Gamma\); curvature intensifies as \(\kappa \to \kappa^*\)</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">\(\partial_t g_{ij} = -2\,\mathrm{Ric}_{ij}\); diffusion toward constant curvature</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:var(--red)">F</div>
+      <div class="perelman-name">Fold</div>
+      <div class="perelman-cell">Whitney \(A_1\) at \(\kappa^*\); Jacobian rank loss; irreversible commit</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">Singularity formation (necks); surgery excises regions, prevents accumulation</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:#5a7a3a">U</div>
+      <div class="perelman-name">Unfold</div>
+      <div class="perelman-cell">Stabilisation on limit cycle \(\Gamma\) within Gronwall basin</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">Post-surgery continuation; convergence toward round metric \(S^3\)</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:#7a5a1a">E</div>
+      <div class="perelman-name">Entropy</div>
+      <div class="perelman-cell">\(\dot{z} \geq 0\); accumulates dissipative cost; seeds \(\kappa'\) of next cycle</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">\(\mathcal{W}\)-entropy: monotonically non-decreasing along Ricci flow; governs singularity control</div>
+    </div>
+    <div class="perelman-footer">The correspondence is structural, not causal. Perelman's proof stands independently. The dm³ framework names the abstract operator structure that made Ricci flow with surgery productive.</div>
+    <div class="perelman-lean">Lean 4: operators C, K, F, U verified (Theorems A–D). Operator E: Theorem T1 is an open obligation (AXLE Issue #15).</div>
+  </div>
+
+  <div class="env-box conjecture">
+    <div class="env-label">Conjecture 15.1 · Perelman Structural Correspondence <span style="color:var(--rule);font-size:.7rem">[ARGUED — NOT PROVED]</span></div>
+    <p>There exists a functor \(\mathcal{P} : \mathbf{dm^3} \to \mathbf{RicciFlow}\) mapping \(C \mapsto\) metric selection; \(K \mapsto \mathrm{Ric}(g)\) as diffusion; \(F \mapsto\) surgical excision at \(\kappa^*\)-necks; \(U \mapsto\) post-surgery convergence to \(S^3\); \(E \mapsto \mathcal{W}\)-entropy. \(\mathcal{P}\) preserves the chain ordering and maps the dm³ limit cycle \(\Gamma\) to \(S^3\) as the terminal attractor.</p>
+    <p style="font-size:.85rem;color:#555;margin-top:.6rem;">The structural parallel is term-by-term (diagram above). The functor construction requires: (a) contact morphisms as morphisms in <strong>dm³</strong>; (b) surgery-compatible diffeomorphisms in <strong>RicciFlow</strong>; (c) construction of \(\mathcal{P}\) and verification of functor laws (open obligation, DM3-lab).</p>
+  </div>
+</div>
+
+<!-- §16 Dimensional Threshold -->
+<div id="sec16" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">16</span><span class="sec-title">The Dimensional Threshold: N = 3 and c = 3</span></div>
+  <p>In dimension 1, contact structure is trivial. In dimension 2, Liouville's theorem rules out limit cycle attractors in area-preserving flows. In dimension 3, the contact form \(\alpha\) first admits a Reeb vector field with a non-trivial flow and a limit cycle attractor [8]. Dimension 3 is the <em>minimum dimension for non-trivial contact geometry</em> — not by convention but by the structure theorem for contact manifolds. This is why the dm³ framework lives on a 3-dimensional contact manifold. It is also why the Poincaré conjecture required Perelman's Ricci flow: dimensions ≥ 5 (Smale [4]) and 4 (Freedman [5]) yield to other methods; dimension 3 is the hardest case.</p>
+
+  <div class="env-box conjecture">
+    <div class="env-label">Conjecture 16.1 · Dimensional Threshold <span style="color:var(--rule);font-size:.7rem">[ARGUED — NOT PROVED]</span></div>
+    <p>The constant \(c = 3\) in the Collatz map \(n \mapsto 3n+1\) and the dimension \(N = 3\) in the Poincaré conjecture are both instances of the same abstract threshold: the minimum value at which a generative system first admits non-trivial contact-geometric structure. \(c = 3\) is the minimum value for which the discrete analogue of the dm³ operator chain generates a non-collapsing, non-periodic orbit structure analogous to a hyperbolic limit cycle.</p>
+    <p style="font-size:.85rem;color:#555;margin-top:.5rem;">Formal proof requires a definition of contact-geometric structure for discrete dynamical systems on \(\mathbb{Z}\) and a proof that the dm³ axioms have no discrete analogue for \(c < 3\) (open obligation, DM3-lab).</p>
+  </div>
+</div>
+
+<!-- §17 Formal Status -->
+<div id="sec17" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">17</span><span class="sec-title">Formal Status and Open Obligations</span></div>
+  <div class="status-grid">
+    <div class="status-card">
+      <h4>Machine-Checked · Lean 4 · Zero sorry</h4>
+      <ul>
+        <li><span class="check">✓</span> Whitney \(A_1\) conditions on \(V(q)=q^3-3q\) at \(q=1\)</li>
+        <li><span class="check">✓</span> Contact non-degeneracy: \(c(\rho)=-2\rho < 0\)</li>
+        <li><span class="check">✓</span> Gronwall radius: \(\varepsilon_0 = 1/3\)</li>
+        <li><span class="check">✓</span> Basin asymmetry: \(1/3 < 4/5 \approx r^*\)</li>
+        <li><span class="check">✓</span> Lyapunov exponents: \(\mu_\mathrm{canonical}=-3\); \(\mu_{\max}=-2 < 0\)</li>
+        <li><span class="check">✓</span> Stability functional \(\sigma(\rho)=\rho^2\): positivity, monotonicity</li>
+        <li><span class="check">✓</span> Theorems A–D (existence, closure, normal form, stability)</li>
+      </ul>
+    </div>
+    <div class="status-card">
+      <h4>Open Obligations</h4>
+      <ul>
+        <li><span class="open">○</span> AXLE #12: kappa_lipschitz (scalar bound proved)</li>
+        <li><span class="open">○</span> AXLE #14: AutophagyDm3 (contact nondeg, Whitney fold from data, Γ_auto existence)</li>
+        <li><span class="open">○</span> AXLE #15: Theorem T1 global monotonicity</li>
+        <li><span class="open">○</span> Sorry 1: Discrete dm³ on ℤ</li>
+        <li><span class="open">○</span> Conj 15.1: Perelman functor construction</li>
+        <li><span class="open">○</span> Conj 16.1: Discrete contact structure threshold</li>
+      </ul>
+    </div>
+  </div>
+  <div class="env-box remark" style="margin-top:1rem;">
+    <div class="env-label">Argued — Not Proved</div>
+    <p>The following are complete mathematical arguments deposited in DM3-lab without Lean 4 verification: Perelman structural correspondence (Conj. 15.1); dimensional threshold (Conj. 16.1); Kakeya needle problem as the \(\tau \to 0\) limit on the rotation contact manifold; Tribonacci constant as the dm³ structural growth rate for the three-operator iteration. These are proof sketches, not proof claims.</p>
+  </div>
+</div>
+
+<!-- §18 Corpus -->
+<div id="sec18" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">18</span><span class="sec-title">The Principia Orthogona Corpus</span></div>
+  <table class="corpus-table">
+    <thead><tr><th>Zenodo DOI</th><th>Date</th><th>Title / Status</th></tr></thead>
+    <tbody>
+      <tr><td class="doi">19117400</td><td>Mar 17</td><td><em>Principia Orthogona Vol I.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19122168</td><td>Mar 19</td><td><em>GCM — Geometric Framework for Dissipative Systems.</em> <span class="status-s">Submitted: J. Geom. Mech.</span></td></tr>
+      <tr><td class="doi">19162013</td><td>Mar 22</td><td><em>The G6 Crystal.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19208015</td><td>Mar 24</td><td><em>Biological Transitions — Multi-Agent Realisations.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19379385</td><td>Apr 2</td><td><em>dm³ Operator — Toy Model &amp; Global Analysis.</em> <span class="status-s">Submitted: SIAM J. Appl. Dyn. Syst.</span></td></tr>
+      <tr><td class="doi">19379473</td><td>Apr 2</td><td><em>Principia Orthogona Vol II — Contact Realization.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19431918</td><td>Apr 5</td><td><em>The Number 33 — Stability Threshold.</em> <span class="status-s">Submitted: Mathematical Intelligencer.</span></td></tr>
+      <tr><td class="doi">19533363</td><td>Apr 2026</td><td><em>GTCT Paper (Ring 5, Version 2).</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr class="highlight"><td class="doi">20221723</td><td>May 2026</td><td><em>Chapter A: Autophagy and Triple-Alpha as dm³ Generative Transitions.</em> <span class="status-p">Deposited — 18 Lean theorems, 0 sorry.</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- References -->
+<div id="references" class="section-anchor">
+  <div class="sec-header"><span class="sec-num"></span><span class="sec-title">References</span></div>
+  <ol class="ref-list">
+    <li><span class="ref-num">[1]</span><span>G. Perelman, "The entropy formula for the Ricci flow and its geometric applications," <em>arXiv:math/0211159</em> (2002). <a href="https://arxiv.org/abs/math/0211159" target="_blank">arxiv.org/abs/math/0211159</a></span></li>
+    <li><span class="ref-num">[2]</span><span>G. Perelman, "Ricci flow with surgery on three-manifolds," <em>arXiv:math/0303109</em> (2003). <a href="https://arxiv.org/abs/math/0303109" target="_blank">arxiv.org/abs/math/0303109</a></span></li>
+    <li><span class="ref-num">[3]</span><span>G. Perelman, "Finite extinction time for the solutions to the Ricci flow on certain three-manifolds," <em>arXiv:math/0307245</em> (2003). <a href="https://arxiv.org/abs/math/0307245" target="_blank">arxiv.org/abs/math/0307245</a></span></li>
+    <li><span class="ref-num">[4]</span><span>S. Smale, "Generalized Poincaré's conjecture in dimensions greater than four," <em>Ann. Math.</em> <strong>74</strong>(2), 391–406 (1961). <a href="https://doi.org/10.2307/1970239" target="_blank">doi:10.2307/1970239</a></span></li>
+    <li><span class="ref-num">[5]</span><span>M. H. Freedman, "The topology of four-dimensional manifolds," <em>J. Differential Geom.</em> <strong>17</strong>(3), 357–453 (1982). <a href="https://doi.org/10.4310/jdg/1214437136" target="_blank">doi:10.4310/jdg/1214437136</a></span></li>
+    <li><span class="ref-num">[6]</span><span>V. I. Arnold, <em>Catastrophe Theory</em>, 3rd ed. Springer, 1986.</span></li>
+    <li><span class="ref-num">[7]</span><span>R. Thom, <em>Structural Stability and Morphogenesis</em>. W. A. Benjamin, 1975.</span></li>
+    <li><span class="ref-num">[8]</span><span>H. Geiges, <em>An Introduction to Contact Topology</em>. Cambridge University Press, 2008.</span></li>
+    <li><span class="ref-num">[9]</span><span>P. Nogueira Grossi, <em>AXLE: Lean 4 Formal Verification Engine for the dm³ Programme</em>. <a href="https://github.com/TOTOGT/AXLE" target="_blank">github.com/TOTOGT/AXLE</a> (2026).</span></li>
+    <li><span class="ref-num">[10]</span><span>P. Nogueira Grossi, <em>DM3-lab</em>. <a href="https://github.com/TOTOGT/DM3-lab" target="_blank">github.com/TOTOGT/DM3-lab</a> (2026).</span></li>
+    <li><span class="ref-num">[11]</span><span>P. Nogueira Grossi, "dm³ Operator — Explicit Toy Model and Global Dynamical Analysis," Zenodo <a href="https://doi.org/10.5281/zenodo.19379385" target="_blank">10.5281/zenodo.19379385</a> (2026). <em>Submitted: SIAM J. Appl. Dyn. Syst.</em></span></li>
+    <li><span class="ref-num">[12]</span><span>P. Nogueira Grossi, "Self-Regulation: Autophagy and the Triple-Alpha Process as dm³ Generative Transitions," Chapter A of <em>Principia Orthogona, Book 3</em>. Zenodo <a href="https://doi.org/10.5281/zenodo.20221723" target="_blank">10.5281/zenodo.20221723</a> (2026).</span></li>
+  </ol>
+</div>
+
+</div><!-- /.page -->
+
+<!-- ── CTA ───────────────────────────────────────────────────── -->
+<div class="cta-band">
+  <h2>Continue the Series</h2>
+  <p>Volume II develops the full contact-geometric realisation. Chapter A applies the framework to autophagy and stellar nucleosynthesis — 18 theorems machine-checked in Lean 4, zero sorry.</p>
+  <a href="sample-chapter-autophagy.html" class="btn-gold">Read Chapter A →</a>
+  <a href="https://doi.org/10.5281/zenodo.19117400" class="btn-outline" target="_blank">Open Access Deposit →</a>
+</div>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div style="margin-bottom:.5rem;">
+    <a href="index.html">Principia Orthogona</a> &nbsp;·&nbsp;
+    <a href="sample-chapter-autophagy.html">Chapter A · Autophagy</a> &nbsp;·&nbsp;
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE Repository</a> &nbsp;·&nbsp;
+    <a href="https://github.com/TOTOGT/DM3-lab" target="_blank">DM3-lab</a> &nbsp;·&nbsp;
+    <a href="https://doi.org/10.5281/zenodo.19117400" target="_blank">Zenodo 19117400</a>
+  </div>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
+  ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+  <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a> · <a href="mailto:g6llc@proton.me">g6llc@proton.me</a> ·
+  <a href="mailto:"></a> ·
+  ISBN 979-8-9954416-0-1 · CC BY-NC-ND 4.0
+</footer>
+
+<!-- ── SCRIPTS ───────────────────────────────────────────────── -->
+<script>
+/* ── dm³ Phase Portrait ──────────────────────────────────────── */
+(function() {
+  const cv = document.getElementById('canvas-dm3');
+  const cx = cv.getContext('2d');
+
+  function step(r, theta, z, dt, eps) {
+    const rdot = r*(1-r*r) + eps*(r-1)*Math.exp(-z);
+    return [r + rdot*dt, theta + dt, z + (r*r - eps*(r-1)*(r-1)*Math.exp(-z))*dt];
+  }
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 320;
+    const H = 320;
+    const rho0 = parseFloat(document.getElementById('rho0').value);
+    const eps  = parseFloat(document.getElementById('eps').value);
+    const dom  = document.getElementById('domain').value;
+    const showEsc = document.getElementById('show-esc').checked;
+
+    document.getElementById('rho0-v').textContent = rho0.toFixed(2);
+    document.getElementById('eps-v').textContent  = eps.toFixed(1);
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const cx0 = W/2, cy0 = H/2, SC = Math.min(W,H)*0.37;
+
+    function px(r,th) { return cx0 + r*Math.cos(th)*SC; }
+    function py(r,th) { return cy0 - r*Math.sin(th)*SC; }
+
+    // rings
+    [[1/3,'rgba(201,168,76,.35)',1,[4,4]],[0.8,'rgba(201,168,76,.35)',1,[4,4]],
+     [1,'#c9a84c',2.5,[]],[1.5,'#1e2a40',.5,[]],[2,'#1e2a40',.5,[]]].forEach(([r,col,lw,dash])=>{
+      cx.beginPath(); cx.setLineDash(dash);
+      for(let i=0;i<=128;i++){const a=i/128*Math.PI*2; i===0?cx.moveTo(px(r,a),py(r,a)):cx.lineTo(px(r,a),py(r,a));}
+      cx.strokeStyle=col; cx.lineWidth=lw; cx.stroke(); cx.setLineDash([]);
+    });
+
+    // labels
+    cx.font='9px JetBrains Mono,monospace'; cx.fillStyle='rgba(201,168,76,.6)'; cx.textAlign='left';
+    cx.fillText('ε₀=1/3', px(1/3,0)+4, py(1/3,0));
+    cx.fillText('r*≈0.80', px(0.8,0)+4, py(0.8,0));
+    cx.fillStyle='#c9a84c'; cx.fillText('Γ (r=1)', px(1,0)+5, py(1,0));
+
+    const domLabels = {
+      auto: ['AUTOPHAGY — X_auto','ρ = mTORC1 activity  ·  θ = autophagic phase'],
+      star: ['TRIPLE-ALPHA — X_star','ρ = T/T*  ·  θ = pulsation phase'],
+      both: ['BOTH SYSTEMS — same contact form','gold orbit = shared attractor Γ']
+    };
+    cx.font='bold 10px Outfit,sans-serif'; cx.fillStyle='#c9a84c'; cx.textAlign='center';
+    cx.fillText(domLabels[dom][0], W/2, 16);
+    cx.font='9px Outfit,sans-serif'; cx.fillStyle='#666';
+    cx.fillText(domLabels[dom][1], W/2, 29);
+
+    function orbit(r0, a0, col, N, dt) {
+      cx.beginPath();
+      let r=r0,th=a0,z=0.15,first=true;
+      for(let i=0;i<N;i++){
+        if(r<0.02||r>3.5) break;
+        const x=px(r,th),y=py(r,th);
+        if(Math.abs(x-cx0)>W*.52||Math.abs(y-cy0)>H*.52) {[r,th,z]=step(r,th,z,dt,eps);continue;}
+        first?cx.moveTo(x,y):cx.lineTo(x,y); first=false;
+        [r,th,z]=step(r,th,z,dt,eps);
+      }
+      cx.strokeStyle=col; cx.lineWidth=1; cx.stroke();
+    }
+
+    const angles=[0,Math.PI/3,2*Math.PI/3,Math.PI,4*Math.PI/3,5*Math.PI/3];
+    [1.3,1.5,1.7,1.9,2.1].forEach((r0,i)=>{
+      angles.forEach(a=>orbit(r0+i*.03, a, 'rgba(88,150,220,.65)', 900, 0.03));
+    });
+    if(showEsc) [.68,.58,.48].forEach(r0=>{
+      angles.forEach(a=>orbit(r0, a+Math.PI/6, 'rgba(200,80,80,.55)', 600, 0.03));
+    });
+
+    // attractor on top
+    cx.beginPath();
+    for(let i=0;i<=256;i++){const a=i/256*Math.PI*2; i===0?cx.moveTo(px(1,a),py(1,a)):cx.lineTo(px(1,a),py(1,a));}
+    cx.strokeStyle='#c9a84c'; cx.lineWidth=2.5; cx.stroke();
+    cx.beginPath(); cx.arc(cx0,cy0,4,0,Math.PI*2); cx.fillStyle='#3a4f7a'; cx.fill();
+  }
+
+  ['rho0','eps','domain','show-esc'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.addEventListener('input',draw); el.addEventListener('change',draw);
+  });
+  window.addEventListener('resize',draw);
+  draw();
+})();
+</script>
+
+</body>
+</html>
