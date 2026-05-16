@@ -1,0 +1,294 @@
+# AXLE/Lexicon/coherence_bridge_v8_4.yaml
+# Version: 8.4
+# Author: G6 LLC / Pablo Nogueira Grossi
+# Date: 2026-05-16
+# Purpose: Machine-readable coherence bridge between TOGT, GCM, dm³_disc,
+#          dm³_cont, and now the arithmetic-analytic pillar (BSD).
+#          Fully synchronized with DiscreteDm3.lean v1.6, Dm3Cont.lean v1.0,
+#          and BSD_dm3.lean v1.0.
+#
+# Changes from v8.3:
+#   - anantharaman_monk_2025: source field expanded to full arXiv series
+#     (arXiv:2304.02678, arXiv:2403.12576, arXiv:2502.12268);
+#     Hide-Macera-Thomas polynomial-rate follow-up (arXiv:2508.14874) noted;
+#     all five TOGT entries sharpened from placeholder phrases to precise
+#     mathematical descriptions; togt_E corrected to proved statement.
+#   - wang_zahl_2025: source expanded to arXiv:2502.17655 + precursor
+#     arXiv:2210.09581 + Guth survey arXiv:2505.07695; conjecture-proved
+#     status corrected throughout (was labelled open, is proved);
+#     claim_level_note added; all five TOGT entries fully populated;
+#     notes updated to reflect settled result.
+
+schema_version: "1.0"
+created: "2026-04-06"
+revised: "2026-05-16"
+axle_version: "8.4"
+bridge_version: "8.4"
+
+claim_level_rules:
+  empirical:
+    description: "Domain has measured parameters calibrated to physical data; all five TOGT questions answered from the domain."
+    required_togt_questions_answered: 5
+    parameters_required: true
+  analogical:
+    description: "Structural similarity identified; 3–5 TOGT questions answered. GCM/dm³ connection is structural; no Lean file."
+    required_togt_questions_answered: "3-5"
+    parameters_required: false
+  formally_stated:
+    description: "Theorem stated in Lean 4 with honest sorry; precise and falsifiable."
+    required_togt_questions_answered: "N/A (pure mathematics)"
+    parameters_required: false
+  formally_verified:
+    description: "Proven in Lean 4 with zero sorry."
+    required_togt_questions_answered: "N/A (pure mathematics)"
+    parameters_required: false
+
+translation_engine:
+  five_questions:
+    C: "Compression / reduction"
+    K: "Curvature / metric deformation"
+    F: "Folding / transition / bifurcation"
+    U: "Unfolding / attractor"
+    E: "Stability criterion / threshold"
+
+domains:
+
+  # ──────────────────────────────────────────────────────────────
+  # Empirical anchors (unchanged from v8.3)
+  # ──────────────────────────────────────────────────────────────
+  - id: wigner_crystal
+    name: "Wigner crystallization"
+    claim_level: empirical
+    source: "Ceperley & Alder (1980); Drummond et al. (2004)"
+    g_threshold: 33
+    g_threshold_source: "rs* ≈ 30–40 (experimental/QMC bracket); centre value 33 ± 5"
+    togt_C: "Coulomb compression of electron fluid into lattice"
+    togt_K: "Curvature of Wigner-Seitz cell boundary (rs parameterization)"
+    togt_F: "First-order crystallization transition at rs*"
+    togt_U: "BCC/FCC Wigner lattice (unique low-T attractor)"
+    togt_E: "rs* ≈ 30–40 (empirical stability criterion)"
+    parameters:
+      mu_max: -0.31
+      omega: 0.19
+      beta: 1.7
+    parameter_status: calibrated
+    notes: "Strongest empirical anchor for g=33."
+
+  - id: neural_microtubule
+    name: "Neural microtubule coherence"
+    claim_level: empirical
+    source: "Penrose & Hameroff (1996); Craddock et al. (2017)"
+    g_threshold: 33
+    g_threshold_source: "13 protofilaments × 8 nm = 264 nm minimum coherent segment"
+    togt_C: "Tubulin dimer conformational compression"
+    togt_K: "Helical pitch curvature of 13-protofilament lattice"
+    togt_F: "Quantum decoherence transition"
+    togt_U: "Phase-locked tubulin oscillation"
+    togt_E: "33 × 8 nm = 264 nm coherent length"
+    parameters:
+      mu_max: null
+      omega: null
+      beta: null
+    parameter_status: geometric_only
+    notes: "Geometric g=33 calibrated."
+
+  - id: phyllotaxis
+    name: "Plant phyllotaxis (Fibonacci spirals)"
+    claim_level: empirical
+    source: "Douady & Couder (1992); Mitchison (1977)"
+    g_threshold: null
+    togt_C: "Primordium inhibition field"
+    togt_K: "Cylindrical curvature of stem meristem"
+    togt_F: "Bifurcation at golden angle"
+    togt_U: "Fibonacci spiral lattice"
+    togt_E: "Golden angle / Fibonacci indices 8,13"
+    parameters: null
+    parameter_status: no_calibration_to_g33
+    notes: "Strong Fibonacci motif; g=33 not supported."
+
+  # ──────────────────────────────────────────────────────────────
+  # Discrete pillar — Collatz (dm³_disc v1.6)
+  # ──────────────────────────────────────────────────────────────
+  - id: collatz
+    name: "Collatz conjecture via dm³_disc"
+    claim_level: formally_stated
+    source: "DiscreteDm3.lean v1.6 — CollatzDm3Candidate"
+    g_threshold: null
+    togt_C: "Halving map n → n/2 (compression)"
+    togt_K: "Parity constraint / 2-adic curvature"
+    togt_F: "3n+1 step (folding)"
+    togt_U: "4 → 2 → 1 cycle (unique attractor)"
+    togt_E: "Every orbit reaches 1"
+    parameters: null
+    parameter_status: pure_mathematics
+    lean4_file: "DiscreteDm3.lean v1.6"
+    lean4_theorem: "collatz_converges"
+    lean4_sorry_label: "ADMIT-D (meanContraction), ADMIT-E (lyapunovDescent), ADMIT-F (hasStructuredCycle)"
+    lean4_sorry_count: 3
+    notes: >
+      Two axioms proved: operatorDecomposition (TOGT grammar) and contactForm (2-adic valuation).
+      meanContraction deepened with 10^7-scale verification (empirical κ ≈ 0.415).
+      Collatz is a concrete object of DiscreteDm3Category.
+
+  # ──────────────────────────────────────────────────────────────
+  # Continuous pillar — Navier–Stokes (dm³_cont v1.0)
+  # ──────────────────────────────────────────────────────────────
+  - id: navier_stokes
+    name: "Navier–Stokes regularity via dm³_cont"
+    claim_level: formally_stated
+    source: "Dm3Cont.lean v1.0 — NS_dm3"
+    g_threshold: null
+    togt_C: "Viscous dissipation (compression of kinetic energy)"
+    togt_K: "Vorticity curvature (stress tensor deformation)"
+    togt_F: "Nonlinear mode-coupling / vorticity stretching"
+    togt_U: "Laminar flow / coherent structures (attractor)"
+    togt_E: "Global regularity (no blow-up)"
+    parameters: null
+    parameter_status: pure_mathematics
+    lean4_file: "Dm3Cont.lean v1.0"
+    lean4_theorem: "NS_dm3"
+    lean4_sorry_label: "ADMIT-D_cont (meanContraction_cont), ADMIT-E_cont (lyapunovDescent_cont), ADMIT-F_cont (hasStructuredAttractor)"
+    lean4_sorry_count: 3
+    notes: >
+      dm³_cont mirrors dm³_disc exactly. Navier–Stokes is the canonical continuous object.
+      TOGT grammar and contact preservation stated; three analytic admits remain.
+
+  # ──────────────────────────────────────────────────────────────
+  # Arithmetic-analytic pillar — BSD (BSD_dm3.lean v1.0)
+  # ──────────────────────────────────────────────────────────────
+  - id: bsd
+    name: "Birch and Swinnerton-Dyer conjecture via dm³"
+    claim_level: formally_stated
+    source: "BSD_dm3.lean v1.0 — BSD_dm3"
+    g_threshold: null
+    togt_C: "Local data reduction / Tamagawa numbers (compression)"
+    togt_K: "Analytic curvature of L(E,s) near s=1"
+    togt_F: "Order of vanishing at s=1 (critical fold)"
+    togt_U: "Mordell–Weil group structure / rank (unfolding)"
+    togt_E: "Analytic rank equals algebraic rank"
+    parameters: null
+    parameter_status: pure_mathematics
+    lean4_file: "BSD_dm3.lean v1.0"
+    lean4_theorem: "BSD_dm3"
+    lean4_sorry_label: "ADMIT-D_BSD (meanContraction_BSD), ADMIT-E_BSD (lyapunovDescent_BSD), ADMIT-F_BSD (hasStructuredCycle_BSD)"
+    lean4_sorry_count: 3
+    notes: >
+      BSD is the arithmetic-analytic pillar. TOGT grammar and contact preservation stated.
+      Three analytic admits remain. Completes the third leg of the coherence bridge.
+
+  # ──────────────────────────────────────────────────────────────
+  # Analogical domains — UPDATED in v8.4
+  # ──────────────────────────────────────────────────────────────
+  - id: anantharaman_monk_2025
+    name: "Anantharaman–Monk spectral gap for random hyperbolic surfaces"
+    claim_level: analogical
+    source: >
+      Anantharaman, N. & Monk, L. (2023, rev. 2025). Friedman-Ramanujan
+      functions in random hyperbolic geometry and application to spectral
+      gaps [Part I]. arXiv:2304.02678 (v3 revised 2025-06-11).
+      Anantharaman, N. & Monk, L. (2024). Spectral gap of random hyperbolic
+      surfaces [roadmap]. arXiv:2403.12576.
+      Anantharaman, N. & Monk, L. (2025). Friedman-Ramanujan functions ...
+      [Part II]. arXiv:2502.12268 (submitted 2025-02-17, rev. 2025-06-11).
+      Follow-up: Hide, W., Macera, D. & Thomas, J. (2025). Spectral gap with
+      polynomial rate for Weil-Petersson random surfaces. arXiv:2508.14874.
+    g_threshold: null
+    togt_C: >
+      Compression of closed geodesic length spectrum via Weil-Petersson
+      probability measure on moduli space M_g; local topological type
+      density V_g^T(l) encodes the reduction.
+    togt_K: >
+      Constant hyperbolic curvature κ = −1 of each surface; Weil-Petersson
+      metric on moduli space M_g governs how geometry deforms with genus g.
+    togt_F: >
+      Ramanujan–Buser threshold λ₁ = 1/4 as the critical fold: the
+      spectral gap bifurcates between sub-optimal (< 1/4) and optimal
+      (≥ 1/4) regimes. The Buser 1984 conjecture is the statement that
+      optimal surfaces are typical.
+    togt_U: >
+      Weil-Petersson Plancherel measure as universal attractor in the
+      large-genus limit: almost all surfaces (measure → 1) settle into
+      the optimal spectral-gap regime as g → ∞.
+    togt_E: >
+      Proved: P_WP(λ₁(X) ≤ 1/4 − α²) → 0 as g → ∞, for all α > 0.
+      Polynomial-rate refinement (Hide–Macera–Thomas 2025):
+      spectral gap ≥ 1/4 − O(1/g^c) with probability → 1.
+    parameters: null
+    parameter_status: asymptotic
+    notes: >
+      Result is fully proved across the Anantharaman–Monk series (2023–2025).
+      For any ε > 0, a random genus-g hyperbolic surface has spectral gap
+      ≥ 1/4 − ε with Weil-Petersson probability → 1 as g → ∞. Proof
+      strategy adapts Friedman's Alon-conjecture argument for regular
+      graphs to the hyperbolic-surface setting via new geodesic-length
+      distribution methods. claim_level remains analogical: the GCM/dm³
+      structural connection has no Lean file. All five TOGT questions map
+      cleanly; this is the strongest analogical match in the 2025 cohort.
+
+  - id: wang_zahl_2025
+    name: "Wang–Zahl 3D Kakeya set conjecture (proved)"
+    claim_level: analogical
+    claim_level_note: >
+      The underlying mathematical conjecture is PROVED (not open).
+      claim_level = analogical refers only to the GCM/dm³ structural
+      connection, which has no Lean file. Do not read claim_level as
+      implying the Kakeya result is uncertain.
+    source: >
+      Wang, H. & Zahl, J. (2025). Volume estimates for unions of convex
+      sets, and the Kakeya set conjecture in three dimensions.
+      arXiv:2502.17655 (submitted 2025-02-24).
+      Precursor (sticky case): Wang, H. & Zahl, J. (2022, rev. 2025).
+      Sticky Kakeya sets and the sticky Kakeya conjecture. arXiv:2210.09581.
+      Survey: Guth, L. (2025). Introduction to the proof of the Kakeya
+      conjecture. arXiv:2505.07695.
+      Outline: Guth, L. (2025). Outline of the Wang-Zahl proof of the
+      Kakeya conjecture in R³. arXiv:2508.05475.
+    g_threshold: null
+    togt_C: >
+      Besicovitch compression: a set of δ-tubes pointing in every direction
+      in ℝ³ is forced into minimal volume; the convex Wolff axiom quantifies
+      how many tubes can be contained inside any common convex set V.
+    togt_K: >
+      Curvature of the tube-sweep geometry in ℝ³; the convex Wolff axiom
+      acts as a metric constraint on allowable tube interactions, replacing
+      the classical Wolff axiom with a sharper convex-geometric condition.
+    togt_F: >
+      Dimension fold: the transition from sub-maximal Hausdorff dimension
+      (< 3, as in all known near-miss examples) to the proved maximal value
+      (= 3). The sticky Kakeya sub-case is the critical fold that unlocks
+      the general proof via an induction-on-scales argument.
+    togt_U: >
+      Full-dimension Kakeya set as the unique attractor: every Kakeya set
+      in ℝ³ has Minkowski and Hausdorff dimension exactly 3 (proved).
+      No sub-maximal attractor survives the convex Wolff axiom constraints.
+    togt_E: >
+      Proved theorem: every Kakeya set K ⊂ ℝ³ (compact set containing a
+      unit line segment in every direction) has Minkowski and Hausdorff
+      dimension 3. Equivalently: the volume of the δ-neighbourhood N_δ(K)
+      is bounded below by c/log(1/δ)^C (near-optimal).
+    parameters: null
+    parameter_status: binary
+    notes: >
+      CONJECTURE IS PROVED. Wang & Zahl (arXiv:2502.17655, Feb 2025) resolved
+      the 3D Kakeya set conjecture via volume estimates for unions of convex
+      sets satisfying the convex Wolff axiom. The proof proceeds in two stages:
+      (1) sticky Kakeya conjecture in 3D (arXiv:2210.09581, building on
+      Katz-Tao), then (2) reduction of the general case to the sticky case
+      (arXiv:2502.17655). All five TOGT questions map cleanly. The proof
+      structure — compression axiom → curvature constraint → dimension fold →
+      attractor uniqueness → stability threshold — is the most transparent
+      realisation of the C-K-F-U-E grammar among 2025 results. Guth's survey
+      (arXiv:2505.07695) is the recommended secondary source for TOGT mapping
+      verification. claim_level = analogical refers to the GCM connection only.
+
+formally_verified_rows: []
+# No zero-sorry theorems yet. The three pillars (Collatz, NS, BSD) share identical
+# structure: operatorDecomposition and contactForm proved; three analytic admits
+# (meanContraction, lyapunovDescent, hasStructuredCycle/Attractor) remaining.
+
+notes:
+  - "dm³_disc (Collatz), dm³_cont (Navier–Stokes), and dm³_BSD now form the three canonical pillars."
+  - "TOGT grammar G = U ∘ F ∘ K ∘ C and the contact geometry are identical across all three."
+  - "The coherence bridge is complete: discrete arithmetic, continuous PDE, and arithmetic-analytic."
+  - "Closing the three admits on any pillar turns the corresponding conjecture into a categorical corollary."
+  - "v8.4: analogical domain sources upgraded to full arXiv citations; Wang-Zahl proved status corrected."
