@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>On Publication · Knacci Spine · G6 LLC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink:        #1A1610;
+    --ink-mid:    #3D3528;
+    --ink-light:  #7A6E5F;
+    --ink-faint:  #B0A898;
+    --paper:      #F5F0E8;
+    --paper-dark: #EDE7D8;
+    --rule:       #C8BEA8;
+    --accent:     #8B1A1A;
+    --accent-soft:#C04040;
+    --mono:       'DM Mono', monospace;
+    --serif:      'EB Garamond', Georgia, serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.72;
+    min-height: 100vh;
+  }
+
+  /* ── noise texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── layout ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 5rem 2rem 8rem;
+  }
+
+  /* ── masthead ── */
+  .masthead {
+    border-top: 2px solid var(--ink);
+    border-bottom: 0.5px solid var(--rule);
+    padding: 1.5rem 0 1.2rem;
+    margin-bottom: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .masthead-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .masthead-title {
+    font-size: 2.1rem;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .masthead-sub {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-top: 0.15rem;
+  }
+
+  .masthead-meta {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    margin-top: 0.75rem;
+    border-top: 0.5px solid var(--rule);
+    padding-top: 0.75rem;
+  }
+
+  /* ── running rule ── */
+  .rule { border: none; border-top: 0.5px solid var(--rule); margin: 2.75rem 0; }
+
+  /* ── section label ── */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+    display: block;
+  }
+
+  /* ── body text ── */
+  p { margin-bottom: 1.3rem; color: var(--ink-mid); }
+  p:last-child { margin-bottom: 0; }
+
+  em { font-style: italic; color: var(--ink); }
+  strong { font-weight: 500; color: var(--ink); }
+
+  /* ── pull quote ── */
+  .pull {
+    border-left: 2.5px solid var(--accent);
+    margin: 2.5rem 0 2.5rem 0;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    font-size: 1.18rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  /* ── theorem block ── */
+  .theorem {
+    background: var(--paper-dark);
+    border: 0.5px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 1.1rem 1.4rem;
+    margin: 2rem 0;
+    font-size: 0.95rem;
+  }
+
+  .theorem-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .theorem p { color: var(--ink-mid); margin-bottom: 0.5rem; }
+
+  /* ── inline code ── */
+  code {
+    font-family: var(--mono);
+    font-size: 0.82em;
+    background: var(--paper-dark);
+    border: 0.5px solid var(--rule);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  /* ── precedent list ── */
+  .precedents {
+    list-style: none;
+    margin: 1.5rem 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .precedents li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 0.5px solid var(--rule);
+  }
+
+  .precedents li:last-child { border-bottom: none; }
+
+  .precedent-name {
+    font-style: italic;
+    color: var(--ink);
+    font-size: 1rem;
+  }
+
+  .precedent-note {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  /* ── footer ── */
+  .footer {
+    margin-top: 5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-left { font-size: 0.88rem; color: var(--ink-light); font-style: italic; }
+  .footer-right { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.1em; text-align: right; }
+
+  /* ── fade-in on load ── */
+  @keyframes fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .page { animation: fadein 0.7s ease both; }
+
+  /* ── responsive ── */
+  @media (max-width: 600px) {
+    body { font-size: 17px; }
+    .page { padding: 3rem 1.25rem 5rem; }
+    .masthead-title { font-size: 1.6rem; }
+    .precedents li { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="masthead">
+    <span class="masthead-eyebrow">G6 LLC · Knacci Spine · Methodological Note</span>
+    <h1 class="masthead-title">A Note on Publication</h1>
+    <p class="masthead-sub">Why this work is self-published, and why that is the correct decision</p>
+    <div class="masthead-meta">
+      Pablo Nogueira Grossi · Newark, New Jersey, USA &nbsp;·&nbsp;
+      Zenodo DOI: <code>[reserved on deposit]</code> &nbsp;·&nbsp;
+      License: CC BY-NC-ND 4.0
+    </div>
+  </header>
+
+  <!-- §1 -->
+  <span class="section-label">§ 1 — The structural problem</span>
+
+  <p>
+    Blind peer review is a quality filter calibrated for incremental work. A reviewer receives a manuscript, matches its claims against shared terminology, situates it within a known literature, and renders a judgment. The mechanism works well when the work speaks a language the reviewer already knows.
+  </p>
+
+  <p>
+    It breaks down when the work is new in three simultaneous dimensions: new <em>terminology</em>, new <em>cross-domain synthesis</em>, and no pre-existing <em>citation network</em> to anchor it. This work is new in all three.
+  </p>
+
+  <div class="pull">
+    The review process is not broken. It is simply not designed for work that creates its own context.
+  </div>
+
+  <!-- §2 -->
+  <hr class="rule"/>
+  <span class="section-label">§ 2 — New terminology</span>
+
+  <p>
+    Terms such as <em>knacci</em>, <em>polylaminin</em>, <em>TOGT derivation</em>, and <em>Principia Orthogonale</em> do not appear in any prior literature because the concepts they name did not previously exist. A reviewer encountering them cold cannot distinguish invented jargon from a genuine naming necessity.
+  </p>
+
+  <p>
+    The default reaction — and the rational one, given the reviewer's information — is suspicion: that unfamiliar words conceal weak reasoning. The opposite is true here. The words exist because the framework required them. But peer review has no mechanism for establishing that distinction quickly, and editors do not have time to adjudicate it.
+  </p>
+
+  <div class="theorem">
+    <span class="theorem-label">Consequence</span>
+    <p>A paper introducing new terminology will be rejected on grounds of clarity by reviewers who lack the context to see that the terminology <em>is</em> the clarity. The feedback loop cannot self-correct within a single review cycle.</p>
+  </div>
+
+  <!-- §3 -->
+  <hr class="rule"/>
+  <span class="section-label">§ 3 — Cross-domain synthesis</span>
+
+  <p>
+    This work spans contact geometry, k-nacci sequences and their Hausdorff scaling, multifractal spectra of biological scaffolds, laminin structural biology, therapeutic corridor mapping, and machine-verified formal proof in Lean 4. No single journal covers this scope. No standard reviewer pool is competent across all of it.
+  </p>
+
+  <p>
+    In practice, a manuscript like this is assigned to one or two reviewers who are expert in a subset of the material. The parts they recognize, they evaluate fairly. The parts they do not recognize, they flag as unsubstantiated — not because those parts are wrong, but because the reviewer lacks the background to evaluate them. The paper fails not on its weakest argument but on its most novel one.
+  </p>
+
+  <div class="pull">
+    Breadth is penalized not because journals distrust it, but because the review infrastructure cannot staff it.
+  </div>
+
+  <!-- §4 -->
+  <hr class="rule"/>
+  <span class="section-label">§ 4 — No citation network</span>
+
+  <p>
+    Journal review expects a references section that positions the work inside an existing conversation. Work that <em>opens</em> a new conversation has no one to cite in the field it creates. This reads to reviewers as either ignorance of the relevant literature or an implicit claim to have no predecessors — both of which trigger rejection.
+  </p>
+
+  <p>
+    The citation network for genuinely new work accumulates <em>after</em> publication, not before. The system cannot evaluate what it cannot yet map. It takes, historically, between five and thirty years for a novel framework to acquire enough secondary literature to be legible to standard review.
+  </p>
+
+  <!-- §5 -->
+  <hr class="rule"/>
+  <span class="section-label">§ 5 — Historical precedent</span>
+
+  <p>
+    This is not a complaint about the system. It is an observation with a well-documented history:
+  </p>
+
+  <ul class="precedents">
+    <li>
+      <span class="precedent-name">Ramanujan's notebooks</span>
+      <span class="precedent-note">circulated privately · 1913</span>
+    </li>
+    <li>
+      <span class="precedent-name">Einstein's special relativity paper</span>
+      <span class="precedent-note">zero citations · Annalen der Physik · 1905</span>
+    </li>
+    <li>
+      <span class="precedent-name">Perelman's geometrization proof</span>
+      <span class="precedent-note">arXiv only · never journal-submitted · 2002–2003</span>
+    </li>
+    <li>
+      <span class="precedent-name">Shannon's information theory</span>
+      <span class="precedent-note">Bell System Technical Journal · no peer review as currently practiced</span>
+    </li>
+  </ul>
+
+  <p>
+    The credential is not the venue. The credential is the proof.
+  </p>
+
+  <!-- §6 -->
+  <hr class="rule"/>
+  <span class="section-label">§ 6 — Why Zenodo and this repository</span>
+
+  <p>
+    Zenodo provides a DOI, a cryptographic hash for each file, and permanent archival. These three things establish priority — the only legal and scientific function that publication was ever required to perform. The timestamp is immutable. The record is public. The files are versioned.
+  </p>
+
+  <p>
+    This repository and its HTML documentation serve the function peer review was meant to serve but cannot here: they give a reader the context necessary to evaluate the work on its own terms. The terminology is defined. The derivations are walked through. The Lean 4 proofs are machine-checkable by anyone with a working Lean installation — a standard of verifiability that no journal referee process achieves.
+  </p>
+
+  <div class="theorem">
+    <span class="theorem-label">In other words</span>
+    <p>The repository <em>is</em> the peer review infrastructure — open, asynchronous, and not gated by a referee who lacks the background to evaluate it. Any reader with the relevant competence can verify any claim. That is a strictly higher standard than single-blind review by two anonymous generalists.</p>
+  </div>
+
+  <!-- §7 -->
+  <hr class="rule"/>
+  <span class="section-label">§ 7 — An invitation</span>
+
+  <p>
+    This work is released under CC BY-NC-ND 4.0. It may be read, cited, and built upon for non-commercial purposes. The Lean proofs are in <code>knacci_spine.lean</code>. The Python pipeline is in <code>knacci_laminin_cross.py</code>. The figures are available as individual PDFs. The full manuscript is <code>knacci_spine_v4.pdf</code>.
+  </p>
+
+  <p>
+    Correspondence, critique, and formal engagement are welcome. Priority is established by the Zenodo deposit timestamp. The work stands on its own terms, and those terms are stated as precisely as the authors know how to state them.
+  </p>
+
+  <div class="pull">
+    If the argument is wrong, the Lean proof will not compile. That is the standard we hold ourselves to.
+  </div>
+
+  <footer class="footer">
+    <div class="footer-left">G6 LLC · Newark, New Jersey, USA</div>
+    <div class="footer-right">
+      KNACCI SPINE · V4<br/>
+      CC BY-NC-ND 4.0<br/>
+      ZENODO · 2026
+    </div>
+  </footer>
+
+</main>
+</body>
+</html>
