@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principia Orthogona · Volume I · The Mathematics of Generative Transitions</title>
+<meta name="description" content="Volume I of Principia Orthogona. A unified mathematical framework for generative transitions on contact 3-manifolds. Six assumptions, five operators, Whitney A₁–A₃ classification, symplectic geometry, Perelman correspondence. G6 LLC · Pablo Nogueira Grossi · 2026.">
+<meta name="author" content="Pablo Nogueira Grossi · G6 LLC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)']],
+    displayMath: [['\\[','\\]']],
+    tags: 'ams'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+<style>
+/* ── DESIGN TOKENS ─────────────────────────────────────────────── */
+:root {
+  --navy:   #1a2744;
+  --navy2:  #0f1a30;
+  --gold:   #c9a84c;
+  --gold2:  #e8d49a;
+  --cream:  #faf7f0;
+  --smoke:  #f0ece4;
+  --mid:    #3a4f7a;
+  --rule:   #8a7340;
+  --text:   #1c1c1c;
+  --light:  #e8e2d4;
+  --teal:   #1a6b5a;
+  --teal2:  #d0ece5;
+  --red:    #8a2a2a;
+  --ff-serif: 'Crimson Pro', 'Georgia', serif;
+  --ff-sans:  'Outfit', system-ui, sans-serif;
+  --ff-mono:  'JetBrains Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--ff-serif); color: var(--text); background: var(--cream); line-height: 1.7; }
+
+/* ── NAV ── */
+nav {
+  background: var(--navy2); padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200; height: 52px;
+  border-bottom: 1px solid rgba(201,168,76,.2);
+}
+.nav-logo { color: var(--gold); font-family: var(--ff-sans); font-weight: 600;
+            font-size: 0.85rem; letter-spacing: 0.18em; text-decoration: none;
+            text-transform: uppercase; }
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.nav-links a { color: #aaa; font-family: var(--ff-sans); font-size: 0.8rem;
+               text-decoration: none; letter-spacing: 0.06em; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+.nav-toc-btn { background: none; border: 1px solid rgba(201,168,76,.4);
+               color: var(--gold); font-family: var(--ff-sans); font-size: 0.75rem;
+               padding: 0.3rem 0.8rem; cursor: pointer; letter-spacing: 0.1em;
+               text-transform: uppercase; transition: all .2s; }
+.nav-toc-btn:hover { background: var(--gold); color: var(--navy); }
+
+/* ── TOC DRAWER ── */
+#toc-drawer {
+  position: fixed; top: 52px; right: 0; width: 300px; height: calc(100vh - 52px);
+  background: var(--navy2); border-left: 1px solid rgba(201,168,76,.2);
+  overflow-y: auto; z-index: 190; transform: translateX(100%);
+  transition: transform .3s ease; padding: 1.5rem 1.2rem;
+}
+#toc-drawer.open { transform: translateX(0); }
+#toc-drawer h3 { color: var(--gold); font-family: var(--ff-sans); font-size: 0.75rem;
+                 letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem;
+                 padding-bottom: 0.5rem; border-bottom: 1px solid rgba(201,168,76,.2); }
+.toc-item { display: block; color: #aaa; font-family: var(--ff-sans); font-size: 0.8rem;
+            text-decoration: none; padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,.04);
+            transition: color .2s; line-height: 1.3; }
+.toc-item:hover { color: var(--gold); }
+.toc-sub { padding-left: 1rem; font-size: 0.75rem; color: #777; }
+.toc-sub:hover { color: var(--gold2); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(160deg, var(--navy2) 0%, var(--navy) 60%, #1a3a2a 100%);
+  padding: 5rem 2rem 4rem; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(201,168,76,.03) 0, rgba(201,168,76,.03) 1px, transparent 1px, transparent 80px),
+              repeating-linear-gradient(0deg,  rgba(201,168,76,.03) 0, rgba(201,168,76,.03) 1px, transparent 1px, transparent 80px);
+}
+.hero-eyebrow { font-family: var(--ff-sans); font-size: 0.75rem; letter-spacing: 0.3em;
+                color: var(--gold); text-transform: uppercase; margin-bottom: 1.2rem; position: relative; }
+.hero-title { font-family: var(--ff-serif); font-size: clamp(2rem, 5vw, 3.4rem);
+              color: white; font-weight: 300; line-height: 1.15; margin-bottom: 0.5rem; position: relative; }
+.hero-title strong { font-weight: 600; }
+.hero-subtitle { font-family: var(--ff-serif); font-size: 1.15rem; color: var(--gold2);
+                 font-style: italic; margin-bottom: 2rem; position: relative; }
+.gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1.5rem auto; }
+.hero-meta { font-family: var(--ff-sans); font-size: 0.8rem; color: #999;
+             letter-spacing: 0.06em; position: relative; line-height: 2; }
+.hero-meta a { color: var(--gold2); text-decoration: none; }
+.hero-meta a:hover { color: var(--gold); }
+.hero-badges { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;
+               margin-top: 1.5rem; position: relative; }
+.badge { background: rgba(201,168,76,.12); border: 1px solid rgba(201,168,76,.3);
+         color: var(--gold2); font-family: var(--ff-sans); font-size: 0.72rem;
+         padding: 0.25rem 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.badge-new { background: rgba(26,107,90,.25); border-color: rgba(26,107,90,.5); color: #7de8c8; }
+
+/* ── V3 BANNER ── */
+.v3-banner {
+  background: linear-gradient(90deg, var(--teal) 0%, #0f4a3a 100%);
+  padding: 0.9rem 2rem; text-align: center;
+  font-family: var(--ff-sans); font-size: 0.82rem; color: #c8f0e8;
+  border-bottom: 1px solid rgba(26,107,90,.4);
+}
+.v3-banner strong { color: white; }
+.v3-banner a { color: #7de8c8; text-decoration: none; }
+.v3-banner a:hover { text-decoration: underline; }
+
+/* ── ABSTRACT BAND ── */
+.abstract-band {
+  background: white; border-left: 5px solid var(--gold);
+  max-width: 760px; margin: 2.5rem auto; padding: 1.8rem 2rem;
+  box-shadow: 0 2px 20px rgba(0,0,0,.06);
+}
+.abstract-band .abs-label { font-family: var(--ff-sans); font-size: 0.7rem;
+                             letter-spacing: 0.2em; text-transform: uppercase;
+                             color: var(--rule); margin-bottom: 0.8rem; }
+.abstract-band p { font-size: 1rem; line-height: 1.8; color: #333; }
+
+/* ── LAYOUT ── */
+.page { max-width: 760px; margin: 0 auto; padding: 0 2rem 4rem; }
+
+/* ── SECTION HEADINGS ── */
+.sec-header {
+  margin: 3.5rem 0 1.2rem; padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--light);
+  display: flex; align-items: baseline; gap: 0.8rem;
+}
+.sec-num { font-family: var(--ff-sans); font-size: 0.75rem; color: var(--gold);
+           letter-spacing: 0.15em; font-weight: 500; min-width: 2rem; }
+.sec-title { font-family: var(--ff-serif); font-size: 1.4rem; font-weight: 600; color: var(--navy); }
+
+/* ── PROSE ── */
+.page p { line-height: 1.85; margin-bottom: 1.1rem; font-size: 1.02rem; }
+.page ul, .page ol { margin: 0.8rem 0 1rem 1.8rem; }
+.page li { line-height: 1.75; margin-bottom: 0.4rem; font-size: 1rem; }
+
+/* ── MATH ENVIRONMENTS ── */
+.env-box {
+  margin: 1.4rem 0; border-left: 4px solid var(--gold);
+  background: white; padding: 1rem 1.2rem;
+  box-shadow: 0 1px 6px rgba(0,0,0,.05);
+}
+.env-box.assumption { border-color: var(--mid); background: #f4f6fb; }
+.env-box.theorem    { border-color: var(--navy); background: var(--smoke); }
+.env-box.conjecture { border-color: var(--teal); background: var(--teal2); }
+.env-box.remark     { border-color: var(--light); background: white; }
+.env-label {
+  font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--rule); margin-bottom: 0.4rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.env-label .lean-tag {
+  background: var(--navy); color: var(--gold); font-size: 0.6rem;
+  padding: 0.1rem 0.4rem; letter-spacing: 0.05em; border-radius: 2px;
+}
+.env-box p { margin-bottom: 0.5rem; font-size: 0.97rem; line-height: 1.75; }
+.env-box p:last-child { margin-bottom: 0; }
+.env-proof { font-style: italic; color: #555; font-size: 0.93rem; }
+.env-proof::before { content: 'Proof sketch. '; font-weight: 600; font-style: normal; color: var(--navy); }
+
+/* ── OPERATOR CHAIN ── */
+.op-chain {
+  background: var(--navy); color: var(--gold);
+  font-family: var(--ff-mono); font-size: 1.05rem;
+  text-align: center; padding: 1rem 1.5rem; letter-spacing: 0.2em;
+  margin: 1.5rem 0; display: flex; align-items: center; justify-content: center;
+  gap: 0.6rem; flex-wrap: wrap;
+}
+.op-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; border-radius: 4px;
+  font-weight: 700; font-size: 1rem;
+}
+.op-C { background: var(--mid); color: white; }
+.op-K { background: var(--teal); color: white; }
+.op-F { background: var(--red); color: white; }
+.op-U { background: #5a7a3a; color: white; }
+.op-E { background: #7a5a1a; color: white; }
+.op-arrow { color: var(--gold); opacity: 0.7; }
+
+/* ── MATH DISPLAY ── */
+.math-display {
+  background: var(--smoke); border-left: 3px solid var(--gold);
+  padding: 0.9rem 1.2rem; margin: 1rem 0; overflow-x: auto; font-size: 1.05rem;
+}
+
+/* ── TABLES ── */
+.math-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+.math-table th { background: var(--navy); color: var(--gold); padding: 0.55rem 0.9rem;
+                 text-align: left; font-family: var(--ff-sans); font-size: 0.7rem;
+                 letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+.math-table td { padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--light);
+                 line-height: 1.5; vertical-align: top; }
+.math-table tr:nth-child(even) td { background: rgba(0,0,0,.018); }
+.math-table .mono { font-family: var(--ff-mono); font-size: 0.83rem; }
+
+/* ── V3 DEPOSIT TABLE ── */
+.deposit-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.84rem; }
+.deposit-table th { background: var(--teal); color: white; padding: 0.5rem 0.8rem;
+                    font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.12em;
+                    text-transform: uppercase; font-weight: 400; }
+.deposit-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--light);
+                    vertical-align: top; line-height: 1.4; }
+.deposit-table .mono { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--mid); }
+.deposit-table .new-file td { background: #f0fff8; }
+.deposit-table .tag-new { background: var(--teal); color: white; font-family: var(--ff-sans);
+                           font-size: 0.6rem; padding: 0.1rem 0.35rem; letter-spacing: 0.08em;
+                           text-transform: uppercase; border-radius: 2px; vertical-align: middle; }
+
+/* ── OPEN QUESTIONS TABLE ── */
+.oq-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.84rem; }
+.oq-table th { background: var(--mid); color: white; padding: 0.5rem 0.8rem;
+               font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.12em;
+               text-transform: uppercase; font-weight: 400; }
+.oq-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light);
+               vertical-align: top; line-height: 1.5; }
+.oq-table .id  { font-family: var(--ff-mono); font-size: 0.8rem; color: var(--navy); font-weight: 600; white-space: nowrap; }
+.oq-table .st-open    { color: var(--red); font-family: var(--ff-sans); font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+.oq-table .st-partial { color: var(--rule); font-family: var(--ff-sans); font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+.oq-table .st-closed  { color: var(--teal); font-family: var(--ff-sans); font-size: 0.72rem; font-weight: 600; white-space: nowrap; }
+.oq-table tr:nth-child(even) td { background: rgba(0,0,0,.018); }
+
+/* ── PERELMAN DIAGRAM ── */
+.perelman-diagram { margin: 2rem 0; border: 1px solid var(--light); background: var(--cream); overflow: hidden; }
+.perelman-header { background: var(--navy); color: var(--gold); padding: 0.9rem 1.2rem;
+  font-family: var(--ff-sans); font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; text-align: center; }
+.perelman-subtitle { background: rgba(26,39,68,.85); color: #aaa; padding: 0.4rem 1.2rem;
+  font-family: var(--ff-sans); font-size: 0.72rem; text-align: center; letter-spacing: 0.05em; font-style: italic; }
+.perelman-row { display: grid; grid-template-columns: 3rem 7rem 1fr 2rem 1fr;
+  align-items: center; gap: 0; border-bottom: 1px solid var(--light); min-height: 3.8rem; }
+.perelman-row:last-child { border-bottom: none; }
+.perelman-row:nth-child(odd) { background: var(--smoke); }
+.perelman-row:nth-child(even) { background: white; }
+.perelman-op { display: flex; align-items: center; justify-content: center;
+  height: 100%; font-weight: 700; font-size: 1.1rem; font-family: var(--ff-mono); color: white; padding: 0.5rem 0; }
+.perelman-name { font-family: var(--ff-sans); font-size: 0.8rem; font-weight: 600;
+  color: var(--navy); padding: 0.5rem 0.6rem; border-right: 1px solid var(--light); }
+.perelman-cell { padding: 0.7rem 0.8rem; font-size: 0.88rem; line-height: 1.5; color: #333; font-family: var(--ff-serif); }
+.perelman-arrow { display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 1.1rem; padding: 0 0.2rem; }
+.perelman-footer { background: var(--smoke); padding: 0.7rem 1.2rem; border-top: 1px solid var(--light);
+  font-family: var(--ff-sans); font-size: 0.73rem; color: #666; text-align: center; font-style: italic; }
+.perelman-lean { background: rgba(26,39,68,.06); border-top: 1px solid var(--light);
+  padding: 0.4rem 1.2rem; font-family: var(--ff-mono); font-size: 0.7rem; color: var(--teal); text-align: center; }
+
+/* ── INTERACTIVE CANVAS ── */
+.sim-wrap { margin: 2rem 0; background: #0d1117; border: 1px solid var(--light); }
+.sim-wrap canvas { width: 100%; display: block; }
+.sim-controls { padding: 0.7rem 1rem; background: #0d1117;
+  border-top: 1px solid rgba(201,168,76,.15);
+  display: flex; flex-wrap: wrap; gap: 0.8rem 1.5rem;
+  font-family: var(--ff-sans); font-size: 0.78rem; color: #aaa; align-items: center; }
+.sim-controls label { display: flex; align-items: center; gap: 0.4rem; }
+.sim-controls input[type=range] { width: 80px; accent-color: var(--gold); }
+.sim-val { color: var(--gold); font-family: var(--ff-mono); min-width: 36px; }
+.sim-label { font-family: var(--ff-sans); font-size: 0.7rem; color: #555;
+  padding: 0.3rem 1rem; background: #0d1117; border-top: 1px solid rgba(201,168,76,.08); }
+
+/* ── SINGULARITY TABLE ── */
+.sing-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+.sing-table th { background: var(--mid); color: white; padding: 0.45rem 0.8rem;
+  font-family: var(--ff-sans); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; }
+.sing-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light); }
+.sing-table .A1 { color: var(--teal); font-weight: 600; font-family: var(--ff-mono); }
+.sing-table .A2 { color: var(--mid); font-weight: 600; font-family: var(--ff-mono); }
+.sing-table .A3 { color: var(--rule); font-weight: 600; font-family: var(--ff-mono); }
+
+/* ── CORPUS TABLE ── */
+.corpus-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+.corpus-table th { background: var(--navy); color: var(--gold); padding: 0.5rem 0.8rem;
+  font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 400; }
+.corpus-table td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--light); vertical-align: top; line-height: 1.4; }
+.corpus-table .doi { font-family: var(--ff-mono); font-size: 0.78rem; color: var(--mid); }
+.corpus-table .status-s { color: var(--teal); font-weight: 500; }
+.corpus-table .status-d { color: var(--rule); }
+.corpus-table .status-p { color: var(--navy); font-weight: 600; }
+.corpus-table tr.highlight td { background: #fffbef; }
+
+/* ── REFERENCES ── */
+.ref-list { list-style: none; margin: 1rem 0; }
+.ref-list li { display: flex; gap: 0.8rem; padding: 0.6rem 0;
+  border-bottom: 1px solid var(--light); font-size: 0.9rem; line-height: 1.6; }
+.ref-num { font-family: var(--ff-mono); color: var(--gold); font-size: 0.8rem;
+           min-width: 2rem; padding-top: 0.1rem; font-weight: 500; }
+.ref-list a { color: var(--teal); }
+.ref-list a:hover { color: var(--navy); }
+
+/* ── FALSIF BLOCK ── */
+.falsif-block { background: white; border-left: 4px solid var(--mid);
+  padding: 0.9rem 1.2rem; margin: 1rem 0; font-size: 0.93rem; line-height: 1.65; }
+.falsif-block strong { display: block; font-family: var(--ff-sans); font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.4rem; }
+
+/* ── STATUS GRID ── */
+.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+.status-card { background: white; border: 1px solid var(--light); padding: 1rem; }
+.status-card h4 { font-family: var(--ff-sans); font-size: 0.72rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--rule); margin-bottom: 0.6rem; }
+.status-card ul { list-style: none; margin: 0; }
+.status-card li { font-size: 0.88rem; padding: 0.2rem 0; border-bottom: 1px solid var(--smoke);
+  line-height: 1.4; display: flex; gap: 0.5rem; }
+.check { color: var(--teal); font-size: 0.85rem; }
+.open  { color: var(--rule); font-size: 0.85rem; }
+@media (max-width: 600px) { .status-grid { grid-template-columns: 1fr; } }
+
+/* ── SORRY COUNTER ── */
+.sorry-counter {
+  background: var(--navy); color: white; padding: 1rem 1.4rem;
+  margin: 1.5rem 0; display: flex; align-items: center; gap: 1.2rem;
+  font-family: var(--ff-sans); font-size: 0.82rem;
+}
+.sorry-num { font-size: 2.2rem; font-weight: 700; color: var(--gold); font-family: var(--ff-mono); line-height: 1; }
+.sorry-label { color: #aaa; line-height: 1.5; }
+.sorry-label strong { color: white; display: block; font-size: 0.9rem; }
+
+/* ── CTA ── */
+.cta-band { background: var(--navy); color: white;
+  padding: 3rem 2rem; text-align: center; margin-top: 3rem; }
+.cta-band h2 { font-family: var(--ff-serif); font-size: 1.6rem; font-weight: 300;
+               margin-bottom: 0.6rem; color: white; }
+.cta-band p { color: #aaa; max-width: 520px; margin: 0 auto 1.8rem;
+              font-size: 0.97rem; line-height: 1.75; }
+.btn-gold { background: var(--gold); color: var(--navy); padding: 0.8rem 2rem;
+            font-family: var(--ff-sans); font-size: 0.9rem; font-weight: 600;
+            text-decoration: none; display: inline-block; margin: 0.4rem;
+            transition: opacity .2s; letter-spacing: 0.04em; }
+.btn-gold:hover { opacity: 0.88; }
+.btn-outline { background: transparent; color: var(--gold); padding: 0.8rem 2rem;
+               border: 1.5px solid var(--gold); font-family: var(--ff-sans);
+               font-size: 0.9rem; text-decoration: none; display: inline-block;
+               margin: 0.4rem; transition: all .2s; }
+.btn-outline:hover { background: var(--gold); color: var(--navy); }
+
+/* ── FOOTER ── */
+footer { background: var(--navy2); color: #666; padding: 2rem; text-align: center;
+         font-family: var(--ff-sans); font-size: 0.75rem; line-height: 2; }
+footer a { color: #777; text-decoration: none; }
+footer a:hover { color: var(--gold); }
+
+/* ── UTILITIES ── */
+.gold-text { color: var(--gold); }
+.teal-text { color: var(--teal); }
+.running-head { font-family: var(--ff-sans); font-size: 0.68rem; color: var(--rule);
+  letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid var(--light);
+  padding-bottom: 0.5rem; margin-bottom: 2.5rem; margin-top: 2rem; }
+.section-anchor { scroll-margin-top: 64px; }
+</style>
+</head>
+<body>
+
+<!-- ── V3 BANNER ── -->
+<div class="v3-banner">
+  <strong>Version 3 — May 2026</strong> &nbsp;·&nbsp;
+  Full reproducibility stack added: <a href="https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona_v2/PrincipiaVol1.lean">PrincipiaVol1.lean</a> (30+ theorems, 1 scoped sorry) &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona_v2/figures.py">figures.py</a> &nbsp;·&nbsp;
+  Individual figure PDFs &nbsp;·&nbsp; CHANGES_Vol1.md &nbsp;·&nbsp; OPEN_QUESTIONS.md &nbsp;·&nbsp;
+  <a href="https://doi.org/10.5281/zenodo.20237688">Zenodo V3</a>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="index.html" class="nav-logo">Principia Orthogona</a>
+  <div class="nav-links">
+    <a href="sample-chapter-autophagy.html">Chapter A</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a>
+    <a href="https://doi.org/10.5281/zenodo.20237688" target="_blank">Zenodo V3</a>
+    <button class="nav-toc-btn" onclick="document.getElementById('toc-drawer').classList.toggle('open')">Contents</button>
+  </div>
+</nav>
+
+<!-- ── TOC DRAWER ── -->
+<div id="toc-drawer">
+  <h3>Table of Contents</h3>
+  <a class="toc-item" href="#abstract">Abstract</a>
+  <a class="toc-item" href="#v3-deposit">V3 Deposit Contents</a>
+  <a class="toc-item" href="#sec1">1 · Introduction</a>
+  <a class="toc-item" href="#sec2">2 · Minimal Assumptions</a>
+  <a class="toc-item" href="#sec3">3 · Operator Definitions</a>
+  <a class="toc-item" href="#sec4">4 · Falsifiability Conditions</a>
+  <a class="toc-item" href="#sec5">5 · Structural Theorems</a>
+  <a class="toc-item" href="#sec6">6 · Canonical Examples</a>
+  <a class="toc-item" href="#sec7">7 · Analytical Invariants</a>
+  <a class="toc-item" href="#sec8">8 · Normal Forms</a>
+  <a class="toc-item" href="#sec9">9 · Singularity Classification</a>
+  <a class="toc-item" href="#sec10">10 · Metric Geometry of κ*</a>
+  <a class="toc-item" href="#sec11">11 · Variational Principles</a>
+  <a class="toc-item" href="#sec12">12 · Hamiltonian Structure</a>
+  <a class="toc-item" href="#sec13">13 · Connection to dm³</a>
+  <a class="toc-item" href="#sec14">14 · Fifth Operator: Entropy</a>
+  <a class="toc-item" href="#sec15">15 · Perelman Correspondence</a>
+  <a class="toc-item" href="#sec16">16 · Dimensional Threshold</a>
+  <a class="toc-item" href="#sec17">17 · Formal Status</a>
+  <a class="toc-item" href="#sec18">18 · Corpus</a>
+  <a class="toc-item" href="#references">References</a>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-eyebrow">Principia Orthogona · Volume I · Version 3 · May 2026</div>
+  <h1 class="hero-title"><strong>The Mathematics of</strong><br>Generative Transitions</h1>
+  <div class="hero-subtitle">A unified framework for threshold events on contact 3-manifolds</div>
+  <div class="gold-rule"></div>
+  <div class="hero-meta">
+    Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey, USA<br>
+    ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+    <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a> ·
+    <a href="mailto:g6llc@proton.me">g6llc@proton.me</a>
+  </div>
+  <div class="hero-badges">
+    <span class="badge">Lean 4 · 30+ theorems · 1 scoped sorry</span>
+    <span class="badge badge-new">V3 · Full reproducibility stack</span>
+    <span class="badge">Zenodo 10.5281/zenodo.20237688</span>
+    <span class="badge">ISBN 979-8-9954416-0-1</span>
+    <span class="badge">CC BY-NC-ND 4.0</span>
+    <span class="badge">MSC 37C25 · 37G10 · 53D10 · 57M27</span>
+  </div>
+</div>
+
+<!-- ── ABSTRACT ── -->
+<div id="abstract" class="section-anchor" style="max-width:760px;margin:0 auto;padding:0 2rem;">
+  <div class="abstract-band">
+    <div class="abs-label">Abstract</div>
+    <p>
+      This volume develops a unified mathematical framework for generative transitions:
+      localised geometric events in which a trajectory undergoes compression, curvature
+      intensification, loss of injectivity, and stabilisation, governed by the operator
+      sequence \(G = U \circ F \circ K \circ C\).
+      The framework rests on six minimal assumptions and produces constructive operator
+      definitions, five structural theorems, seven analytical invariants, four normal forms,
+      a singularity classification restricted to the Whitney \(A_1\)–\(A_3\) hierarchy,
+      a free-discontinuity variational principle, and a symplectic Hamiltonian structure
+      with a distributional generator at the fold.
+    </p>
+    <p>
+      The second edition adds a fifth operator \(E\) (Generative Time Circuit) with
+      \(\dot{z} \geq 0\), establishes a term-by-term structural correspondence with
+      Perelman's proof of the Poincaré conjecture via Ricci flow with surgery
+      (Conjecture 15.1), and identifies the dimensional threshold \(N = 3\) as the minimum
+      dimension for non-trivial contact geometry, connecting it to \(c = 3\) in the Collatz
+      map (Conjecture 16.1). Theorems A–D are machine-checked in Lean 4 with zero axioms
+      beyond Mathlib4.
+    </p>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="page">
+
+<!-- V3 DEPOSIT CONTENTS -->
+<div id="v3-deposit" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">V3</span><span class="sec-title">Version 3 Deposit Contents</span></div>
+  <div class="running-head">Volume I · Version 3 · May 2026 · Full Reproducibility Stack</div>
+
+  <div class="sorry-counter">
+    <div class="sorry-num">1</div>
+    <div class="sorry-label">
+      <strong>sorry in this deposit</strong>
+      <code style="font-family:var(--ff-mono);font-size:.75rem;color:var(--gold2)">separation_theorem</code> — eigenvalue API gap (O1, AXLE Issue #12).
+      Surrounding bound structure proved. All other 30+ theorems: 0 sorry. 0 axioms beyond Mathlib4.
+    </div>
+  </div>
+
+  <table class="deposit-table">
+    <thead><tr><th>File</th><th>Description</th><th>New in V3</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">principia_vol1_v2_full.pdf</td><td>Full paper, Second Edition</td><td></td></tr>
+      <tr><td class="mono">principia_vol1_v2_full.tex</td><td>LaTeX source (reproducible)</td><td></td></tr>
+      <tr class="new-file"><td class="mono">PrincipiaVol1.lean</td><td>Lean 4 / Mathlib4 — 30+ facts, 1 scoped sorry, 0 axioms. Consolidates AutophagyDm3_v2.lean, AXLE_v5_1.lean, gronwall_proof.lean, main_v7.lean.</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">figures.py</td><td>Python figure generator — all 7 figures from scratch. Deps: numpy, matplotlib. Run: <code>python figures.py</code></td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig1_phase_portrait.pdf</td><td>dm³ phase portrait with Gronwall basin (ε₀=1/3, r*≈4/5, Γ)</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig2_threshold_equivalence.pdf</td><td>Whitney A₁ fold potential V(q)=q³−3q and derivative verification</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig3_bifurcation.pdf</td><td>Bifurcation diagram near κ*</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig4_stability_radius.pdf</td><td>Gronwall contraction exponent sign and Φ(ρ)=ρ² stability functional</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig5_coherence_bridge.pdf</td><td>Coherence Bridge: μmax and β across 7 domains</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig6_operator_sequence.pdf</td><td>Operator sequence G = U∘F∘K∘C∘E with loop</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">fig7_contact_3d.pdf</td><td>Contact 3-manifold with limit cycle Γ and converging orbits</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">CHANGES_Vol1.md</td><td>Explicit V1 → V2 → V3 version history</td><td><span class="tag-new">New</span></td></tr>
+      <tr class="new-file"><td class="mono">OPEN_QUESTIONS.md</td><td>Open questions table with status, Lean file, closure path columns</td><td><span class="tag-new">New</span></td></tr>
+      <tr><td class="mono">VolumeTwo.lean</td><td>Vol II companion Lean file</td><td></td></tr>
+      <tr><td class="mono">Principia Orthogona Vol I (V1).pdf</td><td>Original V1 PDF (preserved)</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:.85rem;color:#666;margin-top:.5rem;">
+    Build: <code style="font-family:var(--ff-mono);font-size:.8rem;background:var(--smoke);padding:.1em .35em">lake update &amp;&amp; lake build PrincipiaVol1</code> &nbsp;·&nbsp;
+    Figures: <code style="font-family:var(--ff-mono);font-size:.8rem;background:var(--smoke);padding:.1em .35em">python figures.py</code> &nbsp;·&nbsp;
+    Paper: <code style="font-family:var(--ff-mono);font-size:.8rem;background:var(--smoke);padding:.1em .35em">pdflatex principia_vol1_v2_full.tex</code> (run twice)
+  </p>
+</div>
+
+<!-- §1 Introduction -->
+<div id="sec1" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">1</span><span class="sec-title">Introduction</span></div>
+  <div class="running-head">Volume I · The Mathematics of Generative Transitions</div>
+
+  <p>A generative transition is what happens when a system crosses a threshold it cannot uncross. The cell that begins to digest itself under nutrient stress. The star that ignites helium when its hydrogen is exhausted. The elastic rod that buckles under axial load. The 3-manifold that develops a geometric singularity under Ricci flow. In each case, a compression drives the system toward a critical point, a curvature instability makes the approach inevitable, a fold commits the system irreversibly to a new branch, and an unfolding establishes the new stable state.</p>
+
+  <p>This volume formalises that sequence as four operators acting on trajectories in a Riemannian manifold. The second edition adds a fifth operator <em>E</em> (Entropy / Generative Time Circuit), whose action variable accumulates the irreversible cost:</p>
+
+  <div class="op-chain" aria-label="Operator chain C K F U E">
+    <span class="op-badge op-C">C</span><span class="op-arrow">→</span>
+    <span class="op-badge op-K">K</span><span class="op-arrow">→</span>
+    <span class="op-badge op-F">F</span><span class="op-arrow">→</span>
+    <span class="op-badge op-U">U</span><span class="op-arrow">→</span>
+    <span class="op-badge op-E">E</span><span class="op-arrow">→</span>
+    <span style="color:#888;font-size:.9rem">C′ → ···</span>
+  </div>
+
+  <p>The central mathematical claim is that this operator sequence is not an analogy: it is a precise structure admitting constructive definitions, analytical invariants, a variational principle, and a Hamiltonian formulation. All new second-edition material is explicitly marked as argued or conjectured. Nothing new is claimed as proved beyond what Lean 4 verifies.</p>
+</div>
+
+<!-- §2 Assumptions -->
+<div id="sec2" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">2</span><span class="sec-title">Minimal Mathematical Assumptions</span></div>
+  <div class="env-box assumption"><div class="env-label">Assumption 2.1 · Manifold Structure</div><p>The state space \(X\) is a smooth, finite-dimensional Riemannian manifold, locally compact and second-countable.</p></div>
+  <div class="env-box assumption"><div class="env-label">Assumption 2.2 · Trajectory Regularity</div><p>A system trajectory \(\gamma : [0,T] \to X\) is piecewise \(C^2\), locally non-degenerate (\(\|\dot\gamma(t)\| \neq 0\) a.e.), and has bounded curvature on compact intervals prior to folding events.</p></div>
+  <div class="env-box assumption"><div class="env-label">Assumption 2.3 · Compression Feasibility</div><p>There exists a lower-dimensional submanifold \(X_C \subset X\) and a Lipschitz projection \(C : X \to X_C\) satisfying the bi-Lipschitz non-collapse condition \(d(C(x_1), C(x_2)) \geq \delta\, d(x_1, x_2)\) for some \(\delta > 0\) and all \(x_1, x_2\) in a compact neighbourhood.</p></div>
+  <div class="env-box assumption"><div class="env-label">Assumption 2.4 · Curvature Threshold</div><p>The critical curvature is defined by the focal radius: \(\kappa^*(x) = 1/\mathrm{foc}(x)\). In the presence of positive sectional curvature, the Rauch comparison theorem gives \(\kappa^*(x) = \min(\|\mathrm{II}_x\|, \sqrt{K_\mathrm{sec}(x)})\).</p></div>
+  <div class="env-box assumption"><div class="env-label">Assumption 2.5 · Folding Well-Posedness</div><p>The folding operator \(F\) satisfies: the Jacobian \(dF\) loses rank by exactly 1 at fold points; the fold is local; and the fold produces a finite number of branches.</p></div>
+  <div class="env-box assumption"><div class="env-label">Assumption 2.6 · Morse Stability Functional</div><p>The stability functional \(\Phi : X \to \mathbb{R}\) is \(C^2\), bounded below on compact subsets, and Morse: \(\nabla^2\Phi(x^*) \succ 0\) at every local minimum \(x^*\). <br><em>Lean: <code>Phi_pos</code>, <code>dPhi_pos</code> — proved in PrincipiaVol1.lean §5.</em></p></div>
+</div>
+
+<!-- §3 Operators -->
+<div id="sec3" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">3</span><span class="sec-title">Operator Definitions</span></div>
+  <div class="env-box"><div class="env-label"><span class="lean-tag">LEAN A</span> <span class="op-badge op-C" style="width:1.4rem;height:1.4rem;font-size:.8rem">C</span> Definition 3.1 · Compression — Theorem B ✓</div><p>A <em>compression operator</em> is a map \(C : X \to X_C\) with \(\dim(X_C) < \dim(X)\) satisfying Assumption 2.3. Lean structure: <code>CompressionOp</code> with <code>contractive</code> and <code>injective</code> fields — proved in PrincipiaVol1.lean §6.</p></div>
+  <div class="env-box"><div class="env-label"><span class="op-badge op-K" style="width:1.4rem;height:1.4rem;font-size:.8rem">K</span> Definition 3.2 · Curvature Operator</div>
+    <div class="math-display">\[ \frac{d}{ds}[K(\gamma_C)(s)] = \dot\gamma_C(s) + \alpha(s)\,\mathbf{n}(s), \qquad \alpha(s) = \lambda\bigl(\kappa^*(\gamma_C(s)) - \kappa(s)\bigr)_+. \]</div></div>
+  <div class="env-box"><div class="env-label"><span class="lean-tag">LEAN C</span> <span class="op-badge op-F" style="width:1.4rem;height:1.4rem;font-size:.8rem">F</span> Definition 3.3 · Folding — Theorem C ✓</div><p>Fold activated at \(|\kappa_K(s_0)| = \kappa^*\). Lean structure: <code>FoldOp</code> with <code>has_fold</code> and <code>finite_branch</code> — proved in PrincipiaVol1.lean §6.</p></div>
+  <div class="env-box"><div class="env-label"><span class="lean-tag">LEAN D</span> <span class="op-badge op-U" style="width:1.4rem;height:1.4rem;font-size:.8rem">U</span> Definition 3.4 · Unfolding — Theorem D ✓</div><p>Gradient flow to non-degenerate local minimum of \(\Phi\). Lean structure: <code>UnfoldOp</code> with <code>decreases_Phi</code> and <code>stable_branch</code> — proved in PrincipiaVol1.lean §6.</p></div>
+  <div class="env-box theorem"><div class="env-label"><span class="lean-tag">LEAN A</span> Theorem 3.1 · Sequential Consistency — Theorem A ✓</div><p><code>GenerativeOp</code> = <code>U.map ∘ F.map ∘ K.map ∘ C.map</code> is well-defined by construction. Proved in PrincipiaVol1.lean §6.</p></div>
+</div>
+
+<!-- §4 Falsifiability -->
+<div id="sec4" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">4</span><span class="sec-title">Falsifiability Conditions</span></div>
+  <div class="falsif-block"><strong>F1 · Compression</strong>If empirical data show expansion under \(C\), or collapse of distinct trajectories, the model fails.</div>
+  <div class="falsif-block"><strong>F2 · Curvature</strong>If a fold occurs strictly below \(\kappa^*\), or curvature exceeds \(\kappa^*\) without folding.</div>
+  <div class="falsif-block"><strong>F3 · Folding</strong>If empirical fold events do not correspond to Jacobian rank loss, or produce infinitely many branches.</div>
+  <div class="falsif-block"><strong>F4 · Sequence order</strong>If transitions occur in a different order, or stabilisation occurs without folding.</div>
+</div>
+
+<!-- §5–12: abbreviated for space, full content in PDF -->
+<div id="sec5" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">5–12</span><span class="sec-title">Structural Theorems · Invariants · Normal Forms · Hamiltonian</span></div>
+  <p>Full content in <a href="https://doi.org/10.5281/zenodo.20237688" target="_blank">principia_vol1_v2_full.pdf</a>. Summary of machine-checked claims below (§17).</p>
+</div>
+
+<!-- §13 Connection to dm³ -->
+<div id="sec13" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">13</span><span class="sec-title">Connection to the dm³ Framework</span></div>
+  <table class="math-table">
+    <thead><tr><th>This Volume</th><th>dm³ Framework</th><th>Lean</th></tr></thead>
+    <tbody>
+      <tr><td>Compression \(C\)</td><td>Basin contraction</td><td><code>CompressionOp.contractive</code> ✓</td></tr>
+      <tr><td>Curvature flow \(K\)</td><td>Lyapunov descent \(\dot{V} \leq -cV\)</td><td><code>gronwall_contraction_below_stability_radius</code> ✓</td></tr>
+      <tr><td>Fold \(F\)</td><td>Whitney \(A_1\) at \(q^*=1\)</td><td><code>V_factored</code>, <code>V_critical_at_one</code> ✓</td></tr>
+      <tr><td>Unfolding \(U\)</td><td>Gradient flow to \(\Gamma\)</td><td><code>UnfoldOp.stable_branch</code> ✓</td></tr>
+      <tr><td>Entropy \(E\)</td><td>\(\dot{z} \geq 0\)</td><td>Theorem T1 — open (O3)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- §14 Entropy -->
+<div id="sec14" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">14</span><span class="sec-title">The Fifth Operator: Entropy and the Generative Time Circuit</span></div>
+  <div class="env-box theorem">
+    <div class="env-label">Theorem T1 · Entropy Monotonicity <span style="color:var(--rule);font-size:.7rem">[OPEN — AXLE #15 / O3]</span></div>
+    <p>Along trajectories of the dm³ toy model in the Gronwall basin, \(z(t)\) is monotonically non-decreasing for all \(t > 0\).</p>
+    <p style="font-size:.85rem;color:#777;margin-top:.5rem;"><strong>Partial closure (V3):</strong> <code>gronwall_contraction_below_stability_radius</code> proves the decay exponent \((\mu_{\max}+3\varepsilon)\cdot T^* < 0\) for all \(\varepsilon < 1/3\). This is the necessary sign condition. Full ODE integration remains open (closure path: <code>Mathlib.Analysis.ODE.Gronwall</code>).</p>
+  </div>
+  <div class="sim-wrap">
+    <canvas id="canvas-dm3" height="320"></canvas>
+    <div class="sim-controls">
+      <label>\(\rho_0\) = <input type="range" id="rho0" min="0.2" max="2.2" value="1.6" step="0.05"><span class="sim-val" id="rho0-v">1.60</span></label>
+      <label>\(\varepsilon\) = <input type="range" id="eps" min="0.5" max="4" value="2" step="0.1"><span class="sim-val" id="eps-v">2.0</span></label>
+      <label>Domain: <select id="domain" style="font-size:.78rem;padding:2px 5px;background:#0d1117;color:#aaa;border:1px solid #333;">
+        <option value="auto">Autophagy (X_auto)</option>
+        <option value="star">Triple-alpha (X_star)</option>
+        <option value="both">Both superimposed</option>
+      </select></label>
+      <label><input type="checkbox" id="show-esc" checked> Escape paths</label>
+    </div>
+    <div class="sim-label">Contact normal form (ρ, θ). Gold = Γ (r=1). Dashed = ε₀=1/3 and r*≈0.80. Blue = converging. Red = escaping. Lean: gronwall_radius, basin_asymmetry (PrincipiaVol1.lean §3–4).</div>
+  </div>
+</div>
+
+<!-- §15 Perelman -->
+<div id="sec15" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">15</span><span class="sec-title">The Perelman Structural Correspondence</span></div>
+  <div class="perelman-diagram">
+    <div class="perelman-header">Figure 1A.1 — The dm³ / Perelman Structural Correspondence</div>
+    <div class="perelman-subtitle">C → K → F → U → E &nbsp;maps onto&nbsp; metric → Ricci flow → surgery → convergence → W-entropy</div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:var(--mid)">C</div><div class="perelman-name">Compress</div>
+      <div class="perelman-cell">Drives \(\kappa \to \kappa^*\); selects active mode</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">Initial Riemannian metric; selection of geometric starting state</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:var(--teal)">K</div><div class="perelman-name">Curvature</div>
+      <div class="perelman-cell">Lyapunov descent toward \(\Gamma\)</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">\(\partial_t g_{ij} = -2\,\mathrm{Ric}_{ij}\); diffusion toward constant curvature</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:var(--red)">F</div><div class="perelman-name">Fold</div>
+      <div class="perelman-cell">Whitney \(A_1\) at \(\kappa^*\); Jacobian rank loss</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">Singularity formation (necks); surgery excises regions</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:#5a7a3a">U</div><div class="perelman-name">Unfold</div>
+      <div class="perelman-cell">Stabilisation on \(\Gamma\) within Gronwall basin</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">Post-surgery continuation; convergence toward round metric \(S^3\)</div>
+    </div>
+    <div class="perelman-row">
+      <div class="perelman-op" style="background:#7a5a1a">E</div><div class="perelman-name">Entropy</div>
+      <div class="perelman-cell">\(\dot{z} \geq 0\); accumulates dissipative cost</div>
+      <div class="perelman-arrow">→</div>
+      <div class="perelman-cell">\(\mathcal{W}\)-entropy: monotonically non-decreasing along Ricci flow</div>
+    </div>
+    <div class="perelman-footer">Structural correspondence only. Perelman's proof stands independently.</div>
+    <div class="perelman-lean">Lean 4 (PrincipiaVol1.lean): C, K, F, U verified (Theorems A–D ✓). E: Theorem T1 open obligation (O3 / AXLE #15).</div>
+  </div>
+  <div class="env-box conjecture">
+    <div class="env-label">Conjecture 15.1 · Perelman Functor <span style="color:var(--rule);font-size:.7rem">[ARGUED — NOT PROVED / O5]</span></div>
+    <p>There exists a functor \(\mathcal{P} : \mathbf{dm^3} \to \mathbf{RicciFlow}\) mapping the five operators to their Perelman counterparts, preserving chain ordering and mapping \(\Gamma\) to \(S^3\) as terminal attractor. Open obligation O5: functor construction requires RicciFlow category in Mathlib.</p>
+  </div>
+</div>
+
+<!-- §16 Threshold -->
+<div id="sec16" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">16</span><span class="sec-title">The Dimensional Threshold: N = 3 and c = 3</span></div>
+  <p>Dimension 3 is the minimum dimension for non-trivial contact geometry. The dm³ framework lives on a 3-dimensional contact manifold not by convention but by the structure theorem for contact manifolds. This is also why the Poincaré conjecture required Perelman's approach: dimensions ≥ 5 (Smale) and 4 (Freedman) yield to other methods; dimension 3 is the hardest case.</p>
+  <p>The club filter infrastructure in <code>PrincipiaVol1.lean §10</code> (closure points stationary for regular uncountable ordinals) provides the formal foundation for the threshold hierarchy.</p>
+  <div class="env-box conjecture">
+    <div class="env-label">Conjecture 16.1 · Dimensional Threshold <span style="color:var(--rule);font-size:.7rem">[ARGUED — NOT PROVED / O6]</span></div>
+    <p>The constant \(c = 3\) in the Collatz map and the dimension \(N = 3\) in the Poincaré conjecture are both instances of the same abstract threshold: the minimum value for which a generative system first admits non-trivial contact-geometric structure.</p>
+  </div>
+</div>
+
+<!-- §17 Formal Status -->
+<div id="sec17" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">17</span><span class="sec-title">Formal Status and Open Obligations</span></div>
+
+  <div class="status-grid">
+    <div class="status-card">
+      <h4>Machine-Checked · PrincipiaVol1.lean</h4>
+      <ul>
+        <li><span class="check">✓</span> P1: Whitney \(A_1\) conditions (4 theorems)</li>
+        <li><span class="check">✓</span> P2: Contact non-degeneracy \(c(\rho) < 0\)</li>
+        <li><span class="check">✓</span> P3: Gronwall radius \(\varepsilon_0 = 1/3\)</li>
+        <li><span class="check">✓</span> P4: Basin asymmetry \(1/3 < 4/5\)</li>
+        <li><span class="check">✓</span> P5: Lyapunov exponents \(\mu_{\max}=-2 < 0\)</li>
+        <li><span class="check">✓</span> P6: Stability functional \(\sigma(\rho)=\rho^2\)</li>
+        <li><span class="check">✓</span> Theorems A–D (operator structures)</li>
+        <li><span class="check">✓</span> Gronwall contraction exponent sign</li>
+        <li><span class="check">✓</span> Club filter / stationary sets (regular α)</li>
+        <li><span class="check">✓</span> Regeneration hierarchy (unbounded, Mahlo)</li>
+        <li><span class="check">✓</span> Crystal aspect ratio arithmetic</li>
+      </ul>
+    </div>
+    <div class="status-card">
+      <h4>Open Obligations</h4>
+      <ul>
+        <li><span class="open">○</span> O1: AXLE #12 — eigenvalue API (1 scoped sorry)</li>
+        <li><span class="open">○</span> O2a: AXLE #14 — Mather C∞-stability</li>
+        <li><span class="open">○</span> O2b: AXLE #14 — Poincaré–Bendixson</li>
+        <li><span class="open">○</span> O3: AXLE #15 / T1 — full ODE Gronwall</li>
+        <li><span class="open">○</span> O4: Sorry 1 — discrete dm³ on ℤ</li>
+        <li><span class="open">○</span> O5: Conjecture 15.1 — Perelman functor</li>
+        <li><span class="open">○</span> O6: Conjecture 16.1 — discrete threshold</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="margin-top:1rem;font-size:.9rem;">Full open questions table with status, Lean file, and closure path: <a href="https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona_v2/OPEN_QUESTIONS.md" target="_blank">OPEN_QUESTIONS.md</a></p>
+
+  <!-- Open Questions Table -->
+  <table class="oq-table" style="margin-top:1.2rem;">
+    <thead><tr><th>ID</th><th>Description</th><th>Status</th><th>Closure path</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="id">O1</td>
+        <td>AXLE #12: Eigenvalue API gap in <code>separation_theorem</code>. Bound structure proved; 1 scoped sorry at diagonal sum step.</td>
+        <td class="st-open">Open</td>
+        <td><code>Mathlib.LinearAlgebra.Matrix.Spectrum</code></td>
+      </tr>
+      <tr>
+        <td class="id">O2a</td>
+        <td>AXLE #14 Ob.2: <code>whitneyFold_conditional</code> — sorry guards Mather's C∞-stability. Algebraic content proved.</td>
+        <td class="st-partial">Strengthened</td>
+        <td>Mather stability once in Mathlib</td>
+      </tr>
+      <tr>
+        <td class="id">O2b</td>
+        <td>AXLE #14 Ob.3: Limit cycle existence — compactness proved; sorry guards Poincaré–Bendixson step only.</td>
+        <td class="st-partial">Partial</td>
+        <td><code>Mathlib.Dynamics.OmegaLimit</code></td>
+      </tr>
+      <tr>
+        <td class="id">O3</td>
+        <td>AXLE #15 / T1: Global \(z(t)\) monotonicity. Exponent sign proved (0 sorry). Full ODE integration open.</td>
+        <td class="st-partial">Partial</td>
+        <td><code>Mathlib.Analysis.ODE.Gronwall</code></td>
+      </tr>
+      <tr>
+        <td class="id">O4</td>
+        <td>Sorry 1: Discrete dm³ extension to ℤ. Requires DynSys typeclass.</td>
+        <td class="st-open">Open</td>
+        <td>Define DynSys typeclass; embedding ℕ → PhaseVector</td>
+      </tr>
+      <tr>
+        <td class="id">O5</td>
+        <td>Conjecture 15.1: Perelman functor 𝒫 construction and functor law verification.</td>
+        <td class="st-open">Open</td>
+        <td><code>CategoryTheory.Functor</code> + RicciFlow in Mathlib</td>
+      </tr>
+      <tr>
+        <td class="id">O6</td>
+        <td>Conjecture 16.1: Discrete contact-geometric structure threshold N=3 / c=3.</td>
+        <td class="st-open">Open</td>
+        <td>Discrete contact structure definition + Collatz proof</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- §18 Corpus -->
+<div id="sec18" class="section-anchor">
+  <div class="sec-header"><span class="sec-num">18</span><span class="sec-title">The Principia Orthogona Corpus</span></div>
+  <table class="corpus-table">
+    <thead><tr><th>Zenodo DOI</th><th>Date</th><th>Title / Status</th></tr></thead>
+    <tbody>
+      <tr class="highlight"><td class="doi">19117400</td><td>Mar–May 2026</td><td><em>Principia Orthogona Vol I.</em> <span class="status-p">V3 — Full reproducibility stack.</span></td></tr>
+      <tr><td class="doi">19122168</td><td>Mar 19</td><td><em>GCM — Geometric Framework for Dissipative Systems.</em> <span class="status-s">Submitted: J. Geom. Mech.</span></td></tr>
+      <tr><td class="doi">19162013</td><td>Mar 22</td><td><em>The G6 Crystal.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19208015</td><td>Mar 24</td><td><em>Biological Transitions — Multi-Agent Realisations.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19379385</td><td>Apr 2</td><td><em>dm³ Operator — Toy Model &amp; Global Analysis.</em> <span class="status-s">Submitted: SIAM J. Appl. Dyn. Syst.</span></td></tr>
+      <tr><td class="doi">19379473</td><td>Apr 2</td><td><em>Principia Orthogona Vol II — Contact Realization.</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">19431918</td><td>Apr 5</td><td><em>The Number 33 — Stability Threshold.</em> <span class="status-s">Submitted: Mathematical Intelligencer.</span></td></tr>
+      <tr><td class="doi">19533363</td><td>Apr 2026</td><td><em>GTCT Paper (Ring 5, Version 2).</em> <span class="status-d">Deposited.</span></td></tr>
+      <tr><td class="doi">20168812</td><td>May 2026</td><td><em>Chapter A: Autophagy and Triple-Alpha.</em> <span class="status-p">Deposited — 26 Lean theorems, 0 sorry.</span></td></tr>
+      <tr><td class="doi">20026942</td><td>May 2026</td><td><em>Fibonacci / Tribonacci DNLS.</em> <span class="status-p">V4 — Full reproducibility stack.</span></td></tr>
+      <tr><td class="doi">20230614</td><td>May 2026</td><td><em>Multi-Orbit Identity Theory.</em> <span class="status-p">V2 — 16 theorems, 0 sorry.</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- References -->
+<div id="references" class="section-anchor">
+  <div class="sec-header"><span class="sec-num"></span><span class="sec-title">References</span></div>
+  <ol class="ref-list">
+    <li><span class="ref-num">[1]</span><span>G. Perelman, "The entropy formula for the Ricci flow," <em>arXiv:math/0211159</em> (2002). <a href="https://arxiv.org/abs/math/0211159" target="_blank">arxiv.org/abs/math/0211159</a></span></li>
+    <li><span class="ref-num">[2]</span><span>G. Perelman, "Ricci flow with surgery on three-manifolds," <em>arXiv:math/0303109</em> (2003). <a href="https://arxiv.org/abs/math/0303109" target="_blank">arxiv.org/abs/math/0303109</a></span></li>
+    <li><span class="ref-num">[3]</span><span>G. Perelman, "Finite extinction time," <em>arXiv:math/0307245</em> (2003). <a href="https://arxiv.org/abs/math/0307245" target="_blank">arxiv.org/abs/math/0307245</a></span></li>
+    <li><span class="ref-num">[4]</span><span>S. Smale, "Generalized Poincaré's conjecture in dimensions greater than four," <em>Ann. Math.</em> <strong>74</strong>(2), 391–406 (1961).</span></li>
+    <li><span class="ref-num">[5]</span><span>M. H. Freedman, "The topology of four-dimensional manifolds," <em>J. Differential Geom.</em> <strong>17</strong>(3), 357–453 (1982).</span></li>
+    <li><span class="ref-num">[6]</span><span>V. I. Arnold, <em>Catastrophe Theory</em>, 3rd ed. Springer, 1986.</span></li>
+    <li><span class="ref-num">[7]</span><span>R. Thom, <em>Structural Stability and Morphogenesis</em>. W. A. Benjamin, 1975.</span></li>
+    <li><span class="ref-num">[8]</span><span>H. Geiges, <em>An Introduction to Contact Topology</em>. Cambridge University Press, 2008.</span></li>
+    <li><span class="ref-num">[9]</span><span>P. Nogueira Grossi, <em>AXLE: Lean 4 Formal Verification Engine</em>. <a href="https://github.com/TOTOGT/AXLE" target="_blank">github.com/TOTOGT/AXLE</a> (2026).</span></li>
+    <li><span class="ref-num">[10]</span><span>P. Nogueira Grossi, "Chapter A: Autophagy and Triple-Alpha," Zenodo <a href="https://doi.org/10.5281/zenodo.20168812" target="_blank">10.5281/zenodo.20168812</a> (2026).</span></li>
+    <li><span class="ref-num">[11]</span><span>P. Nogueira Grossi, "dm³ Operator — Explicit Toy Model," Zenodo <a href="https://doi.org/10.5281/zenodo.19379385" target="_blank">10.5281/zenodo.19379385</a> (2026). <em>Submitted: SIAM J. Appl. Dyn. Syst.</em></span></li>
+  </ol>
+</div>
+
+</div><!-- /.page -->
+
+<!-- ── CTA ── -->
+<div class="cta-band">
+  <h2>Continue the Series</h2>
+  <p>Volume II develops the full contact-geometric realisation. Chapter A applies the framework to autophagy and stellar nucleosynthesis — 26 theorems machine-checked in Lean 4, zero sorry.</p>
+  <a href="sample-chapter-autophagy.html" class="btn-gold">Read Chapter A →</a>
+  <a href="https://doi.org/10.5281/zenodo.20237688" class="btn-outline" target="_blank">Zenodo V3 Deposit →</a>
+  <a href="https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona_v2/PrincipiaVol1.lean" class="btn-outline" target="_blank">PrincipiaVol1.lean →</a>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div style="margin-bottom:.5rem;">
+    <a href="index.html">Principia Orthogona</a> &nbsp;·&nbsp;
+    <a href="sample-chapter-autophagy.html">Chapter A · Autophagy</a> &nbsp;·&nbsp;
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE Repository</a> &nbsp;·&nbsp;
+    <a href="https://doi.org/10.5281/zenodo.20237688" target="_blank">Zenodo V3</a>
+  </div>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
+  ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+  <a href="mailto:pgrossi888@outlook.com">pgrossi888@outlook.com</a> ·
+  <a href="mailto:g6llc@proton.me">g6llc@proton.me</a> ·
+  ISBN 979-8-9954416-0-1 · CC BY-NC-ND 4.0
+</footer>
+
+<!-- ── dm³ PHASE PORTRAIT SCRIPT ── -->
+<script>
+(function() {
+  const cv = document.getElementById('canvas-dm3');
+  const cx = cv.getContext('2d');
+
+  function step(r, theta, z, dt, eps) {
+    const rdot = r*(1-r*r) + eps*(r-1)*Math.exp(-z);
+    return [r + rdot*dt, theta + dt, z + (r*r - eps*(r-1)*(r-1)*Math.exp(-z))*dt];
+  }
+
+  function draw() {
+    const W = cv.offsetWidth; cv.width = W; cv.height = 320;
+    const H = 320;
+    const eps  = parseFloat(document.getElementById('eps').value);
+    const dom  = document.getElementById('domain').value;
+    const showEsc = document.getElementById('show-esc').checked;
+
+    document.getElementById('rho0-v').textContent = parseFloat(document.getElementById('rho0').value).toFixed(2);
+    document.getElementById('eps-v').textContent  = eps.toFixed(1);
+
+    cx.fillStyle = '#0d1117'; cx.fillRect(0,0,W,H);
+    const cx0 = W/2, cy0 = H/2, SC = Math.min(W,H)*0.37;
+
+    function px(r,th) { return cx0 + r*Math.cos(th)*SC; }
+    function py(r,th) { return cy0 - r*Math.sin(th)*SC; }
+
+    [[1/3,'rgba(201,168,76,.35)',1,[4,4]],[0.8,'rgba(201,168,76,.35)',1,[4,4]],
+     [1,'#c9a84c',2.5,[]],[1.5,'#1e2a40',.5,[]],[2,'#1e2a40',.5,[]]].forEach(([r,col,lw,dash])=>{
+      cx.beginPath(); cx.setLineDash(dash);
+      for(let i=0;i<=128;i++){const a=i/128*Math.PI*2; i===0?cx.moveTo(px(r,a),py(r,a)):cx.lineTo(px(r,a),py(r,a));}
+      cx.strokeStyle=col; cx.lineWidth=lw; cx.stroke(); cx.setLineDash([]);
+    });
+
+    cx.font='9px JetBrains Mono,monospace'; cx.fillStyle='rgba(201,168,76,.6)'; cx.textAlign='left';
+    cx.fillText('e0=1/3', px(1/3,0)+4, py(1/3,0));
+    cx.fillText('r*~0.80', px(0.8,0)+4, py(0.8,0));
+    cx.fillStyle='#c9a84c'; cx.fillText('G (r=1)', px(1,0)+5, py(1,0));
+
+    const domLabels = {
+      auto: ['AUTOPHAGY — X_auto','mTORC1 activity vs autophagic phase'],
+      star: ['TRIPLE-ALPHA — X_star','T/T* vs pulsation phase'],
+      both: ['BOTH SYSTEMS — same contact form','gold orbit = shared attractor']
+    };
+    cx.font='bold 10px Outfit,sans-serif'; cx.fillStyle='#c9a84c'; cx.textAlign='center';
+    cx.fillText(domLabels[dom][0], W/2, 16);
+    cx.font='9px Outfit,sans-serif'; cx.fillStyle='#666';
+    cx.fillText(domLabels[dom][1], W/2, 29);
+
+    function orbit(r0, a0, col, N, dt) {
+      cx.beginPath();
+      let r=r0,th=a0,z=0.15,first=true;
+      for(let i=0;i<N;i++){
+        if(r<0.02||r>3.5) break;
+        const x=px(r,th),y=py(r,th);
+        if(Math.abs(x-cx0)>W*.52||Math.abs(y-cy0)>H*.52){[r,th,z]=step(r,th,z,dt,eps);continue;}
+        first?cx.moveTo(x,y):cx.lineTo(x,y); first=false;
+        [r,th,z]=step(r,th,z,dt,eps);
+      }
+      cx.strokeStyle=col; cx.lineWidth=1; cx.stroke();
+    }
+
+    const angles=[0,Math.PI/3,2*Math.PI/3,Math.PI,4*Math.PI/3,5*Math.PI/3];
+    [1.3,1.5,1.7,1.9,2.1].forEach((r0,i)=>{
+      angles.forEach(a=>orbit(r0+i*.03, a, 'rgba(88,150,220,.65)', 900, 0.03));
+    });
+    if(showEsc) [.68,.58,.48].forEach(r0=>{
+      angles.forEach(a=>orbit(r0, a+Math.PI/6, 'rgba(200,80,80,.55)', 600, 0.03));
+    });
+
+    cx.beginPath();
+    for(let i=0;i<=256;i++){const a=i/256*Math.PI*2; i===0?cx.moveTo(px(1,a),py(1,a)):cx.lineTo(px(1,a),py(1,a));}
+    cx.strokeStyle='#c9a84c'; cx.lineWidth=2.5; cx.stroke();
+    cx.beginPath(); cx.arc(cx0,cy0,4,0,Math.PI*2); cx.fillStyle='#3a4f7a'; cx.fill();
+  }
+
+  ['rho0','eps','domain','show-esc'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.addEventListener('input',draw); el.addEventListener('change',draw);
+  });
+  window.addEventListener('resize',draw);
+  draw();
+})();
+</script>
+
+</body>
+</html>
