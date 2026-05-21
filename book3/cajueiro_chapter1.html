@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1 · The Cajueiro Principle · Book 3 · Principia Orthogona</title>
+<meta name="description" content="The Cajueiro Principle — Chapter 1 of The Mini-Beast, Book 3 of Principia Orthogona. On seeds, overshoot, resistance, and the next stable form. C1–C2 English for Researchers. G6 LLC · Pablo Nogueira Grossi · 2026.">
+<meta name="author" content="Pablo Nogueira Grossi · G6 LLC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<script>MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<style>
+:root {
+  --ink:     #14120e;
+  --paper:   #faf8f2;
+  --smoke:   #f0ece0;
+  --rule:    #c8a96e;
+  --gold:    #b8933a;
+  --teal:    #1a5c4e;
+  --mid:     #3a4f6a;
+  --red:     #7a2020;
+  --light:   #e2ddd0;
+  --muted:   #7a7060;
+  --seed-bg: #f0f4f8;
+  --math-bg: #fff8f0;
+  --bridge-bg: #f0f8f0;
+  --gen-bg:  #fff0f0;
+  --ext-bg:  #f8f0ff;
+  --act-bg:  #fff8e8;
+  --ff-serif: 'Lora', 'Georgia', serif;
+  --ff-sans:  'DM Sans', system-ui, sans-serif;
+  --ff-mono:  'DM Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body { font-family: var(--ff-serif); color: var(--ink); background: var(--paper); line-height: 1.8; }
+
+/* ── NAV ── */
+nav {
+  background: var(--ink); height: 50px; padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid rgba(200,169,110,.2);
+}
+.nav-brand { color: var(--rule); font-family: var(--ff-sans); font-size: 0.72rem;
+             letter-spacing: 0.25em; text-transform: uppercase; text-decoration: none; }
+.nav-links { display: flex; gap: 1.6rem; }
+.nav-links a { color: #888; font-family: var(--ff-sans); font-size: 0.75rem;
+               text-decoration: none; letter-spacing: 0.05em; transition: color .2s; }
+.nav-links a:hover { color: var(--rule); }
+
+/* ── LAYOUT ── */
+.container { max-width: 680px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+/* ── CHAPTER HEADER ── */
+.chapter-header {
+  padding: 4rem 0 2.5rem;
+  border-bottom: 3px solid var(--rule);
+  margin-bottom: 3rem;
+}
+.chapter-eyebrow { font-family: var(--ff-sans); font-size: 0.68rem; letter-spacing: 0.3em;
+                   text-transform: uppercase; color: var(--rule); margin-bottom: 0.8rem; }
+.chapter-num { font-family: var(--ff-sans); font-size: 0.75rem; letter-spacing: 0.15em;
+               text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.chapter-title { font-family: var(--ff-serif); font-size: clamp(2rem, 5vw, 2.8rem);
+                 font-weight: 700; line-height: 1.1; margin-bottom: 0.6rem; }
+.chapter-subtitle { font-family: var(--ff-serif); font-size: 1.05rem; color: var(--muted);
+                    font-style: italic; margin-bottom: 1.8rem; }
+.chapter-epigraph { border-left: 3px solid var(--rule); padding-left: 1.2rem;
+                    margin: 1.5rem 0 0; }
+.chapter-epigraph p { font-style: italic; font-size: 0.97rem; color: var(--muted);
+                      margin-bottom: 0.3rem; }
+.chapter-epigraph cite { font-family: var(--ff-sans); font-size: 0.72rem;
+                          color: var(--rule); letter-spacing: 0.05em; }
+
+/* ── SECTION HEADINGS ── */
+.sec { margin-top: 3rem; scroll-margin-top: 60px; }
+.sec-title { font-family: var(--ff-serif); font-size: 1.25rem; font-weight: 600;
+             color: var(--ink); border-bottom: 1px solid var(--light);
+             padding-bottom: 0.4rem; margin-bottom: 1.2rem; }
+.op-chain { font-family: var(--ff-mono); font-size: 1.1rem; color: var(--mid);
+            text-align: center; padding: 1rem; letter-spacing: 0.1em;
+            background: var(--smoke); margin: 1rem 0; }
+
+/* ── PROSE ── */
+.container p { line-height: 1.88; margin-bottom: 1.1rem; font-size: 1rem; }
+.container ul, .container ol { margin: 0.8rem 0 1rem 2rem; }
+.container li { line-height: 1.78; margin-bottom: 0.5rem; font-size: 0.98rem; }
+.epigraph-inline { text-align: right; font-style: italic; color: var(--muted);
+                   font-size: 0.93rem; margin: 1rem 0 0.5rem; }
+
+/* ── BOX ENVIRONMENTS ── */
+.box { margin: 1.8rem 0; padding: 1.3rem 1.5rem; border-left: 4px solid; }
+.box-label { font-family: var(--ff-sans); font-size: 0.65rem; letter-spacing: 0.2em;
+             text-transform: uppercase; margin-bottom: 0.8rem; font-weight: 600; }
+.box p { font-size: 0.97rem; margin-bottom: 0.7rem; }
+.box p:last-child { margin-bottom: 0; }
+.box ul, .box ol { margin: 0.5rem 0 0.5rem 1.6rem; }
+.box li { font-size: 0.95rem; margin-bottom: 0.4rem; line-height: 1.65; }
+
+.box-seed    { background: var(--seed-bg);   border-color: #3a4f6a; }
+.box-seed .box-label { color: #3a4f6a; }
+.box-math    { background: var(--math-bg);   border-color: var(--rule); }
+.box-math .box-label { color: var(--gold); }
+.box-bridge  { background: var(--bridge-bg); border-color: #1a6b3a; }
+.box-bridge .box-label { color: #1a6b3a; }
+.box-generate { background: var(--gen-bg);  border-color: var(--red); }
+.box-generate .box-label { color: var(--red); }
+.box-extend  { background: var(--ext-bg);   border-color: #6a1a9a; }
+.box-extend .box-label { color: #6a1a9a; }
+.box-activate { background: var(--act-bg);  border-color: #b87a00; }
+.box-activate .box-label { color: #b87a00; }
+.box-note    { background: var(--smoke);    border-color: var(--muted); }
+.box-note .box-label { color: var(--muted); }
+
+/* ── TABLES ── */
+.vocab-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+.vocab-table th { background: var(--mid); color: white; padding: 0.5rem 0.8rem;
+                  font-family: var(--ff-sans); font-size: 0.65rem; letter-spacing: 0.12em;
+                  text-transform: uppercase; font-weight: 400; text-align: left; }
+.vocab-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light);
+                  vertical-align: top; line-height: 1.5; }
+.vocab-table tr:nth-child(even) td { background: rgba(0,0,0,.018); }
+.vocab-table .en { font-style: normal; }
+.vocab-table .pt { color: var(--teal); }
+.vocab-table .op { color: var(--muted); font-size: 0.82rem; }
+
+/* ── RECOGNITION TABLE ── */
+.rec-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+.rec-table th { background: var(--ink); color: var(--rule); padding: 0.5rem 0.9rem;
+                font-family: var(--ff-sans); font-size: 0.65rem; letter-spacing: 0.12em;
+                text-transform: uppercase; font-weight: 400; text-align: left; }
+.rec-table td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--light);
+                vertical-align: top; line-height: 1.6; }
+.rec-table .move { font-weight: 600; color: var(--mid); white-space: nowrap; }
+
+/* ── CENTERED MATH ── */
+.math-center { text-align: center; margin: 1.2rem 0; font-size: 1.05rem; }
+
+/* ── OPERATOR BADGES ── */
+.op-row { display: flex; justify-content: center; gap: 0.8rem; margin: 1.5rem 0; flex-wrap: wrap; }
+.op-badge { display: inline-flex; align-items: center; justify-content: center;
+            width: 2.8rem; height: 2.8rem; border-radius: 4px; font-weight: 700;
+            font-size: 1.1rem; font-family: var(--ff-mono); color: white; }
+.op-C { background: var(--mid); }
+.op-K { background: var(--teal); }
+.op-F { background: var(--red); }
+.op-U { background: #5a7a3a; }
+.op-arr { font-family: var(--ff-mono); color: var(--rule); font-size: 1.2rem;
+          display: flex; align-items: center; }
+
+/* ── TASK NUMBERS ── */
+.task-num { display: inline-block; background: var(--ink); color: var(--rule);
+            font-family: var(--ff-sans); font-size: 0.65rem; letter-spacing: 0.12em;
+            text-transform: uppercase; padding: 0.15rem 0.5rem; margin-right: 0.5rem; }
+
+/* ── NOTICE BLOCK ── */
+.notice { font-style: italic; margin: 0.8rem 0; padding-left: 1rem;
+          border-left: 2px solid var(--rule); color: var(--muted);
+          font-size: 0.93rem; line-height: 1.65; }
+
+/* ── SECTION NAV ── */
+.section-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 2rem 0 3rem;
+               padding: 1rem 0; border-top: 1px solid var(--light); border-bottom: 1px solid var(--light); }
+.sec-nav-link { font-family: var(--ff-sans); font-size: 0.72rem; color: var(--muted);
+                text-decoration: none; padding: 0.25rem 0.6rem; border: 1px solid var(--light);
+                transition: all .2s; white-space: nowrap; }
+.sec-nav-link:hover { background: var(--ink); color: var(--rule); border-color: var(--ink); }
+
+/* ── CTA ── */
+.cta { background: var(--ink); color: white; padding: 3rem 2rem; text-align: center; margin-top: 4rem; }
+.cta h2 { font-family: var(--ff-serif); font-size: 1.4rem; font-weight: 400; margin-bottom: 0.6rem; }
+.cta p { color: #888; max-width: 480px; margin: 0 auto 1.8rem; font-size: 0.95rem; line-height: 1.75; }
+.btn { display: inline-block; margin: 0.35rem; padding: 0.7rem 1.8rem;
+       font-family: var(--ff-sans); font-size: 0.85rem; text-decoration: none; transition: all .2s; }
+.btn-gold { background: var(--rule); color: var(--ink); font-weight: 600; }
+.btn-gold:hover { background: var(--gold); }
+.btn-outline { border: 1px solid var(--rule); color: var(--rule); }
+.btn-outline:hover { background: var(--rule); color: var(--ink); }
+
+/* ── FOOTER ── */
+footer { background: #0d1117; color: #555; padding: 2rem; text-align: center;
+         font-family: var(--ff-sans); font-size: 0.72rem; line-height: 2; }
+footer a { color: #666; text-decoration: none; }
+footer a:hover { color: var(--rule); }
+
+.running-head { font-family: var(--ff-sans); font-size: 0.65rem; letter-spacing: 0.2em;
+                text-transform: uppercase; color: var(--muted); padding: 2rem 0 0.5rem;
+                border-bottom: 1px solid var(--light); margin-bottom: 3rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">O Princípio do Cajueiro</a>
+  <div class="nav-links">
+    <a href="index.html#ch1">Back to site</a>
+    <a href="https://g6llc.gumroad.com/l/soundworks" target="_blank">Volumes I–VI</a>
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Zenodo</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<div class="running-head">Principia Orthogona · Book 3: The Mini-Beast · Chapter 1</div>
+
+<!-- ── CHAPTER HEADER ── -->
+<header class="chapter-header">
+  <div class="chapter-eyebrow">Book 3 · The Mini-Beast · C1→C2 · English for Researchers</div>
+  <div class="chapter-num">Chapter 1</div>
+  <h1 class="chapter-title">The Cajueiro Principle</h1>
+  <div class="chapter-subtitle">On seeds, overshoot, resistance, and the next stable form</div>
+  <div class="chapter-epigraph">
+    <p>"The cajueiro does not plan the forest. It becomes one."</p>
+    <cite>— Sri Brodananda (Pablo Nogueira Grossi), Principia Orthogona, 2026</cite>
+  </div>
+</header>
+
+<!-- ── SECTION NAV ── -->
+<nav class="section-nav" aria-label="Chapter sections">
+  <a class="sec-nav-link" href="#before">Before You Read</a>
+  <a class="sec-nav-link" href="#seed">Seed Text</a>
+  <a class="sec-nav-link" href="#recognition">Recognition</a>
+  <a class="sec-nav-link" href="#bridge">Bridge</a>
+  <a class="sec-nav-link" href="#mathematics">Mathematics</a>
+  <a class="sec-nav-link" href="#generate">Generate</a>
+  <a class="sec-nav-link" href="#extend">Extend</a>
+</nav>
+
+<!-- ── BEFORE YOU READ ── -->
+<section id="before" class="sec">
+  <h2 class="sec-title">Before You Read</h2>
+
+  <p>You are about to read a seed text. It is not simplified. Before you read, take three minutes:</p>
+
+  <div class="box box-activate">
+    <div class="box-label">Activation Task</div>
+    <p>Think of something that started small and became large without being planned — a tree, a friendship, a field of research, a city. Write three sentences describing the moment it crossed from fragile to self-sustaining.</p>
+  </div>
+
+  <p>Hold that image. You will need it.</p>
+</section>
+
+<!-- ── SEED TEXT ── -->
+<section id="seed" class="sec">
+  <h2 class="sec-title">Seed Text</h2>
+
+  <div class="box box-seed">
+    <div class="box-label">Seed Text</div>
+
+    <p>Nature does not seek perfection. It seeks the next stable configuration.</p>
+
+    <p>A seed falls into poor soil — sandy, dry, resistant. Most seeds die there. The cajueiro does not. It spreads horizontally, branch by branch, each extension testing the ground ahead. Where a branch touches soil and finds sufficient purchase, it roots. A new trunk forms. The original tree has not reproduced — it has extended itself into a new stable state.</p>
+
+    <p>This is not growth in the ordinary sense. It is <em>regeneration across resistance</em>. The tree encounters an obstacle — drought, poor nutrients, competing canopy — and rather than stopping, it overshoots into new territory, then contracts to the next available point of stability.</p>
+
+    <p>Observe what is preserved across each transition: the root logic, the branching pattern, the relationship between canopy and root depth. What changes is the scale. What persists is the organizing principle.</p>
+
+    <p>The largest known cajueiro, in Pirangi, Brazil, covers more than two hectares. From above it looks like a forest. It is one tree. One seed. One organizing principle, iterated across resistance until it saturated the available space.</p>
+
+    <p>The question this raises is not botanical. It is foundational: at what point does a system become self-sustaining? And: what is the minimum unit that must persist for the system to regenerate after disruption?</p>
+
+    <p>These questions do not belong to biology alone. They belong to every domain in which structure emerges, persists, and extends itself across time.</p>
+
+    <div class="epigraph-inline">— Sri Brodananda, <em>Principia Orthogona</em>, 2026</div>
+  </div>
+</section>
+
+<!-- ── RECOGNITION ── -->
+<section id="recognition" class="sec">
+  <h2 class="sec-title">Recognition — Finding the Moves</h2>
+
+  <p>A researcher reads actively. They track the moves the writer makes. Five generative moves are present in this text:</p>
+
+  <table class="rec-table">
+    <thead><tr><th>Move</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="move">Concrete anchor</td>
+        <td>Opens with a specific object before any abstraction. The particular carries the universal.</td>
+      </tr>
+      <tr>
+        <td class="move">Inversion</td>
+        <td>"Not growth in the ordinary sense." Defines by negation. Creates space for the new definition.</td>
+      </tr>
+      <tr>
+        <td class="move">Invariant naming</td>
+        <td>Names what persists across change: the organizing principle. This is the mathematical move.</td>
+      </tr>
+      <tr>
+        <td class="move">Scale extension</td>
+        <td>Moves from seed to forest to every domain. Each step earns the next.</td>
+      </tr>
+      <tr>
+        <td class="move">Open question</td>
+        <td>Ends with questions, not answers. The researcher's signature.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="box box-note">
+    <div class="box-label"><span class="task-num">Task 1</span> Recognition</div>
+    <p>Return to the seed text. Mark each of the five moves in the margin. Then answer in writing: which move do you find most difficult to make in your own prose, and why?</p>
+  </div>
+</section>
+
+<!-- ── BRIDGE ── -->
+<section id="bridge" class="sec">
+  <h2 class="sec-title">Bridge — Português ↔ English</h2>
+
+  <p>You are not learning new concepts. You are learning to deploy concepts you already carry — in English, with precision.</p>
+
+  <div class="box box-bridge">
+    <div class="box-label">Bridge — Português ↔ English</div>
+
+    <table class="vocab-table">
+      <thead><tr><th>English</th><th>Português</th><th>Shared operator</th></tr></thead>
+      <tbody>
+        <tr><td class="en">to generate</td><td class="pt">gerar</td><td class="op">bring into being</td></tr>
+        <tr><td class="en">to compress</td><td class="pt">comprimir</td><td class="op">reduce without losing structure</td></tr>
+        <tr><td class="en">to constrain</td><td class="pt">restringir</td><td class="op">define the boundary</td></tr>
+        <tr><td class="en">to unfold</td><td class="pt">desdobrar</td><td class="op">open what was latent</td></tr>
+        <tr><td class="en">invariant</td><td class="pt">invariante</td><td class="op">what persists across change</td></tr>
+        <tr><td class="en">organizing principle</td><td class="pt">princípio organizador</td><td class="op">seed logic surviving transition</td></tr>
+        <tr><td class="en">self-sustaining</td><td class="pt">autossustentável</td><td class="op">needs no external input</td></tr>
+        <tr><td class="en">to regenerate</td><td class="pt">regenerar</td><td class="op">rebuild from the seed</td></tr>
+        <tr><td class="en">substrate</td><td class="pt">substrato</td><td class="op">the material in which it operates</td></tr>
+        <tr><td class="en">threshold</td><td class="pt">limiar</td><td class="op">minimum condition for transition</td></tr>
+      </tbody>
+    </table>
+
+    <p class="notice">Notice: The suffix <strong>-tion</strong> in English (generation, compression, regeneration) maps directly to <strong>-ção</strong> in Portuguese. Both derive from Latin <em>-tio</em> — a nominalizing suffix converting an action into a process noun. When you see <strong>-tion</strong> in academic English, you are seeing the same Latin operator your language already carries.</p>
+
+    <p><strong>Mapping exercise:</strong> Take the sentence <em>The regeneration of the system depends on the invariant threshold.</em> Write its Portuguese structural equivalent — not a translation, a mapping. Then identify: what is gained or lost in each language?</p>
+  </div>
+</section>
+
+<!-- ── MATHEMATICS ── -->
+<section id="mathematics" class="sec">
+  <h2 class="sec-title">The Mathematics — What \(g^6 = 33\) Means</h2>
+
+  <div class="box box-math">
+    <div class="box-label">The Mathematics</div>
+
+    <p>The operator chain governing generative systems is:</p>
+
+    <div class="math-center">\[ G = U \circ F \circ K \circ C \]</div>
+
+    <div class="op-row">
+      <span class="op-badge op-C">C</span>
+      <span class="op-arr">→</span>
+      <span class="op-badge op-K">K</span>
+      <span class="op-arr">→</span>
+      <span class="op-badge op-F">F</span>
+      <span class="op-arr">→</span>
+      <span class="op-badge op-U">U</span>
+      <span class="op-arr">→ ∞</span>
+    </div>
+
+    <p>One full application of \(G\) is one cycle. The central question of TOGT is: how many cycles before a system becomes genuinely self-sustaining — before it crosses from fragile to regenerative?</p>
+
+    <p>The answer is the threshold \(g^6 = 33\).</p>
+
+    <p>Consider the structure of the operator:</p>
+    <ul>
+      <li>Four operators: \(C\), \(K\), \(F\), \(U\)</li>
+      <li>Three invariants that must simultaneously hold for stability: orthogonality, nilpotency of deviations, spectral collapse</li>
+      <li>Minimum two states per operator: active / latent</li>
+    </ul>
+
+    <p>The minimum cycles for all three invariants to simultaneously achieve closure, given four binary operators:</p>
+
+    <div class="math-center">\[ n_{\min} = \lceil \log_2(3!) \cdot 4 \rceil = \lceil 2.585 \times 4 \rceil = 11 \]</div>
+
+    <p>Eleven cycles to close once. But a single closure is fragile. The triad invariant structure requires three independent confirmations before the system achieves genuine regenerative stability:</p>
+
+    <div class="math-center">\[ g^6 = 3 \times 11 = 33 \]</div>
+
+    <p>Thirty-three is the minimum number of operator cycles for a system to achieve stable, self-sustaining, regenerative coherence. Below 33, the system may appear stable but will not survive disruption. At and above 33, the organizing principle is robust enough to rebuild from any seed that preserves it.</p>
+
+    <p><em>The cajueiro crosses this threshold.</em> That is why it survives drought, poor soil, and competing canopy — and still extends.</p>
+  </div>
+
+  <div class="box box-note">
+    <div class="box-label">A note on the number</div>
+    <p>The threshold 33 appears independently across traditions — hermetic, Vedic, architectural. TOGT does not treat this as coincidence. It treats it as <em>convergent recognition</em>: minds prepared by different routes arriving at the same structural necessity. The sacred languages were their most durable compression medium. The mathematics makes the encoding legible.</p>
+  </div>
+</section>
+
+<!-- ── GENERATE ── -->
+<section id="generate" class="sec">
+  <h2 class="sec-title">Generate</h2>
+
+  <div class="box box-generate">
+    <div class="box-label"><span class="task-num">Task 2</span> Your Domain, Your Cajueiro</div>
+
+    <p>Every domain has a cajueiro: a system that starts from a minimum viable seed, overshoots into new territory, meets resistance, and locks into the next stable configuration.</p>
+
+    <p>Choose one domain you know well. Identify:</p>
+    <ol>
+      <li>The <strong>seed</strong> — the minimum viable unit</li>
+      <li>The <strong>overshoot</strong> — extension beyond the current stable state</li>
+      <li>The <strong>resistance</strong> — what pushes back</li>
+      <li>The <strong>lock</strong> — the next stable configuration</li>
+      <li>The <strong>invariant</strong> — what organizing principle persists across the transition</li>
+    </ol>
+
+    <p>Write 300–400 words in English. Do not simplify. Use at least three vocabulary items from the Bridge section and at least three generative moves from the Recognition section.</p>
+
+    <p><strong>Audience:</strong> A researcher in your domain who has never heard of TOGT. Your writing should make them say: <em>yes, that is exactly what I see.</em></p>
+  </div>
+</section>
+
+<!-- ── EXTEND ── -->
+<section id="extend" class="sec">
+  <h2 class="sec-title">Extend — Now You Teach</h2>
+
+  <div class="box box-extend">
+    <div class="box-label"><span class="task-num">Task 3</span> Design One Question</div>
+
+    <p>A good research question does three things: it anchors in something specific, it opens toward something unknown, and it cannot be answered with yes or no.</p>
+
+    <p>Design one research question in English that emerges from your domain analysis in Task 2. Then: exchange questions with a peer. Answer their question in 150 words. Receive their answer to yours.</p>
+
+    <p>Identify: where did their answer generate something you had not seen? That is the fold point. That is where the next unit begins.</p>
+  </div>
+
+  <!-- ── WHAT COMES NEXT ── -->
+  <div class="box box-note" style="margin-top:3rem;">
+    <div class="box-label">What Comes Next</div>
+    <p><strong>Chapter 2 — The Order Is Not Arbitrary</strong> takes the non-commutativity of the operator chain seriously as a mathematical claim, not a metaphor. The mycelium, the market, and the language learner run the same four operators in different orders — and produce different organisms. You will add a row to the domain table and design a demonstration of non-commutativity that a peer can feel from the inside.</p>
+    <p style="margin-top:.6rem;"><strong>Chapters 3 and 4</strong> (The Quantum Weave; Complete Completeness) complete the first arc of Book 3. Full series — Volumes I–VI — at <a href="https://g6llc.gumroad.com/l/soundworks" target="_blank" style="color:var(--teal);">g6llc.gumroad.com</a> · $25–$250 living book access.</p>
+  </div>
+</section>
+
+</div><!-- /.container -->
+
+<!-- ── CTA ── -->
+<div class="cta">
+  <h2>Continue the Series</h2>
+  <p>Chapter 2 introduces non-commutativity — why the mycelium, the market, and the language learner are not the same organism. Full series access includes Volumes I–VI and the dm³ Soundworks.</p>
+  <a href="index.html" class="btn btn-gold">← Back to Cajueiro</a>
+  <a href="https://g6llc.gumroad.com/l/soundworks" class="btn btn-outline" target="_blank">Get Volumes I–VI →</a>
+  <a href="https://sbm.org.br/xii-bienal/" class="btn btn-outline" target="_blank">XII Bienal SBM · Natal →</a>
+</div>
+
+<footer>
+  <div style="margin-bottom:.5rem;">
+    <a href="index.html">O Princípio do Cajueiro</a> &nbsp;·&nbsp;
+    <a href="https://github.com/grossi-ops/cajueiro" target="_blank">GitHub</a> &nbsp;·&nbsp;
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Zenodo 19117399</a> &nbsp;·&nbsp;
+    <a href="https://g6llc.gumroad.com/l/soundworks" target="_blank">Volumes I–VI</a>
+  </div>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
+  ORCID: <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a> ·
+  <a href="mailto:grossiatwork@gmail.com">grossiatwork@gmail.com</a> ·
+  ISBN 979-8-9954416-0-1 · CC BY-NC-ND 4.0 · MIT (code)
+</footer>
+
+</body>
+</html>
