@@ -1,5 +1,3 @@
-Here's a clean, professional, and well-structured README.md for your GitHub repository:markdown
-
 # CapitalGuard Trader
 
 **Disciplined Single-Name Trading • Capital Protection First**
@@ -112,12 +110,3 @@ Contributions, feedback, and suggestions are welcome. Please open an issue or pu
 **Start Small. Trade Disciplined. Grow Consistently.**
 
 *Made with focus and discipline.*
-
-Next StepsWould you like me to also generate:The full index.html homepage?
-The interactive growth simulator code?
-A daily-setups.md template?
-Tailwind CSS styled version?
-
-Just say the word and I’ll deliver the complete GitHub Pages starter.
-
-
