@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Simulator • CapitalGuard Trader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-shield-alt text-emerald-600 text-2xl"></i>
+        <span class="font-bold text-2xl tracking-tight">CapitalGuard</span>
+      </div>
+      <div class="flex gap-8 text-sm font-medium">
+        <a href="index.html" class="hover:text-emerald-600">Home</a>
+        <a href="strategy.html" class="hover:text-emerald-600">Strategy</a>
+        <a href="daily-setups.html" class="hover:text-emerald-600">Daily Setups</a>
+        <a href="simulator.html" class="text-emerald-600">Growth Simulator</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-6 py-12">
+
+    <h1 class="text-5xl font-bold mb-2">Growth Simulator</h1>
+    <p class="text-xl text-gray-600 mb-10">See how consistent small gains can compound over time</p>
+
+    <div class="grid lg:grid-cols-2 gap-12">
+
+      <!-- Controls -->
+      <div class="bg-white rounded-3xl p-10 shadow-sm">
+        <h2 class="text-2xl font-semibold mb-8">Simulation Parameters</h2>
+
+        <div class="space-y-8">
+          <!-- Starting Capital -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Starting Capital</label>
+            <div class="flex items-center gap-4">
+              <input type="range" id="startCapital" min="100" max="5000" value="100" step="50"
+                     class="w-full accent-emerald-600">
+              <span id="startValue" class="font-bold text-2xl w-28">$100</span>
+            </div>
+          </div>
+
+          <!-- Daily Return -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Average Daily Return</label>
+            <div class="flex items-center gap-4">
+              <input type="range" id="dailyReturn" min="0.3" max="3" value="1" step="0.1"
+                     class="w-full accent-emerald-600">
+              <span id="returnValue" class="font-bold text-2xl w-28">1.0%</span>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0.3%</span>
+              <span>3.0%</span>
+            </div>
+          </div>
+
+          <!-- Trading Days -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Trading Period (Days)</label>
+            <div class="flex items-center gap-4">
+              <input type="range" id="tradingDays" min="100" max="1000" value="756" step="10"
+                     class="w-full accent-emerald-600">
+              <span id="daysValue" class="font-bold text-2xl w-28">756</span>
+            </div>
+            <p class="text-xs text-gray-500">(Approx. 3 years of trading days)</p>
+          </div>
+        </div>
+
+        <button onclick="runSimulation()" 
+                class="mt-10 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-5 rounded-2xl text-lg">
+          Run Simulation
+        </button>
+      </div>
+
+      <!-- Results -->
+      <div class="bg-white rounded-3xl p-10 shadow-sm">
+        <h2 class="text-2xl font-semibold mb-6">Results</h2>
+        
+        <div class="space-y-8">
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <p class="text-sm text-gray-500">Final Account Size</p>
+              <p id="finalAmount" class="text-5xl font-bold text-emerald-600">$38,337</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Total Growth</p>
+              <p id="growthPercent" class="text-5xl font-bold text-emerald-600">38,237%</p>
+            </div>
+          </div>
+
+          <div>
+            <p class="text-sm text-gray-500 mb-3">Potential Daily Income (at 1% daily)</p>
+            <p id="dailyIncome" class="text-4xl font-bold">$383</p>
+          </div>
+
+          <div class="pt-6 border-t">
+            <canvas id="growthChart" height="180"></canvas>
+          </div>
+        </div>
+
+        <div class="mt-10 text-xs text-gray-500 leading-relaxed">
+          <strong>Note:</strong> This is a mathematical projection assuming consistent daily returns and perfect execution. 
+          Real trading includes losing days, slippage, and emotional challenges. Always prioritize risk management.
+        </div>
+      </div>
+    </div>
+
+    <!-- Realistic Scenarios -->
+    <div class="mt-16">
+      <h3 class="text-2xl font-semibold mb-6">Realistic Scenarios (3 Years)</h3>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white p-8 rounded-3xl text-center">
+          <p class="text-emerald-600 font-bold mb-2">Conservative</p>
+          <p class="text-4xl font-bold">0.75% daily</p>
+          <p class="text-2xl mt-6">$8,900</p>
+          <p class="text-sm text-gray-500">Final Balance</p>
+        </div>
+        <div class="bg-white p-8 rounded-3xl text-center border-2 border-emerald-600">
+          <p class="text-emerald-600 font-bold mb-2">Realistic Goal</p>
+          <p class="text-4xl font-bold">1.2% daily</p>
+          <p class="text-2xl mt-6">$92,400</p>
+          <p class="text-sm text-gray-500">Final Balance</p>
+        </div>
+        <div class="bg-white p-8 rounded-3xl text-center">
+          <p class="text-emerald-600 font-bold mb-2">Aggressive</p>
+          <p class="text-4xl font-bold">2.0% daily</p>
+          <p class="text-2xl mt-6">$3.4 Million</p>
+          <p class="text-sm text-gray-500">Final Balance</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- eToro -->
+    <div class="mt-16 bg-emerald-50 rounded-3xl p-10 text-center">
+      <h3 class="text-2xl font-semibold mb-4">Trade With Me on eToro</h3>
+      <p class="text-gray-600 mb-6">
+        Hey! I’m trading with eToro. They have 1,000s of assets and awesome tools.<br>
+        Want to join me? Sign up with my link and we both get rewarded:
+      </p>
+      <a href="https://etoro.tw/42BDbbL" 
+         target="_blank"
+         class="inline-flex items-center gap-3 bg-[#1E90FF] hover:bg-[#1A7ED9] text-white font-semibold px-8 py-4 rounded-2xl text-lg">
+        <i class="fas fa-external-link-alt"></i>
+        Join eToro via my link
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t py-12">
+    <div class="max-w-6xl mx-auto px-6 text-center">
+      <p class="text-gray-500">
+        Follow daily updates on X → <a href="https://x.com/unitedWeStreamU" target="_blank" class="text-emerald-600 hover:underline">@unitedWeStreamU</a>
+      </p>
+      <p class="text-xs text-gray-400 mt-6">
+        CapitalGuard Trader © 2026 • Built for discipline and transparency
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    let growthChart;
+
+    function formatCurrency(amount) {
+      return '$' + amount.toLocaleString('en-US', {minimumFractionDigits: 0});
+    }
+
+    function runSimulation() {
+      const start = parseFloat(document.getElementById('startCapital').value);
+      const dailyRate = parseFloat(document.getElementById('dailyReturn').value) / 100;
+      const days = parseInt(document.getElementById('tradingDays').value);
+
+      let balance = start;
+      const balanceHistory = [start];
+
+      for (let i = 0; i < days; i++) {
+        balance *= (1 + dailyRate);
+        if (i % 30 === 0) { // Sample every 30 days for chart
+          balanceHistory.push(Math.round(balance));
+        }
+      }
+
+      // Update results
+      document.getElementById('finalAmount').textContent = formatCurrency(Math.round(balance));
+      document.getElementById('growthPercent').textContent = (Math.round(((balance / start) - 1) * 10000) / 100) + '%';
+      document.getElementById('dailyIncome').textContent = formatCurrency(Math.round(balance * 0.01));
+
+      // Update live values
+      document.getElementById('startValue').textContent = formatCurrency(start);
+      document.getElementById('returnValue').textContent = (dailyRate * 100).toFixed(1) + '%';
+      document.getElementById('daysValue').textContent = days;
+
+      // Update or create chart
+      const ctx = document.getElementById('growthChart');
+      if (growthChart) growthChart.destroy();
+
+      growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: balanceHistory.length}, (_, i) => i * 30),
+          datasets: [{
+            label: 'Account Growth',
+            data: balanceHistory,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { 
+              grid: { color: '#e5e7eb' },
+              ticks: { callback: v => '$' + v.toLocaleString() }
+            }
+          }
+        }
+      });
+    }
+
+    // Initialize on load
+    window.onload = () => {
+      runSimulation();
+      
+      // Add live update listeners
+      document.getElementById('startCapital').addEventListener('input', runSimulation);
+      document.getElementById('dailyReturn').addEventListener('input', runSimulation);
+      document.getElementById('tradingDays').addEventListener('input', runSimulation);
+    };
+  </script>
+
+</body>
+</html>
