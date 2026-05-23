@@ -3,18 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GAME THEORY · Banned in China · THEORY</title>
+<title>Theory · Principia Orthogona · 21 Papers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --void: #04040a;
+  --surface: #0d0d14;
   --card: #0e0e00;
   --accent: #f7c948;
   --accent2: #ff8c00;
+  --accent3: #00f5d4;
   --text: #e8e8f0;
   --muted: #666660;
   --border: #f7c94818;
+  --border-dim: #ffffff08;
+  --green: #00e676;
+  --red: #ff3860;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -24,362 +29,502 @@ body {
   color: var(--text);
   min-height: 100vh;
 }
+
+/* ── NAV ── */
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem 2rem;
   border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
-nav a { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+nav a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
 nav a:hover { color: var(--accent); }
 nav a.active { color: var(--accent); }
+.nav-right { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+/* ── HERO ── */
 .hero {
   padding: 6rem 2rem 4rem;
   max-width: 900px;
   margin: 0 auto;
   position: relative;
 }
-.banned-stamp {
+.series-badge {
   display: inline-block;
   font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #ff3333;
-  border: 1px solid #ff3333;
-  padding: 0.25rem 0.75rem;
-  margin-bottom: 2rem;
-  transform: rotate(-2deg);
-  display: inline-block;
-}
-.token-symbol {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
   color: var(--accent);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 2rem;
 }
 h1 {
-  font-size: clamp(4rem, 12vw, 9rem);
+  font-size: clamp(2.8rem, 8vw, 6rem);
   font-weight: 700;
-  line-height: 0.88;
+  line-height: 0.92;
   letter-spacing: -0.04em;
   color: var(--accent);
   margin-bottom: 1rem;
-  text-shadow: 0 0 80px #f7c94840;
+  text-shadow: 0 0 60px #f7c94830;
 }
 h1 .sub {
   display: block;
-  font-size: 0.35em;
+  font-size: 0.32em;
   color: var(--text);
   letter-spacing: 0.05em;
   font-weight: 300;
-  margin-top: 0.3em;
+  margin-top: 0.35em;
 }
-.tagline {
-  font-size: 1.2rem;
+.hero-body {
+  font-size: 1.05rem;
   color: var(--muted);
-  margin: 2rem 0 3rem;
-  max-width: 560px;
-  line-height: 1.7;
+  max-width: 620px;
+  line-height: 1.8;
+  margin: 2rem 0 2.5rem;
 }
-.tagline strong { color: var(--text); }
-.cta-row {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 5rem;
-}
-.btn {
+.hero-body strong { color: var(--text); }
+.doi-root {
   font-family: 'Space Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  padding: 0.8rem 1.6rem;
-  border: 1px solid;
-  transition: all 0.2s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.btn-primary { color: var(--void); background: var(--accent); border-color: var(--accent); }
-.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
-.btn-ghost { color: var(--accent); border-color: var(--border); }
-.btn-ghost:hover { background: var(--border); }
-
-/* ── LIVE CHART ── */
-.chart-section {
-  padding: 4rem 2rem;
-  max-width: 900px;
-  margin: 0 auto;
-  border-top: 1px solid var(--border);
-}
-.chart-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.live-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: #00ff88;
-  border-radius: 50%;
-  flex-shrink: 0;
-  animation: blink 1.5s ease-in-out infinite;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px #00ff88; }
-  50%       { opacity: 0.2; box-shadow: none; }
-}
-.chart-wrapper {
-  border: 1px solid var(--border);
-  overflow: hidden;
-}
-.buy-bar {
-  margin-top: 1.5rem;
-  background: var(--accent);
-  padding: 1.25rem 2rem;
+  font-size: 0.78rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--card);
+  border-left: 3px solid var(--accent);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
+  margin-bottom: 5rem;
 }
-.buy-bar-text {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.78rem;
-  color: var(--void);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-.buy-bar-link {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.72rem;
-  background: var(--void);
-  color: var(--accent);
-  padding: 0.65rem 1.4rem;
+.doi-root-label { color: var(--muted); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.doi-root-val { color: var(--accent); }
+.doi-root a {
+  color: var(--accent3);
   text-decoration: none;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: opacity 0.2s;
-  white-space: nowrap;
-  border: 1px solid var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  border: 1px solid #00f5d430;
+  padding: 0.4rem 0.9rem;
+  transition: all 0.2s;
 }
-.buy-bar-link:hover { opacity: 0.75; }
+.doi-root a:hover { background: #00f5d415; }
 
-/* matrix grid */
-.matrix {
-  padding: 4rem 2rem;
+/* ── PAPER COUNT BAR ── */
+.count-bar {
+  padding: 0 2rem;
   max-width: 900px;
-  margin: 0 auto;
-  border-top: 1px solid var(--border);
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
 }
-.matrix-title {
+.count-num {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.count-label {
   font-family: 'Space Mono', monospace;
   font-size: 0.65rem;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 2.5rem;
 }
-.matrix-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
+
+/* ── SECTION HEADERS ── */
+.section-head {
+  padding: 3rem 2rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
 }
-.matrix-cell {
-  background: var(--void);
-  padding: 2rem;
-}
-.matrix-cell h3 {
+.section-head + .section-head { padding-top: 2rem; }
+.section-label {
   font-family: 'Space Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  color: var(--accent);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  margin-bottom: 0.8rem;
+  color: var(--accent);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
 }
-.matrix-cell p {
-  font-size: 0.92rem;
+.section-desc {
+  font-size: 0.88rem;
   color: var(--muted);
-  line-height: 1.7;
+  margin-top: 0.6rem;
+  line-height: 1.6;
 }
-.matrix-cell p strong { color: var(--text); }
-@media (max-width: 600px) { .matrix-grid { grid-template-columns: 1fr; } }
-/* operator section */
+
+/* ── PAPER LIST ── */
+.paper-list {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.paper-item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  gap: 0 1.5rem;
+  align-items: start;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-dim);
+  transition: background 0.15s;
+}
+.paper-item:hover { background: #f7c9480a; }
+.paper-item:first-child { border-top: 1px solid var(--border-dim); }
+.paper-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  padding-top: 0.2rem;
+  letter-spacing: 0.05em;
+}
+.paper-body {}
+.paper-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 0.4rem;
+}
+.paper-doi {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  word-break: break-all;
+}
+.paper-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.75rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+  align-self: center;
+}
+.paper-link:hover { background: var(--border); }
+
+/* ── OPERATOR BLOCK ── */
 .operator {
   padding: 4rem 2rem;
   max-width: 900px;
   margin: 0 auto;
   border-top: 1px solid var(--border);
+  margin-top: 4rem;
 }
 .op-block {
   font-family: 'Space Mono', monospace;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   line-height: 2;
   padding: 2rem;
-  background: #0e0e00;
+  background: var(--card);
   border-left: 3px solid var(--accent);
 }
 .op-block .label { color: var(--accent); }
 .op-block .val   { color: var(--text); }
 .op-block .dim   { color: var(--muted); }
-/* stats row */
-.stats {
-  display: flex;
-  gap: 3rem;
-  padding: 4rem 2rem;
-  max-width: 900px;
-  margin: 0 auto;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-.stat-item { flex: 1; min-width: 140px; }
-.stat-label {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.4rem;
-}
-.stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-}
+
+/* ── FOOTER ── */
 footer {
   border-top: 1px solid var(--border);
   padding: 2rem;
   text-align: center;
+  margin-top: 6rem;
 }
 footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
 footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .paper-item { grid-template-columns: 2rem 1fr; }
+  .paper-link { display: none; }
+  .paper-title { font-size: 0.92rem; }
+}
 </style>
 </head>
 <body>
+
 <nav>
   <a href="index.html">← EMMEs</a>
-  <div style="display:flex;gap:2rem">
-    <a href="game-theory.html" class="active">GAME THEORY</a>
+  <div class="nav-right">
+    <a href="game-theory.html">GAME THEORY</a>
     <a href="probability.html">PROBABILITY</a>
     <a href="propaganda.html">PROPAGANDA!</a>
+    <a href="ticker.html">TICKER</a>
+    <a href="theory.html" class="active">THEORY</a>
   </div>
 </nav>
+
 <section class="hero">
-  <div class="banned-stamp">⛔ Banned in China</div>
-  <div class="token-symbol">THEORY · Solana</div>
-  <h1>GAME<br>THEORY<span class="sub">The fold operator. The commitment point.</span></h1>
-  <p class="tagline">
-    Every market is a game. Every participant has a strategy.
-    <strong>Most strategies lose.</strong>
-    Game theory is the mathematics of why — and the only honest framework
-    for what happens next.
+  <div class="series-badge">Principia Orthogona · Complete Series</div>
+  <h1>The<br>Mathematics<span class="sub">21 papers. One operator chain. No trailing stops.</span></h1>
+  <p class="hero-body">
+    The same sequence — <strong>C → K → F → U</strong> — governs every generative transition
+    in plasma confinement, biological morphogenesis, market structure, and number theory.
+    These papers are not a metaphor for the tokens. <strong>The tokens are an instantiation of the papers.</strong>
   </p>
-  <div class="cta-row">
-    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="btn btn-primary">Buy on Coinbook ↗</a>
-    <a href="https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="btn btn-ghost">Solscan ↗</a>
-    <a href="https://x.com/myemmecoin" target="_blank" class="btn btn-ghost">𝕏 @myemmecoin</a>
-  </div>
-</section>
-<section class="stats">
-  <div class="stat-item">
-    <div class="stat-label">My Holdings</div>
-    <div class="stat-value">1.64M</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-label">Contract</div>
-    <div class="stat-value" style="font-size:0.75rem;font-family:'Space Mono',monospace;margin-top:0.3rem">7xtJR6q...kcoin</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-label">Chain</div>
-    <div class="stat-value">Solana</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-label">Status</div>
-    <div class="stat-value" style="color:#ff3333">Banned in China</div>
+  <div class="doi-root">
+    <div>
+      <div class="doi-root-label">Series Root DOI</div>
+      <div class="doi-root-val">doi.org/10.5281/zenodo.19117399</div>
+    </div>
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Open Series ↗</a>
   </div>
 </section>
 
-<!-- ── LIVE CHART ── -->
-<section class="chart-section">
-  <div class="chart-label">
-    <span class="live-dot"></span>
-    Live Chart · Dexscreener · THEORY/SOL
-  </div>
-  <div class="chart-wrapper">
-    <iframe
-      src="https://dexscreener.com/solana/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin?embed=1&theme=dark&trades=0&info=0"
-      style="width:100%;height:500px;border:0"
-      allow="clipboard-write"
-      allowfullscreen
-    ></iframe>
-  </div>
-  <div class="buy-bar">
-    <span class="buy-bar-text">Ready to enter? The fold is irreversible.</span>
-    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="buy-bar-link">Trade THEORY on Coinbook ↗</a>
-  </div>
-</section>
+<div class="count-bar">
+  <div class="count-num">21</div>
+  <div class="count-label">papers in the series</div>
+</div>
 
-<section class="matrix">
-  <div class="matrix-title">The Game Theory Matrix</div>
-  <div class="matrix-grid">
-    <div class="matrix-cell">
-      <h3>Nash Equilibrium</h3>
-      <p>No player can improve their outcome by unilaterally changing strategy.
-      <strong>Markets find Nash equilibria constantly.</strong> Most traders don't know they're already in one.</p>
+<!-- ── GROUP 1: CORE FRAMEWORK ── -->
+<div class="section-head">
+  <div class="section-label">Core Framework · Principia Orthogona</div>
+  <div class="section-desc">The foundational volumes establishing the operator chain C → K → F → U and its universal applicability.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">03</div>
+    <div class="paper-body">
+      <div class="paper-title">Principia Orthogona, Volume I</div>
+      <div class="paper-doi">zenodo.org/records/20320693</div>
     </div>
-    <div class="matrix-cell">
-      <h3>The Fold Operator (F)</h3>
-      <p>In the TO/TOGT framework, F is the <strong>commitment point</strong> — the moment at which
-      rank-1 Jacobian loss occurs and the trajectory becomes irreversible.
-      Every trade entry is an F event.</p>
-    </div>
-    <div class="matrix-cell">
-      <h3>Dominant Strategy</h3>
-      <p>A strategy that is optimal regardless of what others do.
-      <strong>Holding THEORY is not a dominant strategy.</strong>
-      That's the point. Dominant strategies have no upside.</p>
-    </div>
-    <div class="matrix-cell">
-      <h3>Why Banned in China</h3>
-      <p>Game theory produces agents that optimize for themselves.
-      <strong>Self-optimizing agents are incompatible with central planning.</strong>
-      The mathematics is subversive by construction.</p>
-    </div>
+    <a href="https://zenodo.org/records/20320693" target="_blank" class="paper-link">Open ↗</a>
   </div>
-</section>
+  <div class="paper-item">
+    <div class="paper-num">21</div>
+    <div class="paper-body">
+      <div class="paper-title">Principia Orthogona, Volume I (V3)</div>
+      <div class="paper-doi">zenodo.org/records/20298665</div>
+    </div>
+    <a href="https://zenodo.org/records/20298665" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">20</div>
+    <div class="paper-body">
+      <div class="paper-title">Principia Orthogona, Volume II</div>
+      <div class="paper-doi">zenodo.org/records/20159456</div>
+    </div>
+    <a href="https://zenodo.org/records/20159456" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">16</div>
+    <div class="paper-body">
+      <div class="paper-title">Generative Contact Mechanics (Core Framework)</div>
+      <div class="paper-doi">zenodo.org/records/20230610</div>
+    </div>
+    <a href="https://zenodo.org/records/20230610" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 2: OPERATORS & MATHEMATICS ── -->
+<div class="section-head">
+  <div class="section-label">Operators &amp; Mathematics</div>
+  <div class="section-desc">The dm³ operator, curvature thresholds, orbit theory, and the fold as formal mathematical objects.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">07</div>
+    <div class="paper-body">
+      <div class="paper-title">The dm³ Operator: Explicit Toy Model</div>
+      <div class="paper-doi">zenodo.org/records/20230624</div>
+    </div>
+    <a href="https://zenodo.org/records/20230624" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">08</div>
+    <div class="paper-body">
+      <div class="paper-title">The dm³ Criticality Principle</div>
+      <div class="paper-doi">zenodo.org/records/20230628</div>
+    </div>
+    <a href="https://zenodo.org/records/20230628" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">04</div>
+    <div class="paper-body">
+      <div class="paper-title">Multi-Orbit Identity Theory</div>
+      <div class="paper-doi">zenodo.org/records/20230614</div>
+    </div>
+    <a href="https://zenodo.org/records/20230614" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">01</div>
+    <div class="paper-body">
+      <div class="paper-title">GTCT Ring 5 (Generative Time Circuit Theorem)</div>
+      <div class="paper-doi">zenodo.org/records/20239928</div>
+    </div>
+    <a href="https://zenodo.org/records/20239928" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">14</div>
+    <div class="paper-body">
+      <div class="paper-title">The Number 33: Stability Threshold</div>
+      <div class="paper-doi">zenodo.org/records/20230625</div>
+    </div>
+    <a href="https://zenodo.org/records/20230625" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 3: CRYSTAL GEOMETRY & NUMBER THEORY ── -->
+<div class="section-head">
+  <div class="section-label">Crystal Geometry &amp; Number Theory</div>
+  <div class="section-desc">The G6 crystal structure, Collatz as corollary, wavenumber stability, and n-Bonacci criticality.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">05</div>
+    <div class="paper-body">
+      <div class="paper-title">The G6 Crystal</div>
+      <div class="paper-doi">zenodo.org/records/20230611</div>
+    </div>
+    <a href="https://zenodo.org/records/20230611" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">15</div>
+    <div class="paper-body">
+      <div class="paper-title">Collatz Conjecture as Corollary of Crystal Geometry</div>
+      <div class="paper-doi">zenodo.org/records/20230621</div>
+    </div>
+    <a href="https://zenodo.org/records/20230621" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">02</div>
+    <div class="paper-body">
+      <div class="paper-title">Wavenumber 6: Orthogenetic Stability Generator</div>
+      <div class="paper-doi">zenodo.org/records/20230640</div>
+    </div>
+    <a href="https://zenodo.org/records/20230640" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">12</div>
+    <div class="paper-body">
+      <div class="paper-title">Differential Nonlinear Robustness (Fibonacci vs Tribonacci)</div>
+      <div class="paper-doi">zenodo.org/records/20230642</div>
+    </div>
+    <a href="https://zenodo.org/records/20230642" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">13</div>
+    <div class="paper-body">
+      <div class="paper-title">Criticality Thresholds in n-Bonacci Media</div>
+      <div class="paper-doi">zenodo.org/records/20230643</div>
+    </div>
+    <a href="https://zenodo.org/records/20230643" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 4: BIOLOGY & PHYSICS ── -->
+<div class="section-head">
+  <div class="section-label">Biology &amp; Physics</div>
+  <div class="section-desc">Biological morphogenesis, connectome topology, autophagy, and plasma confinement — all running the same operator chain.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">06</div>
+    <div class="paper-body">
+      <div class="paper-title">Biological Transitions as Multi-Agent Realisations</div>
+      <div class="paper-doi">zenodo.org/records/20276671</div>
+    </div>
+    <a href="https://zenodo.org/records/20276671" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">09</div>
+    <div class="paper-body">
+      <div class="paper-title">Polylaminin, Microtubules, and the k-nacci Spine</div>
+      <div class="paper-doi">zenodo.org/records/20230633</div>
+    </div>
+    <a href="https://zenodo.org/records/20230633" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">11</div>
+    <div class="paper-body">
+      <div class="paper-title">Fruit-Fly Connectome Toy Model (V2)</div>
+      <div class="paper-doi">zenodo.org/records/20230617</div>
+    </div>
+    <a href="https://zenodo.org/records/20230617" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">17</div>
+    <div class="paper-body">
+      <div class="paper-title">Self-Regulation: Autophagy and Triple-Alpha</div>
+      <div class="paper-doi">zenodo.org/records/20168812</div>
+    </div>
+    <a href="https://zenodo.org/records/20168812" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 5: APPLIED & CROSS-DOMAIN ── -->
+<div class="section-head">
+  <div class="section-label">Applied &amp; Cross-Domain</div>
+  <div class="section-desc">From bridge topology to the Vitruvian approximation to lexical generativity — the framework applied beyond physics.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">10</div>
+    <div class="paper-body">
+      <div class="paper-title">Bridges: The Malara Discovery</div>
+      <div class="paper-doi">zenodo.org/records/20230644</div>
+    </div>
+    <a href="https://zenodo.org/records/20230644" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">18</div>
+    <div class="paper-body">
+      <div class="paper-title">The Vitruvian Approximation</div>
+      <div class="paper-doi">zenodo.org/records/19984522</div>
+    </div>
+    <a href="https://zenodo.org/records/19984522" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">19</div>
+    <div class="paper-body">
+      <div class="paper-title">Lexical Generativity in English</div>
+      <div class="paper-doi">zenodo.org/records/19513913</div>
+    </div>
+    <a href="https://zenodo.org/records/19513913" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── OPERATOR CONTEXT ── -->
 <section class="operator">
   <div class="op-block">
-    <div><span class="label">Operator &nbsp;&nbsp;&nbsp;</span><span class="val">F (Fold)</span></div>
-    <div><span class="label">Role &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Commitment · irreversibility · rank-1 loss</span></div>
-    <div><span class="label">Normal form </span><span class="val">F_NF(u,v) = (u, v²) &nbsp;</span><span class="dim">[Whitney A₁]</span></div>
-    <div><span class="label">Market form &nbsp;</span><span class="val">entry · position · stop hit</span></div>
-    <div><span class="label">Token &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">GAME THEORY · THEORY · Solana</span></div>
-    <div><span class="label">Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Principia Orthogona · doi.org/10.5281/zenodo.19117399</span></div>
+    <div><span class="label">Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Principia Orthogona</span></div>
+    <div><span class="label">Root DOI &nbsp;&nbsp;&nbsp;</span><span class="val">doi.org/10.5281/zenodo.19117399</span></div>
+    <div><span class="label">Papers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">21 · spanning plasma, biology, geometry, markets, linguistics</span></div>
+    <div><span class="label">Core claim &nbsp;</span><span class="val">C → K → F → U governs all generative transitions</span></div>
+    <div><span class="label">Tokens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">GAME THEORY · PROBABILITY · PROPAGANDA! &nbsp;</span><span class="dim">instantiations</span></div>
+    <div><span class="label">Market form </span><span class="val">compression → curvature → fold → unfold → new equilibrium</span></div>
   </div>
 </section>
+
 <footer>
   <p>
     <a href="index.html">EMMEs</a> ·
     <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
     <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
-    <a href="https://pablogrossi.my.canva.site/tokenomix-twitter-myemmecoin" target="_blank">Tokenomics</a> ·
-    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank">Coinbook ↗</a>
+    <a href="ticker.html">Live Ticker</a> ·
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Principia Orthogona ↗</a>
   </p>
-  <p style="margin-top:0.6rem">Not financial advice. The fold is irreversible.</p>
+  <p style="margin-top:0.6rem">The mathematics is real. The tokens are real. The risk is very real.</p>
 </footer>
+
 </body>
 </html>

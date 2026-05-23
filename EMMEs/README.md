@@ -52,6 +52,7 @@ in plasma, in biology, in market structure, on-chain.
 | [`probability.html`](probability.html) | PROBABILITY |
 | [`propaganda.html`](propaganda.html) | PROPAGANDA! |
 | [`ticker.html`](ticker.html) | Live ticker — all three tokens · auto-refresh 30s |
+| [`theory.html`](theory.html) | 21 Principia Orthogona papers · grouped by theme |
 
 ---
 
