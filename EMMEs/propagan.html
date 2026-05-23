@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROPAGANDA! · PROPAGAN · The Compression Token</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04040a;
+  --accent: #ff3cac;
+  --accent2: #ff0077;
+  --text: #e8e8f0;
+  --muted: #604050;
+  --border: #ff3cac15;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, #ff3cac08 0%, transparent 70%);
+  pointer-events: none;
+  animation: pulse 4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity:0.5 } 50% { opacity:1 } }
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 10;
+}
+nav a { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+nav a:hover { color: var(--accent); }
+nav a.active { color: var(--accent); }
+.hero {
+  padding: 5rem 2rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.token-symbol {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(3.5rem, 11vw, 8.5rem);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 60px #ff3cac50, 2px 2px 0 #ff007755;
+  position: relative;
+}
+.exclaim {
+  display: inline-block;
+  animation: shake 2s ease-in-out infinite;
+}
+@keyframes shake {
+  0%,90%,100% { transform: rotate(0); }
+  93% { transform: rotate(-8deg) scale(1.1); }
+  96% { transform: rotate(6deg); }
+}
+h1 .sub {
+  display: block;
+  font-size: 0.28em;
+  color: var(--text);
+  letter-spacing: 0.05em;
+  font-weight: 300;
+  margin-top: 0.4em;
+}
+.tagline {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin: 2rem 0 3rem;
+  max-width: 560px;
+  line-height: 1.75;
+}
+.tagline strong { color: var(--text); }
+.cta-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem; }
+.btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid;
+  transition: all 0.2s;
+}
+.btn-primary { color: var(--void); background: var(--accent); border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+.btn-ghost { color: var(--accent); border-color: var(--border); }
+.btn-ghost:hover { background: var(--border); }
+
+/* ── LIVE CHART ── */
+.chart-section {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.chart-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #00ff88;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #00ff88; }
+  50%       { opacity: 0.2; box-shadow: none; }
+}
+.chart-wrapper {
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.buy-bar {
+  margin-top: 1.5rem;
+  background: var(--accent);
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.buy-bar-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--void);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.buy-bar-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--void);
+  color: var(--accent);
+  padding: 0.65rem 1.4rem;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  border: 1px solid var(--accent);
+}
+.buy-bar-link:hover { opacity: 0.75; }
+
+/* slogans */
+.slogans {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.slogans-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+.slogan-list { display: flex; flex-direction: column; gap: 0; }
+.slogan-item {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2rem;
+}
+.slogan-item:last-child { border-bottom: 1px solid var(--border); }
+.slogan-text { font-size: 1.1rem; font-weight: 500; color: var(--text); line-height: 1.5; }
+.slogan-source { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+/* operator block */
+.operator {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.op-block {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  line-height: 2;
+  padding: 2rem;
+  background: #0e0008;
+  border-left: 3px solid var(--accent);
+}
+.op-block .label { color: var(--accent); }
+.op-block .val   { color: var(--text); }
+.op-block .dim   { color: var(--muted); }
+/* live ticker */
+.ticker-wrap {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 0.75rem 0;
+  position: relative;
+  z-index: 1;
+}
+.ticker-inner {
+  display: inline-block;
+  animation: scroll 20s linear infinite;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.ticker-inner span { margin: 0 2rem; }
+.ticker-inner span.dim { color: var(--muted); }
+@keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.stats {
+  display: flex;
+  gap: 3rem;
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.stat-item { flex: 1; min-width: 140px; }
+.stat-label { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">← EMMEs</a>
+  <div style="display:flex;gap:2rem">
+    <a href="game-theory.html">GAME THEORY</a>
+    <a href="probability.html">PROBABILITY</a>
+    <a href="propaganda.html" class="active">PROPAGANDA!</a>
+  </div>
+</nav>
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span>PROPAGANDA!</span>
+    <span class="dim">·</span>
+    <span>ALL PRICE ACTION IS NARRATIVE</span>
+    <span class="dim">·</span>
+    <span>ALL NARRATIVE IS PROPAGANDA</span>
+    <span class="dim">·</span>
+    <span>PROPAGAN</span>
+    <span class="dim">·</span>
+    <span>SOLANA</span>
+    <span class="dim">·</span>
+    <span>7,105,960.26 TOKENS</span>
+    <span class="dim">·</span>
+    <span>@myemmecoin</span>
+    <span class="dim">·</span>
+    <span>PROPAGANDA!</span>
+    <span class="dim">·</span>
+    <span>ALL PRICE ACTION IS NARRATIVE</span>
+    <span class="dim">·</span>
+    <span>ALL NARRATIVE IS PROPAGANDA</span>
+    <span class="dim">·</span>
+    <span>PROPAGAN</span>
+    <span class="dim">·</span>
+    <span>SOLANA</span>
+    <span class="dim">·</span>
+    <span>7,105,960.26 TOKENS</span>
+    <span class="dim">·</span>
+    <span>@myemmecoin</span>
+    <span class="dim">·</span>
+  </div>
+</div>
+<section class="hero">
+  <div class="token-symbol">PROPAGAN · Solana</div>
+  <h1>PROPA-<br>GANDA<span class="exclaim">!</span>
+    <span class="sub">The compression operator. The distribution layer. The reason you're reading this.</span>
+  </h1>
+  <p class="tagline">
+    All price action is narrative. All narrative is propaganda.
+    <strong>The exclamation mark is load-bearing.</strong>
+    This is not a criticism. It is a description.
+    The C operator compresses information into attention,
+    and attention into action.
+  </p>
+  <div class="cta-row">
+    <a href="https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin" target="_blank" class="btn btn-primary">Buy on Coinbook ↗</a>
+    <a href="https://solscan.io/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin" target="_blank" class="btn btn-ghost">Solscan ↗</a>
+    <a href="https://x.com/myemmecoin" target="_blank" class="btn btn-ghost">𝕏 @myemmecoin</a>
+  </div>
+</section>
+<section class="stats">
+  <div class="stat-item">
+    <div class="stat-label">My Holdings</div>
+    <div class="stat-value">7.11M</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Contract</div>
+    <div class="stat-value" style="font-size:0.75rem;font-family:'Space Mono',monospace;margin-top:0.3rem">67xb3dp...Focoin</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Chain</div>
+    <div class="stat-value">Solana</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Creator</div>
+    <div class="stat-value" style="font-size:1rem">Propagandist</div>
+  </div>
+</section>
+
+<!-- ── LIVE CHART ── -->
+<section class="chart-section">
+  <div class="chart-label">
+    <span class="live-dot"></span>
+    Live Chart · Dexscreener · PROPAGAN/SOL
+  </div>
+  <div class="chart-wrapper">
+    <iframe
+      src="https://dexscreener.com/solana/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin?embed=1&theme=dark&trades=0&info=0"
+      style="width:100%;height:500px;border:0"
+      allow="clipboard-write"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="buy-bar">
+    <span class="buy-bar-text">The compression has already occurred.</span>
+    <a href="https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin" target="_blank" class="buy-bar-link">Trade PROPAGAN on Coinbook ↗</a>
+  </div>
+</section>
+
+<section class="slogans">
+  <div class="slogans-label">Known Propaganda · Acknowledged</div>
+  <div class="slogan-list">
+    <div class="slogan-item">
+      <div class="slogan-text">This is the compression operator. It reduces information to what fits in your attention span.</div>
+      <div class="slogan-source">C operator · Vol. I</div>
+    </div>
+    <div class="slogan-item">
+      <div class="slogan-text">You are being compressed right now. So is every chart you read, every thesis you hold, every exit you didn't take.</div>
+      <div class="slogan-source">honest</div>
+    </div>
+    <div class="slogan-item">
+      <div class="slogan-text">The name is PROPAGANDA! so that you cannot claim you were not warned.</div>
+      <div class="slogan-source">nomenclature</div>
+    </div>
+    <div class="slogan-item">
+      <div class="slogan-text">All memecoins are propaganda. This one is at least honest about it.</div>
+      <div class="slogan-source">competitive advantage</div>
+    </div>
+    <div class="slogan-item">
+      <div class="slogan-text">The exclamation mark denotes irreversibility. The fold has already occurred.</div>
+      <div class="slogan-source">F operator · Whitney A₁</div>
+    </div>
+    <div class="slogan-item">
+      <div class="slogan-text">Not financial advice. This is the C operator speaking. It always sounds like this.</div>
+      <div class="slogan-source">disclaimer</div>
+    </div>
+  </div>
+</section>
+<section class="operator">
+  <div class="op-block">
+    <div><span class="label">Operator &nbsp;&nbsp;&nbsp;</span><span class="val">C (Compression)</span></div>
+    <div><span class="label">Role &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Reduces degrees of freedom while retaining essential structure</span></div>
+    <div><span class="label">Condition &nbsp;&nbsp;</span><span class="val">Bi-Lipschitz with δ > 0 &nbsp;</span><span class="dim">never collapses distinct points</span></div>
+    <div><span class="label">Market form &nbsp;</span><span class="val">narrative · attention · the tweet that starts the run</span></div>
+    <div><span class="label">Token &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">PROPAGANDA! · PROPAGAN · Solana</span></div>
+    <div><span class="label">Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Principia Orthogona · doi.org/10.5281/zenodo.19117399</span></div>
+  </div>
+</section>
+<footer>
+  <p>
+    <a href="index.html">EMMEs</a> ·
+    <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
+    <a href="https://pablogrossi.my.canva.site/tokenomix-twitter-myemmecoin" target="_blank">Tokenomics</a> ·
+    <a href="https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin" target="_blank">Coinbook ↗</a>
+  </p>
+  <p style="margin-top:0.6rem">Not financial advice. The compression has already occurred.</p>
+</footer>
+</body>
+</html>
