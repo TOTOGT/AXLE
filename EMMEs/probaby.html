@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROBABILITY · PROBABY · The Curvature Token</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04040a;
+  --accent: #00f5d4;
+  --accent2: #00b4d8;
+  --text: #e8e8f0;
+  --muted: #506060;
+  --border: #00f5d415;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+nav a { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+nav a:hover { color: var(--accent); }
+nav a.active { color: var(--accent); }
+.hero {
+  padding: 6rem 2rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.token-symbol {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(3rem, 10vw, 7.5rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 80px #00f5d430;
+}
+h1 .sub {
+  display: block;
+  font-size: 0.3em;
+  color: var(--text);
+  letter-spacing: 0.05em;
+  font-weight: 300;
+  margin-top: 0.3em;
+}
+.tagline {
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin: 2rem 0 3rem;
+  max-width: 560px;
+  line-height: 1.75;
+}
+.tagline strong { color: var(--text); }
+.cta-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 5rem; }
+.btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid;
+  transition: all 0.2s;
+}
+.btn-primary { color: var(--void); background: var(--accent); border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+.btn-ghost { color: var(--accent); border-color: var(--border); }
+.btn-ghost:hover { background: var(--border); }
+
+/* ── LIVE CHART ── */
+.chart-section {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.chart-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #00ff88;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #00ff88; }
+  50%       { opacity: 0.2; box-shadow: none; }
+}
+.chart-wrapper {
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.buy-bar {
+  margin-top: 1.5rem;
+  background: var(--accent);
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.buy-bar-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--void);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.buy-bar-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--void);
+  color: var(--accent);
+  padding: 0.65rem 1.4rem;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  border: 1px solid var(--accent);
+}
+.buy-bar-link:hover { opacity: 0.75; }
+
+/* probability bars */
+.prob-section {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.prob-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+.prob-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.prob-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--muted);
+  width: 200px;
+  flex-shrink: 0;
+}
+.prob-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: #ffffff08;
+  border-radius: 0;
+  overflow: hidden;
+}
+.prob-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 0;
+  transform-origin: left;
+  animation: barIn 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes barIn {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+.prob-pct {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  width: 40px;
+  text-align: right;
+}
+/* operator block */
+.operator {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.op-block {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  line-height: 2;
+  padding: 2rem;
+  background: #00050e;
+  border-left: 3px solid var(--accent);
+}
+.op-block .label { color: var(--accent); }
+.op-block .val   { color: var(--text); }
+.op-block .dim   { color: var(--muted); }
+/* canvas */
+.wave-section {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+canvas#wave {
+  width: 100%;
+  height: 120px;
+  display: block;
+  background: #00050e;
+}
+.wave-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.75rem;
+}
+.stats {
+  display: flex;
+  gap: 3rem;
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.stat-item { flex: 1; min-width: 140px; }
+.stat-label { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+}
+footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">← EMMEs</a>
+  <div style="display:flex;gap:2rem">
+    <a href="game-theory.html">GAME THEORY</a>
+    <a href="probability.html" class="active">PROBABILITY</a>
+    <a href="propaganda.html">PROPAGANDA!</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="token-symbol">PROBABY · Solana</div>
+  <h1>PROBA-<br>BILITY<span class="sub">The curvature operator. The mechanism of distribution.</span></h1>
+  <p class="tagline">
+    You are always inside a probability distribution.
+    The question is whether you know which one.
+    <strong>Most people confuse probability with certainty, and certainty with safety.</strong>
+    All three are different things.
+  </p>
+  <div class="cta-row">
+    <a href="https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin" target="_blank" class="btn btn-primary">Buy on Coinbook ↗</a>
+    <a href="https://solscan.io/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin" target="_blank" class="btn btn-ghost">Solscan ↗</a>
+    <a href="https://x.com/myemmecoin" target="_blank" class="btn btn-ghost">𝕏 @myemmecoin</a>
+  </div>
+</section>
+<section class="stats">
+  <div class="stat-item">
+    <div class="stat-label">My Holdings</div>
+    <div class="stat-value">10.83M</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Contract</div>
+    <div class="stat-value" style="font-size:0.75rem;font-family:'Space Mono',monospace;margin-top:0.3rem">7DgYPRJ...ojcoin</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Chain</div>
+    <div class="stat-value">Solana</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Largest Position</div>
+    <div class="stat-value" style="color:#00f5d4">in the three</div>
+  </div>
+</section>
+
+<!-- ── LIVE CHART ── -->
+<section class="chart-section">
+  <div class="chart-label">
+    <span class="live-dot"></span>
+    Live Chart · Dexscreener · PROBABY/SOL
+  </div>
+  <div class="chart-wrapper">
+    <iframe
+      src="https://dexscreener.com/solana/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin?embed=1&theme=dark&trades=0&info=0"
+      style="width:100%;height:500px;border:0"
+      allow="clipboard-write"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="buy-bar">
+    <span class="buy-bar-text">You are inside a distribution right now.</span>
+    <a href="https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin" target="_blank" class="buy-bar-link">Trade PROBABY on Coinbook ↗</a>
+  </div>
+</section>
+
+<section class="prob-section">
+  <div class="prob-title">Distribution of Outcomes · Live</div>
+  <div class="prob-row">
+    <div class="prob-label">goes to zero</div>
+    <div class="prob-bar-wrap"><div class="prob-bar" style="width:72%;animation-delay:0.1s"></div></div>
+    <div class="prob-pct">72%</div>
+  </div>
+  <div class="prob-row">
+    <div class="prob-label">stays flat forever</div>
+    <div class="prob-bar-wrap"><div class="prob-bar" style="width:18%;animation-delay:0.2s"></div></div>
+    <div class="prob-pct">18%</div>
+  </div>
+  <div class="prob-row">
+    <div class="prob-label">10x from here</div>
+    <div class="prob-bar-wrap"><div class="prob-bar" style="width:7%;animation-delay:0.3s"></div></div>
+    <div class="prob-pct">7%</div>
+  </div>
+  <div class="prob-row">
+    <div class="prob-label">100x · unfolds to new eq.</div>
+    <div class="prob-bar-wrap"><div class="prob-bar" style="width:3%;animation-delay:0.4s"></div></div>
+    <div class="prob-pct">3%</div>
+  </div>
+  <p style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:2rem;line-height:1.8">
+    These numbers are made up. So are the ones in your trading app.<br>
+    The difference is we're honest about it.
+  </p>
+</section>
+<section class="wave-section">
+  <canvas id="wave"></canvas>
+  <div class="wave-label">Live probability density · refreshing · never settling</div>
+</section>
+<section class="operator">
+  <div class="op-block">
+    <div><span class="label">Operator &nbsp;&nbsp;&nbsp;</span><span class="val">K (Curvature)</span></div>
+    <div><span class="label">Role &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Drives toward threshold κ* without overshoot</span></div>
+    <div><span class="label">Formula &nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">α(s) = λ(κ* − κ(s))₊ &nbsp;</span><span class="dim">monotone curvature gain</span></div>
+    <div><span class="label">Market form &nbsp;</span><span class="val">momentum · trend · distribution shape</span></div>
+    <div><span class="label">Token &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">PROBABILITY · PROBABY · Solana</span></div>
+    <div><span class="label">Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Principia Orthogona · doi.org/10.5281/zenodo.19117399</span></div>
+  </div>
+</section>
+<footer>
+  <p>
+    <a href="index.html">EMMEs</a> ·
+    <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
+    <a href="https://pablogrossi.my.canva.site/tokenomix-twitter-myemmecoin" target="_blank">Tokenomics</a> ·
+    <a href="https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin" target="_blank">Coinbook ↗</a>
+  </p>
+  <p style="margin-top:0.6rem">Not financial advice. You are inside a distribution right now.</p>
+</footer>
+<script>
+const wc = document.getElementById('wave');
+const wx = wc.getContext('2d');
+wc.width = wc.offsetWidth * window.devicePixelRatio;
+wc.height = 120 * window.devicePixelRatio;
+wx.scale(window.devicePixelRatio, window.devicePixelRatio);
+let wt = 0;
+function drawWave() {
+  const W = wc.offsetWidth, H = 120;
+  wx.clearRect(0, 0, W, H);
+  wx.fillStyle = '#00050e';
+  wx.fillRect(0, 0, W, H);
+  const waves = [
+    { freq: 0.025, amp: 28, phase: 0,    color: [0,245,212], speed: 0.008 },
+    { freq: 0.04,  amp: 16, phase: 1.2,  color: [0,180,216], speed: 0.012 },
+    { freq: 0.015, amp: 20, phase: 2.4,  color: [0,245,212], speed: 0.005 },
+  ];
+  waves.forEach((w, wi) => {
+    wx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const y = H/2 + Math.sin(x * w.freq + wt * w.speed * 60 + w.phase) * w.amp
+                     + Math.sin(x * w.freq * 0.6 + wt * w.speed * 40) * w.amp * 0.4;
+      if (x === 0) wx.moveTo(x, y);
+      else wx.lineTo(x, y);
+    }
+    const alpha = wi === 0 ? 0.8 : 0.35;
+    wx.strokeStyle = `rgba(${w.color[0]},${w.color[1]},${w.color[2]},${alpha})`;
+    wx.lineWidth = wi === 0 ? 1.5 : 1;
+    wx.stroke();
+  });
+  wx.beginPath();
+  for (let x = 0; x < W; x++) {
+    const y = H/2 + Math.sin(x * 0.025 + wt * 0.48) * 28 + Math.sin(x * 0.015 + wt * 0.3) * 20 * 0.4;
+    if (x === 0) wx.moveTo(x, y);
+    else wx.lineTo(x, y);
+  }
+  wx.lineTo(W, H); wx.lineTo(0, H); wx.closePath();
+  wx.fillStyle = 'rgba(0,245,212,0.04)';
+  wx.fill();
+  wt++;
+  requestAnimationFrame(drawWave);
+}
+drawWave();
+</script>
+</body>
+</html>
