@@ -6,182 +6,107 @@
 <title>Chapter Map · The Mini-Beast · Book 3 · Principia Orthogona</title>
 <style>
   :root {
-    --navy:  #1a2744;
-    --gold:  #c9a84c;
-    --cream: #faf7f0;
-    --smoke: #f0ece4;
-    --mid:   #3a4f7a;
-    --rule:  #8a7340;
-    --text:  #1c1c1c;
-    --light: #e8e2d4;
-    --c-col: #3a7a5a;
-    --k-col: #7a4a2a;
-    --f-col: #2a4a8a;
-    --u-col: #6a2a7a;
-    --g-col: #8a2a2a;
-    --base: https://totogt.github.io/AXLE/;
+    --navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;
+    --mid:#3a4f7a;--rule:#8a7340;--text:#1c1c1c;--light:#e8e2d4;
+    --c-col:#3a7a5a;--k-col:#7a4a2a;--f-col:#2a4a8a;--u-col:#6a2a7a;--g-col:#8a2a2a;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Georgia', serif;
-    background: #0e1520;
-    color: white;
-    min-height: 100vh;
-  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Georgia',serif;background:#0e1520;color:white;min-height:100vh}
+  nav{background:rgba(26,39,68,0.95);padding:.75rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,168,76,.2);position:sticky;top:0;z-index:100;backdrop-filter:blur(8px);flex-wrap:wrap;gap:.5rem}
+  .nav-logo{color:var(--gold);font-family:sans-serif;font-size:.85rem;letter-spacing:.12em}
+  .nav-back{color:rgba(255,255,255,.5);font-family:sans-serif;font-size:.8rem;text-decoration:none}
+  .nav-back:hover{color:var(--gold)}
+  .hero{text-align:center;padding:4rem 2rem 2rem;background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.07) 0%,transparent 70%)}
+  .hero-eyebrow{font-family:sans-serif;font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+  .hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);color:white;margin-bottom:.5rem}
+  .hero-sub{color:rgba(255,255,255,.45);font-style:italic;font-size:.95rem;margin-bottom:2rem}
+  .gold-rule{width:50px;height:1px;background:var(--gold);margin:0 auto 2rem}
+  .op-legend{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+  .op-pill{font-family:sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;padding:.3rem 1rem;border-radius:2rem;cursor:pointer;transition:all .2s;border:1px solid transparent}
+  .op-pill.c{background:rgba(58,122,90,.2);border-color:rgba(58,122,90,.5);color:#7acc9a}
+  .op-pill.k{background:rgba(122,74,42,.2);border-color:rgba(122,74,42,.5);color:#ccaa7a}
+  .op-pill.f{background:rgba(42,74,138,.2);border-color:rgba(42,74,138,.5);color:#7aaaee}
+  .op-pill.u{background:rgba(106,42,122,.2);border-color:rgba(106,42,122,.5);color:#cc7aee}
+  .op-pill.gr{background:rgba(138,42,42,.2);border-color:rgba(138,42,42,.5);color:#ee9a7a}
+  .op-pill:hover{transform:scale(1.05)}
+  .diagram-wrap{max-width:1100px;margin:0 auto;padding:0 1rem 2rem}
+  #arc-canvas{display:block;width:100%}
 
-  nav {
-    background: rgba(26,39,68,0.95);
-    padding: 0.75rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(8px);
-  }
-  .nav-logo { color: var(--gold); font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.12em; }
-  .nav-back { color: rgba(255,255,255,0.5); font-family: sans-serif; font-size: 0.8rem; text-decoration: none; }
-  .nav-back:hover { color: var(--gold); }
+  /* Phase sections */
+  .phase-section{max-width:1100px;margin:2rem auto 0;padding:0 1rem}
+  .phase-header-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.07)}
+  .phase-op{font-family:'Courier New',monospace;font-size:1.4rem;font-weight:bold}
+  .phase-op.c{color:#7acc9a}.phase-op.k{color:#ccaa7a}.phase-op.f{color:#7aaaee}.phase-op.u{color:#cc7aee}.phase-op.gr{color:#ee9a7a}.phase-op.ext{color:#aaa}
+  .phase-info{flex:1}
+  .phase-name{font-size:1rem;color:white;margin-bottom:.15rem}
+  .phase-count{font-family:sans-serif;font-size:.7rem;color:var(--gold);letter-spacing:.1em}
+  .phase-line{flex:1;height:1px;background:rgba(255,255,255,.07)}
 
-  .hero {
-    text-align: center;
-    padding: 4rem 2rem 2rem;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 70%);
-  }
-  .hero-eyebrow {
-    font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.25em;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem;
-  }
-  .hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: white; margin-bottom: 0.5rem; }
-  .hero-sub { color: rgba(255,255,255,0.45); font-style: italic; font-size: 0.95rem; margin-bottom: 2rem; }
-  .gold-rule { width: 50px; height: 1px; background: var(--gold); margin: 0 auto 2rem; }
+  /* Chapter grid */
+  .ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.7rem;margin-bottom:1rem}
+  .ch-grid.compact{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .ch-card{border:1px solid rgba(255,255,255,.08);padding:.9rem 1rem;text-decoration:none;display:block;position:relative;overflow:hidden;transition:all .2s}
+  .ch-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+  .ch-card.op-c{background:rgba(58,122,90,.06)}.ch-card.op-c::before{background:#3a7a5a}
+  .ch-card.op-k{background:rgba(122,74,42,.06)}.ch-card.op-k::before{background:#7a4a2a}
+  .ch-card.op-f{background:rgba(42,74,138,.06)}.ch-card.op-f::before{background:#2a4a8a}
+  .ch-card.op-u{background:rgba(106,42,122,.06)}.ch-card.op-u::before{background:#6a2a7a}
+  .ch-card.op-gr{background:rgba(138,42,42,.06)}.ch-card.op-gr::before{background:#8a2a2a}
+  .ch-card.op-ext{background:rgba(80,80,80,.08)}.ch-card.op-ext::before{background:#666}
+  .ch-card:hover{border-color:rgba(201,168,76,.35);transform:translateY(-2px);background:rgba(201,168,76,.05)}
+  .ch-num{font-family:sans-serif;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.2rem;opacity:.5}
+  .ch-name{font-size:.9rem;color:white;margin-bottom:.2rem;line-height:1.3}
+  .ch-op-tag{font-family:'Courier New',monospace;font-size:.7rem;margin-bottom:.25rem}
+  .ch-desc{font-size:.72rem;color:rgba(255,255,255,.4);font-family:sans-serif;line-height:1.5}
+  .ch-status{display:inline-block;margin-top:.4rem;font-family:sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.12rem .45rem;border-radius:1rem}
+  .ch-status.live{background:rgba(58,122,90,.3);color:#7acc9a;border:1px solid rgba(58,122,90,.4)}
+  .ch-status.lean{background:rgba(42,74,138,.3);color:#7aaaee;border:1px solid rgba(42,74,138,.4)}
+  .ch-status.building{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.3)}
+  .ch-status.coming{background:rgba(255,255,255,.05);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.1)}
+  .ch-status.submitted{background:rgba(122,74,42,.3);color:#ccaa7a;border:1px solid rgba(122,74,42,.4)}
 
-  .op-legend {
-    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-    margin-bottom: 3rem;
-  }
-  .op-pill {
-    font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.18em;
-    text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 2rem;
-    cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
-  }
-  .op-pill.c  { background: rgba(58,122,90,0.2);  border-color: rgba(58,122,90,0.5);  color: #7acc9a; }
-  .op-pill.k  { background: rgba(122,74,42,0.2);  border-color: rgba(122,74,42,0.5);  color: #ccaa7a; }
-  .op-pill.f  { background: rgba(42,74,138,0.2);  border-color: rgba(42,74,138,0.5);  color: #7aaaee; }
-  .op-pill.u  { background: rgba(106,42,122,0.2); border-color: rgba(106,42,122,0.5); color: #cc7aee; }
-  .op-pill.gr { background: rgba(138,42,42,0.2);  border-color: rgba(138,42,42,0.5);  color: #ee9a7a; }
-  .op-pill.all { background:rgba(80,80,80,0.15); border-color:rgba(120,120,120,0.3); color:#aaa; }
-  .op-pill:hover { opacity:1; transform:scale(1.05); }
+  /* Stats bar */
+  .stats-bar{max-width:1100px;margin:2rem auto;padding:0 1rem}
+  .stats-inner{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;border:1px solid rgba(201,168,76,.2);padding:1.5rem;background:rgba(201,168,76,.03)}
+  .stat-item{text-align:center}
+  .stat-num{font-family:'Courier New',monospace;font-size:1.8rem;color:var(--gold);line-height:1}
+  .stat-label{font-family:sans-serif;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:.3rem}
 
-  .diagram-wrap { max-width: 1100px; margin: 0 auto; padding: 0 1rem 2rem; }
-  #arc-canvas { display: block; width: 100%; }
+  .tooltip{position:fixed;pointer-events:none;background:var(--navy);border:1px solid rgba(201,168,76,.3);padding:.6rem .9rem;font-family:sans-serif;font-size:.78rem;color:white;z-index:500;max-width:220px;transform:translate(12px,-50%);opacity:0;transition:opacity .15s}
+  .tooltip.visible{opacity:1}
+  .tooltip-title{color:var(--gold);font-size:.8rem;margin-bottom:.2rem}
+  .tooltip-sub{color:rgba(255,255,255,.55);font-size:.72rem}
 
-  /* ── Section headers ── */
-  .section-header {
-    max-width: 1100px; margin: 3rem auto 0.8rem; padding: 0 1rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .section-op {
-    font-family: 'Courier New', monospace; font-size: 1.4rem; font-weight: bold;
-  }
-  .section-op.c   { color: #7acc9a; }
-  .section-op.k   { color: #ccaa7a; }
-  .section-op.f   { color: #7aaaee; }
-  .section-op.u   { color: #cc7aee; }
-  .section-op.gr  { color: #ee9a7a; }
-  .section-op.ext { color: #888; }
-  .section-op.all { color: var(--gold); }
-  .section-info { flex: 1; }
-  .section-name { font-size: 1rem; color: white; margin-bottom: 0.15rem; }
-  .section-desc { font-size: 0.78rem; color: rgba(255,255,255,0.4); font-family: sans-serif; }
-  .section-weeks { font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.12em; color: rgba(255,255,255,0.25); text-transform: uppercase; }
-  .section-line { flex: 1; height: 1px; background: rgba(255,255,255,0.07); }
+  .sbm-banner{max-width:1100px;margin:2rem auto;padding:0 1rem}
+  .sbm-inner{background:linear-gradient(135deg,rgba(26,39,68,.8),rgba(42,74,58,.4));border:1px solid rgba(201,168,76,.3);padding:1.5rem 2rem;display:flex;gap:2rem;align-items:center;flex-wrap:wrap}
+  .sbm-num{font-family:'Courier New',monospace;font-size:3rem;color:var(--gold);line-height:1;flex-shrink:0}
+  .sbm-text h3{font-size:1rem;color:white;margin-bottom:.3rem}
+  .sbm-text p{font-family:sans-serif;font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.7}
 
-  /* ── Chapter grid ── */
-  .chapter-grid {
-    max-width: 1100px; margin: 0 auto; padding: 0 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.8rem;
-  }
-  .chapter-grid.wide { grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); }
-  .chapter-grid.narrow { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); }
-
-  .ch-card {
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 1rem 1.2rem;
-    cursor: pointer; transition: all 0.2s;
-    text-decoration: none; display: block;
-    position: relative; overflow: hidden;
-  }
-  .ch-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; }
-  .ch-card.op-c   { background: rgba(58,122,90,0.06); }  .ch-card.op-c::before   { background: #3a7a5a; }
-  .ch-card.op-k   { background: rgba(122,74,42,0.06); }  .ch-card.op-k::before   { background: #7a4a2a; }
-  .ch-card.op-f   { background: rgba(42,74,138,0.06); }  .ch-card.op-f::before   { background: #2a4a8a; }
-  .ch-card.op-u   { background: rgba(106,42,122,0.06); } .ch-card.op-u::before   { background: #6a2a7a; }
-  .ch-card.op-gr  { background: rgba(138,42,42,0.06); }  .ch-card.op-gr::before  { background: #8a2a2a; }
-  .ch-card.op-ext { background: rgba(80,80,80,0.08); }   .ch-card.op-ext::before { background: #666; }
-  .ch-card.op-machine { background: rgba(30,50,80,0.10); } .ch-card.op-machine::before { background: #2a5a8a; }
-
-  .ch-card:hover {
-    border-color: rgba(201,168,76,0.35);
-    transform: translateY(-2px);
-    background: rgba(201,168,76,0.05) !important;
-  }
-  .ch-num  { font-family: sans-serif; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; opacity: 0.6; }
-  .ch-name { font-size: 0.95rem; color: white; margin-bottom: 0.2rem; line-height: 1.3; }
-  .ch-op-tag { font-family: 'Courier New', monospace; font-size: 0.72rem; margin-bottom: 0.3rem; }
-  .ch-desc { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: sans-serif; line-height: 1.5; }
-  .ch-week { position: absolute; top: 0.8rem; right: 0.8rem; font-family: sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.25); text-transform: uppercase; }
-  .ch-branch { position: absolute; bottom: 0.5rem; right: 0.7rem; font-family: 'Courier New', monospace; font-size: 0.58rem; color: rgba(201,168,76,0.35); }
-  .ch-status { display: inline-block; margin-top: 0.5rem; font-family: sans-serif; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 1rem; }
-  .ch-status.live     { background: rgba(58,122,90,0.3);   color: #7acc9a; border: 1px solid rgba(58,122,90,0.4); }
-  .ch-status.building { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
-  .ch-status.coming   { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); }
-
-  /* ── Tooltip ── */
-  .tooltip {
-    position: fixed; pointer-events: none;
-    background: var(--navy); border: 1px solid rgba(201,168,76,0.3);
-    padding: 0.6rem 0.9rem; font-family: sans-serif; font-size: 0.78rem;
-    color: white; z-index: 500; max-width: 220px;
-    transform: translate(12px, -50%);
-    opacity: 0; transition: opacity 0.15s;
-  }
-  .tooltip.visible { opacity: 1; }
-  .tooltip-title { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.2rem; }
-  .tooltip-sub   { color: rgba(255,255,255,0.55); font-size: 0.72rem; }
-
-  footer {
-    margin-top: 4rem; padding: 2rem;
-    text-align: center; font-family: sans-serif;
-    font-size: 0.72rem; color: rgba(255,255,255,0.25);
-    border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.9;
-  }
-  footer a { color: var(--gold); text-decoration: none; }
+  footer{margin-top:4rem;padding:2rem;text-align:center;font-family:sans-serif;font-size:.72rem;color:rgba(255,255,255,.25);border-top:1px solid rgba(255,255,255,.06);line-height:1.9}
+  footer a{color:var(--gold);text-decoration:none}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="https://totogt.github.io/AXLE/index.html" class="nav-back">← Main Index</a>
-  <span class="nav-logo">BOOK 3 · CHAPTER MAP · ALL HTML FILES</span>
-  <a href="https://totogt.github.io/AXLE/course-16weeks.html" class="nav-back">16-Week Course →</a>
+  <a href="index.html" class="nav-back">← The Mini-Beast</a>
+  <span class="nav-logo">BOOK 3 · CHAPTER MAP · 30+ CHAPTERS · LIVING BOOK</span>
+  <a href="course-16weeks.html" class="nav-back">16-Week Course →</a>
 </nav>
 
 <div class="hero">
   <div class="hero-eyebrow">Principia Orthogona · Book 3 · The Mini-Beast</div>
   <h1>Chapter Map</h1>
-  <div class="hero-sub">G = U ∘ F ∘ K ∘ C — all chapters &amp; all live files, one operator chain</div>
+  <div class="hero-sub">G = U ∘ F ∘ K ∘ C — 30+ chapters, one operator chain, growing</div>
   <div class="gold-rule"></div>
-
   <div class="op-legend">
-    <div class="op-pill c"   onclick="filterPhase('c')">C · Compression · Wks 1–4</div>
-    <div class="op-pill k"   onclick="filterPhase('k')">K · Curvature · Wks 5–8</div>
-    <div class="op-pill f"   onclick="filterPhase('f')">F · Fold · Wks 9–12</div>
-    <div class="op-pill u"   onclick="filterPhase('u')">U · Unfold · Wks 13–16</div>
-    <div class="op-pill gr"  onclick="filterPhase('gr')">π→Ω · Recurrence Ladder</div>
-    <div class="op-pill ext" onclick="filterPhase('ext')">Machines &amp; Tools</div>
-    <div class="op-pill all" onclick="filterPhase('all')">All Files</div>
+    <div class="op-pill c">C · Compression</div>
+    <div class="op-pill k">K · Curvature</div>
+    <div class="op-pill f">F · Fold</div>
+    <div class="op-pill u">U · Unfold</div>
+    <div class="op-pill gr">π→Ω · Recurrence</div>
   </div>
 </div>
 
@@ -190,1094 +115,278 @@
   <canvas id="arc-canvas" height="260"></canvas>
 </div>
 
-<!-- Tooltip -->
 <div class="tooltip" id="tooltip">
   <div class="tooltip-title" id="tt-title"></div>
-  <div class="tooltip-sub"   id="tt-sub"></div>
+  <div class="tooltip-sub" id="tt-sub"></div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PHASE C — Compression / Biological Core
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="c">
-  <span class="section-op c">C</span>
-  <div class="section-info">
-    <div class="section-name">Compression — Biological Instantiations</div>
-    <div class="section-desc">Working backward from visible output to hidden structure.</div>
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><div class="stat-num">30+</div><div class="stat-label">Chapters live</div></div>
+    <div class="stat-item"><div class="stat-num">16</div><div class="stat-label">Verified domains</div></div>
+    <div class="stat-item"><div class="stat-num">160+</div><div class="stat-label">Lean 4 theorems</div></div>
+    <div class="stat-item"><div class="stat-num">21</div><div class="stat-label">Zenodo deposits</div></div>
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Sound machines</div></div>
+    <div class="stat-item"><div class="stat-num">$30</div><div class="stat-label">All of it · gumroad</div></div>
   </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">Weeks 1–4 · A1→A2</div>
 </div>
 
-<div class="chapter-grid" id="grid-c">
-
-  <a href="https://grossi-ops.github.io/cajueiro/" class="ch-card op-c">
-    <div class="ch-week">Wk 1</div>
-    <div class="ch-num">Chapter 1</div>
-    <div class="ch-name">The Unfolding</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · The Cajueiro</div>
-    <div class="ch-desc">We see the tree. We ask what made it. Compression as first principle.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/ch00-introduction.html" class="ch-card op-c">
-    <div class="ch-week">Ch 00</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Chapter 0</div>
-    <div class="ch-name">Introduction</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Entry Point</div>
-    <div class="ch-desc">The door into Book 3. What G = U ∘ F ∘ K ∘ C means before the math.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/ch01-one-equation.html" class="ch-card op-c">
-    <div class="ch-week">Ch 01</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Chapter 1-B</div>
-    <div class="ch-name">One Equation</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · The Core Formula</div>
-    <div class="ch-desc">One equation that unifies the operator chain. Entry-level derivation.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/ch00-introduction.html" class="ch-card op-c">
-    <div class="ch-week">Main</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Ch 00 · Main</div>
-    <div class="ch-name">Introduction (main)</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Mirror</div>
-    <div class="ch-desc">Main-branch copy of the introduction chapter.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/ch01-one-equation.html" class="ch-card op-c">
-    <div class="ch-week">Main</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Ch 01 · Main</div>
-    <div class="ch-name">One Equation (main)</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Mirror</div>
-    <div class="ch-desc">Main-branch copy of Ch 01.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/minibeast-pilot.html" class="ch-card op-c">
-    <div class="ch-week">Pilot</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Mini-Beast Pilot</div>
-    <div class="ch-name">Pilot Page</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Launch</div>
-    <div class="ch-desc">The pilot landing page for Book 3 / The Mini-Beast.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="ch2-allostatic.html" class="ch-card op-c">
-    <div class="ch-week">Wk 2</div>
-    <div class="ch-num">Chapter 2</div>
-    <div class="ch-name">The Allostatic Operator</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Stress as Compression</div>
-    <div class="ch-desc">Cortisol, HPA axis, allostatic load. Chronic stress as C operator.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch3-circadian.html" class="ch-card op-c">
-    <div class="ch-week">Wk 3</div>
-    <div class="ch-num">Chapter 3</div>
-    <div class="ch-name">Circadian Regulation</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Time Compressed to 24h</div>
-    <div class="ch-desc">CLOCK, BMAL1 and the feedback loop as C operator.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     PHASE K — Curvature / Threshold
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="k">
-  <span class="section-op k">K</span>
-  <div class="section-info">
-    <div class="section-name">Curvature — The Threshold</div>
-    <div class="section-desc">The moment the system commits to a new orbit.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">Weeks 5–8 · B1→B2</div>
-</div>
-
-<div class="chapter-grid" id="grid-k">
-
-  <a href="ch4-neural.html" class="ch-card op-k">
-    <div class="ch-week">Wk 5</div>
-    <div class="ch-num">Chapter 4</div>
-    <div class="ch-name">Neural Oscillations</div>
-    <div class="ch-op-tag" style="color:#ccaa7a;">K · Curvature Threshold</div>
-    <div class="ch-desc">κ* in the nervous system. Gamma, theta, delta — oscillatory mode locking.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-  <a href="ch5-immune.html" class="ch-card op-k">
-    <div class="ch-week">Wk 6</div>
-    <div class="ch-num">Chapter 5</div>
-    <div class="ch-name">Immune Adaptation</div>
-    <div class="ch-op-tag" style="color:#ccaa7a;">K · Committing to a New Orbit</div>
-    <div class="ch-desc">Th1/Th2 switching as curvature threshold. The system commits — and cannot uncommit.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-  <a href="ch6-falsifiable.html" class="ch-card op-k">
-    <div class="ch-week">Wk 7</div>
-    <div class="ch-num">Chapter 6</div>
-    <div class="ch-name">Three Falsifiable Predictions</div>
-    <div class="ch-op-tag" style="color:#ccaa7a;">K · The Open Frontier</div>
-    <div class="ch-desc">What the series has not yet proved. Three predictions with explicit falsification conditions.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     PHASE F — Fold / Complete Circuit
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="f">
-  <span class="section-op f">F</span>
-  <div class="section-info">
-    <div class="section-name">Fold — The Complete Circuit</div>
-    <div class="section-desc">The structure folds into a complete form. The topology changes.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">Weeks 9–12 · C1</div>
-</div>
-
-<div class="chapter-grid" id="grid-f">
-
-  <a href="ch7-complete-circuit.html" class="ch-card op-f">
-    <div class="ch-week">Wk 9</div>
-    <div class="ch-num">Chapter 7</div>
-    <div class="ch-name">The Complete Circuit</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · g₃₃ = 33</div>
-    <div class="ch-desc">G = U ∘ F ∘ K ∘ C applied at every scale simultaneously. The saturated form.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/ch-e-gtct.html" class="ch-card op-f">
-    <div class="ch-week">Wk 10</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Chapter E</div>
-    <div class="ch-name">GTCT — Generalized Trajectory</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Time Circuit Theory</div>
-    <div class="ch-desc">Time-periodic orbits encode the fold. The circuit as limit cycle.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/sample-chapter-tubulin.html" class="ch-card op-f">
-    <div class="ch-week">Wk 11</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Chapter T</div>
-    <div class="ch-name">Tubulin as Computronium</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Biological Fold</div>
-    <div class="ch-desc">Ulam's question: optimal physical substrate for computation? Tubulin answers it.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/sample-chapter-autophagy.html" class="ch-card op-f">
-    <div class="ch-week">Supp</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Chapter A</div>
-    <div class="ch-name">Autophagy</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Self-Fold</div>
-    <div class="ch-desc">Cellular self-eating as a fold operator. The cell recycles its own compressed forms.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/wigner-fractal.html" class="ch-card op-f">
-    <div class="ch-week">Wk 12</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Chapter W</div>
-    <div class="ch-name">The Wigner Crystal</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Physical Instantiation</div>
-    <div class="ch-desc">Electrons crystallize under extreme compression. Wigner's 1934 prediction — dm³ fold diagram.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/chW-wigner.html" class="ch-card op-f">
-    <div class="ch-week">Wk 12</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Chapter W-B3</div>
-    <div class="ch-name">Wigner (book3 ed.)</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Physical Instantiation</div>
-    <div class="ch-desc">Book3-branch edition of the Wigner Crystal chapter.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/chw-wigner.html" class="ch-card op-f">
-    <div class="ch-week">Wk 12</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Chapter W-B3b</div>
-    <div class="ch-name">Wigner (alternate)</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Alternate Build</div>
-    <div class="ch-desc">Second book3 build of the Wigner chapter (lowercase filename).</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/spectral-radius-v2.html" class="ch-card op-f">
-    <div class="ch-week">Collatz</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Supplement v2</div>
-    <div class="ch-name">Spectral Radius Asymptotics</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Transfer Operator</div>
-    <div class="ch-desc">P_M and Ruelle–Perron–Frobenius operator. ρ(ℒ) ≈ 0.751.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/spectral-radius.html" class="ch-card op-f">
-    <div class="ch-week">Collatz</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Supplement v1</div>
-    <div class="ch-name">Spectral Radius (v1)</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Transfer Operator</div>
-    <div class="ch-desc">First edition of the spectral radius chapter, archived on main.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/spectral-radius.html" class="ch-card op-f">
-    <div class="ch-week">Collatz</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Spectral B3</div>
-    <div class="ch-name">Spectral Radius (book3)</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Transfer Operator</div>
-    <div class="ch-desc">Book3-branch edition of the spectral radius supplement.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/collatz.html" class="ch-card op-f">
-    <div class="ch-week">Collatz</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Collatz</div>
-    <div class="ch-name">Collatz as dm³</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Conjecture</div>
-    <div class="ch-desc">The Collatz conjecture as a corollary of crystal geometry. c = 3 is the triad fingerprint.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/cm-choreography.html" class="ch-card op-f">
-    <div class="ch-week">Supp</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">CM</div>
-    <div class="ch-name">Choreography</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Contact Manifold</div>
-    <div class="ch-desc">Contact manifold choreography — the fold as movement through phase space.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/sample-chapter-wigner.html" class="ch-card op-f">
-    <div class="ch-week">Sample</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sample · W</div>
-    <div class="ch-name">Wigner Sample</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Sample Chapter</div>
-    <div class="ch-desc">Public sample chapter edition of the Wigner Crystal.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapter-eta-dnls.html" class="ch-card op-f">
-    <div class="ch-week">η</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Chapter η · DNLS</div>
-    <div class="ch-name">Tribonacci / DNLS</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · η = 1.839</div>
-    <div class="ch-desc">Discrete Nonlinear Schrödinger equation at η. Long-time dynamics and the critical λ.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     PHASE U — Unfold
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="u">
-  <span class="section-op u">U</span>
-  <div class="section-info">
-    <div class="section-name">Unfold — Verification &amp; the Fixed Point</div>
-    <div class="section-desc">The organism has grown. The circuit closes at D2.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">Weeks 13–16 · D1→D2</div>
-</div>
-
-<div class="chapter-grid" id="grid-u">
-
-  <a href="https://totogt.github.io/AXLE/course-16weeks.html" class="ch-card op-u">
-    <div class="ch-week">D1→D2</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">16-Week Course</div>
-    <div class="ch-name">The Complete Course</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · Full Orbit</div>
-    <div class="ch-desc">Four complete C→K→F→U cycles across 16 weeks. From A1 to researcher.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/portal.html" class="ch-card op-u">
-    <div class="ch-week">D1</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Student Portal</div>
-    <div class="ch-name">Portal</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · D1 Training</div>
-    <div class="ch-desc">Structured LLM prompts guiding A1→C1→D1. The operator orbit, paid access.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/Sportal.html" class="ch-card op-u">
-    <div class="ch-week">D1</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sportal</div>
-    <div class="ch-name">Student Portal (Sportal)</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · 21 Prompts</div>
-    <div class="ch-desc">21-prompt structured training sequence. The full Sportal interface.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/impa-portal.html" class="ch-card op-u">
-    <div class="ch-week">D2</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">IMPA Portal</div>
-    <div class="ch-name">IMPA Edition Portal</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · D2 Collective</div>
-    <div class="ch-desc">IMPA-edition student portal. Bilingual EN/PT. Submitted to IMPA.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/aimpa-portal.html" class="ch-card op-u">
-    <div class="ch-week">D2</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">IMPA Portal · Alt</div>
-    <div class="ch-name">IMPA Portal (alt)</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · Alternate</div>
-    <div class="ch-desc">Alternate IMPA portal build.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/impa-portal-patch.html" class="ch-card op-u">
-    <div class="ch-week">Patch</div>
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">IMPA Patch</div>
-    <div class="ch-name">IMPA Portal Patch</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · Patch</div>
-    <div class="ch-desc">Hotfix patch for the IMPA portal, book3 branch.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/simportal.html" class="ch-card op-u">
-    <div class="ch-week">Sim</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sim Portal</div>
-    <div class="ch-name">Simulation Portal</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · Interactive</div>
-    <div class="ch-desc">Entry point for all simulations. Collatz, Lyapunov, storm manifold.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/simportal2.html" class="ch-card op-u">
-    <div class="ch-week">Sim</div>
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sim Portal 2</div>
-    <div class="ch-name">Simulation Portal v2</div>
-    <div class="ch-op-tag" style="color:#cc7aee;">U · v2</div>
-    <div class="ch-desc">Second build of the simulation portal.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     Recurrence Ladder π→Ω
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="gr">
-  <span class="section-op gr">π→Ω</span>
-  <div class="section-info">
-    <div class="section-name">The Recurrence Ladder</div>
-    <div class="section-desc">Seven Greek chapters. Each constant is a fixed point of a different recurrence.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">Math Supplement · All levels</div>
-</div>
-
-<div class="chapter-grid narrow" id="grid-gr">
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-pi" class="ch-card op-gr">
-    <div class="ch-num">Chapter π</div>
-    <div class="ch-name">Why Period = 2π</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">π</div>
-    <div class="ch-desc">Reeb geometry, limit cycle, contact structure. T* = 2π.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-phi" class="ch-card op-gr">
-    <div class="ch-num">Chapter φ</div>
-    <div class="ch-name">Fibonacci as Subcritical dm³</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">φ</div>
-    <div class="ch-desc">φ = 1.618. Below c* = 3. Subcritical. The golden ratio as a stable fixed point.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-mu" class="ch-card op-gr">
-    <div class="ch-num">Chapter μ</div>
-    <div class="ch-name">Lyapunov &amp; Chaos</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">μ</div>
-    <div class="ch-desc">Lyapunov exponent = −2. Boundary of stability. Sensitive dependence.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapter-eta-dnls.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter η</div>
-    <div class="ch-name">Tribonacci / DNLS</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">η</div>
-    <div class="ch-desc">η = 1.839. Three-term recurrence. DNLS long-time dynamics. First supercritical rung.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-eta" class="ch-card op-gr">
-    <div class="ch-num">Chapter η · Combined</div>
-    <div class="ch-name">Tribonacci 1.839</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.2rem;">η</div>
-    <div class="ch-desc">Combined-page edition of the η chapter.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-delta" class="ch-card op-gr">
-    <div class="ch-num">Chapter Δ</div>
-    <div class="ch-name">Tetranacci / 1.927</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">Δ</div>
-    <div class="ch-desc">Four-term recurrence. Δ = 1.927. Approaching c* = 2 from below.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-sigma" class="ch-card op-gr">
-    <div class="ch-num">Chapter Σ</div>
-    <div class="ch-name">Pentanacci / 1.966</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">Σ</div>
-    <div class="ch-desc">Five-term recurrence. Σ = 1.966. The ladder converges toward τ = 2.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-omega" class="ch-card op-gr">
-    <div class="ch-num">Chapter Ω</div>
-    <div class="ch-name">Hexabonacci → τ = 2</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">Ω</div>
-    <div class="ch-desc">Six-term recurrence → τ = 2. Complete Completeness. Fixed point of the operator chain.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html" class="ch-card op-gr">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Combined Page</div>
-    <div class="ch-name">π · φ · μ · η · Δ · Σ · Ω</div>
-    <div class="ch-op-tag" style="color:#ee9a7a;">All Seven</div>
-    <div class="ch-desc">All seven Greek chapters in one page.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     SIMULATIONS & INTERACTIVE TOOLS
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="ext">
-  <span class="section-op ext">∿</span>
-  <div class="section-info">
-    <div class="section-name">Simulations &amp; Interactive Tools</div>
-    <div class="section-desc">Live computational tools probing the operator chain directly.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">All levels · Interactive</div>
-</div>
-
-<div class="chapter-grid" id="grid-ext">
-
-  <a href="https://totogt.github.io/AXLE/sim-lyapunov.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sim · Lyapunov</div>
-    <div class="ch-name">Lyapunov Simulator</div>
-    <div class="ch-op-tag" style="color:#aaa;">λ exponent · Syracuse map</div>
-    <div class="ch-desc">Live computation of λ for the Syracuse return map. Adjustable N, seed, noise σ. AXLE Target 5.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/sim-stormmanifold.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sim · Storm Manifold</div>
-    <div class="ch-name">Storm Manifold</div>
-    <div class="ch-op-tag" style="color:#aaa;">Contact Geometry · Live</div>
-    <div class="ch-desc">Interactive storm manifold simulation — contact structure visualised in real time.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/sim.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Sim · General</div>
-    <div class="ch-name">General Simulation</div>
-    <div class="ch-op-tag" style="color:#aaa;">Operator · Interactive</div>
-    <div class="ch-desc">General-purpose simulation interface for the operator chain.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters-diagram.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Chapters Diagram</div>
-    <div class="ch-name">Diagram View</div>
-    <div class="ch-op-tag" style="color:#aaa;">Structural · Visual</div>
-    <div class="ch-desc">Diagrammatic overview of all chapters and their operator assignments.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/chapters.html" class="ch-card op-ext">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Book3 · Chapters</div>
-    <div class="ch-name">Book 3 Chapter Index</div>
-    <div class="ch-op-tag" style="color:#aaa;">Index · book3</div>
-    <div class="ch-desc">Chapter index page for the book3 branch — latest build.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     MACHINES / SOUNDWORKS / WELLNESS
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="ext">
-  <span class="section-op ext" style="color:#6aaabb;">⟁</span>
-  <div class="section-info">
-    <div class="section-name">Machines · Soundworks · Wellness</div>
-    <div class="section-desc">Applied operator chain — resonance, mantras, sacred geometry, wellness infrastructure.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">Applied · G6 LLC</div>
-</div>
-
-<div class="chapter-grid wide" id="grid-machines">
-
-  <a href="https://totogt.github.io/AXLE/book3/om-machine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Machine · OM</div>
-    <div class="ch-name">Om Machine</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Sound · 432 Hz</div>
-    <div class="ch-desc">Om frequency generator. Resonance as operator instantiation.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/soham-machine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Machine · Soham</div>
-    <div class="ch-name">Soham Machine</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Mantra · Breath</div>
-    <div class="ch-desc">So-ham breath cycle as C→U operator. "I am that."</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/pranayama-machine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Machine · Pranayama</div>
-    <div class="ch-name">Pranayama Machine</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Breath · 4-7-8</div>
-    <div class="ch-desc">Pranayama breath cycle timer. Compression operator for the nervous system.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/sri-yantra-sakti-machine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Machine · Sri Yantra</div>
-    <div class="ch-name">Sri Yantra Sakti Machine</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Sacred Geometry · dm³</div>
-    <div class="ch-desc">Sri Yantra as a dm³ fold. Sacred geometry meets contact manifold.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/swarnakarshana-bhairava-machine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Machine · Swarnakarshana</div>
-    <div class="ch-name">Swarnakarshana Bhairava</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Mantra · Gold Attractor</div>
-    <div class="ch-desc">Swarnakarshana Bhairava mantra machine. Gold as fixed point.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/hal-saflieni-resonance.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Resonance · Ħal Saflieni</div>
-    <div class="ch-name">Ħal Saflieni Resonance</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Acoustic · 111 Hz</div>
-    <div class="ch-desc">Ħal Saflieni hypogeum resonance at 111 Hz. Contact geometry in stone.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/wellness-soundworks.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Soundworks</div>
-    <div class="ch-name">Wellness Soundworks</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Sound · Wellness</div>
-    <div class="ch-desc">Wellness soundworks hub. All frequency tools in one interface.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/wellness-soundworks.html" class="ch-card op-machine">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Soundworks · Main</div>
-    <div class="ch-name">Wellness Soundworks (main)</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Sound · Main branch</div>
-    <div class="ch-desc">Main-branch edition of the wellness soundworks page.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/g6-drone-machine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">Machine · G6 Drone</div>
-    <div class="ch-name">G6 Drone Machine</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Drone · 33 Hz</div>
-    <div class="ch-desc">G6 drone tone generator. g₃₃ = 33 as resonance frequency.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/newark-wellness.html" class="ch-card op-machine">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Newark Wellness</div>
-    <div class="ch-name">Newark Wellness Hub</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">G6 LLC · Newark NJ</div>
-    <div class="ch-desc">Local wellness infrastructure page. G6 LLC Newark presence.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/trilogy-sale.html" class="ch-card op-machine">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">Trilogy Sale</div>
-    <div class="ch-name">Trilogy Sale Page</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Commerce · G6</div>
-    <div class="ch-desc">Complete series trilogy sale page. Print + eBook bundle.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3/229-ballantine.html" class="ch-card op-machine">
-    <div class="ch-branch">book3/</div>
-    <div class="ch-num">229 Ballantine</div>
-    <div class="ch-name">229 Ballantine Pkwy</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Newark · G6 LLC</div>
-    <div class="ch-desc">229 Ballantine Parkway property / G6 LLC base page.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/229-ballantine.html" class="ch-card op-machine">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">229 Ballantine · Main</div>
-    <div class="ch-name">229 Ballantine (main)</div>
-    <div class="ch-op-tag" style="color:#6aaabb;">Newark · Main branch</div>
-    <div class="ch-desc">Main-branch copy of the 229 Ballantine page.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     MAIN SITE PAGES
-     ══════════════════════════════════════════ -->
-<div class="section-header" data-phase="all">
-  <span class="section-op all">∞</span>
-  <div class="section-info">
-    <div class="section-name">Main Site Pages</div>
-    <div class="section-desc">Index, homepage, access, papers, course infrastructure — the full site skeleton.</div>
-  </div>
-  <div class="section-line"></div>
-  <div class="section-weeks">main/ · All users</div>
-</div>
-
-<div class="chapter-grid wide" id="grid-main">
-
-  <a href="https://totogt.github.io/AXLE/index.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">index.html</div>
-    <div class="ch-name">Main Index</div>
-    <div class="ch-op-tag" style="color:#aaa;">G¹–G⁵ · Entry</div>
-    <div class="ch-desc">The main Principia Orthogona landing page. G¹–G⁵ complete series.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/homepage.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">homepage.html</div>
-    <div class="ch-name">Homepage (alt)</div>
-    <div class="ch-op-tag" style="color:#aaa;">Alternate entry</div>
-    <div class="ch-desc">Alternate homepage build.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/book3-starter-index.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">book3-starter-index</div>
-    <div class="ch-name">Book 3 Starter Index</div>
-    <div class="ch-op-tag" style="color:#aaa;">Book 3 · Entry</div>
-    <div class="ch-desc">Starter index page for Book 3 / The Mini-Beast on the main branch.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/access-required.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">access-required</div>
-    <div class="ch-name">Access Required</div>
-    <div class="ch-op-tag" style="color:#aaa;">Gate · Paid</div>
-    <div class="ch-desc">Paywall / access gate page for paid content sections.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="https://totogt.github.io/AXLE/chapters.html" class="ch-card op-ext">
-    <div class="ch-branch">main/</div>
-    <div class="ch-num">chapters.html</div>
-    <div class="ch-name">Chapters (main)</div>
-    <div class="ch-op-tag" style="color:#aaa;">Index · main</div>
-    <div class="ch-desc">Main-branch chapters index page.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-</div>
-
-<!-- ══════════════════════════════════════════
-     Living Book Status
-     ══════════════════════════════════════════ -->
-<div style="max-width:1100px; margin: 3rem auto; padding: 0 1rem;">
-  <div style="border:1px solid rgba(201,168,76,0.2); padding: 2rem; background: rgba(201,168,76,0.03);">
-    <div style="font-family:sans-serif; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem;">Living Book Status · All Files</div>
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap:1rem; font-family:sans-serif; font-size:0.8rem;">
-      <div>
-        <div style="color:#7acc9a; margin-bottom:0.4rem;">● Live · main/</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:2;">
-          index.html · homepage.html<br>
-          ch00-introduction.html<br>
-          ch01-one-equation.html<br>
-          ch-e-gtct.html · collatz.html<br>
-          chapter-eta-dnls.html<br>
-          chapters-pi-phi-mu-eta-delta-sigma-omega.html<br>
-          chapters-diagram.html · chapters.html<br>
-          wigner-fractal.html · sample-chapter-wigner.html<br>
-          sample-chapter-tubulin.html<br>
-          sample-chapter-autophagy.html<br>
-          spectral-radius-v2.html · spectral-radius.html<br>
-          sim-lyapunov.html · sim-stormmanifold.html · sim.html<br>
-          simportal.html · simportal2.html<br>
-          course-16weeks.html · portal.html<br>
-          Sportal.html · impa-portal.html · aimpa-portal.html<br>
-          minibeast-pilot.html · book3-starter-index.html<br>
-          wellness-soundworks.html · newark-wellness.html<br>
-          trilogy-sale.html · 229-ballantine.html<br>
-          access-required.html
-        </div>
-      </div>
-      <div>
-        <div style="color:#7acc9a; margin-bottom:0.4rem;">● Live · book3/</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:2;">
-          ch00-introduction.html<br>
-          ch01-one-equation.html<br>
-          chW-wigner.html · chw-wigner.html<br>
-          chapters.html · spectral-radius.html<br>
-          cm-choreography.html<br>
-          impa-portal-patch.html<br>
-          om-machine.html · soham-machine.html<br>
-          pranayama-machine.html<br>
-          sri-yantra-sakti-machine.html<br>
-          swarnakarshana-bhairava-machine.html<br>
-          hal-saflieni-resonance.html<br>
-          wellness-soundworks.html<br>
-          g6-drone-machine.html<br>
-          229-ballantine.html
-        </div>
-      </div>
-      <div>
-        <div style="color:var(--gold); margin-bottom:0.4rem;">◑ Building</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:2;">
-          Chapter 2 · Allostatic<br>
-          π · φ · μ · Δ · Σ · Ω (split pages)
-        </div>
-        <br>
-        <div style="color:rgba(255,255,255,0.25); margin-bottom:0.4rem;">○ Coming</div>
-        <div style="color:rgba(255,255,255,0.3); line-height:2;">
-          Chapter 3 · Circadian<br>
-          Chapter 4 · Neural Oscillations<br>
-          Chapter 5 · Immune<br>
-          Chapter 6 · Falsifiable<br>
-          Chapter 7 · Complete Circuit
-        </div>
-      </div>
-      <div>
-        <div style="color:rgba(255,255,255,0.4); margin-bottom:0.4rem;">∞ Growing</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:2;">
-          Buy once · all chapters included<br>
-          ISBN 979-8-9954416-6-3<br>
-          <a href="https://www.paypal.com/paypalme/pgrossi/21.31" style="color:var(--gold);">$19.99 → PayPal</a><br><br>
-          AXLE v6.1 · Lean 4<br>
-          8 verified constants<br>
-          0 axioms beyond Mathlib4
-        </div>
-      </div>
+<!-- SBM Banner -->
+<div class="sbm-banner">
+  <div class="sbm-inner">
+    <div class="sbm-num">5/5</div>
+    <div class="sbm-text">
+      <h3>SBM XII Bienal de Matemática · Natal, Brazil · August 3–7, 2026</h3>
+      <p>5 of 5 submitted works accepted from 274 submissions · Exhibition (EXP13, all 5 days) · Oral Communication (CO144) · Poster (P290) · Minicurso (MC48) · Oficina (OF53)<br>
+      NYFA Fiscal Sponsorship confirmed May 22, 2026 · Tax-deductible donations now accepted via 501(c)(3)</p>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     g₃₃ Section
-     ══════════════════════════════════════════ -->
-<div style="max-width:1100px; margin: 4rem auto 0; padding: 0 1rem;">
-  <div style="
-    background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.07) 0%, rgba(26,39,68,0.6) 70%);
-    border: 1px solid rgba(201,168,76,0.25);
-    padding: 3rem 2.5rem; position: relative; overflow: hidden;">
+<!-- PART I: Core -->
+<div class="phase-section">
+  <div class="phase-header-row">
+    <span class="phase-op c">C→K→F→U</span>
+    <div class="phase-info">
+      <div class="phase-name">Part I — Core Sequence · Biological & Physical Instantiations</div>
+      <div class="phase-count">14 chapters · all live</div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+  <div class="ch-grid">
+    <a href="ch01-cajueiro.html" class="ch-card op-c"><div class="ch-num">Ch. 1</div><div class="ch-name">The Cajueiro Principle</div><div class="ch-op-tag" style="color:#7acc9a">C · Seed and Fixed Point</div><div class="ch-desc">The tree as entry point. Working backward from U to C. The fixed point you already inhabit.</div><span class="ch-status live">Live</span></a>
+    <a href="ch02-biological.html" class="ch-card op-c"><div class="ch-num">Ch. 2</div><div class="ch-name">Biological Instantiations</div><div class="ch-op-tag" style="color:#7acc9a">C → K · HPA, Neural, Circadian, Immune</div><div class="ch-desc">Four biological orbits. One operator sequence. Parameters calibrated from domain data.</div><span class="ch-status live">Live</span></a>
+    <a href="ch03-plasma.html" class="ch-card op-k"><div class="ch-num">Ch. 3</div><div class="ch-name">Plasma Reconnection</div><div class="ch-op-tag" style="color:#ccaa7a">K · X-point curvature</div><div class="ch-desc">Dusty plasmas, fractal current-sheet d_φ ≈ 1.6–1.8. Cassini, MMS, Parker Solar Probe.</div><span class="ch-status live">Live</span></a>
+    <a href="ch04-markets.html" class="ch-card op-k"><div class="ch-num">Ch. 4</div><div class="ch-name">Market Volatility Manifolds</div><div class="ch-op-tag" style="color:#ccaa7a">K · Flash crash as fold event</div><div class="ch-desc">Fisher information metric. Multifractal Hölder spectrum. NYSE TAQ + Binance 2015–2026.</div><span class="ch-status live">Live</span></a>
+    <a href="ch04-neural.html" class="ch-card op-k"><div class="ch-num">Ch. 4c</div><div class="ch-name">Neural Oscillations</div><div class="ch-op-tag" style="color:#ccaa7a">K · Kuramoto sync threshold</div><div class="ch-desc">Theta–gamma coupling. Synaptic connectivity metric. Entrainment as K operator.</div><span class="ch-status live">Live</span></a>
+    <a href="ch05-oscillations.html" class="ch-card op-f"><div class="ch-num">Ch. 5</div><div class="ch-name">Oscillations & Coherence</div><div class="ch-op-tag" style="color:#7aaaee">F · Coherence Bridge</div><div class="ch-desc">The fold that proves exact mathematical identity across six initial domains.</div><span class="ch-status live">Live</span></a>
+    <a href="ch05-immune.html" class="ch-card op-f"><div class="ch-num">Ch. 5b</div><div class="ch-name">Immune Memory</div><div class="ch-op-tag" style="color:#7aaaee">F · Th1/Th2 switching</div><div class="ch-desc">Immune commitment as fold event. The system chooses and cannot easily unchoose.</div><span class="ch-status live">Live</span></a>
+    <a href="ch06-resonant.html" class="ch-card op-f"><div class="ch-num">Ch. 6c</div><div class="ch-name">The Resonant Chamber</div><div class="ch-op-tag" style="color:#7aaaee">F · Cymatics · 110 Hz · Hypogeum</div><div class="ch-desc">Chladni figures as contact fixed points. The Ħal Saflieni Hypogeum. The fold in stone.</div><span class="ch-status live">Live</span></a>
+    <a href="ch7-crystalline.html" class="ch-card op-u"><div class="ch-num">Ch. 7</div><div class="ch-name">Crystalline Structures</div><div class="ch-op-tag" style="color:#cc7aee">U · Wigner, moiré</div><div class="ch-desc">Electrons crystallize under compression. Quantum phase transition as dm³ fold.</div><span class="ch-status live">Live</span></a>
+    <a href="ch8-axiomatic.html" class="ch-card op-u"><div class="ch-num">Ch. 8</div><div class="ch-name">The Axiomatic Foundation</div><div class="ch-op-tag" style="color:#cc7aee">U · Nine axioms</div><div class="ch-desc">The minimal axiomatic base. What must be assumed and what follows.</div><span class="ch-status live">Live</span></a>
+    <a href="ch9-phi.html" class="ch-card op-u"><div class="ch-num">Ch. 9</div><div class="ch-name">Phi — Golden Ratio</div><div class="ch-op-tag" style="color:#cc7aee">U · Fixed point φ = 1.618</div><div class="ch-desc">Fibonacci subcritical dm³. φ as stable fixed point below c* = 3.</div><span class="ch-status live">Live</span></a>
+    <a href="ch10-lyapunov.html" class="ch-card op-u"><div class="ch-num">Ch. 10</div><div class="ch-name">Lyapunov Exponents</div><div class="ch-op-tag" style="color:#cc7aee">U · Stability radius</div><div class="ch-desc">The boundary of stability. μ = −2. Sensitive dependence and the basin edge.</div><span class="ch-status live">Live</span></a>
+    <a href="ch11-spectral.html" class="ch-card op-u"><div class="ch-num">Ch. 11</div><div class="ch-name">Spectral Radius</div><div class="ch-op-tag" style="color:#cc7aee">U → G · Transfer operator</div><div class="ch-desc">Syracuse return map. Collatz spectral structure. The operator as its own fixed point.</div><span class="ch-status live">Live</span></a>
+    <a href="ch14-axle.html" class="ch-card op-u"><div class="ch-num">Ch. 14</div><div class="ch-name">AXLE — Formal Verification</div><div class="ch-op-tag" style="color:#cc7aee">U · Lean 4 · 160+ theorems</div><div class="ch-desc">The proof environment as chapter. lake update && lake build. Machine-verifiable mathematics.</div><span class="ch-status lean">Lean 4</span></a>
+  </div>
+</div>
 
-    <div style="position:absolute; right:2rem; top:50%; transform:translateY(-50%);
-      font-family:'Georgia',serif; font-size:clamp(6rem,16vw,12rem); font-weight:900;
-      color:rgba(201,168,76,0.05); line-height:1; pointer-events:none; user-select:none;">33</div>
+<!-- PART II: Extended -->
+<div class="phase-section" style="margin-top:2.5rem">
+  <div class="phase-header-row">
+    <span class="phase-op ext">EXT</span>
+    <div class="phase-info">
+      <div class="phase-name">Part II — Extended Domain Chapters</div>
+      <div class="phase-count">16 chapters · verified + building</div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+  <div class="ch-grid">
+    <a href="ch-e-gtct.html" class="ch-card op-f"><div class="ch-num">Ch. E</div><div class="ch-name">GTCT for Everyone</div><div class="ch-op-tag" style="color:#7aaaee">F · 9 axioms · 12 operators · 4 theorems</div><div class="ch-desc">The IMPA Volume IV made accessible. Time circuit. Banach FPT. The fixed point as identity.</div><span class="ch-status live">Live</span></a>
+    <a href="ch-f-saturn.html" class="ch-card op-k"><div class="ch-num">Ch. F</div><div class="ch-name">Saturn's North Polar Hexagon</div><div class="ch-op-tag" style="color:#ccaa7a">K · g₃₃ = 33 crystal law</div><div class="ch-desc">Wavenumber-6 selection from the crystal law. Kronos, Saturnus, Śani. Cassini/VIMS data.</div><span class="ch-status live">Live</span></a>
+    <a href="ch-g-kalabhairava.html" class="ch-card op-gr"><div class="ch-num">Ch. G</div><div class="ch-name">Kālabhairava</div><div class="ch-op-tag" style="color:#ee9a7a">G · Time as generative operator</div><div class="ch-desc">The fixed point x* as the form of identity under time-evolution. Bilingual PT/EN.</div><span class="ch-status live">Live</span></a>
+    <a href="collatz.html" class="ch-card op-gr"><div class="ch-num">Ch. H</div><div class="ch-name">The Collatz Conjecture</div><div class="ch-op-tag" style="color:#ee9a7a">G · 3 proofs via GTCT</div><div class="ch-desc">Contact-Hamiltonian H = p² + q³ − 3q + 2z. Tesla's triad. Hailstone bound. AXLE sketch.</div><span class="ch-status live">Live</span></a>
+    <a href="full-chapter-autophagy.html" class="ch-card op-c"><div class="ch-num">Ch. A</div><div class="ch-name">Autophagy & Triple-Alpha</div><div class="ch-op-tag" style="color:#7acc9a">C · 26 theorems · 0 sorry</div><div class="ch-desc">Cellular recycling + stellar nucleosynthesis. AutophagyDm3_v2.lean. DOI 10.5281/zenodo.20168812.</div><span class="ch-status lean">Lean 4</span></a>
+    <a href="sample-chapter-tubulin.html" class="ch-card op-k"><div class="ch-num">Ch. T</div><div class="ch-name">Tubulin Oscillations</div><div class="ch-op-tag" style="color:#ccaa7a">K · Cytoskeletal dm³</div><div class="ch-desc">Microtubule dynamics. Ulam's computronium question. Threshold curvature in polymer networks.</div><span class="ch-status building">Building</span></a>
+    <a href="wigner-fractal.html" class="ch-card op-f"><div class="ch-num">Ch. W</div><div class="ch-name">Wigner Crystal</div><div class="ch-op-tag" style="color:#7aaaee">F · Quantum fold diagram</div><div class="ch-desc">Interactive fold diagram. Electron gas crystallisation. 1934 prediction verified by dm³.</div><span class="ch-status live">Live</span></a>
+    <a href="chapter-eta-dnls.html" class="ch-card op-k"><div class="ch-num">Ch. η</div><div class="ch-name">DNLS / N-bonacci Criticality</div><div class="ch-op-tag" style="color:#ccaa7a">K · η ≈ 1.8393 · τ = 2</div><div class="ch-desc">Discrete nonlinear Schrödinger. Tribonacci waypoint. Full deposit DOI 10.5281/zenodo.20026942.</div><span class="ch-status lean">Lean 4</span></a>
+    <a href="chapter_B_polylaminin.html" class="ch-card op-c"><div class="ch-num">Ch. Λ</div><div class="ch-name">PolyLaminin / k-nacci Spine</div><div class="ch-op-tag" style="color:#7acc9a">C · ECM self-assembly</div><div class="ch-desc">Laminin network formation as C→K→F→U on protein configuration space.</div><span class="ch-status building">Building</span></a>
+    <a href="enceladus_principia_analysis.html" class="ch-card op-k"><div class="ch-num">Ch. Enc</div><div class="ch-name">Enceladus Cryovolcanism</div><div class="ch-op-tag" style="color:#ccaa7a">K · Gronwall basin chemical filter</div><div class="ch-desc">Cassini E5 data. Khawaja et al. 2025. ε₀ = 1/3 as chemical survival threshold. Whitney A₁.</div><span class="ch-status building">Building</span></a>
+    <a href="Faraday/faraday_explainer.html" class="ch-card op-f"><div class="ch-num">Ch. Far</div><div class="ch-name">Faraday / EM Helical Attractors</div><div class="ch-op-tag" style="color:#7aaaee">F · Helicoidal attractors in contact 3-manifolds</div><div class="ch-desc">Electromagnetic induction as dm³ fold. SBM Bienal poster P290. Formal paper deposited.</div><span class="ch-status building">Building</span></a>
+    <a href="Finance/index.html" class="ch-card op-k"><div class="ch-num">Ch. Fin</div><div class="ch-name">Finance / WorldQuant Alpha</div><div class="ch-op-tag" style="color:#ccaa7a">K · Flash crash geometry</div><div class="ch-desc">Two alphas ACTIVE. Sharpe 2.43, Fitness 1.84. IQC USA score. Parametric vs non-parametric.</div><span class="ch-status live">Live</span></a>
+    <a href="FruitFly/README.md" class="ch-card op-c"><div class="ch-num">Ch. Bio</div><div class="ch-name">Multi-Agent Bioswarm</div><div class="ch-op-tag" style="color:#7acc9a">C · FruitFly connectome dm³</div><div class="ch-desc">Multi-orbit bioswarm. FlyWire connectome. MultiOrbitBioSwarm.lean. DOI 10.5281/zenodo.19210136.</div><span class="ch-status lean">Lean 4</span></a>
+    <a href="Intelligence/swarm_simulator.py" class="ch-card op-u"><div class="ch-num">Ch. Intel</div><div class="ch-name">Swarm Intelligence</div><div class="ch-op-tag" style="color:#cc7aee">U · SwarmSimulator.lean</div><div class="ch-desc">AI / complex systems. Lean 4 verified. Convergence proofs, multi-orbit identity.</div><span class="ch-status lean">Lean 4</span></a>
+    <a href="AnuclearPhysics/TOGTnuclearPhysicsB.latex" class="ch-card op-k"><div class="ch-num">Ch. Nuc</div><div class="ch-name">Nuclear Physics B / Tribonacci</div><div class="ch-op-tag" style="color:#ccaa7a">K · Submitted to Nuclear Physics B</div><div class="ch-desc">Tribonacci coherence. N-bonacci diffusion. Submitted to Elsevier Nuclear Physics B.</div><span class="ch-status submitted">Submitted</span></a>
+    <a href="lexical-generativity-ijl.html" class="ch-card op-c"><div class="ch-num">Ch. Lex</div><div class="ch-name">Lexical Generativity</div><div class="ch-op-tag" style="color:#7acc9a">C · Language as dm³ system</div><div class="ch-desc">Submitted to International Journal of Linguistics. Language acquisition as generative transition.</div><span class="ch-status submitted">Submitted</span></a>
+  </div>
+</div>
 
-    <div style="max-width:680px; position:relative; z-index:1;">
-      <div style="font-family:sans-serif; font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">The g₃₃ Threshold</div>
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem); color:white; margin-bottom:1rem; line-height:1.3;">After 33 circles, something changes.</h2>
-      <p style="font-family:'Georgia',serif; font-size:1.05rem; line-height:1.85; color:rgba(255,255,255,0.75); margin-bottom:1.4rem;">
-        One operator cycle is: you compress something, you find the threshold, you cross it, you unfold. C → K → F → U, back to the beginning. The 16-week course completes four full cycles. That is enough to make you a researcher.
-      </p>
-      <div style="background:rgba(0,0,0,0.35); border-left:3px solid var(--gold); padding:1.2rem 1.6rem; margin-bottom:1.5rem; font-family:'Courier New',monospace; font-size:0.88rem; line-height:2;">
-        <div style="font-family:sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem;">The Fixed Point</div>
-        g₃₃ = 33 <span style="color:rgba(255,255,255,0.4);">· minimum cycles for stable fixed point (single agent)</span><br>
-        Θ = g₃₃ + N × M <span style="color:rgba(255,255,255,0.4);">· D2 threshold across a community</span><br>
-        <span style="color:rgba(255,255,255,0.4);">───</span><br>
-        Solo Week 16: N=1, M=4 → Θ = <span style="color:var(--gold);">37</span><br>
-        Class of 8, M=4 each: Θ = 33 + 32 = <span style="color:var(--gold);">65</span> — threshold crossed collectively.
-      </div>
-      <div style="margin-bottom:2rem;">
-        <canvas id="circles-canvas" height="90" style="display:block;width:100%;"></canvas>
-        <div style="font-family:sans-serif; font-size:0.68rem; color:rgba(255,255,255,0.3); margin-top:0.6rem; letter-spacing:0.1em; text-align:center;">Each circle = one complete operator cycle · C → K → F → U</div>
-      </div>
+<!-- PART III: Greek Ladder -->
+<div class="phase-section" style="margin-top:2.5rem">
+  <div class="phase-header-row">
+    <span class="phase-op gr">π→Ω</span>
+    <div class="phase-info">
+      <div class="phase-name">Part III — The Recurrence Ladder</div>
+      <div class="phase-count">7 Greek chapters · φ → τ = 2</div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+  <div class="ch-grid compact">
+    <a href="ch-pi.html" class="ch-card op-gr"><div class="ch-num">Ch. π</div><div class="ch-name">Period = 2π</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">π = 3.14159…</div><div class="ch-desc">Reeb geometry, limit cycle, contact structure. T* = 2π.</div><span class="ch-status building">Building</span></a>
+    <a href="ch-phi.html" class="ch-card op-gr"><div class="ch-num">Ch. φ</div><div class="ch-name">Fibonacci / φ = 1.618</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">φ = 1.61803…</div><div class="ch-desc">Subcritical dm³. Below c* = 3. Stable fixed point.</div><span class="ch-status building">Building</span></a>
+    <a href="ch-mu.html" class="ch-card op-gr"><div class="ch-num">Ch. μ</div><div class="ch-name">Lyapunov / μ = −2</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">μ = −2</div><div class="ch-desc">Stability boundary. Sensitive dependence on initial conditions.</div><span class="ch-status building">Building</span></a>
+    <a href="chapter-eta-dnls.html" class="ch-card op-gr"><div class="ch-num">Ch. η</div><div class="ch-name">Tribonacci / 1.839</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">η = 1.83929…</div><div class="ch-desc">First supercritical rung. Lean 4 verified. DOI 10.5281/zenodo.20026942.</div><span class="ch-status lean">Lean 4</span></a>
+    <a href="ch-delta.html" class="ch-card op-gr"><div class="ch-num">Ch. Δ</div><div class="ch-name">Tetranacci / 1.927</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">Δ = 1.92757…</div><div class="ch-desc">Four-term recurrence. Approaching τ = 2 from below.</div><span class="ch-status building">Building</span></a>
+    <a href="ch-sigma.html" class="ch-card op-gr"><div class="ch-num">Ch. Σ</div><div class="ch-name">Pentanacci / 1.966</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">Σ = 1.96595…</div><div class="ch-desc">Five-term recurrence. The ladder converges.</div><span class="ch-status building">Building</span></a>
+    <a href="ch-omega.html" class="ch-card op-gr"><div class="ch-num">Ch. Ω</div><div class="ch-name">Hexabonacci → τ = 2</div><div class="ch-op-tag" style="color:#ee9a7a;font-size:1.2rem">Ω → τ = 2</div><div class="ch-desc">Six-term recurrence converges to τ = 2. Complete Completeness. SBM Oficina OF53.</div><span class="ch-status live">Live</span></a>
+  </div>
+</div>
+
+<!-- PART IV: Ponto de Entrada -->
+<div class="phase-section" style="margin-top:2.5rem">
+  <div class="phase-header-row">
+    <span class="phase-op u">PE</span>
+    <div class="phase-info">
+      <div class="phase-name">Part IV — Ponto de Entrada · Pedagogical Register</div>
+      <div class="phase-count">6 chapters · seed → recognition → Bridge PT↔EN → generate → extend</div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+  <div class="ch-grid">
+    <a href="cajueiro_chapter1.html" class="ch-card op-c"><div class="ch-num">PE.1</div><div class="ch-name">The Cajueiro Principle</div><div class="ch-op-tag" style="color:#7acc9a">C · Seed text</div><div class="ch-desc">The world's largest cashew tree. 20 km from the SBM Bienal venue. The seed as pedagogy.</div><span class="ch-status live">Live</span></a>
+    <a href="ch-order.html" class="ch-card op-k"><div class="ch-num">PE.2</div><div class="ch-name">The Order Is Not Arbitrary</div><div class="ch-op-tag" style="color:#ccaa7a">K · Curvature as recognition</div><div class="ch-desc">Why C must come before K. Non-commutativity as felt experience.</div><span class="ch-status live">Live</span></a>
+    <a href="ch-quantum-weave.html" class="ch-card op-f"><div class="ch-num">PE.3</div><div class="ch-name">The Quantum Weave</div><div class="ch-op-tag" style="color:#7aaaee">F · The fold as understanding</div><div class="ch-desc">The moment the structure folds into recognition. Bridge PT↔EN.</div><span class="ch-status live">Live</span></a>
+    <a href="ch12-conclusion.html" class="ch-card op-u"><div class="ch-num">PE.4</div><div class="ch-name">Complete Completeness</div><div class="ch-op-tag" style="color:#cc7aee">U · The fixed point of learning</div><div class="ch-desc">The circuit closes. g₃₃ = 33. The student has become the teacher.</div><span class="ch-status live">Live</span></a>
+    <a href="ch-return.html" class="ch-card op-gr"><div class="ch-num">PE.5</div><div class="ch-name">The Return</div><div class="ch-op-tag" style="color:#ee9a7a">G · G6 at g7</div><div class="ch-desc">The same structure, one order higher. The return that is not a repetition.</div><span class="ch-status live">Live</span></a>
+    <a href="ch6-resonant.html" class="ch-card op-gr"><div class="ch-num">PE.6</div><div class="ch-name">The Resonant Chamber</div><div class="ch-op-tag" style="color:#ee9a7a">G · Pedagogical register</div><div class="ch-desc">The operator chain carved in stone five thousand years before its name. Same register, different soil.</div><span class="ch-status live">Live</span></a>
+  </div>
+</div>
+
+<!-- Sound Machines -->
+<div class="phase-section" style="margin-top:2.5rem">
+  <div class="phase-header-row">
+    <span class="phase-op ext">♪</span>
+    <div class="phase-info">
+      <div class="phase-name">Sound Machines — 7 Interactive Installations</div>
+      <div class="phase-count">HTML5 / Web Audio API · dm³ resonance geometry · all included with $30 membership</div>
+    </div>
+    <div class="phase-line"></div>
+  </div>
+  <div class="ch-grid compact">
+    <a href="book3/om-machine.html" class="ch-card op-ext"><div class="ch-name">Om Machine</div><div class="ch-desc">432 Hz. The compression of all sound to one tone.</div><span class="ch-status live">Live</span></a>
+    <a href="book3/pranayama-machine.html" class="ch-card op-ext"><div class="ch-name">Pranayama Machine</div><div class="ch-desc">Breath as operator cycle. C→K→F→U in 4-7-8 rhythm.</div><span class="ch-status live">Live</span></a>
+    <a href="book3/soham-machine.html" class="ch-card op-ext"><div class="ch-name">So-Haṃ Machine</div><div class="ch-desc">The breath that names itself. Fixed point of the respiratory operator.</div><span class="ch-status live">Live</span></a>
+    <a href="book3/g6-drone-machine.html" class="ch-card op-ext"><div class="ch-name">G6 Drone Machine</div><div class="ch-desc">G6 LLC frequency. The drone as institutional fixed point.</div><span class="ch-status live">Live</span></a>
+    <a href="book3/sri-yantra-sakti-machine.html" class="ch-card op-ext"><div class="ch-name">Śrī Yantra Śakti</div><div class="ch-desc">Nine interlocking triangles. 43 contact points. The operator chain in 2D.</div><span class="ch-status live">Live</span></a>
+    <a href="book3/hal-saflieni-resonance.html" class="ch-card op-ext"><div class="ch-name">Ħal Saflieni · 110 Hz</div><div class="ch-desc">5000-year-old resonance chamber. The fold in limestone. Standing wave as fixed point.</div><span class="ch-status live">Live</span></a>
+    <a href="book3/swarnakarshana-bhairava-machine.html" class="ch-card op-ext"><div class="ch-name">Swarnakarṣaṇa Bhairava</div><div class="ch-desc">The attractor of abundance. dm³ resonance at the fold threshold.</div><span class="ch-status live">Live</span></a>
+  </div>
+</div>
+
+<!-- Access -->
+<div class="phase-section" style="margin-top:3rem;margin-bottom:4rem">
+  <div style="border:1px solid rgba(201,168,76,.25);padding:2rem;background:rgba(201,168,76,.03);text-align:center">
+    <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem">Get the Book</div>
+    <div style="font-size:2.5rem;font-family:'Courier New',monospace;color:white;margin-bottom:.5rem">$30</div>
+    <div style="font-family:sans-serif;font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:1.5rem;line-height:1.8">
+      30+ chapters · All 7 sound machines · 160+ Lean 4 theorems · 16-week program<br>
+      Ongoing membership — new chapters added as domains are verified<br>
+      ISBN 979-8-9954416-6-3 · NYFA Fiscal Sponsorship (tax-deductible donations accepted)
+    </div>
+    <a href="https://g6llc.gumroad.com" style="display:inline-block;background:var(--gold);color:#0e1520;font-family:sans-serif;font-size:.85rem;font-weight:bold;padding:.7rem 2rem;text-decoration:none;letter-spacing:.05em">Buy at g6llc.gumroad.com →</a>
+    <div style="margin-top:1rem;font-family:sans-serif;font-size:.7rem;color:rgba(255,255,255,.3)">
+      Series root: 10.5281/zenodo.19117399 · ORCID: 0009-0000-6496-2186
     </div>
   </div>
 </div>
 
 <footer>
-  <div>Principia Orthogona · Book 3 · The Mini-Beast</div>
+  <div>Principia Orthogona · Book 3 · The Mini-Beast · 30+ chapters · Living book</div>
   <div>G6 LLC · Newark, NJ · 2026 · ISBN 979-8-9954416-6-3</div>
-  <div style="margin-top:0.4rem;">
-    <a href="https://totogt.github.io/AXLE/index.html">Book Index</a> ·
-    <a href="https://totogt.github.io/AXLE/course-16weeks.html">16-Week Course</a> ·
-    <a href="https://totogt.github.io/AXLE/Sportal.html">Sportal</a> ·
-    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub</a> ·
-    <a href="https://totogt.github.io/AXLE/impa-portal.html">IMPA Portal</a>
+  <div style="margin-top:.4rem">
+    <a href="index.html">Book Index</a> ·
+    <a href="course-16weeks.html">16-Week Course</a> ·
+    <a href="https://totogt.github.io/AXLE/" target="_blank">AXLE · Lean 4</a> ·
+    <a href="https://g6llc.gumroad.com" target="_blank">Gumroad</a>
   </div>
 </footer>
 
 <script>
-/* ── Arc Diagram ── */
 const canvas = document.getElementById('arc-canvas');
 const ctx = canvas.getContext('2d');
 
 const chapters = [
-  { label:'Ch.0',    name:'Introduction',            op:'C', x:0.04, y:0.90, col:'#3a7a5a', week:'Ch 00',   href:'https://totogt.github.io/AXLE/book3/ch00-introduction.html', live:true },
-  { label:'Ch.1',    name:'The Unfolding',            op:'C', x:0.09, y:0.85, col:'#3a7a5a', week:'Wk 1',    href:'https://grossi-ops.github.io/cajueiro/', live:true },
-  { label:'Ch.1-B',  name:'One Equation',             op:'C', x:0.14, y:0.78, col:'#3a7a5a', week:'Ch 01',   href:'https://totogt.github.io/AXLE/book3/ch01-one-equation.html', live:true },
-  { label:'Ch.2',    name:'Allostatic Operator',      op:'C', x:0.19, y:0.70, col:'#3a7a5a', week:'Wk 2',    href:'ch2-allostatic.html', live:false },
-  { label:'Ch.3',    name:'Circadian',                op:'C', x:0.24, y:0.63, col:'#3a7a5a', week:'Wk 3',    href:'ch3-circadian.html', live:false },
-  { label:'Ch.4',    name:'Neural Oscillations',      op:'K', x:0.31, y:0.50, col:'#7a4a2a', week:'Wk 5',    href:'ch4-neural.html', live:false },
-  { label:'Ch.5',    name:'Immune Adaptation',        op:'K', x:0.38, y:0.37, col:'#7a4a2a', week:'Wk 6',    href:'ch5-immune.html', live:false },
-  { label:'Ch.6',    name:'Falsifiable Predictions',  op:'K', x:0.45, y:0.24, col:'#7a4a2a', week:'Wk 7',    href:'ch6-falsifiable.html', live:false },
-  { label:'Ch.7',    name:'Complete Circuit',         op:'F', x:0.52, y:0.13, col:'#2a4a8a', week:'Wk 9',    href:'ch7-complete-circuit.html', live:false },
-  { label:'Ch.E',    name:'GTCT',                     op:'F', x:0.57, y:0.20, col:'#2a4a8a', week:'Wk 10',   href:'https://totogt.github.io/AXLE/ch-e-gtct.html', live:false },
-  { label:'Ch.T',    name:'Tubulin',                  op:'F', x:0.62, y:0.29, col:'#2a4a8a', week:'Wk 11',   href:'https://totogt.github.io/AXLE/sample-chapter-tubulin.html', live:false },
-  { label:'Ch.A',    name:'Autophagy',                op:'F', x:0.66, y:0.36, col:'#2a4a8a', week:'Supp',    href:'https://totogt.github.io/AXLE/sample-chapter-autophagy.html', live:true },
-  { label:'Ch.W',    name:'Wigner Crystal',           op:'F', x:0.70, y:0.43, col:'#2a4a8a', week:'Wk 12',   href:'https://totogt.github.io/AXLE/wigner-fractal.html', live:true },
-  { label:'η-DNLS',  name:'Tribonacci / DNLS',        op:'F', x:0.74, y:0.50, col:'#2a4a8a', week:'η',       href:'https://totogt.github.io/AXLE/chapter-eta-dnls.html', live:true },
-  { label:'Collatz', name:'Collatz as dm³',           op:'F', x:0.77, y:0.55, col:'#2a4a8a', week:'Supp',    href:'https://totogt.github.io/AXLE/collatz.html', live:true },
-  { label:'Sp.v2',   name:'Spectral Radius v2',       op:'F', x:0.79, y:0.48, col:'#2a4a8a', week:'Supp',    href:'https://totogt.github.io/AXLE/spectral-radius-v2.html', live:true },
-  { label:'Sim-λ',   name:'Lyapunov Simulator',       op:'F', x:0.79, y:0.60, col:'#2a4a8a', week:'Tool',    href:'https://totogt.github.io/AXLE/sim-lyapunov.html', live:true },
-  { label:'π',       name:'Period = 2π',              op:'π', x:0.83, y:0.63, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-pi', live:true },
-  { label:'φ',       name:'Fibonacci φ=1.618',        op:'φ', x:0.86, y:0.70, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-phi', live:true },
-  { label:'μ',       name:'Lyapunov μ=−2',            op:'μ', x:0.89, y:0.76, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-mu', live:true },
-  { label:'η',       name:'Tribonacci 1.839',         op:'η', x:0.915,y:0.81, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-eta', live:true },
-  { label:'Δ',       name:'Tetranacci 1.927',         op:'Δ', x:0.938,y:0.85, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-delta', live:true },
-  { label:'Σ',       name:'Pentanacci 1.966',         op:'Σ', x:0.957,y:0.88, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-sigma', live:true },
-  { label:'Ω',       name:'Hexabonacci → τ=2',        op:'Ω', x:0.973,y:0.91, col:'#8a2a2a', week:'Math',    href:'https://totogt.github.io/AXLE/chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-omega', live:true },
+  {label:'Ch.1',name:'Cajueiro Principle',op:'C',x:.04,y:.85,col:'#3a7a5a',live:true},
+  {label:'Ch.2',name:'Biological (HPA/Neural/Circ/Immune)',op:'C',x:.10,y:.72,col:'#3a7a5a',live:true},
+  {label:'Ch.3',name:'Plasma Reconnection',op:'K',x:.17,y:.58,col:'#7a4a2a',live:true},
+  {label:'Ch.4',name:'Market Volatility',op:'K',x:.23,y:.44,col:'#7a4a2a',live:true},
+  {label:'Ch.4c',name:'Neural Oscillations',op:'K',x:.30,y:.32,col:'#7a4a2a',live:true},
+  {label:'Ch.5',name:'Oscillations & Coherence',op:'F',x:.37,y:.22,col:'#2a4a8a',live:true},
+  {label:'Ch.6c',name:'Resonant Chamber',op:'F',x:.44,y:.14,col:'#2a4a8a',live:true},
+  {label:'Ch.7',name:'Crystalline (Wigner)',op:'U',x:.51,y:.18,col:'#6a2a7a',live:true},
+  {label:'Ch.E',name:'GTCT for Everyone',op:'F',x:.57,y:.28,col:'#2a4a8a',live:true},
+  {label:'Ch.F',name:'Saturn Hexagon',op:'K',x:.62,y:.38,col:'#7a4a2a',live:true},
+  {label:'Ch.H',name:'Collatz (3 proofs)',op:'G',x:.67,y:.48,col:'#8a2a2a',live:true},
+  {label:'Ch.A',name:'Autophagy (26 thm)',op:'C',x:.72,y:.56,col:'#3a7a5a',live:true},
+  {label:'Ch.η',name:'DNLS/N-bonacci',op:'K',x:.77,y:.63,col:'#7a4a2a',live:true},
+  {label:'Ch.Enc',name:'Enceladus',op:'K',x:.81,y:.69,col:'#7a4a2a',live:false},
+  {label:'Ch.Far',name:'Faraday/EM',op:'F',x:.84,y:.74,col:'#2a4a8a',live:false},
+  {label:'π',name:'Period=2π',op:'G',x:.87,y:.78,col:'#8a2a2a',live:false},
+  {label:'φ',name:'Fibonacci φ',op:'G',x:.896,y:.82,col:'#8a2a2a',live:false},
+  {label:'η',name:'Tribonacci 1.839',op:'G',x:.918,y:.85,col:'#8a2a2a',live:true},
+  {label:'Δ',name:'Tetranacci 1.927',op:'G',x:.936,y:.87,col:'#8a2a2a',live:false},
+  {label:'Σ',name:'Pentanacci 1.966',op:'G',x:.952,y:.89,col:'#8a2a2a',live:false},
+  {label:'Ω',name:'τ = 2',op:'G',x:.966,y:.91,col:'#8a2a2a',live:true},
 ];
 
-let W, H, nodes = [];
-let hoveredNode = null;
-const tooltip = document.getElementById('tooltip');
+let W,H,nodes=[];
+let hov=null;
+const tt=document.getElementById('tooltip');
 
-function buildNodes() {
-  W = canvas.offsetWidth;
-  H = canvas.height = Math.max(220, Math.round(W * 0.24));
-  canvas.width = W;
-  const mx = W*0.03, my = H*0.10, aw = W-mx*2, ah = H-my*2;
-  nodes = chapters.map(ch => ({
-    ...ch,
-    px: mx + ch.x * aw,
-    py: my + ch.y * ah,
-    r: Math.max(5, W * 0.011),
-  }));
+function build(){
+  W=canvas.offsetWidth;
+  H=canvas.height=Math.max(200,Math.round(W*.22));
+  canvas.width=W;
+  const mx=W*.03,my=H*.1,aw=W-mx*2,ah=H-my*2;
+  nodes=chapters.map(c=>({...c,px:mx+c.x*aw,py:my+c.y*ah,r:Math.max(5,W*.011)}));
 }
 
-function drawArc() {
-  ctx.clearRect(0, 0, W, H);
-  const bg = ctx.createRadialGradient(W*0.5,H*0.5,0,W*0.5,H*0.5,W*0.6);
-  bg.addColorStop(0,'rgba(26,39,68,0.5)'); bg.addColorStop(1,'transparent');
-  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
-
-  // Spine curve
-  if (nodes.length > 1) {
-    ctx.beginPath(); ctx.moveTo(nodes[0].px, nodes[0].py);
-    for (let i=1; i<nodes.length; i++) {
-      const p=nodes[i-1], c=nodes[i], cpx=(p.px+c.px)/2;
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  // curve
+  if(nodes.length>1){
+    ctx.beginPath();ctx.moveTo(nodes[0].px,nodes[0].py);
+    for(let i=1;i<nodes.length;i++){
+      const p=nodes[i-1],c=nodes[i],cpx=(p.px+c.px)/2;
       ctx.bezierCurveTo(cpx,p.py,cpx,c.py,c.px,c.py);
     }
-    ctx.strokeStyle='rgba(201,168,76,0.15)'; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1.5;ctx.stroke();
   }
-
-  // Phase labels
-  const phases = [
-    {label:'C',x:W*0.12,col:'#3a7a5a'},{label:'K',x:W*0.36,col:'#7a4a2a'},
-    {label:'F',x:W*0.62,col:'#2a4a8a'},{label:'π→Ω',x:W*0.87,col:'#8a2a2a'},
-  ];
-  phases.forEach(p => {
-    ctx.font=`bold ${Math.max(9,W*0.013)}px monospace`;
-    ctx.fillStyle=p.col+'bb'; ctx.textAlign='center';
-    ctx.fillText(p.label, p.x, H*0.08);
+  // phase labels
+  [['C',W*.08,'#3a7a5a'],['K',W*.27,'#7a4a2a'],['F',W*.43,'#2a4a8a'],['U',W*.52,'#6a2a7a'],['EXT',W*.68,'#6a8a6a'],['π→Ω',W*.89,'#8a2a2a']].forEach(([l,x,c])=>{
+    ctx.font=`${Math.max(8,W*.009)}px sans-serif`;ctx.fillStyle=c+'bb';ctx.fillText(l,x,H*.08);
   });
-  ctx.textAlign='left';
-
-  // Segment lines
-  for (let i=1; i<nodes.length; i++) {
-    const a=nodes[i-1], b=nodes[i];
-    ctx.beginPath(); ctx.moveTo(a.px,a.py); ctx.lineTo(b.px,b.py);
-    ctx.strokeStyle=b.col+'44'; ctx.lineWidth=1; ctx.stroke();
-  }
-
-  // Nodes
-  nodes.forEach(n => {
-    const isHov = hoveredNode===n;
-    const r = isHov ? n.r*1.45 : n.r;
-    if (isHov || n.live) {
-      const grd = ctx.createRadialGradient(n.px,n.py,0,n.px,n.py,r*2.5);
-      grd.addColorStop(0, n.col+(n.live?'99':'44')); grd.addColorStop(1,'transparent');
-      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(n.px,n.py,r*2.5,0,Math.PI*2); ctx.fill();
+  nodes.forEach(n=>{
+    const isH=(hov===n),r=isH?n.r*1.4:n.r;
+    if(isH||n.live){
+      const g=ctx.createRadialGradient(n.px,n.py,0,n.px,n.py,r*2.5);
+      g.addColorStop(0,n.col+(n.live?'99':'44'));g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.px,n.py,r*2.5,0,Math.PI*2);ctx.fill();
     }
-    ctx.beginPath(); ctx.arc(n.px,n.py,r,0,Math.PI*2);
-    ctx.fillStyle = n.live ? n.col : '#0e1520';
-    ctx.fill(); ctx.strokeStyle=isHov?'#c9a84c':n.col; ctx.lineWidth=isHov?2:1.5; ctx.stroke();
-    if (n.live) {
-      ctx.beginPath(); ctx.arc(n.px+r*0.6,n.py-r*0.6,r*0.32,0,Math.PI*2);
-      ctx.fillStyle='#7acc9a'; ctx.fill();
+    ctx.beginPath();ctx.arc(n.px,n.py,r,0,Math.PI*2);
+    ctx.fillStyle=n.live?n.col:'#0e1520';ctx.fill();
+    ctx.strokeStyle=isH?'#c9a84c':n.col;ctx.lineWidth=isH?2:1.5;ctx.stroke();
+    if(n.live){
+      ctx.beginPath();ctx.arc(n.px+r*.6,n.py-r*.6,r*.35,0,Math.PI*2);
+      ctx.fillStyle='#7acc9a';ctx.fill();
     }
-    const fs=Math.max(7,W*0.009);
-    ctx.font=`bold ${fs}px sans-serif`; ctx.fillStyle=isHov?'#c9a84c':'rgba(255,255,255,0.7)';
-    ctx.textAlign='center'; ctx.fillText(n.label, n.px, n.py-r-3);
+    const fs=Math.max(7,W*.009);
+    ctx.font=`bold ${fs}px sans-serif`;
+    ctx.fillStyle=isH?'#c9a84c':'rgba(255,255,255,.7)';
+    ctx.textAlign='center';
+    ctx.fillText(n.label,n.px,n.py-r-3);
   });
   ctx.textAlign='left';
 }
 
-function hitTest(mx,my) {
-  for (const n of nodes) {
-    const dx=mx-n.px, dy=my-n.py;
-    if (dx*dx+dy*dy < (n.r*2.8)*(n.r*2.8)) return n;
-  }
-  return null;
-}
+function hit(mx,my){for(const n of nodes){const dx=mx-n.px,dy=my-n.py;if(dx*dx+dy*dy<(n.r*2.5)*(n.r*2.5))return n;}return null;}
 
-canvas.addEventListener('mousemove', e => {
-  const rect=canvas.getBoundingClientRect();
-  const mx=(e.clientX-rect.left)*(W/rect.width), my=(e.clientY-rect.top)*(H/rect.height);
-  const hit=hitTest(mx,my); hoveredNode=hit; drawArc();
-  if (hit) {
-    document.getElementById('tt-title').textContent=hit.label+' · '+hit.name;
-    document.getElementById('tt-sub').textContent=hit.op+' · '+hit.week+(hit.live?' · Live':' · Coming');
-    tooltip.style.left=e.clientX+'px'; tooltip.style.top=e.clientY+'px';
-    tooltip.classList.add('visible'); canvas.style.cursor='pointer';
-  } else { tooltip.classList.remove('visible'); canvas.style.cursor='default'; }
+canvas.addEventListener('mousemove',e=>{
+  const r=canvas.getBoundingClientRect();
+  const mx=(e.clientX-r.left)*(W/r.width),my=(e.clientY-r.top)*(H/r.height);
+  const h=hit(mx,my);hov=h;draw();
+  if(h){
+    document.getElementById('tt-title').textContent=h.label+' · '+h.name;
+    document.getElementById('tt-sub').textContent=h.op+' operator'+(h.live?' · Live':' · Building');
+    tt.style.left=e.clientX+'px';tt.style.top=e.clientY+'px';tt.classList.add('visible');
+    canvas.style.cursor='pointer';
+  }else{tt.classList.remove('visible');canvas.style.cursor='default';}
 });
-canvas.addEventListener('mouseleave', () => { hoveredNode=null; tooltip.classList.remove('visible'); drawArc(); });
-canvas.addEventListener('click', e => {
-  const rect=canvas.getBoundingClientRect();
-  const hit=hitTest((e.clientX-rect.left)*(W/rect.width),(e.clientY-rect.top)*(H/rect.height));
-  if (hit) window.location.href=hit.href;
-});
-canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  const rect=canvas.getBoundingClientRect(), t=e.touches[0];
-  const hit=hitTest((t.clientX-rect.left)*(W/rect.width),(t.clientY-rect.top)*(H/rect.height));
-  if (hit) window.location.href=hit.href;
-},{passive:false});
+canvas.addEventListener('mouseleave',()=>{hov=null;tt.classList.remove('visible');draw();});
 
-/* Filter */
-function filterPhase(phase) {
-  const allCards = document.querySelectorAll('.ch-card');
-  const phaseHeaders = document.querySelectorAll('.section-header');
-  if (phase==='all') {
-    allCards.forEach(c=>c.style.opacity='1');
-    phaseHeaders.forEach(h=>h.style.display='');
-    return;
-  }
-  const opMap={c:'op-c',k:'op-k',f:'op-f',u:'op-u',gr:'op-gr',ext:'op-ext'};
-  const target = opMap[phase] || 'op-machine';
-  allCards.forEach(c => {
-    const match = c.classList.contains(target) || (phase==='ext' && c.classList.contains('op-machine'));
-    c.style.opacity = match?'1':'0.12';
-  });
-}
-
-function init() { buildNodes(); drawArc(); }
-window.addEventListener('resize', init);
-init();
-
-/* g₃₃ circles animation */
-(function() {
-  const cc = document.getElementById('circles-canvas');
-  if (!cc) return;
-  const cx = cc.getContext('2d');
-  let cw, ch, tick=0, rafId;
-  const TOTAL=33, G6_AT=16, G7_AT=33;
-
-  function resizeCC() { cw=cc.offsetWidth; cc.width=cw; ch=cc.height=90; }
-
-  function drawCircles(progress) {
-    cx.clearRect(0,0,cw,ch);
-    const r=Math.max(7,Math.min(12,cw/(TOTAL*2.6))), gap=r*2.5;
-    const startX=(cw-TOTAL*gap)/2+r, midY=ch/2;
-
-    cx.fillStyle='rgba(201,168,76,0.04)'; cx.fillRect(startX-r,midY-r*2.5,G6_AT*gap,r*5);
-    cx.fillStyle='rgba(150,80,200,0.04)'; cx.fillRect(startX-r+G6_AT*gap,midY-r*2.5,(TOTAL-G6_AT)*gap+r,r*5);
-
-    for (let i=0;i<TOTAL;i++) {
-      const x=startX+i*gap, filled=i<Math.floor(progress*TOTAL), isCurrent=i===Math.floor(progress*TOTAL);
-      const pulse=isCurrent?1+0.25*Math.sin(tick*0.08):1, cr=r*pulse;
-      const col = i<G6_AT ? ['#3a7a5a','#7a4a2a','#2a4a8a','#6a2a7a'][Math.floor(i/4)%4] : '#8a4aaa';
-      if (filled||isCurrent) {
-        const grd=cx.createRadialGradient(x,midY,0,x,midY,cr*2.2);
-        grd.addColorStop(0,col+(isCurrent?'cc':'66')); grd.addColorStop(1,'transparent');
-        cx.fillStyle=grd; cx.beginPath(); cx.arc(x,midY,cr*2.2,0,Math.PI*2); cx.fill();
-        cx.beginPath(); cx.arc(x,midY,cr,0,Math.PI*2); cx.fillStyle=col; cx.fill();
-      } else {
-        cx.beginPath(); cx.arc(x,midY,r,0,Math.PI*2);
-        cx.strokeStyle='rgba(255,255,255,0.1)'; cx.lineWidth=1; cx.stroke();
-      }
-      if (i===G6_AT-1&&filled) {
-        cx.font=`bold ${Math.max(8,r*0.85)}px sans-serif`; cx.fillStyle='rgba(201,168,76,0.9)';
-        cx.textAlign='center'; cx.fillText('G6',x,midY-r-5);
-      }
-      if (i===G7_AT-1&&filled) {
-        cx.font=`bold ${Math.max(8,r*0.85)}px sans-serif`; cx.fillStyle='rgba(200,150,255,0.95)';
-        cx.textAlign='center'; cx.fillText('G7',x,midY-r-5);
-      }
-    }
-    const fc=Math.min(Math.floor(progress*TOTAL),TOTAL);
-    if (fc>1) {
-      cx.beginPath(); cx.moveTo(startX,midY); cx.lineTo(startX+(fc-1)*gap,midY);
-      cx.strokeStyle='rgba(201,168,76,0.15)'; cx.lineWidth=1; cx.stroke();
-    }
-    cx.textAlign='left';
-  }
-
-  let progress=0;
-  function animate() { tick++; if(progress<1) progress=Math.min(1,progress+0.006); drawCircles(progress); rafId=requestAnimationFrame(animate); if(progress>=1&&tick>400) cancelAnimationFrame(rafId); }
-  const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){progress=0;tick=0;animate();obs.disconnect();}},{threshold:0.3});
-  resizeCC();
-  window.addEventListener('resize',()=>{resizeCC();drawCircles(progress);});
-  obs.observe(cc);
-})();
+function init(){build();draw();}
+window.addEventListener('resize',init);init();
 </script>
 </body>
 </html>
