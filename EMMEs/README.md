@@ -1,11 +1,9 @@
 # EMMEs
-
 **Three operator tokens on Solana.**
 
 ---
 
 ## G = F · U · C · K
-
 > *Play harder.*
 
 The operator sequence that governs every generative transition —
@@ -27,16 +25,20 @@ in plasma, in biology, in market structure, on-chain.
 - **Chain:** Solana
 - **Status:** Banned in China
 - **Holdings:** 1,642,747.78
-- [Coinbook](https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin) · [Solscan](https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin)
+- [Coinbook](https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin) · [Solscan](https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin) · [Dexscreener](https://dexscreener.com/solana/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin)
 
 ### PROPAGANDA! · `PROPAGAN`
+- **Contract:** `67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin`
 - **Chain:** Solana
 - **Holdings:** 7,105,960.26
+- [Coinbook](https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin) · [Solscan](https://solscan.io/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin) · [Dexscreener](https://dexscreener.com/solana/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin)
 - All price action is narrative. All narrative is propaganda. The fold has already occurred.
 
 ### PROBABILITY · `PROBABY`
+- **Contract:** `7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin`
 - **Chain:** Solana
 - **Holdings:** 10,834,092.25
+- [Coinbook](https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin) · [Solscan](https://solscan.io/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin) · [Dexscreener](https://dexscreener.com/solana/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin)
 - Every market move is a probability distribution. You're always in one.
 
 ---
@@ -45,15 +47,15 @@ in plasma, in biology, in market structure, on-chain.
 
 | File | Token |
 |------|-------|
-| [`index.html`](index.html) | Hub — all three |
+| [`index.html`](index.html) | Hub — all three · live mini-ticker |
 | [`game-theory.html`](game-theory.html) | GAME THEORY |
 | [`probability.html`](probability.html) | PROBABILITY |
 | [`propaganda.html`](propaganda.html) | PROPAGANDA! |
+| [`ticker.html`](ticker.html) | Live ticker — all three tokens · auto-refresh 30s |
 
 ---
 
 ## Links
-
 - 𝕏 [@myemmecoin](https://x.com/myemmecoin)
 - [Telegram](https://t.me/+WC_698vgYxVmZGQx)
 - [Tokenomics](https://pablogrossi.my.canva.site/tokenomix-twitter-myemmecoin)
@@ -62,7 +64,6 @@ in plasma, in biology, in market structure, on-chain.
 ---
 
 ## The Opposite Of
-
 → [`../Finance/`](../Finance/) — CapitalGuard Trader. Capital protection first. Trailing stops. 0.75% risk per trade.
 
 This is not that.
