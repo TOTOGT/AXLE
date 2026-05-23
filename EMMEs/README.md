@@ -53,6 +53,8 @@ in plasma, in biology, in market structure, on-chain.
 | [`propaganda.html`](propaganda.html) | PROPAGANDA! |
 | [`ticker.html`](ticker.html) | Live ticker — all three tokens · auto-refresh 30s |
 | [`theory.html`](theory.html) | 21 Principia Orthogona papers · grouped by theme |
+| [`collatz-engineering.html`](collatz-engineering.html) | Engineering spec: dm³ axioms, G6 Crystal, AXLE Target 5 · Python · Julia · Lean 4 |
+| [`collatz-engineering.tex`](collatz-engineering.tex) | LaTeX source → PDF for Zenodo DOI 10.5281/zenodo.19378742 |
 
 ---
 
