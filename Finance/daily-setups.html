@@ -1,116 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Daily Strategy • CapitalGuard Trader</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
+const fetchTradingData = async () => {
+  const strategyElement = document.getElementById("strategy");
+  const assetNameElement = document.getElementById("asset-name");
+  const asset = "SOLUSDT"; // Trading pair
+  const stopLossPercent = 0.8; // Stop loss at 0.8%
+  const target1Percent = 1.0; // Target 1: +1%
+  const target2Percent = 2.0; // Target 2: +2%
+  
+  try {
+    // Fetch data from Binance API
+    const API_URL = `https://api.binance.com/api/v3/ticker/price?symbol=${asset}`;
+    const response = await fetch(API_URL);
+
+    if (!response.ok) {
+      throw new Error(`API error, status code: ${response.status}`);
     }
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-900">
-  <!-- Navbar -->
-  <nav class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <i class="fas fa-shield-alt text-emerald-600 text-2xl"></i>
-        <span class="font-bold text-2xl tracking-tight">CapitalGuard</span>
+
+    const priceData = await response.json();
+
+    if (!priceData.price) {
+      throw new Error("API response does not contain a valid price.");
+    }
+
+    // Process price data
+    const entryPrice = parseFloat(priceData.price); // Current price
+    const stopLoss = entryPrice * (1 - stopLossPercent / 100);
+    const target1 = entryPrice * (1 + target1Percent / 100);
+    const target2 = entryPrice * (1 + target2Percent / 100);
+
+    // Update strategy information
+    assetNameElement.textContent = "SOL - Solana";
+    strategyElement.innerHTML = `
+      <div class="grid md:grid-cols-2 gap-10">
+        <div>
+          <h3 class="font-semibold text-lg text-gray-700">Strategy</h3>
+          <p><strong>Current Price:</strong> $${entryPrice.toFixed(2)}</p>
+          <p><strong>Stop Loss:</strong> $${stopLoss.toFixed(2)} (-${stopLossPercent}%)</p>
+        </div>
+        <div>
+          <h3 class="font-semibold text-lg text-gray-700">Profit Targets</h3>
+          <p><strong>Target 1:</strong> $${target1.toFixed(2)} (+${target1Percent}%)</p>
+          <p><strong>Target 2:</strong> $${target2.toFixed(2)} (+${target2Percent}%)</p>
+        </div>
       </div>
-      <div class="flex gap-8 text-sm font-medium">
-        <a href="index.html" class="hover:text-emerald-600">Home</a>
-        <a href="strategy.html" class="hover:text-emerald-600">Strategy</a>
-        <a href="daily-setups.html" class="text-emerald-600">Daily Strategy</a>
-        <a href="simulator.html" class="hover:text-emerald-600">Growth Simulator</a>
-      </div>
-    </div>
-  </nav>
+    `;
+  } catch (error) {
+    console.error("Error fetching trading data:", error);
 
-  <!-- Main Container -->
-  <div class="max-w-6xl mx-auto px-6 py-12" id="content">
-    <!-- Section Title -->
-    <div class="flex justify-between items-center mb-8">
-      <div>
-        <h1 class="text-5xl font-bold" id="page-title">Dynamic Daily Strategy</h1>
-        <p class="text-xl text-gray-600">Focused trade ideas updated dynamically for your strategy.</p>
-      </div>
-      <div class="text-right">
-        <p class="text-sm text-gray-500">Today is</p>
-        <p class="text-2xl font-semibold text-emerald-600" id="current-date"></p>
-      </div>
-    </div>
+    // Show error message
+    strategyElement.innerHTML = `
+      <p class="text-red-500">
+        Unable to load today's strategy. Check your internet connection or try again later.<br>
+        <strong>Error:</strong> ${error.message}
+      </p>
+    `;
+  }
+};
 
-    <!-- Strategy Container -->
-    <div id="strategy-container">
-      <!-- Dynamic content will appear here -->
-      <p class="text-gray-600 text-center text-xl">Loading today's strategy...</p>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Display current date
-      const dateElement = document.getElementById('current-date');
-      const today = new Date();
-      dateElement.textContent = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-      // Fetch dynamic data (adjust API URL for your backend service)
-      const strategyContainer = document.getElementById('strategy-container');
-      try {
-        const response = await fetch('https://your-backend-api.com/api/daily-strategy');
-        const data = await response.json();
-        
-        // Update the strategy HTML dynamically
-        strategyContainer.innerHTML = `
-          <div class="bg-white rounded-3xl shadow-sm p-10 mb-12 border border-emerald-100">
-            <div class="flex items-center gap-4 mb-6">
-              <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl">Asset</span>
-              <h2 class="text-4xl font-bold">${data.asset}</h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-10">
-              <div>
-                <h3 class="font-semibold text-lg mb-4 text-gray-700">Current Strategy</h3>
-                <div class="space-y-6">
-                  <div>
-                    <p class="text-sm text-gray-500">Current Price</p>
-                    <p class="text-3xl font-bold">$${data.currentPrice}</p>
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Buy Zone</p>
-                    <p class="text-2xl font-semibold">$${data.buyZoneLow} - $${data.buyZoneHigh}</p>
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Stop Loss</p>
-                    <p class="text-2xl font-semibold text-red-600">$${data.stopLoss}</p>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 class="font-semibold text-lg mb-4 text-gray-700">Profit Targets</h3>
-                <div class="space-y-6">
-                  <div>
-                    <p class="font-semibold">+1.0%</p>
-                    <p class="text-gray-600">Target 1: $${data.target1}</p>
-                  </div>
-                  <div>
-                    <p class="font-semibold">+2.5%</p>
-                    <p class="text-gray-600">Target 2: $${data.target2}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      } catch (error) {
-        strategyContainer.innerHTML = `
-          <p class="text-red-500 text-center">Failed to load today's strategy. Check your network connection.</p>
-        `;
-      }
-    });
-  </script>
-</body>
-</html>
+// Update the trading data on page load and every 5 minutes
+fetchTradingData();
+setInterval(fetchTradingData, 300000); // Update every 5 minutes
