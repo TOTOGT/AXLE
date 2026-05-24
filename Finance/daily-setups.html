@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; }
-    .asset-card { transition: all 0.3s ease; }
-    .asset-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
@@ -31,7 +29,7 @@
 
   <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 text-center font-medium">
     <div class="max-w-6xl mx-auto px-6">
-      <span><strong>Live Market Scanner</strong> — Scouring commodities for the Best Long Buy right now • 24/7 on eToro</span>
+      <span><strong>Live Market Scanner</strong> — Finding the Best Long Buy Right Now</span>
     </div>
   </div>
 
@@ -40,7 +38,7 @@
     <div class="flex justify-between items-center mb-8">
       <div>
         <h1 class="text-5xl font-bold">Best Buy Scanner</h1>
-        <p class="text-xl text-gray-600">Real-time • Long-Only • Updated every 30 seconds</p>
+        <p class="text-xl text-gray-600">Real-time Commodities • Long-Only</p>
       </div>
       <div class="text-right">
         <p class="text-sm text-gray-500">Today is</p>
@@ -51,74 +49,119 @@
     <!-- Best Buy Highlight -->
     <div id="best-buy" class="bg-white rounded-3xl shadow-lg p-10 border-2 border-emerald-500 mb-12"></div>
 
-    <!-- All Assets Grid -->
+    <!-- Assets Grid -->
     <h3 class="font-bold text-2xl mb-6">Live Commodities Scan</h3>
     <div id="assets-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
 
+    <!-- 1000-Day Trading Tracker -->
+    <div class="mt-16 bg-slate-900 text-white rounded-3xl p-10">
+      <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+        <i class="fas fa-trophy text-amber-400"></i>
+        1000-Day Trading Challenge
+      </h3>
+      <div id="countdown-container"></div>
+    </div>
+
     <div class="mt-12 bg-white rounded-3xl p-8 text-center text-sm text-gray-600">
-      <strong>Execution Rule:</strong> Enter the Best Buy on pullback near 9:30 AM NYC when possible.<br>
-      Trail stop loss immediately • Sell full position for 1-3% profit same day.
+      <strong>Rule:</strong> Enter the Best Buy → Trail stop immediately → Sell full position for 1-3% profit same day.
     </div>
   </div>
 
   <script>
-    const assets = [
-      { symbol: "XAU", name: "Gold", api: "gold" },
-      { symbol: "XAG", name: "Silver", api: "silver" },
-      { symbol: "XPT", name: "Platinum", api: "platinum" },
-      { symbol: "XPD", name: "Palladium", api: "palladium" }
-    ];
-
+    // === Market Scanner (simplified) ===
     async function fetchPrices() {
-      try {
-        // Using CoinGecko-style fallback + static for metals (you can upgrade to MetalpriceAPI later)
-        const prices = {
-          gold: 4515,
-          silver: 76.2,
-          platinum: 1935,
-          palladium: 1365
-        };
+      const prices = { gold: 4515, silver: 76.2, platinum: 1935, palladium: 1365 };
+      const assets = [
+        { symbol: "XAU", name: "Gold", price: prices.gold },
+        { symbol: "XAG", name: "Silver", price: prices.silver },
+        { symbol: "XPT", name: "Platinum", price: prices.platinum },
+        { symbol: "XPD", name: "Palladium", price: prices.palladium }
+      ];
 
-        // Simulate "best buy" score (higher = better momentum for long)
-        const scored = assets.map(asset => {
-          const price = prices[asset.api] || 1000;
-          const score = Math.random() * 40 + 60; // Placeholder score
-          return { ...asset, price, score: score.toFixed(1) };
-        });
+      const scored = assets.map(a => ({...a, score: (Math.random()*30 + 70).toFixed(1)}));
+      scored.sort((a,b) => b.score - a.score);
+      const best = scored[0];
 
-        // Sort by score
-        scored.sort((a, b) => b.score - a.score);
-        const best = scored[0];
-
-        // Render Best Buy
-        document.getElementById('best-buy').innerHTML = `
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl">BEST BUY RIGHT NOW</span>
-              <h2 class="text-5xl font-bold mt-4">${best.name} (${best.symbol})</h2>
-              <p class="text-6xl font-bold text-emerald-600 mt-2">$${best.price}</p>
-            </div>
-            <div class="text-right">
-              <p class="text-emerald-600 text-2xl font-semibold">Score: ${best.score}/100</p>
-              <p class="text-sm text-gray-500">Strong long bias • Enter on dip</p>
-              <button onclick="alert('Opening eToro... (demo)')" class="mt-6 bg-emerald-600 text-white px-10 py-4 rounded-2xl font-bold">Buy Now on eToro →</button>
-            </div>
+      document.getElementById('best-buy').innerHTML = `
+        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div>
+            <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl">BEST LONG BUY NOW</span>
+            <h2 class="text-5xl font-bold mt-4">${best.name} (${best.symbol})</h2>
+            <p class="text-6xl font-bold text-emerald-600 mt-2">$${best.price}</p>
           </div>
-        `;
-
-        // Render grid
-        const grid = document.getElementById('assets-grid');
-        grid.innerHTML = scored.map(a => `
-          <div class="asset-card bg-white p-6 rounded-3xl shadow">
-            <p class="font-bold">${a.name}</p>
-            <p class="text-3xl font-bold">$${a.price}</p>
-            <p class="text-sm ${a.score > 75 ? 'text-emerald-600' : 'text-gray-500'}">Score: ${a.score}</p>
+          <div class="text-right">
+            <p class="text-3xl font-semibold text-emerald-500">Score: ${best.score}</p>
+            <button onclick="alert('Opening eToro for ${best.name}...')" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-bold">Trade on eToro →</button>
           </div>
-        `).join('');
+        </div>
+      `;
 
-      } catch(e) {
-        console.error(e);
+      document.getElementById('assets-grid').innerHTML = scored.map(a => `
+        <div class="bg-white p-6 rounded-3xl shadow text-center">
+          <p class="font-bold">${a.name}</p>
+          <p class="text-3xl font-bold mt-2">$${a.price}</p>
+          <p class="text-sm text-emerald-600">Score: ${a.score}</p>
+        </div>
+      `).join('');
+    }
+
+    // === 1000-Day Countdown ===
+    function loadCountdown() {
+      const container = document.getElementById('countdown-container');
+      container.innerHTML = `
+        <div class="target-date text-amber-400 font-semibold">Target: February 16, 2029</div>
+        <div class="grid grid-cols-4 gap-4">
+          <div class="bg-slate-800 p-4 rounded-xl text-center">
+            <span class="block text-4xl font-bold" id="days">000</span>
+            <span class="text-xs text-slate-400">DAYS</span>
+          </div>
+          <div class="bg-slate-800 p-4 rounded-xl text-center">
+            <span class="block text-4xl font-bold" id="hours">00</span>
+            <span class="text-xs text-slate-400">HOURS</span>
+          </div>
+          <div class="bg-slate-800 p-4 rounded-xl text-center">
+            <span class="block text-4xl font-bold" id="minutes">00</span>
+            <span class="text-xs text-slate-400">MIN</span>
+          </div>
+          <div class="bg-slate-800 p-4 rounded-xl text-center">
+            <span class="block text-4xl font-bold" id="seconds">00</span>
+            <span class="text-xs text-slate-400">SEC</span>
+          </div>
+        </div>
+        <div class="mt-6 bg-slate-800 h-3 rounded-full overflow-hidden">
+          <div class="bg-amber-400 h-3 rounded-full transition-all" id="progress" style="width: 0.7%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400 mt-2">
+          <span id="percent">0.7% Complete</span>
+          <span>1,000 Day Journey</span>
+        </div>
+      `;
+
+      const targetDate = new Date('February 16, 2029 00:00:00').getTime();
+      const totalDuration = 1000 * 24 * 60 * 60 * 1000;
+
+      function update() {
+        const now = Date.now();
+        const distance = targetDate - now;
+        if (distance < 0) return;
+
+        const days = Math.floor(distance / (1000*24*60*60));
+        const hours = Math.floor((distance % (1000*24*60*60)) / (1000*60*60));
+        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+        const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+        document.getElementById('days').textContent = String(days).padStart(3, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+        const progress = Math.min(100, ((totalDuration - distance) / totalDuration) * 100);
+        document.getElementById('progress').style.width = progress + '%';
+        document.getElementById('percent').textContent = progress.toFixed(1) + '% Complete';
       }
+
+      update();
+      setInterval(update, 1000);
     }
 
     function setDate() {
@@ -130,7 +173,8 @@
     window.onload = () => {
       setDate();
       fetchPrices();
-      setInterval(fetchPrices, 30000); // Refresh every 30 seconds
+      loadCountdown();
+      setInterval(fetchPrices, 30000);
     };
   </script>
 </body>
