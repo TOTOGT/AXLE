@@ -1,181 +1,275 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Daily Setups • CapitalGuard Trader</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    body { font-family: 'Inter', system-ui, sans-serif; }
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-900">
+<script>
+// ============================================================
+//  SCORING WEIGHTS  (must sum to 100)
+// ============================================================
+const WEIGHTS = {
+  momentum:   35,   // % gain today vs yesterday's close
+  proximity:  25,   // how close price is to the 5-day low (cheaper = better entry)
+  range:      20,   // today's candle range efficiency (narrow consolidation = safer)
+  relStrength: 20,  // relative rank among all 4 metals (normalised)
+};
 
-  <nav class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <i class="fas fa-shield-alt text-emerald-600 text-2xl"></i>
-        <span class="font-bold text-2xl tracking-tight">CapitalGuard</span>
-      </div>
-      <div class="flex gap-8 text-sm font-medium">
-        <a href="index.html" class="hover:text-emerald-600">Home</a>
-        <a href="strategy.html" class="hover:text-emerald-600">Strategy</a>
-        <a href="daily-setups.html" class="text-emerald-600">Daily Setups</a>
-        <a href="simulator.html" class="hover:text-emerald-600">Growth Simulator</a>
-      </div>
-    </div>
-  </nav>
+// ============================================================
+//  FETCH 5-DAY DAILY OHLCV FROM YAHOO FINANCE (no key needed)
+// ============================================================
+async function fetchOHLCV(ticker) {
+  const url =
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}` +
+    `?interval=1d&range=5d`;
+  const res  = await fetch(url, { headers: { Accept: 'application/json' } });
+  const json = await res.json();
+  const q    = json.chart.result[0];
+  const meta = q.meta;
+  const bars = q.indicators.quote[0];
+  const ts   = q.timestamp;
 
-  <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 text-center font-medium">
-    <div class="max-w-6xl mx-auto px-6">
-      <span><strong>Live Market Scanner</strong> — Finding the Best Long Buy Right Now</span>
-    </div>
-  </div>
+  // Build candle array, filter nulls
+  const candles = ts.map((t, i) => ({
+    ts:     t,
+    open:   bars.open[i],
+    high:   bars.high[i],
+    low:    bars.low[i],
+    close:  bars.close[i],
+    volume: bars.volume[i],
+  })).filter(c => c.close != null);
 
-  <div class="max-w-6xl mx-auto px-6 py-12">
+  return {
+    symbol:    meta.symbol,
+    price:     meta.regularMarketPrice,        // live intraday price
+    prevClose: meta.chartPreviousClose,
+    dayHigh:   meta.regularMarketDayHigh,
+    dayLow:    meta.regularMarketDayLow,
+    candles,
+  };
+}
 
-    <div class="flex justify-between items-center mb-8">
+// ============================================================
+//  SCORE ONE ASSET  (returns 0-100)
+// ============================================================
+function scoreAsset(asset) {
+  const { price, prevClose, dayHigh, dayLow, candles } = asset;
+
+  // --- 1. Momentum (35 pts) ---
+  // Ideal: small positive gain today (e.g. +0.3% to +1.5%). 
+  // Penalise already-ripped > +2% (chasing) and negative days.
+  const pctChange = ((price - prevClose) / prevClose) * 100;
+  let momentumScore;
+  if      (pctChange > 2.0)  momentumScore = 50 - (pctChange - 2) * 10;  // overextended
+  else if (pctChange >= 0.1) momentumScore = 60 + (pctChange / 2.0) * 40; // sweet spot
+  else if (pctChange >= -0.5) momentumScore = 50 + pctChange * 20;        // flat/slight dip
+  else                        momentumScore = 50 + pctChange * 10;         // falling
+  momentumScore = Math.max(0, Math.min(100, momentumScore));
+
+  // --- 2. Proximity to 5-day low (25 pts) ---
+  // Closer to the recent low = better long entry (mean reversion / range low)
+  const low5  = Math.min(...candles.map(c => c.low));
+  const high5 = Math.max(...candles.map(c => c.high));
+  const range5 = high5 - low5;
+  const proximityScore = range5 > 0
+    ? Math.max(0, Math.min(100, 100 - ((price - low5) / range5) * 100))
+    : 50;
+
+  // --- 3. Range efficiency today (20 pts) ---
+  // A tight intraday range relative to the 5-day average range
+  // means the market is coiling — safer to enter long.
+  const todayRange = dayHigh - dayLow;
+  const avgRange5  = candles.reduce((s, c) => s + (c.high - c.low), 0) / candles.length;
+  const rangeRatio = avgRange5 > 0 ? todayRange / avgRange5 : 1;
+  // rangeRatio < 1 = tighter than average = good
+  const rangeScore = Math.max(0, Math.min(100, (1 - rangeRatio) * 100 + 50));
+
+  // --- 4. Relative strength placeholder (filled in after all assets scored) ---
+  // Will be normalised across all assets in the caller; store raw momentum as proxy
+  asset._rawRS = pctChange;
+
+  const rawScore =
+    (momentumScore  * WEIGHTS.momentum   / 100) +
+    (proximityScore * WEIGHTS.proximity  / 100) +
+    (rangeScore     * WEIGHTS.range      / 100);
+    // relStrength added externally
+
+  asset._partialScore = rawScore;
+  return asset;
+}
+
+// ============================================================
+//  MAIN — fetch all, score all, render
+// ============================================================
+const ASSETS_DEF = [
+  { ticker: 'GC=F',  symbol: 'XAU', name: 'Gold'      },
+  { ticker: 'SI=F',  symbol: 'XAG', name: 'Silver'    },
+  { ticker: 'PL=F',  symbol: 'XPT', name: 'Platinum'  },
+  { ticker: 'PA=F',  symbol: 'XPD', name: 'Palladium' },
+];
+
+async function fetchPrices() {
+  // Show loading state
+  document.getElementById('best-buy').innerHTML =
+    `<p class="text-gray-400 text-center py-8 animate-pulse">Scanning live markets…</p>`;
+
+  let assets = [];
+  const fallbackPrices = { 'GC=F': 4515, 'SI=F': 76.2, 'PL=F': 1935, 'PA=F': 1365 };
+
+  // Fetch each ticker; use fallback on failure
+  await Promise.allSettled(
+    ASSETS_DEF.map(async (def) => {
+      try {
+        const data = await fetchOHLCV(def.ticker);
+        assets.push({ ...def, ...data });
+      } catch (e) {
+        // Market closed / API unavailable — use hardcoded fallback
+        const fp = fallbackPrices[def.ticker];
+        assets.push({
+          ...def,
+          price:     fp,
+          prevClose: fp,
+          dayHigh:   fp * 1.005,
+          dayLow:    fp * 0.995,
+          candles:   [{ open: fp, high: fp * 1.005, low: fp * 0.995, close: fp, volume: 0 }],
+          _fallback: true,
+        });
+      }
+    })
+  );
+
+  // Score partial (everything except relStrength)
+  assets.forEach(scoreAsset);
+
+  // --- Relative Strength normalisation (20 pts) ---
+  // Rank by _rawRS (today's % change), best gets 100, worst gets 0
+  const rsValues = assets.map(a => a._rawRS);
+  const rsMin    = Math.min(...rsValues);
+  const rsMax    = Math.max(...rsValues);
+  const rsRange  = rsMax - rsMin || 1;
+  assets.forEach(a => {
+    const rsScore = ((a._rawRS - rsMin) / rsRange) * 100;
+    a.score = +(a._partialScore + rsScore * WEIGHTS.relStrength / 100).toFixed(1);
+  });
+
+  // Sort descending by final score
+  assets.sort((a, b) => b.score - a.score);
+  const best = assets[0];
+
+  // ---- Render best buy card ----
+  const isFallback = best._fallback
+    ? `<span class="text-xs text-amber-500 ml-2">(market closed — last known price)</span>` : '';
+
+  document.getElementById('best-buy').innerHTML = `
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8">
       <div>
-        <h1 class="text-5xl font-bold">Best Buy Scanner</h1>
-        <p class="text-xl text-gray-600">Real-time Commodities • Long-Only</p>
+        <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl">BEST LONG BUY NOW</span>
+        <h2 class="text-5xl font-bold mt-4">${best.name} (${best.symbol})${isFallback}</h2>
+        <p class="text-6xl font-bold text-emerald-600 mt-2">$${best.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+        <div class="mt-3 flex gap-4 text-sm text-gray-500">
+          <span>▲ Day High: $${best.dayHigh?.toFixed(2)}</span>
+          <span>▼ Day Low: $${best.dayLow?.toFixed(2)}</span>
+          <span class="${((best.price - best.prevClose)/best.prevClose*100) >= 0 ? 'text-emerald-600' : 'text-red-500'}">
+            ${((best.price - best.prevClose)/best.prevClose*100) >= 0 ? '+' : ''}${((best.price - best.prevClose)/best.prevClose*100).toFixed(2)}% today
+          </span>
+        </div>
       </div>
       <div class="text-right">
-        <p class="text-sm text-gray-500">Today is</p>
-        <p class="text-2xl font-semibold text-emerald-600" id="current-date"></p>
+        <p class="text-3xl font-semibold text-emerald-500">Score: ${best.score}</p>
+        <div class="mt-2 text-xs text-gray-400 space-y-1">
+          <div>Momentum ${WEIGHTS.momentum}% · Proximity ${WEIGHTS.proximity}%</div>
+          <div>Range tightness ${WEIGHTS.range}% · Rel. Strength ${WEIGHTS.relStrength}%</div>
+        </div>
+        <a href="https://www.etoro.com/markets/${best.name.toLowerCase()}" target="_blank"
+           class="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-bold">
+          Trade on eToro →
+        </a>
       </div>
     </div>
+  `;
 
-    <!-- Best Buy Highlight -->
-    <div id="best-buy" class="bg-white rounded-3xl shadow-lg p-10 border-2 border-emerald-500 mb-12"></div>
+  // ---- Render asset grid ----
+  document.getElementById('assets-grid').innerHTML = assets.map((a, i) => {
+    const pct = ((a.price - a.prevClose) / a.prevClose * 100).toFixed(2);
+    const pctColor = pct >= 0 ? 'text-emerald-600' : 'text-red-500';
+    const border = i === 0 ? 'border-2 border-emerald-400' : '';
+    return `
+      <div class="bg-white p-6 rounded-3xl shadow text-center ${border}">
+        ${i === 0 ? '<span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">★ BEST BUY</span>' : ''}
+        <p class="font-bold mt-2">${a.name} (${a.symbol})</p>
+        <p class="text-3xl font-bold mt-2">$${a.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+        <p class="text-sm ${pctColor} mt-1">${pct >= 0 ? '+' : ''}${pct}% today</p>
+        <p class="text-sm text-emerald-600 font-semibold mt-1">Score: ${a.score}</p>
+        ${a._fallback ? '<p class="text-xs text-amber-400 mt-1">offline</p>' : ''}
+      </div>
+    `;
+  }).join('');
+}
 
-    <!-- Assets Grid -->
-    <h3 class="font-bold text-2xl mb-6">Live Commodities Scan</h3>
-    <div id="assets-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-
-    <!-- 1000-Day Trading Tracker -->
-    <div class="mt-16 bg-slate-900 text-white rounded-3xl p-10">
-      <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
-        <i class="fas fa-trophy text-amber-400"></i>
-        1000-Day Trading Challenge
-      </h3>
-      <div id="countdown-container"></div>
+// === 1000-Day Countdown ===
+function loadCountdown() {
+  const container = document.getElementById('countdown-container');
+  container.innerHTML = `
+    <div class="target-date text-amber-400 font-semibold mb-4">Target: February 16, 2029</div>
+    <div class="grid grid-cols-4 gap-4">
+      <div class="bg-slate-800 p-4 rounded-xl text-center">
+        <span class="block text-4xl font-bold" id="days">000</span>
+        <span class="text-xs text-slate-400">DAYS</span>
+      </div>
+      <div class="bg-slate-800 p-4 rounded-xl text-center">
+        <span class="block text-4xl font-bold" id="hours">00</span>
+        <span class="text-xs text-slate-400">HOURS</span>
+      </div>
+      <div class="bg-slate-800 p-4 rounded-xl text-center">
+        <span class="block text-4xl font-bold" id="minutes">00</span>
+        <span class="text-xs text-slate-400">MIN</span>
+      </div>
+      <div class="bg-slate-800 p-4 rounded-xl text-center">
+        <span class="block text-4xl font-bold" id="seconds">00</span>
+        <span class="text-xs text-slate-400">SEC</span>
+      </div>
     </div>
-
-    <div class="mt-12 bg-white rounded-3xl p-8 text-center text-sm text-gray-600">
-      <strong>Rule:</strong> Enter the Best Buy → Trail stop immediately → Sell full position for 1-3% profit same day.
+    <div class="mt-6 bg-slate-800 h-3 rounded-full overflow-hidden">
+      <div class="bg-amber-400 h-3 rounded-full transition-all" id="progress" style="width:0%"></div>
     </div>
-  </div>
+    <div class="flex justify-between text-xs text-slate-400 mt-2">
+      <span id="percent">0.0% Complete</span>
+      <span>1,000 Day Journey</span>
+    </div>
+  `;
 
-  <script>
-    // === Market Scanner (simplified) ===
-    async function fetchPrices() {
-      const prices = { gold: 4515, silver: 76.2, platinum: 1935, palladium: 1365 };
-      const assets = [
-        { symbol: "XAU", name: "Gold", price: prices.gold },
-        { symbol: "XAG", name: "Silver", price: prices.silver },
-        { symbol: "XPT", name: "Platinum", price: prices.platinum },
-        { symbol: "XPD", name: "Palladium", price: prices.palladium }
-      ];
+  const targetDate    = new Date('February 16, 2029 00:00:00').getTime();
+  const startDate     = new Date('February 16, 2026 00:00:00').getTime(); // 1000 days before target
+  const totalDuration = targetDate - startDate;
 
-      const scored = assets.map(a => ({...a, score: (Math.random()*30 + 70).toFixed(1)}));
-      scored.sort((a,b) => b.score - a.score);
-      const best = scored[0];
+  function update() {
+    const now      = Date.now();
+    const distance = targetDate - now;
+    if (distance < 0) return;
 
-      document.getElementById('best-buy').innerHTML = `
-        <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl">BEST LONG BUY NOW</span>
-            <h2 class="text-5xl font-bold mt-4">${best.name} (${best.symbol})</h2>
-            <p class="text-6xl font-bold text-emerald-600 mt-2">$${best.price}</p>
-          </div>
-          <div class="text-right">
-            <p class="text-3xl font-semibold text-emerald-500">Score: ${best.score}</p>
-            <button onclick="alert('Opening eToro for ${best.name}...')" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-4 rounded-2xl font-bold">Trade on eToro →</button>
-          </div>
-        </div>
-      `;
+    const days    = Math.floor(distance / (1000 * 24 * 60 * 60));
+    const hours   = Math.floor((distance % (1000 * 24 * 60 * 60)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      document.getElementById('assets-grid').innerHTML = scored.map(a => `
-        <div class="bg-white p-6 rounded-3xl shadow text-center">
-          <p class="font-bold">${a.name}</p>
-          <p class="text-3xl font-bold mt-2">$${a.price}</p>
-          <p class="text-sm text-emerald-600">Score: ${a.score}</p>
-        </div>
-      `).join('');
-    }
+    document.getElementById('days').textContent    = String(days).padStart(3, '0');
+    document.getElementById('hours').textContent   = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
 
-    // === 1000-Day Countdown ===
-    function loadCountdown() {
-      const container = document.getElementById('countdown-container');
-      container.innerHTML = `
-        <div class="target-date text-amber-400 font-semibold">Target: February 16, 2029</div>
-        <div class="grid grid-cols-4 gap-4">
-          <div class="bg-slate-800 p-4 rounded-xl text-center">
-            <span class="block text-4xl font-bold" id="days">000</span>
-            <span class="text-xs text-slate-400">DAYS</span>
-          </div>
-          <div class="bg-slate-800 p-4 rounded-xl text-center">
-            <span class="block text-4xl font-bold" id="hours">00</span>
-            <span class="text-xs text-slate-400">HOURS</span>
-          </div>
-          <div class="bg-slate-800 p-4 rounded-xl text-center">
-            <span class="block text-4xl font-bold" id="minutes">00</span>
-            <span class="text-xs text-slate-400">MIN</span>
-          </div>
-          <div class="bg-slate-800 p-4 rounded-xl text-center">
-            <span class="block text-4xl font-bold" id="seconds">00</span>
-            <span class="text-xs text-slate-400">SEC</span>
-          </div>
-        </div>
-        <div class="mt-6 bg-slate-800 h-3 rounded-full overflow-hidden">
-          <div class="bg-amber-400 h-3 rounded-full transition-all" id="progress" style="width: 0.7%"></div>
-        </div>
-        <div class="flex justify-between text-xs text-slate-400 mt-2">
-          <span id="percent">0.7% Complete</span>
-          <span>1,000 Day Journey</span>
-        </div>
-      `;
+    const elapsed  = now - startDate;
+    const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+    document.getElementById('progress').style.width = progress.toFixed(2) + '%';
+    document.getElementById('percent').textContent  = progress.toFixed(1) + '% Complete';
+  }
 
-      const targetDate = new Date('February 16, 2029 00:00:00').getTime();
-      const totalDuration = 1000 * 24 * 60 * 60 * 1000;
+  update();
+  setInterval(update, 1000);
+}
 
-      function update() {
-        const now = Date.now();
-        const distance = targetDate - now;
-        if (distance < 0) return;
+function setDate() {
+  document.getElementById('current-date').textContent =
+    new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
 
-        const days = Math.floor(distance / (1000*24*60*60));
-        const hours = Math.floor((distance % (1000*24*60*60)) / (1000*60*60));
-        const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
-        const seconds = Math.floor((distance % (1000*60)) / 1000);
-
-        document.getElementById('days').textContent = String(days).padStart(3, '0');
-        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-
-        const progress = Math.min(100, ((totalDuration - distance) / totalDuration) * 100);
-        document.getElementById('progress').style.width = progress + '%';
-        document.getElementById('percent').textContent = progress.toFixed(1) + '% Complete';
-      }
-
-      update();
-      setInterval(update, 1000);
-    }
-
-    function setDate() {
-      const el = document.getElementById('current-date');
-      const now = new Date();
-      el.textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    window.onload = () => {
-      setDate();
-      fetchPrices();
-      loadCountdown();
-      setInterval(fetchPrices, 30000);
-    };
-  </script>
-</body>
-</html>
+window.onload = () => {
+  setDate();
+  fetchPrices();
+  loadCountdown();
+  setInterval(fetchPrices, 60000); // refresh every 60s (Yahoo rate-limits at 30s)
+};
+</script>
