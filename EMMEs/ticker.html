@@ -8,26 +8,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --void: #04040a;
+  --void:    #04040a;
   --surface: #0d0d1a;
-  --card: #0e0e18;
-  --border: #ffffff0f;
+  --card:    #0e0e18;
+  --border:  #ffffff0f;
   --accent1: #ff3cac;
   --accent2: #00f5d4;
   --accent3: #f7c948;
-  --text: #e8e8f0;
-  --muted: #555570;
-  --green: #00e676;
-  --red: #ff3860;
+  --text:    #e8e8f0;
+  --muted:   #555570;
+  --green:   #00e676;
+  --red:     #ff3860;
 }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body {
-  font-family: 'Space Grotesk', sans-serif;
-  background: var(--void);
-  color: var(--text);
-  min-height: 100vh;
-}
+body { font-family: 'Space Grotesk', sans-serif; background: var(--void); color: var(--text); min-height: 100vh; }
 
 /* ── NAV ── */
 nav {
@@ -68,6 +64,7 @@ nav a.active { color: var(--text); }
   color: var(--text);
 }
 .page-header h1 span { color: var(--accent2); }
+
 .refresh-info {
   font-family: 'Space Mono', monospace;
   font-size: 0.65rem;
@@ -80,8 +77,7 @@ nav a.active { color: var(--text); }
 }
 .live-dot {
   display: inline-block;
-  width: 7px;
-  height: 7px;
+  width: 7px; height: 7px;
   background: var(--green);
   border-radius: 50%;
   animation: blink 1.5s ease-in-out infinite;
@@ -93,14 +89,14 @@ nav a.active { color: var(--text); }
 }
 #countdown { color: var(--text); }
 
-/* ── TICKER TABLE ── */
+/* ── TICKER WRAP ── */
 .ticker-wrap {
-  padding: 0 2rem 6rem;
+  padding: 0 2rem 2rem;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-/* full-width token blocks */
+/* ── TOKEN BLOCK ── */
 .token-block {
   border: 1px solid var(--border);
   margin-bottom: 1.5rem;
@@ -138,6 +134,26 @@ nav a.active { color: var(--text); }
   line-height: 1;
 }
 
+/* Status badge (pre-dex vs live) */
+.token-status {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+}
+.token-status.live { color: var(--green); }
+.status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
 .price-block { text-align: right; }
 .price-usd {
   font-family: 'Space Mono', monospace;
@@ -154,14 +170,15 @@ nav a.active { color: var(--text); }
   margin-top: 0.4rem;
   letter-spacing: 0.05em;
 }
-.price-change.pos { color: var(--green); }
-.price-change.neg { color: var(--red); }
+.price-change.pos  { color: var(--green); }
+.price-change.neg  { color: var(--red); }
 .price-change.flat { color: var(--muted); }
 
+/* ── STATS GRID ── */
 .token-stats {
   border-top: 1px solid var(--border);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 .stat-cell {
   padding: 1.25rem 2rem;
@@ -183,8 +200,56 @@ nav a.active { color: var(--text); }
   color: var(--text);
 }
 .stat-cell-value.loading { color: var(--muted); animation: fade 1.2s ease-in-out infinite; }
+.stat-cell-value.dim { color: var(--muted); }
 @keyframes fade { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
+/* ── BONDING CURVE BAR ── */
+.curve-section {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+}
+.curve-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+.curve-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.curve-pct {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--tok);
+}
+.curve-track {
+  height: 4px;
+  background: color-mix(in srgb, var(--tok) 12%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.curve-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--tok);
+  transition: width 0.8s ease;
+  min-width: 2px;
+}
+.curve-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.curve-meta span { color: var(--text); }
+
+/* ── ACTIONS ── */
 .token-actions {
   border-top: 1px solid var(--border);
   padding: 1.25rem 2rem;
@@ -203,6 +268,7 @@ nav a.active { color: var(--text); }
   border: 1px solid;
   transition: all 0.2s;
   white-space: nowrap;
+  cursor: pointer;
 }
 .action-btn.primary { color: var(--void); background: var(--tok); border-color: var(--tok); }
 .action-btn.primary:hover { opacity: 0.85; }
@@ -210,26 +276,24 @@ nav a.active { color: var(--text); }
 .action-btn.ghost:hover { background: color-mix(in srgb, var(--tok) 10%, transparent); }
 .action-btn.dim { color: var(--muted); border-color: var(--border); }
 .action-btn.dim:hover { color: var(--text); border-color: #ffffff22; }
-.contract-display {
+
+.contract-pill {
   font-family: 'Space Mono', monospace;
   font-size: 0.6rem;
   color: var(--muted);
   letter-spacing: 0.05em;
   margin-left: auto;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.8rem;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 280px;
+  transition: all 0.2s;
+  user-select: none;
 }
-@media (max-width: 600px) { .contract-display { display: none; } }
+.contract-pill:hover { color: var(--text); border-color: #ffffff22; }
+.contract-pill.copied { color: var(--green); border-color: var(--green); }
 
-/* ── ERROR / NO DATA STATE ── */
-.no-data {
-  font-family: 'Space Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--muted);
-  padding: 0.5rem 0;
-}
+@media (max-width: 600px) { .contract-pill { display: none; } }
 
 /* ── FOOTER ── */
 footer {
@@ -241,7 +305,6 @@ footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spac
 footer a { color: var(--text); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
 
-/* ── LAST UPDATED ── */
 .last-updated {
   font-family: 'Space Mono', monospace;
   font-size: 0.6rem;
@@ -254,6 +317,7 @@ footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
+
 <nav>
   <a href="index.html">← EMMEs</a>
   <div class="nav-right">
@@ -274,9 +338,7 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<div class="ticker-wrap" id="ticker-wrap">
-  <!-- Blocks rendered by JS -->
-</div>
+<div class="ticker-wrap" id="ticker-wrap"></div>
 
 <div class="last-updated">
   Last updated: <span id="last-updated-time">—</span>
@@ -287,53 +349,60 @@ footer a:hover { text-decoration: underline; }
     <a href="index.html">EMMEs</a> ·
     <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
     <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
-    Data via <a href="https://dexscreener.com" target="_blank">Dexscreener</a>
+    Data via <a href="https://dexscreener.com" target="_blank">Dexscreener</a> &
+    <a href="https://solscan.io" target="_blank">Solscan</a> &
+    <a href="https://coinbook.fun" target="_blank">Coinbook</a>
   </p>
   <p style="margin-top:0.6rem">Not financial advice. Prices update every 30 seconds.</p>
 </footer>
 
 <script>
+// ── TOKEN CONFIG ──────────────────────────────────────────────────────────────
 const TOKENS = [
   {
-    name: 'GAME THEORY',
-    ticker: 'THEORY',
-    address: '7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
-    cls: 'c3',
+    name:     'GAME THEORY',
+    ticker:   'THEORY',
+    address:  '7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    cls:      'c3',
     coinbook: 'https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
-    solscan: 'https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
-    dex: 'https://dexscreener.com/solana/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
-    page: 'game-theory.html'
+    solscan:  'https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    dex:      'https://dexscreener.com/solana/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    page:     'game-theory.html',
+    // Coinbook bonding-curve data (static seed, updated by fetchCoinbook)
+    cb: { mcap: 2420, bcPct: 0.21, bcSol: 0.05 }
   },
   {
-    name: 'PROBABILITY',
-    ticker: 'PROBABY',
-    address: '7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
-    cls: 'c2',
+    name:     'PROBABILITY',
+    ticker:   'PROBABY',
+    address:  '7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    cls:      'c2',
     coinbook: 'https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
-    solscan: 'https://solscan.io/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
-    dex: 'https://dexscreener.com/solana/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
-    page: 'probability.html'
+    solscan:  'https://solscan.io/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    dex:      'https://dexscreener.com/solana/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    page:     'probability.html',
+    cb: { mcap: 2460, bcPct: 1.35, bcSol: 0.31 }
   },
   {
-    name: 'PROPAGANDA!',
-    ticker: 'PROPAGAN',
-    address: '67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
-    cls: 'c1',
+    name:     'PROPAGANDA!',
+    ticker:   'PROPAGAN',
+    address:  '67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    cls:      'c1',
     coinbook: 'https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
-    solscan: 'https://solscan.io/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
-    dex: 'https://dexscreener.com/solana/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
-    page: 'propaganda.html'
+    solscan:  'https://solscan.io/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    dex:      'https://dexscreener.com/solana/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    page:     'propaganda.html',
+    cb: { mcap: 2440, bcPct: 0.89, bcSol: 0.20 }
   }
 ];
 
+const GRAD_TARGET = 37210; // Raydium graduation MCap in USD
+
+// ── FORMAT HELPERS ────────────────────────────────────────────────────────────
 function fmt(n, digits = 2) {
   if (n === null || n === undefined || isNaN(n)) return '—';
-  if (n < 0.000001) return n.toExponential(2);
-  if (n < 0.01) return n.toPrecision(4);
-  if (n < 1000) return n.toFixed(digits);
-  if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
-  if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
-  if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K';
+  if (n >= 1e9)  return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6)  return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3)  return (n / 1e3).toFixed(2) + 'K';
   return n.toFixed(digits);
 }
 
@@ -341,161 +410,263 @@ function fmtPrice(p) {
   if (p === null || p === undefined || isNaN(p)) return '—';
   const n = parseFloat(p);
   if (n < 0.000001) return '$' + n.toExponential(3);
-  if (n < 0.001) return '$' + n.toPrecision(4);
-  if (n < 1) return '$' + n.toFixed(6);
+  if (n < 0.001)    return '$' + n.toPrecision(4);
+  if (n < 1)        return '$' + n.toFixed(6);
   return '$' + n.toFixed(4);
 }
 
 function changeCls(v) {
-  if (v === null || v === undefined) return 'flat';
+  if (v === null || v === undefined || isNaN(v)) return 'flat';
   return v > 0 ? 'pos' : v < 0 ? 'neg' : 'flat';
 }
 
 function changeStr(v) {
-  if (v === null || v === undefined || isNaN(v)) return '— %';
-  const sign = v > 0 ? '+' : '';
-  return sign + v.toFixed(2) + '% 24h';
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  return (v > 0 ? '+' : '') + v.toFixed(2) + '% 24h';
 }
 
 function shortAddr(addr) {
   return addr.slice(0, 6) + '...' + addr.slice(-6);
 }
 
-// Build initial skeleton blocks
+function el(id) { return document.getElementById(id); }
+
+// ── BUILD SKELETON ────────────────────────────────────────────────────────────
 function buildSkeleton() {
-  const wrap = document.getElementById('ticker-wrap');
+  const wrap = el('ticker-wrap');
   wrap.innerHTML = '';
+
   TOKENS.forEach(tok => {
-    const el = document.createElement('div');
-    el.className = `token-block ${tok.cls}`;
-    el.id = `block-${tok.ticker}`;
-    el.innerHTML = `
+    const cb = tok.cb;
+    const pctDisplay = cb.bcPct.toFixed(2) + '%';
+    const fillW = Math.min(cb.bcPct, 100).toFixed(2);
+    const needed = ((GRAD_TARGET - cb.mcap) / 1000).toFixed(2);
+
+    const div = document.createElement('div');
+    div.className = `token-block ${tok.cls}`;
+    div.id = `block-${tok.ticker}`;
+    div.innerHTML = `
       <div class="token-block-top">
         <div class="token-id">
           <div class="token-ticker-label">${tok.ticker} · Solana</div>
           <div class="token-name-label">${tok.name}</div>
+          <div class="token-status" id="status-${tok.ticker}">
+            <span class="status-dot"></span>Pre-DEX · Coinbook
+          </div>
         </div>
         <div class="price-block">
-          <div class="price-usd" id="price-${tok.ticker}">…</div>
-          <div class="price-change flat" id="change-${tok.ticker}">loading</div>
+          <div class="price-usd" id="price-${tok.ticker}">$${fmt(cb.mcap)}</div>
+          <div class="price-change flat" id="change-${tok.ticker}">MCap</div>
         </div>
       </div>
+
       <div class="token-stats">
         <div class="stat-cell">
           <div class="stat-cell-label">Market Cap</div>
-          <div class="stat-cell-value loading" id="mcap-${tok.ticker}">…</div>
+          <div class="stat-cell-value" id="mcap-${tok.ticker}">$${fmt(cb.mcap)}</div>
         </div>
         <div class="stat-cell">
           <div class="stat-cell-label">FDV</div>
-          <div class="stat-cell-value loading" id="fdv-${tok.ticker}">…</div>
+          <div class="stat-cell-value dim" id="fdv-${tok.ticker}">—</div>
         </div>
         <div class="stat-cell">
           <div class="stat-cell-label">Volume 24h</div>
-          <div class="stat-cell-value loading" id="vol-${tok.ticker}">…</div>
+          <div class="stat-cell-value dim" id="vol-${tok.ticker}">—</div>
         </div>
         <div class="stat-cell">
           <div class="stat-cell-label">Liquidity</div>
-          <div class="stat-cell-value loading" id="liq-${tok.ticker}">…</div>
+          <div class="stat-cell-value dim" id="liq-${tok.ticker}">—</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-cell-label">Price (SOL)</div>
-          <div class="stat-cell-value loading" id="pricesol-${tok.ticker}">…</div>
+          <div class="stat-cell-label">Holders</div>
+          <div class="stat-cell-value loading" id="hld-${tok.ticker}">…</div>
         </div>
         <div class="stat-cell">
-          <div class="stat-cell-label">Txns 24h</div>
-          <div class="stat-cell-value loading" id="txns-${tok.ticker}">…</div>
+          <div class="stat-cell-label">Transfers</div>
+          <div class="stat-cell-value loading" id="txn-${tok.ticker}">…</div>
         </div>
       </div>
+
+      <div class="curve-section">
+        <div class="curve-header">
+          <span class="curve-label">Bonding Curve → Raydium</span>
+          <span class="curve-pct" id="cpct-${tok.ticker}">${pctDisplay}</span>
+        </div>
+        <div class="curve-track">
+          <div class="curve-fill" id="cfill-${tok.ticker}" style="width:${fillW}%"></div>
+        </div>
+        <div class="curve-meta" id="cmeta-${tok.ticker}">
+          <span>${cb.bcSol} SOL in curve</span> · needs <span>$${needed}K</span> more to graduate
+        </div>
+      </div>
+
       <div class="token-actions">
         <a href="${tok.coinbook}" target="_blank" class="action-btn primary">Buy on Coinbook ↗</a>
-        <a href="${tok.dex}" target="_blank" class="action-btn ghost">Dexscreener ↗</a>
-        <a href="${tok.page}" class="action-btn dim">Token page</a>
-        <a href="${tok.solscan}" target="_blank" class="action-btn dim">Solscan ↗</a>
-        <span class="contract-display">${shortAddr(tok.address)}</span>
+        <a href="${tok.dex}"      target="_blank" class="action-btn ghost">Dexscreener ↗</a>
+        <a href="${tok.page}"                     class="action-btn dim">Token page</a>
+        <a href="${tok.solscan}"  target="_blank" class="action-btn dim">Solscan ↗</a>
+        <span class="contract-pill" id="cpill-${tok.ticker}"
+          onclick="copyAddr('${tok.address}','cpill-${tok.ticker}')"
+          title="Click to copy contract address">
+          ${shortAddr(tok.address)}
+        </span>
       </div>
     `;
-    wrap.appendChild(el);
+    wrap.appendChild(div);
   });
 }
 
-// Fetch and populate data
-async function fetchAll() {
+// ── COPY ADDRESS ──────────────────────────────────────────────────────────────
+function copyAddr(addr, pillId) {
+  navigator.clipboard.writeText(addr).then(() => {
+    const pill = el(pillId);
+    if (!pill) return;
+    const orig = pill.textContent;
+    pill.textContent = 'copied ✓';
+    pill.classList.add('copied');
+    setTimeout(() => {
+      pill.textContent = orig;
+      pill.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+// ── DEXSCREENER FETCH ─────────────────────────────────────────────────────────
+async function fetchDex() {
   try {
     const addresses = TOKENS.map(t => t.address).join(',');
     const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${addresses}`);
-    if (!res.ok) throw new Error('API error');
+    if (!res.ok) return;
     const data = await res.json();
     const pairs = data.pairs || [];
 
     TOKENS.forEach(tok => {
-      // Find best pair for this token (highest liquidity)
       const tokenPairs = pairs.filter(p =>
-        p.baseToken && p.baseToken.address &&
-        p.baseToken.address.toLowerCase() === tok.address.toLowerCase()
+        p.baseToken?.address?.toLowerCase() === tok.address.toLowerCase()
       );
       const pair = tokenPairs.sort((a, b) =>
         (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0)
       )[0];
 
-      if (!pair) {
-        // No pair found — show dashes
-        ['price', 'change', 'mcap', 'fdv', 'vol', 'liq', 'pricesol', 'txns'].forEach(id => {
-          const el = document.getElementById(`${id}-${tok.ticker}`);
-          if (el) { el.textContent = '—'; el.classList.remove('loading'); }
-        });
-        return;
+      if (!pair) return; // still pre-DEX, leave Coinbook values
+
+      // Token is now live on DEX — update status badge
+      const statusEl = el(`status-${tok.ticker}`);
+      if (statusEl) {
+        statusEl.innerHTML = '<span class="status-dot"></span>Live · DEX';
+        statusEl.classList.add('live');
       }
 
-      const priceUsd = parseFloat(pair.priceUsd) || null;
-      const priceNative = parseFloat(pair.priceNative) || null;
-      const change24 = pair.priceChange?.h24 ?? null;
-      const vol24 = pair.volume?.h24 ?? null;
-      const mcap = pair.marketCap ?? null;
-      const fdv = pair.fdv ?? null;
-      const liq = pair.liquidity?.usd ?? null;
-      const txns = pair.txns?.h24 ? (pair.txns.h24.buys + pair.txns.h24.sells) : null;
+      const priceUsd    = parseFloat(pair.priceUsd)    || null;
+      const priceNative = parseFloat(pair.priceNative)  || null;
+      const change24    = pair.priceChange?.h24          ?? null;
+      const vol24       = pair.volume?.h24               ?? null;
+      const mcap        = pair.marketCap                 ?? null;
+      const fdv         = pair.fdv                       ?? null;
+      const liq         = pair.liquidity?.usd            ?? null;
+      const txns        = pair.txns?.h24
+        ? (pair.txns.h24.buys + pair.txns.h24.sells)
+        : null;
 
-      const setEl = (id, val) => {
-        const el = document.getElementById(`${id}-${tok.ticker}`);
-        if (el) { el.textContent = val; el.classList.remove('loading'); }
-      };
-      const setElClass = (id, cls) => {
-        const el = document.getElementById(`${id}-${tok.ticker}`);
-        if (el) { el.className = 'price-change ' + cls; }
+      const set = (id, val) => {
+        const e = el(id);
+        if (e) { e.textContent = val; e.classList.remove('loading', 'dim'); }
       };
 
-      setEl('price', fmtPrice(priceUsd));
-      setEl('change', changeStr(change24));
-      setElClass('change', changeCls(change24));
-      setEl('mcap', mcap ? '$' + fmt(mcap) : '—');
-      setEl('fdv',  fdv  ? '$' + fmt(fdv)  : '—');
-      setEl('vol',  vol24 ? '$' + fmt(vol24) : '—');
-      setEl('liq',  liq  ? '$' + fmt(liq)  : '—');
-      setEl('pricesol', priceNative ? fmt(priceNative, 10) + ' SOL' : '—');
-      setEl('txns', txns !== null ? txns.toLocaleString() : '—');
+      set(`price-${tok.ticker}`,    fmtPrice(priceUsd));
+      set(`change-${tok.ticker}`,   changeStr(change24));
+      set(`mcap-${tok.ticker}`,     mcap ? '$' + fmt(mcap) : '—');
+      set(`fdv-${tok.ticker}`,      fdv  ? '$' + fmt(fdv)  : '—');
+      set(`vol-${tok.ticker}`,      vol24 ? '$' + fmt(vol24) : '—');
+      set(`liq-${tok.ticker}`,      liq  ? '$' + fmt(liq)  : '—');
+
+      // Update change class
+      const changeEl = el(`change-${tok.ticker}`);
+      if (changeEl) changeEl.className = `price-change ${changeCls(change24)}`;
+
+      // Update bonding curve with live mcap
+      if (mcap) {
+        const pct     = Math.min((mcap / GRAD_TARGET) * 100, 100);
+        const pctStr  = pct.toFixed(2) + '%';
+        const needed  = Math.max(0, (GRAD_TARGET - mcap) / 1000).toFixed(2);
+        const fillEl  = el(`cfill-${tok.ticker}`);
+        const pctEl   = el(`cpct-${tok.ticker}`);
+        const metaEl  = el(`cmeta-${tok.ticker}`);
+        if (fillEl)  fillEl.style.width = pct + '%';
+        if (pctEl)   pctEl.textContent  = pctStr;
+        if (metaEl)  metaEl.innerHTML   =
+          pct >= 100
+            ? '<span>🎓 Graduated to Raydium!</span>'
+            : `MCap <span>$${fmt(mcap)}</span> · needs <span>$${needed}K</span> more to graduate`;
+
+        // Switch price display from mcap label to actual price
+        const priceEl  = el(`price-${tok.ticker}`);
+        const changeEl = el(`change-${tok.ticker}`);
+        if (priceEl)  priceEl.textContent  = fmtPrice(priceUsd);
+        if (changeEl) changeEl.textContent = changeStr(change24);
+
+        // Show priceNative in holders slot only if no solscan data
+        const hldEl = el(`hld-${tok.ticker}`);
+        if (hldEl && hldEl.textContent === '—') {
+          hldEl.textContent = priceNative ? fmt(priceNative, 10) + ' SOL' : '—';
+          // relabel
+          const lbl = hldEl.previousElementSibling;
+          if (lbl) lbl.textContent = 'Price (SOL)';
+        }
+
+        if (txns !== null) set(`txn-${tok.ticker}`, txns.toLocaleString());
+      }
     });
-
-    document.getElementById('last-updated-time').textContent = new Date().toLocaleTimeString();
   } catch(e) {
-    console.error('Ticker fetch error:', e);
-    TOKENS.forEach(tok => {
-      const el = document.getElementById(`price-${tok.ticker}`);
-      if (el) el.textContent = 'err';
-    });
+    console.warn('DexScreener fetch skipped:', e.message);
   }
 }
 
-// Countdown + auto-refresh
+// ── SOLSCAN FETCH (on-chain: supply, holders, transfers) ──────────────────────
+async function fetchSolscan(tok) {
+  try {
+    const r = await fetch(
+      `https://public-api.solscan.io/token/meta?tokenAddress=${tok.address}`,
+      { headers: { accept: 'application/json' } }
+    );
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.holder !== undefined) {
+      const e = el(`hld-${tok.ticker}`);
+      if (e) { e.textContent = d.holder.toLocaleString(); e.classList.remove('loading'); }
+    }
+  } catch(e) {}
+
+  try {
+    const r2 = await fetch(
+      `https://public-api.solscan.io/token/transfer?tokenAddress=${tok.address}&limit=1&offset=0`,
+      { headers: { accept: 'application/json' } }
+    );
+    if (!r2.ok) return;
+    const d2 = await r2.json();
+    if (d2.total !== undefined) {
+      const e = el(`txn-${tok.ticker}`);
+      if (e) { e.textContent = d2.total.toLocaleString(); e.classList.remove('loading'); }
+    }
+  } catch(e) {}
+}
+
+// ── MAIN FETCH CYCLE ──────────────────────────────────────────────────────────
+async function fetchAll() {
+  await fetchDex();
+  await Promise.all(TOKENS.map(fetchSolscan));
+  el('last-updated-time').textContent = new Date().toLocaleTimeString();
+}
+
+// ── COUNTDOWN TIMER ───────────────────────────────────────────────────────────
 let secs = 30;
 function tick() {
   secs--;
-  document.getElementById('countdown').textContent = secs;
-  if (secs <= 0) {
-    secs = 30;
-    fetchAll();
-  }
+  el('countdown').textContent = secs;
+  if (secs <= 0) { secs = 30; fetchAll(); }
 }
 
+// ── INIT ──────────────────────────────────────────────────────────────────────
 buildSkeleton();
 fetchAll();
 setInterval(tick, 1000);
