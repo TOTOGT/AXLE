@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G6 Earth House · Build with Dirt · G6 LLC · Principia Orthogona</title>
+<meta name="description" content="The G6 Earth House Plan — a compressed earth block housing system based on hexagonal generative contact mechanics, adapted from the NASA Moon Base G6 Crystal framework for terrestrial use. Build a stable home from the dirt on land you own. G6 LLC · Pablo Nogueira Grossi · Newark, NJ · 2026.">
+<style>
+:root{
+  --navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;
+  --mid:#3a4f7a;--rule:#8a7340;--text:#1c1c1c;--green:#2d5a27;
+  --light:#e8e2d4;--amber:#fff8e1;--earth:#7a4a1e;--clay:#c47a3a;
+  --dust:#d4b896;--teal:#1a6b5a;--red:#8b1a1a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Georgia',serif;color:var(--text);background:var(--cream)}
+a{color:var(--mid);text-decoration:none}
+a:hover{color:var(--gold)}
+p{margin-bottom:.8rem}
+p:last-child{margin-bottom:0}
+
+/* NAV */
+nav{background:var(--navy);padding:.65rem 2rem;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:2px solid rgba(201,168,76,.35)}
+.nav-logo{color:var(--gold);font-family:sans-serif;font-weight:bold;font-size:.85rem;letter-spacing:.1em;text-decoration:none}
+.nav-links{display:flex;gap:1rem;list-style:none;flex-wrap:wrap}
+.nav-links a{color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+
+/* HERO */
+.hero{background:var(--navy);color:white;padding:4rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(116,74,30,.18) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-family:sans-serif;font-size:.7rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:.9rem}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);color:white;margin-bottom:.4rem;line-height:1.15}
+.hero-sub{color:var(--clay);font-style:italic;font-size:1.1rem;margin-bottom:.6rem}
+.gold-rule{width:60px;height:2px;background:var(--gold);margin:1.1rem auto}
+.hero-desc{max-width:640px;margin:0 auto;color:#bbb;font-size:.95rem;line-height:1.85}
+.crisis-banner{background:rgba(139,26,26,.25);border:1px solid rgba(139,26,26,.5);padding:.8rem 1.5rem;max-width:640px;margin:1.4rem auto 0;font-family:sans-serif;font-size:.82rem;line-height:1.7;color:#f0c0c0}
+.crisis-banner strong{color:#ff9999}
+
+/* LAYOUT */
+.page-body{max-width:880px;margin:0 auto;padding:3rem 2rem}
+.section-eyebrow{font-family:sans-serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--rule);margin-bottom:.5rem}
+.section-title{font-size:1.5rem;color:var(--navy);margin-bottom:.6rem;line-height:1.3}
+.section-desc{font-size:.95rem;color:#444;line-height:1.85;margin-bottom:1.5rem}
+.gold-divider{border:none;border-top:2px solid var(--gold);margin:3rem 0}
+.section-rule{border:none;border-top:1px solid var(--light);margin:2.5rem 0}
+
+/* OPERATOR CHAIN */
+.op-chain{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:1.5rem 0}
+@media(max-width:560px){.op-chain{grid-template-columns:1fr 1fr}}
+.op{padding:1rem .7rem;text-align:center;color:white;border-radius:3px}
+.op-letter{font-size:1.8rem;font-weight:bold;font-family:monospace;display:block}
+.op-name{font-family:sans-serif;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;display:block;margin:.2rem 0 .3rem}
+.op-earth{font-size:.75rem;font-style:italic;opacity:.9;line-height:1.35}
+.op-C{background:var(--navy)}.op-K{background:var(--earth)}.op-F{background:var(--green)}.op-U{background:var(--teal)}
+
+/* STEP CARDS */
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.5rem 0}
+@media(max-width:640px){.steps-grid{grid-template-columns:1fr}}
+.step-card{background:white;border:1px solid var(--light);overflow:hidden}
+.step-header{padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem}
+.step-num{font-family:sans-serif;font-size:1.3rem;font-weight:bold;color:var(--gold);min-width:2rem}
+.step-title{font-family:sans-serif;font-size:.9rem;font-weight:bold;color:var(--navy)}
+.step-body{padding:.9rem 1rem 1rem;font-size:.88rem;line-height:1.7;color:#333;border-top:1px solid var(--light)}
+.step-body b{color:var(--navy)}
+.step-card.phase-C .step-header{background:var(--navy);color:white}
+.step-card.phase-C .step-num,.step-card.phase-C .step-title{color:var(--gold)}
+.step-card.phase-K .step-header{background:var(--earth);color:white}
+.step-card.phase-K .step-num,.step-card.phase-K .step-title{color:#f0d4b0}
+.step-card.phase-F .step-header{background:var(--green);color:white}
+.step-card.phase-F .step-num,.step-card.phase-F .step-title{color:#c8f0c0}
+.step-card.phase-U .step-header{background:var(--teal);color:white}
+.step-card.phase-U .step-num,.step-card.phase-U .step-title{color:#c0f0e8}
+
+/* COST TABLE */
+.cost-table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.88rem}
+.cost-table th{background:var(--navy);color:var(--gold);padding:.5rem .8rem;font-family:sans-serif;font-size:.72rem;letter-spacing:.08em;text-align:left}
+.cost-table td{padding:.5rem .8rem;border-bottom:1px solid var(--light);vertical-align:top}
+.cost-table td:first-child{font-weight:bold;color:var(--navy);width:40%}
+.cost-table tr:nth-child(even) td{background:var(--smoke)}
+.cost-table tr:last-child td{border-bottom:none;font-weight:bold;background:var(--amber)}
+.cost-table .free{color:var(--green);font-weight:bold}
+.cost-table .cost{font-family:monospace;font-size:.85rem}
+
+/* HEX DIAGRAM */
+.hex-diagram{display:flex;gap:1.5rem;align-items:flex-start;margin:1.5rem 0;flex-wrap:wrap}
+.hex-svg-wrap{flex-shrink:0}
+.hex-legend{flex:1;min-width:200px}
+.hex-legend h4{font-family:sans-serif;font-size:.85rem;color:var(--navy);margin-bottom:.6rem}
+.hex-legend ul{list-style:none;padding:0}
+.hex-legend ul li{font-size:.86rem;line-height:1.7;color:#333;padding:.2rem 0;border-bottom:1px solid var(--light);display:flex;align-items:center;gap:.5rem}
+.hex-legend ul li:last-child{border-bottom:none}
+.color-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+
+/* QUOTE */
+.pullquote{border-left:3px solid var(--gold);background:var(--smoke);padding:1rem 1.4rem;margin:1.5rem 0;font-style:italic;font-size:.97rem;color:#333;line-height:1.85}
+.pullquote cite{display:block;font-style:normal;font-family:sans-serif;font-size:.7rem;color:var(--rule);margin-top:.5rem;letter-spacing:.06em;text-transform:uppercase}
+
+/* STAT BLOCKS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;margin:1.5rem 0}
+@media(max-width:560px){.stats-row{grid-template-columns:1fr 1fr}}
+.stat{background:var(--navy);color:white;padding:1rem;text-align:center}
+.stat-val{font-size:1.5rem;font-weight:bold;font-family:monospace;color:var(--gold);line-height:1.2}
+.stat-label{font-family:sans-serif;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:#aaa;margin-top:.35rem;line-height:1.4}
+
+/* TOOL NOTE */
+.tool-note{background:var(--amber);border:1.5px solid var(--clay);padding:1.1rem 1.4rem;margin:1.2rem 0}
+.tool-note h4{font-family:sans-serif;font-size:.88rem;color:var(--earth);margin-bottom:.4rem}
+.tool-note p{font-size:.87rem;color:#444;line-height:1.7}
+
+/* SOIL TEST BOX */
+.soil-box{background:white;border:1px solid var(--light);border-left:4px solid var(--clay);padding:1.1rem 1.4rem;margin:.8rem 0}
+.soil-box h4{font-family:sans-serif;font-size:.88rem;color:var(--earth);margin-bottom:.4rem}
+.soil-box p{font-size:.87rem;color:#444;line-height:1.7;margin-bottom:.35rem}
+.soil-box code{background:var(--smoke);padding:.1rem .4rem;font-family:monospace;font-size:.82rem;color:var(--navy)}
+
+/* RESEARCH LINK */
+.research-strip{background:var(--navy);color:white;padding:1.2rem 1.5rem;margin:1.5rem 0;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.research-strip .rs-label{font-family:sans-serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);flex-shrink:0}
+.research-strip p{font-size:.88rem;color:#ccc;line-height:1.6;flex:1}
+.research-strip a{color:var(--gold);font-family:monospace;font-size:.8rem;white-space:nowrap}
+
+/* FOOTER */
+footer{background:var(--navy);color:#888;padding:2rem;text-align:center;font-family:sans-serif;font-size:.75rem;line-height:1.8}
+footer a{color:var(--gold);text-decoration:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">HOUR HOUSE &middot; PRINCIPIA ORTHOGONA</a>
+  <ul class="nav-links">
+    <li><a href="index.html#lessons">Lessons</a></li>
+    <li><a href="index.html#research">Research</a></li>
+    <li><a href="caela-framework.html">CAELA</a></li>
+    <li><a href="index.html#support">Support Hour House</a></li>
+    <li><a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Principia Orthogona ↗</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">G6 LLC &middot; Principia Orthogona &middot; Applied Architecture &middot; Newark, NJ &middot; 2026</div>
+  <h1>G6 Earth House</h1>
+  <div class="hero-sub">Build a home from the dirt on land you already have</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">The same hexagonal operator chain that governs lunar base architecture in the G6 Crystal framework — C &rarr; K &rarr; F &rarr; U — also governs compressed earth block construction on Earth. This plan translates that mathematics into a step-by-step building guide any person can follow with minimal tools, minimal cost, and dirt from the land they own.</p>
+  <div class="crisis-banner">
+    <strong>771,480 Americans without permanent shelter.</strong> A shortage of 7.2 million affordable homes. No state or county where a minimum-wage worker can afford a modest apartment. The housing crisis is not a future problem. It is tonight.
+  </div>
+</div>
+
+<div class="page-body">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-val">771K</div>
+      <div class="stat-label">Americans without shelter tonight (HUD 2024)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">7.2M</div>
+      <div class="stat-label">Affordable homes missing from the market (NLIHC 2026)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">$22</div>
+      <div class="stat-label">Hourly wage needed to afford a 2-bedroom. Federal minimum: $7.25</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val">$3K</div>
+      <div class="stat-label">Estimated material cost for a G6 Earth House starter shell</div>
+    </div>
+  </div>
+
+  <hr class="gold-divider">
+
+  <!-- THE IDEA -->
+  <div class="section-eyebrow">The Idea &middot; From Moon to Earth</div>
+  <h2 class="section-title">The Same Mathematics. Different Ground.</h2>
+
+  <p class="section-desc">The G6 Crystal paper (Zenodo, NASA NP-2026-04-6806-HQ) proved that hexagonal compressed block geometry maximizes structural stability under load while minimizing material use. The paper was written for lunar regolith. But the physics does not care where you are. Dirt is dirt. Compression is compression. The hexagon holds.</p>
+
+  <div class="pullquote">
+    &ldquo;The hexagon is not a stylistic choice. It is the answer the operator chain gives when you ask: what shape stores the most stability per unit of material? Sand, soil, regolith &mdash; the answer is always the same.&rdquo;
+    <cite>&mdash; G6 Crystal, Zenodo 10.5281/zenodo.19162012 &middot; Pablo Nogueira Grossi, G6 LLC, 2026</cite>
+  </div>
+
+  <p style="font-size:.93rem;color:#444;line-height:1.85">Compressed Earth Block (CEB) construction is not new. Adobe and rammed earth have been used for 10,000 years. What the G6 framework adds is the formal mathematical justification for the hexagonal tiling pattern, the optimal compression ratio, and the interlocking geometry that allows blocks to be laid without mortar in many configurations. The result: a building system where the primary material costs nothing, because it is already under your feet.</p>
+
+  <hr class="section-rule">
+
+  <!-- OPERATOR CHAIN APPLIED -->
+  <div class="section-eyebrow">The Operator Chain &middot; C &rarr; K &rarr; F &rarr; U Applied to Earth Construction</div>
+  <h2 class="section-title">Four Operators. One House.</h2>
+  <p class="section-desc">Every generative transition in the Principia Orthogona framework follows the same sequence. Building a home from earth is no exception.</p>
+
+  <div class="op-chain">
+    <div class="op op-C">
+      <span class="op-letter">C</span>
+      <span class="op-name">Compress</span>
+      <span class="op-earth">Identify your soil. Remove gravel and organics. This is your universe of material. Everything you need is already here.</span>
+    </div>
+    <div class="op op-K">
+      <span class="op-letter">K</span>
+      <span class="op-name">Curvature</span>
+      <span class="op-earth">Apply mechanical pressure. The CEB press introduces the curvature threshold — the point at which loose earth becomes structural block.</span>
+    </div>
+    <div class="op op-F">
+      <span class="op-letter">F</span>
+      <span class="op-name">Fold</span>
+      <span class="op-earth">Test against reality. The wall tests the block. Load reveals failure. The hexagonal tiling distributes force so no single block bears it alone.</span>
+    </div>
+    <div class="op op-U">
+      <span class="op-letter">U</span>
+      <span class="op-name">Unfold</span>
+      <span class="op-earth">A stable configuration emerges — a room, a wall, a roof. Inhabited. Persistent. Built from what was already underfoot.</span>
+    </div>
+  </div>
+
+  <hr class="gold-divider">
+
+  <!-- THE PLAN -->
+  <div class="section-eyebrow">The Build Plan &middot; Step by Step &middot; Minimal Tools &middot; Minimal Cost</div>
+  <h2 class="section-title">How to Build a G6 Earth House</h2>
+  <p class="section-desc">This is a practical guide. It does not require construction experience. It requires a piece of land, physical effort, and patience. The plan below builds a single-room starter shell (approximately 12&times;16 feet / 192 sq ft) sufficient for one to two people.</p>
+
+  <div class="steps-grid">
+
+    <div class="step-card phase-C">
+      <div class="step-header">
+        <span class="step-num">C</span>
+        <span class="step-title">Know Your Soil</span>
+      </div>
+      <div class="step-body">
+        <p><b>The jar test:</b> Fill a jar with soil and water. Shake it. Let it settle for 24 hours. The layers that form tell you everything: sand sinks first, silt in the middle, clay on top. For CEB, you want approximately 30% clay, 70% sandy soil. Pure clay cracks. Pure sand won&rsquo;t bind.</p>
+        <p><b>The ribbon test:</b> Wet a handful of soil and roll it into a ribbon. If it holds 2 inches without breaking, clay content is sufficient. If it holds 3+ inches and feels slippery, add sand.</p>
+        <p><b>Amendment:</b> If clay is too high, add coarse sand. If too low, add a small amount of powdered clay or bentonite. If structural strength is needed, stabilize with 5&ndash;8% Portland cement (adds ~$50/1,000 blocks).</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-C">
+      <div class="step-header">
+        <span class="step-num">C</span>
+        <span class="step-title">Prepare the Site</span>
+      </div>
+      <div class="step-body">
+        <p><b>Foundation:</b> Do not skip this. A CEB wall on bare earth will wick moisture and fail. The simplest foundation: dig a trench 12 inches deep and 16 inches wide around the perimeter. Fill with compacted rubble stone or gravel. Cap with two courses of fired brick or concrete block. This keeps your earth walls above the moisture line.</p>
+        <p><b>Drainage:</b> Grade the ground away from the building on all sides. Water is the only enemy of earth construction.</p>
+        <p><b>Permit check:</b> In most US rural counties, structures under 200 sq ft do not require a building permit. Verify locally before breaking ground.</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-K">
+      <div class="step-header">
+        <span class="step-num">K</span>
+        <span class="step-title">Make the Blocks</span>
+      </div>
+      <div class="step-body">
+        <p><b>The press:</b> A manual CEB press (e.g., AECT Impact 2001 or Liberator) costs $1,500&ndash;$3,000 and produces 300&ndash;500 blocks per day. A community can share one press and build multiple homes from a single investment. Rental is available in some regions.</p>
+        <p><b>Block size:</b> Standard: 14&times;7&times;4 inches. A 192 sq ft room with 8-foot walls requires approximately 3,200&ndash;3,800 blocks.</p>
+        <p><b>Curing:</b> Stack blocks in the shade, separated for airflow. Cure for 28 days before loading. Do not rush this. The compression strength at day 28 is 4&times; what it is at day 3.</p>
+        <p><b>The G6 hexagonal interlocking variant:</b> If using a press that produces the G6 interlocking profile, no mortar is required in the wall courses. The geometry distributes load across six contact faces rather than two. See the G6 Crystal paper for the exact profile specifications.</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-K">
+      <div class="step-header">
+        <span class="step-num">K</span>
+        <span class="step-title">Lay the Walls</span>
+      </div>
+      <div class="step-body">
+        <p><b>Running bond:</b> Offset each course by half a block, as with brick. Every joint in one course must fall over a solid block in the course below.</p>
+        <p><b>Corners:</b> Alternate block orientation at every corner course. This is where earth walls fail if not done correctly.</p>
+        <p><b>Mortar:</b> If using rectangular (non-interlocking) blocks, use an earth mortar: same soil mix as the blocks, slightly wetter. Commercial mortar is not needed and is harder to work with.</p>
+        <p><b>Openings:</b> Frame windows and doors with timber lintels. The lintel span must be supported during construction until the wall above it cures.</p>
+        <p><b>Wall thickness:</b> 14 inches (single block width) is sufficient for one-story in most climates. In earthquake zones or for two-story, double the wall thickness or add a concrete bond beam at the top of the wall.</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-F">
+      <div class="step-header">
+        <span class="step-num">F</span>
+        <span class="step-title">The Roof</span>
+      </div>
+      <div class="step-body">
+        <p><b>Do not put an earth roof on an earth wall.</b> The roof is where most first-time builders make an expensive mistake. Earth is heavy. A flat earth roof on a CEB wall requires engineering. Instead:</p>
+        <p><b>Simplest option — metal roof:</b> A corrugated metal roof on a simple timber frame is the lowest-cost, fastest solution. A 12&times;16 ft metal roof costs approximately $400&ndash;$800 in materials. It sheds water, reflects heat, and lasts 20+ years with minimal maintenance.</p>
+        <p><b>Bond beam:</b> Before the roof, pour a reinforced concrete bond beam (4&times;6 inches) around the full top perimeter of the wall. This ties everything together and provides a level surface for the roof frame to bear on.</p>
+        <p><b>Overhang:</b> Minimum 18-inch overhang on all sides. This protects your earth walls from rain erosion better than any sealant.</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-F">
+      <div class="step-header">
+        <span class="step-num">F</span>
+        <span class="step-title">Protect the Walls</span>
+      </div>
+      <div class="step-body">
+        <p><b>Exterior plaster:</b> An unplastered CEB wall will erode in heavy rain. Apply a lime plaster (not cement — it traps moisture) in two coats. Lime is breathable, self-healing, and naturally antimicrobial. A 50-lb bag covers approximately 60 sq ft at 1/4 inch thickness.</p>
+        <p><b>Interior finish:</b> Earth plaster (same soil mix as blocks, with added sand and straw) creates a beautiful interior surface that regulates humidity naturally. It can be pigmented with local earth oxides.</p>
+        <p><b>Foundation-wall junction:</b> Apply a generous bead of silicone sealant or bituminous paint at the transition between the concrete/brick foundation and the first course of earth blocks. This is the single most important waterproofing detail.</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-U">
+      <div class="step-header">
+        <span class="step-num">U</span>
+        <span class="step-title">Systems &amp; Finishing</span>
+      </div>
+      <div class="step-body">
+        <p><b>Electrical:</b> Run conduit in the wall before plastering. Surface-mounted conduit is also acceptable and much cheaper in owner-built construction. A basic off-grid solar system (400W panel + 100Ah battery + inverter) costs approximately $600&ndash;$900 and provides lighting, phone charging, and a small appliance.</p>
+        <p><b>Water:</b> A rainwater catchment system using the metal roof: a 500-gallon IBC tote connected to a downspout with a first-flush diverter provides year-round water in most of the US. Cost: $100&ndash;$200.</p>
+        <p><b>Sanitation:</b> A composting toilet eliminates the need for septic infrastructure and is legal in most US states for rural owner-occupied use. Cost: $50 (DIY sawdust toilet) to $1,000 (commercial unit).</p>
+      </div>
+    </div>
+
+    <div class="step-card phase-U">
+      <div class="step-header">
+        <span class="step-num">U</span>
+        <span class="step-title">The Stable Configuration</span>
+      </div>
+      <div class="step-body">
+        <p><b>What you have built:</b> A 192 sq ft compressed earth block room with metal roof, lime plaster exterior, off-grid solar, rainwater catchment, and composting sanitation. Structurally sound for 100+ years. Thermally massive — warm in winter, cool in summer without mechanical HVAC. Built from materials sourced within 100 yards of its foundation.</p>
+        <p><b>What it cost:</b> $1,500&ndash;$5,000 in materials depending on region, soil quality, and whether you share a CEB press. Equivalent conventional construction: $40,000&ndash;$80,000.</p>
+        <p><b>What comes next:</b> The U operator does not stop here. A stable configuration becomes the foundation for the next cycle. A second room. A covered walkway. A community of houses, all sharing the same press, the same design, the same understanding of the ground beneath them.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="gold-divider">
+
+  <!-- COST BREAKDOWN -->
+  <div class="section-eyebrow">Cost Breakdown &middot; 192 sq ft Starter Shell &middot; US 2026</div>
+  <h2 class="section-title">What It Actually Costs</h2>
+  <p class="section-desc">These are real material costs. Labor is not included because in owner-built construction, your labor is the asset — not the expense.</p>
+
+  <table class="cost-table">
+    <tr><th>Item</th><th>Notes</th><th>Estimated Cost</th></tr>
+    <tr>
+      <td>Soil (earth blocks)</td>
+      <td>From your land — excavated from the foundation trench and immediate area</td>
+      <td class="cost free">FREE</td>
+    </tr>
+    <tr>
+      <td>CEB press (shared or rented)</td>
+      <td>Shared among 4 families: ~$500 each. Rental: ~$200/week. Buy: $1,500–$3,000</td>
+      <td class="cost">$200–$500</td>
+    </tr>
+    <tr>
+      <td>Portland cement stabilizer (optional)</td>
+      <td>5–8% by weight of block mix. Improves wet weather performance significantly</td>
+      <td class="cost">$80–$150</td>
+    </tr>
+    <tr>
+      <td>Foundation (rubble trench + 2 brick courses)</td>
+      <td>Local stone if available free. Concrete block alternative: ~$200</td>
+      <td class="cost">$100–$250</td>
+    </tr>
+    <tr>
+      <td>Roof (corrugated metal + timber frame)</td>
+      <td>Most significant single cost. Longer overhang = better wall protection</td>
+      <td class="cost">$400–$900</td>
+    </tr>
+    <tr>
+      <td>Concrete bond beam (top of walls)</td>
+      <td>Rebar + ready-mix concrete for 56 linear feet at 4×6 inches</td>
+      <td class="cost">$150–$250</td>
+    </tr>
+    <tr>
+      <td>Lime plaster (exterior)</td>
+      <td>~30 bags at $15/bag. Two-coat application. Apply after full wall cure</td>
+      <td class="cost">$450</td>
+    </tr>
+    <tr>
+      <td>Door + window frames and glazing</td>
+      <td>Used materials, Habitat for Humanity ReStore, or salvage yard</td>
+      <td class="cost">$100–$400</td>
+    </tr>
+    <tr>
+      <td>Off-grid solar (basic)</td>
+      <td>400W panel + 100Ah LiFePO4 battery + 500W inverter + charge controller</td>
+      <td class="cost">$600–$900</td>
+    </tr>
+    <tr>
+      <td>Rainwater catchment (500 gal)</td>
+      <td>IBC tote + fittings + first-flush diverter + gutters</td>
+      <td class="cost">$150–$250</td>
+    </tr>
+    <tr>
+      <td>Composting toilet (DIY)</td>
+      <td>5-gallon bucket + toilet seat + sawdust supply. Commercial unit: $800–$1,200</td>
+      <td class="cost">$50–$100</td>
+    </tr>
+    <tr>
+      <td><strong>TOTAL</strong></td>
+      <td>Depending on region, salvage availability, and press arrangement</td>
+      <td class="cost"><strong>$2,280–$3,750</strong></td>
+    </tr>
+  </table>
+
+  <div class="tool-note">
+    <h4>&#x1F6E0; The One Tool That Changes Everything: The CEB Press</h4>
+    <p>A single manual CEB press shared among four families costs approximately $500 per household and produces enough blocks for one home in 3&ndash;4 weeks of weekend work. The press is the entire capital investment. Everything else follows from the ground up — literally. <strong>Community press-sharing is the most important organizational step in the plan.</strong> Find 3 neighbors before you buy a press.</p>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- SOIL TESTS -->
+  <div class="section-eyebrow">Soil Testing &middot; The Compress Operator in Practice</div>
+  <h2 class="section-title">Know What You Have Before You Press It</h2>
+
+  <div class="soil-box">
+    <h4>The Jar Test (24 hours)</h4>
+    <p>Fill a quart jar 1/3 with dry soil. Add water to fill. Add 1 tsp of salt (helps separation). Shake vigorously for 3 minutes. Set on a level surface. Do not disturb.</p>
+    <p>After 1 minute: sand has settled. Measure sand depth.<br>
+    After 2 hours: silt has settled. Measure silt depth.<br>
+    After 24 hours: clay has settled. Measure clay depth.</p>
+    <p><b>Target ratio:</b> <code>Sand 50–70%</code> &nbsp;&middot;&nbsp; <code>Silt 10–30%</code> &nbsp;&middot;&nbsp; <code>Clay 15–30%</code></p>
+    <p>If clay is above 35%: add coarse river sand. If clay is below 10%: add bentonite clay powder or find a higher-clay deposit nearby.</p>
+  </div>
+
+  <div class="soil-box">
+    <h4>The Drop Test (5 minutes)</h4>
+    <p>Make a block by hand — compress a handful of moist (not wet) soil into a rough cube shape. Let it dry overnight in the shade. Drop it from shoulder height onto a hard surface.</p>
+    <p><b>If it shatters into powder:</b> not enough clay. Add clay.<br>
+    <b>If it cracks into 3&ndash;5 large pieces:</b> good mix. Proceed.<br>
+    <b>If it bounces and barely cracks:</b> excellent mix. You have good soil.</p>
+  </div>
+
+  <div class="soil-box">
+    <h4>The Compression Test (after pressing)</h4>
+    <p>After curing your first 10 blocks for 28 days, stand one on its end and apply your full body weight (stand on it). A well-made unstabilized CEB should hold 300+ lbs/sq in. A 5% cement-stabilized block should hold 700+ lbs/sq in. If blocks crumble under body weight after 28 days, the mix needs more clay or stabilizer.</p>
+  </div>
+
+  <hr class="gold-divider">
+
+  <!-- THE HEX GEOMETRY -->
+  <div class="section-eyebrow">G6 Crystal Geometry &middot; From Moon to Earth</div>
+  <h2 class="section-title">Why the Hexagon</h2>
+
+  <div class="hex-diagram">
+    <div class="hex-svg-wrap">
+      <svg viewBox="0 0 320 280" width="320" height="280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background -->
+        <rect width="320" height="280" fill="#faf7f0"/>
+        <!-- Title -->
+        <text x="160" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#8a7340" letter-spacing="1">G6 HEXAGONAL TILING — LOAD DISTRIBUTION</text>
+
+        <!-- Helper function: hexagon centered at cx,cy with radius r -->
+        <!-- Row 1: 3 hexagons -->
+        <!-- Center hex (primary load) -->
+        <polygon points="160,60 186,75 186,105 160,120 134,105 134,75" fill="#1a2744" stroke="#c9a84c" stroke-width="1.5"/>
+        <text x="160" y="94" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#c9a84c" font-weight="bold">LOAD</text>
+
+        <!-- 6 surrounding hexagons -->
+        <polygon points="108,30 134,45 134,75 108,90 82,75 82,45" fill="#7a4a1e" stroke="#c9a84c" stroke-width="1"/>
+        <polygon points="212,30 238,45 238,75 212,90 186,75 186,45" fill="#7a4a1e" stroke="#c9a84c" stroke-width="1"/>
+        <polygon points="160,120 186,135 186,165 160,180 134,165 134,135" fill="#2d5a27" stroke="#c9a84c" stroke-width="1"/>
+        <polygon points="56,90 82,105 82,135 56,150 30,135 30,105" fill="#3a4f7a" stroke="#c9a84c" stroke-width="1"/>
+        <polygon points="264,90 290,105 290,135 264,150 238,135 238,105" fill="#3a4f7a" stroke="#c9a84c" stroke-width="1"/>
+        <polygon points="108,150 134,165 134,195 108,210 82,195 82,165" fill="#1a6b5a" stroke="#c9a84c" stroke-width="1"/>
+        <polygon points="212,150 238,165 238,195 212,210 186,195 186,165" fill="#1a6b5a" stroke="#c9a84c" stroke-width="1"/>
+
+        <!-- Force arrows from center outward to 6 neighbors -->
+        <line x1="160" y1="90" x2="108" y2="65" stroke="#c9a84c" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="160" y1="90" x2="212" y2="65" stroke="#c9a84c" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="160" y1="90" x2="134" y2="150" stroke="#c9a84c" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="160" y1="90" x2="186" y2="150" stroke="#c9a84c" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="160" y1="90" x2="82" y2="118" stroke="#c9a84c" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="160" y1="90" x2="238" y2="118" stroke="#c9a84c" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <defs>
+          <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 z" fill="#c9a84c"/>
+          </marker>
+        </defs>
+
+        <!-- Labels -->
+        <text x="108" y="64" text-anchor="middle" font-family="monospace" font-size="7" fill="white">K</text>
+        <text x="212" y="64" text-anchor="middle" font-family="monospace" font-size="7" fill="white">K</text>
+        <text x="56" y="122" text-anchor="middle" font-family="monospace" font-size="7" fill="white">F</text>
+        <text x="264" y="122" text-anchor="middle" font-family="monospace" font-size="7" fill="white">F</text>
+        <text x="108" y="182" text-anchor="middle" font-family="monospace" font-size="7" fill="white">U</text>
+        <text x="212" y="182" text-anchor="middle" font-family="monospace" font-size="7" fill="white">U</text>
+        <text x="160" y="152" text-anchor="middle" font-family="monospace" font-size="7" fill="white">C</text>
+
+        <!-- Caption -->
+        <text x="160" y="240" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#555">Each loaded block transfers force equally to 6 neighbors.</text>
+        <text x="160" y="252" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#555">No single point bears more than 1/6 of the total load.</text>
+        <text x="160" y="267" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#8a7340">G6 Crystal Framework &middot; Zenodo 10.5281/zenodo.19162012</text>
+      </svg>
+    </div>
+    <div class="hex-legend">
+      <h4>Why hexagonal geometry works for earth blocks</h4>
+      <ul>
+        <li><span class="color-dot" style="background:#1a2744"></span>The loaded block distributes force to exactly 6 neighbors &mdash; not 4 (square) or 3 (triangle)</li>
+        <li><span class="color-dot" style="background:#7a4a1e"></span>Six contact faces means each face bears 1/6 of the load &mdash; the mathematical minimum for a convex polygon that tiles a plane</li>
+        <li><span class="color-dot" style="background:#2d5a27"></span>The hexagonal tiling eliminates straight-through crack paths &mdash; cracks must navigate around 6 vertices to propagate</li>
+        <li><span class="color-dot" style="background:#3a4f7a"></span>Interlocking hexagonal profiles eliminate the need for mortar &mdash; geometry replaces adhesive</li>
+        <li><span class="color-dot" style="background:#1a6b5a"></span>This is the same geometry used in beehives, basalt columns, and the G6 Crystal lunar base design</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr class="section-rule">
+
+  <!-- RESEARCH LINK -->
+  <div class="research-strip">
+    <div class="rs-label">Research</div>
+    <p>The formal mathematical derivation of the G6 hexagonal geometry, compression invariants, and structural stability proofs are published in the Principia Orthogona series. The G6 Crystal paper includes Python simulation code and Lean 4 formal proofs.</p>
+    <a href="https://doi.org/10.5281/zenodo.19162012" target="_blank">doi.org/10.5281/zenodo.19162012 ↗</a>
+  </div>
+
+  <div class="research-strip" style="background:var(--earth)">
+    <div class="rs-label">Full Series</div>
+    <p>21 papers. One operator chain. Plasma confinement, biological morphogenesis, market structure, number theory, and now: compressed earth housing. The mathematics is the same.</p>
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">doi.org/10.5281/zenodo.19117399 ↗</a>
+  </div>
+
+  <hr class="gold-divider">
+
+  <!-- CLOSING -->
+  <div class="pullquote">
+    &ldquo;The Moon does not have lumber yards. It does not have concrete plants. It does not have supply chains. It has regolith &mdash; the material under its surface &mdash; and the mathematics of how to build with it. The person living on their land in rural Alabama, or rural New Mexico, or rural Newark &mdash; they have exactly the same situation. They have the ground. They need the mathematics.&rdquo;
+    <cite>&mdash; G6 Earth House Plan &middot; Pablo Nogueira Grossi / G6 LLC &middot; Newark, NJ &middot; 2026</cite>
+  </div>
+
+  <!-- FUNDRAISER + UCEDA -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:2rem 0">
+    <div style="background:#e8f5e9;border:2px solid #2d5a27;padding:1.4rem 1.5rem">
+      <h3 style="color:#2d5a27;font-family:sans-serif;font-size:.95rem;margin-bottom:.5rem">&#x1F3E0; Support Hour House &mdash; Newark, NJ</h3>
+      <p style="font-size:.87rem;color:#1b5e20;line-height:1.7;margin-bottom:.7rem">Hour House is Pablo&rsquo;s community ESL programme at 229 Ballantine Pkwy, Newark, NJ &mdash; free or low-cost for immigrant and refugee learners. Every lesson connects to the same research behind this housing plan.</p>
+      <a href="https://g6llc.gumroad.com" target="_blank" style="display:inline-block;background:#2d5a27;color:white;font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.4rem .9rem;text-decoration:none;margin-right:.5rem">&#x1F4D6; Buy the Membership</a>
+      <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="display:inline-block;background:transparent;color:#2d5a27;border:1.5px solid #2d5a27;font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.4rem .9rem;text-decoration:none">&#x1F6D2; Buy the Book</a>
+    </div>
+    <div style="background:#eef4fb;border:2px solid #3a6fa0;padding:1.4rem 1.5rem">
+      <h3 style="color:#1a4a7a;font-family:sans-serif;font-size:.95rem;margin-bottom:.5rem">&#x1F393; Enroll at UCEDA School of Elizabeth</h3>
+      <p style="font-size:.87rem;color:#1a3a5c;line-height:1.7;margin-bottom:.7rem">Pablo teaches English at UCEDA School of Elizabeth &mdash; accredited online English classes at Basic, Intermediate, and Advanced levels. Flexible schedules for working adults.</p>
+      <p style="font-size:.82rem;color:#2a5080;margin-bottom:.3rem">&#x1F4CD; 1180 Elizabeth Ave, Elizabeth, NJ 07201</p>
+      <p style="font-size:.82rem;color:#2a5080">&#x1F4DE; (908) 354-5505 &middot; Mon&ndash;Fri, opens 8 AM</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div style="color:var(--gold);font-size:.8rem;margin-bottom:.4rem">G6 Earth House Plan &middot; Principia Orthogona Applied Architecture &middot; 2026</div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; 229 Ballantine Pkwy, Newark, NJ 07104</div>
+  <div style="margin-top:.3rem">ORCID: <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &middot; G6 Crystal DOI: <a href="https://doi.org/10.5281/zenodo.19162012" target="_blank">10.5281/zenodo.19162012</a> &middot; Series: <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">10.5281/zenodo.19117399</a></div>
+  <div style="margin-top:.4rem"><a href="index.html">&larr; Hour House Homepage</a> &middot; <a href="index.html#research">Research</a> &middot; <a href="index.html#lessons">Lessons</a></div>
+</footer>
+
+</body>
+</html>
