@@ -1,0 +1,207 @@
+
+<h2 class="sr-only">NVDA daily trade setup sheet for June 1, 2026 — scalp at the open</h2>
+
+<style>
+  .setup-wrap { font-family: var(--font-mono); padding: 0 0 1rem; }
+  .setup-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+  .setup-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); letter-spacing: 0.06em; text-transform: uppercase; }
+  .setup-meta { font-size: 11px; color: var(--color-text-tertiary); }
+  .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 500; margin-left: 6px; }
+  .badge-long { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-warn { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .badge-danger { background: var(--color-background-danger); color: var(--color-text-danger); }
+
+  .context-banner { background: var(--color-background-warning); border: 0.5px solid var(--color-border-warning); border-radius: var(--border-radius-md); padding: 10px 14px; margin-bottom: 1rem; font-size: 12px; color: var(--color-text-warning); line-height: 1.5; }
+
+  .levels-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .levels-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-tertiary); margin-bottom: 10px; }
+
+  .price-ladder { display: flex; flex-direction: column; gap: 3px; }
+  .price-row { display: flex; align-items: center; gap: 10px; padding: 5px 8px; border-radius: 4px; font-size: 12px; }
+  .price-row.resistance { background: var(--color-background-danger); }
+  .price-row.entry-long { background: var(--color-background-success); border: 1px solid var(--color-border-success); }
+  .price-row.current { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-primary); }
+  .price-row.support { background: var(--color-background-info); }
+  .price-row.stop { background: var(--color-background-danger); }
+  .price-tag { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 500; min-width: 72px; text-align: center; }
+  .tag-res { background: #F09595; color: #501313; }
+  .tag-entry { background: #97C459; color: #173404; }
+  .tag-now { background: var(--color-border-secondary); color: var(--color-text-secondary); }
+  .tag-sup { background: #85B7EB; color: #042C53; }
+  .tag-stop { background: #F09595; color: #501313; }
+  .tag-tp { background: #97C459; color: #173404; }
+  .price-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); min-width: 64px; }
+  .price-note { font-size: 11px; color: var(--color-text-secondary); flex: 1; }
+
+  .scenarios { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .scenario-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem; }
+  .scenario-head { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .scenario-long .scenario-head { color: var(--color-text-success); }
+  .scenario-short .scenario-head { color: var(--color-text-danger); }
+  .scenario-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .scenario-row:last-child { border-bottom: none; }
+  .scenario-key { color: var(--color-text-secondary); }
+  .scenario-val { font-weight: 500; color: var(--color-text-primary); }
+  .val-green { color: var(--color-text-success); }
+  .val-red { color: var(--color-text-danger); }
+
+  .rr-bar { height: 6px; border-radius: 3px; background: var(--color-background-secondary); margin: 8px 0 4px; overflow: hidden; display: flex; }
+  .rr-loss { background: #E24B4A; height: 100%; }
+  .rr-win { background: #639922; height: 100%; }
+
+  .rules-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; margin-bottom: 12px; }
+  .rule { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; padding: 4px 0; color: var(--color-text-secondary); line-height: 1.4; }
+  .rule-icon { flex-shrink: 0; margin-top: 1px; }
+  .rule strong { color: var(--color-text-primary); font-weight: 500; }
+
+  .context-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .ctx-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .ctx-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); margin-bottom: 4px; }
+  .ctx-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .ctx-sub { font-size: 10px; color: var(--color-text-tertiary); margin-top: 2px; }
+
+  .calc-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .calc-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .calc-row:last-child { border-bottom: none; }
+  .calc-key { color: var(--color-text-secondary); }
+  .calc-val { font-weight: 500; color: var(--color-text-primary); }
+</style>
+
+<div class="setup-wrap">
+
+  <div class="setup-header">
+    <div>
+      <span class="setup-title">NVDA · Daily setup</span>
+      <span class="badge badge-long">LONG BIAS</span>
+      <span class="badge badge-warn">OPEN SCALP</span>
+    </div>
+    <div class="setup-meta">Mon Jun 1, 2026 · 09:30 ET · eToro</div>
+  </div>
+
+  <div class="context-banner">
+    <i class="ti ti-alert-triangle" style="font-size:14px;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
+    <strong>Catalyst active:</strong> Nvidia unveiled the RTX Spark Superchip at Computex 2026 this morning. Jensen Huang: "This reinvention of the computer is as big a deal as the reinvention of the phone." NVDA +2.4% premarket ($216.29). IBM +12%, ServiceNow +10% riding the wave. Intel –5.8%, Qualcomm –9.6% as losers. Oil up 3.9% (US–Iran fresh strikes over weekend). S&P futures +0.2%, Nasdaq futures +0.34%.
+  </div>
+
+  <div class="context-grid">
+    <div class="ctx-card">
+      <div class="ctx-label">Premarket price</div>
+      <div class="ctx-val">$216.29</div>
+      <div class="ctx-sub">+$5.15 · +2.44% vs Friday</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">Friday close</div>
+      <div class="ctx-val">$211.14</div>
+      <div class="ctx-sub">ATH $236.54 · gap to ATH 8.4%</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">VIX</div>
+      <div class="ctx-val">15.32</div>
+      <div class="ctx-sub">Low vol · complacency zone</div>
+    </div>
+  </div>
+
+  <div class="levels-card">
+    <div class="levels-label">Price ladder — key levels today</div>
+    <div class="price-ladder">
+
+      <div class="price-row resistance">
+        <span class="price-tag tag-res">Resistance</span>
+        <span class="price-val">$220.00</span>
+        <span class="price-note">Round number · prev intraday high zone · first target if long holds</span>
+      </div>
+
+      <div class="price-row resistance">
+        <span class="price-tag tag-res">R2</span>
+        <span class="price-val">$217.86</span>
+        <span class="price-note">Friday session high — first real wall to clear at open</span>
+      </div>
+
+      <div class="price-row entry-long">
+        <span class="price-tag tag-entry">Entry zone</span>
+        <span class="price-val">$215–216</span>
+        <span class="price-note">Premarket consolidation range · VWAP likely anchors here at open</span>
+      </div>
+
+      <div class="price-row current">
+        <span class="price-tag tag-now">Now</span>
+        <span class="price-val">$216.29</span>
+        <span class="price-note">Premarket 9:00 AM · watch if it holds or fades into open</span>
+      </div>
+
+      <div class="price-row support">
+        <span class="price-tag tag-sup">Support S1</span>
+        <span class="price-val">$213.36</span>
+        <span class="price-note">Predicted fair open · volume support from prior week</span>
+      </div>
+
+      <div class="price-row support">
+        <span class="price-tag tag-sup">Support S2</span>
+        <span class="price-val">$211.14</span>
+        <span class="price-note">Friday close · your hard stop reference · must not lose this</span>
+      </div>
+
+      <div class="price-row stop">
+        <span class="price-tag tag-stop">Hard stop</span>
+        <span class="price-val">$213.50</span>
+        <span class="price-note">Below premarket range low — if price falls here, thesis is broken</span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scenarios">
+    <div class="scenario-card scenario-long">
+      <div class="scenario-head"><i class="ti ti-trending-up" style="font-size:13px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>Bull scenario — Long</div>
+      <div class="scenario-row"><span class="scenario-key">Trigger</span><span class="scenario-val">Opens above $216, holds 30s</span></div>
+      <div class="scenario-row"><span class="scenario-key">Entry</span><span class="scenario-val">$216.00–216.50</span></div>
+      <div class="scenario-row"><span class="scenario-key">TP1</span><span class="scenario-val val-green">$217.86 (+$1.86)</span></div>
+      <div class="scenario-row"><span class="scenario-key">TP2</span><span class="scenario-val val-green">$220.00 (+$3.50)</span></div>
+      <div class="scenario-row"><span class="scenario-key">Stop</span><span class="scenario-val val-red">$213.50 (–$2.50)</span></div>
+      <div class="scenario-row"><span class="scenario-key">R:R</span><span class="scenario-val">1:1.4 → 1:1.4</span></div>
+      <div class="rr-bar"><div class="rr-loss" style="width:42%"></div><div class="rr-win" style="width:58%"></div></div>
+      <div style="font-size:10px;color:var(--color-text-tertiary)">Probability: high — catalyst + premarket momentum + sector rotation</div>
+    </div>
+
+    <div class="scenario-card scenario-short">
+      <div class="scenario-head"><i class="ti ti-trending-down" style="font-size:13px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>Bear scenario — Avoid short</div>
+      <div class="scenario-row"><span class="scenario-key">Trigger</span><span class="scenario-val">Gap fill below $213</span></div>
+      <div class="scenario-row"><span class="scenario-key">Entry</span><span class="scenario-val">Only if $213 breaks cleanly</span></div>
+      <div class="scenario-row"><span class="scenario-key">TP</span><span class="scenario-val val-green">$211.14 (Friday close)</span></div>
+      <div class="scenario-row"><span class="scenario-key">Stop</span><span class="scenario-val val-red">$215.00 above</span></div>
+      <div class="scenario-row"><span class="scenario-key">R:R</span><span class="scenario-val">1:0.9 — marginal</span></div>
+      <div class="scenario-row"><span class="scenario-key">Verdict</span><span class="scenario-val val-red">Do not chase short</span></div>
+      <div class="rr-bar"><div class="rr-loss" style="width:52%"></div><div class="rr-win" style="width:48%"></div></div>
+      <div style="font-size:10px;color:var(--color-text-tertiary)">Shorting into a fresh catalyst + 9-week bull run = low-probability trade</div>
+    </div>
+  </div>
+
+  <div class="rules-card">
+    <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-secondary);margin-bottom:8px">5-minute open rules — non-negotiable</div>
+    <div class="rule"><i class="ti ti-clock" style="font-size:14px;color:var(--color-text-tertiary)" aria-hidden="true" class="rule-icon"></i><span><strong>Wait 60 seconds.</strong> Do not click buy the instant the bell rings. Watch the first 60s candle close. Gap-and-crap reversals happen in the first 30s. Let the market show its hand.</span></div>
+    <div class="rule"><i class="ti ti-chart-bar" style="font-size:14px;color:var(--color-text-tertiary)" aria-hidden="true" class="rule-icon"></i><span><strong>VWAP is your guide.</strong> If price opens above premarket VWAP (~$216) and stays above it for 2 candles, the long is on. If it immediately drops below, step aside.</span></div>
+    <div class="rule"><i class="ti ti-x" style="font-size:14px;color:var(--color-text-danger)" aria-hidden="true" class="rule-icon"></i><span><strong>$213.50 stops everything.</strong> If NVDA trades $213.50, close the position immediately. No hoping. No averaging. Out.</span></div>
+    <div class="rule"><i class="ti ti-check" style="font-size:14px;color:var(--color-text-success)" aria-hidden="true" class="rule-icon"></i><span><strong>Take partial at $217.86.</strong> Friday's high is a wall. Sell half there, move stop to breakeven on the rest. Let the rest ride toward $220 only if volume is expanding.</span></div>
+    <div class="rule"><i class="ti ti-clock-off" style="font-size:14px;color:var(--color-text-tertiary)" aria-hidden="true" class="rule-icon"></i><span><strong>Exit by 9:35 regardless.</strong> This is a 5-minute scalp. If it hasn't moved by 9:35, the setup failed. Close and walk away.</span></div>
+  </div>
+
+  <div class="calc-card">
+    <div class="levels-label" style="margin-bottom:10px">Position sizing — $200 account, targeting 1–2%</div>
+    <div class="calc-row"><span class="calc-key">Account size</span><span class="calc-val">$200.00</span></div>
+    <div class="calc-row"><span class="calc-key">Target gain (1–2%)</span><span class="calc-val val-green">$2.00 – $4.00</span></div>
+    <div class="calc-row"><span class="calc-key">Max risk per trade (1%)</span><span class="calc-val val-red">$2.00</span></div>
+    <div class="calc-row"><span class="calc-key">Stop distance ($216 entry → $213.50)</span><span class="calc-val">$2.50 per share</span></div>
+    <div class="calc-row"><span class="calc-key">Shares to risk exactly $2.00</span><span class="calc-val">0.8 shares (eToro fractional)</span></div>
+    <div class="calc-row"><span class="calc-key">Position value</span><span class="calc-val">~$173 (0.8 × $216)</span></div>
+    <div class="calc-row"><span class="calc-key">If TP1 hit ($217.86) on 0.8 shares</span><span class="calc-val val-green">+$1.49</span></div>
+    <div class="calc-row"><span class="calc-key">If TP2 hit ($220.00) on 0.4 shares (half)</span><span class="calc-val val-green">+$1.49 + $1.60 = +$3.09 ✓</span></div>
+    <div class="calc-row"><span class="calc-key">If stopped out at $213.50</span><span class="calc-val val-red">–$2.00 · account = $198</span></div>
+  </div>
+
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="sendPrompt('What are the biggest risks to the NVDA long trade this morning?')">Biggest risks ↗</button>
+    <button onclick="sendPrompt('Show me what to do if NVDA gaps up above $218 at open — do I still buy or chase?')">Gap-up plan ↗</button>
+    <button onclick="sendPrompt('Walk me through the actual eToro steps to place this trade with a stop loss')">eToro steps ↗</button>
+  </div>
+
+</div>
