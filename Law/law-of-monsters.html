@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Law of Monsters — Principia Orthogona Vol. III</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #06070d;
+    --bg2:      #0c0f1c;
+    --bg3:      #111629;
+    --gold:     #c9a84c;
+    --gold2:    #e8c97a;
+    --gold3:    #f5e4b0;
+    --cyan:     #4fc3c3;
+    --red:      #c94c4c;
+    --white:    #eef0f7;
+    --muted:    #7a8199;
+    --border:   #1e2540;
+    --font-body: 'Cormorant Garamond', Georgia, serif;
+    --font-mono: 'JetBrains Mono', 'Fira Mono', monospace;
+    --font-head: 'Rajdhani', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.6;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 0;
+    background: rgba(6,7,13,0.92);
+    backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .site-header .container {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .logo span { color: var(--muted); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 7rem 0 5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: 'M';
+    position: absolute;
+    right: -2rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-head);
+    font-size: 28rem;
+    font-weight: 700;
+    color: rgba(201,168,76,0.03);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .series-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .series-tag::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem; height: 1px;
+    background: var(--gold);
+  }
+  .hero h1 {
+    font-family: var(--font-head);
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .hero-meta a { color: var(--gold); text-decoration: none; }
+  .hero-meta a:hover { color: var(--gold2); }
+
+  /* ── OPERATOR BAR ── */
+  .operator-bar {
+    display: flex; justify-content: center; align-items: center;
+    gap: 0;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  .op-item {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0.6rem 1.4rem;
+    border-right: 1px solid var(--border);
+    min-width: 90px;
+  }
+  .op-item:last-child { border-right: none; }
+  .op-symbol {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .op-label {
+    font-family: var(--font-head);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.25rem;
+  }
+  .op-compose {
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    color: var(--border);
+    padding: 0 0.5rem;
+    align-self: center;
+  }
+
+  /* ── EPIGRAPH ── */
+  .epigraph {
+    padding: 3.5rem 0 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .epigraph blockquote {
+    border-left: 2px solid var(--gold);
+    padding-left: 2rem;
+    margin: 0 0 0 1rem;
+  }
+  .epigraph p {
+    font-size: 1.15rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold3);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+  }
+  .epigraph cite {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    font-style: normal;
+  }
+  .calibration-note {
+    margin: 2rem 0 0 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--bg3);
+    border-left: 2px solid var(--cyan);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── TOC ── */
+  .toc-block {
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toc-block h2 {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 3rem;
+  }
+  .toc-item {
+    display: flex; align-items: baseline; gap: 0.75rem;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid transparent;
+  }
+  .toc-item:hover { color: var(--gold); border-bottom-color: var(--border); }
+  .toc-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--gold);
+    min-width: 1.5rem;
+  }
+  @media (max-width: 600px) { .toc-grid { grid-template-columns: 1fr; } }
+
+  /* ── SECTIONS ── */
+  .chapter-section {
+    padding: 4rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+  .chapter-section h2 {
+    font-family: var(--font-head);
+    font-size: clamp(1.6rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 1.8rem;
+  }
+  .chapter-section h2 em {
+    font-style: italic;
+    color: var(--gold2);
+  }
+  .chapter-section h3 {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 2.5rem 0 1rem;
+  }
+  .chapter-section p {
+    font-size: 1.1rem;
+    line-height: 1.85;
+    color: #d0d4e8;
+    margin-bottom: 1.2rem;
+  }
+
+  /* ── TELOS BOX ── */
+  .telos-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+    border: 1px solid rgba(201,168,76,0.3);
+    border-left: 3px solid var(--gold);
+    padding: 2rem 2.5rem;
+    margin: 2.5rem 0;
+    position: relative;
+  }
+  .telos-box::before {
+    content: 'TELOS';
+    position: absolute; top: -0.5rem; left: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    background: var(--bg);
+    padding: 0 0.5rem;
+  }
+  .telos-statement {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold3);
+    line-height: 1.75;
+  }
+  .telos-statement strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  /* ── ASCENT CHAIN ── */
+  .ascent-chain {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 1.8rem 2rem;
+    margin: 2rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+  }
+  .ascent-chain .chain-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .chain-step {
+    display: flex; align-items: baseline; gap: 1.5rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid rgba(30,37,64,0.6);
+  }
+  .chain-step:last-child { border-bottom: none; }
+  .chain-g { color: var(--gold); font-weight: 700; min-width: 6rem; }
+  .chain-desc { color: var(--white); }
+  .chain-arrow { color: var(--border); margin: 0 0.25rem; }
+
+  /* ── DEFINITION TABLE ── */
+  .def-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.92rem;
+  }
+  .def-table thead tr {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--gold);
+  }
+  .def-table thead th {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 400;
+  }
+  .def-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .def-table tbody tr:hover { background: rgba(201,168,76,0.04); }
+  .def-table td {
+    padding: 0.85rem 1rem;
+    vertical-align: top;
+    color: #d0d4e8;
+    line-height: 1.6;
+  }
+  .def-table td:first-child {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+  .def-table td code {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--cyan);
+    background: rgba(79,195,195,0.08);
+    padding: 0.1em 0.4em;
+    border-radius: 2px;
+  }
+
+  /* ── KANAMORI CORRESPONDENCE ── */
+  .correspondence-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin: 2rem 0;
+    overflow: hidden;
+  }
+  .corr-header {
+    padding: 0.85rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 400;
+    border-bottom: 1px solid var(--border);
+  }
+  .corr-header.left {
+    background: rgba(201,168,76,0.08);
+    color: var(--gold);
+    border-right: 1px solid var(--border);
+  }
+  .corr-header.right {
+    background: rgba(79,195,195,0.06);
+    color: var(--cyan);
+  }
+  .corr-pair {
+    display: contents;
+  }
+  .corr-pair .corr-left, .corr-pair .corr-right {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    border-bottom: 1px solid var(--border);
+  }
+  .corr-pair .corr-left {
+    color: var(--gold3);
+    border-right: 1px solid var(--border);
+    background: rgba(201,168,76,0.02);
+    font-family: var(--font-mono);
+  }
+  .corr-pair .corr-right {
+    color: #d0d4e8;
+    font-style: italic;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+  }
+
+  /* ── PRINCIPLE CARDS ── */
+  .principle-list {
+    display: flex; flex-direction: column; gap: 0;
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .principle-item {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .principle-item:last-child { border-bottom: none; }
+  .principle-item:hover { background: rgba(201,168,76,0.04); }
+  .principle-num {
+    background: var(--bg3);
+    border-right: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 1.2rem 0 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .principle-body { padding: 1.2rem 1.5rem; }
+  .principle-title {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+  }
+  .principle-text {
+    font-size: 0.95rem;
+    color: #9aa0b8;
+    line-height: 1.65;
+    margin: 0;
+  }
+  .principle-text strong { color: var(--gold2); font-weight: 600; }
+
+  /* ── SPINE VISUALIZATION ── */
+  .spine-visual {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin: 2rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+  .spine-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .spine-levels {
+    display: flex; flex-direction: column; gap: 0;
+    position: relative;
+  }
+  .spine-levels::before {
+    content: '';
+    position: absolute;
+    left: 2.2rem; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--gold), var(--border));
+  }
+  .spine-level {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    align-items: start;
+    padding: 0.6rem 0;
+  }
+  .spine-level-label {
+    position: relative;
+    display: flex; align-items: center; gap: 0.5rem;
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+  .spine-level-label::after {
+    content: '';
+    display: inline-block; width: 0.6rem; height: 0.6rem;
+    border: 1px solid var(--gold);
+    background: var(--bg);
+    border-radius: 50%;
+    position: absolute; left: 1.95rem;
+    transform: translateX(-50%);
+  }
+  .spine-level-desc {
+    color: #9aa0b8;
+    padding-left: 1.5rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  .spine-level-desc em { color: var(--gold2); font-style: normal; }
+  .spine-top .spine-level-label { color: var(--gold2); font-size: 1rem; }
+  .spine-top .spine-level-label::after { background: var(--gold); width: 0.8rem; height: 0.8rem; }
+  .spine-top .spine-level-desc { color: var(--white); }
+
+  /* ── OCIO GENEALOGY ── */
+  .genealogy-list {
+    display: flex; flex-direction: column; gap: 0;
+    margin: 2rem 0;
+  }
+  .genealogy-item {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    border-bottom: 1px solid var(--border);
+    padding: 1.1rem 0;
+  }
+  .genealogy-year {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: 700;
+    padding-top: 0.15rem;
+  }
+  .genealogy-desc {
+    font-size: 0.95rem;
+    color: #9aa0b8;
+    line-height: 1.6;
+  }
+  .genealogy-desc strong { color: var(--white); }
+
+  /* ── OPEN AXIOM ── */
+  .open-axiom {
+    background: linear-gradient(135deg, rgba(201,76,76,0.08), rgba(201,76,76,0.03));
+    border: 1px solid rgba(201,76,76,0.25);
+    border-left: 3px solid var(--red);
+    padding: 2rem 2.5rem;
+    margin: 2.5rem 0;
+    position: relative;
+  }
+  .open-axiom::before {
+    content: 'OPEN CONJECTURE — ISSUE 6';
+    position: absolute; top: -0.5rem; left: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    background: var(--bg);
+    padding: 0 0.5rem;
+  }
+  .open-axiom p {
+    color: #e8c0c0 !important;
+  }
+
+  /* ── FORMULA DISPLAY ── */
+  .formula {
+    text-align: center;
+    padding: 1.5rem 0;
+    font-family: var(--font-mono);
+    font-size: 1.3rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    margin: 1.5rem 0;
+  }
+  .formula .op { color: var(--gold2); }
+  .formula .compose { color: var(--muted); margin: 0 0.3em; }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    padding: 4rem 0 3rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+  .footer-brand {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 2;
+    letter-spacing: 0.06em;
+  }
+  .footer-brand a { color: var(--gold); text-decoration: none; }
+  .footer-col h4 {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .footer-col a {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.25rem 0;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin: 0;
+  }
+  .footer-coda {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  @media (max-width: 700px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero { padding: 4rem 0 3rem; }
+    .operator-bar { flex-wrap: wrap; }
+    .correspondence-grid { grid-template-columns: 1fr; }
+    .corr-header.left, .corr-pair .corr-left { border-right: none; }
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-in {
+    opacity: 0; transform: translateY(1.5rem);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="https://totogt.github.io/geometry/book4/hub.html">
+      AXLE <span>/ PRINCIPIA ORTHOGONA</span>
+    </a>
+    <nav class="nav-links">
+      <a href="https://github.com/TOTOGT/AXLE">Lean 4</a>
+      <a href="https://doi.org/10.5281/zenodo.19117399">Zenodo</a>
+      <a href="togt-research-program.html">Research Program</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="series-tag">Principia Orthogona · Vol. III · Chapter: Ocio</div>
+      <h1>The Law of<br><em>Monsters</em></h1>
+      <p class="hero-subtitle">A TOGT Recasting of Foundational Generative Principles</p>
+      <div class="hero-meta">
+        <span>Pablo Nogueira Grossi</span>
+        <span>G6 LLC · Newark, NJ · 2026</span>
+        <a href="https://orcid.org/0009-0000-6496-2186">ORCID 0009-0000-6496-2186</a>
+        <a href="https://doi.org/10.5281/zenodo.19117399">DOI 10.5281/zenodo.19117399</a>
+        <a href="https://github.com/TOTOGT/AXLE">AXLE repo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPERATOR BAR -->
+  <div class="operator-bar">
+    <div class="op-item">
+      <span class="op-symbol">C</span>
+      <span class="op-label">Compress</span>
+    </div>
+    <span class="op-compose">■</span>
+    <div class="op-item">
+      <span class="op-symbol">K</span>
+      <span class="op-label">Curve</span>
+    </div>
+    <span class="op-compose">■</span>
+    <div class="op-item">
+      <span class="op-symbol">F</span>
+      <span class="op-label">Fold</span>
+    </div>
+    <span class="op-compose">■</span>
+    <div class="op-item">
+      <span class="op-symbol">U</span>
+      <span class="op-label">Unfold</span>
+    </div>
+    <span class="op-compose" style="margin: 0 1rem; color: var(--gold);">→</span>
+    <div class="op-item" style="border: 1px solid rgba(201,168,76,0.3);">
+      <span class="op-symbol" style="font-size: 1.5rem;">g</span>
+      <span class="op-label">Generator</span>
+    </div>
+    <span class="op-compose" style="margin: 0 1rem; color: var(--gold);">→</span>
+    <div class="op-item" style="border: 1px solid rgba(201,168,76,0.5); background: rgba(201,168,76,0.06);">
+      <span class="op-symbol" style="font-size: 1.5rem; color: var(--gold2);">M</span>
+      <span class="op-label">Monster (g⁶)</span>
+    </div>
+  </div>
+
+  <!-- EPIGRAPH -->
+  <section class="chapter-section epigraph" id="epigraph">
+    <div class="container">
+      <blockquote>
+        <p>"Chi per mestiere compra o vende si riconosce facilmente: ha l'occhio vigile e il volto teso…<br>
+        È un mestiere che tende a distruggere l'anima immortale."</p>
+        <cite>— Primo Levi, <em>Il sistema periodico</em> (1975)</cite>
+      </blockquote>
+      <div class="calibration-note">
+        CALIBRATION NOTE — This framework arrived at hyper-Mahlo from the operator side. Kanamori arrived from the cardinal side. They meet at the fixed point.
+      </div>
+    </div>
+  </section>
+
+  <!-- TOC -->
+  <section class="chapter-section" id="toc">
+    <div class="container">
+      <div class="toc-block">
+        <h2>Contents</h2>
+        <nav class="toc-grid">
+          <a class="toc-item" href="#telos"><span class="toc-num">§0</span> Telos</a>
+          <a class="toc-item" href="#definitions"><span class="toc-num">§I</span> Core Definitions</a>
+          <a class="toc-item" href="#principles"><span class="toc-num">§II</span> Key Principles</a>
+          <a class="toc-item" href="#kanamori"><span class="toc-num">§III</span> Kanamori Correspondence</a>
+          <a class="toc-item" href="#spines"><span class="toc-num">§IV</span> Regenerative Spines</a>
+          <a class="toc-item" href="#ocio"><span class="toc-num">§V</span> Ocio — The Structural Condition</a>
+          <a class="toc-item" href="#open"><span class="toc-num">§∂</span> Open Boundary — Axiom 9</a>
+          <a class="toc-item" href="#bibliography"><span class="toc-num">§Ref</span> Bibliography</a>
+        </nav>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELOS -->
+  <section class="chapter-section fade-in" id="telos">
+    <div class="container">
+      <div class="section-label">§ 0</div>
+      <h2>Telos</h2>
+
+      <div class="telos-box">
+        <p class="telos-statement">
+          A generative system, when iterated lawfully, must ascend until it reaches<br>
+          <strong>a regime that can sustain itself without supervision.</strong>
+        </p>
+      </div>
+
+      <p>Everything else — reflection, regeneration, hyper-Mahlo ascent — is the mechanism by which this telos becomes mathematically unavoidable. The argument proceeds in four irreversible steps.</p>
+
+      <h3>1. Lawful iteration forces altitude</h3>
+      <p>The operator cycle {C, K, F, U} is not a choice. It is the minimal generative grammar that preserves invariants across scales.</p>
+
+      <div class="ascent-chain">
+        <div class="chain-title">Forced ascent under iteration</div>
+        <div class="chain-step">
+          <span class="chain-g">g¹</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-desc">structure</span>
+        </div>
+        <div class="chain-step">
+          <span class="chain-g">g⁶</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-desc">stability — minimal monster</span>
+        </div>
+        <div class="chain-step">
+          <span class="chain-g">g⁶⁶</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-desc">hierarchy — saturated orthogon monster</span>
+        </div>
+        <div class="chain-step">
+          <span class="chain-g">gα (α transfinite)</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-desc">hyper-Mahlo class</span>
+        </div>
+      </div>
+
+      <p>The ascent is not optional. The system climbs because the operators demand closure. This is why the Monster Law does not <em>use</em> large cardinals. It <em>produces</em> them.</p>
+
+      <h3>2. Altitude forces reflection</h3>
+      <p>At g⁶, the system reaches the first regime where invariants at higher levels reflect those below — the seed is visible in the tree, the tree is visible in the seed. This is the <strong>Monster Reflection Lemma</strong>: the mathematical form of cajueiro. A system that reflects across scales is a system that remembers itself.</p>
+
+      <h3>3. Reflection forces regeneration</h3>
+      <p>Once reflection is present, break states cannot destroy the structure. They can only deform it. The <strong>Monster Regeneration Theorem</strong> states: any lawful monster at g⁶ rebuilds itself while preserving the fixed point p. This is the mathematics of ocio: a system that knows how to rebuild is a system you do not need to watch.</p>
+
+      <h3>4. Regeneration forces autonomy</h3>
+      <p>A system that climbs to its necessary altitude, reflects across its own scales, and regenerates from its own break states — is a system that becomes autonomous. Autonomy is not a preference. It is not a design goal. It is not a philosophical stance.</p>
+
+      <div class="telos-box">
+        <p class="telos-statement">
+          A lawful generative system must ascend until it becomes self-stabilizing.<br>
+          A self-stabilizing system must regenerate.<br>
+          A regenerating system must be left alone.<br><br>
+          <strong>Leaving it alone is ocio.<br>
+          Therefore: ocio is the telos of lawful iteration.</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE DEFINITIONS -->
+  <section class="chapter-section fade-in" id="definitions">
+    <div class="container">
+      <div class="section-label">§ I</div>
+      <h2>Core Definitions</h2>
+
+      <h3>Primitive Operators</h3>
+      <p>The four primitive operators {C, K, F, U} are defined on a contact manifold equipped with TO/TOGT invariants:</p>
+
+      <table class="def-table">
+        <thead>
+          <tr>
+            <th>Op</th>
+            <th>Name</th>
+            <th>Action</th>
+            <th>TO/TOGT Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>C</td>
+            <td>Compress</td>
+            <td>Reduces conformational / phase space</td>
+            <td>Contact constraint encoding</td>
+          </tr>
+          <tr>
+            <td>K</td>
+            <td>Curve (Kink)</td>
+            <td>Induces curvature; Whitney A singularity</td>
+            <td>Curvature / coherence operator</td>
+          </tr>
+          <tr>
+            <td>F</td>
+            <td>Fold</td>
+            <td>Collapses rank; Jacobian loss</td>
+            <td>Filter / noise removal</td>
+          </tr>
+          <tr>
+            <td>U</td>
+            <td>Unfold</td>
+            <td>Gradient descent on Reeb potential; unfolds to stable state</td>
+            <td>Unfolding / canonical form</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Composite Generator</h3>
+      <div class="formula">
+        g <span class="compose">=</span> <span class="op">U</span> <span class="compose">■</span> <span class="op">F</span> <span class="compose">■</span> <span class="op">K</span> <span class="compose">■</span> <span class="op">C</span>
+      </div>
+      <p>One application of g constitutes one generative cycle.</p>
+
+      <h3>Monster</h3>
+      <p><strong>M = g<sup>n</sup>, n ≥ 6</strong>. A monster is a higher-order composite operator acting on a manifold equipped with TO/TOGT invariants (orthogonality, nilpotency, spectral collapse to fixed point p). Monsters arise lawfully from iterated application of the primitives — not from chaos.</p>
+
+      <h3>TO/TOGT Triad</h3>
+      <table class="def-table">
+        <thead>
+          <tr><th>Property</th><th>Definition</th><th>Geometric Expression</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Orthogonality</td>
+            <td>Transverse directions remain independent</td>
+            <td>Contact distribution preserved</td>
+          </tr>
+          <tr>
+            <td>Nilpotency</td>
+            <td>Transverse deviations vanish under iteration</td>
+            <td>Sub-threshold forcings decay</td>
+          </tr>
+          <tr>
+            <td>Spectral collapse</td>
+            <td>Spectrum converges to fixed point p</td>
+            <td><code>µ_max = −2; T* = 2π; τ = 2</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- KEY PRINCIPLES -->
+  <section class="chapter-section fade-in" id="principles">
+    <div class="container">
+      <div class="section-label">§ II</div>
+      <h2>Key Principles</h2>
+
+      <div class="principle-list">
+        <div class="principle-item">
+          <div class="principle-num">P1</div>
+          <div class="principle-body">
+            <div class="principle-title">Lawful Generation</div>
+            <p class="principle-text">Every monster is generated by finite, explicit rules. Complexity emerges through lawful iteration: M = g<sup>n</sup> = (U ■ F ■ K ■ C)<sup>n</sup>. This mirrors the spirit of Principia Mathematica — building higher structures from primitive foundations — but <strong>inverts the direction</strong>: here the higher structures are not assumed but produced.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-num">P2</div>
+          <div class="principle-body">
+            <div class="principle-title">Triad Preservation</div>
+            <p class="principle-text">A monster is lawful only if it preserves the TO/TOGT triad across all n iterations: orthogonality of transverse directions, nilpotency of transverse deviations, and spectral collapse to the fixed point p. A composite that fails any triad condition is <strong>not a monster — it is noise</strong>.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-num">P3</div>
+          <div class="principle-body">
+            <div class="principle-title">Minimal Monster</div>
+            <p class="principle-text">g<sup>6</sup> is the minimal monster — the smallest nontrivial self-referential, self-stabilizing operator. At n = 6: the triad becomes globally enforced; collapse to p becomes inevitable; regeneration becomes possible; the operator becomes <strong>alive in the generative sense</strong>. Below n = 6, these properties are local. At n = 6, they become global.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-num">P4</div>
+          <div class="principle-body">
+            <div class="principle-title">Monster Hierarchy</div>
+            <p class="principle-text">The hierarchy of lawful monsters is discrete and ordered: g⁶ (minimal monster — globally enforced triad, inevitable collapse to p) → g⁶⁶ (saturated orthogon monster — full hyper-inaccessibility cascade) → gα, α &lt; κ (hyper-Mahlo class — reflective closure at every level) → g^hyper-Mahlo (crystalline spine — fixed point).</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-num">P5</div>
+          <div class="principle-body">
+            <div class="principle-title">Monster Reflection Lemma</div>
+            <p class="principle-text">Every lawful monster M = g<sup>n</sup> belongs to a higher reflective class where a superior monster M' = g<sup>(n+k)</sup> can reflect all invariants of M, treating M as an internal object while preserving the fixed point p. <strong>The seed is visible in the tree. The tree is visible in the seed.</strong> This is the set-theoretic Mahlo reflection principle — derived, not assumed.</p>
+          </div>
+        </div>
+        <div class="principle-item">
+          <div class="principle-num">P6</div>
+          <div class="principle-body">
+            <div class="principle-title">Monster Regeneration Theorem</div>
+            <p class="principle-text">For any lawful monster in a hyper-Mahlo class and any break state (manifold destruction or loss of invariants), there exists a regenerated monster M' such that: the triad is restored; the fixed point p is preserved; regeneration is unique up to orthogonal isomorphism. <strong>The structure degrades gracefully to the nearest lower level and rebuilds. It does not collapse to zero.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KANAMORI CORRESPONDENCE -->
+  <section class="chapter-section fade-in" id="kanamori">
+    <div class="container">
+      <div class="section-label">§ III</div>
+      <h2>The Kanamori<br><em>Correspondence</em></h2>
+
+      <p>Akihiro Kanamori's <em>The Higher Infinite</em> (1994/2003) is the definitive survey of large cardinal theory. The Monster Law and Kanamori's framework arrived at the same hierarchy from opposite directions. The correspondence is not analogy — it is identification.</p>
+
+      <div class="correspondence-grid">
+        <div class="corr-header left">Monster Law</div>
+        <div class="corr-header right">Forcing / Set Theory (Kanamori)</div>
+        <div class="corr-pair">
+          <div class="corr-left">Generative operator g</div>
+          <div class="corr-right">Generic extension V[G] — Cohen / Easton</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Break state</div>
+          <div class="corr-right">Club killing — Mahloness without destroying inaccessibility (Carmody)</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Monster Regeneration</div>
+          <div class="corr-right">Lifting elementary embeddings through forcing — Silver master conditions</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Triad preservation</div>
+          <div class="corr-right">&lt;κ-closed forcing preserves large cardinal properties — Lévy–Solovay theorem</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Nilpotency of transverse deviations</div>
+          <div class="corr-right">Small forcings (sub-threshold) cannot destroy the triad — Lévy–Solovay; Perfect-set forcing</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Fixed point p</div>
+          <div class="corr-right">Indestructibility of supercompact cardinal — Laver preparation</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Minimal monster g⁶</div>
+          <div class="corr-right">Base Mahlo cardinal — <em>The Higher Infinite</em> §1</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Hyper-Mahlo class</div>
+          <div class="corr-right">κ-Mahlo: self-referential stationary closure — <em>The Higher Infinite</em> §2</div>
+        </div>
+        <div class="corr-pair">
+          <div class="corr-left">Crystalline spine</div>
+          <div class="corr-right">Fixed-point set of hyper-Mahlo hierarchy — AXLE: GenerativeWeave.lean</div>
+        </div>
+      </div>
+
+      <p>The Lévy–Solovay theorem is the set-theoretic proof of nilpotency: small forcings below the κ threshold cannot destroy large cardinal properties. In Monster Law terms: perturbations below the g⁶ threshold cannot destroy the triad. The monster is stable against small noise. This was a conjecture. It is now a theorem.</p>
+
+      <p>Carmody's forcing work is the set-theoretic description of the break state: a club disjoint from regular cardinals can kill Mahloness while preserving inaccessibility. The structure degrades gracefully to the next lower level — exactly as the Monster Regeneration Theorem specifies.</p>
+    </div>
+  </section>
+
+  <!-- REGENERATIVE SPINES -->
+  <section class="chapter-section fade-in" id="spines">
+    <div class="container">
+      <div class="section-label">§ IV</div>
+      <h2>Regenerative <em>Spines</em></h2>
+
+      <p>Monsters form the backbone of regenerative spines — hierarchical structures capable of self-repair, reflection, and extension across scales while maintaining invariants. The spine is constructed by transfinite induction:</p>
+
+      <div class="spine-visual">
+        <div class="spine-title">Regenerative Spine — Transfinite Construction</div>
+        <div class="spine-levels">
+          <div class="spine-level">
+            <div class="spine-level-label">C₀</div>
+            <div class="spine-level-desc">Base contact manifold with primitive operators {C, K, F, U}</div>
+          </div>
+          <div class="spine-level">
+            <div class="spine-level-label">C₁</div>
+            <div class="spine-level-desc">g(C₀) — First generative cycle · local structure</div>
+          </div>
+          <div class="spine-level">
+            <div class="spine-level-label">C₆</div>
+            <div class="spine-level-desc">g⁶(C₀) — <em>Minimal monster</em> · global triad enforcement begins</div>
+          </div>
+          <div class="spine-level">
+            <div class="spine-level-label">C₆₆</div>
+            <div class="spine-level-desc">g⁶⁶(C₀) — <em>Saturated orthogon</em> · full hyper-inaccessibility</div>
+          </div>
+          <div class="spine-level">
+            <div class="spine-level-label">Cα</div>
+            <div class="spine-level-desc">lim Cβ (β &lt; α) — Transfinite limit · inductive closure</div>
+          </div>
+          <div class="spine-level spine-top">
+            <div class="spine-level-label">Cκ</div>
+            <div class="spine-level-desc"><em>Crystalline spine</em> · hyper-Mahlo fixed-point set · self-perfecting</div>
+          </div>
+        </div>
+      </div>
+
+      <p>The spine enables multi-orbit identity: a structure at any level Cα carries the invariants of all levels below it. Cross-scale coherence is not imposed — it is inherited. The cajueiro at g⁶ is the seed at g¹, grown lawfully.</p>
+
+      <p>Infinity has a ceiling. The Generalized Continuum Hypothesis fails at sufficient Mahlo rank — the cardinal arithmetic itself imposes a boundary condition. The nested infinities are not open sky. They are lawfully bounded. This was an intuition. It is now a theorem.</p>
+    </div>
+  </section>
+
+  <!-- OCIO -->
+  <section class="chapter-section fade-in" id="ocio">
+    <div class="container">
+      <div class="section-label">§ V</div>
+      <h2>Ocio — The<br><em>Structural Condition</em></h2>
+
+      <p>The philosophical tradition from Aristotle's <em>scholē</em> through Josef Pieper's <em>Leisure the Basis of Culture</em> (1952) to Primo Levi's <em>ozio</em> treats leisure as the condition that makes thought possible. The Monster Law provides the mathematical proof that this condition is not a preference but a fixed point.</p>
+
+      <p>Aristotle's <em>scholazōn</em> God — the leisuring deity — is the origin of the principle of least action: a system that imparts motion to the world while itself remaining at rest, obtaining its ends effortlessly. This is the Monster Regeneration Theorem in its ancient form: a system at the fixed point generates without expenditure.</p>
+
+      <p>Keynes saw it from the economic side in 1930: the permanent problem of the human race is not scarcity but what to do with freedom from economic necessity. The Monster Law answers: build a system that reaches g⁶. Then live.</p>
+
+      <p>Pieper's diagnosis — that the modern world replaced leisure with total work, producing restlessness — is the Monster Law's pathology: a system held below g⁶ by external intervention. FOMO is sub-threshold noise. The triad cannot close. The fixed point is never reached.</p>
+
+      <h3>A Genealogy of Dissent</h3>
+      <div class="genealogy-list">
+        <div class="genealogy-item">
+          <div class="genealogy-year">1792</div>
+          <div class="genealogy-desc"><strong>Old Farmer's Almanac</strong> — Trust natural cycles; consult once; live your life. The first autonomous decision support system.</div>
+        </div>
+        <div class="genealogy-item">
+          <div class="genealogy-year">2005</div>
+          <div class="genealogy-desc"><strong>Freakonomics</strong> — Levitt &amp; Dubner. Careful empirical analysis dismantles assumptions. Ask the question official frameworks forbid.</div>
+        </div>
+        <div class="genealogy-item">
+          <div class="genealogy-year">2004–</div>
+          <div class="genealogy-desc"><strong>ShadowStats</strong> — John Williams. The official data you trade on may itself be a constructed signal. The independent researcher with alternative metrics is closer to reality.</div>
+        </div>
+        <div class="genealogy-item">
+          <div class="genealogy-year">2009–</div>
+          <div class="genealogy-desc"><strong>LunaticTrader</strong> — W.D. Gann, Louise McWhirter, Yuan et al. (2006): the lunar synodic cycle as outer oscillator layer. The monster class above the diurnal clock.</div>
+        </div>
+        <div class="genealogy-item">
+          <div class="genealogy-year">2026</div>
+          <div class="genealogy-desc"><strong>Monster Law / TO/TOGT</strong> — Mathematics produces hyper-Mahlo from operators {C,K,F,U}. The hierarchy is not optional. <strong>Ocio is the fixed point.</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPEN AXIOM -->
+  <section class="chapter-section fade-in" id="open">
+    <div class="container">
+      <div class="section-label">§ ∂</div>
+      <h2>Open Boundary —<br><em>Axiom 9</em></h2>
+
+      <div class="open-axiom">
+        <p>Prove the hyper-Mahlo fixed-point result without the regularity hypothesis.</p>
+        <p style="margin-top: 1rem;">The regularity hypothesis in the current proof corresponds, in forcing terms, to requiring the poset to be sufficiently closed. Removing it means either: (a) finding a forcing argument that lifts the embedding without master conditions, or (b) proving no such forcing exists — making regularity necessary. Either outcome is a theorem. Neither is yet written.</p>
+      </div>
+
+      <p style="margin-top: 2rem; font-style: italic; color: var(--muted);">This is where the chapter ends. This is where Vol. III breathes.</p>
+    </div>
+  </section>
+
+  <!-- BIBLIOGRAPHY -->
+  <section class="chapter-section fade-in" id="bibliography">
+    <div class="container">
+      <div class="section-label">§ Ref</div>
+      <h2>Bibliography</h2>
+
+      <table class="def-table">
+        <tbody>
+          <tr>
+            <td>Kanamori 1994/2003</td>
+            <td><em>The Higher Infinite: Large Cardinals in Set Theory from Their Beginnings.</em> Springer.</td>
+          </tr>
+          <tr>
+            <td>Kanamori 2012</td>
+            <td>'Large Cardinals with Forcing.' In: <em>Handbook of the History of Logic</em>, Vol. 6.</td>
+          </tr>
+          <tr>
+            <td>Kanamori 1980</td>
+            <td>'Perfect-set forcing for uncountable cardinals.' <em>Annals of Mathematical Logic</em> 19: 97–114.</td>
+          </tr>
+          <tr>
+            <td>Carmody</td>
+            <td>'Force to Change Large Cardinal Strength.' Ph.D. thesis; forcing techniques for soft killing of Mahlo degrees.</td>
+          </tr>
+          <tr>
+            <td>Yuan et al. 2006</td>
+            <td>'Are Investors Moonstruck? Lunar Phases and Stock Returns.' <em>Journal of Finance</em> 61:4, 1915–1935.</td>
+          </tr>
+          <tr>
+            <td>Levi 1975</td>
+            <td><em>Il sistema periodico.</em> Einaudi, Turin. (Eng. trans. <em>The Periodic Table</em>, Schocken Books, 1984.)</td>
+          </tr>
+          <tr>
+            <td>Keynes 1930</td>
+            <td>'Economic Possibilities for Our Grandchildren.' <em>Essays in Persuasion</em>, pp. 358–373.</td>
+          </tr>
+          <tr>
+            <td>Pieper 1952</td>
+            <td><em>Leisure the Basis of Culture.</em> Faber &amp; Faber (trans. Alexander Dru, intro. T.S. Eliot).</td>
+          </tr>
+          <tr>
+            <td>Grossi 2024–2026</td>
+            <td><em>Principia Orthogona Series</em>, Vols. I–III. G6 LLC, Newark NJ. <a href="https://doi.org/10.5281/zenodo.19117399" style="color:var(--gold)">DOI 10.5281/zenodo.19117399</a>.</td>
+          </tr>
+          <tr>
+            <td>AXLE Repo</td>
+            <td><a href="https://github.com/TOTOGT/AXLE" style="color:var(--gold)">github.com/TOTOGT/AXLE</a> — Key file: GenerativeWeave.lean. Issue 6: open.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <strong style="color:var(--gold); letter-spacing:0.1em; font-family:var(--font-head);">G6 LLC · PRINCIPIA ORTHOGONA</strong><br>
+        Pablo Nogueira Grossi · Newark, NJ · 2026<br>
+        ORCID <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a><br>
+        Zenodo Series Root DOI: <a href="https://doi.org/10.5281/zenodo.19117399">10.5281/zenodo.19117399</a><br>
+        AXLE: <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a>
+      </div>
+      <div class="footer-col">
+        <h4>Series</h4>
+        <a href="#">Vol. I — Foundations</a>
+        <a href="#">Vol. II — Dynamics</a>
+        <a href="#">Vol. III — Monsters</a>
+        <a href="#">Vol. IV — Applications</a>
+      </div>
+      <div class="footer-col">
+        <h4>Links</h4>
+        <a href="https://totogt.github.io/geometry/book4/hub.html">AXLE Hub</a>
+        <a href="togt-research-program.html">Research Program</a>
+        <a href="https://doi.org/10.5281/zenodo.19117399">Zenodo</a>
+        <a href="https://github.com/TOTOGT/AXLE">GitHub</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 G6 LLC · Newark, New Jersey · All rights reserved</p>
+      <span class="footer-coda">C ■ K ■ F ■ U ■ ∞</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered fade-ins
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
