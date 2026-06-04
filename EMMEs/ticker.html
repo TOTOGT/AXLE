@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMMEs · Live Ticker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0d0d1a;
+  --card:    #0e0e18;
+  --border:  #ffffff0f;
+  --accent1: #ff3cac;
+  --accent2: #00f5d4;
+  --accent3: #f7c948;
+  --text:    #e8e8f0;
+  --muted:   #555570;
+  --green:   #00e676;
+  --red:     #ff3860;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Space Grotesk', sans-serif; background: var(--void); color: var(--text); min-height: 100vh; }
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+nav a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+nav a:hover { color: var(--text); }
+nav a.active { color: var(--text); }
+.nav-right { display: flex; gap: 2rem; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding: 4rem 2rem 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.page-header h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.page-header h1 span { color: var(--accent2); }
+
+.refresh-info {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.live-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+  50%       { opacity: 0.25; box-shadow: none; }
+}
+#countdown { color: var(--text); }
+
+/* ── TICKER WRAP ── */
+.ticker-wrap {
+  padding: 0 2rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── TOKEN BLOCK ── */
+.token-block {
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+  background: var(--card);
+  transition: border-color 0.25s;
+}
+.token-block.c1 { --tok: var(--accent1); }
+.token-block.c2 { --tok: var(--accent2); }
+.token-block.c3 { --tok: var(--accent3); }
+.token-block:hover { border-color: color-mix(in srgb, var(--tok) 40%, transparent); }
+
+.token-block-top {
+  border-top: 2px solid var(--tok);
+  padding: 2rem 2rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.token-id { flex: 1; min-width: 180px; }
+.token-ticker-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--tok);
+  margin-bottom: 0.3rem;
+}
+.token-name-label {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  line-height: 1;
+}
+
+/* Status badge (pre-dex vs live) */
+.token-status {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+}
+.token-status.live { color: var(--green); }
+.status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
+.price-block { text-align: right; }
+.price-usd {
+  font-family: 'Space Mono', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--tok);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.price-change {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 0.4rem;
+  letter-spacing: 0.05em;
+}
+.price-change.pos  { color: var(--green); }
+.price-change.neg  { color: var(--red); }
+.price-change.flat { color: var(--muted); }
+
+/* ── STATS GRID ── */
+.token-stats {
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+.stat-cell {
+  padding: 1.25rem 2rem;
+  border-right: 1px solid var(--border);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-cell-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.stat-cell-value {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.stat-cell-value.loading { color: var(--muted); animation: fade 1.2s ease-in-out infinite; }
+.stat-cell-value.dim { color: var(--muted); }
+@keyframes fade { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── BONDING CURVE BAR ── */
+.curve-section {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+}
+.curve-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+.curve-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.curve-pct {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--tok);
+}
+.curve-track {
+  height: 4px;
+  background: color-mix(in srgb, var(--tok) 12%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+.curve-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--tok);
+  transition: width 0.8s ease;
+  min-width: 2px;
+}
+.curve-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.curve-meta span { color: var(--text); }
+
+/* ── ACTIONS ── */
+.token-actions {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.action-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid;
+  transition: all 0.2s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.action-btn.primary { color: var(--void); background: var(--tok); border-color: var(--tok); }
+.action-btn.primary:hover { opacity: 0.85; }
+.action-btn.ghost { color: var(--tok); border-color: color-mix(in srgb, var(--tok) 30%, transparent); }
+.action-btn.ghost:hover { background: color-mix(in srgb, var(--tok) 10%, transparent); }
+.action-btn.dim { color: var(--muted); border-color: var(--border); }
+.action-btn.dim:hover { color: var(--text); border-color: #ffffff22; }
+
+.contract-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-left: auto;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.8rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+  user-select: none;
+}
+.contract-pill:hover { color: var(--text); border-color: #ffffff22; }
+.contract-pill.copied { color: var(--green); border-color: var(--green); }
+
+@media (max-width: 600px) { .contract-pill { display: none; } }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+}
+footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+footer a { color: var(--text); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+.last-updated {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-align: center;
+  padding: 1rem 2rem 3rem;
+}
+#last-updated-time { color: var(--text); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">← EMMEs</a>
+  <div class="nav-right">
+    <a href="game-theory.html">THEORY</a>
+    <a href="probability.html">PROBABY</a>
+    <a href="propaganda.html">PROPAGAN</a>
+    <a href="ticker.html" class="active">TICKER</a>
+    <a href="theory.html">PAPERS</a>
+    <a href="collatz-engineering.html">COLLATZ</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Live <span>Ticker</span></h1>
+  <div class="refresh-info">
+    <span class="live-dot"></span>
+    Live · refreshes in <span id="countdown">30</span>s
+  </div>
+</div>
+
+<div class="ticker-wrap" id="ticker-wrap"></div>
+
+<div class="last-updated">
+  Last updated: <span id="last-updated-time">—</span>
+</div>
+
+<footer>
+  <p>
+    <a href="index.html">EMMEs</a> ·
+    <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
+    Data via <a href="https://dexscreener.com" target="_blank">Dexscreener</a> &
+    <a href="https://solscan.io" target="_blank">Solscan</a> &
+    <a href="https://coinbook.fun" target="_blank">Coinbook</a>
+  </p>
+  <p style="margin-top:0.6rem">Not financial advice. Prices update every 30 seconds.</p>
+</footer>
+
+<script>
+// ── TOKEN CONFIG ──────────────────────────────────────────────────────────────
+const TOKENS = [
+  {
+    name:     'GAME THEORY',
+    ticker:   'THEORY',
+    address:  '7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    cls:      'c3',
+    coinbook: 'https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    solscan:  'https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    dex:      'https://dexscreener.com/solana/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin',
+    page:     'game-theory.html',
+    // Coinbook bonding-curve data (static seed, updated by fetchCoinbook)
+    cb: { mcap: 2420, bcPct: 0.21, bcSol: 0.05 }
+  },
+  {
+    name:     'PROBABILITY',
+    ticker:   'PROBABY',
+    address:  '7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    cls:      'c2',
+    coinbook: 'https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    solscan:  'https://solscan.io/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    dex:      'https://dexscreener.com/solana/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin',
+    page:     'probability.html',
+    cb: { mcap: 2460, bcPct: 1.35, bcSol: 0.31 }
+  },
+  {
+    name:     'PROPAGANDA!',
+    ticker:   'PROPAGAN',
+    address:  '67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    cls:      'c1',
+    coinbook: 'https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    solscan:  'https://solscan.io/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    dex:      'https://dexscreener.com/solana/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin',
+    page:     'propaganda.html',
+    cb: { mcap: 2440, bcPct: 0.89, bcSol: 0.20 }
+  }
+];
+
+const GRAD_TARGET = 37210; // Raydium graduation MCap in USD
+
+// ── FORMAT HELPERS ────────────────────────────────────────────────────────────
+function fmt(n, digits = 2) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  if (n >= 1e9)  return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6)  return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3)  return (n / 1e3).toFixed(2) + 'K';
+  return n.toFixed(digits);
+}
+
+function fmtPrice(p) {
+  if (p === null || p === undefined || isNaN(p)) return '—';
+  const n = parseFloat(p);
+  if (n < 0.000001) return '$' + n.toExponential(3);
+  if (n < 0.001)    return '$' + n.toPrecision(4);
+  if (n < 1)        return '$' + n.toFixed(6);
+  return '$' + n.toFixed(4);
+}
+
+function changeCls(v) {
+  if (v === null || v === undefined || isNaN(v)) return 'flat';
+  return v > 0 ? 'pos' : v < 0 ? 'neg' : 'flat';
+}
+
+function changeStr(v) {
+  if (v === null || v === undefined || isNaN(v)) return '—';
+  return (v > 0 ? '+' : '') + v.toFixed(2) + '% 24h';
+}
+
+function shortAddr(addr) {
+  return addr.slice(0, 6) + '...' + addr.slice(-6);
+}
+
+function el(id) { return document.getElementById(id); }
+
+// ── BUILD SKELETON ────────────────────────────────────────────────────────────
+function buildSkeleton() {
+  const wrap = el('ticker-wrap');
+  wrap.innerHTML = '';
+
+  TOKENS.forEach(tok => {
+    const cb = tok.cb;
+    const pctDisplay = cb.bcPct.toFixed(2) + '%';
+    const fillW = Math.min(cb.bcPct, 100).toFixed(2);
+    const needed = ((GRAD_TARGET - cb.mcap) / 1000).toFixed(2);
+
+    const div = document.createElement('div');
+    div.className = `token-block ${tok.cls}`;
+    div.id = `block-${tok.ticker}`;
+    div.innerHTML = `
+      <div class="token-block-top">
+        <div class="token-id">
+          <div class="token-ticker-label">${tok.ticker} · Solana</div>
+          <div class="token-name-label">${tok.name}</div>
+          <div class="token-status" id="status-${tok.ticker}">
+            <span class="status-dot"></span>Pre-DEX · Coinbook
+          </div>
+        </div>
+        <div class="price-block">
+          <div class="price-usd" id="price-${tok.ticker}">$${fmt(cb.mcap)}</div>
+          <div class="price-change flat" id="change-${tok.ticker}">MCap</div>
+        </div>
+      </div>
+
+      <div class="token-stats">
+        <div class="stat-cell">
+          <div class="stat-cell-label">Market Cap</div>
+          <div class="stat-cell-value" id="mcap-${tok.ticker}">$${fmt(cb.mcap)}</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">FDV</div>
+          <div class="stat-cell-value dim" id="fdv-${tok.ticker}">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">Volume 24h</div>
+          <div class="stat-cell-value dim" id="vol-${tok.ticker}">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">Liquidity</div>
+          <div class="stat-cell-value dim" id="liq-${tok.ticker}">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">Holders</div>
+          <div class="stat-cell-value loading" id="hld-${tok.ticker}">…</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">Transfers</div>
+          <div class="stat-cell-value loading" id="txn-${tok.ticker}">…</div>
+        </div>
+      </div>
+
+      <div class="curve-section">
+        <div class="curve-header">
+          <span class="curve-label">Bonding Curve → Raydium</span>
+          <span class="curve-pct" id="cpct-${tok.ticker}">${pctDisplay}</span>
+        </div>
+        <div class="curve-track">
+          <div class="curve-fill" id="cfill-${tok.ticker}" style="width:${fillW}%"></div>
+        </div>
+        <div class="curve-meta" id="cmeta-${tok.ticker}">
+          <span>${cb.bcSol} SOL in curve</span> · needs <span>$${needed}K</span> more to graduate
+        </div>
+      </div>
+
+      <div class="token-actions">
+        <a href="${tok.coinbook}" target="_blank" class="action-btn primary">Buy on Coinbook ↗</a>
+        <a href="${tok.dex}"      target="_blank" class="action-btn ghost">Dexscreener ↗</a>
+        <a href="${tok.page}"                     class="action-btn dim">Token page</a>
+        <a href="${tok.solscan}"  target="_blank" class="action-btn dim">Solscan ↗</a>
+        <span class="contract-pill" id="cpill-${tok.ticker}"
+          onclick="copyAddr('${tok.address}','cpill-${tok.ticker}')"
+          title="Click to copy contract address">
+          ${shortAddr(tok.address)}
+        </span>
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+// ── COPY ADDRESS ──────────────────────────────────────────────────────────────
+function copyAddr(addr, pillId) {
+  navigator.clipboard.writeText(addr).then(() => {
+    const pill = el(pillId);
+    if (!pill) return;
+    const orig = pill.textContent;
+    pill.textContent = 'copied ✓';
+    pill.classList.add('copied');
+    setTimeout(() => {
+      pill.textContent = orig;
+      pill.classList.remove('copied');
+    }, 1500);
+  });
+}
+
+// ── DEXSCREENER FETCH ─────────────────────────────────────────────────────────
+async function fetchDex() {
+  try {
+    const addresses = TOKENS.map(t => t.address).join(',');
+    const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${addresses}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const pairs = data.pairs || [];
+
+    TOKENS.forEach(tok => {
+      const tokenPairs = pairs.filter(p =>
+        p.baseToken?.address?.toLowerCase() === tok.address.toLowerCase()
+      );
+      const pair = tokenPairs.sort((a, b) =>
+        (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0)
+      )[0];
+
+      if (!pair) return; // still pre-DEX, leave Coinbook values
+
+      // Token is now live on DEX — update status badge
+      const statusEl = el(`status-${tok.ticker}`);
+      if (statusEl) {
+        statusEl.innerHTML = '<span class="status-dot"></span>Live · DEX';
+        statusEl.classList.add('live');
+      }
+
+      const priceUsd    = parseFloat(pair.priceUsd)    || null;
+      const priceNative = parseFloat(pair.priceNative)  || null;
+      const change24    = pair.priceChange?.h24          ?? null;
+      const vol24       = pair.volume?.h24               ?? null;
+      const mcap        = pair.marketCap                 ?? null;
+      const fdv         = pair.fdv                       ?? null;
+      const liq         = pair.liquidity?.usd            ?? null;
+      const txns        = pair.txns?.h24
+        ? (pair.txns.h24.buys + pair.txns.h24.sells)
+        : null;
+
+      const set = (id, val) => {
+        const e = el(id);
+        if (e) { e.textContent = val; e.classList.remove('loading', 'dim'); }
+      };
+
+      set(`price-${tok.ticker}`,    fmtPrice(priceUsd));
+      set(`change-${tok.ticker}`,   changeStr(change24));
+      set(`mcap-${tok.ticker}`,     mcap ? '$' + fmt(mcap) : '—');
+      set(`fdv-${tok.ticker}`,      fdv  ? '$' + fmt(fdv)  : '—');
+      set(`vol-${tok.ticker}`,      vol24 ? '$' + fmt(vol24) : '—');
+      set(`liq-${tok.ticker}`,      liq  ? '$' + fmt(liq)  : '—');
+
+      // Update change class
+      const changeEl = el(`change-${tok.ticker}`);
+      if (changeEl) changeEl.className = `price-change ${changeCls(change24)}`;
+
+      // Update bonding curve with live mcap
+      if (mcap) {
+        const pct     = Math.min((mcap / GRAD_TARGET) * 100, 100);
+        const pctStr  = pct.toFixed(2) + '%';
+        const needed  = Math.max(0, (GRAD_TARGET - mcap) / 1000).toFixed(2);
+        const fillEl  = el(`cfill-${tok.ticker}`);
+        const pctEl   = el(`cpct-${tok.ticker}`);
+        const metaEl  = el(`cmeta-${tok.ticker}`);
+        if (fillEl)  fillEl.style.width = pct + '%';
+        if (pctEl)   pctEl.textContent  = pctStr;
+        if (metaEl)  metaEl.innerHTML   =
+          pct >= 100
+            ? '<span>🎓 Graduated to Raydium!</span>'
+            : `MCap <span>$${fmt(mcap)}</span> · needs <span>$${needed}K</span> more to graduate`;
+
+        // Switch price display from mcap label to actual price
+        const priceEl  = el(`price-${tok.ticker}`);
+        const changeEl = el(`change-${tok.ticker}`);
+        if (priceEl)  priceEl.textContent  = fmtPrice(priceUsd);
+        if (changeEl) changeEl.textContent = changeStr(change24);
+
+        // Show priceNative in holders slot only if no solscan data
+        const hldEl = el(`hld-${tok.ticker}`);
+        if (hldEl && hldEl.textContent === '—') {
+          hldEl.textContent = priceNative ? fmt(priceNative, 10) + ' SOL' : '—';
+          // relabel
+          const lbl = hldEl.previousElementSibling;
+          if (lbl) lbl.textContent = 'Price (SOL)';
+        }
+
+        if (txns !== null) set(`txn-${tok.ticker}`, txns.toLocaleString());
+      }
+    });
+  } catch(e) {
+    console.warn('DexScreener fetch skipped:', e.message);
+  }
+}
+
+// ── SOLSCAN FETCH (on-chain: supply, holders, transfers) ──────────────────────
+async function fetchSolscan(tok) {
+  try {
+    const r = await fetch(
+      `https://public-api.solscan.io/token/meta?tokenAddress=${tok.address}`,
+      { headers: { accept: 'application/json' } }
+    );
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.holder !== undefined) {
+      const e = el(`hld-${tok.ticker}`);
+      if (e) { e.textContent = d.holder.toLocaleString(); e.classList.remove('loading'); }
+    }
+  } catch(e) {}
+
+  try {
+    const r2 = await fetch(
+      `https://public-api.solscan.io/token/transfer?tokenAddress=${tok.address}&limit=1&offset=0`,
+      { headers: { accept: 'application/json' } }
+    );
+    if (!r2.ok) return;
+    const d2 = await r2.json();
+    if (d2.total !== undefined) {
+      const e = el(`txn-${tok.ticker}`);
+      if (e) { e.textContent = d2.total.toLocaleString(); e.classList.remove('loading'); }
+    }
+  } catch(e) {}
+}
+
+// ── MAIN FETCH CYCLE ──────────────────────────────────────────────────────────
+async function fetchAll() {
+  await fetchDex();
+  await Promise.all(TOKENS.map(fetchSolscan));
+  el('last-updated-time').textContent = new Date().toLocaleTimeString();
+}
+
+// ── COUNTDOWN TIMER ───────────────────────────────────────────────────────────
+let secs = 30;
+function tick() {
+  secs--;
+  el('countdown').textContent = secs;
+  if (secs <= 0) { secs = 30; fetchAll(); }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildSkeleton();
+fetchAll();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>

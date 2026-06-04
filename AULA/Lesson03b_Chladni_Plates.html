@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 03 — Chladni Plates · Hour House · Principia Orthogona</title>
+<meta name="description" content="Hour House ESL Lesson 03 — Seeing Sound: Chladni Plates and the beauty of standing waves. A hands-on science lesson connecting physics, history, and academic English. Newark, NJ · 2026.">
+<style>
+  :root {
+    --navy:  #1a2744; --gold:  #c9a84c; --cream: #faf7f0; --smoke: #f0ece4;
+    --mid:   #3a4f7a; --rule:  #8a7340; --text:  #1c1c1c; --green: #2d5a27;
+    --light: #e8e2d4; --amber: #fff8e1; --amber-border: #f9a825;
+    --parchment: #f4ead5; --ink: #3b2a1a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', serif; color: var(--text); background: var(--cream); }
+
+  nav {
+    background: var(--navy); padding: 0.75rem 2rem;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-links { display: flex; gap: 1.2rem; list-style: none; flex-wrap: wrap; }
+  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .hero { background: var(--navy); color: white; padding: 3.5rem 2rem 3rem; text-align: center; }
+  .hero-eyebrow { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: white; margin-bottom: 0.5rem; line-height: 1.2; }
+  .hero-sub { color: var(--gold); font-style: italic; font-size: 1.05rem; margin-bottom: 0.6rem; }
+  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+  .hero-desc { max-width: 640px; margin: 0 auto; color: #bbb; font-size: 0.95rem; line-height: 1.8; }
+
+  .lesson-body { max-width: 860px; margin: 0 auto; padding: 2rem; }
+  .lesson-header {
+    padding: 1.5rem 0 1rem; border-bottom: 2px solid var(--gold); margin-bottom: 1.8rem;
+  }
+  .lesson-header .level-tag { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.3rem; }
+  .lesson-header h2 { font-size: 1.6rem; color: var(--navy); line-height: 1.25; margin-bottom: 0.3rem; }
+  .lesson-header .lesson-source { font-style: italic; color: #666; font-size: 0.9rem; line-height: 1.6; }
+
+  .basics-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.9rem; }
+  .basics-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.5rem 0.8rem; font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.08em; }
+  .basics-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light); vertical-align: top; }
+  .basics-table td:first-child { font-family: sans-serif; font-size: 0.78rem; font-weight: bold; color: var(--mid); width: 160px; background: #eef2f8; text-transform: uppercase; letter-spacing: 0.04em; }
+  .basics-table tr:last-child td { border-bottom: none; }
+
+  .qr-row { display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+  .qr-box {
+    flex: 1; min-width: 220px; background: var(--amber); border: 1.5px solid var(--amber-border);
+    padding: 1rem 1.2rem; text-align: center;
+  }
+  .qr-box .qr-label { font-family: sans-serif; font-size: 0.75rem; font-weight: bold; color: var(--navy); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .qr-box .qr-url { font-family: monospace; font-size: 0.82rem; color: var(--mid); word-break: break-all; }
+  .qr-box .qr-caption { font-style: italic; font-size: 0.82rem; color: #666; margin-top: 0.4rem; }
+
+  .marginalia-banner {
+    background: var(--parchment); border: 1px solid #c9a37a;
+    padding: 1.2rem 1.5rem; margin: 1.5rem 0;
+    font-family: 'Georgia', serif; color: var(--ink); font-size: 0.92rem; line-height: 1.7;
+    position: relative;
+  }
+  .marginalia-banner::before {
+    content: "🔊"; position: absolute; top: -10px; left: 14px;
+    background: var(--parchment); padding: 0 6px; color: var(--rule); font-size: 1rem;
+  }
+  .marginalia-banner em { color: var(--rule); }
+
+  .stage-block { margin-bottom: 2.5rem; }
+  .stage-header {
+    background: var(--green); color: white; padding: 0.7rem 1rem;
+    font-family: sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 0.03em;
+    margin-bottom: 1rem;
+  }
+  .stage-activity { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; font-family: sans-serif; }
+  .body-p { font-size: 0.93rem; line-height: 1.75; margin-bottom: 0.7rem; }
+  .body-p b { color: var(--navy); }
+
+  .lesson-list { list-style: none; margin: 0.5rem 0 0.8rem; padding-left: 1.2rem; }
+  .lesson-list li { font-size: 0.93rem; line-height: 1.7; margin-bottom: 0.3rem; padding-left: 0.3rem; }
+  .lesson-list li::before { content: attr(data-n) ".\00a0"; color: var(--mid); font-weight: bold; }
+
+  .lesson-quote {
+    border-left: 3px solid var(--gold); background: var(--smoke);
+    padding: 0.8rem 1.2rem; margin: 0.8rem 0 1rem;
+    font-style: italic; font-size: 0.92rem; color: #444; line-height: 1.7;
+  }
+
+  .vocab-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 0.88rem; }
+  .vocab-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.45rem 0.7rem; font-family: sans-serif; font-size: 0.73rem; letter-spacing: 0.08em; }
+  .vocab-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--light); vertical-align: top; }
+  .vocab-table td:first-child { font-weight: bold; color: var(--mid); width: 170px; }
+  .vocab-table tr:nth-child(even) td { background: var(--smoke); }
+  .vocab-table tr:last-child td { border-bottom: none; }
+
+  .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .cards-grid { grid-template-columns: 1fr; } }
+  .disc-card { background: var(--amber); border: 1.5px solid var(--amber-border); padding: 1rem 1.1rem; }
+  .disc-card-title { font-family: sans-serif; font-size: 0.8rem; font-weight: bold; color: #c45000; margin-bottom: 0.5rem; }
+  .disc-card p { font-size: 0.88rem; line-height: 1.65; color: #333; }
+  .disc-card .disc-question { font-style: italic; color: #444; margin-top: 0.5rem; font-size: 0.86rem; }
+
+  .timing-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 0.8rem 0 1.2rem; }
+  .timing-table th { background: var(--navy); color: var(--gold); padding: 0.45rem 0.7rem; font-family: sans-serif; font-size: 0.73rem; text-align: left; letter-spacing: 0.06em; }
+  .timing-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--light); }
+  .timing-table tr:nth-child(even) td { background: var(--smoke); }
+  .timing-table tr:last-child td { font-weight: bold; background: #eef2f8; border-top: 2px solid var(--gold); }
+  .timing-table td:first-child, .timing-table td:last-child { text-align: center; font-family: monospace; }
+
+  .teacher-note { background: var(--smoke); border-left: 3px solid var(--mid); padding: 1rem 1.2rem; margin: 1rem 0; font-size: 0.88rem; line-height: 1.7; color: #444; }
+  .teacher-note strong { color: var(--navy); }
+
+  .timeline {
+    background: white; border: 1px solid var(--light); padding: 1.2rem 1.5rem; margin: 1rem 0 1.5rem;
+  }
+  .timeline-row { display: grid; grid-template-columns: 100px 1fr; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px dashed var(--light); }
+  .timeline-row:last-child { border-bottom: none; }
+  .timeline-year { font-family: monospace; color: var(--rule); font-size: 0.86rem; }
+  .timeline-event { font-size: 0.9rem; color: #333; line-height: 1.6; }
+  .timeline-event b { color: var(--navy); }
+
+  .fundraiser {
+    background: #e8f5e9; border: 2px solid var(--green);
+    padding: 1.2rem 1.5rem; margin: 2rem 0; text-align: center;
+  }
+  .fundraiser h3 { color: var(--green); font-family: sans-serif; font-size: 1rem; margin-bottom: 0.4rem; }
+  .fundraiser p { font-size: 0.9rem; color: #1b5e20; line-height: 1.6; margin-bottom: 0.5rem; }
+  .fundraiser a { color: var(--green); font-weight: bold; font-family: sans-serif; }
+
+  .copyright-strip { background: var(--smoke); padding: 0.8rem 1.5rem; margin: 1.5rem 0; font-size: 0.8rem; color: #777; font-family: sans-serif; border-top: 1px solid var(--light); }
+  .copyright-strip a { color: var(--mid); }
+
+  footer { background: var(--navy); color: #888; padding: 2rem; text-align: center; font-size: 0.78rem; font-family: sans-serif; line-height: 1.7; }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav style="background:#1a2744;padding:.65rem 2rem;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:2px solid rgba(201,168,76,.35)">
+  <a href="index.html" style="color:#c9a84c;font-family:sans-serif;font-weight:bold;font-size:.85rem;letter-spacing:.1em;text-decoration:none;">HOUR HOUSE &middot; PRINCIPIA ORTHOGONA</a>
+  <ul style="display:flex;gap:1rem;list-style:none;flex-wrap:wrap;align-items:center;margin:0;padding:0">
+    <li><a href="index.html#lessons" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">All Lessons</a></li>
+    <li><a href="index.html#research" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">Research</a></li>
+    <li><a href="index.html#support" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">Support Hour House</a></li>
+    <li><a href="Lesson03_Number33.html" style="color:#aaa;text-decoration:none;font-family:sans-serif;font-size:.78rem;">&larr; 03: The Number 33</a></li><li><a href="Lesson04_USA_Top10.html" style="color:#aaa;text-decoration:none;font-family:sans-serif;font-size:.78rem;">04: USA Enters Top 10 &rarr;</a></li>
+  </ul>
+</nav>
+
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Hour House · Newark, NJ · Adult ESL · Lesson 03</div>
+  <h1>Chladni Plates</h1>
+  <div class="hero-sub">Seeing Sound — The Hidden Patterns of Waves</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">How can we make invisible sound visible? In 1787, Ernst Chladni discovered a way to paint pictures with sound using nothing but metal plates and sand. This lesson explores standing waves, resonance, and the deep connection between music, mathematics, and physics.</p>
+</div>
+
+<!-- LESSON BODY -->
+<div class="lesson-body" id="lesson-03">
+
+  <div class="lesson-header">
+    <div class="level-tag">Lesson 03 · Level B1–B2+ · 90–120 minutes</div>
+    <h2>Chladni Plates<br>Seeing the Music in the Mathematics</h2>
+    <div class="lesson-source">
+      Companion text: <em>Moment of Science: Chladni Plates</em> — 13abc (July 21, 2025)
+    </div>
+  </div>
+
+  <!-- Marginalia banner -->
+  <div class="marginalia-banner">
+    <em>Chladni (n.):</em> German physicist and musician who showed that sound has shape. By vibrating metal plates covered in sand, he revealed the invisible geometry of music — patterns that look like sacred geometry, yet are created by simple waves.
+  </div>
+
+  <!-- Basics table -->
+  <table class="basics-table">
+    <tr><th colspan="2">Lesson Basics</th></tr>
+    <tr><td>Topic</td><td>Physics · Sound Waves · History of Science · Academic English</td></tr>
+    <tr><td>Objective</td><td>Understand standing waves and resonance, describe scientific experiments, and connect sound, mathematics, and art through Chladni plates.</td></tr>
+    <tr><td>Level</td><td>Intermediate to Upper-Intermediate (B1–B2+)</td></tr>
+    <tr><td>Duration</td><td>90–120 minutes</td></tr>
+    <tr><td>Skills</td><td>Listening · Reading · Speaking · Vocabulary · Description · Critical Thinking</td></tr>
+    <tr><td>Grammar</td><td>Passive voice · Cause and effect (causes / leads to / results in) · Relative clauses</td></tr>
+    <tr><td>Pronunciation</td><td>CHLAD-ni (KLAD-nee) · RES-o-nance · NODE · AN-ti-node · FRE-quen-cy</td></tr>
+    <tr><td>Materials</td><td>This page · Article link · Video · Optional DIY speaker setup + salt</td></tr>
+  </table>
+
+  <!-- QR row -->
+  <div class="qr-row">
+    <div class="qr-box">
+      <div class="qr-label">📰 Read the Article</div>
+      <div class="qr-url">https://www.13abc.com/2025/07/21/moment-science-chladni-plates/</div>
+      <div class="qr-caption"><em>Moment of Science</em> — 13abc · July 21, 2025 · ~5 min read</div>
+    </div>
+    <div class="qr-box">
+      <div class="qr-label">🎥 Watch the Video</div>
+      <div class="qr-url">https://www.youtube.com/watch?v=wvJAgrUBF4w</div>
+      <div class="qr-caption">“Amazing Resonance Experiment!” — Highly recommended visual demo</div>
+    </div>
+  </div>
+
+  <!-- STAGE 1 -->
+  <div class="stage-block">
+    <div class="stage-header">✅ STAGE 1 — WARM-UP · 10 minutes</div>
+    <div class="stage-activity">Activity: Sound & Vision</div>
+    <p class="body-p">Ask students:</p>
+    <ol class="lesson-list">
+      <li data-n="1">Can you “see” sound? Why or why not?</li>
+      <li data-n="2">Have you ever seen sand or dust move on a speaker? What happened?</li>
+      <li data-n="3">Why do some musical instruments sound richer than others?</li>
+    </ol>
+  </div>
+
+  <!-- STAGE 2 -->
+  <div class="stage-block">
+    <div class="stage-header">✅ STAGE 2 — READING & VOCABULARY · 20 minutes</div>
+    <div class="stage-activity">Activity: Read the Article + Vocabulary</div>
+    <table class="vocab-table">
+      <tr><th>Word</th><th>Meaning</th></tr>
+      <tr><td>resonance</td><td>when an object vibrates strongly at its natural frequency</td></tr>
+      <tr><td>standing wave</td><td>a wave that appears to stay in one place</td></tr>
+      <tr><td>node</td><td>a point where there is no vibration</td></tr>
+      <tr><td>antinode</td><td>a point where the vibration is strongest</td></tr>
+      <tr><td>acoustics</td><td>the science of sound</td></tr>
+      <tr><td>frequency</td><td>how many times something vibrates per second (measured in Hz)</td></tr>
+      <tr><td>pattern</td><td>a regular, repeated design</td></tr>
+      <tr><td>harmonic</td><td>a higher frequency that is a multiple of the main tone</td></tr>
+    </table>
+  </div>
+
+  <!-- STAGE 3 -->
+  <div class="stage-block">
+    <div class="stage-header">✅ STAGE 3 — VIDEO & UNDERSTANDING · 20 minutes</div>
+    <div class="stage-activity">Activity: Watch “Amazing Resonance Experiment!”</div>
+    <p class="body-p">While watching, answer:</p>
+    <ol class="lesson-list">
+      <li data-n="1">What makes the salt move into beautiful patterns?</li>
+      <li data-n="2">What are nodes and antinodes?</li>
+      <li data-n="3">How does changing the frequency affect the pattern?</li>
+    </ol>
+  </div>
+
+  <!-- STAGE 4 -->
+  <div class="stage-block">
+    <div class="stage-header">✅ STAGE 4 — DIY EXPERIMENT (Optional Hands-on) · 20–30 minutes</div>
+    <div class="stage-activity">Activity: Build a Simple Chladni Plate at Home</div>
+    <p class="body-p">Use the simple speaker + balloon/saran wrap method with salt. Students describe what they observe using new vocabulary.</p>
+  </div>
+
+  <!-- STAGE 5 -->
+  <div class="stage-block">
+    <div class="stage-header">✅ STAGE 5 — DISCUSSION · 15 minutes</div>
+    <div class="stage-activity">Discussion Cards</div>
+    <div class="cards-grid">
+      <div class="disc-card">
+        <div class="disc-card-title">Card A — Music and Mathematics</div>
+        <p>How does this experiment show that music is connected to mathematics and physics?</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-card-title">Card B — Life Metaphor</div>
+        <p>The quote says life is like a sound wave with ups and downs. Do you agree? Why?</p>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- STAGE 2 — INTRODUCTION -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 2 &mdash; INTRODUCTION &nbsp;&middot;&nbsp; 10 minutes</div>
+    <div class="stage-activity">Focusing Attention &mdash; Sound Has Shape</div>
+    <p class="body-p">Teacher plays 10 seconds of a single sustained musical note (any instrument, any device). Then asks: <em>&ldquo;If sound could leave a mark &mdash; a physical trace of its shape &mdash; what would it look like?&rdquo;</em> Students sketch or describe in words for 2 minutes, then share.</p>
+    <p class="body-p">Teacher introduces the lesson objective: <em>&ldquo;By the end of this lesson, you will be able to describe the Chladni plate experiment in English, explain why sand moves into patterns, and connect this phenomenon to the idea that invisible forces create visible structure &mdash; as evidenced by your written description and discussion participation.&rdquo;</em></p>
+    <p class="body-p">Preview vocabulary: <em>&ldquo;Before we read, let&rsquo;s look at the eight words we will need. Have you seen any of them before?&rdquo;</em> Quick show of hands. This becomes the baseline for Stage 3&rsquo;s comprehension check.</p>
+  </div>
+
+  <!-- STAGE 3 — PRESENTATION (with comprehension check) -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 3 &mdash; PRESENTATION &nbsp;&middot;&nbsp; 20 minutes</div>
+    <div class="stage-activity">Reading the Article + Comprehension Check</div>
+    <p class="body-p">Students read the 13abc article (<a href="https://www.13abc.com/2025/07/21/moment-science-chladni-plates/" target="_blank" style="color:var(--mid)">13abc.com</a>) while teacher circulates. Then:</p>
+    <p class="body-p"><b>Comprehension Check &mdash; True / False / Not in the Text (whole class, 8 min):</b></p>
+    <ol class="lesson-list">
+      <li data-n="1">Ernst Chladni was a physicist and a musician. <em>(True)</em></li>
+      <li data-n="2">Sand moves toward the areas where the plate vibrates most strongly. <em>(False &mdash; sand moves to the nodes, where vibration is lowest)</em></li>
+      <li data-n="3">Changing the frequency changes the pattern. <em>(True)</em></li>
+      <li data-n="4">Chladni published his findings in the 18th century. <em>(True &mdash; 1787)</em></li>
+      <li data-n="5">The patterns are called Chladni figures. <em>(True)</em></li>
+    </ol>
+    <p class="body-p">For any wrong answer, students find the relevant sentence in the article and read it aloud. This is the core comprehension check &mdash; do not skip it.</p>
+    <p class="body-p"><b>Vocabulary check (pairs, 5 min):</b> Can you now use &ldquo;node,&rdquo; &ldquo;antinode,&rdquo; &ldquo;frequency,&rdquo; and &ldquo;resonance&rdquo; in one sentence each? Partners check each other.</p>
+  </div>
+
+
+  <!-- STAGE 6 — EVALUATION -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 6 &mdash; EVALUATION &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">Written Description &mdash; Explain the Experiment</div>
+    <p class="body-p">Students write independently, without notes. Choose <b>one</b>:</p>
+    <p class="body-p"><b>Option A &mdash; Scientific Description (Speaking Objective):</b> Imagine you are explaining the Chladni experiment to a friend who was not in class today. Write what you would say. Use passive voice at least twice (e.g., <em>&ldquo;The sand is pushed toward the nodes&rdquo;</em>). Use at least <b>5 vocabulary words</b> from today. 120&ndash;160 words.</p>
+    <p class="body-p"><b>Option B &mdash; Cause and Effect Paragraph:</b> Write a paragraph explaining what causes the Chladni patterns. Use at least three cause-and-effect connectors from this list: <em>causes, leads to, results in, because of, as a result, therefore</em>. Connect the physics to what you can see with your eyes.</p>
+    <p class="body-p"><b>Option C &mdash; The Metaphor:</b> The article says &ldquo;life is like a sound wave with ups and downs.&rdquo; Do you agree? Write your own version of this metaphor using what you now know about Chladni plates. What are the nodes in your life? What are the antinodes? Where is the sand collecting?</p>
+  </div>
+
+  <!-- STAGE 7 — APPLICATION -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 7 &mdash; APPLICATION &nbsp;&middot;&nbsp; 15 min (or homework)</div>
+    <div class="stage-activity">DIY Extension + Connection to Principia Orthogona</div>
+    <p class="body-p">If materials are available (speaker, balloon or plastic wrap, salt or fine sand): students set up the experiment at home or in class and describe what they observe using at least 4 vocabulary words. They write 3 sentences: <em>what I set up, what I observed, what it means.</em></p>
+    <p class="body-p">If no materials: students watch the YouTube video (<a href="https://www.youtube.com/watch?v=wvJAgrUBF4w" target="_blank" style="color:var(--mid)">Amazing Resonance Experiment!</a>) and write the same 3 sentences based on what they observe on screen.</p>
+    <p class="body-p"><b>Connection to the series:</b> In the Principia Orthogona framework, the Chladni plate is a Fold (Operator F): reality tests the pattern. The frequency is the input. The stable figure in the sand is the output. Teacher asks: <em>What is the &ldquo;frequency&rdquo; in your English practice? What stable pattern is it creating?</em></p>
+    <div class="lesson-quote">&ldquo;The plate does not choose its pattern. The pattern is the honest answer to the question the frequency is asking.&rdquo;</div>
+  </div>
+
+  <!-- Timing -->
+  <h3 style="color:var(--navy); font-family:sans-serif; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin:1.5rem 0 0.6rem;">Timing Summary</h3>
+  <table class="timing-table">
+    <tr><th>#</th><th>Stage (WIPPEA)</th><th>Activity</th><th>Time</th></tr>
+    <tr><td>1</td><td>Warm-Up</td><td>Sound &amp; Vision &mdash; Pairs</td><td>10 min</td></tr>
+    <tr><td>2</td><td>Introduction</td><td>Sound Has Shape &mdash; Objective</td><td>10 min</td></tr>
+    <tr><td>3</td><td>Presentation</td><td>Reading + True/False Comprehension Check</td><td>20 min</td></tr>
+    <tr><td>4</td><td>Guided Practice</td><td>Vocabulary + Video Questions</td><td>20 min</td></tr>
+    <tr><td>5</td><td>Communicative Practice</td><td>Discussion Cards &mdash; Groups</td><td>15 min</td></tr>
+    <tr><td>6</td><td>Evaluation</td><td>Written Description</td><td>15 min</td></tr>
+    <tr><td>7</td><td>Application</td><td>DIY / Video + Principia Connection</td><td>15 min</td></tr>
+    <tr><td></td><td colspan="2"><strong>TOTAL</strong></td><td><strong>105&ndash;120 min</strong></td></tr>
+  </table>
+
+  <!-- Teacher Note -->
+  <div class="teacher-note">
+    <strong>Teacher Notes &mdash;</strong> This is an excellent lesson for mixed-level classes because the visual element (the YouTube video, the DIY experiment) gives lower-level students access to the content without requiring heavy reading. The comprehension check (Stage 3) is the backbone &mdash; do not replace it with discussion. Students need to verify specific facts before they can discuss meaning.<br><br>
+    <strong>Comprehension check note:</strong> The most common error is confusing nodes with antinodes. Sand moves to nodes (low vibration), not antinodes (high vibration). Repeat this once clearly and have students point to the relevant sentence in the article.<br><br>
+    <strong>The metaphor (Option C):</strong> This produces surprisingly strong writing. Students from musical or religious backgrounds often engage deeply with the idea that invisible forces create visible form. Do not pre-explain the metaphor &mdash; let students construct it from what they know.<br><br>
+    <strong>For B1 students:</strong> Provide sentence starters for the evaluation: <em>&ldquo;When the plate vibrates, sand is pushed... The pattern changes when... This happens because...&rdquo;</em>
+  </div>
+
+  <!-- Fundraiser -->
+  
+
+  <!-- Copyright -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:2rem 0">
+  <div style="background:#e8f5e9;border:2px solid #2d5a27;padding:1.4rem 1.5rem">
+    <h3 style="color:#2d5a27;font-family:sans-serif;font-size:.95rem;margin-bottom:.5rem">&#x1F3E0; Support Hour House &mdash; Newark, NJ</h3>
+    <p style="font-size:.87rem;color:#1b5e20;line-height:1.7;margin-bottom:.7rem">Hour House at 229 Ballantine Pkwy is Pablo&rsquo;s own adult ESL programme &mdash; independent, community-funded, and free or low-cost for immigrant and refugee learners. Your support keeps it open.</p>
+    <a href="https://g6llc.gumroad.com" target="_blank" style="display:inline-block;background:#2d5a27;color:white;font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.4rem .9rem;text-decoration:none;margin-right:.5rem;margin-bottom:.4rem">&#x1F4D6; Buy the Membership</a>
+    <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="display:inline-block;background:transparent;color:#2d5a27;border:1.5px solid #2d5a27;font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.4rem .9rem;text-decoration:none">&#x1F6D2; Buy the Book</a>
+  </div>
+  <div style="background:#eef4fb;border:2px solid #3a6fa0;padding:1.4rem 1.5rem">
+    <h3 style="color:#1a4a7a;font-family:sans-serif;font-size:.95rem;margin-bottom:.5rem">&#x1F393; Enroll at UCEDA School of Elizabeth</h3>
+    <p style="font-size:.87rem;color:#1a3a5c;line-height:1.7;margin-bottom:.7rem">Pablo teaches at UCEDA School of Elizabeth &mdash; accredited online English classes at Basic, Intermediate, and Advanced levels with flexible schedules for working adults.</p>
+    <p style="font-size:.82rem;color:#2a5080;margin-bottom:.3rem">&#x1F4CD; 1180 Elizabeth Ave, Elizabeth, NJ 07201</p>
+    <p style="font-size:.82rem;color:#2a5080">&#x1F4DE; (908) 354-5505 &middot; Mon&ndash;Fri, opens 8 AM</p>
+  </div>
+</div>
+<div class="copyright-strip">
+    © 2026 Pablo Nogueira Grossi / Hour House · Newark, NJ · 
+    Lesson 03 — Chladni Plates
+  </div>
+
+</div>
+
+
+
+
+<div style="background:#f0ece4;border-top:2px solid #c9a84c;padding:2rem;margin-top:2rem">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem"><a href="Lesson03_Number33.html" style="display:inline-block;color:#c9a84c;border:1px solid rgba(201,168,76,.4);font-family:sans-serif;font-size:.75rem;padding:.45rem 1rem;text-decoration:none;">&larr; 03: The Number 33</a><a href="Lesson04_USA_Top10.html" style="display:inline-block;background:#c9a84c;color:#1a2744;font-family:sans-serif;font-size:.75rem;font-weight:bold;padding:.45rem 1rem;text-decoration:none;">04: USA Enters Top 10 &rarr;</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.2rem">
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">All Lessons</div>
+        <a href="Lesson01_Vitruvian_Approximation.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">01: The Vitruvian Approximation</a><a href="Lesson02_Cajueiro_Principle.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">02: The Cajueiro Principle</a><a href="Lesson02b_Galilean_Confluence.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">02b: The Galilean Confluence</a><a href="Lesson03_Number33.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">03: The Number 33</a><a href="Lesson03b_Chladni_Plates.html" style="color:#c9a84c;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">&rsaquo; 03b: Chladni Plates</a><a href="Lesson04_USA_Top10.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">04: USA Enters Top 10</a><a href="Lesson07_Alpha_Submission_v2.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">07: Your First Alpha</a><a href="voynich-caela-lesson.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">V: The Voynich Manuscript</a>
+      </div>
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">Support &amp; Connect</div>
+        <a href="https://g6llc.gumroad.com" target="_blank" style="color:#2d5a27;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F4D6; Buy the Membership &mdash; g6llc.gumroad.com</a>
+        <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="color:#2d5a27;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F6D2; Buy the Book &mdash; Principia Orthogona on eBay</a>
+        <a href="https://platform.worldquantbrain.com" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F4C8; WorldQuant Brain</a>
+        <a href="https://claude.ai" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F916; claude.ai &mdash; Your Research Partner</a>
+        <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;font-family:sans-serif;font-size:.78rem;">&#x1F4BB; github.com/TOTOGT/AXLE</a>
+      </div>
+    </div>
+  </div>
+</div>
+<footer style="background:#1a2744;color:#888;padding:1.8rem 2rem;text-align:center;font-size:.75rem;font-family:sans-serif;line-height:1.8">
+  <div style="color:#c9a84c;font-size:.8rem;margin-bottom:.4rem">&#x1F949;&#x1F948; Bronze &amp; Silver Quant Medals &mdash; IQC 2026 &middot; Pablo Nogueira Grossi</div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; Hour House &middot; 229 Ballantine Pkwy, Newark, NJ 07104</div>
+  <div style="margin-top:.3rem">ORCID: <a href="https://orcid.org/0009-0000-6496-2186" target="_blank" style="color:#777;text-decoration:none">0009-0000-6496-2186</a> &middot; Principia Orthogona &middot; AXLE v6.1 &middot; <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:#777;text-decoration:none">github.com/TOTOGT/AXLE</a> &middot; CC BY-NC-ND 4.0 &middot; CAELA Framework</div>
+  <div style="margin-top:.4rem"><a href="index.html" style="color:#c9a84c;text-decoration:none">&larr; Hour House Homepage</a></div>
+</footer>
+</body>
+</html>

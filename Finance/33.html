@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Paper Bot v2 · Monitor · G6 LLC</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#07050f;color:#e8e0d0;font-family:'Courier New',monospace;min-height:100vh;overflow-x:hidden}
+
+/* ── NAV ── */
+.back-nav{background:#0a0814;border-bottom:1px solid #18122a;padding:0;position:sticky;top:0;z-index:100}
+.back-nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:40px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;letter-spacing:.08em;color:#443355;text-decoration:none;transition:color .2s}
+.back-link:hover{color:#c9a84c}
+.back-link svg{width:12px;height:12px;flex-shrink:0}
+.nav-right{display:flex;gap:14px;align-items:center}
+.nav-right a{font-size:.68rem;letter-spacing:.06em;color:#2a2040;text-decoration:none;transition:color .2s}
+.nav-right a:hover{color:#c9a84c}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#50c878;display:inline-block;margin-right:4px;box-shadow:0 0 6px #50c87866}
+.clock-el{font-size:.68rem;color:#2a2040}
+
+/* ── HERO ── */
+.hero{max-width:1200px;margin:0 auto;padding:28px 20px 18px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;border-bottom:1px solid #1a1530}
+.hero-left h1{font-size:1.1rem;color:#c9a84c;letter-spacing:.06em;margin-bottom:4px}
+.hero-left p{font-size:.68rem;color:#443355}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Courier New',monospace;font-size:.72rem;color:#554466;background:#0c0918;border:1px solid #221c38;border-radius:4px;padding:6px 14px;cursor:pointer;transition:all .2s}
+.upload-btn:hover{border-color:#c9a84c;color:#c9a84c}
+
+/* ── LAYOUT ── */
+.dash{max-width:1200px;margin:0 auto;padding:16px 20px 48px}
+
+/* ── METRICS STRIP ── */
+.metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.metric{background:#0c0918;border:1px solid #1e1840;border-radius:6px;padding:12px 14px;position:relative;overflow:hidden}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--mc,#1e1840)}
+.m-label{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin-bottom:5px}
+.m-val{font-size:1.25rem;font-weight:500;font-family:'Georgia',serif;color:#e8e0d0;line-height:1}
+.m-sub{font-size:.62rem;color:#2a2040;margin-top:4px}
+.pos{color:#50c878!important}
+.neg{color:#e05a3a!important}
+.warn{color:#c9a84c!important}
+
+/* ── DIAGNOSIS BANNER ── */
+.diag-banner{background:#0c0610;border:1px solid #3a1828;border-radius:8px;padding:16px 18px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.diag-title{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#e05a3a;margin-bottom:10px;grid-column:1/-1;display:flex;align-items:center;gap:8px}
+.diag-title::after{content:'';flex:1;height:1px;background:#3a1828}
+.gap-card{background:#09040e;border:1px solid #2a1020;border-radius:6px;padding:10px 12px}
+.gap-id{display:inline-block;font-size:.6rem;letter-spacing:.1em;padding:1px 6px;border-radius:2px;background:rgba(224,90,58,.1);color:#e05a3a;border:1px solid rgba(224,90,58,.2);margin-bottom:5px}
+.gap-head{font-size:.78rem;color:#e8e0d0;margin-bottom:4px}
+.gap-body{font-size:.7rem;color:#776688;line-height:1.5}
+.fix-pill{display:inline-block;margin-top:6px;font-size:.6rem;padding:2px 8px;border-radius:2px;background:rgba(201,168,76,.08);color:#c9a84c;border:1px solid rgba(201,168,76,.2)}
+
+/* ── CHARTS GRID ── */
+.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:10px}
+.chart-card{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px}
+.chart-title{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.chart-badge{font-size:.58rem;background:#110e1c;color:#2a2040;padding:2px 8px;border-radius:12px;border:1px solid #1e1840}
+
+/* ── BOTTOM GRID ── */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.panel{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px}
+.panel-title{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin-bottom:10px}
+
+/* ── TRADE LOG ── */
+.trade-row{display:grid;grid-template-columns:1fr 54px 62px 70px 58px;gap:4px;padding:6px 0;border-bottom:1px solid #100d1c;font-size:.7rem;align-items:center}
+.trade-row:last-child{border-bottom:none}
+.tr-hdr{font-size:.58rem;text-transform:uppercase;letter-spacing:.06em;color:#2a2040}
+.tr-pair{color:#e8e0d0;font-weight:500}
+.phase-long{font-size:.58rem;padding:1px 5px;border-radius:2px;background:rgba(80,200,120,.08);color:#50c878;border:1px solid rgba(80,200,120,.2)}
+.phase-short{font-size:.58rem;padding:1px 5px;border-radius:2px;background:rgba(224,90,58,.08);color:#e05a3a;border:1px solid rgba(224,90,58,.2)}
+.r-tp{color:#50c878}.r-sl{color:#e05a3a}.r-trail{color:#9ac8ff}
+
+/* ── DIST BARS ── */
+.dist-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.7rem}
+.dist-lbl{width:44px;color:#554466;text-align:right;font-size:.65rem}
+.dist-bar-wrap{flex:1;height:5px;background:#110e1c;border-radius:3px;overflow:hidden}
+.dist-bar{height:100%;border-radius:3px;transition:width .4s}
+.dist-cnt{width:20px;color:#2a2040;text-align:right;font-size:.62rem}
+.dist-pnl{width:44px;text-align:right;font-size:.62rem}
+
+/* ── PAIR TABLE ── */
+.pair-row{display:grid;grid-template-columns:80px 36px 36px 36px 56px 56px;gap:4px;padding:5px 0;border-bottom:1px solid #100d1c;font-size:.68rem;align-items:center}
+.pair-row:last-child{border-bottom:none}
+.ph-hdr{font-size:.55rem;text-transform:uppercase;letter-spacing:.06em;color:#2a2040}
+.pair-name{color:#e8e0d0;font-size:.68rem}
+
+/* ── HOURLY ── */
+.hour-chart{height:80px;position:relative}
+
+/* ── FIX PANEL ── */
+.fix-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.fix-card{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px}
+.fix-num{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#67e8f9;margin-bottom:4px}
+.fix-head{font-size:.85rem;color:#e8e0d0;margin-bottom:6px}
+.fix-body{font-size:.72rem;color:#776688;line-height:1.55}
+.fix-eq{font-family:'Courier New',monospace;font-size:.75rem;color:#9ac8ff;background:#080c18;padding:5px 9px;border-radius:3px;margin:6px 0;display:inline-block;border-left:2px solid #4a9eff}
+.status-open{display:inline-block;margin-top:6px;font-size:.6rem;padding:2px 7px;border-radius:2px;background:rgba(103,232,249,.08);color:#67e8f9;border:1px solid rgba(103,232,249,.2)}
+.status-fix{display:inline-block;margin-top:6px;font-size:.6rem;padding:2px 7px;border-radius:2px;background:rgba(80,200,120,.08);color:#50c878;border:1px solid rgba(80,200,120,.2)}
+
+/* ── FOOTER ── */
+.site-footer{max-width:1200px;margin:0 auto;padding:16px 20px 8px;border-top:1px solid #18122a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer-chain{font-size:.68rem;letter-spacing:.08em;color:#c9a84c;opacity:.35}
+.footer-links{display:flex;gap:14px}
+.footer-links a{font-size:.66rem;color:#2a2040;text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:#c9a84c}
+.footer-copy{width:100%;font-size:.6rem;color:#1a1428;margin-top:4px}
+
+@media(max-width:900px){.metrics{grid-template-columns:repeat(3,1fr)}.charts-grid{grid-template-columns:1fr}.bottom-grid{grid-template-columns:1fr}.fix-grid{grid-template-columns:1fr}.diag-banner{grid-template-columns:1fr}}
+@media(max-width:480px){.metrics{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="back-nav">
+  <div class="back-nav-inner">
+    <a class="back-link" href="../index.html">
+      <svg viewBox="0 0 12 12" fill="none"><path d="M7.5 2L3 6l4.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      AXLE · G6 LLC
+    </a>
+    <div class="nav-right">
+      <span><span class="status-dot"></span><span style="font-size:.68rem;color:#2a4030">paper trading</span></span>
+      <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE ↗</a>
+      <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Zenodo ↗</a>
+      <span class="clock-el" id="clock">--:--:--</span>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-left">
+    <h1>Paper Bot v2 &mdash; Monitor</h1>
+    <p>G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; trades_test.csv &nbsp;·&nbsp; G6 LLC · Newark, NJ</p>
+  </div>
+  <label class="upload-btn">
+    ↑ load CSV
+    <input type="file" accept=".csv" id="csvInput" style="display:none">
+  </label>
+</div>
+
+<div class="dash">
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric" style="--mc:#e05a3a">
+      <div class="m-label">Bank</div>
+      <div class="m-val neg" id="m-bank">$160.58</div>
+      <div class="m-sub">started $200.00</div>
+    </div>
+    <div class="metric" style="--mc:#e05a3a">
+      <div class="m-label">Total P&amp;L</div>
+      <div class="m-val neg" id="m-pnl">−$39.62</div>
+      <div class="m-sub" id="m-pct">−19.81%</div>
+    </div>
+    <div class="metric" style="--mc:#e05a3a">
+      <div class="m-label">Win rate</div>
+      <div class="m-val neg" id="m-wr">0%</div>
+      <div class="m-sub" id="m-wrsub">0 wins · 351 losses</div>
+    </div>
+    <div class="metric" style="--mc:#554466">
+      <div class="m-label">Trades</div>
+      <div class="m-val" id="m-trades">351</div>
+      <div class="m-sub" id="m-phases">241 long · 110 short</div>
+    </div>
+    <div class="metric" style="--mc:#e05a3a">
+      <div class="m-label">Avg P&amp;L</div>
+      <div class="m-val neg" id="m-avg">−$0.11</div>
+      <div class="m-sub">per trade</div>
+    </div>
+    <div class="metric" style="--mc:#e05a3a">
+      <div class="m-label">Max Drawdown</div>
+      <div class="m-val neg" id="m-dd">−$39.22</div>
+      <div class="m-sub">−19.61% peak</div>
+    </div>
+  </div>
+
+  <!-- DIAGNOSIS BANNER -->
+  <div class="diag-banner">
+    <div class="diag-title">⚠ Structural diagnosis — three open bridges to profitability</div>
+
+    <div class="gap-card">
+      <div class="gap-id">GAP G1 · CRITICAL</div>
+      <div class="gap-head">TP trades are net-negative</div>
+      <div class="gap-body">Every "winning" exit is still a loss. TP avg = −$0.027, SL avg = −$0.184. This means the bot is entering <em>after</em> the move has already happened — entry timing is systematically late. Price reverses before TP fires a real profit.</div>
+      <div class="fix-pill">Fix: entry filter — only enter on confirmed momentum, not on pattern detection alone</div>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-id">GAP G2 · CRITICAL</div>
+      <div class="gap-head">R:R ratio is inverted — 1:0.14</div>
+      <div class="gap-body">SL loses $0.184 on average. TP gains only $0.027. For a 0% win rate, no R:R saves you — but even at 50% WR this R:R bleeds you dry. The minimum viable ratio at 40% WR needs R:R ≥ 1.5. Current: 0.14.</div>
+      <div class="fix-pill">Fix: widen TP to ≥7× the SL distance, or tighten SL to match TP distance</div>
+    </div>
+
+    <div class="gap-card">
+      <div class="gap-id">GAP G3 · STRUCTURAL</div>
+      <div class="gap-head">Equity slope = −$0.11/trade, R²=0.9994</div>
+      <div class="gap-body">The decay is perfectly linear — not random noise, not bad luck. This is a structural fee/spread problem. At 3.8 min avg between trades and $0.11 loss/trade, the system burns ~$1.73/hr. The bot is paying spread on every single trade with no edge to compensate.</div>
+      <div class="fix-pill">Fix: reduce trade frequency 10×, add trend filter, require min spread clearance before entry</div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Equity curve <span class="chart-badge">bank over time · R²=0.9994 linear decay</span></div>
+      <div style="position:relative;height:200px">
+        <canvas id="equityChart" role="img" aria-label="Equity curve showing bank declining linearly from $200 to $160.58 over 351 trades">Bank declining from $200 to $160.58.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">P&amp;L per trade <span class="chart-badge">all negative</span></div>
+      <div style="position:relative;height:200px">
+        <canvas id="pnlChart" role="img" aria-label="Bar chart of individual trade P&L — all bars negative">All 351 trades closed at a loss.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="charts-grid" style="margin-bottom:10px">
+    <div class="chart-card">
+      <div class="chart-title">P&amp;L by hour (UTC) <span class="chart-badge">no safe hour found</span></div>
+      <div style="position:relative;height:160px">
+        <canvas id="hourlyChart" role="img" aria-label="Hourly P&L chart — all hours negative">All 23 active hours show net losses.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Exit reason breakdown <span class="chart-badge">SL dominates</span></div>
+      <div id="distPanel" style="padding-top:8px"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM ROW -->
+  <div class="bottom-grid">
+    <!-- Recent trades -->
+    <div class="panel">
+      <div class="panel-title">Recent trades (last 20)</div>
+      <div class="trade-row tr-hdr">
+        <span>Pair</span><span>Dir</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">Exit</span><span style="text-align:right">Reason</span>
+      </div>
+      <div id="tradeLog"></div>
+    </div>
+
+    <!-- Pair breakdown -->
+    <div class="panel">
+      <div class="panel-title">Performance by pair</div>
+      <div class="pair-row tr-hdr">
+        <span>Pair</span><span style="text-align:right">n</span><span style="text-align:right">SL</span><span style="text-align:right">TP</span><span style="text-align:right">Total</span><span style="text-align:right">Avg</span>
+      </div>
+      <div id="pairPanel"></div>
+    </div>
+
+    <!-- Best hours -->
+    <div class="panel">
+      <div class="panel-title">Hourly loss rank</div>
+      <div id="hourPanel" style="font-size:.68rem"></div>
+    </div>
+  </div>
+
+  <!-- FIX PLAN -->
+  <div style="font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin:18px 0 8px;display:flex;align-items:center;gap:8px">
+    Profitability roadmap — what to build next
+    <span style="flex:1;height:1px;background:#1e1840"></span>
+  </div>
+  <div class="fix-grid">
+
+    <div class="fix-card">
+      <div class="fix-num">Fix 01 · Entry gate</div>
+      <div class="fix-head">Add a trend filter before every entry</div>
+      <div class="fix-body">The bot currently enters on both sides (LONG+SHORT) of every detected pattern regardless of prevailing trend. Add a 1-hour EMA check: only go LONG above EMA, only SHORT below. This alone kills ~50% of counter-trend losses.</div>
+      <div class="fix-eq">entry_ok = (phase=='LONG' and price > ema1h) or (phase=='SHORT' and price &lt; ema1h)</div>
+      <div class="status-fix">High impact · 2h to implement</div>
+    </div>
+
+    <div class="fix-card">
+      <div class="fix-num">Fix 02 · R:R rebalance</div>
+      <div class="fix-head">Widen TP to at least 3× the SL distance</div>
+      <div class="fix-body">Current TP = ~0.027 avg, SL = ~0.184. Even at a 35% win rate, a 1:3 R:R breaks even. At 40% WR it turns profitable. The bot clearly has <em>some</em> directional ability (147 TPs fired) — the edge is real but is being suffocated by the TP being too close.</div>
+      <div class="fix-eq">tp_distance = sl_distance * 3.0  # minimum viable</div>
+      <div class="status-fix">High impact · 30 min to implement</div>
+    </div>
+
+    <div class="fix-card">
+      <div class="fix-num">Fix 03 · Frequency cap</div>
+      <div class="fix-head">Limit to 5–10 trades per hour maximum</div>
+      <div class="fix-body">Current: ~16 trades/hr on average, 21 in the worst hours. Each entry pays spread. At this frequency, spread alone accounts for the majority of losses. Add a cooldown: after any trade, lock the pair for 15 minutes. Target: &lt;8 trades/hr total.</div>
+      <div class="fix-eq">cooldown[pair] = now + timedelta(minutes=15)</div>
+      <div class="status-open">Medium impact · eliminates ~60% of spread drag</div>
+    </div>
+
+    <div class="fix-card">
+      <div class="fix-num">Fix 04 · Volatility gate</div>
+      <div class="fix-head">Only trade when ATR clears the spread</div>
+      <div class="fix-body">The bot trades micro-cap pairs (DEGEN, HOME, NOM) where bid-ask spread is a large fraction of move size. Compute 14-period ATR on the entry timeframe. If ATR &lt; 3× estimated spread, skip. This filters entries where there is no room to profit.</div>
+      <div class="fix-eq">if atr14 &lt; spread * 3: skip_trade()</div>
+      <div class="status-open">High impact · stops trading in dead markets</div>
+    </div>
+
+    <div class="fix-card">
+      <div class="fix-num">Fix 05 · Pair culling</div>
+      <div class="fix-head">Drop AERGO, ALLO, DEXT — keep NOM, WLD</div>
+      <div class="fix-body">NOM-USD (avg −$0.091) and WLD-USD (avg −$0.086) are the least-bad pairs, suggesting marginally better liquidity. AERGO (−$0.133) and ALLO (−$0.148) bleed fastest. Drop them immediately. Focus volume on STG and HOME where trade count is high enough to improve with fixes 01–03.</div>
+      <div class="fix-eq">PAIRS = ['STG-USD','HOME-USD','NOM-USD','WLD-USD']</div>
+      <div class="status-fix">Quick win · no logic change needed</div>
+    </div>
+
+    <div class="fix-card">
+      <div class="fix-num">Fix 06 · Confirmation candle</div>
+      <div class="fix-head">Wait for one closed candle before entry</div>
+      <div class="fix-body">The ping-pong pattern in the data (LONG → SHORT on same pair within 2 min) shows the bot is chasing sub-candle noise. Enforce that the signal candle must fully close before entering. This eliminates the LONG+SHORT whipsaw pattern that generated 147 back-to-back SL/TP pairs.</div>
+      <div class="fix-eq">wait_for_close(candle) before signal_entry()</div>
+      <div class="status-open">Medium impact · prevents whipsaw entries</div>
+    </div>
+
+  </div>
+
+  <!-- BREAKEVEN CALCULATOR -->
+  <div style="background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;margin-bottom:10px">
+    <div style="font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin-bottom:12px">Breakeven simulator — adjust parameters to find the threshold</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px">
+      <div>
+        <div style="font-size:.62rem;color:#554466;margin-bottom:4px">Win rate (%)</div>
+        <input type="range" id="sl-wr" min="5" max="70" value="35" style="width:100%">
+        <div style="font-size:.7rem;color:#c9a84c;margin-top:2px" id="wr-out">35%</div>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:#554466;margin-bottom:4px">Avg win ($)</div>
+        <input type="range" id="sl-win" min="0.05" max="1.00" step="0.01" value="0.27" style="width:100%">
+        <div style="font-size:.7rem;color:#50c878;margin-top:2px" id="win-out">$0.27</div>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:#554466;margin-bottom:4px">Avg loss ($)</div>
+        <input type="range" id="sl-loss" min="0.05" max="0.50" step="0.01" value="0.18" style="width:100%">
+        <div style="font-size:.7rem;color:#e05a3a;margin-top:2px" id="loss-out">$0.18</div>
+      </div>
+    </div>
+    <div style="background:#080c14;border-radius:6px;padding:10px 14px;display:flex;gap:24px;flex-wrap:wrap;font-size:.75rem">
+      <span style="color:#554466">Expected value per trade:</span>
+      <span id="ev-out" style="color:#c9a84c;font-weight:500">…</span>
+      <span style="color:#554466">R:R ratio:</span>
+      <span id="rr-out" style="color:#9ac8ff">…</span>
+      <span style="color:#554466">Verdict:</span>
+      <span id="verdict-out">…</span>
+    </div>
+  </div>
+
+</div><!-- .dash -->
+
+<footer class="site-footer">
+  <span class="footer-chain">C → K → F → U → ∞</span>
+  <div class="footer-links">
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a>
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Series Root</a>
+    <a href="https://doi.org/10.5281/zenodo.19162012" target="_blank">G6 Crystal</a>
+  </div>
+  <div class="footer-copy">© G6 LLC · Newark, NJ · 2026 · Paper Bot v2 Monitor · MIT (code)</div>
+</footer>
+
+<script>
+// ── EMBEDDED DATA ──────────────────────────────────────────
+const DATA = {"equity":[[" 2026-05-31 10:00",199.8],["2026-05-31 10:04",199.6],["2026-05-31 10:07",199.51],["2026-05-31 10:08",199.47],["2026-05-31 10:19",199.27],["2026-05-31 10:20",199.07],["2026-05-31 10:25",199.05],["2026-05-31 10:36",198.83],["2026-05-31 10:38",198.63],["2026-05-31 10:39",198.43],["2026-05-31 10:45",198.24],["2026-05-31 10:49",198.04],["2026-05-31 10:51",197.84],["2026-05-31 10:53",197.64],["2026-05-31 10:59",197.62],["2026-05-31 11:02",197.58],["2026-05-31 11:04",197.56],["2026-05-31 11:05",197.35],["2026-05-31 11:08",197.15],["2026-05-31 11:10",196.95],["2026-05-31 11:12",196.93],["2026-05-31 11:12",196.89],["2026-05-31 11:14",196.87],["2026-05-31 11:16",196.66],["2026-05-31 11:17",196.64],["2026-05-31 11:18",196.42],["2026-05-31 11:20",196.4],["2026-05-31 11:20",196.36],["2026-05-31 11:29",196.25],["2026-05-31 11:36",196.21],["2026-05-31 11:38",196.02],["2026-05-31 11:40",195.82],["2026-05-31 11:43",195.63],["2026-05-31 11:45",195.43],["2026-05-31 11:50",195.33],["2026-05-31 11:58",195.12],["2026-05-31 12:00",194.92],["2026-05-31 12:02",194.9],["2026-05-31 12:04",194.86],["2026-05-31 12:14",194.67],["2026-05-31 12:15",194.65],["2026-05-31 12:16",194.43],["2026-05-31 12:19",194.24],["2026-05-31 12:20",194.04],["2026-05-31 12:29",193.94],["2026-05-31 12:43",193.73],["2026-05-31 12:45",193.54],["2026-05-31 12:49",193.52],["2026-05-31 12:51",193.48],["2026-05-31 12:54",193.46],["2026-05-31 12:56",193.42],["2026-05-31 12:59",193.31],["2026-05-31 12:59",193.1],["2026-05-31 13:01",193.0],["2026-05-31 13:05",192.96],["2026-05-31 13:14",192.88],["2026-05-31 13:14",192.84],["2026-05-31 13:18",192.65],["2026-05-31 13:24",192.63],["2026-05-31 13:24",192.42],["2026-05-31 13:33",192.4],["2026-05-31 13:37",192.36],["2026-05-31 13:43",192.17],["2026-05-31 13:45",192.15],["2026-05-31 13:46",192.11],["2026-05-31 13:50",192.09],["2026-05-31 13:52",192.05],["2026-05-31 13:54",192.03],["2026-05-31 13:54",191.99],["2026-05-31 13:58",191.89],["2026-05-31 14:01",191.85],["2026-05-31 14:05",191.83],["2026-05-31 14:06",191.79],["2026-05-31 14:08",191.77],["2026-05-31 14:08",191.73],["2026-05-31 14:25",191.72],["2026-05-31 14:36",191.5],["2026-05-31 14:39",191.49],["2026-05-31 14:40",191.45],["2026-05-31 14:43",191.26],["2026-05-31 14:45",191.06],["2026-05-31 14:48",191.05],["2026-05-31 14:52",191.01],["2026-05-31 14:55",190.82],["2026-05-31 14:57",190.63],["2026-05-31 14:59",190.44],["2026-05-31 15:01",190.24],["2026-05-31 15:09",190.15],["2026-05-31 15:28",189.94],["2026-05-31 15:30",189.92],["2026-05-31 15:30",189.71],["2026-05-31 15:34",189.52],["2026-05-31 15:37",189.33],["2026-05-31 15:40",189.31],["2026-05-31 15:40",189.28],["2026-05-31 15:42",189.09],["2026-05-31 15:50",188.99],["2026-05-31 15:54",188.79],["2026-05-31 15:55",188.6],["2026-05-31 15:57",188.41],["2026-05-31 16:00",188.22],["2026-05-31 16:02",188.13],["2026-05-31 16:05",188.09],["2026-05-31 16:12",188.07],["2026-05-31 16:16",187.86],["2026-05-31 16:17",187.67],["2026-05-31 16:19",187.66],["2026-05-31 16:19",187.62],["2026-05-31 16:21",187.6],["2026-05-31 16:22",187.56],["2026-05-31 16:30",187.37],["2026-05-31 16:31",187.19],["2026-05-31 16:38",187.17],["2026-05-31 16:41",187.13],["2026-05-31 16:42",187.11],["2026-05-31 16:47",186.91],["2026-05-31 16:50",186.89],["2026-05-31 16:51",186.85],["2026-05-31 17:01",186.66],["2026-05-31 17:04",186.58],["2026-05-31 17:05",186.37],["2026-05-31 17:09",186.19],["2026-05-31 17:15",186.17],["2026-05-31 17:19",185.96],["2026-05-31 17:21",185.94],["2026-05-31 17:24",185.74],["2026-05-31 17:26",185.72],["2026-05-31 17:27",185.68],["2026-05-31 17:30",185.5],["2026-05-31 17:35",185.31],["2026-05-31 17:37",185.2],["2026-05-31 17:39",185.17],["2026-05-31 17:41",185.15],["2026-05-31 17:43",185.11],["2026-05-31 17:44",184.93],["2026-05-31 17:46",184.74],["2026-05-31 17:51",184.72],["2026-05-31 17:56",184.52],["2026-05-31 17:59",184.33],["2026-05-31 18:02",184.15],["2026-05-31 18:04",183.97],["2026-05-31 18:05",183.95],["2026-05-31 18:12",183.91],["2026-05-31 18:17",183.73],["2026-05-31 18:19",183.54],["2026-05-31 18:22",183.36],["2026-05-31 18:27",183.18],["2026-05-31 18:28",183.16],["2026-05-31 18:30",183.12],["2026-05-31 18:33",183.1],["2026-05-31 18:36",183.07],["2026-05-31 18:47",183.05],["2026-05-31 18:49",183.01],["2026-05-31 18:50",182.83],["2026-05-31 18:52",182.81],["2026-05-31 19:03",182.61],["2026-05-31 19:05",182.59],["2026-05-31 19:09",182.55],["2026-05-31 19:11",182.37],["2026-05-31 19:14",182.19],["2026-05-31 19:24",182.01],["2026-05-31 19:29",181.99],["2026-05-31 19:35",181.95],["2026-05-31 19:39",181.86],["2026-05-31 19:41",181.66],["2026-05-31 19:49",181.48],["2026-05-31 19:54",181.3],["2026-05-31 19:58",181.19],["2026-05-31 20:01",180.99],["2026-05-31 20:03",180.81],["2026-05-31 20:12",180.63],["2026-05-31 20:14",180.45],["2026-05-31 20:16",180.43],["2026-05-31 20:17",180.23],["2026-05-31 20:21",180.05],["2026-05-31 20:24",179.87],["2026-05-31 20:26",179.78],["2026-05-31 20:28",179.58],["2026-05-31 20:31",179.56],["2026-05-31 20:37",179.52],["2026-05-31 20:40",179.35],["2026-05-31 20:45",179.33],["2026-05-31 20:45",179.29],["2026-05-31 20:54",179.27],["2026-05-31 21:05",179.24],["2026-05-31 21:08",179.22],["2026-05-31 21:10",179.02],["2026-05-31 21:15",178.92],["2026-05-31 21:15",178.73],["2026-05-31 21:29",178.71],["2026-05-31 21:46",178.67],["2026-05-31 21:47",178.49],["2026-05-31 21:52",178.32],["2026-05-31 21:57",178.14],["2026-05-31 22:00",177.96],["2026-05-31 22:03",177.78],["2026-05-31 22:23",177.6],["2026-05-31 22:28",177.59],["2026-05-31 22:30",177.39],["2026-05-31 22:31",177.21],["2026-05-31 22:34",177.13],["2026-05-31 22:37",176.94],["2026-05-31 22:38",176.76],["2026-05-31 22:41",176.74],["2026-05-31 22:46",176.55],["2026-05-31 22:50",176.53],["2026-05-31 22:54",176.5],["2026-05-31 22:56",176.48],["2026-05-31 22:57",176.28],["2026-05-31 23:00",176.27],["2026-05-31 23:01",176.07],["2026-05-31 23:06",175.9],["2026-05-31 23:07",175.72],["2026-05-31 23:09",175.54],["2026-05-31 23:14",175.53],["2026-05-31 23:16",175.49],["2026-05-31 23:37",175.32],["2026-05-31 23:39",175.14],["2026-05-31 23:44",174.97],["2026-05-31 23:51",174.95],["2026-05-31 23:52",174.91],["2026-05-31 23:54",174.9],["2026-05-31 23:57",174.7],["2026-05-31 23:58",174.53],["2026-06-01 00:01",174.35],["2026-06-01 00:02",174.18],["2026-06-01 00:07",174.01],["2026-06-01 00:09",173.99],["2026-06-01 00:09",173.8],["2026-06-01 00:12",173.62],["2026-06-01 00:19",173.45],["2026-06-01 00:21",173.28],["2026-06-01 00:26",173.26],["2026-06-01 00:32",173.07],["2026-06-01 00:33",172.89],["2026-06-01 00:40",172.8],["2026-06-01 00:41",172.61],["2026-06-01 00:50",172.59],["2026-06-01 00:55",172.56],["2026-06-01 00:58",172.54],["2026-06-01 01:00",172.51],["2026-06-01 01:02",172.49],["2026-06-01 01:03",172.45],["2026-06-01 01:05",172.44],["2026-06-01 01:06",172.25],["2026-06-01 01:22",172.23],["2026-06-01 01:24",172.2],["2026-06-01 01:26",172.18],["2026-06-01 01:28",172.14],["2026-06-01 01:30",172.13],["2026-06-01 01:31",171.94],["2026-06-01 01:36",171.77],["2026-06-01 01:38",171.59],["2026-06-01 01:42",171.58],["2026-06-01 01:47",171.39],["2026-06-01 01:50",171.37],["2026-06-01 01:51",171.34],["2026-06-01 01:56",171.32],["2026-06-01 01:59",171.13],["2026-06-01 02:01",171.11],["2026-06-01 02:03",171.08],["2026-06-01 02:06",170.91],["2026-06-01 02:19",170.89],["2026-06-01 02:22",170.7],["2026-06-01 02:25",170.53],["2026-06-01 02:28",170.36],["2026-06-01 02:36",170.19],["2026-06-01 02:39",170.12],["2026-06-01 02:50",169.93],["2026-06-01 02:56",169.76],["2026-06-01 02:59",169.59],["2026-06-01 03:00",169.42],["2026-06-01 03:08",169.25],["2026-06-01 03:10",169.23],["2026-06-01 03:17",169.05],["2026-06-01 03:19",169.03],["2026-06-01 03:31",169.0],["2026-06-01 03:38",168.83],["2026-06-01 03:45",168.81],["2026-06-01 03:54",168.78],["2026-06-01 03:56",168.61],["2026-06-01 04:01",168.59],["2026-06-01 04:23",168.56],["2026-06-01 04:28",168.39],["2026-06-01 04:32",168.22],["2026-06-01 04:34",168.05],["2026-06-01 04:41",167.88],["2026-06-01 04:43",167.72],["2026-06-01 04:53",167.55],["2026-06-01 04:57",167.53],["2026-06-01 04:58",167.5],["2026-06-01 05:07",167.48],["2026-06-01 05:12",167.3],["2026-06-01 05:14",167.13],["2026-06-01 05:16",167.11],["2026-06-01 05:19",167.08],["2026-06-01 05:24",167.0],["2026-06-01 05:27",166.82],["2026-06-01 05:29",166.65],["2026-06-01 05:35",166.48],["2026-06-01 05:36",166.47],["2026-06-01 05:37",166.28],["2026-06-01 05:46",166.27],["2026-06-01 05:58",166.09],["2026-06-01 06:01",165.92],["2026-06-01 06:03",165.75],["2026-06-01 06:06",165.59],["2026-06-01 06:07",165.57],["2026-06-01 06:08",165.39],["2026-06-01 06:18",165.22],["2026-06-01 06:20",165.06],["2026-06-01 06:39",164.89],["2026-06-01 06:40",164.73],["2026-06-01 06:41",164.56],["2026-06-01 06:45",164.4],["2026-06-01 06:47",164.38],["2026-06-01 06:47",164.2],["2026-06-01 06:50",164.19],["2026-06-01 06:51",164.15],["2026-06-01 06:54",164.14],["2026-06-01 06:55",163.96],["2026-06-01 06:57",163.79],["2026-06-01 06:59",163.78],["2026-06-01 06:59",163.74],["2026-06-01 07:02",163.73],["2026-06-01 07:08",163.69],["2026-06-01 07:10",163.53],["2026-06-01 07:12",163.37],["2026-06-01 07:20",163.2],["2026-06-01 07:21",163.04],["2026-06-01 07:22",163.02],["2026-06-01 07:27",162.99],["2026-06-01 07:29",162.83],["2026-06-01 07:44",162.66],["2026-06-01 07:46",162.5],["2026-06-01 07:48",162.34],["2026-06-01 07:52",162.32],["2026-06-01 07:52",162.29],["2026-06-01 07:53",162.13],["2026-06-01 07:55",162.11],["2026-06-01 07:59",161.93],["2026-06-01 08:00",161.77],["2026-06-01 08:06",161.61],["2026-06-01 08:07",161.59],["2026-06-01 08:08",161.42],["2026-06-01 08:12",161.25],["2026-06-01 08:14",161.09],["2026-06-01 08:17",161.08],["2026-06-01 08:17",160.9],["2026-06-01 08:22",160.74],["2026-06-01 08:23",160.58]],"pnl_by_trade":[-0.2,-0.2,-0.09,-0.04,-0.2,-0.2,-0.02,-0.22,-0.2,-0.2,-0.2,-0.2,-0.2,-0.2,-0.02,-0.04,-0.02,-0.22,-0.2,-0.2,-0.02,-0.04,-0.02,-0.22,-0.02,-0.22,-0.02,-0.04,-0.11,-0.04,-0.2,-0.2,-0.2,-0.2,-0.1,-0.21,-0.2,-0.02,-0.04,-0.19,-0.02,-0.21,-0.19,-0.19,-0.1,-0.21,-0.19,-0.02,-0.04,-0.02,-0.04,-0.11,-0.21,-0.1,-0.04,-0.08,-0.04,-0.19,-0.02,-0.21,-0.02,-0.04,-0.19,-0.02,-0.04,-0.02,-0.04,-0.02,-0.04,-0.11,-0.04,-0.02,-0.04,-0.02,-0.04,-0.02,-0.21,-0.02,-0.04,-0.19,-0.19,-0.02,-0.04,-0.19,-0.19,-0.19,-0.19,-0.09,-0.21,-0.02,-0.21,-0.19,-0.19,-0.02,-0.04,-0.19,-0.09,-0.21,-0.19,-0.19,-0.19,-0.09,-0.04,-0.02,-0.21,-0.19,-0.02,-0.04,-0.02,-0.04,-0.19,-0.19,-0.02,-0.04,-0.02,-0.21,-0.02,-0.04,-0.19,-0.09,-0.21,-0.19,-0.02,-0.2,-0.02,-0.2,-0.02,-0.04,-0.19,-0.19,-0.11,-0.04,-0.02,-0.04,-0.19,-0.18,-0.02,-0.2,-0.18,-0.18,-0.18,-0.02,-0.04,-0.18,-0.18,-0.18,-0.18,-0.02,-0.04,-0.02,-0.04,-0.02,-0.04,-0.18,-0.02,-0.2,-0.02,-0.04,-0.18,-0.18,-0.18,-0.02,-0.04,-0.09,-0.2,-0.18,-0.18,-0.11,-0.2,-0.18,-0.18,-0.18,-0.02,-0.2,-0.18,-0.18,-0.1,-0.2,-0.02,-0.04,-0.18,-0.02,-0.04,-0.02,-0.04,-0.02,-0.2,-0.1,-0.2,-0.02,-0.04,-0.18,-0.18,-0.18,-0.18,-0.18,-0.18,-0.02,-0.2,-0.18,-0.08,-0.19,-0.18,-0.02,-0.19,-0.02,-0.04,-0.02,-0.19,-0.02,-0.19,-0.18,-0.18,-0.18,-0.02,-0.04,-0.18,-0.18,-0.18,-0.02,-0.03,-0.02,-0.19,-0.17,-0.17,-0.17,-0.17,-0.02,-0.19,-0.17,-0.17,-0.17,-0.02,-0.19,-0.17,-0.1,-0.19,-0.02,-0.03,-0.02,-0.03,-0.02,-0.03,-0.02,-0.19,-0.02,-0.03,-0.02,-0.03,-0.02,-0.19,-0.17,-0.17,-0.02,-0.19,-0.02,-0.03,-0.02,-0.19,-0.02,-0.03,-0.17,-0.02,-0.19,-0.17,-0.17,-0.17,-0.07,-0.19,-0.17,-0.17,-0.17,-0.17,-0.02,-0.19,-0.02,-0.03,-0.17,-0.02,-0.03,-0.17,-0.02,-0.03,-0.17,-0.17,-0.17,-0.17,-0.17,-0.17,-0.02,-0.03,-0.02,-0.18,-0.17,-0.02,-0.03,-0.08,-0.18,-0.17,-0.17,-0.02,-0.18,-0.02,-0.18,-0.17,-0.17,-0.17,-0.02,-0.18,-0.17,-0.17,-0.17,-0.16,-0.16,-0.16,-0.02,-0.18,-0.02,-0.03,-0.02,-0.18,-0.16,-0.02,-0.03,-0.02,-0.03,-0.16,-0.16,-0.16,-0.16,-0.02,-0.03,-0.16,-0.16,-0.16,-0.16,-0.02,-0.03,-0.16,-0.02,-0.18,-0.16,-0.16,-0.02,-0.18,-0.16,-0.16,-0.02,-0.18,-0.16,-0.16],"hourly":[{"hour":0,"count":16,"pnl":-1.97,"sl":10,"tp":5},{"hour":1,"count":19,"pnl":-1.41,"sl":6,"tp":13},{"hour":2,"count":12,"pnl":-1.54,"sl":8,"tp":3},{"hour":3,"count":10,"pnl":-0.99,"sl":5,"tp":5},{"hour":4,"count":10,"pnl":-1.12,"sl":6,"tp":4},{"hour":5,"count":13,"pnl":-1.42,"sl":7,"tp":5},{"hour":6,"count":20,"pnl":-2.36,"sl":13,"tp":7},{"hour":7,"count":17,"pnl":-1.79,"sl":10,"tp":7},{"hour":8,"count":10,"pnl":-1.36,"sl":8,"tp":2},{"hour":10,"count":15,"pnl":-2.39,"sl":11,"tp":3},{"hour":11,"count":21,"pnl":-2.54,"sl":10,"tp":9},{"hour":12,"count":17,"pnl":-2.0,"sl":8,"tp":7},{"hour":13,"count":17,"pnl":-1.22,"sl":3,"tp":11},{"hour":14,"count":16,"pnl":-1.46,"sl":6,"tp":10},{"hour":15,"count":14,"pnl":-2.03,"sl":9,"tp":3},{"hour":16,"count":18,"pnl":-1.59,"sl":6,"tp":11},{"hour":17,"count":21,"pnl":-2.54,"sl":11,"tp":8},{"hour":18,"count":16,"pnl":-1.52,"sl":7,"tp":9},{"hour":19,"count":13,"pnl":-1.62,"sl":7,"tp":4},{"hour":20,"count":16,"pnl":-1.94,"sl":9,"tp":6},{"hour":21,"count":10,"pnl":-1.16,"sl":5,"tp":4},{"hour":22,"count":15,"pnl":-1.87,"sl":9,"tp":5},{"hour":23,"count":15,"pnl":-1.78,"sl":9,"tp":6}],"pairs":[{"pair":"STG-USD","trades":97,"sl":47,"tp":43,"trail":7,"total_pnl":-10.55,"avg_pnl":-0.1088},{"pair":"HOME-USD","trades":89,"sl":42,"tp":40,"trail":7,"total_pnl":-9.61,"avg_pnl":-0.108},{"pair":"GHST-USD","trades":49,"sl":28,"tp":20,"trail":1,"total_pnl":-5.99,"avg_pnl":-0.1222},{"pair":"CTR-USD","trades":38,"sl":21,"tp":15,"trail":2,"total_pnl":-4.15,"avg_pnl":-0.1092},{"pair":"DEGEN-USD","trades":18,"sl":8,"tp":7,"trail":3,"total_pnl":-2.04,"avg_pnl":-0.1133},{"pair":"AERGO-USD","trades":13,"sl":10,"tp":3,"trail":0,"total_pnl":-1.73,"avg_pnl":-0.1331},{"pair":"ZORA-USD","trades":12,"sl":6,"tp":6,"trail":0,"total_pnl":-1.31,"avg_pnl":-0.1092},{"pair":"NOM-USD","trades":13,"sl":6,"tp":7,"trail":0,"total_pnl":-1.18,"avg_pnl":-0.0908},{"pair":"DEXT-USD","trades":6,"sl":4,"tp":2,"trail":0,"total_pnl":-0.79,"avg_pnl":-0.1317},{"pair":"ALLO-USD","trades":5,"sl":3,"tp":1,"trail":1,"total_pnl":-0.74,"avg_pnl":-0.148},{"pair":"WLD-USD","trades":5,"sl":2,"tp":3,"trail":0,"total_pnl":-0.43,"avg_pnl":-0.086},{"pair":"FUN1-USD","trades":2,"sl":2,"tp":0,"trail":0,"total_pnl":-0.4,"avg_pnl":-0.2},{"pair":"LRDS-USD","trades":1,"sl":1,"tp":0,"trail":0,"total_pnl":-0.2,"avg_pnl":-0.2},{"pair":"W-USD","trades":1,"sl":1,"tp":0,"trail":0,"total_pnl":-0.17,"avg_pnl":-0.17},{"pair":"XLM-USD","trades":1,"sl":1,"tp":0,"trail":0,"total_pnl":-0.17,"avg_pnl":-0.17},{"pair":"BILL-USD","trades":1,"sl":1,"tp":0,"trail":0,"total_pnl":-0.16,"avg_pnl":-0.16}],"recent":[{"pair":"NOM-USD","phase":"SHORT","pnl":-0.03,"reason":"TP","time":"07:27","exit":0.00259},{"pair":"CTR-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"07:29","exit":0.01868},{"pair":"AERGO-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"07:44","exit":0.0563},{"pair":"HOME-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"07:46","exit":0.04623},{"pair":"NOM-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"07:48","exit":0.00262},{"pair":"DEGEN-USD","phase":"LONG","pnl":-0.02,"reason":"TP","time":"07:52","exit":0.001058},{"pair":"DEGEN-USD","phase":"SHORT","pnl":-0.03,"reason":"TP","time":"07:52","exit":0.001045},{"pair":"AERGO-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"07:53","exit":0.0576},{"pair":"CTR-USD","phase":"LONG","pnl":-0.02,"reason":"TP","time":"07:55","exit":0.01904},{"pair":"CTR-USD","phase":"SHORT","pnl":-0.18,"reason":"SL","time":"07:59","exit":0.01925},{"pair":"HOME-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"08:00","exit":0.0471},{"pair":"NOM-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"08:06","exit":0.00257},{"pair":"AERGO-USD","phase":"LONG","pnl":-0.02,"reason":"TP","time":"08:07","exit":0.0595},{"pair":"AERGO-USD","phase":"SHORT","pnl":-0.18,"reason":"SL","time":"08:08","exit":0.0601},{"pair":"BILL-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"08:12","exit":0.08914},{"pair":"HOME-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"08:14","exit":0.04435},{"pair":"NOM-USD","phase":"LONG","pnl":-0.02,"reason":"TP","time":"08:17","exit":0.00266},{"pair":"NOM-USD","phase":"SHORT","pnl":-0.18,"reason":"SL","time":"08:17","exit":0.00271},{"pair":"AERGO-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"08:22","exit":0.0593},{"pair":"CTR-USD","phase":"LONG","pnl":-0.16,"reason":"SL","time":"08:23","exit":0.01906}],"total":351,"final_bank":160.58,"total_pnl":-39.62,"max_dd":-39.22,"sl_count":183,"tp_count":147,"trail_count":21,"avg_sl":-0.1842,"avg_tp":-0.0267,"avg_trail":-0.0952,"slope":-0.1103,"long_count":241,"short_count":110};
+
+// ── CLOCK ──────────────────────────────────────────────────
+function tick(){ document.getElementById('clock').textContent = new Date().toLocaleTimeString(); }
+tick(); setInterval(tick,1000);
+
+// ── CHARTS ─────────────────────────────────────────────────
+const RED='#e05a3a', GOLD='#c9a84c', CYAN='#67e8f9', DIM='#221c38';
+const GRIDCLR='rgba(34,28,56,0.8)', TICKCLR='#2a2040', FONT={size:9,family:'Courier New,monospace'};
+
+// Equity — subsample to ~100 pts for clarity
+(function(){
+  const eq = DATA.equity;
+  const step = Math.max(1, Math.floor(eq.length/100));
+  const pts = eq.filter((_,i)=>i%step===0 || i===eq.length-1);
+  const labels = pts.map(p=>p[0].slice(5));
+  const vals = pts.map(p=>p[1]);
+  // regression line
+  const n=vals.length, sumX=vals.reduce((_,__,i)=>_+i,0), sumY=vals.reduce((a,b)=>a+b,0);
+  const sumXY=vals.reduce((a,v,i)=>a+i*v,0), sumX2=vals.reduce((a,_,i)=>a+i*i,0);
+  const slope=(n*sumXY-sumX*sumY)/(n*sumX2-sumX*sumX);
+  const intercept=(sumY-slope*sumX)/n;
+  const regLine=vals.map((_,i)=>+(intercept+slope*i).toFixed(2));
+
+  new Chart(document.getElementById('equityChart'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'Bank',data:vals,borderColor:RED,borderWidth:1.5,pointRadius:0,fill:false,tension:0.1},
+      {label:'Trend',data:regLine,borderColor:GOLD,borderWidth:1,borderDash:[4,4],pointRadius:0,fill:false,tension:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{...FONT,color:TICKCLR,autoSkip:true,maxTicksLimit:8,maxRotation:0},grid:{color:GRIDCLR}},
+        y:{ticks:{...FONT,color:TICKCLR,callback:v=>'$'+v.toFixed(0)},grid:{color:GRIDCLR},min:155}
+      }
+    }
+  });
+})();
+
+// PnL bars (subsample)
+(function(){
+  const pnls=DATA.pnl_by_trade;
+  const step=Math.max(1,Math.floor(pnls.length/80));
+  const pts=pnls.filter((_,i)=>i%step===0);
+  new Chart(document.getElementById('pnlChart'),{
+    type:'bar',
+    data:{labels:pts.map((_,i)=>''),datasets:[{label:'P&L',data:pts,backgroundColor:pts.map(v=>v>=-0.03?'#554466':RED),borderRadius:1}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{display:false},grid:{display:false}},
+        y:{ticks:{...FONT,color:TICKCLR,callback:v=>'$'+v.toFixed(2)},grid:{color:GRIDCLR}}
+      }
+    }
+  });
+})();
+
+// Hourly
+(function(){
+  const h=DATA.hourly;
+  const labels=h.map(r=>r.hour+'h');
+  const pnls=h.map(r=>r.pnl);
+  const colors=pnls.map(v=>v>-1.3?'#443355':RED);
+  new Chart(document.getElementById('hourlyChart'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'P&L',data:pnls,backgroundColor:colors,borderRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{...FONT,color:TICKCLR,maxRotation:0},grid:{display:false}},
+        y:{ticks:{...FONT,color:TICKCLR,callback:v=>'$'+v.toFixed(1)},grid:{color:GRIDCLR}}
+      }
+    }
+  });
+})();
+
+// ── DIST PANEL ─────────────────────────────────────────────
+(function(){
+  const {sl_count,tp_count,trail_count,avg_sl,avg_tp,avg_trail,total}=DATA;
+  const rows=[
+    {lbl:'SL',count:sl_count,col:RED,avg:avg_sl},
+    {lbl:'TP',count:tp_count,col:'#9ac8ff',avg:avg_tp},
+    {lbl:'TRAIL',count:trail_count,col:GOLD,avg:avg_trail},
+  ];
+  const maxC=Math.max(...rows.map(r=>r.count));
+  document.getElementById('distPanel').innerHTML=rows.map(r=>`
+    <div class="dist-row">
+      <span class="dist-lbl">${r.lbl}</span>
+      <div class="dist-bar-wrap"><div class="dist-bar" style="width:${(r.count/maxC*100).toFixed(0)}%;background:${r.col}"></div></div>
+      <span class="dist-cnt">${r.count}</span>
+      <span class="dist-pnl" style="color:${r.col}">${r.avg.toFixed(3)}</span>
+    </div>
+    <div style="font-size:.6rem;color:#1e1840;padding:0 0 6px 52px">avg $${r.avg.toFixed(3)} · ${(r.count/total*100).toFixed(0)}% of trades</div>
+  `).join('');
+})();
+
+// ── TRADE LOG ──────────────────────────────────────────────
+(function(){
+  const rClass={TP:'r-tp',SL:'r-sl',TRAIL:'r-trail'};
+  document.getElementById('tradeLog').innerHTML=DATA.recent.map(t=>`
+    <div class="trade-row">
+      <span class="tr-pair">${t.pair}</span>
+      <span><span class="${t.phase==='LONG'?'phase-long':'phase-short'}">${t.phase}</span></span>
+      <span style="text-align:right;color:#e05a3a">${t.pnl.toFixed(2)}</span>
+      <span style="text-align:right;color:#2a2040;font-size:.62rem">${t.exit.toFixed(4)}</span>
+      <span style="text-align:right" class="${rClass[t.reason]||''}">${t.reason}</span>
+    </div>`).join('');
+})();
+
+// ── PAIR PANEL ─────────────────────────────────────────────
+(function(){
+  const best=['WLD-USD','NOM-USD'];
+  document.getElementById('pairPanel').innerHTML=DATA.pairs.map(p=>`
+    <div class="pair-row" style="${best.includes(p.pair)?'border-left:2px solid #50c87840;padding-left:4px':''}">
+      <span class="pair-name" style="color:${best.includes(p.pair)?'#50c878':'#e8e0d0'}">${p.pair.replace('-USD','')}</span>
+      <span style="text-align:right;color:#2a2040">${p.trades}</span>
+      <span style="text-align:right;color:#e05a3a">${p.sl}</span>
+      <span style="text-align:right;color:#9ac8ff">${p.tp}</span>
+      <span style="text-align:right;color:#e05a3a">${p.total_pnl.toFixed(2)}</span>
+      <span style="text-align:right;color:#554466">${p.avg_pnl.toFixed(3)}</span>
+    </div>`).join('');
+})();
+
+// ── HOURLY RANK ────────────────────────────────────────────
+(function(){
+  const sorted=[...DATA.hourly].sort((a,b)=>b.pnl-a.pnl);
+  const best3=sorted.slice(-3).reverse();
+  const worst3=sorted.slice(0,3);
+  let html='<div style="color:#2a2040;font-size:.6rem;margin-bottom:6px;letter-spacing:.08em">Least bad hours (UTC)</div>';
+  best3.forEach(h=>{
+    const pct=(h.pnl/Math.min(...DATA.hourly.map(x=>x.pnl))*100).toFixed(0);
+    html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+      <span style="width:28px;color:#c9a84c">${h.hour}h</span>
+      <div style="flex:1;height:4px;background:#110e1c;border-radius:2px"><div style="width:${pct}%;height:100%;background:#443355;border-radius:2px"></div></div>
+      <span style="color:#554466;font-size:.65rem">$${h.pnl.toFixed(2)}</span>
+      <span style="color:#1e1840;font-size:.6rem">${h.count}tr</span>
+    </div>`;
+  });
+  html+='<div style="color:#2a2040;font-size:.6rem;margin:10px 0 6px;letter-spacing:.08em">Worst hours — avoid</div>';
+  worst3.forEach(h=>{
+    html+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+      <span style="width:28px;color:#e05a3a">${h.hour}h</span>
+      <div style="flex:1;height:4px;background:#110e1c;border-radius:2px"><div style="width:100%;height:100%;background:#3a1828;border-radius:2px"></div></div>
+      <span style="color:#e05a3a;font-size:.65rem">$${h.pnl.toFixed(2)}</span>
+      <span style="color:#1e1840;font-size:.6rem">${h.count}tr</span>
+    </div>`;
+  });
+  document.getElementById('hourPanel').innerHTML=html;
+})();
+
+// ── BREAKEVEN SIMULATOR ────────────────────────────────────
+function updateSim(){
+  const wr=parseFloat(document.getElementById('sl-wr').value)/100;
+  const win=parseFloat(document.getElementById('sl-win').value);
+  const loss=parseFloat(document.getElementById('sl-loss').value);
+  document.getElementById('wr-out').textContent=(wr*100).toFixed(0)+'%';
+  document.getElementById('win-out').textContent='$'+win.toFixed(2);
+  document.getElementById('loss-out').textContent='$'+loss.toFixed(2);
+  const ev=wr*win-(1-wr)*loss;
+  const rr=(win/loss).toFixed(2);
+  document.getElementById('ev-out').textContent=(ev>=0?'+':'')+'$'+ev.toFixed(4)+' per trade';
+  document.getElementById('ev-out').style.color=ev>=0?'#50c878':'#e05a3a';
+  document.getElementById('rr-out').textContent='1:'+rr;
+  const verdict=ev>0?'✓ Profitable':'✗ Still losing';
+  document.getElementById('verdict-out').textContent=verdict;
+  document.getElementById('verdict-out').style.color=ev>=0?'#50c878':'#e05a3a';
+}
+['sl-wr','sl-win','sl-loss'].forEach(id=>document.getElementById(id).addEventListener('input',updateSim));
+updateSim();
+
+// ── CSV LOADER (same schema as original) ──────────────────
+document.getElementById('csvInput').addEventListener('change',function(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    const lines=ev.target.result.trim().split('\n');
+    const header=lines[0].split(',');
+    const idx=k=>header.indexOf(k);
+    const trades=lines.slice(1).map(line=>{
+      const cols=line.split(',');
+      return{num:parseInt(cols[idx('#')])||0,phase:cols[idx('phase')]?.trim().toUpperCase(),pair:cols[idx('pair')]?.trim(),entry:parseFloat(cols[idx('entry')])||0,exit:parseFloat(cols[idx('exit')])||0,size:parseFloat(cols[idx('size')])||0,pnl:parseFloat(cols[idx('pnl')])||0,reason:cols[idx('reason')]?.trim().toUpperCase(),bank:parseFloat(cols[idx('bank')])||200};
+    }).filter(t=>t.pair);
+    if(!trades.length) return;
+    alert('CSV loaded: '+trades.length+' trades. Reload page to see live data embedded; CSV override coming in v3.');
+  };
+  reader.readAsText(file);
+});
+</script>
+ 
+</body>
+</html>
+
+

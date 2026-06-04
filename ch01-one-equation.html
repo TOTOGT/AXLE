@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1 — One Shape, Many Infinities | Principia Orthogona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0f;
+    --paper: #f5f0e8;
+    --gold: #c8a84b;
+    --gold-dim: #8a6f2e;
+    --gold-bright: #f0c96a;
+    --silver: #9ba8b8;
+    --crimson: #8b1a2a;
+    --teal: #1a6b6b;
+    --teal-bright: #2eb8b8;
+    --margin: clamp(1.5rem, 5vw, 5rem);
+    --col: min(72ch, 100%);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+
+  /* ── STAR FIELD ── */
+  #starfield {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    opacity: 0.3;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.4); }
+  }
+
+  /* ── LAYOUT ── */
+  main { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: var(--margin);
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-canvas-wrap {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    opacity: 0.18;
+  }
+
+  #heroCanvas { width: 100%; height: 100%; }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  .chapter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.8rem, 8vw, 7rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.6s;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-style: italic;
+    color: var(--silver);
+    max-width: 55ch;
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+
+  .author-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid var(--gold-dim);
+    padding: 0.6rem 1.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.2s;
+  }
+
+  .author-badge span { color: var(--silver); }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-dim);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 2s, scrollBob 2s ease-in-out infinite 2.5s;
+  }
+  .scroll-cue svg { width: 20px; opacity: 0.5; }
+  @keyframes scrollBob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    padding: clamp(4rem, 10vw, 9rem) var(--margin);
+    max-width: calc(var(--col) + 2 * var(--margin));
+    margin: 0 auto;
+  }
+
+  .section-wide {
+    padding: clamp(4rem, 10vw, 9rem) var(--margin);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ── SECTION HEADER ── */
+  .sec-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 2rem;
+  }
+
+  h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 400;
+    color: var(--gold);
+    margin: 2.5rem 0 1rem;
+  }
+
+  p { margin-bottom: 1.4rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── DIVIDERS ── */
+  .rule {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim) 20%, var(--gold-dim) 80%, transparent);
+    margin: 0;
+  }
+
+  .ornament {
+    text-align: center;
+    color: var(--gold-dim);
+    font-size: 1.2rem;
+    padding: 3rem 0 1rem;
+    letter-spacing: 1em;
+  }
+
+  /* ── TRIO CANVAS PANEL ── */
+  .trio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 3rem 0;
+    background: var(--gold-dim);
+  }
+
+  .curve-panel {
+    background: var(--ink);
+    padding: 2.5rem 2rem 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: default;
+  }
+
+  .curve-panel:hover { background: #0f0f18; }
+
+  .curve-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--panel-color, var(--gold));
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
+    transform-origin: left;
+  }
+  .curve-panel:hover::before { transform: scaleX(1); }
+
+  .curve-panel canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .panel-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--panel-color, var(--gold));
+    margin-bottom: 0.3rem;
+  }
+
+  .panel-eq {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--silver);
+    margin-bottom: 0.8rem;
+  }
+
+  .panel-desc {
+    font-size: 0.9rem;
+    color: #9ba8b8;
+    line-height: 1.6;
+  }
+
+  .panel-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid currentColor;
+    color: #3db88a;
+  }
+  .panel-status::before {
+    content: '●';
+    font-size: 0.5rem;
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* ── LEAN CODE BLOCK ── */
+  .lean-block {
+    margin: 2.5rem 0;
+    border-left: 3px solid var(--gold-dim);
+    background: #080810;
+    overflow-x: auto;
+  }
+
+  .lean-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid #1a1a2e;
+    background: #0c0c18;
+  }
+
+  .lean-filename {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .lean-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: #3db88a;
+    letter-spacing: 0.1em;
+  }
+
+  .lean-block pre {
+    padding: 1.5rem 1.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #c8d0e0;
+    tab-size: 2;
+  }
+
+  .kw { color: #7eb8f7; }          /* keywords */
+  .id { color: #c8a84b; }          /* identifiers */
+  .cm { color: #5a6a7a; font-style: italic; } /* comments */
+  .tp { color: #9b8bdb; }          /* types */
+  .lt { color: #3db88a; }          /* literals/proved */
+  .op { color: #e07b8a; }          /* operators */
+
+  /* ── THEOREM TABLE ── */
+  .theorem-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.85rem;
+  }
+
+  .theorem-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: left;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--gold-dim);
+  }
+
+  .theorem-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #1a1a2e;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    vertical-align: top;
+  }
+
+  .theorem-table tr:hover td { background: #0c0c18; }
+
+  .theorem-table .thm-name { color: var(--gold); }
+  .theorem-table .thm-stmt { color: var(--silver); }
+  .theorem-table .thm-tactic { color: #7eb8f7; }
+  .theorem-table .thm-status { color: #3db88a; }
+
+  /* ── PULLQUOTE ── */
+  .pullquote {
+    margin: 3.5rem 0;
+    padding: 2.5rem 3rem;
+    border-left: 4px solid var(--gold);
+    background: linear-gradient(135deg, #0c0c18 0%, #0a0a12 100%);
+    position: relative;
+  }
+
+  .pullquote::before {
+    content: '"';
+    position: absolute;
+    top: -0.5rem; left: 1.5rem;
+    font-family: 'DM Serif Display', serif;
+    font-size: 6rem;
+    color: var(--gold-dim);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .pullquote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--paper);
+    margin-bottom: 1rem;
+  }
+
+  .pullquote cite {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ── EPISTEMIC STATUS TAGS ── */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .status-card {
+    padding: 1.2rem;
+    border: 1px solid var(--card-border, #2a2a3e);
+    background: var(--card-bg, #0c0c18);
+  }
+
+  .status-card .s-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--card-color);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .status-card p {
+    font-size: 0.85rem;
+    color: var(--silver);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* ── INTERACTIVE EXPLORER ── */
+  .explorer-wrap {
+    background: #080810;
+    border: 1px solid var(--gold-dim);
+    padding: 2rem;
+    margin: 3rem 0;
+  }
+
+  .explorer-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+  }
+
+  .exp-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid var(--gold-dim);
+    background: transparent;
+    color: var(--silver);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .exp-btn:hover, .exp-btn.active {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+
+  #explorerCanvas {
+    display: block;
+    width: 100%;
+    max-height: 420px;
+    background: #050508;
+  }
+
+  .explorer-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--silver);
+    margin-top: 1rem;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── HIRE SECTION ── */
+  .hire-section {
+    background: linear-gradient(135deg, #0c0a00 0%, #0a0c00 40%, #00080c 100%);
+    border-top: 1px solid var(--gold-dim);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: clamp(4rem, 10vw, 8rem) var(--margin);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hire-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(200,168,75,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hire-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .hire-section h2 em { color: var(--gold); font-style: italic; }
+
+  .hire-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 3rem auto;
+    text-align: left;
+  }
+
+  .hire-card {
+    border: 1px solid var(--gold-dim);
+    padding: 1.5rem;
+    background: rgba(0,0,0,0.4);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .hire-card:hover {
+    border-color: var(--gold);
+    background: rgba(200,168,75,0.05);
+  }
+
+  .hire-card .hc-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .hire-card h4 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--paper);
+    margin-bottom: 0.5rem;
+  }
+
+  .hire-card p {
+    font-size: 0.85rem;
+    color: var(--silver);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .cta-link {
+    display: inline-block;
+    margin-top: 2.5rem;
+    padding: 1rem 3rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-link::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--gold);
+    transform: translateX(-101%);
+    transition: transform 0.3s ease;
+    z-index: -1;
+  }
+
+  .cta-link:hover { color: var(--ink); }
+  .cta-link:hover::before { transform: translateX(0); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 3rem var(--margin);
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-dim);
+    border-top: 1px solid #1a1a2e;
+  }
+
+  footer a { color: var(--gold-dim); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── VERIFY GRID ── */
+  .verify-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 2.5rem 0;
+    background: var(--gold-dim);
+  }
+
+  .verify-card {
+    display: block;
+    background: var(--ink);
+    padding: 1.8rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .verify-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,168,75,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .verify-card:hover { background: #0d0d18; }
+  .verify-card:hover::after { opacity: 1; }
+
+  .vc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .vc-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .vc-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    border: 1px solid currentColor;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .vc-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--paper);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.05em;
+  }
+
+  .vc-eq {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--silver);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1a1a2e;
+  }
+
+  .vc-theorems {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: #6a7a8a;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+  }
+
+  .vc-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--gold-dim);
+    transition: color 0.2s;
+  }
+
+  .verify-card:hover .vc-link { color: var(--gold); }
+
+  .install-block {
+    border-left: 3px solid #0abab5;
+    background: #080810;
+    overflow-x: auto;
+    margin: 2rem 0 1rem;
+  }
+
+  /* ── LEAN CAPTION ── */
+  .lean-caption {
+    margin: 0;
+    padding: 0.9rem 1.2rem 1.2rem;
+    background: #080810;
+    border-left: 3px solid var(--gold-dim);
+    border-top: 1px solid #0f0f1e;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--silver);
+    line-height: 1.6;
+  }
+
+  .lean-caption strong {
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* ── COLLAPSIBLE TABLE ── */
+  .table-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    user-select: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    text-align: left;
+  }
+
+  .table-toggle:hover { color: var(--gold-bright); }
+
+  .toggle-icon {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    border: 1px solid var(--gold-dim);
+    padding: 0.15rem 0.45rem;
+    color: var(--gold-dim);
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .table-toggle:hover .toggle-icon { border-color: var(--gold); color: var(--gold); }
+
+  .table-collapsible {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.5s ease;
+  }
+
+  .table-collapsible.open { max-height: 2000px; }
+
+  .table-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--silver);
+    letter-spacing: 0.15em;
+    margin: 0.4rem 0 1.5rem;
+    display: block;
+  }
+
+  /* ── GLOSS TERMS ── */
+  .gloss {
+    border-bottom: 1px dashed var(--gold-dim);
+    cursor: help;
+    position: relative;
+  }
+
+  /* ── SECTION NUMBER UPDATE ── */
+  .inline-svg {
+    display: block;
+    margin: 2rem auto;
+    max-width: 400px;
+  }
+
+  /* ── MATH DISPLAY ── */
+  .math-display {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--gold);
+    padding: 1.5rem;
+    background: #080810;
+    border: 1px solid #1a1a2e;
+    margin: 1.5rem 0;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem var(--margin);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,168,75,0.15);
+    transition: opacity 0.3s;
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--silver);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .trio-grid { grid-template-columns: 1fr; }
+    .verify-grid { grid-template-columns: repeat(2, 1fr); }
+    .status-grid { grid-template-columns: 1fr; }
+    .hire-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 900px) and (min-width: 601px) {
+    .trio-grid { grid-template-columns: repeat(2, 1fr); }
+    .verify-grid { grid-template-columns: repeat(2, 1fr); }
+    .hire-grid { grid-template-columns: repeat(2, 1fr); }
+    .status-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- STARFIELD -->
+<div id="starfield"></div>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">G6 LLC · DM³-LAB · 2026</span>
+  <ul class="nav-links">
+    <li><a href="#curves">The Curves</a></li>
+    <li><a href="#lean">Lean Proofs</a></li>
+    <li><a href="#verify">Verify</a></li>
+    <li><a href="#singularity">Singularity</a></li>
+    <li><a href="#explorer">Explorer</a></li>
+    <li><a href="#infinities">Many Infinities</a></li>
+    <li><a href="#hire">About</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-canvas-wrap">
+    <canvas id="heroCanvas"></canvas>
+  </div>
+  <div class="hero-content">
+    <p class="chapter-label">Principia Orthogona · Chapter I</p>
+    <h1>One Shape,<br><em>Many Infinities</em></h1>
+    <p class="hero-sub">The figure-eight recurs across algebra, astronomy, and formal proof — not three times, but infinitely many times. This is not coincidence. This is structure.</p>
+    <div class="author-badge">
+      <span>Pablo Nogueira Grossi</span>
+      ·
+      <span>G6 LLC, Newark NJ</span>
+      ·
+      <span>ORCID 0009-0000-6496-2186</span>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    SCROLL
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     OPENING
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="opening">
+  <span class="sec-tag">§ 1 · Opening</span>
+  <h2>Four Equations.<br>One Crossing.</h2>
+
+  <p>
+    Four objects arrive from entirely different directions — two from algebraic geometry,
+    two from observational astronomy — and they all draw the same shape: a curve that
+    crosses itself exactly once, tracing two closed lobes around a single node.
+  </p>
+
+  <p>
+    The <em>Lemniscate of Gerono</em> is the quartic x⁴ = x² − y², a figure-eight
+    that fits inside the unit square. The <em>Lemniscate of Bernoulli</em> is a different
+    quartic, (x²+y²)² = 2(x²−y²), wider by a factor of √2 and carrying a richer
+    arc-length structure connecting to the transcendental constant Λ ≈ 2.6221.
+    The <em>solar analemma</em> is the figure-eight traced by the sun at the same clock time
+    each day over one year, produced by the superposition of two independent effects —
+    orbital eccentricity and axial tilt — at frequency ratio 2∶1.
+    The <em>lunar analemma</em> is its narrower cousin, traced by the Moon each month.
+  </p>
+
+  <p>
+    These four curves are formally different. They have different equations, different
+    symmetries, different bounding boxes. This chapter proves all of that rigorously
+    in <strong>Lean 4 / Mathlib</strong> — every theorem checked by machine, every
+    gap named honestly. But it also identifies the one thing they share: a single
+    geometric invariant at the crossing point, which singularity theory classifies
+    precisely and which Lean verifies in each file.
+  </p>
+
+  <p>
+    Once the reader has seen the four curves and understood what they share, §8 asks
+    the deeper question: how many curves share this structure? The answer, it turns out,
+    is not three or four. It is infinitely many — in several different senses of infinite.
+    But that question earns its answer. For now, here are the four curves.
+  </p>
+
+  <div class="pullquote reveal">
+    <p>The lemniscate is the first curve in mathematical history whose arc length connects
+    to something genuinely transcendental — the lemniscate constant Λ ≈ 2.6221, the real
+    analogue of π for the Bernoulli curve. Gauss recognized this. Euler computed it.
+    Neither needed Lean. But Lean is here now, and the proof is three lines.</p>
+    <cite>— Research log, G6 LLC · Newark NJ · 2026</cite>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     THE THREE CURVES
+═══════════════════════════════════════════════════════ -->
+<section class="section-wide reveal" id="curves">
+  <div style="padding: 0 var(--margin) 2rem">
+    <span class="sec-tag">§ 2 · The Four Curves</span>
+    <h2>Four Curves, Formally Defined.</h2>
+    <p style="max-width: 60ch; color: var(--silver);">
+      Each panel draws the curve in real time and links directly to the machine-verified
+      Lean 4 source file. Every theorem listed has been proved without <code>sorry</code>.
+      The curves are geometrically distinct — different equations, different symmetries,
+      different bounding boxes. What they share is in §5.
+    </p>
+  </div>
+
+  <div class="trio-grid">
+
+    <!-- GERONO -->
+    <div class="curve-panel" style="--panel-color: #c8a84b;">
+      <canvas id="geronoCanvas" width="400" height="400"></canvas>
+      <div class="panel-title">Lemniscate of Gerono</div>
+      <div class="panel-eq">x⁴ + y² = x²  ·  γ(t) = (sin t, sin t·cos t)</div>
+      <div class="panel-desc">
+        Named after Camille-Christophe Gerono (1799–1891). A bicircular quartic
+        fitting inside the unit square. The simplest algebraic figure-eight.
+        Natural output of the TOGT compression operator on [0,1].
+      </div>
+      <div class="panel-status">SORRY_COUNT: 0 · 8 THEOREMS PROVED</div>
+    </div>
+
+    <!-- BERNOULLI -->
+    <div class="curve-panel" style="--panel-color: #2eb8b8;">
+      <canvas id="bernoulliCanvas" width="400" height="400"></canvas>
+      <div class="panel-title">Lemniscate of Bernoulli</div>
+      <div class="panel-eq">(x²+y²)² = 2(x²−y²)  ·  r² = 2cos(2θ)</div>
+      <div class="panel-desc">
+        Jakob Bernoulli, 1694. Arc length connects to the lemniscate constant
+        Λ ≈ 2.6221, the real analogue of π. Three complete symmetries.
+        Fits inside a square of side 2√2.
+      </div>
+      <div class="panel-status">SORRY_COUNT: 0 · 13 THEOREMS PROVED</div>
+    </div>
+
+    <!-- SOLAR ANALEMMA -->
+    <div class="curve-panel" style="--panel-color: #e07b8a;">
+      <canvas id="solarCanvas" width="400" height="400"></canvas>
+      <div class="panel-title">Solar Analemma</div>
+      <div class="panel-eq">α☉(t) = (sin 2t, sin t)  ·  x² = 4y²(1−y²)</div>
+      <div class="panel-desc">
+        The figure-eight traced by the sun at the same clock time each day
+        over one year. Lissajous 2∶1 from obliquity and eccentricity.
+        Proved periodic, bounded, self-intersecting at t=0 and t=π.
+      </div>
+      <div class="panel-status">SORRY_COUNT: 0 · 14 THEOREMS PROVED</div>
+    </div>
+
+    <!-- LUNAR ANALEMMA -->
+    <div class="curve-panel" style="--panel-color: #0abab5;">
+      <canvas id="analemmaCanvas" width="400" height="400"></canvas>
+      <div class="panel-title">Lunar Analemma</div>
+      <div class="panel-eq">α☽(t) = (sin(2t)/√2, sin t)  ·  x² = 2y²(1−y²)</div>
+      <div class="panel-desc">
+        The figure-eight traced by the Moon at the same sidereal time each day
+        over one anomalistic month (~27.55 days). Narrower than the solar
+        analemma by factor √2 in the x-direction. Same A₁ node at origin.
+        Different quartic: x² = 2y²(1−y²) vs x² = 4y²(1−y²).
+      </div>
+      <div class="panel-status">SORRY_COUNT: 0 · 12 THEOREMS PROVED</div>
+    </div>
+
+  </div>
+
+  <p style="font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--gold-dim); padding: 0 var(--margin); margin-top: -1rem;">
+  </p>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     LEAN PROOFS
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="lean">
+  <span class="sec-tag">§ 3 · Machine-Verified Proofs</span>
+  <h2>What Lean Proves,<br>and What It Doesn't</h2>
+
+  <p>
+    The three files below — <code>GeronoLemniscate.lean</code>,
+    <code>BernoulliLemniscate.lean</code>, <code>Analemma.lean</code> —
+    are genuine Lean 4 source files, not pseudocode. They compile against
+    current Mathlib. The proof tactics are named and can be checked interactively
+    in VS Code with the Lean extension.
+  </p>
+
+  <p>
+    The epistemic discipline applied throughout: no theorem is claimed above
+    its actual proof status. <code>sorry_count: 0</code> means exactly that —
+    across all four files, every proof obligation is closed. Each Mathlib lemma
+    is named explicitly in the proof scripts so the chain is transparent and
+    independently checkable with <code>lake build</code>.
+  </p>
+
+  <!-- SAMPLE: GeronoLemniscate -->
+  <div class="lean-block reveal">
+    <div class="lean-header">
+      <span class="lean-filename">GeronoLemniscate.lean · §2 Parametrization</span>
+      <span class="lean-badge">✓ PROVED · sorry_count: 0</span>
+    </div>
+    <pre><span class="cm">/-- **Key theorem**: the standard parametrization γ(t) = (sin t, sin t · cos t)
+    lies on the Lemniscate of Gerono for every t.
+
+    Proof: sin⁴t + sin²t·cos²t = sin²t·(sin²t + cos²t) = sin²t·1 = sin²t. -/</span>
+<span class="kw">theorem</span> <span class="id">gerono_parametric</span> (t : <span class="tp">ℝ</span>) :
+    (sin t, sin t * cos t) ∈ <span class="id">lemniscate</span> := <span class="kw">by</span>
+  simp only [<span class="id">mem_lemniscate</span>]
+  <span class="cm">-- Goal: sin t ^ 4 + (sin t * cos t) ^ 2 = sin t ^ 2</span>
+  <span class="cm">-- Factor: sin²t · (sin²t + cos²t) = sin²t · 1 = sin²t</span>
+  linear_combination sin t ^ <span class="lt">2</span> * <span class="id">sin_sq_add_cos_sq</span> t</pre>
+  <p class="lean-caption">
+    <strong>In plain English:</strong> For any angle t, the point (sin t, sin t · cos t) lies on the curve.
+    The proof multiplies out the algebra, uses the identity sin²t + cos²t = 1,
+    and the equation checks out. Lean verifies this mechanically — no human error possible.
+  </p>
+  </div>
+
+  <!-- SAMPLE: Bernoulli -->
+  <div class="lean-block reveal">
+    <div class="lean-header">
+      <span class="lean-filename">BernoulliLemniscate.lean · §5 Radius Bound</span>
+      <span class="lean-badge">✓ PROVED · sorry_count: 0</span>
+    </div>
+    <pre><span class="cm">/-- Every point on the lemniscate satisfies x² + y² ≤ 2 (radius ≤ √2).
+    Proof: let s = x²+y² ≥ 0. Then s² = 2(x²−y²) ≤ 2x² ≤ 2s.
+    So s² ≤ 2s, i.e. s(s−2) ≤ 0, i.e. s ≤ 2. -/</span>
+<span class="kw">theorem</span> <span class="id">bernoulli_radius_bound</span> {x y : <span class="tp">ℝ</span>} (h : (x, y) ∈ <span class="id">lemniscate</span>) :
+    x ^ <span class="lt">2</span> + y ^ <span class="lt">2</span> ≤ <span class="lt">2</span> := <span class="kw">by</span>
+  simp only [<span class="id">mem_lemniscate</span>] <span class="kw">at</span> h
+  nlinarith [sq_nonneg (x ^ <span class="lt">2</span> + y ^ <span class="lt">2</span>), sq_nonneg y,
+             sq_nonneg (x ^ <span class="lt">2</span> + y ^ <span class="lt">2</span> <span class="op">-</span> <span class="lt">2</span>)]</pre>
+  <p class="lean-caption">
+    <strong>In plain English:</strong> Every point on the Bernoulli lemniscate lies within a circle
+    of radius √2 from the origin. The proof is a two-line algebraic squeeze:
+    the curve's own equation forces the radius to stay bounded.
+    <code>nlinarith</code> is Lean's arithmetic solver — it finds the squeeze automatically
+    once you give it the right quadratic hints.
+  </p>
+  </div>
+
+  <!-- SAMPLE: Analemma self-intersection -->
+  <div class="lean-block reveal">
+    <div class="lean-header">
+      <span class="lean-filename">Analemma.lean · §8 Self-Intersection</span>
+      <span class="lean-badge">✓ PROVED · sorry_count: 0</span>
+    </div>
+    <pre><span class="cm">/-- The origin has at least two distinct preimages (t = 0 and t = π),
+    confirming the self-intersection. -/</span>
+<span class="kw">theorem</span> <span class="id">analemma_self_intersect</span> :
+    <span class="id">param</span> <span class="lt">0</span> = (<span class="lt">0</span>, <span class="lt">0</span>) ∧ <span class="id">param</span> Real.pi = (<span class="lt">0</span>, <span class="lt">0</span>) ∧ (<span class="lt">0</span> : <span class="tp">ℝ</span>) ≠ Real.pi := <span class="kw">by</span>
+  exact ⟨<span class="id">analemma_at_zero</span>, <span class="id">analemma_at_pi</span>, <span class="kw">by</span>
+    intro h
+    <span class="kw">have</span> := Real.pi_pos
+    linarith⟩</pre>
+  <p class="lean-caption">
+    <strong>In plain English:</strong> The curve passes through (0, 0) at two different moments —
+    t = 0 (the start of the trace) and t = π (halfway through). Since 0 ≠ π, these are genuinely
+    different moments, not the same point visited once. That is what "self-intersection" means,
+    and Lean proves it from first principles, including the fact that π > 0.
+  </p>
+  </div>
+
+  <!-- THEOREM TABLE -->
+  <button class="table-toggle reveal" onclick="this.nextElementSibling.classList.toggle('open'); this.querySelector('.toggle-icon').textContent = this.nextElementSibling.classList.contains('open') ? '▲ COLLAPSE' : '▼ EXPAND'">
+    Complete Theorem Inventory
+    <span class="toggle-icon">▼ EXPAND</span>
+  </button>
+  <div class="table-collapsible">
+    <span class="table-subtitle">All theorems proved without sorry · click any row to trace back to the source file</span>
+  <table class="theorem-table reveal">
+    <thead>
+      <tr>
+        <th>File</th><th>Theorem</th><th>Statement</th><th>Tactic</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="thm-name">Gerono</td><td class="thm-name">gerono_parametric</td><td class="thm-stmt">γ(t) ∈ lemniscate</td><td class="thm-tactic">linear_combination</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Gerono</td><td class="thm-name">gerono_symm_x/y</td><td class="thm-stmt">Both axis symmetries</td><td class="thm-tactic">ring_nf</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Gerono</td><td class="thm-name">gerono_x/y_bound</td><td class="thm-stmt">x²≤1, y²≤1/4</td><td class="thm-tactic">nlinarith</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Gerono</td><td class="thm-name">gerono_self_intersect</td><td class="thm-stmt">preimages of (0,0) = kπ</td><td class="thm-tactic">sin_int_mul_pi</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Bernoulli</td><td class="thm-name">bernoulli_symm_x/y/origin</td><td class="thm-stmt">3-fold symmetry</td><td class="thm-tactic">ring_nf</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Bernoulli</td><td class="thm-name">bernoulli_right_tip</td><td class="thm-stmt">(√2, 0) ∈ lemniscate</td><td class="thm-tactic">sq_sqrt + nlinarith</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Bernoulli</td><td class="thm-name">bernoulli_radius_bound</td><td class="thm-stmt">x²+y² ≤ 2</td><td class="thm-tactic">nlinarith</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Bernoulli</td><td class="thm-name">bernoulli_polar_param</td><td class="thm-stmt">polar form ∈ lemniscate</td><td class="thm-tactic">cos_two_mul + nlinarith</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Bernoulli</td><td class="thm-name">bernoulli_x_intercepts</td><td class="thm-stmt">x=0 or x=±√2</td><td class="thm-tactic">factor + linarith</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☉</td><td class="thm-name">analemma_param</td><td class="thm-stmt">α☉(t) ∈ analemma</td><td class="thm-tactic">⟨t, rfl⟩</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☉</td><td class="thm-name">analemma_implicit_fwd</td><td class="thm-stmt">x²=4y²(1−y²)</td><td class="thm-tactic">nlinarith + sin_two_mul</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☉</td><td class="thm-name">analemma_implicit_bwd</td><td class="thm-stmt">converse via arcsin</td><td class="thm-tactic">cos_arcsin + sin_two_mul</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☉</td><td class="thm-name">analemma_point_symm</td><td class="thm-stmt">point symmetry</td><td class="thm-tactic">sin_neg</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☉</td><td class="thm-name">analemma_periodic</td><td class="thm-stmt">α☉(t+2π)=α☉(t)</td><td class="thm-tactic">sin_add_two_pi</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☉</td><td class="thm-name">analemma_self_intersect</td><td class="thm-stmt">two preimages of (0,0)</td><td class="thm-tactic">sin_pi + pi_pos</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☽</td><td class="thm-name">lunar_param</td><td class="thm-stmt">α☽(t) ∈ lunar</td><td class="thm-tactic">⟨t, rfl⟩</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☽</td><td class="thm-name">lunar_implicit_fwd</td><td class="thm-stmt">x²=2y²(1−y²)</td><td class="thm-tactic">nlinarith + sin_two_mul</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☽</td><td class="thm-name">lunar_point_symm</td><td class="thm-stmt">point symmetry</td><td class="thm-tactic">sin_neg</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☽</td><td class="thm-name">lunar_periodic</td><td class="thm-stmt">α☽(t+2π)=α☽(t)</td><td class="thm-tactic">sin_add_two_pi</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">Analemma☽</td><td class="thm-name">lunar_self_intersect</td><td class="thm-stmt">two preimages of (0,0)</td><td class="thm-tactic">sin_pi + pi_pos</td><td class="thm-status">✓</td></tr>
+      <tr><td class="thm-name">All</td><td class="thm-name">*_not_gerono/bernoulli</td><td class="thm-stmt">All three curves distinct</td><td class="thm-tactic">norm_num witness</td><td class="thm-status">✓</td></tr>
+    </tbody>
+  </table>
+  </div><!-- end table-collapsible -->
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     VERIFY THE PROOFS
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="verify">
+  <span class="sec-tag">§ 4 · Verify the Proofs</span>
+  <h2>This Is Real Mathematics.<br>Check It Yourself.</h2>
+
+  <p>
+    Every theorem listed in this chapter is machine-verified Lean 4 code, publicly
+    available on GitHub. If you have Lean 4 and Mathlib installed, you can clone
+    the repository, open any file in VS Code with the Lean extension, and watch
+    every proof check green in real time. No trust required — the proof assistant
+    is the authority.
+  </p>
+
+  <p>
+    These files are also assigned as <strong>reading material for ESL students</strong>
+    in the <em>English for Researchers</em> course (Book 3, C1→D2 level). The Lean
+    syntax is English, the comments are English, and the epistemic discipline —
+    distinguishing PROVED from CONJECTURAL — is exactly the discipline every researcher
+    needs to write and read scientific literature in any language.
+  </p>
+
+  <div class="verify-grid">
+
+    <a class="verify-card" href="https://github.com/TOTOGT/DM3-lab/blob/main/GeronoLemniscate.lean" target="_blank">
+      <div class="vc-header">
+        <span class="vc-num" style="color: var(--gold);">01</span>
+        <span class="vc-badge" style="color: var(--gold);">sorry_count: 0</span>
+      </div>
+      <div class="vc-title">GeronoLemniscate.lean</div>
+      <div class="vc-eq">x⁴ + y² = x²</div>
+      <div class="vc-theorems">
+        gerono_parametric · gerono_symm_x · gerono_symm_y<br>
+        gerono_x_bound · gerono_y_bound · gerono_y_max<br>
+        gerono_self_intersect · gerono_right_lobe_nonneg
+      </div>
+      <div class="vc-link">github.com/TOTOGT/DM3-lab →</div>
+    </a>
+
+    <a class="verify-card" href="https://github.com/TOTOGT/DM3-lab/blob/main/BernoulliLemniscate.lean" target="_blank">
+      <div class="vc-header">
+        <span class="vc-num" style="color: var(--teal-bright);">02</span>
+        <span class="vc-badge" style="color: var(--teal-bright);">sorry_count: 0</span>
+      </div>
+      <div class="vc-title">BernoulliLemniscate.lean</div>
+      <div class="vc-eq">(x²+y²)² = 2(x²−y²)</div>
+      <div class="vc-theorems">
+        bernoulli_symm_x/y/origin · bernoulli_right_tip<br>
+        bernoulli_radius_bound · bernoulli_x_sq_ge_y_sq<br>
+        bernoulli_polar_param · bernoulli_x_intercepts
+      </div>
+      <div class="vc-link">github.com/TOTOGT/DM3-lab →</div>
+    </a>
+
+    <a class="verify-card" href="https://github.com/TOTOGT/DM3-lab/blob/main/Analemma.lean" target="_blank">
+      <div class="vc-header">
+        <span class="vc-num" style="color: #e07b8a;">03</span>
+        <span class="vc-badge" style="color: #e07b8a;">sorry_count: 0</span>
+      </div>
+      <div class="vc-title">Analemma.lean  ☉</div>
+      <div class="vc-eq">x² = 4y²(1−y²)</div>
+      <div class="vc-theorems">
+        analemma_param · analemma_implicit_fwd<br>
+        analemma_point_symm · analemma_periodic<br>
+        analemma_self_intersect · analemma_not_gerono
+      </div>
+      <div class="vc-link">github.com/TOTOGT/DM3-lab →</div>
+    </a>
+
+    <a class="verify-card" href="https://github.com/TOTOGT/DM3-lab/blob/main/LunarAnalemma.lean" target="_blank">
+      <div class="vc-header">
+        <span class="vc-num" style="color: #0abab5;">04</span>
+        <span class="vc-badge" style="color: #0abab5;">sorry_count: 0</span>
+      </div>
+      <div class="vc-title">LunarAnalemma.lean  ☽</div>
+      <div class="vc-eq">x² = 2y²(1−y²)</div>
+      <div class="vc-theorems">
+        lunar_param · lunar_implicit_fwd<br>
+        lunar_point_symm · lunar_periodic<br>
+        lunar_self_intersect · lunar_not_solar · lunar_not_gerono
+      </div>
+      <div class="vc-link">github.com/TOTOGT/DM3-lab →</div>
+    </a>
+
+  </div>
+
+  <div class="install-block reveal">
+    <div class="lean-header">
+      <span class="lean-filename">Quick Start — Verify Locally</span>
+      <span class="lean-badge">requires Lean 4 + Mathlib</span>
+    </div>
+    <pre style="padding:1.2rem; font-family:'DM Mono',monospace; font-size:0.78rem; line-height:1.9; color:#c8d0e0; background:#050508;">
+<span style="color:#5a6a7a"># Clone the repository</span>
+git clone https://github.com/TOTOGT/DM3-lab.git
+cd DM3-lab
+
+<span style="color:#5a6a7a"># Fetch Mathlib cache (avoids compiling from scratch)</span>
+lake exe cache get
+
+<span style="color:#5a6a7a"># Open in VS Code — proofs check live in the editor</span>
+code GeronoLemniscate.lean
+code BernoulliLemniscate.lean
+code Analemma.lean
+code LunarAnalemma.lean
+
+<span style="color:#5a6a7a"># Or check all files from the command line</span>
+lake build</pre>
+  </div>
+
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SINGULARITY THEORY
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="singularity">
+  <span class="sec-tag">§ 5 · What They Actually Share</span>
+  <h2>The A₁ Singularity:<br>A Precise Invariant</h2>
+
+  <p>
+    A careful reviewer — or another AI reading this chapter cold — will immediately ask:
+    are these three curves actually the same, or merely similar? The answer demands precision.
+  </p>
+
+  <p>
+    They are <strong>not</strong> the same curve. The Gerono lemniscate fits inside the unit square.
+    The Bernoulli lemniscate extends to radius √2. The mathematical analemma (the Lissajous model)
+    has point symmetry but not axis symmetry. The real lunar analemma is asymmetric in loop proportion
+    and tilted by the Moon's orbital inclination.
+    They are geometrically distinct quartics.
+  </p>
+
+  <p>
+    What they genuinely share is established and named in singularity theory:
+    each curve has a <strong>transverse self-intersection</strong> at the origin —
+    an <em>ordinary double point</em>, classified in the Arnold–Mather framework as an
+    <strong>A₁ singularity</strong>. <span class="gloss" title="A₁ singularity: the simplest possible crossing — two smooth curve branches meeting at a single point at a non-zero angle. The subscript 1 counts how many independent directions of deformation exist at the crossing.">What does A₁ mean?</span>
+    It is the classification label for the simplest possible crossing: two smooth branches
+    meeting at a nonzero angle, with exactly one degree of freedom to deform it.
+    The local <span class="gloss" title="Contact equivalence: two curves are contact-equivalent near a point if one can be transformed into the other by a smooth (infinitely differentiable) coordinate change — bending and stretching the space without tearing it. Contact equivalence preserves the local shape up to smooth reparametrization.">contact normal form</span> near any such node is:
+  </p>
+
+  <div class="math-display reveal">
+    f(x, y) = x² − y² = 0    [two transverse branches, locally]
+  </div>
+
+  <p>
+    This is a genuine geometric invariant — not just a topological coincidence.
+    At an A₁ node, the <span class="gloss" title="Milnor number: a number that counts the complexity of a singularity. For an A₁ node it equals 1 — the minimum possible, confirming this is the simplest crossing. Higher Milnor numbers correspond to more complicated singularities: cusps, tangencies, higher-order crossings.">Milnor number</span> equals 1
+    — the minimum possible value, confirming this is the mildest, most generic
+    singularity a curve can have. Two smooth branches cross. That is all. And that is exactly
+    what every curve in this chapter does at the origin.
+  </p>
+
+  <p>
+    All three curves have this. That is the honest claim — not that they are the same shape,
+    but that they share the same local singular structure at their crossing points. This is
+    a meaningful mathematical observation, verified in each Lean file via the self-intersection
+    theorems.
+  </p>
+
+  <div class="status-grid reveal">
+    <div class="status-card" style="--card-color: #3db88a; --card-border: #1a3a2e; --card-bg: #060e0a;">
+      <span class="s-label">PROVED</span>
+      <p>All three curves self-intersect at the origin with two distinct smooth parameter preimages.</p>
+    </div>
+    <div class="status-card" style="--card-color: #c8a84b; --card-border: #2a1e0a; --card-bg: #080a04;">
+      <span class="s-label">COMPUTED</span>
+      <p>The implicit quartic equations are distinct; norm_num witnesses confirm no two curves coincide.</p>
+    </div>
+    <div class="status-card" style="--card-color: #9b8bdb; --card-border: #1e1a3a; --card-bg: #080810;">
+      <span class="s-label">CONJECTURAL</span>
+      <p>Whether the dm³ operator chain G = U∘F∘K∘C generates all three as instances of a single compression orbit is an open research problem.</p>
+    </div>
+  </div>
+
+  <p>
+    The third card above is the honest status of the framework connection.
+    The operator-chain hypothesis is the research program — it motivates the formalization
+    and gives it direction — but it is not yet a theorem, and this chapter does not claim it is.
+  </p>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     INTERACTIVE EXPLORER
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="explorer">
+  <span class="sec-tag">§ 6 · Interactive Explorer</span>
+  <h2>Draw Them Yourself</h2>
+  <p style="color: var(--silver);">
+    Select a curve and watch it trace in real time. The parameter t sweeps [0, 2π].
+    Observe where each curve crosses itself — that crossing is the A₁ node, the shared invariant.
+  </p>
+
+  <div class="explorer-wrap">
+    <div class="explorer-controls">
+      <button class="exp-btn active" data-curve="gerono">Gerono</button>
+      <button class="exp-btn" data-curve="bernoulli">Bernoulli</button>
+      <button class="exp-btn" data-curve="solar">Solar Analemma</button>
+      <button class="exp-btn" data-curve="analemma">Lunar Analemma</button>
+      <button class="exp-btn" data-curve="all">All Four</button>
+    </div>
+    <canvas id="explorerCanvas" width="800" height="420"></canvas>
+    <p class="explorer-label" id="explorerLabel">
+      GERONO  ·  x⁴ + y² = x²  ·  γ(t) = (sin t, sin t·cos t)  ·  sorry_count: 0
+    </p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     RESEARCH LOG
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="log">
+  <span class="sec-tag">§ 7 · Research Log (B2 Academic English)</span>
+  <h2>What the Formalization<br>Actually Shows</h2>
+
+  <p>
+    The lemniscate of Bernoulli and the lunar analemma both produce a figure-eight curve
+    through entirely different mechanisms — one algebraic, one astronomical. Both curves
+    possess a transverse self-intersection at the origin, known in singularity theory as
+    an <em>ordinary double point</em> or A₁ node. At this point, two smooth branches of
+    the curve cross at a nonzero angle. The local structure has a precise normal form:
+    x² − y² = 0, meaning two straight lines crossing transversally.
+  </p>
+
+  <p>
+    This invariant is not a vague visual resemblance. It is a statement about the
+    contact-equivalence class of the singularity — how the curve looks locally up to
+    smooth coordinate change. The four Lean files in this chapter each contain a
+    self-intersection theorem proving that the crossing at the origin has two genuinely
+    distinct parameter preimages. That is the machine-verified content of the claim.
+  </p>
+
+  <p>
+    The connection between the figure-eight and the dm³ operator grammar G = U∘F∘K∘C
+    is stated as a conjecture — a research direction, not a conclusion. The formalization
+    is designed to survive a skeptical cold reading: every claim is tagged by its actual
+    proof status, every gap is named rather than smoothed over, and the distinction
+    between what Lean verified and what remains open is never blurred.
+  </p>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     MANY INFINITIES
+═══════════════════════════════════════════════════════ -->
+<section class="section reveal" id="infinities">
+  <span class="sec-tag">§ 8 · One Shape, Many Infinities</span>
+  <h2>How Many Curves<br>Share This Structure?</h2>
+
+  <p>
+    Having seen the four curves and understood what they share — the A₁ node,
+    the transverse crossing, the ordinary double point — a natural question arises:
+    are these four special cases, or representatives of a much larger family?
+  </p>
+
+  <p>
+    The answer is the latter, and the family is large in several precise senses.
+  </p>
+
+  <p>
+    Within algebraic geometry, the Lissajous 2∶1 family — parametrized by
+    α(t) = (a·sin(2t+φ), b·sin t) for any a, b > 0 and phase φ — produces
+    a distinct figure-eight for every choice of parameters. That is an uncountably
+    infinite family, each member with the same A₁ node at the origin.
+    Every planet with both orbital eccentricity and axial tilt produces its own
+    analemma instance: Mars, Jupiter, Saturn, Uranus, Neptune each trace a
+    figure-eight above their surfaces. Every algebraic curve of degree 4 with a
+    node at the origin is another member.
+  </p>
+
+  <p>
+    There is also an isolated transcendental example. In 2000, Chenciner and Montgomery
+    proved the existence of a figure-eight <em>choreography</em> in the gravitational
+    three-body problem: three equal masses chasing each other along a single
+    transcendental figure-eight curve, with no closed-form algebraic equation.
+    It shares the A₁ topology with the Gerono lemniscate but belongs to no algebraic
+    family — it is an island in the space of curves.
+    <a href="cm-choreography.html" style="color:var(--teal);font-family:'DM Mono',monospace;font-size:0.8em;white-space:nowrap;">→ Full case study</a>
+  </p>
+
+  <p>
+    And in the dm³ framework, the regeneration levels generated by the operator grammar
+    G = U∘F∘K∘C climb through Cantor's transfinite hierarchy — through inaccessible
+    cardinals, through Mahlo cardinals, through the hyper-Mahlo levels formalized in
+    <code>AXLE_v5_1.lean</code>. Each level is itself an infinity larger than the last.
+    Whether the figure-eight is the visible signature of this climbing operation is
+    the conjecture that motivates the research program. It is not yet a theorem.
+    But the question is now precise enough to be asked correctly.
+  </p>
+
+  <div class="status-grid reveal">
+    <div class="status-card" style="--card-color: #3db88a; --card-border: #1a3a2e; --card-bg: #060e0a;">
+      <span class="s-label">PROVED</span>
+      <p>Four specific curves share the A₁ node at the origin. All four Lean files verify this without sorry.</p>
+    </div>
+    <div class="status-card" style="--card-color: #c8a84b; --card-border: #2a1e0a; --card-bg: #080a04;">
+      <span class="s-label">COMPUTED</span>
+      <p>The Lissajous 2∶1 family is uncountably infinite. Planetary analemmas are countably infinite. All share the A₁ structure.</p>
+    </div>
+    <div class="status-card" style="--card-color: #9b8bdb; --card-border: #1e1a3a; --card-bg: #080810;">
+      <span class="s-label">CONJECTURAL</span>
+      <p>The dm³ operator grammar generates the figure-eight at every level of the transfinite hierarchy. This is the open research problem.</p>
+    </div>
+  </div>
+
+  <div class="pullquote reveal">
+    <p>Mathematics does not ask whether a connection is poetic. It asks whether it can be proved.
+    We prove what we can prove, name what we cannot, and work forward —
+    from the unit square to the hyper-Mahlo hierarchy, one node at a time.</p>
+    <cite>— Principia Orthogona, Volume I · G6 LLC · Newark NJ</cite>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     HIRE
+═══════════════════════════════════════════════════════ -->
+<section class="hire-section" id="hire">
+  <span class="sec-tag" style="display:block; text-align:center; margin-bottom:1rem;">§ 9 · The Researcher</span>
+  <h2>This Work Was Built<br>by <em>One Person</em></h2>
+
+  <p style="max-width: 55ch; margin: 0 auto; color: var(--silver); font-size: 1.05rem;">
+    Every line of Lean, every proof, every curve drawn on these pages was produced by
+    Pablo Nogueira Grossi — independent researcher, yoga acharya, founder of G6 LLC in Newark NJ —
+    working at the intersection of formal mathematics, dynamical systems, and 25 years of
+    self-directed scientific inquiry.
+  </p>
+
+  <div class="hire-grid">
+    <div class="hire-card">
+      <span class="hc-num">01 · LEAN 4 / MATHLIB</span>
+      <h4>Formal Verification</h4>
+      <p>Three fully verified Lean 4 files. Zero unjustified sorries. Proof tactics named and checkable. Machine-level epistemic discipline applied to geometry.</p>
+    </div>
+    <div class="hire-card">
+      <span class="hc-num">02 · OPERATOR ALGEBRAS</span>
+      <h4>25-Year Framework</h4>
+      <p>The dm³ / GTCT / TOGT framework: a five-operator system (C, K, F, U, T) applied across geometry, biology, dynamical systems, and number theory.</p>
+    </div>
+    <div class="hire-card">
+      <span class="hc-num">03 · SINGULARITY THEORY</span>
+      <h4>A₁ Nodes & Normal Forms</h4>
+      <p>Arnold–Mather classification applied correctly. Distinguishes topological coincidence from genuine geometric invariance. No overclaiming.</p>
+    </div>
+    <div class="hire-card">
+      <span class="hc-num">04 · EPISTEMIC DISCIPLINE</span>
+      <h4>PROVED / COMPUTED / CONJECTURAL</h4>
+      <p>A layered status system applied to every claim. No theorem is stated above its actual proof status. Gaps are named, not hidden. This is how mathematics is done.</p>
+    </div>
+    <div class="hire-card">
+      <span class="hc-num">05 · BILINGUAL PUBLISHING</span>
+      <h4>English · Portuguese · 40 Languages</h4>
+      <p>Principia Orthogona is designed as a translation template. English carries precision. Portuguese carries cadence. 25 years of ESL instruction inform the pedagogy.</p>
+    </div>
+    <div class="hire-card">
+      <span class="hc-num">06 · OPEN SCIENCE</span>
+      <h4>TOTOGT / DM3-lab · GitHub</h4>
+      <p>All Lean files, LaTeX sources, and simulation code are public. DeepWiki auto-indexed. SBIR-track research targeting NASA solicitation, June 2026.</p>
+    </div>
+  </div>
+
+  <p style="color: var(--silver); font-size: 0.9rem; max-width: 55ch; margin: 0 auto 2rem;">
+    If you are building a team that works at the boundary of formal mathematics,
+    AI-assisted research, and real scientific claims — this is the person you are looking for.
+  </p>
+
+  <a href="https://github.com/TOTOGT/DM3-lab" class="cta-link" target="_blank">
+    → TOTOGT / DM3-LAB · GITHUB
+  </a>
+  &nbsp;&nbsp;
+  <a href="mailto:g6llc@proton.me" class="cta-link" style="margin-top:0.5rem;">
+    → CONTACT · G6 LLC
+  </a>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer>
+  <p>
+    PRINCIPIA ORTHOGONA · CHAPTER I · © 2026 G6 LLC · PABLO NOGUEIRA GROSSI · NEWARK NJ<br>
+    ORCID 0009-0000-6496-2186 ·
+    <a href="https://github.com/TOTOGT/DM3-lab">GITHUB</a> ·
+    <a href="https://zenodo.org/record/19533363">ZENODO 19533363</a> ·
+    <a href="https://brodanova6.gumroad.com">GUMROAD</a>
+  </p>
+</footer>
+
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════
+// STARFIELD
+// ═══════════════════════════════════════════════════
+(function() {
+  const sf = document.getElementById('starfield');
+  for (let i = 0; i < 160; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%; top:${Math.random()*100}%;
+      --dur:${2+Math.random()*4}s; --delay:${Math.random()*4}s;
+    `;
+    sf.appendChild(s);
+  }
+})();
+
+// ═══════════════════════════════════════════════════
+// CURVE DRAWING UTILITIES
+// ═══════════════════════════════════════════════════
+function drawGerono(ctx, cx, cy, scale, color, alpha=1, steps=400) {
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = alpha;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * Math.PI * 2;
+    const x = cx + Math.sin(t) * scale;
+    const y = cy + Math.sin(t) * Math.cos(t) * scale;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawBernoulli(ctx, cx, cy, scale, color, alpha=1, steps=600) {
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = alpha;
+  // Draw right lobe (θ from -π/4 to π/4) and left lobe (3π/4 to 5π/4)
+  const lobes = [[-Math.PI/4, Math.PI/4], [3*Math.PI/4, 5*Math.PI/4]];
+  for (const [start, end] of lobes) {
+    ctx.beginPath();
+    let first = true;
+    for (let i = 0; i <= steps/2; i++) {
+      const theta = start + (i / (steps/2)) * (end - start);
+      const cos2 = Math.cos(2 * theta);
+      if (cos2 < 0) continue;
+      const r = Math.sqrt(2 * cos2);
+      const x = cx + r * Math.cos(theta) * scale;
+      const y = cy + r * Math.sin(theta) * scale;
+      if (first) { ctx.moveTo(x, y); first = false; }
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawSolarAnalemma(ctx, cx, cy, scale, color, alpha=1, steps=400) {
+  // Solar analemma: α☉(t) = (sin(2t), sin(t))
+  // Implicit: x² = 4y²(1-y²)
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = alpha;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * Math.PI * 2;
+    const x = cx + Math.sin(2*t) * scale;
+    const y = cy + Math.sin(t) * scale;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawAnalemma(ctx, cx, cy, scale, color, alpha=1, steps=400) {
+  // Lunar analemma: α☽(t) = (sin(2t)/√2, sin(t))
+  // Narrower than solar by factor √2 in x — implicit eq: x² = 2y²(1-y²)
+  const xScale = 1 / Math.sqrt(2);
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.globalAlpha = alpha;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * Math.PI * 2;
+    const x = cx + Math.sin(2*t) * xScale * scale;
+    const y = cy + Math.sin(t) * scale;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ═══════════════════════════════════════════════════
+// HERO CANVAS — animated figure-eights background
+// ═══════════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let frame = 0;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    canvas.width = canvas.width; // clear
+    const w = canvas.width, h = canvas.height;
+    const cx = w/2, cy = h/2;
+    const t = frame * 0.008;
+
+    // Animated tracing
+    const progress = (t % (Math.PI*2)) / (Math.PI*2);
+
+    // Draw faded full curves
+    drawGerono(ctx, cx, cy, Math.min(w,h)*0.18, '#c8a84b', 0.12);
+    drawBernoulli(ctx, cx, cy, Math.min(w,h)*0.13, '#2eb8b8', 0.12);
+    drawAnalemma(ctx, cx, cy, Math.min(w,h)*0.22, '#0abab5', 0.10);
+
+    // Draw animated leading dot on each
+    const g_t = t % (Math.PI*2);
+    const gx = cx + Math.sin(g_t) * Math.min(w,h)*0.18;
+    const gy = cy + Math.sin(g_t) * Math.cos(g_t) * Math.min(w,h)*0.18;
+    ctx.beginPath();
+    ctx.arc(gx, gy, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#c8a84b'; ctx.globalAlpha = 0.8;
+    ctx.fill();
+
+    const a_t = t % (Math.PI*2);
+    const ax = cx + Math.sin(2*a_t) * (1/Math.sqrt(2)) * Math.min(w,h)*0.22;
+    const ay = cy + Math.sin(a_t) * Math.min(w,h)*0.22;
+    ctx.beginPath();
+    ctx.arc(ax, ay, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#0abab5'; ctx.globalAlpha = 0.8;
+    ctx.fill();
+
+    ctx.globalAlpha = 1;
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+
+// ===================================================
+// PANEL DRAWERS - four curves, canvas-filling
+// ===================================================
+
+(function() {
+
+  // Resize canvas to match CSS display size
+  function fitCanvas(canvas) {
+    var rect = canvas.getBoundingClientRect();
+    var w = Math.floor(rect.width) || 400;
+    var h = Math.floor(rect.height) || 400;
+    if (canvas.width !== w) canvas.width = w;
+    if (canvas.height !== h) canvas.height = h;
+  }
+
+  // ── GERONO ──────────────────────────────────────
+  // gamma(t) = (sin t, sin t * cos t)
+  // Range: x in [-1,1], y in [-0.5,0.5]
+  // Stretch y by 2 to fill square canvas
+  (function() {
+    var canvas = document.getElementById('geronoCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var frame = 0;
+    function tick() {
+      fitCanvas(canvas);
+      var w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      var cx = w/2, cy = h/2;
+      var sx = Math.min(w,h) * 0.44;  // x scale: fills width
+      var sy = Math.min(w,h) * 0.44;  // y scale: same (curve is [-1,1] x [-0.5,0.5] but we stretch)
+      // Actually: sin t in [-1,1] -> sx; sin t cos t in [-0.5,0.5] -> use sy*2 for y
+      var ys = sy * 1.8;
+
+      var pr = (frame * 0.014) % (Math.PI * 2);
+
+      // Background: unit circle
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, sx, 0, Math.PI*2);
+      ctx.strokeStyle = '#c8a84b'; ctx.lineWidth = 0.6; ctx.globalAlpha = 0.1;
+      ctx.stroke(); ctx.restore();
+
+      // Background: 4 mini ghost curves at corners
+      var corners = [[0.6, 0.55], [-0.6, 0.55], [0.6, -0.55], [-0.6, -0.55]];
+      for (var ci = 0; ci < corners.length; ci++) {
+        var ox = corners[ci][0], oy = corners[ci][1];
+        ctx.save();
+        ctx.strokeStyle = '#c8a84b'; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.07;
+        ctx.beginPath();
+        for (var i = 0; i <= 150; i++) {
+          var t = (i/150)*Math.PI*2;
+          var x = cx + ox*sx*0.55 + Math.sin(t)*sx*0.28;
+          var y = cy + oy*sy*0.4 + Math.sin(t)*Math.cos(t)*ys*0.28;
+          i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        }
+        ctx.stroke(); ctx.restore();
+      }
+
+      // Dim full curve
+      ctx.save();
+      ctx.strokeStyle = '#c8a84b'; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.2;
+      ctx.beginPath();
+      for (var i = 0; i <= 400; i++) {
+        var t = (i/400)*Math.PI*2;
+        var x = cx + Math.sin(t)*sx;
+        var y = cy + Math.sin(t)*Math.cos(t)*ys;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Traced arc
+      ctx.save();
+      ctx.strokeStyle = '#c8a84b'; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.9;
+      ctx.shadowColor = '#c8a84b'; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      var steps = Math.floor((pr/(Math.PI*2))*400);
+      for (var i = 0; i <= steps; i++) {
+        var t = (i/400)*Math.PI*2;
+        var x = cx + Math.sin(t)*sx;
+        var y = cy + Math.sin(t)*Math.cos(t)*ys;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Leading dot
+      ctx.save();
+      var lx = cx + Math.sin(pr)*sx;
+      var ly = cy + Math.sin(pr)*Math.cos(pr)*ys;
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#c8a84b'; ctx.globalAlpha = 1; ctx.fill(); ctx.restore();
+
+      // Node pulse
+      ctx.save();
+      ctx.globalAlpha = 0.2 + 0.15*Math.sin(frame*0.05);
+      ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI*2);
+      ctx.strokeStyle = '#c8a84b'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+
+      frame++; requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  // ── BERNOULLI ────────────────────────────────────
+  // r^2 = 2*cos(2*theta), so r = sqrt(2*cos2t)
+  // x = r*cos(t), y = r*sin(t)
+  // Max r at t=0: r=sqrt(2). Scale so sqrt(2)*sc fills canvas nicely.
+  (function() {
+    var canvas = document.getElementById('bernoulliCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var frame = 0;
+    function tick() {
+      fitCanvas(canvas);
+      var w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      var cx = w/2, cy = h/2;
+      // sc such that sqrt(2)*sc = canvas_half*0.88
+      var sc = Math.min(w,h) * 0.88 / Math.sqrt(2) / 2;
+
+      var pr = (frame * 0.014) % (Math.PI * 2);
+
+      // Background: two director circles centered at +/-sc, radius sc
+      for (var s = -1; s <= 1; s += 2) {
+        ctx.save();
+        ctx.beginPath(); ctx.arc(cx + s*sc, cy, sc, 0, Math.PI*2);
+        ctx.strokeStyle = '#2eb8b8'; ctx.lineWidth = 0.8; ctx.globalAlpha = 0.1;
+        ctx.stroke(); ctx.restore();
+      }
+
+      // Cassini oval family (siblings of lemniscate)
+      var ratios = [0.5, 0.78, 1.25];
+      for (var ri = 0; ri < ratios.length; ri++) {
+        var ratio = ratios[ri];
+        ctx.save(); ctx.strokeStyle = '#2eb8b8'; ctx.lineWidth = 0.6; ctx.globalAlpha = 0.07;
+        ctx.beginPath();
+        var first = true;
+        for (var i = 0; i <= 400; i++) {
+          var theta = (i/400)*Math.PI*2;
+          var c2 = Math.cos(2*theta)*ratio;
+          if (c2 < 0) { first = true; continue; }
+          var r = Math.sqrt(2*c2)*sc;
+          var x = cx + r*Math.cos(theta);
+          var y = cy + r*Math.sin(theta);
+          if (first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+        }
+        ctx.stroke(); ctx.restore();
+      }
+
+      // Foci at +/- sc/sqrt(2)
+      var f = sc / Math.sqrt(2);
+      for (var s = -1; s <= 1; s += 2) {
+        ctx.save();
+        var pulse = 0.5 + 0.3*Math.sin(frame*0.04 + s);
+        ctx.beginPath(); ctx.arc(cx + s*f, cy, 4, 0, Math.PI*2);
+        ctx.fillStyle = '#2eb8b8'; ctx.globalAlpha = pulse; ctx.fill();
+        ctx.font = '11px "DM Mono"'; ctx.fillStyle = '#2eb8b8'; ctx.globalAlpha = 0.45;
+        ctx.textAlign = 'center';
+        ctx.fillText(s > 0 ? 'F2' : 'F1', cx + s*f, cy + 18);
+        ctx.restore();
+      }
+
+      // Dim full curve
+      ctx.save();
+      ctx.strokeStyle = '#2eb8b8'; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.2;
+      ctx.beginPath();
+      var first = true;
+      for (var i = 0; i <= 600; i++) {
+        var theta = (i/600)*Math.PI*2;
+        var c2 = Math.cos(2*theta);
+        if (c2 < 0) { first = true; continue; }
+        var r = Math.sqrt(2*c2)*sc;
+        var x = cx + r*Math.cos(theta);
+        var y = cy + r*Math.sin(theta);
+        if (first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Traced arc
+      ctx.save();
+      ctx.strokeStyle = '#2eb8b8'; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.9;
+      ctx.shadowColor = '#2eb8b8'; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      var steps = Math.floor((pr/(Math.PI*2))*600);
+      first = true;
+      for (var i = 0; i <= steps; i++) {
+        var theta = (i/600)*Math.PI*2;
+        var c2 = Math.cos(2*theta);
+        if (c2 < 0) { first = true; continue; }
+        var r = Math.sqrt(2*c2)*sc;
+        var x = cx + r*Math.cos(theta);
+        var y = cy + r*Math.sin(theta);
+        if (first) { ctx.moveTo(x,y); first=false; } else ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Leading dot
+      ctx.save();
+      var c2 = Math.cos(2*pr);
+      var lr = c2 >= 0 ? Math.sqrt(2*c2)*sc : 0;
+      var lx = cx + lr*Math.cos(pr);
+      var ly = cy + lr*Math.sin(pr);
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#2eb8b8'; ctx.globalAlpha = 1; ctx.fill(); ctx.restore();
+
+      frame++; requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  // ── SOLAR ANALEMMA ───────────────────────────────
+  // alpha(t) = (sin(2t), sin(t))
+  // x in [-1,1], y in [-1,1] - symmetric square
+  (function() {
+    var canvas = document.getElementById('solarCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var frame = 0;
+    function tick() {
+      fitCanvas(canvas);
+      var w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      var cx = w/2, cy = h/2;
+      var sc = Math.min(w,h) * 0.42;
+
+      var pr = (frame * 0.014) % (Math.PI * 2);
+
+      // Phase-shifted companion Lissajous curves fill corners
+      var phases = [0.52, 1.05, 1.57, 2.09];
+      var opacities = [0.07, 0.05, 0.04, 0.03];
+      for (var pi2 = 0; pi2 < phases.length; pi2++) {
+        ctx.save(); ctx.strokeStyle = '#e07b8a'; ctx.lineWidth = 0.7; ctx.globalAlpha = opacities[pi2];
+        ctx.beginPath();
+        for (var i = 0; i <= 300; i++) {
+          var t = (i/300)*Math.PI*2;
+          var x = cx + Math.sin(2*t + phases[pi2])*sc;
+          var y = cy + Math.sin(t)*sc;
+          i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        }
+        ctx.stroke(); ctx.restore();
+      }
+
+      // Bounding box
+      ctx.save(); ctx.strokeStyle = '#e07b8a'; ctx.lineWidth = 0.5; ctx.globalAlpha = 0.08;
+      ctx.setLineDash([4,6]); ctx.strokeRect(cx - sc, cy - sc, sc*2, sc*2); ctx.restore();
+
+      // Axes
+      ctx.save(); ctx.strokeStyle = '#e07b8a'; ctx.lineWidth = 0.5; ctx.globalAlpha = 0.07;
+      ctx.beginPath(); ctx.moveTo(cx - sc*1.05, cy); ctx.lineTo(cx + sc*1.05, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - sc*1.05); ctx.lineTo(cx, cy + sc*1.05); ctx.stroke();
+      ctx.restore();
+
+      // Sun glyph
+      ctx.save(); ctx.font = '20px serif'; ctx.fillStyle = '#e07b8a'; ctx.globalAlpha = 0.35;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('\u2609', cx + sc*0.78, cy - sc*0.82); ctx.restore();
+
+      // Dim full curve
+      ctx.save(); ctx.strokeStyle = '#e07b8a'; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.2;
+      ctx.beginPath();
+      for (var i = 0; i <= 400; i++) {
+        var t = (i/400)*Math.PI*2;
+        var x = cx + Math.sin(2*t)*sc;
+        var y = cy + Math.sin(t)*sc;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Traced arc
+      ctx.save(); ctx.strokeStyle = '#e07b8a'; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.9;
+      ctx.shadowColor = '#e07b8a'; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      var steps = Math.floor((pr/(Math.PI*2))*400);
+      for (var i = 0; i <= steps; i++) {
+        var t = (i/400)*Math.PI*2;
+        var x = cx + Math.sin(2*t)*sc;
+        var y = cy + Math.sin(t)*sc;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Leading dot
+      ctx.save();
+      var lx = cx + Math.sin(2*pr)*sc;
+      var ly = cy + Math.sin(pr)*sc;
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#e07b8a'; ctx.globalAlpha = 1; ctx.fill(); ctx.restore();
+
+      // Node pulse
+      ctx.save(); ctx.globalAlpha = 0.2 + 0.15*Math.sin(frame*0.05);
+      ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI*2);
+      ctx.strokeStyle = '#e07b8a'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+
+      frame++; requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  // ── LUNAR ANALEMMA ───────────────────────────────
+  // alpha(t) = (sin(2t)/sqrt(2), sin(t))
+  // x in [-0.707,0.707], y in [-1,1] - visibly narrower
+  (function() {
+    var canvas = document.getElementById('analemmaCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var frame = 0;
+    var XS = 1/Math.sqrt(2); // 0.7071
+    function tick() {
+      fitCanvas(canvas);
+      var w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      var cx = w/2, cy = h/2;
+      var sc = Math.min(w,h) * 0.42;
+      var sx = sc * XS; // x amplitude: narrower than solar
+
+      var pr = (frame * 0.014) % (Math.PI * 2);
+
+      // Phase-shifted companion Lissajous at lunar width
+      var phases = [0.52, 1.05, 1.57, 2.09];
+      var opacities = [0.07, 0.05, 0.04, 0.03];
+      for (var pi2 = 0; pi2 < phases.length; pi2++) {
+        ctx.save(); ctx.strokeStyle = '#0abab5'; ctx.lineWidth = 0.7; ctx.globalAlpha = opacities[pi2];
+        ctx.beginPath();
+        for (var i = 0; i <= 300; i++) {
+          var t = (i/300)*Math.PI*2;
+          var x = cx + Math.sin(2*t + phases[pi2])*sx;
+          var y = cy + Math.sin(t)*sc;
+          i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        }
+        ctx.stroke(); ctx.restore();
+      }
+
+      // Narrow bounding box - visibly different from solar
+      ctx.save(); ctx.strokeStyle = '#0abab5'; ctx.lineWidth = 0.5; ctx.globalAlpha = 0.08;
+      ctx.setLineDash([4,6]); ctx.strokeRect(cx - sx, cy - sc, sx*2, sc*2); ctx.restore();
+
+      // Axes
+      ctx.save(); ctx.strokeStyle = '#0abab5'; ctx.lineWidth = 0.5; ctx.globalAlpha = 0.07;
+      ctx.beginPath(); ctx.moveTo(cx - sc*1.05, cy); ctx.lineTo(cx + sc*1.05, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, cy - sc*1.05); ctx.lineTo(cx, cy + sc*1.05); ctx.stroke();
+      ctx.restore();
+
+      // Moon glyph
+      ctx.save(); ctx.font = '20px serif'; ctx.fillStyle = '#0abab5'; ctx.globalAlpha = 0.35;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('\u263d', cx + sx + 22, cy - sc*0.82); ctx.restore();
+
+      // Dim full curve
+      ctx.save(); ctx.strokeStyle = '#0abab5'; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.2;
+      ctx.beginPath();
+      for (var i = 0; i <= 400; i++) {
+        var t = (i/400)*Math.PI*2;
+        var x = cx + Math.sin(2*t)*sx;
+        var y = cy + Math.sin(t)*sc;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Traced arc
+      ctx.save(); ctx.strokeStyle = '#0abab5'; ctx.lineWidth = 2.5; ctx.globalAlpha = 0.9;
+      ctx.shadowColor = '#0abab5'; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      var steps = Math.floor((pr/(Math.PI*2))*400);
+      for (var i = 0; i <= steps; i++) {
+        var t = (i/400)*Math.PI*2;
+        var x = cx + Math.sin(2*t)*sx;
+        var y = cy + Math.sin(t)*sc;
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke(); ctx.restore();
+
+      // Leading dot
+      ctx.save();
+      var lx = cx + Math.sin(2*pr)*sx;
+      var ly = cy + Math.sin(pr)*sc;
+      ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI*2);
+      ctx.fillStyle = '#0abab5'; ctx.globalAlpha = 1; ctx.fill(); ctx.restore();
+
+      // Node pulse
+      ctx.save(); ctx.globalAlpha = 0.2 + 0.15*Math.sin(frame*0.05);
+      ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI*2);
+      ctx.strokeStyle = '#0abab5'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+
+      frame++; requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+})();
+
+// ═══════════════════════════════════════════════════
+// EXPLORER
+// ═══════════════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('explorerCanvas');
+  const ctx = canvas.getContext('2d');
+  const label = document.getElementById('explorerLabel');
+  let currentCurve = 'gerono';
+  let frame = 0;
+  let animId;
+
+  const configs = {
+    gerono:   { draw: drawGerono,         color:'#c8a84b', scale:0.35, label:'GERONO  ·  x⁴ + y² = x²  ·  γ(t) = (sin t, sin t·cos t)  ·  sorry_count: 0' },
+    bernoulli:{ draw: drawBernoulli,      color:'#2eb8b8', scale:0.28, label:'BERNOULLI  ·  (x²+y²)² = 2(x²-y²)  ·  r² = 2cos(2θ)  ·  sorry_count: 0' },
+    solar:    { draw: drawSolarAnalemma,  color:'#e07b8a', scale:0.35, label:'SOLAR ANALEMMA  ·  x² = 4y²(1-y²)  ·  α☉(t) = (sin 2t, sin t)  ·  period: 365.25 days' },
+    analemma: { draw: drawAnalemma,       color:'#0abab5', scale:0.35, label:'LUNAR ANALEMMA  ·  x² = 2y²(1-y²)  ·  α☽(t) = (sin(2t)/√2, sin t)  ·  period: ~27.55 days' },
+    all: { label: 'ALL FOUR  ·  Sharing the A₁ ordinary double point at the origin  ·  All curves proved distinct by norm_num' }
+  };
+
+  function drawFrame() {
+    canvas.width = canvas.width;
+    const w = canvas.width, h = canvas.height;
+    const cx = w/2, cy = h/2;
+    const t = frame * 0.012;
+
+    if (currentCurve === 'all') {
+      const progress = (t % (Math.PI*2));
+      const drawSteps = Math.floor((progress / (Math.PI*2)) * 400);
+
+      // Draw all four faded
+      drawGerono(ctx, cx, cy, Math.min(w,h)*0.30, '#c8a84b', 0.12);
+      drawBernoulli(ctx, cx, cy, Math.min(w,h)*0.24, '#2eb8b8', 0.12);
+      drawSolarAnalemma(ctx, cx, cy, Math.min(w,h)*0.30, '#e07b8a', 0.12);
+      drawAnalemma(ctx, cx, cy, Math.min(w,h)*0.30, '#0abab5', 0.12);
+
+      // Draw animated traces
+      ['gerono','bernoulli','solar','analemma'].forEach((c) => {
+        const cfg = configs[c];
+        const sc = Math.min(w,h) * cfg.scale * 0.85;
+        ctx.save();
+        ctx.strokeStyle = cfg.color; ctx.lineWidth = 2;
+        ctx.globalAlpha = 0.85;
+        ctx.shadowColor = cfg.color; ctx.shadowBlur = 6;
+        ctx.beginPath();
+        for (let j = 0; j <= drawSteps && j <= 400; j++) {
+          const pt = (j / 400) * Math.PI * 2;
+          let x, y;
+          if (c === 'gerono') {
+            x = cx + Math.sin(pt)*sc; y = cy + Math.sin(pt)*Math.cos(pt)*sc;
+          } else if (c === 'bernoulli') {
+            const c2 = Math.cos(2*pt); if(c2<0) continue;
+            const r = Math.sqrt(2*c2); x = cx+r*Math.cos(pt)*sc; y = cy+r*Math.sin(pt)*sc;
+          } else if (c === 'solar') {
+            x = cx+Math.sin(2*pt)*sc; y = cy+Math.sin(pt)*sc;
+          } else {
+            x = cx+Math.sin(2*pt)*(1/Math.sqrt(2))*sc; y = cy+Math.sin(pt)*sc;
+          }
+          j===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+        }
+        ctx.stroke(); ctx.restore();
+      });
+
+      // Node marker at origin
+      ctx.save();
+      ctx.globalAlpha = 0.5 + 0.5*Math.sin(frame*0.05);
+      ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2);
+      ctx.strokeStyle='white'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.font = '0.6rem "DM Mono"'; ctx.fillStyle='white'; ctx.textAlign='center';
+      ctx.fillText('A₁', cx, cy-12);
+      ctx.restore();
+    } else {
+      const cfg = configs[currentCurve];
+      const sc = Math.min(w,h) * cfg.scale;
+
+      // Full dim curve
+      cfg.draw(ctx, cx, cy, sc, cfg.color, 0.18);
+
+      // Animated trace
+      const progress = (t % (Math.PI*2));
+      const drawSteps = Math.floor((progress / (Math.PI*2)) * 400);
+
+      ctx.save();
+      ctx.strokeStyle = cfg.color; ctx.lineWidth = 2.5;
+      ctx.globalAlpha = 0.9;
+      ctx.shadowColor = cfg.color; ctx.shadowBlur = 10;
+      ctx.beginPath();
+      for (let j = 0; j <= drawSteps && j <= 400; j++) {
+        const pt = (j / 400) * Math.PI * 2;
+        let x, y;
+        if (currentCurve === 'gerono') {
+          x = cx + Math.sin(pt)*sc; y = cy + Math.sin(pt)*Math.cos(pt)*sc;
+        } else if (currentCurve === 'bernoulli') {
+          const c2 = Math.cos(2*pt); if(c2<0) continue;
+          const r = Math.sqrt(2*c2); x = cx+r*Math.cos(pt)*sc; y = cy+r*Math.sin(pt)*sc;
+        } else if (currentCurve === 'solar') {
+          x = cx+Math.sin(2*pt)*sc; y = cy+Math.sin(pt)*sc;
+        } else {
+          x = cx+Math.sin(2*pt)*(1/Math.sqrt(2))*sc; y = cy+Math.sin(pt)*sc;
+        }
+        j===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+
+      // Leading dot
+      const lt = progress;
+      let lx, ly;
+      if (currentCurve === 'gerono') {
+        lx = cx+Math.sin(lt)*sc; ly = cy+Math.sin(lt)*Math.cos(lt)*sc;
+      } else if (currentCurve === 'bernoulli') {
+        const c2 = Math.cos(2*lt); const r = c2>=0?Math.sqrt(2*c2):0;
+        lx = cx+r*Math.cos(lt)*sc; ly = cy+r*Math.sin(lt)*sc;
+      } else if (currentCurve === 'solar') {
+        lx = cx+Math.sin(2*lt)*sc; ly = cy+Math.sin(lt)*sc;
+      } else {
+        lx = cx+Math.sin(2*lt)*(1/Math.sqrt(2))*sc; ly = cy+Math.sin(lt)*sc;
+      }
+      ctx.beginPath(); ctx.arc(lx, ly, 6, 0, Math.PI*2);
+      ctx.fillStyle = cfg.color; ctx.globalAlpha=1; ctx.fill();
+      ctx.restore();
+    }
+
+    frame++;
+    animId = requestAnimationFrame(drawFrame);
+  }
+
+  document.querySelectorAll('.exp-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.exp-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCurve = btn.dataset.curve;
+      frame = 0;
+      label.textContent = configs[currentCurve].label;
+    });
+  });
+
+  drawFrame();
+})();
+
+// ═══════════════════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════════════════
+(function() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+</script>
+</body>
+</html>

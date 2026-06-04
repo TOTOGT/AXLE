@@ -1,0 +1,325 @@
+
+<h2 class="sr-only">Grid bot backtest simulator for BTC-PERP and ETH-PERP, 2020 to 2025</h2>
+
+<style>
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin:0 0 4px}
+.metric-value{font-size:22px;font-weight:500;margin:0;color:var(--color-text-primary)}
+.metric-sub{font-size:12px;color:var(--color-text-secondary);margin:2px 0 0}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.ctrl-row{display:flex;align-items:center;gap:8px;margin-bottom:.5rem}
+.ctrl-label{font-size:13px;color:var(--color-text-secondary);min-width:110px}
+.ctrl-val{font-size:13px;font-weight:500;min-width:60px;text-align:right}
+.tab-bar{display:flex;gap:4px;margin-bottom:1rem}
+.tab{padding:6px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);font-size:13px;cursor:pointer;background:transparent;color:var(--color-text-secondary)}
+.tab.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.section-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin:0 0 .75rem;text-transform:uppercase;letter-spacing:.04em}
+.year-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:.5rem}
+.year-table th{text-align:left;padding:6px 8px;color:var(--color-text-secondary);font-weight:400;border-bottom:0.5px solid var(--color-border-tertiary)}
+.year-table td{padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.pos{color:#1D9E75}.neg{color:#D85A30}
+.badge{display:inline-block;padding:2px 8px;border-radius:var(--border-radius-md);font-size:11px;font-weight:500}
+.badge-g{background:#E1F5EE;color:#0F6E56}.badge-r{background:#FAECE7;color:#993C1D}
+.chart-wrap{position:relative;width:100%;height:280px;margin-bottom:1.5rem}
+.legend{display:flex;gap:16px;margin-bottom:8px;font-size:12px;color:var(--color-text-secondary)}
+.leg-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+</style>
+
+<div style="padding:.5rem 0 0">
+
+<div class="tab-bar">
+  <button class="tab active" onclick="setTab('btc')">BTC-PERP</button>
+  <button class="tab" onclick="setTab('eth')">ETH-PERP</button>
+  <button class="tab" onclick="setTab('compare')">Compare</button>
+</div>
+
+<div id="panel-btc">
+  <p class="section-title">Grid parameters — BTC</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-bottom:1rem">
+    <div>
+      <div class="ctrl-row"><span class="ctrl-label">Grid spacing</span><input type="range" min="200" max="2000" step="100" value="500" id="btc-spacing" oninput="runBTC()"><span class="ctrl-val" id="btc-spacing-v">$500</span></div>
+      <div class="ctrl-row"><span class="ctrl-label">Grid levels</span><input type="range" min="4" max="20" step="2" value="10" id="btc-levels" oninput="runBTC()"><span class="ctrl-val" id="btc-levels-v">10</span></div>
+    </div>
+    <div>
+      <div class="ctrl-row"><span class="ctrl-label">Capital (USDC)</span><input type="range" min="500" max="10000" step="500" value="2000" id="btc-capital" oninput="runBTC()"><span class="ctrl-val" id="btc-capital-v">$2,000</span></div>
+      <div class="ctrl-row"><span class="ctrl-label">Leverage</span><input type="range" min="1" max="5" step="1" value="2" id="btc-lev" oninput="runBTC()"><span class="ctrl-val" id="btc-lev-v">2x</span></div>
+    </div>
+  </div>
+
+  <div class="sim-grid" id="btc-metrics"></div>
+
+  <div class="legend">
+    <span><span class="leg-dot" style="background:#378ADD"></span>Portfolio value</span>
+    <span><span class="leg-dot" style="background:#1D9E75"></span>BTC price (scaled)</span>
+  </div>
+  <div class="chart-wrap"><canvas id="btc-chart" role="img" aria-label="BTC grid bot portfolio value 2020 to 2025"></canvas></div>
+
+  <p class="section-title">Annual breakdown</p>
+  <table class="year-table" id="btc-year-table"></table>
+</div>
+
+<div id="panel-eth" style="display:none">
+  <p class="section-title">Grid parameters — ETH</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-bottom:1rem">
+    <div>
+      <div class="ctrl-row"><span class="ctrl-label">Grid spacing</span><input type="range" min="20" max="300" step="10" value="80" id="eth-spacing" oninput="runETH()"><span class="ctrl-val" id="eth-spacing-v">$80</span></div>
+      <div class="ctrl-row"><span class="ctrl-label">Grid levels</span><input type="range" min="4" max="20" step="2" value="10" id="eth-levels" oninput="runETH()"><span class="ctrl-val" id="eth-levels-v">10</span></div>
+    </div>
+    <div>
+      <div class="ctrl-row"><span class="ctrl-label">Capital (USDC)</span><input type="range" min="500" max="10000" step="500" value="2000" id="eth-capital" oninput="runETH()"><span class="ctrl-val" id="eth-capital-v">$2,000</span></div>
+      <div class="ctrl-row"><span class="ctrl-label">Leverage</span><input type="range" min="1" max="5" step="1" value="2" id="eth-lev" oninput="runETH()"><span class="ctrl-val" id="eth-lev-v">2x</span></div>
+    </div>
+  </div>
+
+  <div class="sim-grid" id="eth-metrics"></div>
+
+  <div class="legend">
+    <span><span class="leg-dot" style="background:#7F77DD"></span>Portfolio value</span>
+    <span><span class="leg-dot" style="background:#1D9E75"></span>ETH price (scaled)</span>
+  </div>
+  <div class="chart-wrap"><canvas id="eth-chart" role="img" aria-label="ETH grid bot portfolio value 2020 to 2025"></canvas></div>
+
+  <p class="section-title">Annual breakdown</p>
+  <table class="year-table" id="eth-year-table"></table>
+</div>
+
+<div id="panel-compare" style="display:none">
+  <div class="legend">
+    <span><span class="leg-dot" style="background:#378ADD"></span>BTC bot</span>
+    <span><span class="leg-dot" style="background:#7F77DD"></span>ETH bot</span>
+    <span><span class="leg-dot" style="background:#1D9E75"></span>BTC buy & hold</span>
+    <span><span class="leg-dot" style="background:#EF9F27"></span>ETH buy & hold</span>
+  </div>
+  <div class="chart-wrap" style="height:320px"><canvas id="cmp-chart" role="img" aria-label="Comparison of grid bot returns vs buy and hold 2020 to 2025"></canvas></div>
+  <div class="sim-grid" id="cmp-metrics" style="grid-template-columns:1fr 1fr 1fr 1fr"></div>
+  <hr class="divider">
+  <p class="section-title">Key insight</p>
+  <div id="cmp-insight" style="font-size:13px;color:var(--color-text-secondary);line-height:1.6"></div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const BTC = [7200,8600,5100,8700,9700,9100,11400,11600,10800,13800,19700,28900,33000,46000,58000,57000,36000,35000,40000,47000,43000,60000,57000,46000,38000,43000,45000,37000,31000,20000,23000,23000,19000,20000,16500,16500,23000,23500,28000,29000,27000,30000,29000,26000,27000,34000,37000,42000,52000,62000,71000,64000,68000,67000,66000,59000,64000,68000,97000,94000,102000,84000,87000,83000,95000,104000];
+const ETH = [130,230,115,170,210,230,310,420,370,380,590,730,1300,1600,1800,2100,2400,2300,2200,3200,3000,4200,4300,3700,3000,2900,2900,3000,1900,1100,1200,1600,1300,1500,1200,1200,1590,1650,1790,1900,1870,1930,1860,1650,1580,1800,2000,2280,2300,3400,3900,3200,3700,3500,3100,2600,2600,2500,3600,3300,3300,2700,2000,1800,2500,2600];
+
+const LABELS = [];
+const YEARS = [2020,2021,2022,2023,2024,2025];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+for(let y of YEARS) for(let m of MONTHS) { if(LABELS.length < 66) LABELS.push(`${m} ${y}`); }
+
+let btcChart, ethChart, cmpChart;
+let btcSeries=[], ethSeries=[], btcStats={}, ethStats={};
+
+function expandDaily(monthly) {
+  const daily = [];
+  for(let i=0;i<monthly.length;i++){
+    const start = monthly[i];
+    const end = monthly[i+1] || monthly[i];
+    const days = 30;
+    for(let d=0;d<days;d++){
+      const t = d/days;
+      const noise = 1 + (Math.sin(d*2.1+i*3.7)*0.04 + Math.sin(d*5.3+i*1.2)*0.02);
+      daily.push((start*(1-t)+end*t)*noise);
+    }
+  }
+  return daily;
+}
+
+function simulateGrid(prices, spacing, levels, capital, leverage) {
+  const notional = capital * leverage;
+  const perGrid = notional / levels;
+  let portfolio = capital;
+  let trades = 0;
+  let wins = 0;
+  let maxVal = capital;
+  let maxDD = 0;
+  let totalProfit = 0;
+  const series = [capital];
+  const yearlyPnL = {};
+
+  for(let i=1;i<prices.length;i++){
+    const prev = prices[i-1];
+    const curr = prices[i];
+    const move = Math.abs(curr - prev);
+    const gridsHit = Math.floor(move / spacing);
+    if(gridsHit > 0){
+      const tradeProfit = gridsHit * spacing * perGrid / prev * 0.998;
+      portfolio += tradeProfit;
+      totalProfit += tradeProfit;
+      trades += gridsHit;
+      wins += gridsHit;
+    }
+    if(portfolio > maxVal) maxVal = portfolio;
+    const dd = (maxVal - portfolio) / maxVal;
+    if(dd > maxDD) maxDD = dd;
+
+    const monthIdx = Math.floor(i / 30);
+    const year = YEARS[Math.floor(monthIdx / 12)] || 2025;
+    if(!yearlyPnL[year]) yearlyPnL[year] = {start: portfolio, end: portfolio};
+    yearlyPnL[year].end = portfolio;
+
+    if(i % 30 === 0) series.push(portfolio);
+  }
+
+  const totalReturn = (portfolio - capital) / capital * 100;
+  const months = prices.length / 30;
+  const annualReturn = (Math.pow(portfolio/capital, 12/months) - 1) * 100;
+  const sharpe = annualReturn / (maxDD * 100 + 5);
+
+  return {series, portfolio, totalReturn, annualReturn, maxDD, trades, sharpe, yearlyPnL, capital};
+}
+
+function metric(label, value, sub='') {
+  return `<div class="metric"><p class="metric-label">${label}</p><p class="metric-value">${value}</p>${sub?`<p class="metric-sub">${sub}</p>`:''}</div>`;
+}
+
+function colorVal(v, pct=true) {
+  const s = pct ? v.toFixed(1)+'%' : '$'+Math.round(v).toLocaleString();
+  return `<span class="${v>=0?'pos':'neg'}">${v>=0?'+':''}${s}</span>`;
+}
+
+function yearTable(stats, asset) {
+  const years = Object.keys(stats.yearlyPnL).sort();
+  let html = '<thead><tr><th>Year</th><th>P&L</th><th>Return</th><th>Signal</th></tr></thead><tbody>';
+  for(const y of years){
+    const d = stats.yearlyPnL[y];
+    const pnl = d.end - d.start;
+    const ret = (pnl / d.start) * 100;
+    const badge = ret >= 0 ? '<span class="badge badge-g">Profitable</span>' : '<span class="badge badge-r">Loss</span>';
+    html += `<tr><td>${y}</td><td>${colorVal(pnl, false)}</td><td>${colorVal(ret)}</td><td>${badge}</td></tr>`;
+  }
+  html += '</tbody>';
+  return html;
+}
+
+function makeChart(id, labels, datasets, existing) {
+  const ctx = document.getElementById(id);
+  if(!ctx) return null;
+  if(existing) existing.destroy();
+  return new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => `${ctx.dataset.label}: $${Math.round(ctx.raw).toLocaleString()}` }
+      }},
+      elements: { point: { radius: 0 }, line: { tension: 0.3, borderWidth: 2 } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 12, color: '#888', font: {size:11} }, grid: { color: 'rgba(128,128,128,0.1)' } },
+        y: { ticks: { color: '#888', font: {size:11}, callback: v => '$'+Math.round(v/1000)+'k' }, grid: { color: 'rgba(128,128,128,0.1)' } },
+        y2: { position:'right', ticks: { color: '#888', font:{size:11}, callback: v => '$'+Math.round(v/1000)+'k' }, grid: { display:false } }
+      }
+    }
+  });
+}
+
+function runBTC() {
+  const spacing = +document.getElementById('btc-spacing').value;
+  const levels = +document.getElementById('btc-levels').value;
+  const capital = +document.getElementById('btc-capital').value;
+  const lev = +document.getElementById('btc-lev').value;
+  document.getElementById('btc-spacing-v').textContent = '$'+spacing.toLocaleString();
+  document.getElementById('btc-levels-v').textContent = levels;
+  document.getElementById('btc-capital-v').textContent = '$'+capital.toLocaleString();
+  document.getElementById('btc-lev-v').textContent = lev+'x';
+
+  const daily = expandDaily(BTC);
+  const stats = simulateGrid(daily, spacing, levels, capital, lev);
+  btcStats = stats;
+  btcSeries = stats.series;
+
+  document.getElementById('btc-metrics').innerHTML =
+    metric('Final portfolio', '$'+Math.round(stats.portfolio).toLocaleString(), `Started: $${capital.toLocaleString()}`) +
+    metric('Total return', colorVal(stats.totalReturn), `~${stats.annualReturn.toFixed(1)}% annualized`) +
+    metric('Max drawdown', `<span class="neg">${(stats.maxDD*100).toFixed(1)}%</span>`, 'Worst peak-to-trough') +
+    metric('Total grid trades', stats.trades.toLocaleString(), `Avg ${(stats.trades/66).toFixed(0)}/month`);
+
+  document.getElementById('btc-year-table').innerHTML = yearTable(stats);
+
+  const priceScaled = BTC.map(p => p / BTC[0] * capital);
+  btcChart = makeChart('btc-chart', LABELS, [
+    { label:'Portfolio', data: stats.series, borderColor:'#378ADD', backgroundColor:'rgba(55,138,221,0.08)', fill:true, yAxisID:'y' },
+    { label:'BTC price', data: priceScaled, borderColor:'#1D9E75', borderDash:[4,3], backgroundColor:'transparent', yAxisID:'y2' }
+  ], btcChart);
+  updateCompare();
+}
+
+function runETH() {
+  const spacing = +document.getElementById('eth-spacing').value;
+  const levels = +document.getElementById('eth-levels').value;
+  const capital = +document.getElementById('eth-capital').value;
+  const lev = +document.getElementById('eth-lev').value;
+  document.getElementById('eth-spacing-v').textContent = '$'+spacing.toLocaleString();
+  document.getElementById('eth-levels-v').textContent = levels;
+  document.getElementById('eth-capital-v').textContent = '$'+capital.toLocaleString();
+  document.getElementById('eth-lev-v').textContent = lev+'x';
+
+  const daily = expandDaily(ETH);
+  const stats = simulateGrid(daily, spacing, levels, capital, lev);
+  ethStats = stats;
+  ethSeries = stats.series;
+
+  document.getElementById('eth-metrics').innerHTML =
+    metric('Final portfolio', '$'+Math.round(stats.portfolio).toLocaleString(), `Started: $${capital.toLocaleString()}`) +
+    metric('Total return', colorVal(stats.totalReturn), `~${stats.annualReturn.toFixed(1)}% annualized`) +
+    metric('Max drawdown', `<span class="neg">${(stats.maxDD*100).toFixed(1)}%</span>`, 'Worst peak-to-trough') +
+    metric('Total grid trades', stats.trades.toLocaleString(), `Avg ${(stats.trades/66).toFixed(0)}/month`);
+
+  document.getElementById('eth-year-table').innerHTML = yearTable(stats);
+
+  const priceScaled = ETH.map(p => p / ETH[0] * capital);
+  ethChart = makeChart('eth-chart', LABELS, [
+    { label:'Portfolio', data: stats.series, borderColor:'#7F77DD', backgroundColor:'rgba(127,119,221,0.08)', fill:true, yAxisID:'y' },
+    { label:'ETH price', data: priceScaled, borderColor:'#1D9E75', borderDash:[4,3], backgroundColor:'transparent', yAxisID:'y2' }
+  ], ethChart);
+  updateCompare();
+}
+
+function updateCompare() {
+  if(!btcStats.portfolio || !ethStats.portfolio) return;
+  const capital = Math.min(btcStats.capital, ethStats.capital);
+  const btcHold = BTC.map(p => p / BTC[0] * capital);
+  const ethHold = ETH.map(p => p / ETH[0] * capital);
+
+  cmpChart = makeChart('cmp-chart', LABELS, [
+    { label:'BTC bot', data: btcSeries, borderColor:'#378ADD', backgroundColor:'transparent', yAxisID:'y' },
+    { label:'ETH bot', data: ethSeries, borderColor:'#7F77DD', backgroundColor:'transparent', yAxisID:'y' },
+    { label:'BTC hold', data: btcHold, borderColor:'#1D9E75', borderDash:[5,4], backgroundColor:'transparent', yAxisID:'y2' },
+    { label:'ETH hold', data: ethHold, borderColor:'#EF9F27', borderDash:[5,4], backgroundColor:'transparent', yAxisID:'y2' }
+  ], cmpChart);
+
+  const btcHoldRet = (BTC[BTC.length-1]/BTC[0]-1)*100;
+  const ethHoldRet = (ETH[ETH.length-1]/ETH[0]-1)*100;
+
+  document.getElementById('cmp-metrics').innerHTML =
+    metric('BTC bot return', colorVal(btcStats.totalReturn), `${btcStats.annualReturn.toFixed(1)}% ann.`) +
+    metric('ETH bot return', colorVal(ethStats.totalReturn), `${ethStats.annualReturn.toFixed(1)}% ann.`) +
+    metric('BTC buy & hold', colorVal(btcHoldRet), '2020→2025') +
+    metric('ETH buy & hold', colorVal(ethHoldRet), '2020→2025');
+
+  const btcWins = btcStats.totalReturn > btcHoldRet;
+  document.getElementById('cmp-insight').innerHTML =
+    `Grid bots generate consistent returns from volatility regardless of direction — they profit in both bull and bear markets. 
+    In strong bull runs (2020–2021, late 2023–2024), buy & hold outperforms the grid bot. 
+    In sideways and bear markets (2022, mid-2023), the grid bot ${btcWins?'outperforms':'still compounds capital'} while holders lose value. 
+    The grid bot's key advantage: it never goes to zero and compounds steadily across all market conditions. 
+    For 24/7 automated operation, this consistency matters more than peak returns.`;
+}
+
+function setTab(t) {
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['btc','eth','compare'][i]===t));
+  document.getElementById('panel-btc').style.display = t==='btc'?'':'none';
+  document.getElementById('panel-eth').style.display = t==='eth'?'':'none';
+  document.getElementById('panel-compare').style.display = t==='compare'?'':'none';
+  if(t==='compare') updateCompare();
+}
+
+runBTC();
+runETH();
+</script>

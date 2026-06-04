@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mini-Beast — Living Book · Principia Orthogona Book 3</title>
+<meta name="description" content="The living web edition of The Mini-Beast. All chapters. Biological instantiations, plasma, markets, neural geometry, GTCT, and the Greek recurrence ladder.">
+<style>
+:root {
+  --navy:#1a2744; --gold:#c9a84c; --cream:#faf7f0; --smoke:#f0ece4;
+  --mid:#3a4f7a; --rule:#8a7340; --text:#1c1c1c; --green:#2d5a27;
+  --light:#e8e2d4; --red:#8b1a1a; --teal:#1a5c5c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);}
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.9rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1.2rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;}
+.nav-links a:hover{color:var(--gold);}
+
+.hero{background:var(--navy);color:white;padding:5rem 2rem 3.5rem;text-align:center;}
+.eyebrow{font-family:sans-serif;font-size:.78rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:.8rem;}
+h1{font-size:clamp(2rem,5vw,3.5rem);color:white;line-height:1.2;margin-bottom:.5rem;}
+.hero-sub{color:var(--gold);font-style:italic;font-size:1.2rem;margin-bottom:1rem;}
+.gold-rule{width:60px;height:2px;background:var(--gold);margin:1.2rem auto;}
+.hero-desc{max-width:640px;margin:0 auto 1.5rem;color:#bbb;font-size:.97rem;line-height:1.85;}
+.isbn-strip{font-family:monospace;font-size:.78rem;color:#888;margin-top:.8rem;}
+
+.op-banner{background:var(--gold);color:var(--navy);text-align:center;padding:.85rem 2rem;font-size:1.3rem;font-weight:bold;letter-spacing:.18em;font-family:sans-serif;}
+
+.status-bar{background:var(--teal);color:white;text-align:center;padding:.6rem 2rem;font-family:sans-serif;font-size:.82rem;}
+.status-bar span{color:#9ff;font-weight:bold;}
+
+section{padding:3rem 2rem;}
+.section-inner{max-width:960px;margin:0 auto;}
+.section-label{font-family:sans-serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);margin-bottom:.4rem;}
+h2{font-size:clamp(1.2rem,2.5vw,1.7rem);border-bottom:2px solid var(--gold);padding-bottom:.3rem;display:inline-block;margin-bottom:1.5rem;}
+
+/* ── Chapter grid ── */
+.chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-top:1rem;}
+.ch-card{background:white;border-top:3px solid var(--gold);padding:0;box-shadow:0 2px 8px rgba(0,0,0,.06);text-decoration:none;color:inherit;display:block;transition:box-shadow .2s,border-top-color .2s;}
+.ch-card:hover{box-shadow:0 6px 20px rgba(201,168,76,.22);border-top-color:var(--mid);}
+.ch-card.coming-soon{border-top-color:var(--light);opacity:.75;cursor:default;}
+.ch-card.bonus{border-top-color:var(--teal);}
+.ch-card.milestone{border-top-color:var(--red);}
+
+.ch-head{padding:1.2rem 1.2rem .6rem;display:flex;align-items:flex-start;gap:.8rem;}
+.ch-num{font-family:sans-serif;font-size:1.5rem;font-weight:bold;color:var(--gold);min-width:2.2rem;line-height:1;}
+.ch-meta{}
+.ch-week{font-family:sans-serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rule);margin-bottom:.2rem;}
+.ch-title{font-size:1rem;font-weight:bold;color:var(--navy);line-height:1.3;}
+.ch-sub{font-size:.8rem;color:#666;margin-top:.2rem;font-style:italic;}
+
+.ch-body{padding:.4rem 1.2rem 1.2rem;}
+.ch-desc{font-size:.85rem;line-height:1.65;color:#444;}
+.ch-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem;}
+.tag{font-family:sans-serif;font-size:.63rem;padding:.15rem .45rem;letter-spacing:.05em;}
+.tag-bio{background:#dbeafe;color:#1e40af;}
+.tag-phys{background:#fce7f3;color:#9d174d;}
+.tag-fin{background:#dcfce7;color:#166534;}
+.tag-neural{background:#f3e8ff;color:#6b21a8;}
+.tag-math{background:#fef3c7;color:#92400e;}
+.tag-pedagogy{background:#f0fdf4;color:#14532d;border:1px solid #bbf7d0;}
+.tag-bonus{background:var(--teal);color:white;}
+.tag-coming{background:var(--light);color:var(--rule);}
+.tag-milestone{background:var(--red);color:white;}
+
+.ch-cta{font-family:sans-serif;font-size:.72rem;color:var(--mid);font-weight:bold;letter-spacing:.05em;margin-top:.8rem;}
+.ch-card.coming-soon .ch-cta{color:var(--rule);}
+
+/* ── Parameter table ── */
+.param-table{width:100%;border-collapse:collapse;margin-top:1.2rem;font-size:.85rem;overflow-x:auto;display:block;}
+.param-table th{background:var(--navy);color:var(--gold);padding:.5rem .7rem;text-align:left;font-family:sans-serif;font-size:.7rem;letter-spacing:.1em;white-space:nowrap;}
+.param-table td{padding:.5rem .7rem;border-bottom:1px solid var(--light);font-family:monospace;font-size:.82rem;vertical-align:middle;white-space:nowrap;}
+.param-table tr:nth-child(even) td{background:var(--smoke);}
+.param-table .domain{font-family:serif;font-size:.87rem;}
+
+/* ── Seed sentences ── */
+.seed-box{background:var(--navy);color:white;padding:2rem;margin:1.5rem 0;border-left:4px solid var(--gold);}
+.seed-label{font-family:sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+.seed-text{font-style:italic;line-height:1.8;font-size:.95rem;}
+.seed-num{color:var(--gold);font-weight:bold;margin-right:.5rem;}
+
+/* ── CEFR table ── */
+.cefr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.8rem;margin-top:1rem;}
+.cefr-cell{background:white;border-top:2px solid var(--gold);padding:.8rem;text-align:center;}
+.cefr-level{font-family:sans-serif;font-size:1.3rem;font-weight:bold;color:var(--navy);}
+.cefr-togt{font-family:sans-serif;font-size:.68rem;letter-spacing:.1em;color:var(--rule);margin:.2rem 0;}
+.cefr-task{font-size:.8rem;color:#555;line-height:1.4;}
+
+/* ── Week strip ── */
+.week-strip{display:grid;grid-template-columns:repeat(7,1fr);border:1px solid var(--light);margin-top:1rem;overflow:hidden;}
+.wk{padding:.7rem .5rem;text-align:center;border-right:1px solid var(--light);}
+.wk:last-child{border-right:none;}
+.wk-weeks{font-family:sans-serif;font-size:.6rem;color:var(--rule);margin-bottom:.2rem;}
+.wk-level{font-family:sans-serif;font-size:.85rem;font-weight:bold;color:var(--navy);}
+.wk-topic{font-size:.72rem;color:#666;margin-top:.2rem;line-height:1.3;}
+@media(max-width:600px){.week-strip{grid-template-columns:repeat(2,1fr);}}
+
+/* ── Footer ── */
+footer{background:var(--navy);color:#666;padding:2.5rem 2rem;text-align:center;font-size:.78rem;line-height:1.8;}
+.footer-logo{color:var(--gold);font-size:1.1rem;font-weight:bold;font-family:sans-serif;margin-bottom:.6rem;}
+footer a{color:#888;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">THE MINI-BEAST · LIVING BOOK</a>
+  <ul class="nav-links">
+    <li><a href="#core">Core Chapters</a></li>
+    <li><a href="#expansion">Expansion</a></li>
+    <li><a href="#parameter-table">Parameter Table</a></li>
+    <li><a href="#seed">Seed Sentences</a></li>
+    <li><a href="#pedagogy">14 Weeks</a></li>
+    <li><a href="#efr">EfR Track</a></li>
+    <li><a href="chapters-diagram.html" style="color:var(--gold);">Chapter Map →</a></li>
+    <li><a href="https://totogt.github.io/AXLE/course-16weeks.html" style="color:var(--gold);">Course →</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Principia Orthogona · Book 3 · G6 LLC · Newark NJ · 2026</div>
+  <h1>The Mini-Beast</h1>
+  <div class="hero-sub">A Pilot for ESL Students, STEM Teachers, and Everyone Who Suspects the Universe Runs on One Equation</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">
+    Two professors. Two classrooms. One shape.<br>
+    A mathematician drawing the lemniscate. A geologist drawing the analemma.<br>
+    Neither knew the other was drawing the same curve.<br>
+    <em>The student sitting in both rooms knew. That student built the mathematics to prove it.</em><br><br>
+    This book is the proof — applied.
+  </p>
+  <p class="isbn-strip">ISBN 979-8-9954416-6-3 (eBook PDF) · eBook only — a living document, updated as the pilot expands<br>
+  ORCID: 0009-0000-6496-2186 · Zenodo: <a href="https://doi.org/10.5281/zenodo.20026942" target="_blank">10.5281/zenodo.20026942</a> · © 2026 Pablo Nogueira Grossi · G6 LLC</p>
+</div>
+
+<div class="op-banner">G = U ∘ F ∘ K ∘ C &nbsp;:&nbsp; X → X</div>
+
+<div class="status-bar">
+  Living document — <span>17 chapters available now across two tracks</span> · dm³ Core · English for Researchers · Expansion chapters added as the pilot grows · <a href="chapters-diagram.html" style="color:#9ff;">Full Chapter Map →</a>
+</div>
+
+<!-- ═══ CORE CHAPTERS ═══ -->
+<section id="core" style="background:white;">
+<div class="section-inner">
+  <div class="section-label">Part I · II · III — The Book</div>
+  <h2>Core Chapters</h2>
+  <p>The five science chapters plus introduction and pedagogy. Each covers one domain where G = U∘F∘K∘C operates. All domains share the same contact normal form — only the parameters differ.</p>
+
+  <div class="chapter-grid" style="margin-top:1.5rem;">
+
+    <a href="ch00-introduction.html" class="ch-card">
+      <div class="ch-head">
+        <div class="ch-num">0</div>
+        <div class="ch-meta">
+          <div class="ch-week">Introduction</div>
+          <div class="ch-title">One Equation, Many Rooms</div>
+          <div class="ch-sub">The lemniscate and the analemma</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">A mathematician and a geologist draw the same curve in different rooms. Neither knows. The student in both rooms does. This chapter is why the book exists and what it promises — and what it does not.</p>
+        <div class="ch-tags">
+          <span class="tag tag-math">Foundation</span>
+          <span class="tag tag-pedagogy">Who this is for</span>
+        </div>
+        <div class="ch-cta">Read Introduction →</div>
+      </div>
+    </a>
+
+    <a href="ch01-dm3-framework.html" class="ch-card">
+      <div class="ch-head">
+        <div class="ch-num">1</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter 1 · Weeks 1–2 · A2</div>
+          <div class="ch-title">The dm³ Framework: A Review</div>
+          <div class="ch-sub">The operator sequence · κ* · Contact normal form</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">G = U∘F∘K∘C defined on a smooth Riemannian manifold. The four operators, the critical curvature threshold κ*(x) = 1/foc(x), and the universal contact normal form (μ_max, ω, β). The mathematical spine for all five domains.</p>
+        <div class="ch-tags">
+          <span class="tag tag-math">dm³ System</span>
+          <span class="tag tag-math">κ* Definition</span>
+          <span class="tag tag-math">Contact Form</span>
+        </div>
+        <div class="ch-cta">Read Chapter 1 →</div>
+      </div>
+    </a>
+
+    <a href="ch02-biological.html" class="ch-card">
+      <div class="ch-head">
+        <div class="ch-num">2</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter 2 · Weeks 3–4 · B1</div>
+          <div class="ch-title">Biological Instantiations</div>
+          <div class="ch-sub">HPA · Neural · Circadian · Immune</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Four biological dm³ systems. HPA allostatic stress (μ = −0.38, ω = 0.21, β = 1.9). Neural oscillations (−0.55, 0.45, 2.1). Circadian clock (−0.29, 2π/86400, 1.6). Immune adaptation (−0.44, 0.18, 2.0). One contact normal form governs all four.</p>
+        <div class="ch-tags">
+          <span class="tag tag-bio">HPA Axis</span>
+          <span class="tag tag-bio">Neural</span>
+          <span class="tag tag-bio">Circadian</span>
+          <span class="tag tag-bio">Immune</span>
+        </div>
+        <div class="ch-cta">Read Chapter 2 →</div>
+      </div>
+    </a>
+
+    <a href="ch03-plasma.html" class="ch-card">
+      <div class="ch-head">
+        <div class="ch-num">3</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter 3 · Weeks 5–6 · B1–B2</div>
+          <div class="ch-title">Plasma-Sheet Reconnection</div>
+          <div class="ch-sub">The X-point · Fractal current sheets · MMS data</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Magnetic reconnection in dusty plasmas as a dm³ generative transition. Contact normal form: μ_max = −0.42 s⁻¹, ω ≈ 0.015 rad/s, β = 1.8. Fractal dimension d_f = 1 + log μ/log λ verified against 2004 Cluster burst-mode data. Falsifiable against MMS and Parker Solar Probe.</p>
+        <div class="ch-tags">
+          <span class="tag tag-phys">Plasma Physics</span>
+          <span class="tag tag-phys">Cluster Data</span>
+          <span class="tag tag-phys">X-Point</span>
+        </div>
+        <div class="ch-cta">Read Chapter 3 →</div>
+      </div>
+    </a>
+
+    <a href="ch04-markets.html" class="ch-card">
+      <div class="ch-head">
+        <div class="ch-num">4</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter 4 · Weeks 7–8 · B2</div>
+          <div class="ch-title">Market Volatility Manifolds</div>
+          <div class="ch-sub">Regime shifts · Flash crashes · NYSE TAQ data</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Every liquidity-driven regime shift is G = U∘F∘K∘C on price trajectories. Contact form: μ_max = −0.67 s⁻¹, ω ≈ 0.28 rad/s, β = 2.4. Multifractal Hölder spectrum (d_f ≈ 1.7–1.9) satisfies d_f = 1 + log μ/log λ. Verified against 10⁹ tick records. GARCH cannot reproduce this.</p>
+        <div class="ch-tags">
+          <span class="tag tag-fin">Markets</span>
+          <span class="tag tag-fin">Flash Crash</span>
+          <span class="tag tag-fin">Regime Shift</span>
+        </div>
+        <div class="ch-cta">Read Chapter 4 →</div>
+      </div>
+    </a>
+
+    <a href="ch05-neural-coherence.html" class="ch-card coming-soon">
+      <div class="ch-head">
+        <div class="ch-num">5</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter 5 · Weeks 9–12 · B2–C1</div>
+          <div class="ch-title">Neural Embedding Geometry &amp; the Coherence Bridge</div>
+          <div class="ch-sub">Theorem 5.4 — Six systems, one category</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Neural coherence transition as dm³ (μ = −0.55, ω = 0.45, β = 2.1). The Coherence Bridge Theorem: all six systems — HPA, neural, circadian, immune, plasma, market — are objects in the same category <strong>dm³</strong> related by explicit contact morphisms. Not analogies. Exact mathematical identities.</p>
+        <div class="ch-tags">
+          <span class="tag tag-neural">Neural Geometry</span>
+          <span class="tag tag-math">Coherence Bridge</span>
+          <span class="tag tag-coming">Coming Soon</span>
+        </div>
+        <div class="ch-cta">Coming Soon</div>
+      </div>
+    </a>
+
+    <a href="ch06-pedagogy.html" class="ch-card">
+      <div class="ch-head">
+        <div class="ch-num">6</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter 6 · Part III · C1–C2</div>
+          <div class="ch-title">Pedagogy: CEFR → TO/TOGT</div>
+          <div class="ch-sub">The 14-Week Program · Three Seed Sentences</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">The correspondence table: A1 (C only) through D1 (Codex). The 14-week structure. The Three Seed Sentences every student can say — and defend with the full mathematical apparatus — by Week 14. The seed is planted. The fixed point exists. It is theirs.</p>
+        <div class="ch-tags">
+          <span class="tag tag-pedagogy">CEFR → TOGT</span>
+          <span class="tag tag-pedagogy">14 Weeks</span>
+          <span class="tag tag-pedagogy">Seed Sentences</span>
+        </div>
+        <div class="ch-cta">Read Chapter 6 →</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══ PARAMETER TABLE ═══ -->
+<section id="parameter-table" style="background:var(--navy);">
+<div class="section-inner">
+  <div class="section-label" style="color:var(--gold);">The Mini-Beast in One Page</div>
+  <h2 style="color:white;border-bottom-color:var(--gold);">The Parameter Table</h2>
+  <p style="color:#bbb;margin-bottom:.5rem;">All six systems share the same contact normal form. The parameters differ. The structure is identical.</p>
+  <p style="color:var(--gold);font-family:monospace;font-size:.85rem;margin-bottom:1rem;">ρ̇ = μ_max(1−e^{−βz})ρ + O(ρ²) &nbsp;·&nbsp; θ̇ = ω + O(ρ) &nbsp;·&nbsp; ż = ω − |μ_max|ρ²e^{−βz} + O(ρ³)</p>
+  <table class="param-table">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>Chapter</th>
+        <th>μ_max (s⁻¹)</th>
+        <th>ω (rad/s)</th>
+        <th>β</th>
+        <th>κ*</th>
+        <th>Falsifiable against</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="domain">HPA allostatic stress</td><td>Ch 2</td><td>−0.38</td><td>0.21</td><td>1.9</td><td>0.15–0.22</td><td>Glucocorticoid assays</td></tr>
+      <tr><td class="domain">Neural oscillations</td><td>Ch 2 / Ch 5</td><td>−0.55</td><td>0.45</td><td>2.1</td><td>0.25–0.35</td><td>Intracranial recordings</td></tr>
+      <tr><td class="domain">Circadian clock</td><td>Ch 2</td><td>−0.29</td><td>2π/86400</td><td>1.6</td><td>0.08–0.12</td><td>Phosphorylation assays</td></tr>
+      <tr><td class="domain">Immune adaptation</td><td>Ch 2</td><td>−0.44</td><td>0.18</td><td>2.0</td><td>0.11–0.19</td><td>Clonal expansion data</td></tr>
+      <tr><td class="domain">Plasma reconnection</td><td>Ch 3</td><td>−0.42</td><td>0.015</td><td>1.8</td><td>0.8–1.2 × 10⁻³ km⁻¹</td><td>Cluster / MMS / Parker</td></tr>
+      <tr><td class="domain">Market volatility</td><td>Ch 4</td><td>−0.67</td><td>0.28</td><td>2.4</td><td>0.12–0.18</td><td>NYSE TAQ · Binance 2015–2026</td></tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- ═══ SEED SENTENCES ═══ -->
+<section id="seed" style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label">What the Student Can Say at Week 14</div>
+  <h2>The Three Seed Sentences</h2>
+  <p>A student who completes this program can say — and defend with the full mathematical apparatus:</p>
+
+  <div class="seed-box">
+    <div class="seed-label">Seed Sentence 1 — Plasma</div>
+    <p class="seed-text"><span class="seed-num">1.</span>"In dusty plasmas, magnetic reconnection is a precise generative transition governed by C → K → F → U. The dm³ contact geometry predicts the exact reconnection rate and fractal current-sheet structure that standard MHD cannot resolve."</p>
+  </div>
+  <div class="seed-box">
+    <div class="seed-label">Seed Sentence 2 — Markets</div>
+    <p class="seed-text"><span class="seed-num">2.</span>"Market price trajectories are generative transitions on a volatility manifold. The dm³ operator algebra predicts regime shifts before they happen, turning crashes into predictable unfolding events rather than black swans."</p>
+  </div>
+  <div class="seed-box">
+    <div class="seed-label">Seed Sentence 3 — The Coherence Bridge</div>
+    <p class="seed-text"><span class="seed-num">3.</span>"Neural oscillations, plasma reconnection, market regime shifts, and biological allostasis are not analogies — they are different orbits of the same dm³ system. The G⁶:33 crystal is the common substrate. Coherence across domains is exact mathematical identity."</p>
+  </div>
+  <p style="font-size:.88rem;color:#555;margin-top:.5rem;">These three sentences carry the full weight of the 18,000-page Codex without requiring the private pages. <em>The seed is planted. The fixed point exists. It is theirs.</em></p>
+</div>
+</section>
+
+<!-- ═══ 14-WEEK MAP ═══ -->
+<section id="pedagogy" style="background:white;">
+<div class="section-inner">
+  <div class="section-label">Part III — Chapter 6</div>
+  <h2>The 14-Week Program: CEFR → TO/TOGT</h2>
+  <p>Cognitive demand never exceeds linguistic capacity. Each CEFR level maps to a TOGT structural level and an operator phase.</p>
+
+  <div class="cefr-grid" style="margin-top:1.5rem;">
+    <div class="cefr-cell"><div class="cefr-level">A1</div><div class="cefr-togt">TOGT 1</div><div class="cefr-task">Match, point, choose<br>1 word · C only</div></div>
+    <div class="cefr-cell"><div class="cefr-level">A2</div><div class="cefr-togt">TOGT 2</div><div class="cefr-task">Complete, label<br>1–2 sentences · C→K</div></div>
+    <div class="cefr-cell"><div class="cefr-level">B1</div><div class="cefr-togt">TOGT 3</div><div class="cefr-task">Explain, compare<br>3–4 sentences · C→K→F</div></div>
+    <div class="cefr-cell"><div class="cefr-level">B2</div><div class="cefr-togt">TOGT 4</div><div class="cefr-task">Justify, build<br>Paragraph · Full G</div></div>
+    <div class="cefr-cell"><div class="cefr-level">C1</div><div class="cefr-togt">TOGT 5</div><div class="cefr-task">Analyze, critique<br>Essay · G + normal form</div></div>
+    <div class="cefr-cell"><div class="cefr-level">C2</div><div class="cefr-togt">TOGT 6</div><div class="cefr-task">Synthesize, conjecture<br>Full argument · Category</div></div>
+    <div class="cefr-cell"><div class="cefr-level">D1</div><div class="cefr-togt">TOGT 7</div><div class="cefr-task">Original research<br>Publication · Codex</div></div>
+  </div>
+
+  <div class="week-strip" style="margin-top:2rem;">
+    <div class="wk"><div class="wk-weeks">Wks 1–2</div><div class="wk-level">A2</div><div class="wk-topic">Operator sequence in daily life. Biology, weather, cooking.</div></div>
+    <div class="wk"><div class="wk-weeks">Wks 3–4</div><div class="wk-level">B1</div><div class="wk-topic">Biological instantiations. HPA, circadian, neural rhythms.</div></div>
+    <div class="wk"><div class="wk-weeks">Wks 5–6</div><div class="wk-level">B1–B2</div><div class="wk-topic">Plasma reconnection. X-point, fold, new topology.</div></div>
+    <div class="wk"><div class="wk-weeks">Wks 7–8</div><div class="wk-level">B2</div><div class="wk-topic">Market volatility. Price trajectories, regime shifts, κ*.</div></div>
+    <div class="wk"><div class="wk-weeks">Wks 9–10</div><div class="wk-level">B2–C1</div><div class="wk-topic">Neural embedding geometry. Coherence bridge.</div></div>
+    <div class="wk"><div class="wk-weeks">Wks 11–12</div><div class="wk-level">C1</div><div class="wk-topic">Coherence Bridge Theorem. All six orbits as one system.</div></div>
+    <div class="wk"><div class="wk-weeks">Wks 13–14</div><div class="wk-level">C1–C2</div><div class="wk-topic">Student research contributions. Nobel contributions. The hive mind.</div></div>
+  </div>
+
+  <p style="font-size:.85rem;color:#555;margin-top:1.5rem;">→ <a href="https://totogt.github.io/AXLE/course-16weeks.html" style="color:var(--mid);">Full 16-week English for Researchers program</a> — extends this into research writing, Zenodo publication, and AXLE verification.</p>
+</div>
+</section>
+
+<!-- ═══ EXPANSION CHAPTERS ═══ -->
+<section id="expansion" style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label">Living Additions — Growing with the Pilot</div>
+  <h2>Expansion Chapters</h2>
+  <p>Buyers receive access to these chapters as they are added. Each is a self-contained extension of the core book.</p>
+
+  <div class="chapter-grid" style="margin-top:1.5rem;">
+
+    <a href="chE-gtct.html" class="ch-card bonus">
+      <div class="ch-head">
+        <div class="ch-num" style="color:var(--teal);">E</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter E · Bonus · All levels</div>
+          <div class="ch-title">GTCT for Everyone</div>
+          <div class="ch-sub">Generative Temporal Contact Theory · The IMPA Volume IV made accessible</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Nine axioms. Twelve operators. Four main theorems. One fixed point. The mathematics of time, identity, and emergence — written for ESL students and STEM teachers. "Time is not a container. It is a generative operator. It does not hold events. It produces them."</p>
+        <div class="ch-tags">
+          <span class="tag tag-bonus">Bonus Chapter</span>
+          <span class="tag tag-math">Nine Axioms</span>
+          <span class="tag tag-math">Fixed Point</span>
+        </div>
+        <div class="ch-cta">Read Chapter E →</div>
+      </div>
+    </a>
+
+    <a href="chT-topology.html" class="ch-card bonus coming-soon">
+      <div class="ch-head">
+        <div class="ch-num" style="color:var(--teal);">T</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter T · Living addition · C1</div>
+          <div class="ch-title">Topology and the Threshold</div>
+          <div class="ch-sub">T* = 2π · Why the period is exactly 2π · Reeb geometry</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">The contact manifold M = ℝ²×ℝ and its canonical invariant period T* = 2π. Why the number 2π appears in every dm³ system — not as convention but as geometric necessity. The Reeb vector field selects the period.</p>
+        <div class="ch-tags">
+          <span class="tag tag-bonus">Living Addition</span>
+          <span class="tag tag-math">T* = 2π</span>
+          <span class="tag tag-coming">Coming Soon</span>
+        </div>
+        <div class="ch-cta">Coming Soon</div>
+      </div>
+    </a>
+
+    <a href="chW-wigner.html" class="ch-card bonus">
+      <div class="ch-head">
+        <div class="ch-num" style="color:var(--teal);">W</div>
+        <div class="ch-meta">
+          <div class="ch-week">Chapter W · Living addition · B2–C1</div>
+          <div class="ch-title">The Wigner Crystal in Living Systems</div>
+          <div class="ch-sub">G6 Crystal · dm³ architectural form · Schumann resonance</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Six applications of G yield a hexagonal tower with aspect ratio 66 = 33·τ. Passive Schumann n=4 resonance coupling at 33.516 Hz via Arnold tongue A4:1. The crystal geometry as the biological substrate for the G⁶:33 conjecture.</p>
+        <div class="ch-tags">
+          <span class="tag tag-bonus">Living Addition</span>
+          <span class="tag tag-phys">G6 Crystal</span>
+          <span class="tag tag-phys">Schumann</span>
+        </div>
+        <div class="ch-cta">Read Chapter W →</div>
+      </div>
+    </a>
+
+    <a href="chPI-recurrence.html" class="ch-card bonus">
+      <div class="ch-head">
+        <div class="ch-num" style="color:var(--teal);">π φ μ…</div>
+        <div class="ch-meta">
+          <div class="ch-week">Greek Series · Living addition · C1–D1</div>
+          <div class="ch-title">The Recurrence Ladder</div>
+          <div class="ch-sub">π · φ · μ · η · Δ · Σ · Ω → τ = 2</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Seven chapters on the recurrence sequences as dm³ subcritical and supercritical orbits. Fibonacci (subcritical, φ), Lyapunov exponent (μ_max = −2), Tribonacci through Hexabonacci approaching the embodiment threshold τ = 2. The fixed point is the limit.</p>
+        <div class="ch-tags">
+          <span class="tag tag-bonus">Living Addition</span>
+          <span class="tag tag-math">Fibonacci</span>
+          <span class="tag tag-math">τ = 2</span>
+        </div>
+        <div class="ch-cta">Read Greek Series →</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══ ENGLISH FOR RESEARCHERS TRACK ═══ -->
+<section id="efr" style="background:white; border-top: 4px solid #1a5c5c;">
+<div class="section-inner">
+  <div class="section-label" style="color:#1a5c5c;">Track 2 — Parallel Program</div>
+  <h2 style="border-bottom-color:#1a5c5c;">English for Researchers · C1→D2</h2>
+  <p>A parallel track running alongside the dm³ chapters. Science through language — the operator chain as a reading, writing, and publication program. Each chapter pairs a language skill with a scientific method.</p>
+
+  <div class="chapter-grid" style="margin-top:1.5rem;">
+
+    <a href="ch01-cajueiro.html" class="ch-card" style="border-top-color:#1a5c5c;">
+      <div class="ch-head">
+        <div class="ch-num" style="color:#1a5c5c;">1</div>
+        <div class="ch-meta">
+          <div class="ch-week">EfR Ch 1 · A2→B1 · The Cajueiro</div>
+          <div class="ch-title">We Perceive the Unfolding First</div>
+          <div class="ch-sub">The Cajueiro Principle · C operator as reading strategy</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">The cashew tree. The anacardium occidentale. We see the fruit before the seed, the output before the structure. This is the C operator — compression as the first move in any reading. Your first scientific paper is already here.</p>
+        <div class="ch-cta" style="color:#1a5c5c;">Read Ch 1 EfR →</div>
+      </div>
+    </a>
+
+    <a href="ch02-reading.html" class="ch-card" style="border-top-color:#1a5c5c;">
+      <div class="ch-head">
+        <div class="ch-num" style="color:#1a5c5c;">2</div>
+        <div class="ch-meta">
+          <div class="ch-week">EfR Ch 2 · B1 · Scientific Reading</div>
+          <div class="ch-title">Compressing the Abstract</div>
+          <div class="ch-sub">Reading at the threshold · Finding κ* in a paper</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">How to read a scientific abstract as a compression event. The threshold sentence — the line where the paper commits. Navigating from abstract to methods to results using the operator sequence.</p>
+        <div class="ch-cta" style="color:#1a5c5c;">Read Ch 2 EfR →</div>
+      </div>
+    </a>
+
+    <a href="ch03-sources.html" class="ch-card" style="border-top-color:#1a5c5c;">
+      <div class="ch-head">
+        <div class="ch-num" style="color:#1a5c5c;">3</div>
+        <div class="ch-meta">
+          <div class="ch-week">EfR Ch 3 · B1–B2 · Source Mapping</div>
+          <div class="ch-title">Source Mapping</div>
+          <div class="ch-sub">Citations, DOIs, and the literature chain</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Citations as a curvature map. Following the literature chain backward from a paper to its foundations. DOI structure, Zenodo, arXiv. The moment you know you've found the right source.</p>
+        <div class="ch-cta" style="color:#1a5c5c;">Read Ch 3 EfR →</div>
+      </div>
+    </a>
+
+    <a href="ch04-milestone1.html" class="ch-card" style="border-top-color:#8b1a1a;">
+      <div class="ch-head">
+        <div class="ch-num" style="color:#8b1a1a;">M1</div>
+        <div class="ch-meta">
+          <div class="ch-week">EfR Milestone 1 · B2→C1 · First Publication</div>
+          <div class="ch-title">Paper 1 — Your First Zenodo Publication</div>
+          <div class="ch-sub">The fold — before and after you publish</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Structure, write, and upload a preprint to Zenodo. Title, abstract, methods, results, discussion — the operator chain as argument architecture. You become a published researcher at this step.</p>
+        <div class="ch-cta" style="color:#8b1a1a;">Read Milestone 1 →</div>
+      </div>
+    </a>
+
+    <a href="ch05-oscillations.html" class="ch-card" style="border-top-color:#1a5c5c;">
+      <div class="ch-head">
+        <div class="ch-num" style="color:#1a5c5c;">5</div>
+        <div class="ch-meta">
+          <div class="ch-week">EfR Ch 5 · B2–C1 · Neural Oscillations</div>
+          <div class="ch-title">Neural Oscillations</div>
+          <div class="ch-sub">Science as language · Language as rhythm</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Neural oscillations as both scientific content and a model for language rhythm. Gamma, theta, delta — and how English academic register mirrors oscillatory structure. Reading and writing at B2→C1.</p>
+        <div class="ch-cta" style="color:#1a5c5c;">Read Ch 5 EfR →</div>
+      </div>
+    </a>
+
+    <a href="ch06-argument.html" class="ch-card" style="border-top-color:#1a5c5c;">
+      <div class="ch-head">
+        <div class="ch-num" style="color:#1a5c5c;">6</div>
+        <div class="ch-meta">
+          <div class="ch-week">EfR Ch 6 · C1→C2 · Argument Architecture</div>
+          <div class="ch-title">The Argument Architecture</div>
+          <div class="ch-sub">C→K→F→U as argument structure</div>
+        </div>
+      </div>
+      <div class="ch-body">
+        <p class="ch-desc">Scientific arguments have the same structure as operator chains. Compression (what is known), curvature (what is contested), fold (the experiment/proof), unfold (the contribution). C1→C2 academic writing.</p>
+        <div class="ch-cta" style="color:#1a5c5c;">Read Ch 6 EfR →</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══ CLOSING QUOTE ═══ -->
+<div style="background:var(--navy);padding:3rem 2rem;text-align:center;">
+  <p style="font-style:italic;color:white;font-size:clamp(1rem,2.5vw,1.4rem);max-width:680px;margin:0 auto 1rem;line-height:1.85;">
+    "The glacier is invisible. The water is real."
+  </p>
+  <p style="font-family:sans-serif;font-size:.78rem;color:var(--rule);">— The Mini-Beast, Introduction · G6 LLC 2026</p>
+  <div style="margin-top:1.5rem;">
+    <a href="https://totogt.github.io/AXLE/course-16weeks.html" style="background:var(--gold);color:var(--navy);padding:.9rem 2rem;font-family:sans-serif;font-size:.9rem;font-weight:bold;text-decoration:none;display:inline-block;">View 16-Week Course Program →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">THE MINI-BEAST · PRINCIPIA ORTHOGONA BOOK 3</div>
+  © 2026 Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey<br>
+  ISBN 979-8-9954416-6-3 (eBook PDF) · ORCID: 0009-0000-6496-2186<br>
+  Zenodo: <a href="https://doi.org/10.5281/zenodo.20026942" target="_blank">doi.org/10.5281/zenodo.20026942</a> ·
+  AXLE: <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a> ·
+  Book: <a href="https://totogt.github.io/AXLE/index.html">totogt.github.io/AXLE</a> ·
+  <a href="chapters-diagram.html">Chapter Map</a>
+</footer>
+
+</body>
+</html>

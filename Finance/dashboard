@@ -1,0 +1,167 @@
+Yes, hosting this on your existing Vultr instance is a perfect way to keep it running live 24/7. Since you already have a bot running there, you can leverage that same server to host this dashboard.
+
+However, because your current frontend code relies on client-side browser requests to Yahoo Finance and Anthropic, **it will fail due to security blocks (CORS) and expose your private API keys.** To make it work 24/7 on Vultr, we need to structure it with a tiny backend proxy that fetches the data securely and serves the HTML page. Here is the easiest, most robust way to set it up.
+
+---
+
+## The Recommended Stack for Your Vultr Server
+
+Instead of just hosting a raw HTML file, we will use **Node.js** with **Express**. The server will:
+
+1. Securely hold your Anthropic API key.
+2. Act as a proxy to fetch Yahoo Finance data (bypassing CORS).
+3. Serve your updated frontend dashboard to the web.
+
+### Step 1: Prepare the Files on Your Vultr Server
+
+SSH into your Vultr instance, create a new directory, and initialize a Node project:
+
+```bash
+mkdir lunch-money-dashboard
+cd lunch-money-dashboard
+npm init -y
+npm install express dotenv cors
+
+```
+
+### Step 2: Create the Backend Proxy (`server.js`)
+
+Create a file named `server.js` in that folder. This backend handling prevents any API or CORS blocks:
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Serve static files (your HTML frontend)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// PROXY 1: Yahoo Finance Data
+app.get('/api/finance/:ticker', async (req, res) => {
+    try {
+        const ticker = encodeURIComponent(req.params.ticker);
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=12d`;
+        const response = await fetch(url);
+        if (!response.ok) return res.status(response.status).json({ error: 'Failed to fetch Yahoo data' });
+        const data = await response.json();
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// PROXY 2: Anthropic AI Assistant
+app.post('/api/ai', async (req, res) => {
+    try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01' // Standard header for Anthropic API
+            },
+            body: JSON.stringify({
+                model: 'claude-3-5-sonnet-20241022', // Updated to stable 2026 production build
+                max_tokens: 1000,
+                messages: [{ role: 'user', content: req.body.prompt }]
+            })
+        });
+        const data = await response.json();
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Lunch Money running live on port ${PORT}`));
+
+```
+
+### Step 3: Move and Update Your Frontend
+
+Create a `public` folder inside your directory and save your HTML code inside it as `index.html`:
+
+```bash
+mkdir public
+nano public/index.html
+
+```
+
+Inside your `index.html`, **update the network paths** so they talk to your new Vultr backend backend instead of hitting external APIs directly:
+
+1. **Update `fetchQuote` URL to point to your proxy:**
+```javascript
+// Change from query1.finance.yahoo... to your local endpoint:
+const url = `/api/finance/${encodeURIComponent(ticker)}`;
+
+```
+
+
+2. **Update `aiAsk` URL and payload:**
+```javascript
+// Change from https://api.anthropic.com/v1/messages to:
+const res = await fetch('/api/ai', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ prompt: prompt }) // Send just the prompt wrapper
+});
+
+```
+
+
+
+### Step 4: Add Your Environment Variables
+
+Create a `.env` file in the root directory to store your credentials securely:
+
+```bash
+nano .env
+
+```
+
+Add your configurations inside:
+
+```env
+PORT=3000
+ANTHROPIC_API_KEY=your_actual_anthropic_api_key_here
+
+```
+
+---
+
+## Keeping It Running 24/7
+
+To ensure the dashboard doesn't crash when you close your SSH terminal, use **PM2** (Process Manager 2), which you might already be using for your other bot.
+
+1. **Install PM2 globally (if not already installed):**
+```bash
+npm install pm2 -g
+
+```
+
+
+2. **Start your app:**
+```bash
+pm2 start server.js --name "lunch-money-dashboard"
+
+```
+
+
+3. **Ensure it reboots if the Vultr server restarts:**
+```bash
+pm2 startup
+pm2 save
+
+```
+
+
+
+Your scanner app is now running 24/7 on port `3000`. If you have a domain mapped or use an Nginx reverse proxy on that Vultr instance, you can point a domain (like `scanner.yourdomain.com`) directly to port 3000!
+
+Do you have Nginx or a specific reverse proxy already set up on that Vultr server to handle web traffic for your other bot?

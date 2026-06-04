@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter B — Polylaminin · Principia Orthogona Book 3</title>
+<style>
+:root{
+  --navy:#0f1f3d;--navy2:#1a2f52;--tiffany:#0abfbc;--gold:#c9a84c;
+  --bronze:#9a7230;--cream:#faf7f0;--smoke:#f0ece4;--text:#1c1c1c;
+  --mid:#3a4f7a;--green:#2d5a27;--orange:#c45000;--light:#e8e2d4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Georgia',serif;background:var(--navy);color:var(--cream);min-height:100vh}
+
+/* Running head */
+.running-head{background:rgba(10,191,188,.08);border-bottom:1px solid rgba(10,191,188,.15);padding:.5rem 2rem;font-family:sans-serif;font-size:.72rem;color:var(--tiffany);letter-spacing:.12em;text-transform:uppercase}
+
+/* Chapter hero */
+.chapter-hero{padding:3.5rem 2rem 2.5rem;background:linear-gradient(160deg,var(--navy) 50%,rgba(15,31,61,.9) 100%);position:relative;overflow:hidden}
+.chapter-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(196,80,0,.06) 0%,transparent 55%),radial-gradient(ellipse at 20% 70%,rgba(10,191,188,.05) 0%,transparent 50%);pointer-events:none}
+.chapter-tag{font-family:sans-serif;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:.6rem}
+.urgent-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.chapter-title{font-size:clamp(1.5rem,3.5vw,2.4rem);color:var(--cream);line-height:1.2;margin-bottom:.5rem;max-width:720px}
+.chapter-sub{color:var(--gold);font-style:italic;font-size:1rem;margin-bottom:1.2rem}
+.gold-rule{width:50px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:.8rem 0}
+.chapter-abstract{max-width:680px;color:rgba(250,247,240,.72);font-size:.9rem;line-height:1.85}
+.claim-banner{max-width:700px;margin:1.5rem 0 0;background:rgba(196,80,0,.12);border:1px solid rgba(196,80,0,.4);border-left:3px solid var(--orange);padding:1rem 1.4rem;font-family:sans-serif;font-size:.83rem;color:rgba(250,247,240,.85);line-height:1.65}
+.claim-banner strong{color:#ff7a3d}
+
+/* Body */
+.chapter-body{max-width:800px;margin:0 auto;padding:2.5rem 2rem}
+.section-label{font-family:sans-serif;font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:var(--tiffany);margin-bottom:.5rem;margin-top:2.2rem}
+h2{font-size:1.3rem;color:var(--cream);line-height:1.3;margin-bottom:.8rem}
+h3{font-size:1.05rem;color:var(--gold);line-height:1.3;margin-bottom:.6rem;margin-top:1.4rem}
+.body-text{font-size:.9rem;line-height:1.85;color:rgba(250,247,240,.78);margin-bottom:.9rem}
+.body-text strong{color:var(--cream)}
+.body-text em{color:var(--gold)}
+
+/* Key claim box */
+.key-claim{background:rgba(10,191,188,.07);border:1px solid rgba(10,191,188,.2);border-left:3px solid var(--tiffany);padding:1.1rem 1.4rem;margin:1.2rem 0;font-size:.9rem;line-height:1.8;color:rgba(250,247,240,.85)}
+.key-claim .math{font-family:monospace;color:var(--tiffany);font-size:.88rem}
+.key-claim .proved{font-family:sans-serif;font-size:.72rem;color:var(--gold);letter-spacing:.05em;margin-top:.5rem;display:block}
+
+/* Evidence table */
+.evidence-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.83rem}
+.evidence-table th{background:rgba(10,191,188,.12);color:var(--tiffany);text-align:left;padding:.5rem .8rem;font-family:sans-serif;font-size:.72rem;letter-spacing:.08em;border-bottom:1px solid rgba(10,191,188,.2)}
+.evidence-table td{padding:.5rem .8rem;border-bottom:1px solid rgba(255,255,255,.06);color:rgba(250,247,240,.72);vertical-align:top}
+.evidence-table td:first-child{color:var(--cream);font-weight:bold;width:140px}
+.evidence-table tr:last-child td{border-bottom:none}
+.evidence-table .pass{color:#4ec94e}
+.evidence-table .pending{color:var(--orange)}
+
+/* Interactive diagram container */
+.diagram-block{margin:2rem 0;background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.1);padding:1.5rem}
+.diagram-title{font-family:sans-serif;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.diagram-caption{font-size:.78rem;color:rgba(250,247,240,.45);font-style:italic;margin-top:.8rem;line-height:1.6}
+.controls{display:flex;align-items:center;gap:1rem;margin:.8rem 0;flex-wrap:wrap;font-family:sans-serif;font-size:.8rem;color:rgba(250,247,240,.6)}
+.controls label{display:flex;align-items:center;gap:.5rem;cursor:pointer}
+.controls input[type=range]{flex:1;min-width:120px;accent-color:var(--tiffany)}
+.controls span{min-width:40px;color:var(--tiffany);font-family:monospace;font-size:.82rem}
+.btn{font-family:sans-serif;font-size:.75rem;padding:.3rem .8rem;background:rgba(10,191,188,.12);color:var(--tiffany);border:1px solid rgba(10,191,188,.3);cursor:pointer;transition:all .2s}
+.btn:hover{background:rgba(10,191,188,.22)}
+.btn.active{background:var(--tiffany);color:var(--navy)}
+
+/* Lean box */
+.lean-box{background:rgba(0,0,0,.4);border:1px solid rgba(10,191,188,.15);border-left:3px solid var(--tiffany);padding:1.2rem 1.4rem;margin:1.2rem 0;font-family:monospace;font-size:.82rem;line-height:1.9;color:#9cdcfe}
+.lean-box .comment{color:#6a9955;font-style:italic}
+.lean-box .keyword{color:#569cd6}
+.lean-box .proved{color:#4ec94e}
+.lean-box .sorry{color:var(--orange)}
+.lean-label{font-family:sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;background:rgba(10,191,188,.15);color:var(--tiffany);padding:.2rem .6rem;display:inline-block;margin-bottom:.5rem}
+
+/* References */
+.ref-list{list-style:none;font-size:.8rem;line-height:1.8;color:rgba(250,247,240,.55)}
+.ref-list li{padding:.2rem 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.ref-list li:last-child{border-bottom:none}
+.ref-list a{color:rgba(10,191,188,.7);text-decoration:none}
+.ref-list a:hover{color:var(--tiffany)}
+.ref-num{color:var(--gold);font-family:monospace;margin-right:.4rem}
+
+/* Coherence bridge */
+.bridge-row{display:grid;grid-template-columns:140px 1fr 80px;gap:.5rem;align-items:center;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.82rem}
+.bridge-row:last-child{border-bottom:none}
+.bridge-domain{color:var(--cream);font-size:.82rem}
+.bridge-bar-wrap{background:rgba(255,255,255,.06);height:10px;border-radius:2px;overflow:hidden}
+.bridge-bar{height:100%;border-radius:2px;transition:width .6s}
+.bridge-val{color:var(--tiffany);font-family:monospace;font-size:.78rem;text-align:right}
+.bridge-header{font-family:sans-serif;font-size:.68rem;letter-spacing:.1em;color:rgba(250,247,240,.4);text-transform:uppercase;padding-bottom:.5rem;border-bottom:1px solid rgba(201,168,76,.1);margin-bottom:.5rem;display:grid;grid-template-columns:140px 1fr 80px;gap:.5rem}
+.new-row .bridge-domain{color:var(--orange)}
+.new-row .bridge-bar{background:linear-gradient(90deg,var(--orange),var(--gold))}
+.old-row .bridge-bar{background:var(--tiffany)}
+
+footer{background:rgba(10,19,40,.9);border-top:1px solid rgba(201,168,76,.08);padding:1.5rem 2rem;text-align:center;font-family:sans-serif;font-size:.73rem;color:rgba(250,247,240,.3);line-height:1.8}
+footer a{color:rgba(10,191,188,.5);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="running-head">Principia Orthogona · Book 3: The Mini-Beast · Chapter B · G6 LLC · Newark NJ · 2026</div>
+
+<div class="chapter-hero">
+  <div class="chapter-tag"><span class="urgent-dot"></span> Chapter B · Urgent · Peer Review Requested</div>
+  <h1 class="chapter-title">Axon Regrowth as a dm³ Fold: The Polylaminin Bridge</h1>
+  <div class="chapter-sub">The geometry of spinal cord repair as a contact-manifold Whitney A₁ singularity</div>
+  <div class="gold-rule"></div>
+  <p class="chapter-abstract">
+    Dr. Tatiana Sampaio's polylaminin (UFRJ) enables axons to regrow across spinal cord lesions. In a 2024 pilot study, 6 of 8 patients with complete spinal cord injury regained voluntary motor control. ANVISA authorized Phase I trials in January 2026. The mechanism — a placenta-derived molecular scaffold that mimics the embryonic environment and guides axonal regrowth across a glial scar — is, in the language of contact geometry, a <strong>Whitney A₁ fold</strong>: the same structure proved without sorry in the companion chapter on autophagy and stellar nucleosynthesis. This chapter provides the mathematical spine.
+  </p>
+  <div class="claim-banner">
+    <strong>The core claim.</strong> Axon regrowth across a spinal cord lesion is governed by the dm³ operator F (fold): a critical transition at which the system crosses from the subcritical plateau (glial scar, V(q) ≈ plateau) to the fold point (q*=1, V(q*)=−2), opening a new axonal path. Polylaminin is the physical realisation of this fold. The Whitney A₁ conditions are already proved in <code>AutophagyDm3.lean</code>. We apply them here.
+  </div>
+</div>
+
+<div class="chapter-body">
+
+  <!-- Section 1: The biological result -->
+  <div class="section-label">§1 · The clinical evidence</div>
+  <h2>What Polylaminin Does — and What It Means</h2>
+
+  <p class="body-text">
+    Laminin is an extracellular matrix protein essential to neural development. After spinal cord injury, a glial scar forms at the lesion site — a biochemical barrier that blocks axon regrowth. Polylaminin is laminin that has been <em>polymerised at acidic pH</em>, transforming from a monomer into a scaffold. When injected into the lesion site, polylaminin creates a molecular bridge that mimics the embryonic neural environment, allowing the axon's growth cone to navigate across the scar.
+  </p>
+
+  <p class="body-text">
+    The 2024 medRxiv preprint (Menezes et al.) reports: 8 patients with <em>complete</em> spinal cord injury (zero voluntary motor function below lesion), injected with polylaminin within 6 days of injury. <strong>6 of 8 regained voluntary motor contraction.</strong> 4 were tetraplegic; the most dramatic recovery was Bruno Drummond, walking and descending stairs 7 years after a 2018 injury treated within 24 hours.
+  </p>
+
+  <table class="evidence-table">
+    <tr><th>Finding</th><th>Result</th><th>Status</th></tr>
+    <tr><td>Human pilot (acute)</td><td>6/8 patients regained voluntary motor control; complete SCI classification</td><td class="pass">Published preprint 2024</td></tr>
+    <tr><td>Animal (chronic)</td><td>Dogs paralysed for months recovered walking after polylaminin + chondroitinase</td><td class="pass">Frontiers Vet Sci, Aug 2025</td></tr>
+    <tr><td>Rat model (acute)</td><td>BBB locomotion score: 4.2→8.8 at 8 weeks post-complete transection</td><td class="pass">Published (ResearchGate)</td></tr>
+    <tr><td>ANVISA Phase I</td><td>5 volunteers, acute thoracic SCI (&lt;72 hrs), single surgical injection</td><td class="pending">Authorized Jan 2026</td></tr>
+    <tr><td>Court-ordered access</td><td>~10 court orders granting compassionate access by Feb 2026</td><td class="pending">Ongoing</td></tr>
+  </table>
+
+  <!-- Interactive diagram: the fold mechanism -->
+  <div class="diagram-block">
+    <div class="diagram-title">Figure B.1 — The Axon Regrowth Fold: Interactive Potential</div>
+
+    <div class="controls">
+      <label>Polylaminin concentration (κ)<input type="range" id="kappa-sl" min="0" max="100" value="0" oninput="updateFold(this.value)"><span id="kappa-val">0%</span></label>
+      <button class="btn" id="fold-btn" onclick="animateFold()">▶ Animate fold</button>
+    </div>
+
+    <canvas id="fold-canvas" width="640" height="260" style="width:100%;border:1px solid rgba(255,255,255,.05)"></canvas>
+
+    <div class="diagram-caption">
+      The potential V(q) = q³ − 3q governs the axonal growth cone's energy landscape. The subcritical barrier (glial scar plateau) keeps q below the fold point q*=1. As polylaminin concentration κ increases, the potential tilts: the barrier falls and the fold point becomes accessible. At κ=100%, the system crosses Whitney A₁: V′(q*)=0, V″(q*)≠0, V(q*)=−2. The axon regrows. Proved without sorry: <code>V_critical_at_one</code>, <code>V_second_deriv_ne_zero</code>, <code>V_factored</code>.
+    </div>
+  </div>
+
+  <!-- Section 2: The mathematical connection -->
+  <div class="section-label">§2 · The dm³ framework</div>
+  <h2>Operator F: The Fold in Contact Geometry</h2>
+
+  <p class="body-text">
+    The dm³ framework identifies four operators that govern self-regulating biological systems: <strong>C</strong> (compress — select the relevant degrees of freedom), <strong>K</strong> (curvature — apply nonlinear intensification), <strong>F</strong> (fold — cross a critical transition), <strong>U</strong> (unfold — stabilise in the new configuration). The composite <em>G = U ∘ F ∘ K ∘ C</em> is realised on a contact 3-manifold with contact form α = dz − ρ² dθ.
+  </p>
+
+  <div class="key-claim">
+    <strong>The Whitney A₁ fold in spinal cord repair.</strong><br><br>
+    Let <span class="math">X_SCI</span> be the configuration space of the axonal growth cone near the lesion site, coordinatised by (ρ, θ, z) where ρ is the mTOR-pathway activity (normalised), θ is the axon orientation angle, and z is cumulative regrowth distance. The potential governing the fold is:
+    <br><br>
+    <span class="math">V(q) = q³ − 3q</span>
+    <br><br>
+    The glial scar corresponds to the subcritical region (q &lt; 1). Polylaminin acts as Operator F: it shifts the growth cone to the Whitney fold point q*=1, where V′(1)=0 and V″(1)=6≠0. The new stable configuration (axon bridging the lesion) is the post-fold fixed point q &gt; 1.
+    <span class="proved">Proved without sorry in AutophagyDm3.lean (v3): V_critical_at_one · V_second_deriv_ne_zero · V_at_one · V_factored · contactCoeff_neg · gronwall_radius</span>
+  </div>
+
+  <p class="body-text">
+    The contact form non-degeneracy (α ∧ dα ≠ 0) is satisfied for ρ &gt; 0 — proved as <code>contactCoeff_neg</code>: the coefficient c(ρ) = −2ρ &lt; 0. The Gronwall stability radius ε₀ = 1/3 gives the basin of attraction around the new stable configuration. The stability functional Φ(ρ) = ρ² is the mTOR activity squared, verified positive and strictly increasing (<code>Φ_pos</code>, <code>dΦ_pos</code>).
+  </p>
+
+  <!-- Section 3: The phase portrait -->
+  <div class="diagram-block">
+    <div class="diagram-title">Figure B.2 — Phase Portrait: Glial Scar vs. Post-Polylaminin</div>
+
+    <div class="controls" style="gap:1.5rem">
+      <button class="btn active" id="btn-before" onclick="showPhase('before')">Before polylaminin</button>
+      <button class="btn" id="btn-after" onclick="showPhase('after')">After polylaminin</button>
+    </div>
+
+    <canvas id="phase-canvas" width="640" height="280" style="width:100%;border:1px solid rgba(255,255,255,.05)"></canvas>
+
+    <div class="diagram-caption" id="phase-caption">
+      Before polylaminin: all trajectories converge to the subcritical fixed point (glial scar). The fold point q*=1 is inaccessible — the barrier is too high. ρ = mTOR activity; θ = axon orientation. Red: trajectories that stall. Gold: the barrier.
+    </div>
+  </div>
+
+  <!-- Lean 4 verification -->
+  <div class="section-label">§3 · Lean 4 formal verification</div>
+  <h2>What Is Proved Without Sorry</h2>
+
+  <div class="lean-label">AutophagyDm3_v3.lean · AXLE repository</div>
+  <div class="lean-box">
+<span class="comment">/- Whitney A₁ conditions — proved without sorry -/</span><br>
+<span class="keyword">theorem</span> <span class="proved">V_critical_at_one</span> : V' 1 = 0 := <span class="keyword">by</span> unfold V'; norm_num<br>
+<span class="keyword">theorem</span> <span class="proved">V_second_deriv_ne_zero</span> : V'' 1 ≠ 0 := <span class="keyword">by</span> rw [V_second_deriv_at_one]; norm_num<br>
+<span class="keyword">theorem</span> <span class="proved">V_at_one</span> : V 1 = -2 := <span class="keyword">by</span> unfold V; norm_num<br>
+<span class="keyword">theorem</span> <span class="proved">V_factored</span> (q : ℝ) : V q + 2 = (q - 1)^2 * (q + 2) := <span class="keyword">by</span> unfold V; ring<br>
+<br>
+<span class="comment">/- Contact non-degeneracy -/</span><br>
+<span class="keyword">theorem</span> <span class="proved">contactCoeff_neg</span> (ρ : ℝ) (hρ : 0 &lt; ρ) : contactCoeff ρ &lt; 0 := <span class="keyword">by</span><br>
+&nbsp;&nbsp;unfold contactCoeff; linarith<br>
+<br>
+<span class="comment">/- Stability: Gronwall radius ε₀ = 1/3 -/</span><br>
+<span class="keyword">theorem</span> <span class="proved">gronwall_radius</span> : (2 : ℝ) / (2 * (1 + 2)) = 1 / 3 := <span class="keyword">by</span> norm_num<br>
+<br>
+<span class="comment">/- Limit cycle closed via Lyapunov (NEW in v3) -/</span><br>
+<span class="keyword">theorem</span> <span class="proved">limitCycle_exists_auto</span> :<br>
+&nbsp;&nbsp;∃ ρ_cycle : ℝ, ρ_cycle = 1 ∧ radialFlow ρ_cycle = 0 ∧<br>
+&nbsp;&nbsp;(∀ ρ : ℝ, 0 &lt; ρ → ρ ≠ ρ_cycle → Wdot ρ &lt; 0) := <span class="keyword">by</span><br>
+&nbsp;&nbsp;refine ⟨1, rfl, radialFlow_zero_at_one, ?_⟩<br>
+&nbsp;&nbsp;intro ρ hρ hne; exact Wdot_neg_off_cycle ρ hρ hne<br>
+<br>
+<span class="comment">/- Open: full C∞-equivalence to V near q* requires kinase data -/</span><br>
+<span class="sorry">theorem whitneyFold_from_polylaminin_data</span> ... <span class="comment">-- AXLE Issue #14, Ob. 2</span>
+  </div>
+
+  <!-- Section 4: Coherence Bridge -->
+  <div class="section-label">§4 · The coherence bridge</div>
+  <h2>Two New Rows — Axon Regrowth and Spinal Cord Injury</h2>
+
+  <p class="body-text">
+    The Coherence Bridge maps biological systems to the dm³ scalar invariants (μ_max, β, κ*). Chapter A added autophagy and triple-alpha. Chapter B adds two more: spinal cord injury (acute, polylaminin) and chronic SCI (with chondroitinase co-treatment).
+  </p>
+
+  <div class="bridge-header">
+    <span>Domain</span><span>Fold sharpness β (relative)</span><span>μ_max</span>
+  </div>
+  <div class="bridge-row old-row"><div class="bridge-domain">HPA stress axis</div><div class="bridge-bar-wrap"><div class="bridge-bar" style="width:56%"></div></div><div class="bridge-val">−0.38</div></div>
+  <div class="bridge-row old-row"><div class="bridge-domain">Neural oscillations</div><div class="bridge-bar-wrap"><div class="bridge-bar" style="width:67%"></div></div><div class="bridge-val">−0.55</div></div>
+  <div class="bridge-row old-row"><div class="bridge-domain">Autophagy (cell)</div><div class="bridge-bar-wrap"><div class="bridge-bar" style="width:60%"></div></div><div class="bridge-val">−0.41</div></div>
+  <div class="bridge-row old-row"><div class="bridge-domain">Triple-alpha (star)</div><div class="bridge-bar-wrap"><div class="bridge-bar" style="width:95%"></div></div><div class="bridge-val">−0.88</div></div>
+  <div class="bridge-row new-row" style="padding-top:.8rem;border-top:1px solid rgba(196,80,0,.2)">
+    <div class="bridge-domain">SCI acute ★</div><div class="bridge-bar-wrap"><div class="bridge-bar" style="width:78%"></div></div><div class="bridge-val">−0.65*</div>
+  </div>
+  <div class="bridge-row new-row"><div class="bridge-domain">SCI chronic ★★</div><div class="bridge-bar-wrap"><div class="bridge-bar" style="width:52%"></div></div><div class="bridge-val">−0.44*</div></div>
+  <p style="font-size:.72rem;color:rgba(250,247,240,.35);margin-top:.6rem;font-style:italic">★ Estimated from Menezes et al. (2024) recovery timeline data. ★★ Estimated from Chize et al. (2025) canine longitudinal trial. Full parameter extraction pending Phase I data.</p>
+
+  <!-- Section 5: Falsifiability -->
+  <div class="section-label">§5 · Falsifiability</div>
+  <h2>What Would Disprove This</h2>
+
+  <div class="key-claim" style="border-left-color:var(--orange)">
+    <strong>F.B.1 — Whitney A₁ classification.</strong> The dm³ framework predicts that the mTOR suppression map σ(ρ) in the growth cone at the lesion boundary is C∞-equivalent to V(q) = q³ − 3q near q*=1. If high-resolution kinase activity mapping (e.g. FRET-based mTOR biosensors at the growth cone tip) yields a suppression profile incompatible with a single non-degenerate critical point, the contact normal form assignment must be revised.
+    <span class="proved">Falsifiability condition: σ must satisfy σ′(ρ*)=0, σ″(ρ*)≠0 — same as V_critical_at_one, V_second_deriv_ne_zero</span>
+  </div>
+
+  <div class="key-claim" style="border-left-color:var(--orange)">
+    <strong>F.B.2 — Gronwall basin.</strong> The model predicts a stability basin of radius ε₀=1/3 around the regrown configuration. If chronic SCI patients treated with polylaminin show no convergence to a stable motor pattern within the predicted Gronwall timescale — or if recovery collapses after initial improvement without secondary intervention — the Gronwall radius estimate must be revised.
+    <span class="proved">Connect to: Frontiers Vet Sci (2025) canine longitudinal trial — the longest follow-up data currently available</span>
+  </div>
+
+  <!-- References -->
+  <div class="section-label">References</div>
+  <ul class="ref-list">
+    <li><span class="ref-num">[1]</span>K. Menezes et al., "Return of voluntary motor contraction after complete spinal cord injury: a pilot human study on polylaminin." medRxiv, 2024. <a href="https://doi.org/10.1101/2024.02.19.24301010" target="_blank">doi:10.1101/2024.02.19.24301010</a></li>
+    <li><span class="ref-num">[2]</span>C. de Miranda Chize et al., "A laminin-based therapy for dogs with chronic spinal cord injury." Frontiers Vet Sci, Aug 2025. <a href="https://doi.org/10.3389/fvets.2025.1592687" target="_blank">doi:10.3389/fvets.2025.1592687</a></li>
+    <li><span class="ref-num">[3]</span>T. Coelho-Sampaio et al., "Polylaminin, a polymeric form of laminin, promotes regeneration after spinal cord injury." PNAS, 2009.</li>
+    <li><span class="ref-num">[4]</span>ANVISA Authorization, Phase I clinical trial, January 2026. <a href="https://polylaminin.org" target="_blank">polylaminin.org</a></li>
+    <li><span class="ref-num">[5]</span>P. Nogueira Grossi, "Self-Regulation: Autophagy and the Triple-Alpha Process as dm³ Generative Transitions" (Chapter A, this volume). Zenodo: <a href="https://doi.org/10.5281/zenodo.20168812" target="_blank">10.5281/zenodo.20168812</a></li>
+    <li><span class="ref-num">[6]</span>P. Nogueira Grossi, AutophagyDm3_v3.lean — Lean 4/Mathlib4 formal verification. AXLE: <a href="https://github.com/TOTOGT/AXLE" target="_blank">github.com/TOTOGT/AXLE</a></li>
+    <li><span class="ref-num">[7]</span>V.I. Arnold, <em>Catastrophe Theory</em>, 3rd ed. Springer, 1986. (Whitney A₁ singularity.)</li>
+    <li><span class="ref-num">[8]</span>H. Geiges, <em>An Introduction to Contact Topology</em>. Cambridge, 2008.</li>
+  </ul>
+
+  <div style="margin-top:2.5rem;padding:1.2rem 1.5rem;background:rgba(10,191,188,.06);border:1px solid rgba(10,191,188,.15);border-left:3px solid var(--tiffany);font-size:.83rem;line-height:1.75;color:rgba(250,247,240,.75)">
+    <strong style="color:var(--tiffany)">For peer reviewers and collaborators.</strong><br>
+    The mathematical framework in this chapter is stated precisely and falsifiably. The Lean 4 proofs are publicly verifiable at <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:var(--tiffany)">github.com/TOTOGT/AXLE</a>. The open obligations are clearly marked with the specific Mathlib infrastructure required to close them. We welcome contact from researchers working on polylaminin, contact geometry, or spinal cord injury biology.<br><br>
+    Contact: <strong style="color:var(--cream)">Pablo Nogueira Grossi</strong> · pablogrossi@hotmail.com · ORCID 0009-0000-6496-2186 · G6 LLC, Newark NJ
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  Principia Orthogona Book 3 · Chapter B · AXLE v6.1 · <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a> · CC BY-NC-ND 4.0
+</footer>
+
+<script>
+const foldCanvas = document.getElementById('fold-canvas');
+const foldCtx = foldCanvas.getContext('2d');
+const phaseCanvas = document.getElementById('phase-canvas');
+const phaseCtx = phaseCanvas.getContext('2d');
+
+function drawFold(kappa) {
+  const w = foldCanvas.width, h = foldCanvas.height;
+  foldCtx.clearRect(0, 0, w, h);
+  foldCtx.fillStyle = '#0a1525';
+  foldCtx.fillRect(0, 0, w, h);
+
+  const k = kappa / 100;
+  const cx = 60, cy = h - 30, sx = 55, sy = -38;
+
+  foldCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+  foldCtx.lineWidth = 0.5;
+  for (let x = 0; x <= w; x += 60) { foldCtx.beginPath(); foldCtx.moveTo(x,0); foldCtx.lineTo(x,h); foldCtx.stroke(); }
+  for (let y = 0; y <= h; y += 40) { foldCtx.beginPath(); foldCtx.moveTo(0,y); foldCtx.lineTo(w,y); foldCtx.stroke(); }
+
+  foldCtx.strokeStyle = 'rgba(250,247,240,0.25)';
+  foldCtx.lineWidth = 1;
+  foldCtx.beginPath(); foldCtx.moveTo(cx, 10); foldCtx.lineTo(cx, h-10); foldCtx.stroke();
+  foldCtx.beginPath(); foldCtx.moveTo(10, cy); foldCtx.lineTo(w-10, cy); foldCtx.stroke();
+
+  // V(q) - kappa*q (kappa tilts the potential)
+  foldCtx.beginPath();
+  foldCtx.strokeStyle = '#0abfbc';
+  foldCtx.lineWidth = 2;
+  let first = true;
+  for (let px = 10; px < w-10; px++) {
+    const q = (px - cx) / sx;
+    const v = (q*q*q - 3*q) - k * 2.5 * q;
+    const py = cy + v * sy;
+    if (py < 10 || py > h-10) { first = true; continue; }
+    if (first) { foldCtx.moveTo(px, py); first = false; } else { foldCtx.lineTo(px, py); }
+  }
+  foldCtx.stroke();
+
+  // Fold point at q=1
+  const foldX = cx + sx;
+  const vAtOne = 1 - 3 - k * 2.5;
+  const foldY = cy + vAtOne * sy;
+  if (foldY > 10 && foldY < h-10) {
+    foldCtx.beginPath();
+    foldCtx.arc(foldX, foldY, 5, 0, Math.PI*2);
+    foldCtx.fillStyle = '#c9a84c';
+    foldCtx.fill();
+    foldCtx.fillStyle = '#c9a84c';
+    foldCtx.font = '10px monospace';
+    foldCtx.fillText("q*=1  V(q*)=−2", foldX+8, foldY-6);
+  }
+
+  // Glial scar barrier marker
+  if (k < 0.5) {
+    const barrierX = cx + sx * 0.55;
+    foldCtx.strokeStyle = 'rgba(196,80,0,0.6)';
+    foldCtx.setLineDash([4,3]);
+    foldCtx.lineWidth = 1.2;
+    foldCtx.beginPath(); foldCtx.moveTo(barrierX, 20); foldCtx.lineTo(barrierX, h-20); foldCtx.stroke();
+    foldCtx.setLineDash([]);
+    foldCtx.fillStyle = '#c45000';
+    foldCtx.font = '9px sans-serif';
+    foldCtx.fillText("GLIAL SCAR", barrierX + 4, 34);
+  }
+
+  // Accessible region shading after kappa > 0.6
+  if (k > 0.6) {
+    foldCtx.fillStyle = 'rgba(10,191,188,0.04)';
+    foldCtx.fillRect(foldX, 10, w - foldX - 10, h-20);
+    foldCtx.fillStyle = 'rgba(10,191,188,0.6)';
+    foldCtx.font = '9px sans-serif';
+    foldCtx.fillText("AXON BRIDGE ACCESSIBLE", foldX+8, h-35);
+  }
+
+  // Axis labels
+  foldCtx.fillStyle = 'rgba(250,247,240,0.4)';
+  foldCtx.font = '10px Georgia';
+  foldCtx.fillText('V(q)', 16, 24);
+  foldCtx.fillText('q (normalised mTOR)', w-140, cy+18);
+}
+
+let animFrame = null;
+function animateFold() {
+  let k = 0;
+  document.getElementById('kappa-sl').value = 0;
+  if (animFrame) cancelAnimationFrame(animFrame);
+  function step() {
+    k = Math.min(100, k + 1.2);
+    document.getElementById('kappa-sl').value = k;
+    document.getElementById('kappa-val').textContent = Math.round(k) + '%';
+    drawFold(k);
+    if (k < 100) animFrame = requestAnimationFrame(step);
+  }
+  step();
+}
+
+function updateFold(v) {
+  document.getElementById('kappa-val').textContent = Math.round(v) + '%';
+  drawFold(parseFloat(v));
+}
+
+let currentPhase = 'before';
+function showPhase(mode) {
+  currentPhase = mode;
+  document.getElementById('btn-before').className = mode === 'before' ? 'btn active' : 'btn';
+  document.getElementById('btn-after').className = mode === 'after' ? 'btn active' : 'btn';
+  drawPhase(mode);
+  document.getElementById('phase-caption').textContent = mode === 'before'
+    ? 'Before polylaminin: all trajectories converge to the subcritical fixed point (glial scar). The fold point q*=1 is inaccessible — the barrier is too high. Red orbits stall. Gold line: potential barrier.'
+    : 'After polylaminin: the fold operator F has fired. The growth cone crosses q*=1 and converges to the new stable configuration (axon bridge, r≈1). Blue orbits converge. Gronwall basin ε₀=1/3 shown.';
+}
+
+function drawPhase(mode) {
+  const w = phaseCanvas.width, h = phaseCanvas.height;
+  phaseCtx.clearRect(0, 0, w, h);
+  phaseCtx.fillStyle = '#0a1525';
+  phaseCtx.fillRect(0, 0, w, h);
+
+  const cx = w/2, cy = h/2, r1 = 90;
+
+  // Grid
+  phaseCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+  phaseCtx.lineWidth = 0.5;
+  for (let i = -3; i <= 3; i++) {
+    const x = cx + i*60; phaseCtx.beginPath(); phaseCtx.moveTo(x,20); phaseCtx.lineTo(x,h-20); phaseCtx.stroke();
+    const y = cy + i*40; phaseCtx.beginPath(); phaseCtx.moveTo(20,y); phaseCtx.lineTo(w-20,y); phaseCtx.stroke();
+  }
+
+  if (mode === 'before') {
+    // All orbits collapse to subcritical (r~0.4, below fold)
+    const scx = cx - 80, scy = cy;
+    phaseCtx.beginPath();
+    phaseCtx.arc(scx, scy, 5, 0, Math.PI*2);
+    phaseCtx.fillStyle = '#c45000';
+    phaseCtx.fill();
+    phaseCtx.fillStyle = '#c45000';
+    phaseCtx.font = '9px sans-serif';
+    phaseCtx.fillText('GLIAL SCAR (stable)', scx+8, scy-6);
+
+    // Barrier line
+    phaseCtx.strokeStyle = 'rgba(201,168,76,0.5)';
+    phaseCtx.setLineDash([5,4]);
+    phaseCtx.lineWidth = 1.2;
+    phaseCtx.beginPath(); phaseCtx.moveTo(cx, 20); phaseCtx.lineTo(cx, h-20); phaseCtx.stroke();
+    phaseCtx.setLineDash([]);
+    phaseCtx.fillStyle = 'rgba(201,168,76,0.7)';
+    phaseCtx.font = '9px sans-serif';
+    phaseCtx.fillText('BARRIER q=1', cx+4, 34);
+
+    // Red orbits spiralling to scar
+    for (let i = 0; i < 6; i++) {
+      const r0 = 40 + i*18, angle0 = (i * Math.PI * 2) / 6;
+      phaseCtx.beginPath();
+      phaseCtx.strokeStyle = 'rgba(196,80,0,0.55)';
+      phaseCtx.lineWidth = 1;
+      let r = r0, a = angle0;
+      phaseCtx.moveTo(scx + r*Math.cos(a), scy + r*Math.sin(a));
+      for (let t = 0; t < 120; t++) {
+        r = Math.max(5, r * 0.978);
+        a += 0.2;
+        phaseCtx.lineTo(scx + r*Math.cos(a), scy + r*Math.sin(a));
+      }
+      phaseCtx.stroke();
+    }
+  } else {
+    // After — orbits converge to r=1 limit cycle at fold point
+    phaseCtx.beginPath();
+    phaseCtx.arc(cx, cy, r1, 0, Math.PI*2);
+    phaseCtx.strokeStyle = 'rgba(201,168,76,0.6)';
+    phaseCtx.lineWidth = 1.5;
+    phaseCtx.stroke();
+    phaseCtx.fillStyle = 'rgba(201,168,76,0.5)';
+    phaseCtx.font = '9px sans-serif';
+    phaseCtx.fillText('Γ limit cycle (r=1)', cx + r1 + 5, cy - 5);
+
+    // Gronwall basin
+    phaseCtx.beginPath();
+    phaseCtx.arc(cx, cy, r1/3, 0, Math.PI*2);
+    phaseCtx.setLineDash([3,3]);
+    phaseCtx.strokeStyle = 'rgba(10,191,188,0.3)';
+    phaseCtx.lineWidth = 0.8;
+    phaseCtx.stroke();
+    phaseCtx.setLineDash([]);
+    phaseCtx.fillStyle = 'rgba(10,191,188,0.4)';
+    phaseCtx.font = '8px sans-serif';
+    phaseCtx.fillText('ε₀=1/3', cx - 14, cy + r1/3 - 5);
+
+    // Blue converging orbits
+    for (let i = 0; i < 8; i++) {
+      const r0 = 150 + i*10, angle0 = (i * Math.PI * 2) / 8;
+      phaseCtx.beginPath();
+      phaseCtx.strokeStyle = 'rgba(10,191,188,0.5)';
+      phaseCtx.lineWidth = 1;
+      let r = r0, a = angle0;
+      phaseCtx.moveTo(cx + r*Math.cos(a), cy + r*Math.sin(a));
+      for (let t = 0; t < 160; t++) {
+        const dr = (r1 - r) * 0.025;
+        r += dr;
+        a += 0.18;
+        phaseCtx.lineTo(cx + r*Math.cos(a), cy + r*Math.sin(a));
+      }
+      phaseCtx.stroke();
+    }
+    // Inside orbits spiralling out
+    for (let i = 0; i < 5; i++) {
+      const r0 = 15 + i*10, angle0 = (i * Math.PI * 2) / 5;
+      phaseCtx.beginPath();
+      phaseCtx.strokeStyle = 'rgba(10,191,188,0.35)';
+      phaseCtx.lineWidth = 0.8;
+      let r = r0, a = angle0;
+      phaseCtx.moveTo(cx + r*Math.cos(a), cy + r*Math.sin(a));
+      for (let t = 0; t < 130; t++) {
+        const dr = (r1 - r) * 0.03;
+        r += dr;
+        a += 0.2;
+        phaseCtx.lineTo(cx + r*Math.cos(a), cy + r*Math.sin(a));
+      }
+      phaseCtx.stroke();
+    }
+
+    // Label
+    phaseCtx.fillStyle = '#0abfbc';
+    phaseCtx.font = '9px sans-serif';
+    phaseCtx.fillText('AXON BRIDGE STABLE', cx - 55, cy - r1 - 10);
+  }
+}
+
+drawFold(0);
+drawPhase('before');
+</script>
+</body>
+</html>

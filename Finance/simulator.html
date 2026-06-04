@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growth Simulator • Lunch Money</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --void: #07080d;
+      --surface: #0e0f14;
+      --surface2: #13141a;
+      --accent: #10b981;
+      --accent2: #059669;
+      --gold: #f7c948;
+      --text: #e8eaf0;
+      --muted: #5a5e6e;
+      --border: rgba(16,185,129,0.12);
+      --border2: rgba(16,185,129,0.25);
+      --discord: #5865F2;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--void); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); background: var(--void); position: sticky; top: 0; z-index: 50; }
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-logo span { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-logo small { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
+    nav a { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+    nav a:hover, nav a.active { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; }
+
+    /* DISCORD BANNER */
+    .discord-bar { background: var(--discord); padding: 0.7rem 2rem; text-align: center; font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; color: #fff; }
+    .discord-bar a { color: #c5c9ff; text-decoration: underline; }
+
+    /* HERO */
+    .hero { padding: 5rem 2rem 3rem; max-width: 960px; margin: 0 auto; }
+    .hero-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; }
+    .hero h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 700; line-height: 0.9; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p { font-size: 1rem; color: var(--muted); max-width: 520px; line-height: 1.7; margin-top: 1.2rem; }
+
+    /* MAIN GRID */
+    .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); max-width: 960px; margin: 3rem auto; }
+    @media (max-width: 700px) { .sim-grid { grid-template-columns: 1fr; } }
+    .sim-panel { background: var(--surface); padding: 2.5rem; }
+    .panel-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 2rem; }
+
+    /* SLIDERS */
+    .control { margin-bottom: 2rem; }
+    .control label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.75rem; letter-spacing: 0.02em; }
+    .control label strong { color: var(--text); }
+    .slider-row { display: flex; align-items: center; gap: 1rem; }
+    input[type=range] { flex: 1; -webkit-appearance: none; height: 2px; background: var(--border2); outline: none; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--void); }
+    .slider-val { font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--accent); min-width: 80px; text-align: right; }
+
+    /* RESULTS */
+    .result-big { margin-bottom: 2rem; }
+    .result-big .label { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .result-big .value { font-size: 3rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .result-big .value.gold { color: var(--gold); }
+    .result-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .result-small .label { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .result-small .value { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+
+    /* CHART */
+    .chart-wrap { border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 1rem; }
+
+    /* SCENARIOS */
+    .scenarios { max-width: 960px; margin: 0 auto 4rem; padding: 0 0; }
+    .scenarios-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; padding: 0 1px; }
+    .scenarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    @media (max-width: 600px) { .scenarios-grid { grid-template-columns: 1fr; } }
+    .scenario-card { background: var(--surface); padding: 2rem; }
+    .scenario-card.featured { background: var(--surface2); border-top: 2px solid var(--accent); }
+    .scenario-tier { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+    .scenario-rate { font-size: 2.5rem; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 1rem; }
+    .scenario-card.featured .scenario-rate { color: var(--gold); }
+    .scenario-balance { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.3rem; }
+    .scenario-daily { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--accent); margin-bottom: 1rem; }
+    .scenario-note { font-size: 0.78rem; color: var(--muted); line-height: 1.6; border-top: 1px solid var(--border); padding-top: 0.8rem; margin-top: 0.8rem; }
+    .scenario-note strong { color: var(--text); }
+
+    /* ETORO */
+    .etoro-block { max-width: 960px; margin: 0 auto 4rem; border: 1px solid var(--border); background: var(--surface); padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .etoro-block p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 500px; }
+    .etoro-block p strong { color: var(--text); }
+    .btn-etoro { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; background: #1E90FF; color: #fff; padding: 0.9rem 1.8rem; text-decoration: none; white-space: nowrap; flex-shrink: 0; transition: opacity 0.2s; }
+    .btn-etoro:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; }
+    footer p { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer .disclaimer { margin-top: 1rem; font-size: 0.58rem; color: var(--muted); opacity: 0.6; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <span>🥪 Lunch Money</span>
+    <small>by CapitalGuard</small>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="strategy.html">Strategy</a>
+    <a href="daily-setups.html">Daily Setups</a>
+    <a href="simulator.html" class="active">Simulator</a>
+  </div>
+</nav>
+
+<div class="discord-bar">
+  <i class="fab fa-discord"></i>
+  &nbsp;<strong>Trading Masterclass coming to Discord</strong> — Learn the full Lunch Money strategy live ·
+  <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank">Join the server →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">Growth Simulator · Lunch Money</div>
+  <h1>What does<br><em>discipline</em><br>compound to?</h1>
+  <p>Adjust the parameters. See what consistent small gains do over time. The math is honest — no guarantees, just compounding.</p>
+</div>
+
+<!-- EINSTEIN -->
+<div style="max-width:960px;margin:0 auto 3rem;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;gap:0;overflow:hidden;">
+  <img src="einstein.png" alt="Einstein sticking his tongue out"
+       style="width:160px;height:160px;object-fit:cover;object-position:center top;flex-shrink:0;filter:grayscale(20%);">
+  <div style="padding:2rem 2.5rem;">
+    <blockquote style="font-size:1.15rem;line-height:1.7;color:var(--text);font-style:italic;margin-bottom:0.75rem;">
+      "Compound interest is the eighth wonder of the world. He who understands it, earns it. He who doesn't, pays it."
+    </blockquote>
+    <cite style="font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);">— Albert Einstein</cite>
+  </div>
+</div>
+
+<div class="sim-grid">
+  <!-- CONTROLS -->
+  <div class="sim-panel">
+    <div class="panel-label">Parameters</div>
+
+    <div class="control">
+      <label>Starting capital — <strong id="startValue">$100</strong></label>
+      <div class="slider-row">
+        <input type="range" id="startCapital" min="100" max="5000" value="100" step="50">
+        <span class="slider-val" id="startVal2">$100</span>
+      </div>
+    </div>
+
+    <div class="control">
+      <label>Average daily return — <strong id="returnValue">1.0%</strong></label>
+      <div class="slider-row">
+        <input type="range" id="dailyReturn" min="0.3" max="3" value="1" step="0.1">
+        <span class="slider-val" id="returnVal2">1.0%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:0.4rem">
+        <span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted)">0.3% cautious</span>
+        <span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted)">3.0% aggressive</span>
+      </div>
+    </div>
+
+    <div class="control">
+      <label>Trading days — <strong id="daysValue">756</strong></label>
+      <div class="slider-row">
+        <input type="range" id="tradingDays" min="100" max="1012" value="756" step="10">
+        <span class="slider-val" id="daysVal2">756</span>
+      </div>
+      <div style="margin-top:0.4rem">
+        <span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted)">1012 = full Lunch Money challenge</span>
+      </div>
+    </div>
+
+    <div class="control">
+      <label>Win rate — <strong id="winRateValue">65%</strong></label>
+      <div class="slider-row">
+        <input type="range" id="winRate" min="40" max="80" value="65" step="1">
+        <span class="slider-val" id="winRateVal2">65%</span>
+      </div>
+      <div style="margin-top:0.4rem">
+        <span style="font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted)">Adjusts realistic compounding vs perfect model</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="sim-panel">
+    <div class="panel-label">Projection</div>
+
+    <div class="result-big">
+      <div class="label">Final account size</div>
+      <div class="value gold" id="finalAmount">—</div>
+    </div>
+
+    <div class="result-row">
+      <div class="result-small">
+        <div class="label">Total growth</div>
+        <div class="value" id="growthPercent">—</div>
+      </div>
+      <div class="result-small">
+        <div class="label">Est. daily income</div>
+        <div class="value" id="dailyIncome">—</div>
+      </div>
+    </div>
+
+    <div class="result-row">
+      <div class="result-small">
+        <div class="label">Realistic (adjusted)</div>
+        <div class="value" id="realisticAmount" style="color:var(--accent)">—</div>
+      </div>
+      <div class="result-small">
+        <div class="label">Daily income (realistic)</div>
+        <div class="value" id="realisticIncome" style="color:var(--accent)">—</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="growthChart" height="160"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIOS -->
+<div class="scenarios" style="padding:0 0;max-width:960px;margin:0 auto 4rem;">
+  <div style="padding:0 1px;margin-bottom:1.5rem">
+    <div style="font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted)">Scenarios · 1012-Day Challenge · Starting $100</div>
+  </div>
+  <div class="scenarios-grid">
+
+    <div class="scenario-card">
+      <div class="scenario-tier">Conservative</div>
+      <div class="scenario-rate">0.75%<span style="font-size:1rem;color:var(--muted)"> /day</span></div>
+      <div class="scenario-balance" id="sc-conservative-bal">—</div>
+      <div class="scenario-daily" id="sc-conservative-daily">—</div>
+      <div class="scenario-note">
+        Achievable with <strong>strict discipline</strong>. Roughly 2–3 trades per week hitting T1. Many traders never get here consistently — but those who do build lasting income.
+      </div>
+    </div>
+
+    <div class="scenario-card featured">
+      <div class="scenario-tier">★ Lunch Money Target</div>
+      <div class="scenario-rate">1.2%<span style="font-size:1rem;color:var(--muted)"> /day</span></div>
+      <div class="scenario-balance" id="sc-target-bal">—</div>
+      <div class="scenario-daily" id="sc-target-daily">—</div>
+      <div class="scenario-note">
+        The goal. Requires hitting T1 <strong>most days</strong> and occasionally riding to T2. Realistic for a focused, journalling trader after 6+ months of consistent execution.
+      </div>
+    </div>
+
+    <div class="scenario-card">
+      <div class="scenario-tier">Aggressive</div>
+      <div class="scenario-rate">2.0%<span style="font-size:1rem;color:var(--muted)"> /day</span></div>
+      <div class="scenario-balance" id="sc-aggressive-bal">—</div>
+      <div class="scenario-daily" id="sc-aggressive-daily">—</div>
+      <div class="scenario-note">
+        The math works. <strong>The execution almost never does.</strong> 2% daily sustained requires near-perfect discipline, no revenge trades, no oversize. Shown for context — not as a target.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ETORO -->
+<div class="etoro-block">
+  <p><strong>Trade with me on eToro.</strong> I'm using eToro for the Lunch Money challenge — fractional shares, tight spreads, and a clean mobile interface. Sign up with my link and we both get rewarded.</p>
+  <a href="https://etoro.tw/42BDbbL" target="_blank" class="btn-etoro">Join eToro ↗</a>
+</div>
+
+<footer>
+  <p>
+    <a href="https://x.com/unitedWeStreamU" target="_blank">@unitedWeStreamU</a> ·
+    <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank">Discord Masterclass</a> ·
+    Lunch Money © 2026
+  </p>
+  <p class="disclaimer">
+    Mathematical projection only. Real trading includes losing days, slippage, spreads, and emotional execution errors.
+    Past performance is not indicative of future results. Never risk money you cannot afford to lose.
+    The aggressive scenario is shown for mathematical illustration — sustained 2% daily returns are extremely rare in practice.
+  </p>
+</footer>
+
+<script>
+  let growthChart;
+
+  const fmt = n => {
+    if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+    if (n >= 1e3) return '$' + Math.round(n).toLocaleString('en-US');
+    return '$' + n.toFixed(2);
+  };
+  const fmtPct = n => n >= 10000
+    ? (n/1000).toFixed(1) + 'K%'
+    : Math.round(n) + '%';
+
+  function simulate(startCap, dailyRatePct, days, winRatePct) {
+    const rate = dailyRatePct / 100;
+    const wr   = winRatePct / 100;
+    // Perfect compounding
+    const perfect = startCap * Math.pow(1 + rate, days);
+    // Realistic: win days compound at full rate, loss days at -0.75% (stop hit)
+    const lossRate = 0.0075;
+    let real = startCap;
+    for (let i = 0; i < days; i++) {
+      real *= Math.random() < wr ? (1 + rate) : (1 - lossRate);
+    }
+    // Deterministic realistic: use expected value per day
+    const ev = wr * (1 + rate) + (1 - wr) * (1 - lossRate);
+    const realisticDet = startCap * Math.pow(ev, days);
+    return { perfect, realistic: realisticDet };
+  }
+
+  function scenarioBalance(rate, days) {
+    return 100 * Math.pow(1 + rate/100, days);
+  }
+
+  function runSimulation() {
+    const start   = parseFloat(document.getElementById('startCapital').value);
+    const rate    = parseFloat(document.getElementById('dailyReturn').value);
+    const days    = parseInt(document.getElementById('tradingDays').value);
+    const winRate = parseInt(document.getElementById('winRate').value);
+
+    // Update display labels
+    document.getElementById('startValue').textContent  = fmt(start);
+    document.getElementById('startVal2').textContent   = fmt(start);
+    document.getElementById('returnValue').textContent = rate.toFixed(1) + '%';
+    document.getElementById('returnVal2').textContent  = rate.toFixed(1) + '%';
+    document.getElementById('daysValue').textContent   = days;
+    document.getElementById('daysVal2').textContent    = days;
+    document.getElementById('winRateValue').textContent= winRate + '%';
+    document.getElementById('winRateVal2').textContent = winRate + '%';
+
+    // Simulate
+    const rateD   = rate / 100;
+    const lossR   = 0.0075;
+    const wr      = winRate / 100;
+    const perfect = start * Math.pow(1 + rateD, days);
+    const ev      = wr * (1 + rateD) + (1 - wr) * (1 - lossR);
+    const realistic = start * Math.pow(ev, days);
+
+    document.getElementById('finalAmount').textContent    = fmt(perfect);
+    document.getElementById('growthPercent').textContent  = fmtPct(((perfect / start) - 1) * 100);
+    document.getElementById('dailyIncome').textContent    = fmt(perfect * rateD);
+    document.getElementById('realisticAmount').textContent= fmt(realistic);
+    document.getElementById('realisticIncome').textContent= fmt(realistic * rateD);
+
+    // Scenario cards (always 1012 days, $100 start)
+    const DAYS = 1012;
+    const scenarios = [
+      { rate: 0.75, balId: 'sc-conservative-bal', dayId: 'sc-conservative-daily' },
+      { rate: 1.2,  balId: 'sc-target-bal',        dayId: 'sc-target-daily' },
+      { rate: 2.0,  balId: 'sc-aggressive-bal',    dayId: 'sc-aggressive-daily' },
+    ];
+    scenarios.forEach(s => {
+      const bal = scenarioBalance(s.rate, DAYS);
+      document.getElementById(s.balId).textContent = fmt(bal) + ' final';
+      document.getElementById(s.dayId).textContent = fmt(bal * s.rate / 100) + '/day at peak';
+    });
+
+    // Chart
+    const chartPoints = [];
+    const realisticPoints = [];
+    const step = Math.max(1, Math.floor(days / 60));
+    for (let d = 0; d <= days; d += step) {
+      chartPoints.push({ x: d, y: +(start * Math.pow(1 + rateD, d)).toFixed(2) });
+      realisticPoints.push({ x: d, y: +(start * Math.pow(ev, d)).toFixed(2) });
+    }
+
+    const ctx = document.getElementById('growthChart');
+    if (growthChart) growthChart.destroy();
+    growthChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            label: 'Perfect compounding',
+            data: chartPoints,
+            borderColor: '#f7c948',
+            backgroundColor: 'rgba(247,201,72,0.06)',
+            tension: 0.3,
+            borderWidth: 2,
+            pointRadius: 0,
+          },
+          {
+            label: 'Realistic (win rate adjusted)',
+            data: realisticPoints,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16,185,129,0.06)',
+            tension: 0.3,
+            borderWidth: 2,
+            pointRadius: 0,
+            borderDash: [4, 3],
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        parsing: { xAxisKey: 'x', yAxisKey: 'y' },
+        plugins: {
+          legend: {
+            display: true,
+            labels: { color: '#5a5e6e', font: { family: 'Space Mono', size: 10 }, boxWidth: 20 }
+          }
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            grid: { color: 'rgba(16,185,129,0.06)' },
+            ticks: { color: '#5a5e6e', font: { family: 'Space Mono', size: 9 }, callback: v => v + 'd' }
+          },
+          y: {
+            grid: { color: 'rgba(16,185,129,0.06)' },
+            ticks: {
+              color: '#5a5e6e',
+              font: { family: 'Space Mono', size: 9 },
+              callback: v => v >= 1000 ? '$' + (v/1000).toFixed(0) + 'k' : '$' + v
+            }
+          }
+        }
+      }
+    });
+  }
+
+  window.onload = () => {
+    ['startCapital','dailyReturn','tradingDays','winRate'].forEach(id => {
+      document.getElementById(id).addEventListener('input', runSimulation);
+    });
+    runSimulation();
+  };
+</script>
+</body>
+</html>

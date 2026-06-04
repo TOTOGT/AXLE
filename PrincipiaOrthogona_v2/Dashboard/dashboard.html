@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principia Orthogona Vol. II — Interactive Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  :root {
+    --navy:  #0a1628;
+    --navy2: #0f2035;
+    --navy3: #1a3a5c;
+    --gold:  #c9a84c;
+    --gold2: #e8c97a;
+    --cream: #f5f0e8;
+    --teal:  #2a7f7f;
+    --rose:  #c0392b;
+    --gray:  #8a9bb0;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--navy);
+    color: var(--cream);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    min-height: 100vh;
+  }
+  header {
+    padding: 1.8rem 2rem 1rem;
+    border-bottom: 2px solid var(--gold);
+    background: var(--navy2);
+  }
+  header h1 {
+    font-size: 1.4rem;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+  }
+  header p {
+    font-size: 0.82rem;
+    color: var(--gray);
+    margin-top: 0.3rem;
+  }
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--gold);
+    background: var(--navy2);
+    padding: 0 2rem;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 0.65rem 1.2rem;
+    cursor: pointer;
+    color: var(--gray);
+    font-size: 0.82rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--cream); }
+  .tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    background: var(--navy);
+  }
+  .panel { display: none; padding: 1.5rem 2rem; }
+  .panel.active { display: block; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--navy2);
+    border: 1px solid var(--navy3);
+    border-radius: 4px;
+  }
+  .ctrl-group { display: flex; flex-direction: column; gap: 4px; }
+  .ctrl-group label { font-size: 0.75rem; color: var(--gray); }
+  .ctrl-group input[type=range] {
+    accent-color: var(--gold);
+    width: 130px;
+  }
+  .ctrl-val {
+    font-size: 0.78rem;
+    color: var(--gold2);
+    font-family: 'Courier New', monospace;
+  }
+  button.run-btn {
+    padding: 0.45rem 1.1rem;
+    background: var(--gold);
+    color: var(--navy);
+    border: none;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.15s;
+  }
+  button.run-btn:hover { background: var(--gold2); }
+
+  canvas, svg { display: block; }
+  .svg-wrap {
+    background: var(--navy2);
+    border: 1px solid var(--navy3);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* Coherence table */
+  .coherence-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  .coherence-table th {
+    background: var(--navy3);
+    color: var(--gold);
+    padding: 0.55rem 0.8rem;
+    text-align: left;
+    border-bottom: 2px solid var(--gold);
+  }
+  .coherence-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--navy3);
+    font-family: 'Courier New', monospace;
+    font-size: 0.79rem;
+  }
+  .coherence-table tr:hover td { background: var(--navy3); }
+  .coherence-table .domain { color: var(--cream); font-family: inherit; }
+  .bar-cell { position: relative; }
+  .bar {
+    display: inline-block;
+    height: 10px;
+    background: var(--teal);
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  /* Lean proof status */
+  .lean-block {
+    background: #050e1c;
+    border: 1px solid var(--navy3);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+  .sorry-badge {
+    display: inline-block;
+    background: var(--rose);
+    color: white;
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .proved-badge {
+    display: inline-block;
+    background: var(--teal);
+    color: white;
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+  .kw { color: #7ec8e3; }
+  .cm { color: var(--gray); font-style: italic; }
+  .nm { color: var(--gold2); }
+  .ty { color: #a8d8a8; }
+
+  .theorem-card {
+    border: 1px solid var(--navy3);
+    border-left: 4px solid var(--gold);
+    background: var(--navy2);
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1rem;
+    border-radius: 0 4px 4px 0;
+  }
+  .theorem-card h4 { color: var(--gold); font-size: 0.88rem; margin-bottom: 0.4rem; }
+  .theorem-card p  { font-size: 0.8rem; color: var(--cream); line-height: 1.55; }
+  .theorem-card .status {
+    font-size: 0.72rem;
+    color: var(--gray);
+    margin-top: 0.4rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  h3 { color: var(--gold); font-size: 0.95rem; margin-bottom: 0.8rem; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media(max-width:780px){ .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Principia Orthogona · Volume II: Contact Realization of Generative Transitions</h1>
+  <p>Pablo Nogueira Grossi · G6 LLC · Newark, NJ · 2026 · ORCID 0009-0000-6496-2186</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('phase')">dm³ Phase Portrait</div>
+  <div class="tab" onclick="showTab('threshold')">Threshold Equivalence</div>
+  <div class="tab" onclick="showTab('coherence')">Coherence Bridge</div>
+  <div class="tab" onclick="showTab('lean')">Lean Proof Status</div>
+  <div class="tab" onclick="showTab('operators')">Operator Sequence</div>
+</div>
+
+<!-- ── TAB 1: Phase Portrait ───────────────────────────────────────────────── -->
+<div id="tab-phase" class="panel active">
+  <h3>dm³ Toy Model — Contact Manifold M = ℝ²₊ × ℝ</h3>
+  <div class="controls">
+    <div class="ctrl-group">
+      <label>σ (noise) <span class="ctrl-val" id="sigma-val">0.0</span></label>
+      <input type="range" id="sigma" min="0" max="3" step="0.05" value="0">
+    </div>
+    <div class="ctrl-group">
+      <label>Initial r <span class="ctrl-val" id="r0-val">0.4</span></label>
+      <input type="range" id="r0" min="0.05" max="2.2" step="0.05" value="0.4">
+    </div>
+    <div class="ctrl-group">
+      <label>Initial z <span class="ctrl-val" id="z0-val">0.01</span></label>
+      <input type="range" id="z0" min="0.001" max="2.0" step="0.05" value="0.01">
+    </div>
+    <div class="ctrl-group">
+      <label>Time steps</label>
+      <input type="range" id="steps" min="500" max="8000" step="500" value="3000">
+      <span class="ctrl-val" id="steps-val">3000</span>
+    </div>
+    <button class="run-btn" onclick="drawPhase()">▶ Run</button>
+  </div>
+
+  <div class="grid2">
+    <div class="svg-wrap">
+      <svg id="phase-rz" width="100%" viewBox="0 0 420 320"></svg>
+    </div>
+    <div class="svg-wrap">
+      <svg id="phase-lambda" width="100%" viewBox="0 0 420 320"></svg>
+    </div>
+  </div>
+
+  <p style="font-size:0.77rem;color:var(--gray);margin-top:0.8rem;">
+    Equations (4.1)–(4.3): ṙ = r(1−r²)+2(r−1)e⁻ᶻ, θ̇=1, ż = r²−2(r−1)²e⁻ᶻ.
+    Limit cycle Γ₁₂ = {r=1} shown as dashed gold line.
+    λ(z)=−2(1−e⁻ᶻ): neutral at z=0, attracting for z&gt;0 (Prop. 4.2).
+  </p>
+</div>
+
+<!-- ── TAB 2: Threshold Equivalence ──────────────────────────────────────────── -->
+<div id="tab-threshold" class="panel">
+  <h3>Theorem B — κ* ⟺ μ_max &lt; 0 ⟺ τ ∈ (0,∞)</h3>
+  <div class="controls">
+    <div class="ctrl-group">
+      <label>c (contraction rate) <span class="ctrl-val" id="c-val">4.0</span></label>
+      <input type="range" id="c-rate" min="0.1" max="8" step="0.1" value="4.0">
+    </div>
+    <div class="ctrl-group">
+      <label>κ_noise <span class="ctrl-val" id="kn-val">1.0</span></label>
+      <input type="range" id="kn" min="0.1" max="4" step="0.1" value="1.0">
+    </div>
+    <button class="run-btn" onclick="drawThreshold()">▶ Update</button>
+  </div>
+
+  <div class="svg-wrap">
+    <svg id="thresh-svg" width="100%" viewBox="0 0 860 320"></svg>
+  </div>
+
+  <div class="theorem-card" style="margin-top:1rem;">
+    <h4>Theorem B (§3.3)</h4>
+    <p>|κ| ↑ κ* ⟺ μ_max &lt; 0 ⟺ τ = √(c/κ_noise) ∈ (0,∞).<br>
+    κ* is the geometric precursor of τ: curvature accumulation creates the conditions
+    under which stochastic stability becomes meaningful.</p>
+    <div class="status">Proof: Forward → Thm 3.2 (Itô correction). Backward → Thm 3.4 (contradiction). Middle → Lemma 3.3.</div>
+  </div>
+</div>
+
+<!-- ── TAB 3: Coherence Bridge ───────────────────────────────────────────────── -->
+<div id="tab-coherence" class="panel">
+  <h3>Theorem 5.4 — Coherence Bridge: Six Domains, One Contact Normal Form</h3>
+
+  <table class="coherence-table" id="coherence-table"></table>
+
+  <div class="theorem-card" style="margin-top:1.2rem;">
+    <h4>Coherence Bridge Theorem (§5.4)</h4>
+    <p>The six dm³ systems are objects in the same category <strong>dm³</strong> and are related
+    by explicit contact morphisms f_ij : X_i → X_j satisfying f_ij(Γ_i) = Γ_j.
+    The systems are not analogies — they are exact mathematical identities in the category dm³.</p>
+    <div class="status">Contact normal form: ρ̇ = μ_max(1−e^{−βz})ρ + O(ρ²), θ̇ = ω + O(ρ), ż = ω−|μ_max|ρ²e^{−βz}+O(ρ³)</div>
+  </div>
+
+  <div class="svg-wrap" style="margin-top:1rem;">
+    <svg id="coherence-bars" width="100%" viewBox="0 0 860 240"></svg>
+  </div>
+</div>
+
+<!-- ── TAB 4: Lean Proof Status ──────────────────────────────────────────────── -->
+<div id="tab-lean" class="panel">
+  <h3>Lean 4 Proof Status — Honest Sorry Tracker</h3>
+  <p style="font-size:0.8rem;color:var(--gray);margin-bottom:1rem;">
+    All <code style="color:var(--rose)">sorry</code> statements are open proof obligations.
+    None are hidden. Green badges = closed in Lean 4. Red = open.
+  </p>
+
+  <div class="grid2">
+    <div>
+      <div class="theorem-card">
+        <h4>eigenvalue_at_zero <span class="proved-badge">PROVED</span></h4>
+        <p>λ(0) = 0 — neutral stability at embodiment threshold.</p>
+        <div class="status">simp [transverseEigenvalue] — closes immediately.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>eigenvalue_neg_pos_z <span class="proved-badge">PROVED</span></h4>
+        <p>λ(z) &lt; 0 for z &gt; 0 — attracting post-embodiment.</p>
+        <div class="status">mul_neg_of_neg_of_pos + exp_lt_one_of_neg.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>toyModel_tau <span class="proved-badge">PROVED</span></h4>
+        <p>τ = √(4/1) = 2 in closed form.</p>
+        <div class="status">norm_num + Real.sqrt_eq_iff_sq_eq.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>toyModel_epsilon0 <span class="proved-badge">PROVED</span></h4>
+        <p>ε₀ = 2 / (2·(1+2)) = 1/3.</p>
+        <div class="status">norm_num. Closes immediately.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>thm_C_singularity_bijection <span class="proved-badge">PROVED</span></h4>
+        <p>A2, A3 have unique preimages in the singularity correspondence.</p>
+        <div class="status">cases + simp on finite inductive type.</div>
+      </div>
+    </div>
+    <div>
+      <div class="theorem-card">
+        <h4>eigenvalue_limit <span class="sorry-badge">OPEN</span></h4>
+        <p>λ(z) → μ_max as z → ∞.</p>
+        <div class="status">★★☆ — Needs: Real.tendsto_exp_atBot + filter algebra. Estimated 1–2 days.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>thm_A_contact_realization <span class="sorry-badge">OPEN</span></h4>
+        <p>H_diss → S(γ) as β→∞ in distributional sense.</p>
+        <div class="status">★★★★☆ — Requires distribution theory framework in Mathlib. Major effort.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>thm_B full chain <span class="sorry-badge">OPEN</span></h4>
+        <p>|κ|↑κ* ↔ μ_max &lt; 0: requires Floquet theory formalization.</p>
+        <div class="status">★★★★★ — Floquet + SDE in Lean 4 is frontier Mathlib work. Collaboration target.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>OP1: Global Equivalence <span class="sorry-badge">OPEN</span></h4>
+        <p>Every τ-stable dm³ system arises from a fold globally on X.</p>
+        <div class="status">Open problem (§6.3). Requires global contact topology.</div>
+      </div>
+      <div class="theorem-card">
+        <h4>OP2: Higher Resonances <span class="sorry-badge">OPEN</span></h4>
+        <p>k:m correspondence between higher Ak and higher resonances.</p>
+        <div class="status">Open problem (§6.3). Requires Morse theory beyond A3.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lean-block">
+<span class="cm">-- Proved in Lean 4 (no sorry):</span>
+<span class="kw">theorem</span> <span class="nm">eigenvalue_at_zero</span> (sys : <span class="ty">DM3System</span>) :
+    transverseEigenvalue sys <span class="nm">0</span> = <span class="nm">0</span> := <span class="kw">by</span>
+  simp [transverseEigenvalue]  <span class="proved-badge">✓</span>
+
+<span class="kw">theorem</span> <span class="nm">toyModel_epsilon0</span> :
+    stabilityRadius <span class="nm">2</span> <span class="nm">2</span> (by norm_num) (by norm_num) = <span class="nm">1</span> / <span class="nm">3</span> := <span class="kw">by</span>
+  unfold stabilityRadius; norm_num  <span class="proved-badge">✓</span>
+
+<span class="cm">-- Open obligation (sorry documented):</span>
+<span class="kw">theorem</span> <span class="nm">eigenvalue_limit</span> (sys : <span class="ty">DM3System</span>) :
+    Filter.Tendsto (transverseEigenvalue sys) Filter.atTop (nhds sys.mu_max) := <span class="kw">by</span>
+  sorry  <span class="sorry-badge">OPEN ★★☆</span>
+  <span class="cm">-- Strategy: Real.tendsto_exp_atBot, then ring. Est. 1-2 days.</span>
+  </div>
+</div>
+
+<!-- ── TAB 5: Operator Sequence ───────────────────────────────────────────────── -->
+<div id="tab-operators" class="panel">
+  <h3>Operator Sequence G = U ∘ F ∘ K ∘ C and Contact Extension</h3>
+  <div class="svg-wrap">
+    <svg id="op-svg" width="100%" viewBox="0 0 860 280"></svg>
+  </div>
+  <div style="margin-top:1rem;" class="grid2">
+    <div class="theorem-card">
+      <h4>Volume I → Volume II Bridge</h4>
+      <p>Volume I: C→K→F→U is a piecewise-smooth symplectic map on T*X.
+      The fold F preserves ω = dγ∧dp (Theorem 11.1 [Vol I]).<br><br>
+      Volume II: passes to contact extension M = X×ℝ, α = dz−λ,
+      dλ = ω. The fold becomes H_diss = −γVe^{−βz} in the regularized limit β→∞.</p>
+    </div>
+    <div class="theorem-card">
+      <h4>Why Contact Geometry?</h4>
+      <p>Liouville's theorem forbids attractors in symplectic systems on compact manifolds.
+      Contact geometry provides: limit cycle attractors, stochastic stability, and variational
+      structure simultaneously. The contact variable z records accumulated dissipation —
+      the orbit earns its stability by accumulating action.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Utilities ────────────────────────────────────────────────────────────────
+function showTab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'coherence') drawCoherence();
+  if (id === 'operators') drawOperators();
+  if (id === 'threshold') drawThreshold();
+}
+
+// Sync range labels
+['sigma','r0','z0','steps','c-rate','kn'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const label_map = {
+    'sigma': 'sigma-val', 'r0': 'r0-val', 'z0': 'z0-val',
+    'steps': 'steps-val', 'c-rate': 'c-val', 'kn': 'kn-val'
+  };
+  el.addEventListener('input', () => {
+    const lbl = document.getElementById(label_map[id]);
+    if (lbl) lbl.textContent = parseFloat(el.value).toFixed(id==='steps'?0:2);
+  });
+});
+
+// RK4 integrator
+function rk4(f, y, t, dt) {
+  const k1 = f(t, y);
+  const k2 = f(t + dt/2, y.map((yi, i) => yi + dt/2 * k1[i]));
+  const k3 = f(t + dt/2, y.map((yi, i) => yi + dt/2 * k2[i]));
+  const k4 = f(t + dt,   y.map((yi, i) => yi + dt     * k3[i]));
+  return y.map((yi, i) => yi + dt/6 * (k1[i] + 2*k2[i] + 2*k3[i] + k4[i]));
+}
+
+function dm3_rhs(t, state) {
+  const [r, th, z] = state;
+  const ez = Math.exp(-z);
+  return [
+    r*(1 - r*r) + 2*(r-1)*ez,
+    1.0,
+    r*r - 2*(r-1)*(r-1)*ez
+  ];
+}
+
+function integrate(r0, z0, nSteps) {
+  let state = [r0, 0, z0];
+  const dt = 0.015;
+  const rs = [r0], zs = [z0];
+  for (let i = 0; i < nSteps; i++) {
+    state = rk4(dm3_rhs, state, i*dt, dt);
+    rs.push(state[0]);
+    zs.push(state[2]);
+  }
+  return { rs, zs };
+}
+
+// ── Phase Portrait ────────────────────────────────────────────────────────────
+function drawPhase() {
+  const r0    = parseFloat(document.getElementById('r0').value);
+  const z0    = parseFloat(document.getElementById('z0').value);
+  const steps = parseInt(document.getElementById('steps').value);
+
+  const svg = d3.select('#phase-rz');
+  svg.selectAll('*').remove();
+
+  const W = 420, H = 320, m = { t:30, r:15, b:40, l:50 };
+  const w = W - m.l - m.r, h = H - m.t - m.b;
+
+  const g = svg.append('g').attr('transform', `translate(${m.l},${m.t})`);
+
+  const xSc = d3.scaleLinear().domain([0, 2.4]).range([0, w]);
+  const ySc = d3.scaleLinear().domain([-0.5, 14]).range([h, 0]);
+
+  // Axes
+  g.append('g').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(xSc).ticks(5))
+    .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+  g.append('g').call(d3.axisLeft(ySc).ticks(5))
+    .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+
+  g.append('text').attr('x', w/2).attr('y', h+33).attr('text-anchor','middle')
+    .attr('fill','#8a9bb0').attr('font-size','11').text('r');
+  g.append('text').attr('x',-h/2).attr('y',-36).attr('transform','rotate(-90)')
+    .attr('text-anchor','middle').attr('fill','#8a9bb0').attr('font-size','11').text('z');
+  g.append('text').attr('x',w/2).attr('y',-12).attr('text-anchor','middle')
+    .attr('fill','#c9a84c').attr('font-size','11').text('(r, z) projection — Eqs. (4.1)/(4.3)');
+
+  // Gamma
+  g.append('line').attr('x1',xSc(1)).attr('y1',0).attr('x2',xSc(1)).attr('y2',h)
+    .attr('stroke','#c9a84c').attr('stroke-width',2).attr('stroke-dasharray','6,3');
+  g.append('text').attr('x',xSc(1)+4).attr('y',ySc(1)).attr('fill','#c9a84c').attr('font-size','10')
+    .text('Γ₁₂: r=1');
+
+  // Multiple trajectories
+  const ics = [[r0,z0],[0.3,0.01],[1.8,0.1],[0.15,0.5]];
+  const cols = ['#c9a84c','#2a7f7f','#f5f0e8','#8a9bb0'];
+
+  ics.forEach((ic, idx) => {
+    const {rs, zs} = integrate(ic[0], ic[1], steps);
+    const line = d3.line()
+      .x((_,i) => xSc(rs[i]))
+      .y((_,i) => ySc(zs[i]))
+      .defined((_,i) => rs[i] > 0 && rs[i] < 2.5 && zs[i] > -0.5 && zs[i] < 14);
+    g.append('path').datum(rs).attr('d', line)
+      .attr('fill','none').attr('stroke', cols[idx])
+      .attr('stroke-width', idx===0 ? 2 : 1).attr('opacity', 0.8);
+    g.append('circle').attr('cx',xSc(ic[0])).attr('cy',ySc(ic[1]))
+      .attr('r',4).attr('fill',cols[idx]);
+  });
+
+  // λ(z) panel
+  const svg2 = d3.select('#phase-lambda');
+  svg2.selectAll('*').remove();
+  const g2 = svg2.append('g').attr('transform', `translate(${m.l},${m.t})`);
+  const xSc2 = d3.scaleLinear().domain([0, 8]).range([0, w]);
+  const ySc2 = d3.scaleLinear().domain([-2.4, 0.5]).range([h, 0]);
+
+  g2.append('g').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(xSc2).ticks(5))
+    .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+  g2.append('g').call(d3.axisLeft(ySc2).ticks(6))
+    .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+
+  g2.append('text').attr('x',w/2).attr('y',h+33).attr('text-anchor','middle')
+    .attr('fill','#8a9bb0').attr('font-size','11').text('z');
+  g2.append('text').attr('x',w/2).attr('y',-12).attr('text-anchor','middle')
+    .attr('fill','#c9a84c').attr('font-size','11').text('λ(z) = −2(1−e⁻ᶻ) — Prop. 4.2');
+
+  const zArr = d3.range(0, 8.05, 0.05);
+  const lamArr = zArr.map(z => -2*(1 - Math.exp(-z)));
+
+  const line2 = d3.line().x((_,i)=>xSc2(zArr[i])).y((_,i)=>ySc2(lamArr[i]));
+  g2.append('path').datum(zArr).attr('d', line2)
+    .attr('fill','none').attr('stroke','#c9a84c').attr('stroke-width',2.5);
+
+  // Fill attracting region
+  const areaFn = d3.area().x((_,i)=>xSc2(zArr[i])).y0(ySc2(0)).y1((_,i)=>ySc2(lamArr[i]))
+    .defined((_,i)=>zArr[i]>0);
+  g2.append('path').datum(zArr).attr('d', areaFn)
+    .attr('fill','#2a7f7f').attr('opacity',0.15);
+
+  g2.append('line').attr('x1',0).attr('y1',ySc2(0)).attr('x2',w).attr('y2',ySc2(0))
+    .attr('stroke','#8a9bb0').attr('stroke-dasharray','4,3');
+  g2.append('line').attr('x1',0).attr('y1',ySc2(-2)).attr('x2',w).attr('y2',ySc2(-2))
+    .attr('stroke','#c0392b').attr('stroke-dasharray','4,3').attr('stroke-width',1.5);
+  g2.append('text').attr('x',w-5).attr('y',ySc2(-2)-4).attr('text-anchor','end')
+    .attr('fill','#c0392b').attr('font-size','9').text('μ_max=−2');
+  g2.append('line').attr('x1',xSc2(0)).attr('y1',0).attr('x2',xSc2(0)).attr('y2',h)
+    .attr('stroke','#2a7f7f').attr('stroke-dasharray','4,3').attr('stroke-width',1.5);
+  g2.append('text').attr('x',xSc2(0)+4).attr('y',ySc2(0.3)).attr('fill','#2a7f7f').attr('font-size','9')
+    .text('z=0: embodiment threshold');
+}
+
+// ── Threshold Equivalence ────────────────────────────────────────────────────
+function drawThreshold() {
+  const c  = parseFloat(document.getElementById('c-rate').value);
+  const kn = parseFloat(document.getElementById('kn').value);
+  const tau = Math.sqrt(c / kn);
+
+  const svg = d3.select('#thresh-svg');
+  svg.selectAll('*').remove();
+  const W = 860, H = 320, m = {t:35,r:20,b:45,l:55};
+  const panelW = (W - m.l - m.r - 30) / 3;
+
+  // Panel 1: kappa accumulation
+  {
+    const g = svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+    const xSc = d3.scaleLinear().domain([0,10]).range([0,panelW]);
+    const ySc = d3.scaleLinear().domain([0,1.3]).range([H-m.t-m.b,0]);
+    const h = H-m.t-m.b;
+    g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).ticks(4))
+     .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+    g.append('g').call(d3.axisLeft(ySc).ticks(4))
+     .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+    g.append('text').attr('x',panelW/2).attr('y',-15).attr('text-anchor','middle')
+     .attr('fill','#c9a84c').attr('font-size','10').text('(a) |κ(s)| accumulating to κ*');
+
+    const s = d3.range(0,10.02,0.05);
+    const kap = s.map(si => 1*(1-Math.exp(-0.6*si)));
+    const line = d3.line().x((_,i)=>xSc(s[i])).y((_,i)=>ySc(kap[i]));
+    g.append('path').datum(s).attr('d',line).attr('fill','none').attr('stroke','#c9a84c').attr('stroke-width',2);
+    g.append('line').attr('x1',0).attr('y1',ySc(1)).attr('x2',panelW).attr('y2',ySc(1))
+     .attr('stroke','#c0392b').attr('stroke-dasharray','5,3').attr('stroke-width',2);
+    g.append('text').attr('x',panelW-5).attr('y',ySc(1)-5).attr('text-anchor','end')
+     .attr('fill','#c0392b').attr('font-size','9').text('κ*=1');
+
+    const aFn = d3.area().x((_,i)=>xSc(s[i])).y0(ySc(0)).y1((_,i)=>ySc(kap[i]));
+    g.append('path').datum(s).attr('d',aFn).attr('fill','#2a7f7f').attr('opacity',0.13);
+  }
+
+  // Panel 2: mu_max
+  {
+    const g = svg.append('g').attr('transform',`translate(${m.l+panelW+15},${m.t})`);
+    const xSc = d3.scaleLinear().domain([0,3]).range([0,panelW]);
+    const ySc = d3.scaleLinear().domain([-2,2]).range([H-m.t-m.b,0]);
+    const h = H-m.t-m.b;
+    g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).ticks(4))
+     .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+    g.append('g').call(d3.axisLeft(ySc).ticks(5))
+     .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+    g.append('text').attr('x',panelW/2).attr('y',-15).attr('text-anchor','middle')
+     .attr('fill','#c9a84c').attr('font-size','10').text('(b) μ_max vs γ (sign change)');
+
+    const gam = d3.range(0,3.01,0.02);
+    const mu  = gam.map(g => -0.8*g + 0.5);
+    const line = d3.line().x((_,i)=>xSc(gam[i])).y((_,i)=>ySc(mu[i]));
+    g.append('path').datum(gam).attr('d',line).attr('fill','none').attr('stroke','#c9a84c').attr('stroke-width',2);
+    g.append('line').attr('x1',0).attr('y1',ySc(0)).attr('x2',panelW).attr('y2',ySc(0))
+     .attr('stroke','#8a9bb0').attr('stroke-dasharray','4,3');
+    const aStable = d3.area().x((_,i)=>xSc(gam[i])).y0(ySc(0)).y1((_,i)=>ySc(Math.min(mu[i],0)))
+      .defined((_,i)=>mu[i]<0);
+    g.append('path').datum(gam).attr('d',aStable).attr('fill','#c0392b').attr('opacity',0.18);
+    g.append('text').attr('x',panelW*0.75).attr('y',ySc(-0.7)).attr('fill','#c0392b').attr('font-size','9')
+     .text('μ_max<0\n(stable)');
+  }
+
+  // Panel 3: tau
+  {
+    const g = svg.append('g').attr('transform',`translate(${m.l+2*(panelW+15)},${m.t})`);
+    const xSc = d3.scaleLinear().domain([0.1,5]).range([0,panelW]);
+    const ySc = d3.scaleLinear().domain([0,5]).range([H-m.t-m.b,0]);
+    const h = H-m.t-m.b;
+    g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc).ticks(4))
+     .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+    g.append('g').call(d3.axisLeft(ySc).ticks(4))
+     .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+    g.append('text').attr('x',panelW/2).attr('y',-15).attr('text-anchor','middle')
+     .attr('fill','#c9a84c').attr('font-size','10').text(`(c) τ=√(c/κ_noise)  [c=${c.toFixed(1)}, κ_n=${kn.toFixed(1)}]`);
+
+    const cArr = d3.range(0.1,5.01,0.05);
+    [[0.25,'#c9a84c'],[kn,'#2a7f7f'],[4,'#c0392b']].forEach(([kni, col]) => {
+      const tauArr = cArr.map(ci => Math.min(Math.sqrt(ci/kni),4.9));
+      const line = d3.line().x((_,i)=>xSc(cArr[i])).y((_,i)=>ySc(tauArr[i]));
+      g.append('path').datum(cArr).attr('d',line).attr('fill','none').attr('stroke',col).attr('stroke-width',1.8).attr('opacity',0.85);
+    });
+    // Mark current tau
+    if (c <= 5 && tau <= 5) {
+      g.append('circle').attr('cx',xSc(c)).attr('cy',ySc(tau))
+       .attr('r',7).attr('fill','#ffffff').attr('stroke','#c9a84c').attr('stroke-width',2);
+      g.append('text').attr('x',xSc(c)+10).attr('y',ySc(tau)+4)
+       .attr('fill','#ffffff').attr('font-size','10').text(`τ=${tau.toFixed(2)}`);
+    }
+    // Toy model star
+    g.append('text').attr('x',xSc(4)).attr('y',ySc(2)-4).attr('text-anchor','middle')
+     .attr('fill','#c9a84c').attr('font-size','14').text('★');
+    g.append('text').attr('x',xSc(4)+5).attr('y',ySc(2)+10).attr('fill','#8a9bb0').attr('font-size','8')
+     .text('dm³ toy τ=2');
+  }
+}
+
+// ── Coherence Bridge ─────────────────────────────────────────────────────────
+const coherenceData = [
+  { domain: 'HPA allostatic stress',   mu: -0.38, omega: 0.210,    beta: 1.9, kstar: '0.15–0.22' },
+  { domain: 'Neural oscillations',      mu: -0.55, omega: 0.450,    beta: 2.1, kstar: '0.25–0.35' },
+  { domain: 'Circadian clock',          mu: -0.29, omega: 7.27e-5,  beta: 1.6, kstar: '0.08–0.12' },
+  { domain: 'Immune adaptation',        mu: -0.44, omega: 0.180,    beta: 2.0, kstar: '0.11–0.19' },
+  { domain: 'Plasma reconnection',      mu: -0.42, omega: 0.015,    beta: 1.8, kstar: '8–12×10⁻⁴ km⁻¹' },
+  { domain: 'Market volatility',        mu: -0.67, omega: 0.280,    beta: 2.4, kstar: '0.12–0.18' },
+];
+
+function drawCoherence() {
+  const tbody = document.querySelector('#coherence-table');
+  const maxMu = Math.max(...coherenceData.map(d=>Math.abs(d.mu)));
+  const maxOm = Math.max(...coherenceData.map(d=>d.omega));
+  const maxBe = Math.max(...coherenceData.map(d=>d.beta));
+
+  tbody.innerHTML = `<tr>
+    <th>Domain</th><th>μ_max (s⁻¹)</th><th>ω (rad/s)</th><th>β</th><th>κ*</th>
+  </tr>` + coherenceData.map(d => {
+    const muBar = Math.abs(d.mu)/maxMu;
+    const omBar = Math.abs(d.omega)/maxOm;
+    const beBar = d.beta/maxBe;
+    return `<tr>
+      <td class="domain">${d.domain}</td>
+      <td class="bar-cell"><span class="bar" style="width:${muBar*80}px;background:#c0392b"></span>${d.mu.toFixed(2)}</td>
+      <td class="bar-cell"><span class="bar" style="width:${omBar*80}px;background:#2a7f7f"></span>${d.omega < 0.001 ? d.omega.toExponential(2) : d.omega.toFixed(3)}</td>
+      <td class="bar-cell"><span class="bar" style="width:${beBar*80}px;background:#c9a84c"></span>${d.beta.toFixed(1)}</td>
+      <td>${d.kstar}</td>
+    </tr>`;
+  }).join('');
+
+  // Bar chart svg
+  const svg = d3.select('#coherence-bars');
+  svg.selectAll('*').remove();
+  const W = 860, H = 240, m = {t:30,r:20,b:60,l:30};
+  const w = W-m.l-m.r, h = H-m.t-m.b;
+
+  const domains = coherenceData.map(d=>d.domain);
+  const xSc = d3.scaleBand().domain(domains).range([0,w]).padding(0.25);
+  const ySc = d3.scaleLinear().domain([-0.75,0]).range([h,0]);
+
+  const g = svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(xSc))
+   .selectAll('text').attr('fill','#8a9bb0').attr('font-size','9')
+   .attr('transform','rotate(-18)').attr('text-anchor','end');
+  g.append('g').call(d3.axisLeft(ySc).ticks(5))
+   .selectAll('text,line,path').attr('stroke','#8a9bb0').style('fill','#8a9bb0');
+  g.append('line').attr('x1',0).attr('y1',ySc(0)).attr('x2',w).attr('y2',ySc(0))
+   .attr('stroke','#8a9bb0').attr('stroke-width',1);
+
+  coherenceData.forEach(d => {
+    const x = xSc(d.domain);
+    const bw = xSc.bandwidth();
+    g.append('rect')
+     .attr('x',x).attr('y',ySc(d.mu)).attr('width',bw).attr('height',h-ySc(d.mu))
+     .attr('fill','#c0392b').attr('opacity',0.8).attr('rx',2);
+    g.append('text').attr('x',x+bw/2).attr('y',ySc(d.mu)-5).attr('text-anchor','middle')
+     .attr('fill','#c9a84c').attr('font-size','9').text(d.mu.toFixed(2));
+  });
+
+  g.append('text').attr('x',w/2).attr('y',-15).attr('text-anchor','middle')
+   .attr('fill','#c9a84c').attr('font-size','11').text('μ_max across six domains (all negative — Axiom 2)');
+}
+
+// ── Operator Sequence SVG ─────────────────────────────────────────────────────
+function drawOperators() {
+  const svg = d3.select('#op-svg');
+  svg.selectAll('*').remove();
+  const W = 860, H = 280;
+
+  const ops = [
+    { label:'C', desc:'Compression\nX → X_C\nreduces DOF', x:80,  col:'#2a7f7f' },
+    { label:'K', desc:'Curvature\n|κ|↑κ*\ndrive',          x:220, col:'#2a7f7f' },
+    { label:'F', desc:'Fold\nrank(J)↓1\nWhitney A1',       x:360, col:'#c0392b' },
+    { label:'U', desc:'Unfolding\n∇Φ-flow\nnew topology',  x:500, col:'#2a7f7f' },
+    { label:'Hdiss', desc:'Contact diss.\n−γVe^{−βz}\nβ→∞ limit', x:660, col:'#c9a84c' },
+  ];
+
+  ops.forEach((op, i) => {
+    const g = svg.append('g');
+    // Box
+    g.append('rect').attr('x',op.x-55).attr('y',80).attr('width',110).attr('height',100)
+     .attr('fill','#0f2035').attr('stroke',op.col).attr('stroke-width',2).attr('rx',4);
+    // Label
+    g.append('text').attr('x',op.x).attr('y',120).attr('text-anchor','middle')
+     .attr('fill',op.col).attr('font-size',20).attr('font-weight','bold')
+     .attr('font-family','Georgia').text(op.label);
+    // Desc (multi-line)
+    op.desc.split('\n').forEach((line, li) => {
+      g.append('text').attr('x',op.x).attr('y',140+li*14).attr('text-anchor','middle')
+       .attr('fill','#f5f0e8').attr('font-size',9).text(line);
+    });
+    // Arrow
+    if (i < ops.length-1) {
+      svg.append('line')
+        .attr('x1',op.x+55).attr('y1',130).attr('x2',ops[i+1].x-55).attr('y2',130)
+        .attr('stroke','#c9a84c').attr('stroke-width',2.5).attr('marker-end','url(#arr)');
+    }
+  });
+
+  // Arrowhead marker
+  svg.append('defs').append('marker')
+    .attr('id','arr').attr('markerWidth',8).attr('markerHeight',8)
+    .attr('refX',6).attr('refY',3).attr('orient','auto')
+    .append('path').attr('d','M0,0 L6,3 L0,6 Z').attr('fill','#c9a84c');
+
+  // Divider Vol I / Vol II
+  svg.append('line').attr('x1',430).attr('y1',55).attr('x2',430).attr('y2',210)
+   .attr('stroke','#8a9bb0').attr('stroke-dasharray','6,3').attr('stroke-width',1.5);
+  svg.append('text').attr('x',250).attr('y',50).attr('text-anchor','middle')
+   .attr('fill','#8a9bb0').attr('font-size',9).attr('font-style','italic')
+   .text('Volume I: symplectic T*X');
+  svg.append('text').attr('x',600).attr('y',50).attr('text-anchor','middle')
+   .attr('fill','#c9a84c').attr('font-size',9).attr('font-style','italic')
+   .text('Volume II: contact M = X×ℝ');
+
+  // Bottom formula
+  svg.append('text').attr('x',430).attr('y',225).attr('text-anchor','middle')
+   .attr('fill','#c9a84c').attr('font-size',10)
+   .text('G = U ∘ F ∘ K ∘ C  (piecewise-smooth symplectic, Vol.I Thm.11.1)');
+  svg.append('text').attr('x',430).attr('y',245).attr('text-anchor','middle')
+   .attr('fill','#8a9bb0').attr('font-size',9)
+   .text('Contact extension: α = dz−λ, dλ=ω — post-fold stability requires contact geometry (Liouville obstruction)');
+}
+
+// Init
+drawPhase();
+drawCoherence();
+drawOperators();
+</script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAME THEORY · Banned in China · THEORY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04040a;
+  --card: #0e0e00;
+  --accent: #f7c948;
+  --accent2: #ff8c00;
+  --text: #e8e8f0;
+  --muted: #666660;
+  --border: #f7c94818;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+}
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+}
+nav a { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+nav a:hover { color: var(--accent); }
+nav a.active { color: var(--accent); }
+.hero {
+  padding: 6rem 2rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+}
+.banned-stamp {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ff3333;
+  border: 1px solid #ff3333;
+  padding: 0.25rem 0.75rem;
+  margin-bottom: 2rem;
+  transform: rotate(-2deg);
+  display: inline-block;
+}
+.token-symbol {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 80px #f7c94840;
+}
+h1 .sub {
+  display: block;
+  font-size: 0.35em;
+  color: var(--text);
+  letter-spacing: 0.05em;
+  font-weight: 300;
+  margin-top: 0.3em;
+}
+.tagline {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin: 2rem 0 3rem;
+  max-width: 560px;
+  line-height: 1.7;
+}
+.tagline strong { color: var(--text); }
+.cta-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 5rem;
+}
+.btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.8rem 1.6rem;
+  border: 1px solid;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-primary { color: var(--void); background: var(--accent); border-color: var(--accent); }
+.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+.btn-ghost { color: var(--accent); border-color: var(--border); }
+.btn-ghost:hover { background: var(--border); }
+
+/* ── LIVE CHART ── */
+.chart-section {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.chart-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #00ff88;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #00ff88; }
+  50%       { opacity: 0.2; box-shadow: none; }
+}
+.chart-wrapper {
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.buy-bar {
+  margin-top: 1.5rem;
+  background: var(--accent);
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.buy-bar-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--void);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.buy-bar-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  background: var(--void);
+  color: var(--accent);
+  padding: 0.65rem 1.4rem;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  border: 1px solid var(--accent);
+}
+.buy-bar-link:hover { opacity: 0.75; }
+
+/* matrix grid */
+.matrix {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.matrix-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 2.5rem;
+}
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.matrix-cell {
+  background: var(--void);
+  padding: 2rem;
+}
+.matrix-cell h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.matrix-cell p {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.matrix-cell p strong { color: var(--text); }
+@media (max-width: 600px) { .matrix-grid { grid-template-columns: 1fr; } }
+/* operator section */
+.operator {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+.op-block {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  line-height: 2;
+  padding: 2rem;
+  background: #0e0e00;
+  border-left: 3px solid var(--accent);
+}
+.op-block .label { color: var(--accent); }
+.op-block .val   { color: var(--text); }
+.op-block .dim   { color: var(--muted); }
+/* stats row */
+.stats {
+  display: flex;
+  gap: 3rem;
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.stat-item { flex: 1; min-width: 140px; }
+.stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+}
+footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html">← EMMEs</a>
+  <div style="display:flex;gap:2rem">
+    <a href="game-theory.html" class="active">GAME THEORY</a>
+    <a href="probability.html">PROBABILITY</a>
+    <a href="propaganda.html">PROPAGANDA!</a>
+    <a href="ticker.html">TICKER</a>
+    <a href="theory.html">THEORY</a>
+    <a href="collatz-engineering.html">COLLATZ</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="banned-stamp">⛔ Banned in China</div>
+  <div class="token-symbol">THEORY · Solana</div>
+  <h1>GAME<br>THEORY<span class="sub">The fold operator. The commitment point.</span></h1>
+  <p class="tagline">
+    Every market is a game. Every participant has a strategy.
+    <strong>Most strategies lose.</strong>
+    Game theory is the mathematics of why — and the only honest framework
+    for what happens next.
+  </p>
+  <div class="cta-row">
+    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="btn btn-primary">Buy on Coinbook ↗</a>
+    <a href="https://solscan.io/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="btn btn-ghost">Solscan ↗</a>
+    <a href="https://x.com/myemmecoin" target="_blank" class="btn btn-ghost">𝕏 @myemmecoin</a>
+  </div>
+</section>
+<section class="stats">
+  <div class="stat-item">
+    <div class="stat-label">My Holdings</div>
+    <div class="stat-value">1.64M</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Contract</div>
+    <div class="stat-value" style="font-size:0.75rem;font-family:'Space Mono',monospace;margin-top:0.3rem">7xtJR6q...kcoin</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Chain</div>
+    <div class="stat-value">Solana</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-label">Status</div>
+    <div class="stat-value" style="color:#ff3333">Banned in China</div>
+  </div>
+</section>
+
+<!-- ── LIVE CHART ── -->
+<section class="chart-section">
+  <div class="chart-label">
+    <span class="live-dot"></span>
+    Live Chart · Dexscreener · THEORY/SOL
+  </div>
+  <div class="chart-wrapper">
+    <iframe
+      src="https://dexscreener.com/solana/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin?embed=1&theme=dark&trades=0&info=0"
+      style="width:100%;height:500px;border:0"
+      allow="clipboard-write"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="buy-bar">
+    <span class="buy-bar-text">Ready to enter? The fold is irreversible.</span>
+    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="buy-bar-link">Trade THEORY on Coinbook ↗</a>
+  </div>
+</section>
+
+<section class="matrix">
+  <div class="matrix-title">The Game Theory Matrix</div>
+  <div class="matrix-grid">
+    <div class="matrix-cell">
+      <h3>Nash Equilibrium</h3>
+      <p>No player can improve their outcome by unilaterally changing strategy.
+      <strong>Markets find Nash equilibria constantly.</strong> Most traders don't know they're already in one.</p>
+    </div>
+    <div class="matrix-cell">
+      <h3>The Fold Operator (F)</h3>
+      <p>In the TO/TOGT framework, F is the <strong>commitment point</strong> — the moment at which
+      rank-1 Jacobian loss occurs and the trajectory becomes irreversible.
+      Every trade entry is an F event.</p>
+    </div>
+    <div class="matrix-cell">
+      <h3>Dominant Strategy</h3>
+      <p>A strategy that is optimal regardless of what others do.
+      <strong>Holding THEORY is not a dominant strategy.</strong>
+      That's the point. Dominant strategies have no upside.</p>
+    </div>
+    <div class="matrix-cell">
+      <h3>Why Banned in China</h3>
+      <p>Game theory produces agents that optimize for themselves.
+      <strong>Self-optimizing agents are incompatible with central planning.</strong>
+      The mathematics is subversive by construction.</p>
+    </div>
+  </div>
+</section>
+<section class="operator">
+  <div class="op-block">
+    <div><span class="label">Operator &nbsp;&nbsp;&nbsp;</span><span class="val">F (Fold)</span></div>
+    <div><span class="label">Role &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Commitment · irreversibility · rank-1 loss</span></div>
+    <div><span class="label">Normal form </span><span class="val">F_NF(u,v) = (u, v²) &nbsp;</span><span class="dim">[Whitney A₁]</span></div>
+    <div><span class="label">Market form &nbsp;</span><span class="val">entry · position · stop hit</span></div>
+    <div><span class="label">Token &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">GAME THEORY · THEORY · Solana</span></div>
+    <div><span class="label">Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Principia Orthogona · doi.org/10.5281/zenodo.19117399</span></div>
+  </div>
+</section>
+<footer>
+  <p>
+    <a href="index.html">EMMEs</a> ·
+    <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
+    <a href="https://pablogrossi.my.canva.site/tokenomix-twitter-myemmecoin" target="_blank">Tokenomics</a> ·
+    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank">Coinbook ↗</a>
+  </p>
+  <p style="margin-top:0.6rem">Not financial advice. The fold is irreversible.</p>
+</footer>
+</body>
+</html>

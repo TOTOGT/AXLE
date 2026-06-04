@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NVDA · Daily Setup · Jun 1, 2026 · G6 LLC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#07050f;color:#e8e0d0;font-family:'Courier New',monospace;min-height:100vh;line-height:1.6}
+
+/* ── NAV ── */
+.back-nav{background:#0a0814;border-bottom:1px solid #18122a;position:sticky;top:0;z-index:100}
+.back-nav-inner{max-width:960px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:40px}
+.back-link{display:inline-flex;align-items:center;gap:6px;font-size:.7rem;letter-spacing:.08em;color:#443355;text-decoration:none;transition:color .2s}
+.back-link:hover{color:#c9a84c}
+.back-link svg{width:12px;height:12px;flex-shrink:0}
+.nav-right{display:flex;gap:16px;align-items:center}
+.nav-right a{font-size:.68rem;letter-spacing:.06em;color:#2a2040;text-decoration:none;transition:color .2s}
+.nav-right a:hover{color:#c9a84c}
+
+/* ── HERO ── */
+.hero{max-width:960px;margin:0 auto;padding:28px 20px 18px;border-bottom:1px solid #1a1530}
+.hero-tag{font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#443355;margin-bottom:6px}
+.hero h1{font-size:1.4rem;color:#c9a84c;letter-spacing:.04em;margin-bottom:4px}
+.hero-sub{font-size:.75rem;color:#443355}
+.badge{display:inline-block;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
+.badge-long{background:rgba(80,200,120,.1);color:#50c878;border:1px solid rgba(80,200,120,.25)}
+.badge-warn{background:rgba(201,168,76,.1);color:#c9a84c;border:1px solid rgba(201,168,76,.25)}
+.badge-danger{background:rgba(224,90,58,.1);color:#e05a3a;border:1px solid rgba(224,90,58,.25)}
+.badge-cyan{background:rgba(103,232,249,.08);color:#67e8f9;border:1px solid rgba(103,232,249,.2)}
+
+/* ── LAYOUT ── */
+.page{max-width:960px;margin:0 auto;padding:20px 20px 60px}
+
+/* ── SECTION LABEL ── */
+.sec-label{font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:#443355;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.sec-label::after{content:'';flex:1;height:1px;background:#1a1530}
+.sec-title{font-size:1rem;color:#c9a84c;margin-bottom:14px}
+
+/* ── CONTEXT GRID ── */
+.ctx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+.ctx-card{background:#0c0918;border:1px solid #1e1840;border-radius:6px;padding:12px 14px}
+.ctx-label{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#443355;margin-bottom:4px}
+.ctx-val{font-size:1.1rem;font-family:'Georgia',serif;color:#e8e0d0}
+.ctx-sub{font-size:.62rem;color:#2a2040;margin-top:2px}
+
+/* ── CATALYST BANNER ── */
+.catalyst{background:#0c0610;border:1px solid #3a1828;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:.78rem;color:#bbaabb;line-height:1.6}
+.catalyst strong{color:#e8e0d0}
+.catalyst-title{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#e05a3a;margin-bottom:6px}
+
+/* ── PRICE LADDER ── */
+.ladder-wrap{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;margin-bottom:14px}
+.ladder{display:flex;flex-direction:column;gap:3px}
+.lrow{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:4px;font-size:.75rem}
+.lrow.res{background:rgba(224,90,58,.06);border-left:2px solid #e05a3a}
+.lrow.entry{background:rgba(80,200,120,.06);border-left:2px solid #50c878;border:1px solid rgba(80,200,120,.2);border-radius:4px}
+.lrow.now{background:#110e1c;border:1px solid #221c38;border-radius:4px}
+.lrow.sup{background:rgba(74,158,255,.06);border-left:2px solid #4a9eff}
+.lrow.stp{background:rgba(224,90,58,.08);border-left:3px solid #e05a3a}
+.ltag{font-size:.58rem;letter-spacing:.06em;padding:2px 7px;border-radius:2px;min-width:72px;text-align:center;flex-shrink:0}
+.tag-res{background:rgba(224,90,58,.15);color:#e05a3a}
+.tag-entry{background:rgba(80,200,120,.15);color:#50c878}
+.tag-now{background:#1e1840;color:#554466}
+.tag-sup{background:rgba(74,158,255,.12);color:#4a9eff}
+.tag-stp{background:rgba(224,90,58,.15);color:#e05a3a}
+.lprice{font-size:.9rem;font-family:'Georgia',serif;color:#e8e0d0;min-width:70px}
+.lnote{font-size:.7rem;color:#554466;flex:1}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.scenario{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px}
+.scenario.s-long{border-top:2px solid #50c878}
+.scenario.s-short{border-top:2px solid #e05a3a}
+.scenario.s-swing{border-top:2px solid #c9a84c}
+.scen-head{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.scen-head.green{color:#50c878}
+.scen-head.red{color:#e05a3a}
+.scen-head.gold{color:#c9a84c}
+.srow{display:flex;justify-content:space-between;font-size:.72rem;padding:4px 0;border-bottom:1px solid #100d1c}
+.srow:last-child{border-bottom:none}
+.sk{color:#554466}
+.sv{color:#e8e0d0}
+.sv.g{color:#50c878}
+.sv.r{color:#e05a3a}
+.sv.a{color:#c9a84c}
+
+/* ── RR BAR ── */
+.rr-bar{height:5px;background:#110e1c;border-radius:3px;margin:8px 0 4px;overflow:hidden;display:flex}
+.rr-l{background:#e05a3a;height:100%}
+.rr-w{background:#50c878;height:100%}
+
+/* ── RULES ── */
+.rules{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;margin-bottom:14px}
+.rule{display:flex;align-items:flex-start;gap:10px;font-size:.73rem;padding:5px 0;border-bottom:1px solid #100d1c;line-height:1.5}
+.rule:last-child{border-bottom:none}
+.rule-icon{font-size:.7rem;flex-shrink:0;margin-top:2px;min-width:16px;text-align:center}
+.rule strong{color:#e8e0d0}
+.rule span{color:#776688}
+
+/* ── CALC TABLE ── */
+.calc{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;margin-bottom:14px}
+.calc-row{display:flex;justify-content:space-between;font-size:.72rem;padding:4px 0;border-bottom:1px solid #100d1c}
+.calc-row:last-child{border-bottom:none}
+.ck{color:#554466}
+.cv{color:#e8e0d0}
+.cv.g{color:#50c878}
+.cv.r{color:#e05a3a}
+.cv.a{color:#c9a84c}
+
+/* ── CONFLICT BANNER ── */
+.conflict{background:#0c0408;border:1px solid #4a1020;border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.conflict-head{font-size:.72rem;font-weight:500;color:#e05a3a;margin-bottom:6px}
+.conflict-body{font-size:.72rem;color:#886677;line-height:1.55}
+
+/* ── OBSTACLES ── */
+.obstacles{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;margin-bottom:14px}
+.obs-row{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px solid #100d1c;font-size:.72rem}
+.obs-row:last-child{border-bottom:none}
+.obs-price{min-width:56px;color:#e05a3a;font-weight:500;flex-shrink:0}
+.obs-desc{color:#554466;flex:1;line-height:1.4}
+.obs-tag{font-size:.58rem;padding:1px 6px;border-radius:2px;background:rgba(224,90,58,.1);color:#e05a3a;flex-shrink:0}
+
+/* ── VERDICT ── */
+.verdict{background:#080c14;border:1px solid #141030;border-radius:8px;padding:14px;margin-bottom:14px}
+.verdict-head{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#443355;margin-bottom:10px}
+.voption{display:flex;align-items:flex-start;gap:10px;font-size:.73rem;padding:6px 0;border-bottom:1px solid #100d1c;line-height:1.5;color:#776688}
+.voption:last-child{border-bottom:none}
+.voption strong{color:#e8e0d0}
+.vi{font-size:.8rem;flex-shrink:0;margin-top:2px}
+
+/* ── DISTANCE BAR ── */
+.dist-bar-wrap{background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;margin-bottom:14px}
+.dist-track{height:8px;background:#110e1c;border-radius:4px;overflow:hidden;position:relative;margin:8px 0}
+.dist-now{position:absolute;left:0;height:100%;background:#50c878;border-radius:4px}
+.dist-target{position:absolute;height:100%;background:#c9a84c;border-radius:4px}
+.dist-ath{position:absolute;right:0;height:100%;background:#e05a3a;width:3px}
+.dist-markers{display:flex;justify-content:space-between;font-size:.62rem;color:#2a2040;margin-top:4px}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,#1e1840 30%,#1e1840 70%,transparent);margin:24px 0}
+
+/* ── FOOTER ── */
+footer{max-width:960px;margin:0 auto;padding:16px 20px 8px;border-top:1px solid #18122a;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.footer-chain{font-size:.68rem;letter-spacing:.08em;color:#c9a84c;opacity:.35}
+.footer-links{display:flex;gap:14px}
+.footer-links a{font-size:.65rem;color:#2a2040;text-decoration:none}
+.footer-links a:hover{color:#c9a84c}
+.footer-copy{width:100%;font-size:.6rem;color:#1a1428;margin-top:4px}
+
+@media(max-width:600px){.two-col{grid-template-columns:1fr}.ctx-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="back-nav">
+  <div class="back-nav-inner">
+    <a class="back-link" href="33.html">
+      <svg viewBox="0 0 12 12" fill="none"><path d="M7.5 2L3 6l4.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Bot Monitor
+    </a>
+    <div class="nav-right">
+      <a href="index.html">Finance Hub</a>
+      <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE ↗</a>
+      <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Zenodo ↗</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">Daily trade setup · eToro · G6 LLC</div>
+  <h1>NVDA &mdash; Nvidia Corporation
+    <span class="badge badge-long">Long bias</span>
+    <span class="badge badge-warn">Catalyst active</span>
+  </h1>
+  <div class="hero-sub">Monday June 1, 2026 &nbsp;·&nbsp; Open 09:30 ET &nbsp;·&nbsp; $200 account &nbsp;·&nbsp; G = U ∘ F ∘ K ∘ C</div>
+</div>
+
+<div class="page">
+
+  <!-- ── SECTION 1: CONTEXT ── -->
+  <div class="sec-label">Market context</div>
+
+  <div class="ctx-grid">
+    <div class="ctx-card">
+      <div class="ctx-label">Premarket (9:00 AM)</div>
+      <div class="ctx-val">$216.29</div>
+      <div class="ctx-sub">+$5.15 · +2.44% vs Friday</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">Friday close</div>
+      <div class="ctx-val">$211.14</div>
+      <div class="ctx-sub">Friday range $211.13 – $217.86</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">52-week ATH</div>
+      <div class="ctx-val">$236.54</div>
+      <div class="ctx-sub">Hit May 14, 2026</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">VIX</div>
+      <div class="ctx-val">15.32</div>
+      <div class="ctx-sub">–2.67% · complacency zone</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">S&amp;P 500 futures</div>
+      <div class="ctx-val">+0.17%</div>
+      <div class="ctx-sub">7,608 · 9th week of gains</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-label">Oil (Brent)</div>
+      <div class="ctx-val">$94.10</div>
+      <div class="ctx-sub">+3.3% · US–Iran strikes</div>
+    </div>
+  </div>
+
+  <div class="catalyst">
+    <div class="catalyst-title">⚡ Active catalyst — Computex 2026 · Jensen Huang keynote</div>
+    Nvidia unveiled the <strong>RTX Spark Superchip</strong> at Computex Taipei this morning. Huang: <em>"This reinvention of the computer is as big a deal as the reinvention of the phone into what we now know as the smartphone."</em> NVDA +2.4% premarket. <strong>IBM +12%, ServiceNow +10%</strong> riding the AI PC wave. <strong>Intel –5.8%, Qualcomm –9.6%</strong> as the losers. Nasdaq-100 futures +0.34%. Oil +3.9% on fresh US–Iran weekend strikes — headline risk is live but market is looking through it for now.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── SECTION 2: SETUP A — SCALP ── -->
+  <div class="sec-label">Setup A &nbsp;·&nbsp; <span class="badge badge-long" style="margin-left:0">recommended</span></div>
+  <div class="sec-title">5-minute open scalp &nbsp;·&nbsp; target $217.86 → $220</div>
+
+  <div class="ladder-wrap">
+    <div style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#443355;margin-bottom:10px">Price ladder — key levels</div>
+    <div class="ladder">
+      <div class="lrow res">
+        <span class="ltag tag-res">R2 · wall</span>
+        <span class="lprice">$220.00</span>
+        <span class="lnote">Round number · full exit if reached</span>
+      </div>
+      <div class="lrow res">
+        <span class="ltag tag-res">R1 · TP1</span>
+        <span class="lprice">$217.86</span>
+        <span class="lnote">Friday session high · first real wall · sell half here</span>
+      </div>
+      <div class="lrow entry">
+        <span class="ltag tag-entry">Entry zone</span>
+        <span class="lprice">$215–$216.50</span>
+        <span class="lnote">Premarket consolidation · VWAP anchor at open</span>
+      </div>
+      <div class="lrow now">
+        <span class="ltag tag-now">Now (9 AM)</span>
+        <span class="lprice">$216.29</span>
+        <span class="lnote">Premarket · watch first 60 seconds after open</span>
+      </div>
+      <div class="lrow sup">
+        <span class="ltag tag-sup">Support S1</span>
+        <span class="lprice">$213.36</span>
+        <span class="lnote">Predicted fair open · volume support</span>
+      </div>
+      <div class="lrow sup">
+        <span class="ltag tag-sup">Support S2</span>
+        <span class="lprice">$211.14</span>
+        <span class="lnote">Friday close · thesis invalidated below here</span>
+      </div>
+      <div class="lrow stp">
+        <span class="ltag tag-stp">Hard stop</span>
+        <span class="lprice">$213.50</span>
+        <span class="lnote">Below premarket range low · exit immediately, no debate</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="scenario s-long">
+      <div class="scen-head green">↑ Bull scenario — go long</div>
+      <div class="srow"><span class="sk">Trigger</span><span class="sv">Opens ≥$216 · holds 60s</span></div>
+      <div class="srow"><span class="sk">Entry</span><span class="sv">$216.00 – $216.50</span></div>
+      <div class="srow"><span class="sk">TP1 (half position)</span><span class="sv g">$217.86 · +$1.36–1.86</span></div>
+      <div class="srow"><span class="sk">TP2 (remainder)</span><span class="sv g">$220.00 · +$3.50</span></div>
+      <div class="srow"><span class="sk">Stop</span><span class="sv r">$213.50 · –$2.50</span></div>
+      <div class="srow"><span class="sk">R:R</span><span class="sv a">1:0.7 → 1:1.4</span></div>
+      <div class="rr-bar"><div class="rr-l" style="width:42%"></div><div class="rr-w" style="width:58%"></div></div>
+      <div style="font-size:.62rem;color:#443355">Catalyst + 9-week bull run = high probability setup</div>
+    </div>
+    <div class="scenario s-short">
+      <div class="scen-head red">↓ Bear scenario — avoid</div>
+      <div class="srow"><span class="sk">Only trade if</span><span class="sv r">Clean break below $213</span></div>
+      <div class="srow"><span class="sk">TP</span><span class="sv g">$211.14 (Friday close)</span></div>
+      <div class="srow"><span class="sk">Stop</span><span class="sv r">$215.00 above</span></div>
+      <div class="srow"><span class="sk">R:R</span><span class="sv r">1:0.9 — marginal</span></div>
+      <div class="srow"><span class="sk">Verdict</span><span class="sv r">Do not short this</span></div>
+      <div style="height:14px"></div>
+      <div class="rr-bar"><div class="rr-l" style="width:55%"></div><div class="rr-w" style="width:45%"></div></div>
+      <div style="font-size:.62rem;color:#443355">Shorting into a fresh catalyst = low probability, high risk</div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <div style="font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin-bottom:10px">Open rules — non-negotiable</div>
+    <div class="rule"><span class="rule-icon" style="color:#c9a84c">⏱</span><span><strong>Wait 60 seconds.</strong> Do not click buy at the bell. Watch the first candle close — gap-and-crap reversals happen in the first 30 seconds.</span></div>
+    <div class="rule"><span class="rule-icon" style="color:#4a9eff">◈</span><span><strong>VWAP is your guide.</strong> If price opens above premarket VWAP (~$216) and holds for 2 candles, the long is on. Drops below immediately → step aside.</span></div>
+    <div class="rule"><span class="rule-icon" style="color:#e05a3a">✕</span><span><strong>$213.50 stops everything.</strong> If NVDA prints $213.50, close the trade. No averaging. No hoping. Out.</span></div>
+    <div class="rule"><span class="rule-icon" style="color:#50c878">✓</span><span><strong>Take partial at $217.86.</strong> Sell half at Friday's high. Move stop to breakeven on the rest. Ride toward $220 only if volume is expanding.</span></div>
+    <div class="rule"><span class="rule-icon" style="color:#c9a84c">⌛</span><span><strong>Exit by 9:35 regardless.</strong> If it hasn't moved in 5 minutes, the setup failed. Close and walk away. Do not convert a scalp into a hold.</span></div>
+  </div>
+
+  <div class="calc">
+    <div style="font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#443355;margin-bottom:10px">Position sizing — $200 account · 1–2% target</div>
+    <div class="calc-row"><span class="ck">Account size</span><span class="cv">$200.00</span></div>
+    <div class="calc-row"><span class="ck">Max risk (1% of account)</span><span class="cv r">$2.00</span></div>
+    <div class="calc-row"><span class="ck">Stop distance ($216 → $213.50)</span><span class="cv">$2.50 per share</span></div>
+    <div class="calc-row"><span class="ck">Shares to risk exactly $2.00</span><span class="cv a">0.8 shares (eToro fractional)</span></div>
+    <div class="calc-row"><span class="ck">Position value</span><span class="cv">~$173 (0.8 × $216.50)</span></div>
+    <div class="calc-row"><span class="ck">TP1 hit — 0.8 shares × ($217.86 – $216.50)</span><span class="cv g">+$1.09</span></div>
+    <div class="calc-row"><span class="ck">TP2 hit — 0.4 shares × ($220 – $216.50)</span><span class="cv g">+$1.40</span></div>
+    <div class="calc-row"><span class="ck">Total if both TPs hit</span><span class="cv g">+$2.49 · +1.25% account ✓</span></div>
+    <div class="calc-row"><span class="ck">If stopped at $213.50</span><span class="cv r">–$2.00 · account = $198</span></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── SECTION 3: SETUP B — SWING ── -->
+  <div class="sec-label">Setup B &nbsp;·&nbsp; <span class="badge badge-warn" style="margin-left:0">different trade — different rules</span></div>
+  <div class="sec-title">Swing trade to $234 &nbsp;·&nbsp; 3–7 day hold</div>
+
+  <div class="conflict">
+    <div class="conflict-head">⚠ Target conflict — $234 requires a completely different plan</div>
+    <div class="conflict-body">$234 is $17.71 above current price — an 8.2% move from $216.29. The ATH is $236.54, only $2.54 above your target. Every holder from the May 14 top is sitting on a loss and will sell near that level (overhead supply). This is a swing trade measured in days, not a 5-minute scalp. Do not mix the two: buying for a scalp and then holding because it hasn't hit $234 yet is how a planned $2 loss becomes a $15 loss when a headline drops at 2 PM.</div>
+  </div>
+
+  <div class="dist-bar-wrap">
+    <div style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#443355;margin-bottom:6px">Where $234 sits relative to ATH</div>
+    <div class="dist-track" style="position:relative;height:8px;background:#110e1c;border-radius:4px;overflow:visible">
+      <div style="position:absolute;left:0;height:100%;width:60%;background:#1e1840;border-radius:4px"></div>
+      <div style="position:absolute;left:60%;height:100%;width:34%;background:#c9a84c44;border-radius:0"></div>
+      <div style="position:absolute;right:0;top:-2px;height:12px;width:3px;background:#e05a3a;border-radius:1px"></div>
+    </div>
+    <div class="dist-markers">
+      <span>52w Low $135</span>
+      <span style="color:#50c878">Now $216 (60%)</span>
+      <span style="color:#c9a84c">Target $234</span>
+      <span style="color:#e05a3a">ATH $236.54</span>
+    </div>
+  </div>
+
+  <div class="obstacles">
+    <div style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#443355;margin-bottom:10px">Walls between $216 and $234</div>
+    <div class="obs-row">
+      <span class="obs-price">$217.86</span>
+      <span class="obs-desc">Friday session high. Many limit sell orders parked here. Must close above this on day 1.</span>
+      <span class="obs-tag">Wall 1</span>
+    </div>
+    <div class="obs-row">
+      <span class="obs-price">$220.00</span>
+      <span class="obs-desc">Round-number psychological resistance. Needs strong follow-through volume to breach.</span>
+      <span class="obs-tag">Wall 2</span>
+    </div>
+    <div class="obs-row">
+      <span class="obs-price">$236.54</span>
+      <span class="obs-desc">All-time high (May 14). Every buyer above $234 is underwater. Massive overhead supply ceiling — your $234 target sits directly in this zone.</span>
+      <span class="obs-tag">ATH ceiling</span>
+    </div>
+    <div class="obs-row">
+      <span class="obs-price">Macro</span>
+      <span class="obs-desc">US–Iran exchanged strikes over the weekend. Oil +3.9%. Geopolitical headline risk is live every night you hold. Any escalation gaps you down at open.</span>
+      <span class="obs-tag">Overnight risk</span>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="scenario s-swing">
+      <div class="scen-head gold">↑ Swing long — $234 plan</div>
+      <div class="srow"><span class="sk">Entry</span><span class="sv">~$216 at open</span></div>
+      <div class="srow"><span class="sk">Target</span><span class="sv a">$234.00</span></div>
+      <div class="srow"><span class="sk">Distance</span><span class="sv">+$18 · +8.3%</span></div>
+      <div class="srow"><span class="sk">Stop</span><span class="sv r">$211.00 (Friday close)</span></div>
+      <div class="srow"><span class="sk">Stop distance</span><span class="sv r">–$5.00 per share</span></div>
+      <div class="srow"><span class="sk">Shares (risk $2.00)</span><span class="sv">0.4 shares only</span></div>
+      <div class="srow"><span class="sk">Hold period</span><span class="sv a">3–7 days</span></div>
+      <div class="srow"><span class="sk">Profit if target hit</span><span class="sv g">+$7.20 · +3.6% account</span></div>
+      <div class="srow"><span class="sk">Overnight exposure</span><span class="sv r">YES — Iran/oil/macro</span></div>
+      <div class="rr-bar"><div class="rr-l" style="width:22%"></div><div class="rr-w" style="width:78%"></div></div>
+      <div style="font-size:.62rem;color:#443355">R:R = 1:3.6 is excellent IF you can hold and accept gaps</div>
+    </div>
+    <div class="scenario" style="border-top:2px solid #2a2040">
+      <div class="scen-head" style="color:#554466">Day-by-day conditions to keep holding</div>
+      <div class="srow"><span class="sk">Day 1</span><span class="sv">Must close above $217.86</span></div>
+      <div class="srow"><span class="sk">Day 2</span><span class="sv">Must close above $220</span></div>
+      <div class="srow"><span class="sk">Day 3–5</span><span class="sv">Volume must stay above avg</span></div>
+      <div class="srow"><span class="sk">Stop trail</span><span class="sv">Move up with each day's low</span></div>
+      <div class="srow"><span class="sk">Exit trigger</span><span class="sv r">Any close below prev day low</span></div>
+      <div class="srow"><span class="sk">News to watch</span><span class="sv r">Iran ceasefire update daily</span></div>
+      <div class="srow"><span class="sk">Ex-div date</span><span class="sv a">Jun 4 (Thu) · –$0.25/share</span></div>
+      <div class="srow"><span class="sk">Next earnings</span><span class="sv">Aug 26, 2026</span></div>
+      <div style="height:5px"></div>
+      <div style="font-size:.62rem;color:#443355">If Day 1 closes below $217.86 → exit. Thesis failed.</div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="verdict-head">Choose one — do not mix them</div>
+    <div class="voption">
+      <span class="vi" style="color:#50c878">A.</span>
+      <span><strong>Scalp (Setup A).</strong> Buy ~$216, sell at $217.86, exit by 9:35. Hit your 1% target on $200, protect the account, log the win. Clean and done in 5 minutes.</span>
+    </div>
+    <div class="voption">
+      <span class="vi" style="color:#c9a84c">B.</span>
+      <span><strong>Swing to $234 (Setup B).</strong> Buy at open with 0.4 shares, stop at $211, hold 3–7 days, accept overnight Iran/oil risk. Only if Day 1 closes above $217.86, otherwise exit.</span>
+    </div>
+    <div class="voption">
+      <span class="vi" style="color:#e05a3a">✕</span>
+      <span><strong>Do not</strong> start with Setup A intent and then hold because $234 hasn't been hit. A planned $2 loss becomes a $15 loss if a headline drops while you're waiting.</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── NOTES ── -->
+  <div class="sec-label">Session notes</div>
+  <div style="background:#0c0918;border:1px solid #1e1840;border-radius:8px;padding:14px;font-size:.75rem;color:#443355;min-height:80px">
+    <!-- Add your post-trade notes here -->
+    <span style="color:#221c38;font-style:italic">No notes yet — add after close.</span>
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-chain">C → K → F → U → ∞</span>
+  <div class="footer-links">
+    <a href="33.html">Bot Monitor</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a>
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Series Root</a>
+  </div>
+  <div class="footer-copy">© G6 LLC · Newark, NJ · 2026 · NVDA Daily Setup · Jun 1 2026 · MIT (code) · CC BY-NC-ND 4.0 (content)</div>
+</footer>
+
+</body>
+</html>

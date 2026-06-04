@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Voynich Manuscript — CAELA Lesson Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1e38;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f7f2e8;
+    --cream-dark: #ede4d0;
+    --ink: #1a1410;
+    --muted: #5a4e3e;
+    --correct: #1b4332;
+    --correct-bg: #d8f3dc;
+    --wrong: #7d1a1a;
+    --wrong-bg: #ffe0e0;
+    --selected-bg: #fff3cd;
+    --selected: #7a5c00;
+
+    /* WIPPEA stage colors */
+    --warmup:   #2d6a4f;
+    --intro:    #1a5276;
+    --present:  #6c3483;
+    --guided:   #784212;
+    --comm:     #1a6b5a;
+    --eval:     #922b21;
+    --apply:    #1f618d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'EB Garamond', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--navy);
+    color: var(--cream);
+    text-align: center;
+    padding: 3rem 2rem 2rem;
+    position: relative; overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,168,76,0.04) 40px, rgba(201,168,76,0.04) 41px);
+  }
+  .header-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.8rem;
+  }
+  .site-header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.7rem, 5vw, 2.8rem);
+    font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 0.5rem; position: relative;
+  }
+  .header-sub { font-style: italic; color: var(--gold-light); font-size: 1.05rem; margin-bottom: 1.2rem; }
+  .gold-rule { width: 80px; height: 2px; background: var(--gold); margin: 1.2rem auto; opacity: 0.7; }
+  .header-meta {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem;
+    font-size: 0.8rem; font-family: 'Cinzel', serif; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ── NAV ── */
+  .lesson-nav {
+    background: var(--navy); border-top: 1px solid rgba(201,168,76,0.3);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .lesson-nav ul { list-style: none; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .lesson-nav ul::-webkit-scrollbar { display: none; }
+  .lesson-nav li a {
+    display: block; padding: 0.7rem 1.1rem;
+    color: rgba(255,255,255,0.65); text-decoration: none;
+    font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.1em;
+    text-transform: uppercase; white-space: nowrap;
+    border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s;
+  }
+  .lesson-nav li a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── SECTIONS ── */
+  .lesson-section { padding: 3rem 0 2rem; border-bottom: 1px solid var(--cream-dark); }
+  p { margin-bottom: 1rem; }
+  p:last-child { margin-bottom: 0; }
+  strong { font-weight: 600; color: var(--navy); }
+  em { font-style: italic; }
+  ul, ol { padding-left: 1.4rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.3rem; }
+
+  /* ── SECTION HEADER ── */
+  .section-header { margin-bottom: 1.5rem; }
+  .section-header h2 {
+    font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 600;
+    color: var(--navy); line-height: 1.3;
+  }
+  .section-meta {
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; flex-wrap: wrap;
+  }
+  .badge {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 2px;
+  }
+  .badge-navy { background: var(--navy); color: var(--gold); }
+  .badge-time { background: var(--cream-dark); color: var(--muted); }
+
+  /* ── CAELA INFO BOX ── */
+  .caela-box {
+    background: var(--navy); color: var(--cream);
+    border-radius: 4px; padding: 1.5rem; margin: 1.5rem 0;
+  }
+  .caela-box-title {
+    font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.8rem;
+  }
+  .caela-box p, .caela-box li { font-size: 0.92rem; line-height: 1.7; }
+  .caela-box strong { color: var(--gold-light); }
+
+  /* ── LESSON PLAN HEADER BLOCK ── */
+  .lp-header {
+    background: #fff; border: 1px solid var(--cream-dark);
+    border-top: 4px solid var(--navy); border-radius: 3px;
+    padding: 1.5rem; margin: 1.5rem 0;
+  }
+  .lp-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;
+  }
+  .lp-field label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.2rem;
+  }
+  .lp-field p { font-size: 0.95rem; margin: 0; }
+  .lp-objective {
+    background: var(--cream); border-left: 3px solid var(--gold);
+    padding: 0.9rem 1.1rem; border-radius: 0 3px 3px 0; margin-top: 0.5rem;
+  }
+  .lp-objective label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.4rem;
+  }
+  .lp-objective p { font-size: 0.95rem; margin: 0; font-style: italic; }
+  .enabling-skills { margin-top: 1rem; }
+  .enabling-skills label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.4rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .skill-tag {
+    background: var(--cream-dark); color: var(--ink); font-size: 0.82rem;
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ── WIPPEA STAGE CARDS ── */
+  .wippea-strip {
+    display: flex; gap: 4px; margin: 1.5rem 0; overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .wippea-strip::-webkit-scrollbar { height: 4px; }
+  .wippea-strip::-webkit-scrollbar-track { background: var(--cream-dark); }
+  .wippea-strip::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+  .ws-item {
+    flex-shrink: 0; padding: 6px 12px; border-radius: 3px;
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #fff; text-align: center;
+  }
+  .ws-item.active { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .ws-warmup   { background: var(--warmup); }
+  .ws-intro    { background: var(--intro); }
+  .ws-present  { background: var(--present); }
+  .ws-guided   { background: var(--guided); }
+  .ws-comm     { background: var(--comm); }
+  .ws-eval     { background: var(--eval); }
+  .ws-apply    { background: var(--apply); }
+
+  .stage-card {
+    border-radius: 4px; margin: 1.5rem 0; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .stage-header {
+    padding: 0.75rem 1.25rem; color: #fff;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .stage-header.warmup   { background: var(--warmup); }
+  .stage-header.intro    { background: var(--intro); }
+  .stage-header.present  { background: var(--present); }
+  .stage-header.guided   { background: var(--guided); }
+  .stage-header.comm     { background: var(--comm); }
+  .stage-header.eval     { background: var(--eval); }
+  .stage-header.apply    { background: var(--apply); }
+  .stage-label {
+    font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.15em;
+    text-transform: uppercase; opacity: 0.85;
+  }
+  .stage-title { font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 600; }
+  .stage-time { font-family: 'Cinzel', serif; font-size: 0.68rem; opacity: 0.8; margin-left: auto; }
+  .stage-body { background: #fff; padding: 1.25rem 1.5rem; }
+  .stage-body p, .stage-body li { font-size: 0.94rem; }
+  .stage-body ul, .stage-body ol { margin-bottom: 0.75rem; }
+  .stage-purpose {
+    font-size: 0.85rem; font-style: italic; color: var(--muted);
+    border-bottom: 1px solid var(--cream-dark); padding-bottom: 0.75rem; margin-bottom: 1rem;
+  }
+  .stage-purpose strong { color: var(--muted); }
+  .grouping {
+    display: inline-block; background: var(--cream); border: 1px solid var(--cream-dark);
+    border-radius: 2px; font-size: 0.78rem; padding: 2px 8px; margin-bottom: 0.5rem;
+    font-family: 'Cinzel', serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .activity-block { margin: 1rem 0; }
+  .activity-block h4 {
+    font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--navy); margin-bottom: 0.4rem;
+  }
+  .timing-note {
+    font-size: 0.8rem; color: var(--muted); font-style: italic; margin-top: 0.3rem;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-intro {
+    font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin: 1.5rem 0 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .quiz-intro::before, .quiz-intro::after { content: ''; flex: 1; height: 1px; background: var(--cream-dark); }
+  .progress-wrap { margin-bottom: 1.2rem; }
+  .progress-label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+    display: flex; justify-content: space-between; margin-bottom: 0.3rem;
+  }
+  .progress-bar { height: 4px; background: var(--cream-dark); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s; }
+  .q-card {
+    background: #fff; border: 1px solid var(--cream-dark); border-radius: 4px;
+    padding: 1.2rem; margin-bottom: 0.9rem; transition: border-color 0.3s;
+  }
+  .q-card.correct { border-color: var(--correct); background: var(--correct-bg); }
+  .q-card.wrong   { border-color: var(--wrong); background: var(--wrong-bg); }
+  .q-meta { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .q-num { font-family: 'Cinzel', serif; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; }
+  .q-level {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; padding: 2px 6px;
+    border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .q-level.recall   { background: #e8f4fd; color: #1a5276; }
+  .q-level.analysis { background: #fef9e7; color: #7d6608; }
+  .q-level.critical { background: #fdedec; color: #7b241c; }
+  .q-text { font-size: 1rem; margin-bottom: 0.9rem; line-height: 1.6; }
+  .q-source { font-size: 0.78rem; font-style: italic; color: var(--muted); margin-bottom: 0.7rem; }
+  .options { display: flex; flex-direction: column; gap: 0.45rem; }
+  .opt {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.55rem 0.85rem; border: 1px solid var(--cream-dark);
+    border-radius: 3px; cursor: pointer; font-size: 0.9rem; background: var(--cream);
+    transition: background 0.15s, border-color 0.15s; line-height: 1.5;
+  }
+  .opt:hover:not(.disabled) { border-color: var(--gold); background: #fff; }
+  .opt.selected  { border-color: var(--selected); background: var(--selected-bg); }
+  .opt.correct-ans { border-color: var(--correct); background: var(--correct-bg); }
+  .opt.wrong-ans   { border-color: var(--wrong); background: var(--wrong-bg); }
+  .opt.disabled { cursor: default; }
+  .opt-letter {
+    font-family: 'Cinzel', serif; font-size: 0.68rem; color: var(--muted);
+    min-width: 16px; margin-top: 2px; font-weight: 600;
+  }
+  .feedback {
+    margin-top: 0.7rem; font-size: 0.87rem; padding: 0.55rem 0.85rem;
+    border-radius: 3px; display: none; font-style: italic; line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: #b7e4c7; color: #1b4332; }
+  .feedback.wrong   { background: #f5c6cb; color: #721c24; }
+  textarea.open-q {
+    width: 100%; min-height: 85px; padding: 0.6rem 0.85rem;
+    border: 1px solid var(--cream-dark); border-radius: 3px;
+    font-family: 'EB Garamond', Georgia, serif; font-size: 0.95rem;
+    background: var(--cream); resize: vertical; line-height: 1.6; margin-top: 0.5rem;
+  }
+  textarea.open-q:focus { outline: 2px solid var(--gold); border-color: transparent; }
+  .btn-row { display: flex; gap: 0.7rem; margin-top: 1.2rem; flex-wrap: wrap; }
+  .btn {
+    padding: 0.55rem 1.3rem; border-radius: 3px;
+    font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; border: none; transition: background 0.15s;
+  }
+  .btn-primary { background: var(--navy); color: var(--gold); }
+  .btn-primary:hover { background: #1a3260; }
+  .btn-primary:disabled { opacity: 0.5; cursor: default; }
+  .btn-ghost { background: transparent; color: var(--navy); border: 1px solid var(--cream-dark); }
+  .btn-ghost:hover { background: var(--cream-dark); }
+  .score-card {
+    background: var(--navy); color: var(--cream); border-radius: 4px;
+    padding: 1.1rem 1.4rem; margin-top: 1.2rem; display: none;
+  }
+  .score-card.show { display: block; }
+  .score-num { font-family: 'Cinzel', serif; font-size: 2rem; color: var(--gold); display: block; }
+  .score-label { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+
+  /* ── COMP TABLE ── */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1.2rem 0; background: #fff; }
+  .comp-table th {
+    background: var(--navy); color: var(--gold); font-family: 'Cinzel', serif;
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.55rem 0.85rem; text-align: left;
+  }
+  .comp-table td { padding: 0.5rem 0.85rem; border-bottom: 1px solid var(--cream-dark); vertical-align: top; }
+  .comp-table tr:last-child td { border-bottom: none; }
+  .comp-table tr:nth-child(even) td { background: var(--cream); }
+  .verdict { font-weight: 600; }
+  .refuted    { color: var(--wrong); }
+  .unresolved { color: #7a5c00; }
+
+  /* ── MATERIALS BOX ── */
+  .materials {
+    background: var(--cream-dark); border-radius: 3px; padding: 1rem 1.2rem; margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .materials strong {
+    font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.12em;
+    text-transform: uppercase; display: block; margin-bottom: 0.4rem; color: var(--muted);
+  }
+
+  /* ── REFLECTION ── */
+  .reflection {
+    border: 1px dashed var(--gold); border-radius: 3px; padding: 1rem 1.2rem; margin: 1rem 0;
+    background: #fffdf5; font-size: 0.92rem;
+  }
+  .reflection strong { display: block; margin-bottom: 0.3rem; font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+
+  /* ── SOURCES ── */
+  .sources { background: var(--navy); color: rgba(255,255,255,0.7); font-size: 0.82rem; padding: 1.4rem; border-radius: 4px; margin: 1.5rem 0; }
+  .sources-title { font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.65rem; }
+  .sources ol { padding-left: 1.2rem; }
+  .sources li { margin-bottom: 0.35rem; }
+  footer { text-align: center; padding: 2rem 1rem; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--cream-dark); font-style: italic; }
+
+  @media (max-width: 580px) {
+    .lp-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav style="background:#1a2744;padding:.65rem 2rem;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:2px solid rgba(201,168,76,.35)">
+  <a href="index.html" style="color:#c9a84c;font-family:sans-serif;font-weight:bold;font-size:.85rem;letter-spacing:.1em;text-decoration:none;">HOUR HOUSE &middot; PRINCIPIA ORTHOGONA</a>
+  <ul style="display:flex;gap:1rem;list-style:none;flex-wrap:wrap;align-items:center;margin:0;padding:0">
+    <li><a href="index.html#lessons" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">All Lessons</a></li>
+    <li><a href="index.html#research" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">Research</a></li>
+    <li><a href="index.html#support" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">Support Hour House</a></li>
+    <li><a href="Lesson07_Alpha_Submission_v2.html" style="color:#aaa;text-decoration:none;font-family:sans-serif;font-size:.78rem;">&larr; 07: Your First Alpha</a></li>
+  </ul>
+</nav>
+
+
+<header class="site-header">
+  <p class="header-eyebrow">CAELA Guide for Adult ESL · Effective Lesson Planning (III-C)</p>
+  <h1>The Voynich Manuscript</h1>
+  <p class="header-sub">The most mysterious book in the world — A WIPPEA Lesson Plan</p>
+  <div class="gold-rule"></div>
+  <div class="header-meta">
+    <span>⏱ 120 minutes</span>
+    <span>📋 WIPPEA framework</span>
+    <span>🎯 B2 – C1 (Adult ESL)</span>
+    <span>🔎 3 primary sources</span>
+  </div>
+</header>
+
+<nav class="lesson-nav">
+  <ul>
+    <li><a href="#plan">Lesson Plan</a></li>
+    <li><a href="#warmup">Warm-Up</a></li>
+    <li><a href="#intro">Introduction</a></li>
+    <li><a href="#presentation">Presentation</a></li>
+    <li><a href="#guided">Guided Practice</a></li>
+    <li><a href="#comm">Communicative Practice</a></li>
+    <li><a href="#eval">Evaluation</a></li>
+    <li><a href="#apply">Application</a></li>
+  </ul>
+</nav>
+
+<main class="container">
+
+<!-- ═══════════════ CAELA NOTE -->
+<section class="lesson-section" id="plan">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">CAELA Framework</span>
+    </div>
+    <h2>Lesson at a Glance</h2>
+  </div>
+
+  <div class="caela-box">
+    <span class="caela-box-title">About This Framework — CAELA III-C</span>
+    <p>This lesson follows the <strong>WIPPEA</strong> model from the CAELA Guide for Adult ESL Trainers (III-C: Effective Lesson Planning), based on Madeline Hunter's Direct Instruction Model (1982). The seven stages are: <strong>Warm-Up/Review → Introduction → Presentation → Guided Practice → Communicative Practice → Evaluation → Application</strong>. Each stage has a clear purpose, appropriate grouping strategy, activity type, and timing. The lesson objective is written in the CAELA format: <em>"Students will be able to [communicative task] in order to [real-life purpose] as evidenced by [evaluation method]."</em></p>
+  </div>
+
+  <!-- WIPPEA visual strip -->
+  <div class="wippea-strip">
+    <div class="ws-item ws-warmup">Warm-Up<br>10 min</div>
+    <div class="ws-item ws-intro">Introduction<br>10 min</div>
+    <div class="ws-item ws-present">Presentation<br>25 min</div>
+    <div class="ws-item ws-guided">Guided<br>Practice<br>20 min</div>
+    <div class="ws-item ws-comm">Communicative<br>Practice<br>20 min</div>
+    <div class="ws-item ws-eval">Evaluation<br>20 min</div>
+    <div class="ws-item ws-apply">Application<br>15 min</div>
+  </div>
+
+  <!-- LESSON PLAN HEADER -->
+  <div class="lp-header">
+    <div class="lp-grid">
+      <div class="lp-field"><label>Topic</label><p>The Voynich Manuscript: History, mystery, and methods of inquiry</p></div>
+      <div class="lp-field"><label>Level</label><p>High Intermediate – Advanced (B2–C1 CEFR)</p></div>
+      <div class="lp-field"><label>Language Skill Focus</label><p>Reading, Listening, Speaking (with integrated Writing in Application)</p></div>
+      <div class="lp-field"><label>Total Time</label><p>120 minutes</p></div>
+      <div class="lp-field"><label>Class Size</label><p>10–25 adult learners</p></div>
+      <div class="lp-field"><label>Grouping Strategies</label><p>Individual → Pairs → Small groups → Whole class</p></div>
+    </div>
+
+    <div class="lp-objective">
+      <label>Lesson Objective (CAELA format)</label>
+      <p>Students will be able to <strong>discuss competing theories about an unsolved historical mystery</strong> using evidence from multiple sources, <strong>in order to participate in academic conversations and evaluate arguments critically</strong>, as evidenced by <strong>a structured group discussion and a written evaluation of one theory using hedging language appropriately</strong>.</p>
+    </div>
+
+    <div class="enabling-skills">
+      <label>Enabling Skills</label>
+      <div class="skill-tags">
+        <span class="skill-tag">Vocabulary: cipher, manuscript, vellum, cryptographer, decipher, herbal, conjecture, provenience</span>
+        <span class="skill-tag">Grammar: Hedging modals (may, might, could, appears to)</span>
+        <span class="skill-tag">Grammar: Passive voice for academic reporting</span>
+        <span class="skill-tag">Reading: Skimming and scanning academic summaries</span>
+        <span class="skill-tag">Speaking: Agreeing / disagreeing with evidence</span>
+        <span class="skill-tag">Writing: Topic sentence + evidence + hedge</span>
+      </div>
+    </div>
+
+    <div class="materials" style="margin-top:1rem;">
+      <strong>Materials &amp; Equipment</strong>
+      This web page (all activities embedded) · Projector or shared screen for video · Whiteboard / markers · Handout: Hedging language reference card (see Application stage) · Student devices (optional, for quiz)
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ WARM-UP -->
+<section class="lesson-section" id="warmup">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 1</span>
+      <span class="badge badge-time">0:00 – 0:10 · 10 min</span>
+    </div>
+    <h2>Warm-Up / Review</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header warmup">
+      <div>
+        <div class="stage-label">WIPPEA Stage 1</div>
+        <div class="stage-title">Warm-Up / Review</div>
+      </div>
+      <span class="stage-time">10 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Activate students' prior knowledge; establish the communicative context; generate interest and motivation before new material is introduced.</p>
+
+      <span class="grouping">Pairs → Whole class</span>
+
+      <div class="activity-block">
+        <h4>Activity: Round Robin — "The Traveler" analogy</h4>
+        <p>Open with the CAELA traveler analogy to frame lesson planning and research approaches. Tell students:</p>
+        <blockquote style="border-left:3px solid var(--gold); padding: 0.5rem 1rem; margin: 0.75rem 0; font-style: italic; color: var(--muted); font-size:0.92rem;">
+          "Imagine three people trying to solve a mystery. Person A has read everything, has a full plan, and knows exactly where to start. Person B has a rough idea and one lead to follow. Person C woke up this morning and decided to start solving today. Which person are you when you face a problem you've never seen before?"
+        </blockquote>
+        <p>Students discuss in pairs (2 min), then share (2 min whole class). Teacher briefly links all three styles to how the manuscript has been researched.</p>
+      </div>
+
+      <div class="activity-block">
+        <h4>Prior Knowledge Activation — Quick Think</h4>
+        <p>Ask the whole class (elicit, do not lecture): <em>"Has anyone heard of the Voynich Manuscript? What do you know about unbreakable codes or undeciphered languages?"</em> Write key student ideas on the board. These will be revisited at the Evaluation stage.</p>
+      </div>
+
+      <div class="reflection">
+        <strong>Comprehension Check</strong>
+        Ask: "What's one thing you already know, and one thing you want to find out today?" — quick think-aloud, no writing required. This is a baseline before new input.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ INTRODUCTION -->
+<section class="lesson-section" id="intro">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 2</span>
+      <span class="badge badge-time">0:10 – 0:20 · 10 min</span>
+    </div>
+    <h2>Introduction</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header intro">
+      <div>
+        <div class="stage-label">WIPPEA Stage 2</div>
+        <div class="stage-title">Introduction — Building the Bridge</div>
+      </div>
+      <span class="stage-time">10 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Connect warm-up to new content; introduce the lesson objective explicitly; pre-teach critical vocabulary; frame the three sources students will encounter.</p>
+
+      <span class="grouping">Whole class</span>
+
+      <div class="activity-block">
+        <h4>1. State the Objective (2 min)</h4>
+        <p>Write the objective on the board in student-friendly language: <em>"Today we will read, watch, and discuss theories about the Voynich Manuscript so that we can evaluate arguments and practise academic discussion using hedging language."</em> Tell students what the three sources are and what role each plays.</p>
+      </div>
+
+      <div class="activity-block">
+        <h4>2. Pre-Teach Vocabulary (8 min)</h4>
+        <p>Present the eight key terms using context sentences drawn directly from the sources. Students match each word to its definition in pairs, then check whole-class. Do not over-explain — students will encounter the words in context.</p>
+
+        <table class="comp-table" style="margin-top:0.75rem;">
+          <thead><tr><th>Word</th><th>Part of Speech</th><th>Meaning in context</th></tr></thead>
+          <tbody>
+            <tr><td><strong>manuscript</strong></td><td>noun</td><td>A book or document written by hand, before printing</td></tr>
+            <tr><td><strong>cipher</strong></td><td>noun</td><td>A system of writing in which letters or symbols represent other letters</td></tr>
+            <tr><td><strong>vellum</strong></td><td>noun</td><td>Fine parchment made from animal skin, used for important documents</td></tr>
+            <tr><td><strong>decipher</strong></td><td>verb</td><td>To convert a coded or unclear text into readable language</td></tr>
+            <tr><td><strong>cryptographer</strong></td><td>noun</td><td>A person who studies or designs codes and ciphers</td></tr>
+            <tr><td><strong>herbal</strong></td><td>noun</td><td>A medieval book describing plants and their medicinal uses</td></tr>
+            <tr><td><strong>conjecture</strong></td><td>noun</td><td>An opinion or theory without sufficient evidence; an educated guess</td></tr>
+            <tr><td><strong>provenience</strong></td><td>noun</td><td>The origin or source of an artefact (used in archaeology/history)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PRESENTATION -->
+<section class="lesson-section" id="presentation">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 3</span>
+      <span class="badge badge-time">0:20 – 0:45 · 25 min</span>
+    </div>
+    <h2>Presentation — New Language and Concepts</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header present">
+      <div>
+        <div class="stage-label">WIPPEA Stage 3</div>
+        <div class="stage-title">Presentation — Input from Three Sources</div>
+      </div>
+      <span class="stage-time">25 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Deliver new content through three differentiated input channels (video → reading A → reading B), each progressively deeper. Include comprehension checks after each input segment.</p>
+
+      <!-- SOURCE 1: VIDEO -->
+      <div class="activity-block">
+        <h4>Source 1 — Video Input (10 min) · Individual then Pairs</h4>
+        <span class="grouping">Individual</span>
+        <p>Play the TED-Ed video (4:43). Students watch with a specific listening task: <em>"Note three facts and one theory you hear."</em> Do not pre-explain the video content.</p>
+        <p><a href="https://www.youtube.com/watch?v=8NS4CbBJQ84" target="_blank" style="color:var(--navy); font-weight:600;">▶ TED-Ed: "The world's most mysterious book" — Stephen Bax (4:43)</a></p>
+
+        <div class="reflection" style="margin-top:0.75rem;">
+          <strong>Comprehension Check after Video (2 min)</strong>
+          Ask students to turn to their partner and share: "What three facts did you note? Which part was a theory, not a fact?" Cold-call 2–3 pairs. Clarify any misunderstandings before moving to reading.
+        </div>
+      </div>
+
+      <!-- SOURCE 2: TILTMAN -->
+      <div class="activity-block">
+        <h4>Source 2 — Reading A: Tiltman's NSA Report (8 min) · Individual</h4>
+        <span class="grouping">Individual → Pairs</span>
+        <p>Students read the summary below silently. While reading they underline: (a) one fact, (b) one inference, (c) one word that signals uncertainty. Then compare with a partner.</p>
+
+        <div class="caela-box" style="margin-top:0.75rem;">
+          <span class="caela-box-title">Reading Summary — Tiltman (NSA, declassified 2002)</span>
+          <p>Brigadier John H. Tiltman was one of Britain's greatest codebreakers. He spent over 25 years studying the Voynich Manuscript. His 1967 paper identifies three published decipherment claims — all rejected by scholars. <strong>Newbold</strong> (1921) argued Roger Bacon wrote it and had possessed a telescope centuries before its invention; his method was shown to be too subjective to yield a single verifiable text. <strong>Feely</strong> (1943) produced medieval Latin rejected as inauthentic. <strong>Strong</strong> (1946) identified the author as Anthony Askham and produced medieval English — equally unacceptable.</p>
+          <p style="margin-top:0.75rem;">Tiltman's own analysis of 17 symbols found consistent patterns: paragraphs nearly always begin with specific symbols; spaces between "words" may not indicate actual word boundaries; certain groups appear to carry grammatical functions like endings or suffixes. He concluded that simple letter-for-symbol substitution is impossible because <em>"languages simply do not behave this way."</em> His tentative hypothesis: the text <strong>may</strong> represent a primitive synthetic universal language — a philosophical classification of ideas — similar to systems developed by Bishop Wilkins (1667) and Cave Beck (1657).</p>
+        </div>
+
+        <div class="reflection" style="margin-top:0.75rem;">
+          <strong>Comprehension Check (2 min)</strong>
+          Ask: "What word did Tiltman use that shows this is a hypothesis, not a conclusion?" (Answer: "may.") Point out hedging language explicitly — this connects to the enabling skill and Evaluation stage.
+        </div>
+      </div>
+
+      <!-- SOURCE 3: D'IMPERIO -->
+      <div class="activity-block">
+        <h4>Source 3 — Reading B: D'Imperio's Monograph (7 min) · Jigsaw</h4>
+        <span class="grouping">Jigsaw (groups of 3)</span>
+        <p>Following the CAELA Jigsaw Reading technique: divide students into groups of three. Each person reads one extract below and prepares to teach the main idea to their group in 60 seconds.</p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:0.75rem; margin-top:0.75rem;">
+          <div class="caela-box">
+            <span class="caela-box-title">Reader 1 — Authenticity</span>
+            <p style="font-size:0.85rem;">D'Imperio surveyed all scholarly opinion. Most researchers — including Tiltman, Panofsky, and Friedman — concluded the manuscript is not a hoax. It is "a homogeneous, creative work of a serious scholar." Only Brumbaugh dissented, claiming it was a forgery to fool Emperor Rudolph II. Even he admitted there may be an underlying text.</p>
+          </div>
+          <div class="caela-box">
+            <span class="caela-box-title">Reader 2 — Chain of Evidence</span>
+            <p style="font-size:0.85rem;">The manuscript entered recorded history in 1665 when Marci sent it from Prague to Kircher in Rome. Before that: Rudolph II's court (before 1608), then Jacobus de Tepenecz (his erased signature, visible under UV light, confirms this). Found by Voynich at Villa Mondragone, Italy, in 1912. Now at Yale, catalogued MS 408.</p>
+          </div>
+          <div class="caela-box">
+            <span class="caela-box-title">Reader 3 — The Text Problem</span>
+            <p style="font-size:0.85rem;">Captain Currier found at least two different "hands" (writers) and possibly two "languages" in the manuscript. The text follows consistent internal rules throughout. Statistical patterns do not match simple substitution ciphers. No punctuation. Spaces may not mark word boundaries. These facts must be explained by any theory.</p>
+          </div>
+        </div>
+
+        <div class="reflection" style="margin-top:0.75rem;">
+          <strong>Comprehension Check (1 min)</strong>
+          Ask one student from each jigsaw group to state the main idea of their extract in one sentence. Clarify before moving to Guided Practice.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ GUIDED PRACTICE -->
+<section class="lesson-section" id="guided">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 4</span>
+      <span class="badge badge-time">0:45 – 1:05 · 20 min</span>
+    </div>
+    <h2>Guided Practice</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header guided">
+      <div>
+        <div class="stage-label">WIPPEA Stage 4</div>
+        <div class="stage-title">Guided Practice — Structured Comprehension Quiz</div>
+      </div>
+      <span class="stage-time">20 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Provide highly structured activities that help students work with the new language; check understanding of all three sources through scaffolded questions. Teacher circulates and monitors.</p>
+
+      <span class="grouping">Individual (self-correcting)</span>
+
+      <p>Complete the quiz individually. The quiz covers all three sources. Read each question carefully and select the best answer. After submitting, review feedback with your partner.</p>
+
+      <div class="quiz-intro">Guided Practice Quiz · 12 Questions</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Questions answered</span><span id="g-prog-text">0 of 12</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="g-prog-fill" style="width:0%"></div></div>
+      </div>
+      <div id="guided-questions"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="g-submit" onclick="submitQuiz('g')">Check Answers</button>
+        <button class="btn btn-ghost" onclick="resetQuiz('g')">Reset</button>
+      </div>
+      <div class="score-card" id="g-score">
+        <span class="score-num" id="g-score-num"></span>
+        <span class="score-label" id="g-score-msg"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ COMMUNICATIVE PRACTICE -->
+<section class="lesson-section" id="comm">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 5</span>
+      <span class="badge badge-time">1:05 – 1:25 · 20 min</span>
+    </div>
+    <h2>Communicative Practice</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header comm">
+      <div>
+        <div class="stage-label">WIPPEA Stage 5</div>
+        <div class="stage-title">Communicative Practice — Academic Discussion</div>
+      </div>
+      <span class="stage-time">20 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Allow students to integrate new language with previously acquired skills in interactive, authentic settings — moving away from teacher-controlled input toward student-generated output. Activities are less controlled than Guided Practice.</p>
+
+      <span class="grouping">Small groups of 3–4 → Whole class report-out</span>
+
+      <div class="activity-block">
+        <h4>Activity: Fact / Inference / Speculation — Information Gap</h4>
+        <p>Each group receives the five claims below. Together they classify each as: <strong>Confirmed Fact</strong> (the source states it directly), <strong>Inference</strong> (a logical conclusion from evidence), or <strong>Speculation</strong> (no solid evidence; possible but unconfirmed). Groups must cite which source supports their classification.</p>
+        <ol style="margin-top:0.5rem;">
+          <li><em>"The manuscript was written around 1420."</em></li>
+          <li><em>"Roger Bacon wrote the Voynich Manuscript."</em></li>
+          <li><em>"The manuscript was in Rudolph II's court before 1608."</em></li>
+          <li><em>"The text contains meaningful content, not random nonsense."</em></li>
+          <li><em>"The manuscript may represent a universal language system."</em></li>
+        </ol>
+        <p class="timing-note">10 minutes group discussion · 5 minutes report-out · 5 minutes whole-class discussion</p>
+      </div>
+
+      <div class="activity-block">
+        <h4>Language Focus — Hedging (integrate while reporting)</h4>
+        <p>As groups report out, teacher models and reinforces hedging expressions. Write these on the board and ask students to use at least one when making a claim:</p>
+        <ul>
+          <li><em>"The evidence suggests that…"</em></li>
+          <li><em>"It appears that…, although…"</em></li>
+          <li><em>"This may indicate that…"</em></li>
+          <li><em>"While X cannot be ruled out, the balance of evidence…"</em></li>
+          <li><em>"Tiltman's analysis indicates…, but this remains tentative."</em></li>
+        </ul>
+      </div>
+
+      <div class="reflection">
+        <strong>Comprehension Check</strong>
+        After report-out, ask: "Did any group disagree about a classification? What made it difficult to decide?" Use disagreement as a teaching moment about the difference between evidence and interpretation.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EVALUATION -->
+<section class="lesson-section" id="eval">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 6</span>
+      <span class="badge badge-time">1:25 – 1:45 · 20 min</span>
+    </div>
+    <h2>Evaluation</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header eval">
+      <div>
+        <div class="stage-label">WIPPEA Stage 6</div>
+        <div class="stage-title">Evaluation — Assessing Achievement of the Objective</div>
+      </div>
+      <span class="stage-time">20 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Teacher and students assess whether the lesson objective has been met. Evaluation must match the language skill proficiency focus (speaking and reading). This stage is performance-based, not pen-and-paper.</p>
+
+      <span class="grouping">Pairs → Whole class</span>
+
+      <div class="activity-block">
+        <h4>Task A — Decipherment Theory Comparison (10 min) · Pairs</h4>
+        <p>Students use the table below and their notes from all three sources to complete a mini oral presentation to their partner: <em>"I think [Researcher]'s theory is / is not convincing because [evidence], and the evidence suggests that [hedge]."</em> Each partner speaks for 90 seconds.</p>
+
+        <table class="comp-table">
+          <thead>
+            <tr><th>Scholar</th><th>Year</th><th>Claimed author</th><th>Method</th><th>Verdict (use hedging)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Newbold</td><td>1921</td><td>Roger Bacon</td><td>Microscopic strokes = Greek shorthand</td><td class="verdict refuted">Refuted — Manly (1931)</td></tr>
+            <tr><td>Feely</td><td>1943</td><td>Roger Bacon</td><td>Unmethodical Latin substitution</td><td class="verdict refuted">Rejected by scholars</td></tr>
+            <tr><td>Strong</td><td>1946</td><td>Anthony Askham</td><td>Undisclosed key → medieval English</td><td class="verdict refuted">Key never revealed; rejected</td></tr>
+            <tr><td>Brumbaugh</td><td>1974–76</td><td>Unknown forger</td><td>Deliberate hoax with planted clues</td><td class="verdict unresolved">Minority view; not accepted</td></tr>
+            <tr><td>Tiltman</td><td>1951–67</td><td>Unknown</td><td>Statistical analysis → universal language?</td><td class="verdict unresolved">Hypothesis; respected</td></tr>
+            <tr><td>Bax (video)</td><td>2014</td><td>Unknown</td><td>Proper nouns as anchors</td><td class="verdict unresolved">Partial (~10 words proposed)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="activity-block">
+        <h4>Task B — Open Written Questions (10 min) · Individual</h4>
+        <p>Students answer two of the three questions in writing (4–6 sentences each). This is the primary evaluation artifact.</p>
+
+        <div class="q-card">
+          <div class="q-meta"><span class="q-num">Evaluation Question 1</span><span class="q-level analysis">Analysis</span></div>
+          <p class="q-source">Sources: Video + Tiltman (1967)</p>
+          <p class="q-text">Stephen Bax (video) and Brigadier Tiltman both tried to decode the manuscript but used completely different approaches. In your own words, explain how their methods differ and what each approach assumes about the nature of the text. Use at least one hedging expression.</p>
+          <textarea class="open-q" placeholder="Write 4–6 sentences…"></textarea>
+        </div>
+
+        <div class="q-card">
+          <div class="q-meta"><span class="q-num">Evaluation Question 2</span><span class="q-level critical">Critical</span></div>
+          <p class="q-source">Sources: D'Imperio (1978) + Tiltman (1967)</p>
+          <p class="q-text">D'Imperio reports that virtually every serious scholar concluded the manuscript is not a hoax — but Brumbaugh disagreed. Whose position do you find more convincing, and why? Use specific evidence from at least two sources and at least two hedging expressions.</p>
+          <textarea class="open-q" placeholder="Write 4–6 sentences…"></textarea>
+        </div>
+
+        <div class="q-card">
+          <div class="q-meta"><span class="q-num">Evaluation Question 3</span><span class="q-level critical">Critical</span></div>
+          <p class="q-source">Source: D'Imperio (1978)</p>
+          <p class="q-text">Captain Currier found evidence of at least two different "hands" (writers) in the manuscript. If confirmed, what are three implications this would have for existing theories about who wrote the manuscript and why? Use hedging language in each implication.</p>
+          <textarea class="open-q" placeholder="Write 4–6 sentences…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ APPLICATION -->
+<section class="lesson-section" id="apply">
+  <div class="section-header">
+    <div class="section-meta">
+      <span class="badge badge-navy">Stage 7</span>
+      <span class="badge badge-time">1:45 – 2:00 · 15 min</span>
+    </div>
+    <h2>Application</h2>
+  </div>
+
+  <div class="stage-card">
+    <div class="stage-header apply">
+      <div>
+        <div class="stage-label">WIPPEA Stage 7</div>
+        <div class="stage-title">Application — Real-World Transfer</div>
+      </div>
+      <span class="stage-time">15 minutes</span>
+    </div>
+    <div class="stage-body">
+      <p class="stage-purpose"><strong>Purpose:</strong> Tasks reflect real-life applications of the lesson objective. Students transfer what they have learned to a new, authentic context — moving beyond the classroom material to demonstrate genuine communicative competence.</p>
+
+      <span class="grouping">Individual (in-class) → Take-home option</span>
+
+      <div class="activity-block">
+        <h4>In-Class Task — 150-word Position Paragraph</h4>
+        <p>Write one academic paragraph responding to this question: <em>"After more than 600 years and dozens of failed attempts, should scholars continue trying to decode the Voynich Manuscript? Why or why not?"</em></p>
+        <p>The paragraph <strong>must</strong> include:</p>
+        <ul>
+          <li>A clear topic sentence with your position</li>
+          <li>Evidence from at least <strong>two</strong> of the three sources</li>
+          <li>At least <strong>three</strong> different hedging expressions</li>
+          <li>One use of the passive voice for academic reporting (e.g. <em>"It has been argued that…"</em>)</li>
+        </ul>
+        <textarea class="open-q" style="min-height:120px;" placeholder="Write your paragraph here (aim for 130–170 words)…"></textarea>
+      </div>
+
+      <div class="activity-block">
+        <h4>Wrap-Up — Return to Warm-Up (5 min)</h4>
+        <p>Return to the board from the Warm-Up stage. Ask students: <em>"What did you know at the start? What do you know now? What question do you still have?"</em> This closes the lesson and models reflective thinking — a key CAELA skill.</p>
+      </div>
+
+      <div class="activity-block">
+        <h4>Take-Home Application Activities (CAELA III-C)</h4>
+        <p>Students select <strong>one</strong> of the following to complete before the next class:</p>
+        <ol>
+          <li><strong>Find another unsolved mystery</strong> (a historical artefact, an unexplained text, an unsolved scientific question). Write a short comparison: how is the investigation similar to or different from the Voynich Manuscript research?</li>
+          <li><strong>Lesson Reflection:</strong> Write 3–5 sentences answering — What went well in your understanding today? What was most challenging? What would you still like to investigate?</li>
+          <li><strong>Research extension:</strong> Find one news article published after 2015 about the Voynich Manuscript. Summarise it in 100 words and bring it to the next class. Be ready to evaluate whether the claim in the article is a fact, inference, or speculation.</li>
+        </ol>
+      </div>
+
+      <div class="sources">
+        <span class="sources-title">Primary Sources Used in This Lesson</span>
+        <ol>
+          <li>Bax, Stephen. "The world's most mysterious book." <em>TED-Ed</em>, 2014. <a href="https://www.youtube.com/watch?v=8NS4CbBJQ84" style="color:var(--gold-light)" target="_blank">youtube.com/watch?v=8NS4CbBJQ84</a></li>
+          <li>Tiltman, J.H. "The Voynich Manuscript: 'The Most Mysterious Manuscript in the World.'" NSA internal paper, 1967. Declassified under FOIA, 2002. (DOCID: 631091)</li>
+          <li>D'Imperio, M.E. <em>The Voynich Manuscript: An Elegant Enigma.</em> National Security Agency / Central Security Service, 1978.</li>
+        </ol>
+        <p style="margin-top:0.75rem; font-size:0.8rem; opacity:0.7;">Framework: Center for Applied Linguistics. (2007). <em>The CAELA Guide for Adult ESL Trainers: III-C Effective Lesson Planning for Adult English Language Learners.</em> Washington, DC: CAL. Based on Hunter, M. (1982). <em>Mastery teaching.</em> TIP Publications.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div style="background:#f0ece4;border-left:3px solid #3a4f7a;padding:1rem 1.4rem;margin:1.5rem 0;font-size:.88rem;line-height:1.7;color:#444">
+  <strong style="color:#1a2744;display:block;margin-bottom:.5rem">Teacher Notes &mdash; The Voynich Manuscript</strong>
+  This lesson was used as a final project by Hour House students. Its emotional register should match a genuine intellectual challenge, not a worksheet exercise. Students who have lived through uncertainty &mdash; displacement, documentation, language barriers &mdash; often connect powerfully to a 600-year-old document that no one has been able to read.<br><br>
+  <strong style="color:#1a2744">On the interactive quiz:</strong> The quiz distinguishes between recall, analysis, and critical thinking questions. Do not skip the critical-thinking questions even with B2 students. The hardest questions often produce the best discussion. If a student chooses wrong, ask them to read the source again and identify where their reasoning diverged from the text.<br><br>
+  <strong style="color:#1a2744">On hedging language:</strong> This is the core linguistic focus of the lesson. Monitor the Application stage writing closely for inappropriate certainty: students should not write &ldquo;the Voynich Manuscript is a hoax&rdquo; but rather &ldquo;it may be a hoax&rdquo; or &ldquo;the evidence appears to suggest.&rdquo; This is academic writing at B2&ndash;C1 level and it matters professionally.<br><br>
+  <strong style="color:#1a2744">On the sources:</strong> Tiltman (1967) and D&rsquo;Imperio (1978) are primary scholarly sources. Students should understand that these are not Wikipedia &mdash; they are the same kind of document your teacher publishes in the Principia Orthogona series. Reading them is an act of intellectual respect for the tradition they represent.<br><br>
+  <strong style="color:#1a2744">For stronger students:</strong> Ask them to write a CAELA-format lesson objective for the Voynich lesson itself, then compare it to the one in the lesson header. Does it meet the four-element standard (C, CT, P, E)?
+</div>
+</main>
+<footer>
+  <p>CAELA WIPPEA lesson design · UCEDA School of English · All primary sources are in the public domain or declassified government documents.</p>
+</footer>
+
+<script>
+// ═══════════ QUIZ DATA (Guided Practice — 12 questions covering all 3 sources)
+const quizzes = {
+  g: {
+    total: 12,
+    questions: [
+      {
+        text: "According to the TED-Ed video, where is the Voynich Manuscript currently held?",
+        level: "recall", source: "TED-Ed video",
+        opts: ["The Vatican Secret Archives","Yale's Beinecke Rare Book and Manuscript Library","The NSA headquarters in Maryland","The British Library in London"],
+        ans: 1,
+        fb: "The manuscript is held at Yale's Beinecke Rare Book and Manuscript Library — confirmed by all three sources."
+      },
+      {
+        text: "The video describes the manuscript as being carbon-dated to approximately which year?",
+        level: "recall", source: "TED-Ed video",
+        opts: ["Around 1280","Around 1350","Around 1420","Around 1510"],
+        ans: 2,
+        fb: "Carbon dating places the manuscript at around 1420."
+      },
+      {
+        text: "In the TED-Ed video, what is Stephen Bax's method for beginning to decode the manuscript?",
+        level: "recall", source: "TED-Ed video",
+        opts: ["Running the full text through a statistical frequency analysis","Starting with recognisable proper nouns such as plant and star names","Comparing the script character by character to Latin letters","Hiring a team of cryptographers to break the cipher"],
+        ans: 1,
+        fb: "Bax uses proper nouns — particularly identifiable plant and star names — as anchors to decode individual words, similar to the Rosetta Stone approach."
+      },
+      {
+        text: "According to Tiltman's report, who successfully challenged Newbold's decipherment, and on what grounds?",
+        level: "recall", source: "Tiltman (1967)",
+        opts: ["Wilfrid Voynich — he proved the manuscript was a forgery","Professor John Manly — the method could not yield a single verifiable plain text","John Dee — he showed the script was too old for Roger Bacon","D'Imperio — she exposed Newbold's statistical errors"],
+        ans: 1,
+        fb: "Professor John Manly of the University of Chicago showed that Newbold's method — converting microscopic pen strokes into Greek shorthand — was too subjective to ever produce one definitive reading."
+      },
+      {
+        text: "Tiltman observed that paragraphs in the manuscript 'nearly always begin with D or H.' What does this pattern suggest?",
+        level: "analysis", source: "Tiltman (1967)",
+        opts: ["The text is written in a Germanic language beginning with 'D' or 'H' sounds","Certain symbols have positional or grammatical functions — they are not randomly placed","The manuscript was written by two authors, one preferring D and one H","D and H represent the initials of the manuscript's original owner"],
+        ans: 1,
+        fb: "Consistent positional patterns — symbols appearing systematically at paragraph beginnings — indicate the script follows structural rules, like a grammatical marker. This is evidence of internal order, not randomness."
+      },
+      {
+        text: "What is Tiltman's most important conclusion about simple letter-substitution as an explanation for the text?",
+        level: "analysis", source: "Tiltman (1967)",
+        opts: ["Simple substitution is the most likely explanation because the script is too simple for anything else","Simple substitution is impossible because the statistical patterns of symbols do not match how natural languages behave when encoded this way","Simple substitution was used but with a key that has been lost","Simple substitution was Newbold's method and Tiltman agreed with him"],
+        ans: 1,
+        fb: "Tiltman states directly that 'the text cannot be the result of substituting single symbols for letters in the natural order — languages simply do not behave in this way.'"
+      },
+      {
+        text: "According to D'Imperio, what is the significance of Jacobus de Tepenecz's erased signature on the first page?",
+        level: "recall", source: "D'Imperio (1978)",
+        opts: ["It proves Roger Bacon was the author","It establishes that the manuscript was at Rudolph II's court and in de Tepenecz's hands after 1608, providing a date anchor","It shows the manuscript was a forgery by de Tepenecz himself","It reveals the manuscript's original title in Latin"],
+        ans: 1,
+        fb: "De Tepenecz only acquired the noble title 'de Tepenecz' after 1608 — so his presence on the manuscript places it firmly at Rudolph's court in that period. The signature is visible under UV light."
+      },
+      {
+        text: "D'Imperio reports that Tiltman, Friedman, and Currier all reached 'similar conclusions' about the text. Which shared conclusion did all three analysts reach?",
+        level: "analysis", source: "D'Imperio (1978)",
+        opts: ["The manuscript is written in medieval Latin","Simple single-symbol substitution cannot explain the text's statistical behaviour","Roger Bacon is the most likely author","The manuscript is certainly a deliberately constructed hoax"],
+        ans: 1,
+        fb: "Three independent analysts — working separately — all concluded that simple substitution fails to account for the text's patterns. This repeated independent finding is the most robust conclusion in the literature."
+      },
+      {
+        text: "If Captain Currier's finding of two 'hands' and two possible 'languages' is correct, which theory does this most strongly challenge?",
+        level: "analysis", source: "D'Imperio (1978)",
+        opts: ["Tiltman's universal language hypothesis","Brumbaugh's theory that it was a single-person forgery designed to fool Rudolph II","The theory that the manuscript is a medical encyclopaedia","Bax's proper-noun anchoring approach"],
+        ans: 1,
+        fb: "A single-person forgery designed for one specific purpose would typically show more consistency across the full manuscript. Two different writers and languages make a deliberate, unified hoax far less plausible."
+      },
+      {
+        text: "What does the CAELA reading framework call the skills — like vocabulary, grammar, and pronunciation — that support a student's ability to achieve the main lesson objective?",
+        level: "recall", source: "CAELA III-C",
+        opts: ["Foundational competencies","Enabling skills","Prerequisite benchmarks","Support standards"],
+        ans: 1,
+        fb: "CAELA calls these 'enabling skills' — skills such as vocabulary, grammar, and pronunciation that students need in order to accomplish the lesson objective."
+      },
+      {
+        text: "Which of the following is the best example of a well-formed CAELA lesson objective?",
+        level: "analysis", source: "CAELA III-C",
+        opts: ["Students will study vocabulary on page 45 of the textbook.","Students will learn about the Voynich Manuscript.","Students will be able to evaluate competing theories about an unsolved mystery in order to participate in academic discussion, as evidenced by a structured group presentation.","Students will understand hedging language."],
+        ans: 2,
+        fb: "A well-formed CAELA objective identifies: (1) what students will be able to DO (evaluate theories), (2) the real-life purpose (academic discussion), and (3) how achievement will be evidenced (group presentation). Options A, B, and D describe content or knowledge, not communicative performance."
+      },
+      {
+        text: "Looking across all three sources: what is the strongest single reason to believe the Voynich Manuscript contains meaningful content and is not simply nonsense?",
+        level: "critical", source: "All three sources",
+        opts: ["The illustrations are too beautiful to have been created for a hoax","The text is internally consistent, follows rule-governed structural patterns throughout 240+ pages, and was produced on expensive vellum — an investment inconsistent with meaningless writing","Wilfrid Voynich was a trustworthy bookseller who would not have promoted a fake","No medieval forger could have invented so many different plant illustrations"],
+        ans: 1,
+        fb: "Multiple scholars — Tiltman, Friedman, Panofsky, D'Imperio — emphasise two points: (1) the text follows consistent grammatical-like rules throughout; (2) the investment of high-quality vellum and enormous labour would be economically irrational for pure nonsense. The internal consistency is the most compelling single argument."
+      }
+    ]
+  }
+};
+
+const state = { g: { selected: {}, submitted: false } };
+
+function renderQuiz(key) {
+  const quiz = quizzes[key];
+  const container = document.getElementById('guided-questions');
+  const letters = ['A','B','C','D'];
+  let html = '';
+  quiz.questions.forEach((q, qi) => {
+    html += `<div class="q-card" id="${key}-qcard-${qi}">
+      <div class="q-meta">
+        <span class="q-num">Question ${qi+1}</span>
+        <span class="q-level ${q.level}">${q.level.charAt(0).toUpperCase()+q.level.slice(1)}</span>
+      </div>
+      <p class="q-source">Source: ${q.source}</p>
+      <p class="q-text">${q.text}</p>
+      <div class="options">`;
+    q.opts.forEach((opt, oi) => {
+      html += `<div class="opt" id="${key}-opt-${qi}-${oi}" onclick="choose('${key}',${qi},${oi})">
+        <span class="opt-letter">${letters[oi]}</span><span>${opt}</span></div>`;
+    });
+    html += `</div><div class="feedback" id="${key}-fb-${qi}"></div></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function choose(key, qi, oi) {
+  if (state[key].submitted) return;
+  state[key].selected[qi] = oi;
+  quizzes[key].questions[qi].opts.forEach((_, i) => {
+    document.getElementById(`${key}-opt-${qi}-${i}`).className = 'opt' + (i === oi ? ' selected' : '');
+  });
+  updateProgress(key);
+}
+
+function updateProgress(key) {
+  const answered = Object.keys(state[key].selected).length;
+  const total = quizzes[key].total;
+  document.getElementById(`${key}-prog-text`).textContent = `${answered} of ${total}`;
+  document.getElementById(`${key}-prog-fill`).style.width = Math.round(answered/total*100) + '%';
+}
+
+function submitQuiz(key) {
+  if (state[key].submitted) return;
+  state[key].submitted = true;
+  let score = 0;
+  quizzes[key].questions.forEach((q, qi) => {
+    const card = document.getElementById(`${key}-qcard-${qi}`);
+    const fb = document.getElementById(`${key}-fb-${qi}`);
+    const sel = state[key].selected[qi];
+    q.opts.forEach((_, oi) => {
+      const el = document.getElementById(`${key}-opt-${qi}-${oi}`);
+      el.classList.add('disabled'); el.classList.remove('selected');
+      if (oi === q.ans) el.classList.add('correct-ans');
+      else if (oi === sel && sel !== q.ans) el.classList.add('wrong-ans');
+    });
+    if (sel === q.ans) {
+      score++;
+      card.classList.add('correct');
+      fb.className = 'feedback show correct';
+      fb.textContent = '✓ ' + q.fb;
+    } else {
+      card.classList.add('wrong');
+      fb.className = 'feedback show wrong';
+      fb.textContent = (sel === undefined ? 'Not answered. ' : 'Not quite. ') + q.fb;
+    }
+  });
+  const sc = document.getElementById(`${key}-score`);
+  sc.classList.add('show');
+  document.getElementById(`${key}-score-num`).textContent = `${score} / ${quizzes[key].total}`;
+  const msgs = ['Review the sources and try again!','Good start — re-read the summaries.','Solid effort!','Strong understanding!','Excellent!','Perfect!'];
+  document.getElementById(`${key}-score-msg`).textContent = msgs[Math.min(score, msgs.length-1)];
+  document.getElementById(`${key}-submit`).disabled = true;
+}
+
+function resetQuiz(key) {
+  state[key] = { selected: {}, submitted: false };
+  renderQuiz(key);
+  document.getElementById(`${key}-score`).classList.remove('show');
+  document.getElementById(`${key}-submit`).disabled = false;
+  updateProgress(key);
+}
+
+renderQuiz('g');
+</script>
+
+<section style="padding:2rem 0 1rem;border-bottom:1px solid var(--cream-dark)">
+<div class="container">
+<p class="quiz-intro">Timing Summary</p>
+<table style="width:100%;border-collapse:collapse;font-size:.88rem;margin:.8rem 0">
+  <tr style="background:var(--navy)">
+    <th style="color:var(--gold);padding:.45rem .7rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.08em;text-align:left">#</th>
+    <th style="color:var(--gold);padding:.45rem .7rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.08em;text-align:left">WIPPEA Stage</th>
+    <th style="color:var(--gold);padding:.45rem .7rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.08em;text-align:left">Activity</th>
+    <th style="color:var(--gold);padding:.45rem .7rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.08em;text-align:left">Time</th>
+  </tr>
+  <tr><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">1</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--warmup);font-weight:600">Warm-Up</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Traveller Analogy &mdash; Prior Knowledge Activation</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">10 min</td></tr>
+  <tr style="background:var(--cream)"><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">2</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--intro);font-weight:600">Introduction</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Vocabulary Preview + Objective Setting</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">10 min</td></tr>
+  <tr><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">3</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--present);font-weight:600">Presentation</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Three Primary Sources &mdash; Summarised Reading + Comp Check</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">25 min</td></tr>
+  <tr style="background:var(--cream)"><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">4</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--guided);font-weight:600">Guided Practice</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Interactive Quiz (Recall + Analysis + Critical)</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">20 min</td></tr>
+  <tr><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">5</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--comm);font-weight:600">Communicative Practice</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Theory Debate &mdash; Group Discussion</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">20 min</td></tr>
+  <tr style="background:var(--cream)"><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">6</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--eval);font-weight:600">Evaluation</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Written Theory Evaluation with Hedging Language</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">20 min</td></tr>
+  <tr><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">7</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark);color:var(--apply);font-weight:600">Application</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">Design Your Own Research Approach</td><td style="padding:.4rem .7rem;border-bottom:1px solid var(--cream-dark)">15 min</td></tr>
+  <tr style="background:#eef2f8"><td style="padding:.45rem .7rem;font-weight:bold"></td><td style="padding:.45rem .7rem;font-weight:bold" colspan="2"><strong>TOTAL</strong></td><td style="padding:.45rem .7rem;font-weight:bold"><strong>120 min</strong></td></tr>
+</table>
+</div>
+</section>
+<div style="background:#0f1e38;color:rgba(255,255,255,.45);text-align:center;padding:2rem 1rem 1.5rem;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;border-top:2px solid #c9a84c;margin-top:2rem">
+  <div style="color:#c9a84c;margin-bottom:.5rem;font-size:.72rem;">Hour House &middot; Principia Orthogona &middot; Newark, NJ</div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; 229 Ballantine Pkwy, Newark, NJ 07104 &middot; ORCID 0009-0000-6496-2186</div>
+  <div style="margin-top:.35rem;">AXLE v6.1 &middot; <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:#c9a84c;text-decoration:none;">github.com/TOTOGT/AXLE</a> &middot; CC BY-NC-ND 4.0 &middot; CAELA Framework &middot; &#x1F949;&#x1F948; IQC 2026</div>
+  <div style="margin-top:.6rem"><a href="index.html" style="color:#c9a84c;text-decoration:none;">&larr; Back to Hour House Homepage</a></div>
+</div>
+
+
+<div style="background:#f0ece4;border-top:2px solid #c9a84c;padding:2rem;margin-top:2rem">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem"><a href="Lesson07_Alpha_Submission_v2.html" style="display:inline-block;color:#c9a84c;border:1px solid rgba(201,168,76,.4);font-family:sans-serif;font-size:.75rem;padding:.45rem 1rem;text-decoration:none;">&larr; 07: Your First Alpha</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.2rem">
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">All Lessons</div>
+        <a href="Lesson01_Vitruvian_Approximation.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">01: The Vitruvian Approximation</a><a href="Lesson02_Cajueiro_Principle.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">02: The Cajueiro Principle</a><a href="Lesson02b_Galilean_Confluence.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">02b: The Galilean Confluence</a><a href="Lesson03_Number33.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">03: The Number 33</a><a href="Lesson03b_Chladni_Plates.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">03b: Chladni Plates</a><a href="Lesson04_USA_Top10.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">04: USA Enters Top 10</a><a href="Lesson07_Alpha_Submission_v2.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">07: Your First Alpha</a><a href="voynich-caela-lesson.html" style="color:#c9a84c;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">&rsaquo; V: The Voynich Manuscript</a>
+      </div>
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">Support &amp; Connect</div>
+        <a href="https://g6llc.gumroad.com" target="_blank" style="color:#2d5a27;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F4D6; Buy the Membership &mdash; g6llc.gumroad.com</a>
+        <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="color:#2d5a27;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F6D2; Buy the Book &mdash; Principia Orthogona on eBay</a>
+        <a href="https://platform.worldquantbrain.com" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F4C8; WorldQuant Brain</a>
+        <a href="https://claude.ai" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F916; claude.ai &mdash; Your Research Partner</a>
+        <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;font-family:sans-serif;font-size:.78rem;">&#x1F4BB; github.com/TOTOGT/AXLE</a>
+      </div>
+    </div>
+  </div>
+</div>
+<footer style="background:#1a2744;color:#888;padding:1.8rem 2rem;text-align:center;font-size:.75rem;font-family:sans-serif;line-height:1.8">
+  <div style="color:#c9a84c;font-size:.8rem;margin-bottom:.4rem">&#x1F949;&#x1F948; Bronze &amp; Silver Quant Medals &mdash; IQC 2026 &middot; Pablo Nogueira Grossi</div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; Hour House &middot; 229 Ballantine Pkwy, Newark, NJ 07104</div>
+  <div style="margin-top:.3rem">ORCID: <a href="https://orcid.org/0009-0000-6496-2186" target="_blank" style="color:#777;text-decoration:none">0009-0000-6496-2186</a> &middot; Principia Orthogona &middot; AXLE v6.1 &middot; <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:#777;text-decoration:none">github.com/TOTOGT/AXLE</a> &middot; CC BY-NC-ND 4.0 &middot; CAELA Framework</div>
+  <div style="margin-top:.4rem"><a href="index.html" style="color:#c9a84c;text-decoration:none">&larr; Hour House Homepage</a></div>
+</footer>
+</body>
+</html>

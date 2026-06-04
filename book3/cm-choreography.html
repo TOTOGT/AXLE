@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Chenciner–Montgomery Choreography | One Shape, Many Infinities</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0f;
+  --paper: #f5f0e8;
+  --gold: #c8a84b;
+  --gold-dim: #8a6f2e;
+  --gold-bright: #f0c96a;
+  --silver: #9ba8b8;
+  --teal: #0abab5;
+  --teal-dim: #067a77;
+  --rose: #e07b8a;
+  --violet: #9b8bdb;
+  --margin: clamp(1.5rem, 5vw, 5rem);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
+  line-height: 1.78;
+  overflow-x: hidden;
+}
+
+/* STARFIELD */
+#starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.star { position: absolute; border-radius: 50%; background: white; animation: twinkle var(--dur,3s) ease-in-out infinite; animation-delay: var(--delay,0s); }
+@keyframes twinkle { 0%,100%{opacity:0.1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.3)} }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1rem var(--margin);
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,10,15,0.88); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(200,168,75,0.15);
+}
+.nav-logo { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.2em; color: var(--gold); }
+.nav-back { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--silver); text-decoration: none; }
+.nav-back:hover { color: var(--gold); }
+
+main { position: relative; z-index: 1; padding-top: 4rem; }
+
+/* SECTIONS */
+.section { padding: clamp(4rem,10vw,8rem) var(--margin); max-width: calc(72ch + 2*var(--margin)); margin: 0 auto; }
+.section-wide { padding: clamp(3rem,8vw,6rem) var(--margin); max-width: 1200px; margin: 0 auto; }
+.rule { width: 100%; height: 1px; background: linear-gradient(90deg,transparent,var(--gold-dim) 20%,var(--gold-dim) 80%,transparent); }
+
+.sec-tag { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: block; }
+h1, h2 { font-family: 'DM Serif Display', serif; font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
+h1 { font-size: clamp(2.5rem,6vw,5rem); }
+h2 { font-size: clamp(1.8rem,4vw,3rem); }
+h3 { font-family: 'DM Serif Display', serif; font-size: clamp(1.1rem,2.5vw,1.6rem); font-weight: 400; color: var(--gold); margin: 2.5rem 0 1rem; }
+p { margin-bottom: 1.4rem; }
+p:last-child { margin-bottom: 0; }
+em { color: var(--gold-bright); font-style: italic; }
+strong { color: var(--paper); font-weight: 600; }
+
+/* HERO */
+.hero { min-height: 100svh; display: grid; place-items: center; padding: var(--margin); text-align: center; position: relative; }
+.hero-canvas-wrap { position: absolute; inset: 0; display: grid; place-items: center; }
+#heroCanvas { width: 100%; height: 100%; opacity: 0.15; }
+.hero-content { position: relative; z-index: 2; }
+.chapter-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: fadeUp 1s ease forwards 0.3s; }
+h1 { opacity: 0; animation: fadeUp 1s ease forwards 0.6s; }
+h1 em { color: var(--gold); }
+.hero-sub { font-size: clamp(1rem,2vw,1.3rem); font-style: italic; color: var(--silver); max-width: 52ch; margin: 1.5rem auto 0; opacity: 0; animation: fadeUp 1s ease forwards 0.9s; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+.scroll-cue { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.3em; color: var(--gold-dim); opacity: 0; animation: fadeUp 1s forwards 1.5s, scrollBob 2s ease-in-out infinite 2s; }
+@keyframes scrollBob { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+/* MAIN SIMULATION */
+.sim-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--gold-dim);
+  margin: 2rem 0;
+}
+@media (max-width: 700px) { .sim-wrap { grid-template-columns: 1fr; } }
+
+.sim-panel {
+  background: var(--ink);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.sim-canvas-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+.sim-canvas-wrap canvas { display: block; width: 100%; height: 100%; }
+.sim-label {
+  padding: 1.2rem 1.5rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--silver);
+  letter-spacing: 0.08em;
+  border-top: 1px solid #1a1a2e;
+}
+.sim-label strong { color: var(--gold); font-style: normal; }
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  margin: 3rem 0;
+  padding-left: 2rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--gold-dim) 10%, var(--gold-dim) 90%, transparent);
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -2.35rem; top: 0.45rem;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+.tl-year {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+.tl-item p { margin-bottom: 0; }
+
+/* KEY FACTS */
+.facts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--gold-dim);
+  margin: 2.5rem 0;
+}
+@media (max-width: 700px) {
+  .facts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 440px) {
+  .facts-grid { grid-template-columns: 1fr; }
+}
+.fact-card {
+  background: var(--ink);
+  padding: 1.5rem;
+  transition: background 0.3s;
+  min-width: 0; /* prevent overflow */
+}
+.fact-card:hover { background: #0d0d18; }
+.fact-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.fact-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  color: var(--teal);
+  margin-bottom: 0.3rem;
+}
+.fact-card p { font-size: 0.82rem; color: var(--silver); margin: 0; line-height: 1.5; }
+
+/* CONTROLS */
+.controls {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  padding: 1rem 0 0;
+}
+.ctrl-btn {
+  font-family: 'DM Mono', monospace; font-size: 0.68rem;
+  letter-spacing: 0.1em; padding: 0.5rem 1rem;
+  border: 1px solid var(--gold-dim); background: transparent;
+  color: var(--silver); cursor: pointer; transition: all 0.2s;
+}
+.ctrl-btn:hover, .ctrl-btn.active { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* WHAT LEAN CAN/CANNOT */
+.lean-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--gold-dim);
+  margin: 2rem 0;
+}
+@media (max-width: 600px) { .lean-compare { grid-template-columns: 1fr; } }
+.lc-col { background: var(--ink); padding: 1.8rem; }
+.lc-head {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  margin-bottom: 1rem; padding-bottom: 0.7rem;
+  border-bottom: 1px solid #1a1a2e;
+}
+.lc-col ul { list-style: none; padding: 0; }
+.lc-col li {
+  font-size: 0.88rem; color: var(--silver);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #0f0f18;
+  padding-left: 1.2rem;
+  position: relative;
+}
+.lc-col li::before { position: absolute; left: 0; }
+.can li::before { content: '✓'; color: #3db88a; }
+.cannot li::before { content: '—'; color: #5a3a3a; }
+.lc-head.can-h { color: #3db88a; }
+.lc-head.cannot-h { color: #8a4a4a; }
+
+/* STATUS CARDS */
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 1rem; margin: 2rem 0; }
+.status-card { padding: 1.2rem; border: 1px solid var(--card-border,#2a2a3e); background: var(--card-bg,#0c0c18); }
+.status-card .s-label { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--card-color); margin-bottom:0.5rem; display:block; }
+.status-card p { font-size:0.85rem; color:var(--silver); margin:0; line-height:1.5; }
+
+/* MATH DISPLAY */
+.math-display {
+  text-align: center; font-family: 'DM Mono', monospace; font-size: 0.88rem;
+  color: var(--gold); padding: 1.5rem; background: #080810;
+  border: 1px solid #1a1a2e; margin: 1.5rem 0; letter-spacing: 0.05em; line-height: 1.9;
+}
+
+/* PULLQUOTE */
+.pullquote { margin: 3.5rem 0; padding: 2.5rem 3rem; border-left: 4px solid var(--gold); background: linear-gradient(135deg,#0c0c18,#0a0a12); position: relative; }
+.pullquote::before { content: '\201C'; position: absolute; top: -0.5rem; left: 1.5rem; font-family: 'DM Serif Display', serif; font-size: 6rem; color: var(--gold-dim); line-height: 1; pointer-events: none; }
+.pullquote p { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.05rem,2vw,1.4rem); font-style: italic; line-height: 1.65; color: var(--paper); margin-bottom: 0.8rem; }
+.pullquote cite { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.15em; color: var(--gold); font-style: normal; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* FOOTER */
+footer { padding: 3rem var(--margin); text-align: center; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gold-dim); border-top: 1px solid #1a1a2e; }
+footer a { color: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<div id="starfield"></div>
+
+<nav>
+  <span class="nav-logo">G6 LLC · DM³-LAB · ONE SHAPE, MANY INFINITIES</span>
+  <a class="nav-back" href="ch01-one-equation.html">← Chapter 1</a>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-canvas-wrap"><canvas id="heroCanvas"></canvas></div>
+  <div class="hero-content">
+    <p class="chapter-label">Case Study · Chapter 1 · §8</p>
+    <h1>The Figure-Eight<br>That <em>Gravity Drew</em></h1>
+    <p class="hero-sub">Three equal masses. One curve. No algebraic equation. A proof that took seven years after the discovery.</p>
+  </div>
+  <div class="scroll-cue">
+    <svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    SCROLL
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- THE DISCOVERY -->
+<section class="section reveal">
+  <span class="sec-tag">§ 1 · Discovery</span>
+  <h2>A Shape No One<br>Expected to Find</h2>
+
+  <p>
+    In 1993, Cris Moore was experimenting with equal-mass solutions to the gravitational
+    three-body problem — three masses attracting each other under Newton's law, tracing
+    complicated paths that weave around each other. Most solutions are chaotic.
+    Some are periodic but inelegant. Then Moore's numerical simulation produced something
+    unexpected: three equal masses chasing each other along a single smooth figure-eight,
+    repeating forever.
+  </p>
+
+  <p>
+    Each mass follows the same curve, arriving at each point exactly one-third of a
+    period after the mass ahead of it. The arrangement is called a <em>choreography</em>:
+    a periodic solution in which all bodies trace the same closed path at equal time
+    intervals. Moore found this one by numerical experiment. He could not prove it existed.
+  </p>
+
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-year">1993</div>
+      <p>Cris Moore discovers the figure-eight choreography numerically. The solution exists in simulation — but is it a true solution to Newton's equations, or a numerical artifact?</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2000</div>
+      <p>Alain Chenciner and Richard Montgomery publish a rigorous existence proof in the <em>Annals of Mathematics</em>. The key tool: variational calculus — minimizing the action functional over the space of choreographic loops.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2001</div>
+      <p>Carles Simó produces high-precision numerical data confirming the solution's properties: period, symmetry group, Fourier coefficients, and stability. The Fourier expansion is what makes the curve drawable.</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-year">2026</div>
+      <p>No formal Lean proof of the choreography's existence. The proof requires formalizing the calculus of variations, collision-free minimizers, and Newton's gravitational law — open problems in Mathlib. The figure-eight is real; its Lean certificate does not yet exist.</p>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- SIMULATION -->
+<section class="section-wide reveal" id="sim">
+  <div style="padding: 0 0 1.5rem">
+    <span class="sec-tag">§ 2 · Live Simulation</span>
+    <h2>Watch Gravity Draw the Figure-Eight</h2>
+    <p style="max-width: 58ch; color: var(--silver);">
+      The left panel shows all three masses and the trail of one. The right panel shows
+      the path traced by a single mass over one full period — the figure-eight curve itself.
+      The Fourier expansion used here comes from Simó (2002).
+    </p>
+    <div class="controls">
+      <button class="ctrl-btn active" id="btn-play">&#9646;&#9646; PAUSE</button>
+      <button class="ctrl-btn" id="btn-slow">0.3× SLOW</button>
+      <button class="ctrl-btn active" id="btn-norm">1× SPEED</button>
+      <button class="ctrl-btn" id="btn-fast">3× FAST</button>
+      <button class="ctrl-btn" id="btn-trail">TRAIL: LONG</button>
+    </div>
+  </div>
+
+  <div class="sim-wrap">
+    <div class="sim-panel">
+      <div class="sim-canvas-wrap"><canvas id="simCanvas"></canvas></div>
+      <div class="sim-label">
+        <strong>Three bodies</strong> · each mass m=1 · gravitational constant G=1 ·
+        choreography symmetry Z₃ · period T ≈ 6.3259
+      </div>
+    </div>
+    <div class="sim-panel">
+      <div class="sim-canvas-wrap"><canvas id="curveCanvas"></canvas></div>
+      <div class="sim-label">
+        <strong>The figure-eight curve</strong> · traced by mass 1 over one full period ·
+        Fourier approximation: 4 harmonics · crossing at (−0.206, 0) in normalized coords
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- THE MATHEMATICS -->
+<section class="section reveal">
+  <span class="sec-tag">§ 3 · The Mathematics</span>
+  <h2>Why This Curve<br>Cannot Have an Equation</h2>
+
+  <p>
+    The Gerono lemniscate is defined by x⁴ + y² = x². You can write it on a napkin.
+    The Bernoulli lemniscate is (x²+y²)² = 2(x²−y²). Also a napkin.
+    The analemma is x² = 4y²(1−y²). Napkin again.
+  </p>
+
+  <p>
+    The Chenciner–Montgomery curve has no such equation. It is the minimizer of an
+    action functional over an infinite-dimensional space of loops — the unique closed
+    path (up to scaling and rotation) on which Newton's gravitational three-body system
+    achieves minimum action subject to choreography symmetry. That minimum exists and
+    is collision-free, but it is not algebraic.
+  </p>
+
+  <div class="math-display reveal">
+    Action functional:
+    A[q] = &int;<sub>0</sub><sup>T</sup> [ &frac12;&Sigma;m<sub>i</sub>|q&#775;<sub>i</sub>|&sup2; + &Sigma;<sub>i&lt;j</sub> m<sub>i</sub>m<sub>j</sub>/|q<sub>i</sub>&minus;q<sub>j</sub>| ] dt
+
+    Minimized over choreographic loops with D<sub>6</sub> symmetry.
+    The minimizer is the Chenciner&ndash;Montgomery figure-eight.
+  </div>
+
+  <p>
+    The hardest part of the proof is showing the minimizer has no collisions — that
+    the three masses never occupy the same point. Chenciner and Montgomery used Marchal's
+    theorem together with the D₆ symmetry of the solution space to rule out all
+    possible collision types. Once collisions are excluded, the variational minimum
+    is a genuine smooth periodic solution.
+  </p>
+
+  <h3>The Fourier expansion</h3>
+
+  <p>
+    Although no algebraic equation exists, the curve can be approximated to arbitrary
+    precision by its Fourier series. For one of the three masses:
+  </p>
+
+  <div class="math-display reveal">
+    x(t) &asymp; 0.30689 cos(t) &minus; 0.12522 cos(3t) + 0.02623 cos(5t) &minus; 0.00483 cos(7t) + &hellip;
+    y(t) &asymp; 0.53028 sin(t) &minus; 0.11694 sin(3t) + 0.01642 sin(5t) &minus; 0.00209 sin(7t) + &hellip;
+  </div>
+
+  <p>
+    Only odd harmonics appear, reflecting the curve's symmetry. The leading term decays
+    rapidly — 4 harmonics already give a visually indistinguishable approximation.
+    The simulation above uses exactly these 4 harmonics, computed in real time.
+  </p>
+</section>
+
+<div class="rule"></div>
+
+<!-- KEY FACTS -->
+<section class="section-wide reveal">
+  <div style="padding: 0 0 2rem">
+    <span class="sec-tag">§ 4 · Key Facts</span>
+    <h2>The Properties of the Curve</h2>
+  </div>
+  <div class="facts-grid">
+    <div class="fact-card">
+      <span class="fact-label">Period</span>
+      <div class="fact-value">T ≈ 6.3259</div>
+      <p>In units where G=m=1 and the curve has unit scale. One mass traces the full figure-eight in this time.</p>
+    </div>
+    <div class="fact-card">
+      <span class="fact-label">Symmetry group</span>
+      <div class="fact-value">D₆</div>
+      <p>Dihedral group of order 6: three rotational symmetries (120°) and three reflections. The most symmetric figure-eight known.</p>
+    </div>
+    <div class="fact-card">
+      <span class="fact-label">Self-intersection</span>
+      <div class="fact-value">1 node</div>
+      <p>The curve crosses itself exactly once, at approximately (−0.206, 0) in normalized coordinates. A transverse A₁ node.</p>
+    </div>
+    <div class="fact-card">
+      <span class="fact-label">Crossing angle</span>
+      <div class="fact-value">≈ 60°</div>
+      <p>The two branches meet at approximately 60°, not 90°. This distinguishes it from the algebraic lemniscates, where branches are perpendicular.</p>
+    </div>
+    <div class="fact-card">
+      <span class="fact-label">Algebraic degree</span>
+      <div class="fact-value">∞ (transcendental)</div>
+      <p>No polynomial equation f(x,y)=0 defines this curve. It is transcendental — it cannot be the zero set of any polynomial.</p>
+    </div>
+    <div class="fact-card">
+      <span class="fact-label">Isolation</span>
+      <div class="fact-value">Unique</div>
+      <p>Up to scaling and rotation, there is only one such choreography. It is an isolated point in the space of three-body solutions, not a member of a continuous family.</p>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- WHAT LEAN CAN AND CANNOT PROVE -->
+<section class="section reveal">
+  <span class="sec-tag">§ 5 · Lean 4 and the Choreography</span>
+  <h2>What Lean Can Prove<br>and What It Cannot</h2>
+
+  <p>
+    The four curves formalized in Chapter 1 — Gerono, Bernoulli, solar analemma, lunar
+    analemma — all have explicit algebraic definitions that Lean can work with directly.
+    The Chenciner–Montgomery choreography is different. Its existence proof requires
+    mathematical infrastructure that has not yet been formalized in Mathlib.
+  </p>
+
+  <div class="lean-compare reveal">
+    <div class="lc-col can">
+      <div class="lc-head can-h">Lean CAN prove (now)</div>
+      <ul>
+        <li>The Fourier approximation satisfies A₁ node conditions at the computed crossing point</li>
+        <li>The D₆ symmetry of the Fourier expansion: if (x,y) is on the curve, so is (−x,y), (x,−y), and the 120° rotations</li>
+        <li>The curve is closed: q(t+T) = q(t) for the Fourier truncation</li>
+        <li>The three masses are always at distinct positions (from the truncation data)</li>
+        <li>The Fourier truncation is a genuine figure-eight topologically</li>
+      </ul>
+    </div>
+    <div class="lc-col cannot">
+      <div class="lc-head cannot-h">Lean CANNOT prove (yet)</div>
+      <ul>
+        <li>Existence of a smooth periodic solution to the gravitational three-body equations</li>
+        <li>The action minimizer is collision-free (requires Marchal's theorem in Lean)</li>
+        <li>The minimizer is unique up to symmetry</li>
+        <li>The exact Fourier series converges to the true solution</li>
+        <li>The crossing angle is exactly arctan(√3) ≈ 60°</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>
+    This is not a failure — it is an honest accounting. The distinction between
+    what Lean has verified and what remains unverified is exactly the epistemic
+    discipline the Principia Orthogona framework applies throughout.
+    The choreography's existence is established mathematics; its Lean certificate
+    is future work.
+  </p>
+
+  <div class="status-grid reveal">
+    <div class="status-card" style="--card-color:#3db88a;--card-border:#1a3a2e;--card-bg:#060e0a;">
+      <span class="s-label">PROVED (Chenciner-Montgomery)</span>
+      <p>A smooth periodic choreographic solution to the gravitational 3-body problem exists, is collision-free, and traces a figure-eight with D₆ symmetry.</p>
+    </div>
+    <div class="status-card" style="--card-color:#c8a84b;--card-border:#2a1e0a;--card-bg:#080a04;">
+      <span class="s-label">COMPUTED (Simó 2002)</span>
+      <p>High-precision Fourier coefficients, period, crossing coordinates, and symmetry group confirmed numerically to machine precision.</p>
+    </div>
+    <div class="status-card" style="--card-color:#9b8bdb;--card-border:#1e1a3a;--card-bg:#080810;">
+      <span class="s-label">OPEN (Lean formalization)</span>
+      <p>No Mathlib formalization of the existence proof. Requires: calculus of variations, Newton's gravitational law, collision theory. Estimated years of work.</p>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- CONNECTION TO THE FRAMEWORK -->
+<section class="section reveal">
+  <span class="sec-tag">§ 6 · Connection to the Framework</span>
+  <h2>The Isolated Transcendental<br>and the Many Infinities</h2>
+
+  <p>
+    The Lissajous 2∶1 family is a continuous uncountable family parameterized by
+    (a, b, φ). The planetary analemmas form a countable family indexed by planets.
+    The algebraic quartics with A₁ nodes at the origin form another infinite family.
+    All of these are families — connected, parameterized, smoothly varying.
+  </p>
+
+  <p>
+    The Chenciner–Montgomery choreography is none of these. It is <em>isolated</em>:
+    a single point in the space of closed curves, not connected to any continuous
+    family of figure-eights. You cannot deform it continuously into the Gerono
+    lemniscate or the analemma — they live in different mathematical worlds.
+    One is defined by a polynomial, the other by a physics variational principle.
+  </p>
+
+  <p>
+    This is what "many infinities" means in practice. The figure-eight appears
+    in at least three structurally different types of mathematical context:
+    algebraic (polynomial equations), trigonometric (Lissajous/Fourier families),
+    and variational (action minimizers). Each type is itself infinite. And the
+    types are not exhaustive — there may be others not yet recognized.
+  </p>
+
+  <div class="pullquote reveal">
+    <p>The choreography is the hardest figure-eight to find and the easiest to watch.
+    Gravity found it before mathematics did. The proof came seven years later.
+    Lean will come after that. But the shape was always there.</p>
+    <cite>— Research log, G6 LLC · Newark NJ · 2026</cite>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<footer>
+  <p>
+    ONE SHAPE, MANY INFINITIES · CASE STUDY: CHENCINER–MONTGOMERY ·
+    G6 LLC · PABLO NOGUEIRA GROSSI · NEWARK NJ · 2026<br>
+    <a href="ch01-one-equation.html">← Back to Chapter 1</a> ·
+    <a href="https://github.com/TOTOGT/DM3-lab">TOTOGT / DM3-LAB</a> ·
+    ORCID 0009-0000-6496-2186
+  </p>
+</footer>
+
+</main>
+
+<script>
+// STARFIELD
+(function(){
+  var sf = document.getElementById('starfield');
+  for(var i=0;i<120;i++){
+    var s=document.createElement('div'); s.className='star';
+    var sz=Math.random()*2+0.5;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--dur:'+(2+Math.random()*4)+'s;--delay:'+Math.random()*4+'s;opacity:0.3';
+    sf.appendChild(s);
+  }
+})();
+
+// SCROLL REVEAL
+(function(){
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+  },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el);});
+})();
+
+// CHENCINER-MONTGOMERY FOURIER COEFFICIENTS (Simo 2002)
+var CM = {
+  cx: [0, 0.30689, 0, -0.12522, 0, 0.02623, 0, -0.00483],
+  cy: [0, 0.53028, 0, -0.11694, 0, 0.01642, 0, -0.00209],
+  T: 2 * Math.PI,  // normalized period
+  crossX: -0.20386, // self-intersection x coord
+  crossY: 0.0,      // self-intersection y coord
+  // mass positions at phase offset 0, T/3, 2T/3
+  x: function(t) {
+    var s=0;
+    for(var n=1;n<this.cx.length;n++) s+=this.cx[n]*Math.cos(n*t);
+    return s;
+  },
+  y: function(t) {
+    var s=0;
+    for(var n=1;n<this.cy.length;n++) s+=this.cy[n]*Math.sin(n*t);
+    return s;
+  }
+};
+
+// SIMULATION STATE
+var simState = {
+  t: 0,
+  speed: 1.0,
+  paused: false,
+  trailLen: 300,
+  trails: [[],[],[]], // one trail per mass
+  colors: ['#c8a84b', '#0abab5', '#e07b8a']
+};
+
+function fitCanvas(canvas) {
+  var rect = canvas.getBoundingClientRect();
+  var w = Math.floor(rect.width) || 400;
+  var h = Math.floor(rect.height) || 400;
+  if(canvas.width!==w) canvas.width=w;
+  if(canvas.height!==h) canvas.height=h;
+}
+
+// SCALE: curve range is approx +-0.666 in y
+var SCALE_FAC = 0.72; // fraction of half-canvas to use
+
+function toCanvas(cx, cy, half, px, py) {
+  var sc = half * SCALE_FAC / 0.666;
+  return [cx + px*sc, cy - py*sc]; // flip y for canvas
+}
+
+// HERO CANVAS - three masses tracing figure-eight
+(function(){
+  var canvas = document.getElementById('heroCanvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var t = 0;
+  function tick() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    var w=canvas.width, h=canvas.height;
+    var cx=w/2, cy=h/2, half=Math.min(w,h)/2;
+    ctx.clearRect(0,0,w,h);
+
+    // Full dim curve
+    ctx.save(); ctx.strokeStyle='#c8a84b'; ctx.lineWidth=1; ctx.globalAlpha=0.25;
+    ctx.beginPath();
+    for(var i=0;i<=300;i++){
+      var pt=CM.T*i/300;
+      var xy=toCanvas(cx,cy,half,CM.x(pt),CM.y(pt));
+      i===0?ctx.moveTo(xy[0],xy[1]):ctx.lineTo(xy[0],xy[1]);
+    }
+    ctx.stroke(); ctx.restore();
+
+    // Three masses
+    for(var m=0;m<3;m++){
+      var tm = t + m*CM.T/3;
+      var px=CM.x(tm), py=CM.y(tm);
+      var xy=toCanvas(cx,cy,half,px,py);
+      ctx.save();
+      ctx.beginPath(); ctx.arc(xy[0],xy[1],4,0,Math.PI*2);
+      ctx.fillStyle=simState.colors[m]; ctx.globalAlpha=0.8; ctx.fill(); ctx.restore();
+    }
+
+    t += 0.012; requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+// SIMULATION CANVAS
+var simCanvas = document.getElementById('simCanvas');
+var curveCanvas = document.getElementById('curveCanvas');
+var simCtx = simCanvas ? simCanvas.getContext('2d') : null;
+var curveCtx = curveCanvas ? curveCanvas.getContext('2d') : null;
+
+function simTick() {
+  if(!simCtx || !curveCtx) { requestAnimationFrame(simTick); return; }
+
+  fitCanvas(simCanvas); fitCanvas(curveCanvas);
+
+  var sw=simCanvas.width, sh=simCanvas.height;
+  var cw=curveCanvas.width, ch=curveCanvas.height;
+  var scx=sw/2, scy=sh/2, shall=Math.min(sw,sh)/2;
+  var ccx=cw/2, ccy=ch/2, chalf=Math.min(cw,ch)/2;
+
+  simCtx.clearRect(0,0,sw,sh);
+  curveCtx.clearRect(0,0,cw,ch);
+
+  // --- SIM CANVAS ---
+  // Background: faint figure-eight
+  simCtx.save(); simCtx.strokeStyle='#c8a84b'; simCtx.lineWidth=0.7; simCtx.globalAlpha=0.1;
+  simCtx.beginPath();
+  for(var i=0;i<=300;i++){
+    var pt=CM.T*i/300; var xy=toCanvas(scx,scy,shall,CM.x(pt),CM.y(pt));
+    i===0?simCtx.moveTo(xy[0],xy[1]):simCtx.lineTo(xy[0],xy[1]);
+  }
+  simCtx.stroke(); simCtx.restore();
+
+  // Gravitational connection lines
+  var mpos = [];
+  for(var m=0;m<3;m++){
+    var tm=simState.t+m*CM.T/3;
+    mpos.push(toCanvas(scx,scy,shall,CM.x(tm),CM.y(tm)));
+  }
+  for(var i=0;i<3;i++){
+    for(var j=i+1;j<3;j++){
+      simCtx.save();
+      var dx=mpos[i][0]-mpos[j][0], dy=mpos[i][1]-mpos[j][1];
+      var dist=Math.sqrt(dx*dx+dy*dy);
+      simCtx.strokeStyle='#3a3a5a'; simCtx.lineWidth=0.8; simCtx.globalAlpha=Math.max(0.05,1-dist/shall);
+      simCtx.beginPath(); simCtx.moveTo(mpos[i][0],mpos[i][1]); simCtx.lineTo(mpos[j][0],mpos[j][1]);
+      simCtx.stroke(); simCtx.restore();
+    }
+  }
+
+  // Mass trails
+  for(var m=0;m<3;m++){
+    var trail=simState.trails[m];
+    if(trail.length>1){
+      simCtx.save(); simCtx.strokeStyle=simState.colors[m]; simCtx.lineCap='round';
+      for(var i=1;i<trail.length;i++){
+        var alpha=(i/trail.length)*0.5;
+        simCtx.globalAlpha=alpha; simCtx.lineWidth=1+alpha;
+        simCtx.beginPath(); simCtx.moveTo(trail[i-1][0],trail[i-1][1]); simCtx.lineTo(trail[i][0],trail[i][1]);
+        simCtx.stroke();
+      }
+      simCtx.restore();
+    }
+  }
+
+  // Masses
+  for(var m=0;m<3;m++){
+    simCtx.save();
+    simCtx.beginPath(); simCtx.arc(mpos[m][0],mpos[m][1],7,0,Math.PI*2);
+    simCtx.fillStyle=simState.colors[m]; simCtx.globalAlpha=1;
+    simCtx.shadowColor=simState.colors[m]; simCtx.shadowBlur=12;
+    simCtx.fill(); simCtx.restore();
+    // Label
+    simCtx.save(); simCtx.font='11px "DM Mono"'; simCtx.fillStyle=simState.colors[m];
+    simCtx.globalAlpha=0.7; simCtx.textAlign='center';
+    simCtx.fillText('m'+(m+1), mpos[m][0], mpos[m][1]-14); simCtx.restore();
+  }
+
+  // Center of mass dot
+  var comx=(mpos[0][0]+mpos[1][0]+mpos[2][0])/3;
+  var comy=(mpos[0][1]+mpos[1][1]+mpos[2][1])/3;
+  simCtx.save(); simCtx.globalAlpha=0.3+0.1*Math.sin(simState.t*3);
+  simCtx.beginPath(); simCtx.arc(comx,comy,3,0,Math.PI*2);
+  simCtx.fillStyle='white'; simCtx.fill(); simCtx.restore();
+
+  // --- CURVE CANVAS ---
+  // Background grid
+  curveCtx.save(); curveCtx.strokeStyle='#c8a84b'; curveCtx.lineWidth=0.5; curveCtx.globalAlpha=0.06;
+  for(var v=-0.6;v<=0.65;v+=0.2){
+    var xy1=toCanvas(ccx,ccy,chalf,v,-0.7), xy2=toCanvas(ccx,ccy,chalf,v,0.7);
+    curveCtx.beginPath(); curveCtx.moveTo(xy1[0],xy1[1]); curveCtx.lineTo(xy2[0],xy2[1]); curveCtx.stroke();
+    xy1=toCanvas(ccx,ccy,chalf,-0.35,v); xy2=toCanvas(ccx,ccy,chalf,0.35,v);
+    curveCtx.beginPath(); curveCtx.moveTo(xy1[0],xy1[1]); curveCtx.lineTo(xy2[0],xy2[1]); curveCtx.stroke();
+  }
+  curveCtx.restore();
+
+  // Full dim figure-eight
+  curveCtx.save(); curveCtx.strokeStyle='#c8a84b'; curveCtx.lineWidth=1.5; curveCtx.globalAlpha=0.18;
+  curveCtx.beginPath();
+  for(var i=0;i<=400;i++){
+    var pt=CM.T*i/400; var xy=toCanvas(ccx,ccy,chalf,CM.x(pt),CM.y(pt));
+    i===0?curveCtx.moveTo(xy[0],xy[1]):curveCtx.lineTo(xy[0],xy[1]);
+  }
+  curveCtx.stroke(); curveCtx.restore();
+
+  // Traced portion (mass 1 progress through current period)
+  var phase = simState.t % CM.T;
+  var tracedSteps = Math.floor((phase/CM.T)*400);
+  curveCtx.save(); curveCtx.strokeStyle='#c8a84b'; curveCtx.lineWidth=2.5; curveCtx.globalAlpha=0.9;
+  curveCtx.shadowColor='#c8a84b'; curveCtx.shadowBlur=10;
+  curveCtx.beginPath();
+  for(var i=0;i<=tracedSteps;i++){
+    var pt=CM.T*i/400; var xy=toCanvas(ccx,ccy,chalf,CM.x(pt),CM.y(pt));
+    i===0?curveCtx.moveTo(xy[0],xy[1]):curveCtx.lineTo(xy[0],xy[1]);
+  }
+  curveCtx.stroke(); curveCtx.restore();
+
+  // Mass 1 leading dot on curve
+  var xy=toCanvas(ccx,ccy,chalf,CM.x(simState.t),CM.y(simState.t));
+  curveCtx.save(); curveCtx.beginPath(); curveCtx.arc(xy[0],xy[1],6,0,Math.PI*2);
+  curveCtx.fillStyle='#c8a84b'; curveCtx.globalAlpha=1;
+  curveCtx.shadowColor='#c8a84b'; curveCtx.shadowBlur=14; curveCtx.fill(); curveCtx.restore();
+
+  // Crossing marker
+  var cxy=toCanvas(ccx,ccy,chalf,CM.crossX,CM.crossY);
+  curveCtx.save(); curveCtx.globalAlpha=0.25+0.15*Math.sin(simState.t*2);
+  curveCtx.beginPath(); curveCtx.arc(cxy[0],cxy[1],5,0,Math.PI*2);
+  curveCtx.strokeStyle='white'; curveCtx.lineWidth=1.2; curveCtx.stroke();
+  curveCtx.font='10px "DM Mono"'; curveCtx.fillStyle='white'; curveCtx.textAlign='center';
+  curveCtx.fillText('A\u2081', cxy[0], cxy[1]-12); curveCtx.restore();
+
+  // Update state
+  if(!simState.paused) {
+    var dt = 0.018 * simState.speed;
+    simState.t += dt;
+    // Update trails for mass 0 only
+    var trailPt = toCanvas(scx,scy,shall,CM.x(simState.t),CM.y(simState.t));
+    simState.trails[0].push(trailPt);
+    if(simState.trails[0].length > simState.trailLen) simState.trails[0].shift();
+  }
+
+  requestAnimationFrame(simTick);
+}
+simTick();
+
+// CONTROLS
+document.getElementById('btn-play').addEventListener('click', function(){
+  simState.paused = !simState.paused;
+  this.textContent = simState.paused ? '\u25B6 PLAY' : '\u23F8 PAUSE';
+  // unicode: ▶ and ⏸
+  this.textContent = simState.paused ? String.fromCharCode(9654)+' PLAY' : String.fromCharCode(9646)+String.fromCharCode(9646)+' PAUSE';
+});
+document.getElementById('btn-slow').addEventListener('click', function(){
+  simState.speed=0.3;
+  document.querySelectorAll('.ctrl-btn').forEach(function(b){b.classList.remove('active');});
+  this.classList.add('active');
+});
+document.getElementById('btn-norm').addEventListener('click', function(){
+  simState.speed=1.0;
+  document.querySelectorAll('.ctrl-btn').forEach(function(b){b.classList.remove('active');});
+  this.classList.add('active');
+});
+document.getElementById('btn-fast').addEventListener('click', function(){
+  simState.speed=3.0;
+  document.querySelectorAll('.ctrl-btn').forEach(function(b){b.classList.remove('active');});
+  this.classList.add('active');
+});
+document.getElementById('btn-trail').addEventListener('click', function(){
+  if(simState.trailLen===300){simState.trailLen=80;this.textContent='TRAIL: SHORT';}
+  else if(simState.trailLen===80){simState.trailLen=600;this.textContent='TRAIL: FULL';}
+  else{simState.trailLen=300;this.textContent='TRAIL: LONG';}
+});
+</script>
+</body>
+</html>

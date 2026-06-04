@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theory · Principia Orthogona · 21 Papers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04040a;
+  --surface: #0d0d14;
+  --card: #0e0e00;
+  --accent: #f7c948;
+  --accent2: #ff8c00;
+  --accent3: #00f5d4;
+  --text: #e8e8f0;
+  --muted: #666660;
+  --border: #f7c94818;
+  --border-dim: #ffffff08;
+  --green: #00e676;
+  --red: #ff3860;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+nav a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+nav a:hover { color: var(--accent); }
+nav a.active { color: var(--accent); }
+.nav-right { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+
+/* ── HERO ── */
+.hero {
+  padding: 6rem 2rem 4rem;
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+}
+.series-badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 2rem;
+}
+h1 {
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  text-shadow: 0 0 60px #f7c94830;
+}
+h1 .sub {
+  display: block;
+  font-size: 0.32em;
+  color: var(--text);
+  letter-spacing: 0.05em;
+  font-weight: 300;
+  margin-top: 0.35em;
+}
+.hero-body {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 620px;
+  line-height: 1.8;
+  margin: 2rem 0 2.5rem;
+}
+.hero-body strong { color: var(--text); }
+.doi-root {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.78rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--card);
+  border-left: 3px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 5rem;
+}
+.doi-root-label { color: var(--muted); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.doi-root-val { color: var(--accent); }
+.doi-root a {
+  color: var(--accent3);
+  text-decoration: none;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  border: 1px solid #00f5d430;
+  padding: 0.4rem 0.9rem;
+  transition: all 0.2s;
+}
+.doi-root a:hover { background: #00f5d415; }
+
+/* ── PAPER COUNT BAR ── */
+.count-bar {
+  padding: 0 2rem;
+  max-width: 900px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+.count-num {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.count-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── SECTION HEADERS ── */
+.section-head {
+  padding: 3rem 2rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.section-head + .section-head { padding-top: 2rem; }
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-top: 0.6rem;
+  line-height: 1.6;
+}
+
+/* ── PAPER LIST ── */
+.paper-list {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.paper-item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  gap: 0 1.5rem;
+  align-items: start;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-dim);
+  transition: background 0.15s;
+}
+.paper-item:hover { background: #f7c9480a; }
+.paper-item:first-child { border-top: 1px solid var(--border-dim); }
+.paper-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--muted);
+  padding-top: 0.2rem;
+  letter-spacing: 0.05em;
+}
+.paper-body {}
+.paper-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.45;
+  margin-bottom: 0.4rem;
+}
+.paper-doi {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  word-break: break-all;
+}
+.paper-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.75rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+  align-self: center;
+}
+.paper-link:hover { background: var(--border); }
+
+/* ── OPERATOR BLOCK ── */
+.operator {
+  padding: 4rem 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+  margin-top: 4rem;
+}
+.op-block {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  line-height: 2;
+  padding: 2rem;
+  background: var(--card);
+  border-left: 3px solid var(--accent);
+}
+.op-block .label { color: var(--accent); }
+.op-block .val   { color: var(--text); }
+.op-block .dim   { color: var(--muted); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  margin-top: 6rem;
+}
+footer p { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+footer a { color: var(--accent); text-decoration: none; }
+
+@media (max-width: 600px) {
+  .paper-item { grid-template-columns: 2rem 1fr; }
+  .paper-link { display: none; }
+  .paper-title { font-size: 0.92rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">← EMMEs</a>
+  <div class="nav-right">
+    <a href="game-theory.html">GAME THEORY</a>
+    <a href="probability.html">PROBABILITY</a>
+    <a href="propaganda.html">PROPAGANDA!</a>
+    <a href="ticker.html">TICKER</a>
+    <a href="theory.html" class="active">THEORY</a>
+    <a href="collatz-engineering.html" style="color:#00f5d470">COLLATZ</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="series-badge">Principia Orthogona · Complete Series</div>
+  <h1>The<br>Mathematics<span class="sub">21 papers. One operator chain. No trailing stops.</span></h1>
+  <p class="hero-body">
+    The same sequence — <strong>C → K → F → U</strong> — governs every generative transition
+    in plasma confinement, biological morphogenesis, market structure, and number theory.
+    These papers are not a metaphor for the tokens. <strong>The tokens are an instantiation of the papers.</strong>
+  </p>
+  <div class="doi-root">
+    <div>
+      <div class="doi-root-label">Series Root DOI</div>
+      <div class="doi-root-val">doi.org/10.5281/zenodo.19117399</div>
+    </div>
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Open Series ↗</a>
+  </div>
+</section>
+
+<div class="count-bar">
+  <div class="count-num">21</div>
+  <div class="count-label">papers in the series + engineering supplement</div>
+</div>
+
+<!-- ── ENGINEERING SUPPLEMENT ── -->
+<div class="section-head" style="border-color:#00f5d4;background:linear-gradient(90deg,#00f5d408,transparent)">
+  <div class="section-label" style="color:#00f5d4">Engineering Supplement · Build Manual</div>
+  <div class="section-desc">Full engineering specification: dm³ axioms in computable form, Python/Julia/Lean 4 code, TikZ figures, Bridge 0 gap analysis. Zenodo DOI 10.5281/zenodo.19378742.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item" style="border-color:#00f5d420;background:linear-gradient(90deg,#00f5d406,transparent)">
+    <div class="paper-num" style="color:#00f5d4">ES</div>
+    <div class="paper-body">
+      <div class="paper-title">The Collatz Conjecture as a Corollary of Crystal Geometry — Engineering Specification</div>
+      <div class="paper-doi">doi.org/10.5281/zenodo.19378742 · dm³ axioms · G6 Crystal · AXLE Target 5 · Python · Julia · Lean 4</div>
+    </div>
+    <div style="display:flex;gap:0.5rem;align-items:center">
+      <a href="collatz-engineering.html" class="paper-link" style="background:#00f5d415;border-color:#00f5d440;color:#00f5d4">Read ↗</a>
+      <a href="https://doi.org/10.5281/zenodo.19378742" target="_blank" class="paper-link">Zenodo ↗</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── GROUP 1: CORE FRAMEWORK ── -->
+<div class="section-head">
+  <div class="section-label">Core Framework · Principia Orthogona</div>
+  <div class="section-desc">The foundational volumes establishing the operator chain C → K → F → U and its universal applicability.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">03</div>
+    <div class="paper-body">
+      <div class="paper-title">Principia Orthogona, Volume I</div>
+      <div class="paper-doi">zenodo.org/records/20320693</div>
+    </div>
+    <a href="https://zenodo.org/records/20320693" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">21</div>
+    <div class="paper-body">
+      <div class="paper-title">Principia Orthogona, Volume I (V3)</div>
+      <div class="paper-doi">zenodo.org/records/20298665</div>
+    </div>
+    <a href="https://zenodo.org/records/20298665" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">20</div>
+    <div class="paper-body">
+      <div class="paper-title">Principia Orthogona, Volume II</div>
+      <div class="paper-doi">zenodo.org/records/20159456</div>
+    </div>
+    <a href="https://zenodo.org/records/20159456" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">16</div>
+    <div class="paper-body">
+      <div class="paper-title">Generative Contact Mechanics (Core Framework)</div>
+      <div class="paper-doi">zenodo.org/records/20230610</div>
+    </div>
+    <a href="https://zenodo.org/records/20230610" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 2: OPERATORS & MATHEMATICS ── -->
+<div class="section-head">
+  <div class="section-label">Operators &amp; Mathematics</div>
+  <div class="section-desc">The dm³ operator, curvature thresholds, orbit theory, and the fold as formal mathematical objects.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">07</div>
+    <div class="paper-body">
+      <div class="paper-title">The dm³ Operator: Explicit Toy Model</div>
+      <div class="paper-doi">zenodo.org/records/20230624</div>
+    </div>
+    <a href="https://zenodo.org/records/20230624" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">08</div>
+    <div class="paper-body">
+      <div class="paper-title">The dm³ Criticality Principle</div>
+      <div class="paper-doi">zenodo.org/records/20230628</div>
+    </div>
+    <a href="https://zenodo.org/records/20230628" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">04</div>
+    <div class="paper-body">
+      <div class="paper-title">Multi-Orbit Identity Theory</div>
+      <div class="paper-doi">zenodo.org/records/20230614</div>
+    </div>
+    <a href="https://zenodo.org/records/20230614" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">01</div>
+    <div class="paper-body">
+      <div class="paper-title">GTCT Ring 5 (Generative Time Circuit Theorem)</div>
+      <div class="paper-doi">zenodo.org/records/20239928</div>
+    </div>
+    <a href="https://zenodo.org/records/20239928" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">14</div>
+    <div class="paper-body">
+      <div class="paper-title">The Number 33: Stability Threshold</div>
+      <div class="paper-doi">zenodo.org/records/20230625</div>
+    </div>
+    <a href="https://zenodo.org/records/20230625" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 3: CRYSTAL GEOMETRY & NUMBER THEORY ── -->
+<div class="section-head">
+  <div class="section-label">Crystal Geometry &amp; Number Theory</div>
+  <div class="section-desc">The G6 crystal structure, Collatz as corollary, wavenumber stability, and n-Bonacci criticality.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">05</div>
+    <div class="paper-body">
+      <div class="paper-title">The G6 Crystal</div>
+      <div class="paper-doi">zenodo.org/records/20230611</div>
+    </div>
+    <a href="https://zenodo.org/records/20230611" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">15</div>
+    <div class="paper-body">
+      <div class="paper-title">Collatz Conjecture as Corollary of Crystal Geometry</div>
+      <div class="paper-doi">zenodo.org/records/20230621</div>
+    </div>
+    <a href="https://zenodo.org/records/20230621" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">02</div>
+    <div class="paper-body">
+      <div class="paper-title">Wavenumber 6: Orthogenetic Stability Generator</div>
+      <div class="paper-doi">zenodo.org/records/20230640</div>
+    </div>
+    <a href="https://zenodo.org/records/20230640" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">12</div>
+    <div class="paper-body">
+      <div class="paper-title">Differential Nonlinear Robustness (Fibonacci vs Tribonacci)</div>
+      <div class="paper-doi">zenodo.org/records/20230642</div>
+    </div>
+    <a href="https://zenodo.org/records/20230642" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">13</div>
+    <div class="paper-body">
+      <div class="paper-title">Criticality Thresholds in n-Bonacci Media</div>
+      <div class="paper-doi">zenodo.org/records/20230643</div>
+    </div>
+    <a href="https://zenodo.org/records/20230643" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 4: BIOLOGY & PHYSICS ── -->
+<div class="section-head">
+  <div class="section-label">Biology &amp; Physics</div>
+  <div class="section-desc">Biological morphogenesis, connectome topology, autophagy, and plasma confinement — all running the same operator chain.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">06</div>
+    <div class="paper-body">
+      <div class="paper-title">Biological Transitions as Multi-Agent Realisations</div>
+      <div class="paper-doi">zenodo.org/records/20276671</div>
+    </div>
+    <a href="https://zenodo.org/records/20276671" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">09</div>
+    <div class="paper-body">
+      <div class="paper-title">Polylaminin, Microtubules, and the k-nacci Spine</div>
+      <div class="paper-doi">zenodo.org/records/20230633</div>
+    </div>
+    <a href="https://zenodo.org/records/20230633" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">11</div>
+    <div class="paper-body">
+      <div class="paper-title">Fruit-Fly Connectome Toy Model (V2)</div>
+      <div class="paper-doi">zenodo.org/records/20230617</div>
+    </div>
+    <a href="https://zenodo.org/records/20230617" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">17</div>
+    <div class="paper-body">
+      <div class="paper-title">Self-Regulation: Autophagy and Triple-Alpha</div>
+      <div class="paper-doi">zenodo.org/records/20168812</div>
+    </div>
+    <a href="https://zenodo.org/records/20168812" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── GROUP 5: APPLIED & CROSS-DOMAIN ── -->
+<div class="section-head">
+  <div class="section-label">Applied &amp; Cross-Domain</div>
+  <div class="section-desc">From bridge topology to the Vitruvian approximation to lexical generativity — the framework applied beyond physics.</div>
+</div>
+<div class="paper-list">
+  <div class="paper-item">
+    <div class="paper-num">10</div>
+    <div class="paper-body">
+      <div class="paper-title">Bridges: The Malara Discovery</div>
+      <div class="paper-doi">zenodo.org/records/20230644</div>
+    </div>
+    <a href="https://zenodo.org/records/20230644" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">18</div>
+    <div class="paper-body">
+      <div class="paper-title">The Vitruvian Approximation</div>
+      <div class="paper-doi">zenodo.org/records/19984522</div>
+    </div>
+    <a href="https://zenodo.org/records/19984522" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+  <div class="paper-item">
+    <div class="paper-num">19</div>
+    <div class="paper-body">
+      <div class="paper-title">Lexical Generativity in English</div>
+      <div class="paper-doi">zenodo.org/records/19513913</div>
+    </div>
+    <a href="https://zenodo.org/records/19513913" target="_blank" class="paper-link">Open ↗</a>
+  </div>
+</div>
+
+<!-- ── OPERATOR CONTEXT ── -->
+<section class="operator">
+  <div class="op-block">
+    <div><span class="label">Series &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">Principia Orthogona</span></div>
+    <div><span class="label">Root DOI &nbsp;&nbsp;&nbsp;</span><span class="val">doi.org/10.5281/zenodo.19117399</span></div>
+    <div><span class="label">Papers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">21 · spanning plasma, biology, geometry, markets, linguistics</span></div>
+    <div><span class="label">Core claim &nbsp;</span><span class="val">C → K → F → U governs all generative transitions</span></div>
+    <div><span class="label">Tokens &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="val">GAME THEORY · PROBABILITY · PROPAGANDA! &nbsp;</span><span class="dim">instantiations</span></div>
+    <div><span class="label">Market form </span><span class="val">compression → curvature → fold → unfold → new equilibrium</span></div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    <a href="index.html">EMMEs</a> ·
+    <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
+    <a href="ticker.html">Live Ticker</a> ·
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Principia Orthogona ↗</a>
+  </p>
+  <p style="margin-top:0.6rem">The mathematics is real. The tokens are real. The risk is very real.</p>
+</footer>
+
+</body>
+</html>

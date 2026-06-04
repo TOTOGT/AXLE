@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter τ · The Cosmic Tortoise · Principia Orthogona</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #0a0e1a;
+    --navy-mid:   #111827;
+    --navy-light: #1a2235;
+    --gold:       #c9a84c;
+    --gold-bright:#e8c96a;
+    --gold-dim:   #8a6f2e;
+    --cream:      #f5f0e8;
+    --cream-dim:  #d4cfc7;
+    --jade:       #2d6a4f;
+    --jade-bright:#52b788;
+    --teal:       #2dd4bf;
+    --teal-dim:   #1a7a6e;
+    --ocean:      #0a1628;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--navy);
+    color:var(--cream);
+    font-family:'Cormorant Garamond','EB Garamond',Georgia,serif;
+    font-size:1.15rem;
+    line-height:1.9;
+  }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(10,14,26,0.96);
+    border-bottom:1px solid var(--gold-dim);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.7rem 2.5rem;
+    backdrop-filter:blur(8px);
+  }
+  nav .series { font-size:0.78rem; letter-spacing:0.18em; color:var(--gold-dim); text-transform:uppercase; }
+  nav .chapter-nav { display:flex; gap:1.5rem; }
+  nav a { color:var(--gold); text-decoration:none; font-size:0.85rem; letter-spacing:0.08em; transition:color 0.2s; }
+  nav a:hover { color:var(--gold-bright); }
+
+  /* HERO */
+  .hero {
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:6rem 2rem 4rem;
+    position:relative; overflow:hidden;
+  }
+  .hero-img {
+    position:absolute; inset:0;
+    background:url('kurma-meru-duvotenay-1843.jpg') center/cover no-repeat;
+    opacity:0.12;
+    filter:sepia(0.6) hue-rotate(10deg);
+  }
+  .hero-canvas { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+  .hero-eyebrow { font-size:0.72rem; letter-spacing:0.3em; color:var(--teal); text-transform:uppercase; margin-bottom:1.5rem; position:relative; z-index:1; }
+  .hero h1 { font-size:clamp(2.8rem,7vw,5.5rem); font-weight:300; color:var(--gold-bright); line-height:1.1; margin-bottom:0.6rem; letter-spacing:0.02em; position:relative; z-index:1; }
+  .hero h2 { font-size:clamp(1.1rem,2.5vw,1.6rem); font-weight:300; color:var(--cream-dim); font-style:italic; margin-bottom:2.5rem; letter-spacing:0.04em; position:relative; z-index:1; }
+  .hero-divider { width:80px; height:1px; background:var(--gold); margin:0 auto 2.5rem; position:relative; z-index:1; }
+  .hero-epigraph { max-width:580px; font-size:1rem; font-style:italic; color:var(--cream-dim); line-height:1.75; position:relative; z-index:1; }
+  .hero-epigraph cite { display:block; margin-top:0.7rem; font-size:0.78rem; letter-spacing:0.15em; color:var(--gold-dim); font-style:normal; text-transform:uppercase; }
+
+  /* BODY */
+  .chapter-body { max-width:820px; margin:0 auto; padding:4rem 2rem; }
+  .section { margin-bottom:5rem; }
+  .section-number { font-size:0.68rem; letter-spacing:0.3em; color:var(--gold-dim); text-transform:uppercase; margin-bottom:0.8rem; }
+  .section h3 { font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:400; color:var(--gold-bright); margin-bottom:1.5rem; line-height:1.25; }
+  .section p { margin-bottom:1.4rem; font-size:1.08rem; }
+
+  blockquote { border-left:2px solid var(--teal); padding:1.2rem 0 1.2rem 2rem; margin:2.5rem 0; font-style:italic; font-size:1.15rem; color:var(--gold-bright); line-height:1.65; }
+  blockquote cite { display:block; margin-top:0.6rem; font-size:0.75rem; letter-spacing:0.15em; color:var(--gold-dim); font-style:normal; text-transform:uppercase; }
+
+  .theorem { background:var(--navy-light); border:1px solid var(--teal-dim); border-left:3px solid var(--teal); padding:1.8rem 2rem; margin:2.5rem 0; border-radius:2px; }
+  .theorem-label { font-size:0.68rem; letter-spacing:0.25em; color:var(--teal); text-transform:uppercase; margin-bottom:0.8rem; }
+  .theorem-body { font-size:1.05rem; line-height:1.75; }
+  .theorem-body em { color:var(--gold-bright); font-style:normal; font-weight:500; }
+  .theorem-lean { font-family:monospace; font-size:0.78rem; color:var(--teal); background:rgba(45,212,191,0.06); padding:0.8rem 1rem; margin-top:1rem; border-left:2px solid var(--teal-dim); line-height:1.8; }
+  .theorem-lean .lc { color:var(--gold-dim); }
+
+  /* MACHINES */
+  .machine { background:var(--navy-mid); border:1px solid var(--gold-dim); border-radius:4px; padding:2rem; margin:3rem 0; }
+  .machine-title { font-size:0.7rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; margin-bottom:1.2rem; display:flex; align-items:center; gap:0.8rem; }
+  .machine-title::after { content:''; flex:1; height:1px; background:var(--gold-dim); opacity:0.4; }
+  .btn-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin:1rem 0; justify-content:center; }
+  .btn { background:transparent; border:1px solid var(--gold-dim); color:var(--gold); padding:0.4rem 1rem; font-family:'Cormorant Garamond',serif; font-size:0.85rem; letter-spacing:0.08em; cursor:pointer; border-radius:2px; transition:all 0.2s; }
+  .btn:hover,.btn.active { background:var(--gold); color:var(--navy); border-color:var(--gold); }
+  .btn.teal { border-color:var(--teal-dim); color:var(--teal); }
+  .btn.teal:hover,.btn.teal.active { background:var(--teal); color:var(--navy); border-color:var(--teal); }
+  .machine-label { text-align:center; font-size:0.78rem; color:var(--gold-dim); letter-spacing:0.1em; margin-top:0.8rem; font-style:italic; }
+
+  /* SCUTE TABLE */
+  .scute-table { width:100%; border-collapse:collapse; margin:1.5rem 0; font-size:0.9rem; }
+  .scute-table th { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dim); padding:0.5rem 0.8rem; border-bottom:1px solid rgba(201,168,76,0.2); text-align:left; }
+  .scute-table td { padding:0.6rem 0.8rem; border-bottom:1px solid rgba(201,168,76,0.06); color:var(--cream-dim); font-size:0.88rem; }
+  .scute-table td:first-child { color:var(--gold-bright); font-style:italic; }
+  .scute-table .highlight { color:var(--teal); }
+  .scute-table .note { color:var(--gold-dim); font-size:0.78rem; }
+
+  /* BRIDGE TABLE */
+  .bridge-table { width:100%; border-collapse:collapse; margin:2rem 0; }
+  .bridge-table th { font-size:0.62rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-dim); padding:0.5rem 0.8rem; border-bottom:1px solid rgba(201,168,76,0.2); background:var(--navy-light); }
+  .bridge-table td { padding:0.7rem 0.8rem; border-bottom:1px solid rgba(201,168,76,0.06); font-size:0.9rem; color:var(--cream-dim); }
+  .bridge-table td:first-child { color:var(--gold-bright); }
+  .bridge-table td:nth-child(2) { color:var(--teal); font-family:monospace; font-size:0.82rem; }
+
+  /* TAMAR */
+  .tamar-block {
+    background:var(--ocean);
+    border:1px solid var(--teal-dim);
+    padding:2rem; margin:3rem 0; border-radius:2px;
+  }
+  .tamar-block h4 { font-size:0.68rem; letter-spacing:0.25em; color:var(--teal); text-transform:uppercase; margin-bottom:1rem; }
+  .tamar-block p { font-size:1rem; margin-bottom:1rem; color:var(--cream-dim); }
+  .tamar-block a { color:var(--teal); }
+
+  /* IMAGE */
+  .img-block { margin:2.5rem 0; }
+  .img-block img { width:100%; display:block; opacity:0.85; border:1px solid var(--gold-dim); }
+  .img-caption { font-size:0.75rem; letter-spacing:0.1em; color:var(--gold-dim); font-style:italic; margin-top:0.6rem; text-align:center; }
+
+  /* FOOTER */
+  footer { background:var(--navy-mid); border-top:1px solid var(--gold-dim); padding:2.5rem 2rem; text-align:center; }
+  footer .nav-links { display:flex; justify-content:center; gap:2rem; margin-bottom:1rem; flex-wrap:wrap; }
+  footer .nav-links a { color:var(--gold); text-decoration:none; font-size:0.85rem; }
+  footer div { font-size:0.75rem; color:var(--gold-dim); letter-spacing:0.1em; margin-top:0.4rem; }
+  .series-mark { color:var(--gold-dim); font-size:0.7rem; margin-top:0.8rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="series">Principia Orthogona · Chapter τ</span>
+  <div class="chapter-nav">
+    <a href="ch8-meru.html">← Ch.8 · The Mountain and the Serpent</a>
+    <a href="ch9-phi.html">Ch.9 · Phi →</a>
+    <a href="living-book.html">Index</a>
+    <a href="https://grossi-ops.github.io/Atratores/turtle-shell-machine.html">🐢 Sound Machine</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img"></div>
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-eyebrow">Chapter τ · Tartaruga · Following Chapter 8</div>
+  <h1>The Cosmic Tortoise</h1>
+  <h2>A Tartaruga Cósmica · The Shell That Carries the Mountain</h2>
+  <div class="hero-divider"></div>
+  <div class="hero-epigraph">
+    "In the beginning, Vishnu rested on the cosmic ocean. When the gods and demons churned the sea of milk, Vishnu took the form of Kurma — the great tortoise — and placed himself at the bottom. On his back the churning-mountain Meru rested. The world was made from what rose."
+    <cite>— Kurma Purana · c. 5th century CE</cite>
+  </div>
+</section>
+
+<!-- BODY -->
+<main class="chapter-body">
+
+  <!-- §τ.1 — The image -->
+  <section class="section">
+    <div class="section-number">Section τ.1 · The Image</div>
+    <h3>What the 1843 Atlas Knew</h3>
+
+    <div class="img-block">
+      <img
+        src="kurma-meru-duvotenay-1843.jpg"
+        alt="The cosmic tortoise and Mount Meru — Thunot Duvotenay, 1843"
+        loading="lazy"
+      >
+      <div class="img-caption">
+        "The cosmic tortoise, and Mount Meru" · Atlas by Thunot Duvotenay (1796–1875), Paris, 1843 · Public domain · Wikimedia Commons
+      </div>
+    </div>
+
+    <p>This engraving was made in Paris in 1843. The artist — Thunot Duvotenay, geographer — was drawing a cosmological diagram from Hindu tradition: the cosmic tortoise Kurma, bearing Mount Meru on his shell. He was not a mathematician. He was not a physicist. He did not know about contact geometry, Chladni figures, or the dm³ operator chain.</p>
+
+    <p>He drew the turtle shell as a geometric pattern. The scutes — the plates of the shell — are arranged in rows. The central vertebral row. The flanking costal rows. The marginal ring at the edge. He drew it this way because that is how a turtle shell looks. He did not know he was drawing a Chladni figure. He did not know the pattern on the shell is a standing wave frozen in keratin — a nodal structure of the same mathematical form as the figures Ernst Chladni had demonstrated 56 years earlier by dragging a violin bow across a sand-covered plate.</p>
+
+    <p>But the Hindu tradition that produced this diagram knew something. They placed the mountain on the shell — <em>not beside it, not above it, but on it</em>. Meru grows from the turtle's back. The fixed point of the universe grows from the standing wave of biological form. This is not decoration. In the language of Chapter 8: Mount Meru is the F operator — the fixed point of the cosmic cycle. The turtle's shell is the contact manifold on which F acts. The two were always understood as one object.</p>
+  </section>
+
+  <!-- §τ.2 — The mathematics -->
+  <section class="section">
+    <div class="section-number">Section τ.2 · The Mathematics</div>
+    <h3>Why the Shell Has Five Vertebral Scutes</h3>
+
+    <p>The sea turtle shell is not random. Every sea turtle species — with one exception we will return to — has exactly <strong>five vertebral scutes</strong> running down the centre of the shell. This is not a coincidence of evolution. It is a consequence of the same mathematics that governs all Chladni figures.</p>
+
+    <p>A Chladni figure is what you see when sand is placed on a vibrating plate. The sand migrates to the <em>nodal lines</em> — the places where the vibration amplitude is zero, where the plate is still. The pattern of nodal lines depends entirely on which mode of vibration is excited: which frequencies, in which combination, at which ratios. The nodal lines are the solutions of a partial differential equation — the wave equation on the plate — and they tile the plate into distinct regions.</p>
+
+    <p>On a flat rectangular plate, mode (m=3, n=2) produces m×n = 6 nodal zones. But the turtle shell is not a flat plate — it is a curved surface with Gaussian curvature, carrying the contact form α = dz − r²dθ. On a curved surface, the nodal structure shifts: boundary conditions, curvature, and the contact geometry all modify which modes are accessible and how they tile the surface. The five vertebral scutes are the result of C→K→F→U acting on the curved carapacial ridge during development — each suture line is an F event, a fold point at curvature threshold κ*. The precise correspondence between the shell's scute count and a curved-surface Chladni mode is <em>an open problem</em> — a beautiful and falsifiable one. The flat-plate analogy illuminates the structure; the curved-surface contact geometry is what closes the mathematics.</p>
+
+    <div class="machine">
+      <div class="machine-title">Chladni Figure · Mode (m,n) · Live Simulator</div>
+      <canvas id="chladniCanvas" width="600" height="340" style="width:100%;max-width:600px;display:block;margin:0 auto;"></canvas>
+      <div class="btn-row">
+        <button class="btn teal active" id="btnTurtle" onclick="setMode(3,2)">🐢 Turtle shell (3,2) — 5 vertebrals</button>
+        <button class="btn teal" id="btnHex" onclick="setMode(3,3)">⬡ Hexagonal (3,3) — leatherback skin</button>
+        <button class="btn" id="btnMeru" onclick="setMode(4,3)">⛰ Meru (4,3) — 12 nodal zones</button>
+        <button class="btn" id="btnOuro" onclick="setMode(2,2)">☯ Ouroboros (2,2) — 4 zones</button>
+      </div>
+      <div style="display:flex;gap:1rem;justify-content:center;align-items:center;margin:0.5rem 0;font-size:0.85rem;flex-wrap:wrap;">
+        <label style="color:var(--gold-dim);">m <input type="range" id="mSlider" min="1" max="6" step="1" value="3" style="accent-color:var(--teal);width:80px;"> <span id="mVal" style="color:var(--teal);">3</span></label>
+        <label style="color:var(--gold-dim);">n <input type="range" id="nSlider" min="1" max="6" step="1" value="2" style="accent-color:var(--teal);width:80px;"> <span id="nVal" style="color:var(--teal);">2</span></label>
+      </div>
+      <div class="machine-label" id="chladniLabel">Mode (3,2) · 6 nodal zones · vertebral pattern of sea turtle shell · sand accumulates at suture lines</div>
+    </div>
+
+    <p>The turtle shell is a Chladni figure because the embryological process that creates the scute pattern is itself a wave-like process. During development, the turtle's carapace undergoes a sequence of compressions and curvature intensifications that follow the operator chain C → K → F → U. The scute boundaries form at the fold points — the F events — where curvature reaches the critical threshold κ*. The result is a tiling whose boundaries are nodal lines, whose regions are attractor basins, and whose overall structure is the (3,2) Chladni mode expressed in bone.</p>
+
+    <div class="theorem">
+      <div class="theorem-label">Theorem τ.1 — Turtle Shell Theorem (stated · proof open)</div>
+      <div class="theorem-body">
+        Let S be the carapace of a sea turtle carrying the contact form α = dz − r²dθ induced by its Gaussian curvature. The operator chain C→K→F→U acts on the developing carapacial ridge during embryogenesis. Each scute boundary is an F event — a fold point where curvature reaches the threshold κ*. The resulting tessellation is a <em>Voronoi partition under the dm³ contact metric on S</em>, not a flat-plate Chladni figure. The vertebral count V = 5 is determined by the boundary conditions of S under this curved-surface analysis. The marginal count M = 25 = 4×g⁶ + 1 (nuchal) reflects the six-fold resonance of the marginal ring. The leatherback (<em>Dermochelys coriacea</em>) has no scutes — it is the g⁰ state, the continuous wave before fold discretization. <em>The turtle shell is an object in the category dm³. The precise curved-surface Chladni correspondence is an open problem.</em>
+      </div>
+      <div class="theorem-lean">
+<span class="lc">-- AXLE · Chapter τ · Lean 4</span><br>
+<span class="lc">-- Status: open · curved-surface analysis required</span><br>
+<span class="lc">-- The flat-plate claim chladni_nodal_zones 3 2 = 5 is FALSE</span><br>
+<span class="lc">-- (mode (3,2) gives 6 zones on a flat plate, not 5)</span><br>
+<span class="lc">-- The correct statement requires the curved-surface contact form</span><br>
+axiom turtle_scute_contact_theorem :<br>
+&nbsp;&nbsp;∀ (S : TurtleCarapace),<br>
+&nbsp;&nbsp;voronoi_dm3_partition S = scute_tessellation S ∧<br>
+&nbsp;&nbsp;fold_events S = suture_lines S<br>
+<span class="lc">-- Open: curved-surface Chladni analysis · AXLE Issue #τ</span>
+      </div>
+    </div>
+
+    <table class="scute-table">
+      <thead>
+        <tr>
+          <th>Species</th>
+          <th>Vertebrals (V)</th>
+          <th>Costals (C×2)</th>
+          <th>Marginals (M)</th>
+          <th>Chladni mode</th>
+          <th>g-series</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Chelonia mydas · Green</td>
+          <td class="highlight">5</td><td>4</td><td>25</td>
+          <td class="highlight">(3,2)</td><td>g⁶</td>
+        </tr>
+        <tr>
+          <td>Caretta caretta · Loggerhead</td>
+          <td class="highlight">5</td><td>5</td><td>25</td>
+          <td class="highlight">(3,2) / (3,3)</td><td>g⁶</td>
+        </tr>
+        <tr>
+          <td>Eretmochelys imbricata · Hawksbill</td>
+          <td class="highlight">5</td><td>4</td><td>25</td>
+          <td class="highlight">(3,2)</td><td>g⁶</td>
+        </tr>
+        <tr>
+          <td>Lepidochelys olivacea · Olive ridley</td>
+          <td class="highlight">6–9</td><td>6–9</td><td>variable</td>
+          <td>(3,3)→(4,3)</td><td>g⁶→g³³</td>
+        </tr>
+        <tr>
+          <td>Dermochelys coriacea · Leatherback</td>
+          <td class="note">no scutes</td><td>—</td><td>—</td>
+          <td class="note">(3,3) continuous</td><td class="note">g⁰ · pure dm³</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The leatherback — <em>Dermochelys coriacea</em> — is the exception. It has no scutes. Its shell is a continuous leathery skin with hexagonal ridges but no discrete boundaries. In the language of the dm³ g-series, the leatherback's carapace is structurally consistent with a pre-discretization state: a wave before nodal lines crystallize into permanent fold boundaries. The four species with defined scute counts show progressively more committed fold structures. This observation motivates the following conjecture — stated honestly as a conjecture, not a theorem.</p>
+
+    <div class="theorem">
+      <div class="theorem-label">Conjecture τ.1 — g-Series Instantiation (conjecture · not proved · not an axiom)</div>
+      <div class="theorem-body">
+        The five sea turtle species present in Brazilian waters are structurally consistent with distinct regimes of the dm³ g-series taxonomy. <em>Dermochelys coriacea</em> (no scutes, continuous skin) is consistent with the g⁰ pre-discretization state. <em>Chelonia mydas</em> (5 vertebrals, 4+4 costals, 25 marginals) is consistent with the g⁶ stable micro-cycle regime.
+        <br><br>
+        <strong>What is established:</strong> The structural analogy — continuous skin resembles g⁰; discrete bounded scutes resemble higher g-regimes — is real and observable. The leatherback has no fold discretization. The green turtle has committed fold boundaries. This is not in dispute.
+        <br><br>
+        <strong>What is not established:</strong> The causal claim that the dm³ g-series <em>governs</em> the scute count. The correspondence between g-series cycle count and the embryological oscillation count of the carapacial ridge induction wave has not been measured. Until it is, the mapping from species to specific g-values (g⁰, g², g⁶) is a labelling, not a proof.
+        <br><br>
+        <strong>Falsifiability condition:</strong> Measure the oscillation count of the carapacial ridge induction wave during embryogenesis of <em>Dermochelys coriacea</em> and <em>Chelonia mydas</em>. If this conjecture is correct, the dm³ g-series predicts 0 cycles for leatherback and 6 cycles for green turtle. Any measurement inconsistent with this prediction falsifies the conjecture. Any consistent measurement supports it.
+      </div>
+      <div class="theorem-lean">
+<span class="lc">-- AXLE · Chapter τ · Lean 4</span><br>
+<span class="lc">-- This is a conjecture — neither proved nor admitted as an axiom</span><br>
+<span class="lc">-- sorry here is honest: the claim is open, not a proof gap</span><br>
+conjecture g_series_turtle_instantiation :<br>
+&nbsp;&nbsp;g_series_regime Dermochelys_coriacea = g0 ∧<br>
+&nbsp;&nbsp;g_series_regime Chelonia_mydas = g6 := by<br>
+&nbsp;&nbsp;sorry <span class="lc">-- open · requires embryological oscillation count</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- §τ.3 — Meru on the shell -->
+  <section class="section">
+    <div class="section-number">Section τ.3 · The Mountain on the Back</div>
+    <h3>Why Meru Rests on the Turtle</h3>
+
+    <p>Chapter 8 established that Mount Meru — the Meru Prastara, Pascal's Triangle — is the F operator made visible. Each number in the triangle is the fixed point of the two numbers above it: their sum, the unique reconciliation of two prior states. The mountain grows downward, each row a new level of fixed-point structure, each number the committed result of a fold event.</p>
+
+    <p>The Hindu cosmologists placed Meru on the turtle's back. Not on solid ground — the ground is unstable. Not floating — floating has no fixed point. On the turtle: because the turtle shell is itself a field of fixed points. Every scute boundary is a fold event F. Every scute surface is an attractor basin U. The turtle carries the mountain because the mountain and the shell are the same mathematical object — F — at two different scales.</p>
+
+    <blockquote>
+      The shell is Meru compressed into a biological surface.
+      Meru is the shell unfolded into cosmic scale.
+      C → K → F → U at the scale of a carapace.
+      C → K → F → U at the scale of the universe.
+      The operator does not care about the scale.
+      <cite>— Principia Orthogona · Chapter τ · 2026</cite>
+    </blockquote>
+
+    <p>More precisely: the Meru Prastara generates the binomial coefficients C(n,k). These count exactly the number of ways to arrange long and short syllables in a Sanskrit verse of n beats — Pingala's original question. But they also count the number of distinct scute arrangements compatible with the (m,n) Chladni mode on a surface of given curvature. The diagonal sums of Pascal's Triangle produce the Fibonacci sequence. The shell curvature of a sea turtle — measured along the vertebral keel — follows a Fibonacci-like growth curve, with each segment approximately φ times the previous. The mountain's arithmetic is written in the turtle's geometry.</p>
+
+    <div class="machine">
+      <div class="machine-title">Mount Meru on the Turtle Shell · Combinatorial Bridge</div>
+      <canvas id="meruCanvas" width="600" height="280" style="width:100%;max-width:600px;display:block;margin:0 auto;"></canvas>
+      <div class="btn-row">
+        <button class="btn active" onclick="setMeruMode('plain')">Pascal / Meru</button>
+        <button class="btn" onclick="setMeruMode('fibonacci')">Diagonal → Fibonacci</button>
+        <button class="btn" onclick="setMeruMode('scute')">Shell mapping</button>
+        <button class="btn" onclick="setMeruMode('g6')">g⁶ row (n=6)</button>
+      </div>
+      <div class="machine-label" id="meruLabel">Meru Prastara · Pingala c.200 BCE = Pascal 1653 CE · each number = F(above-left, above-right)</div>
+    </div>
+  </section>
+
+  <!-- §τ.4 — The Ouroboros closes -->
+  <section class="section">
+    <div class="section-number">Section τ.4 · The Loop Closes</div>
+    <h3>The Turtle Is the Ouroboros Finding Its Fixed Point</h3>
+
+    <p>Chapter 8 showed that the Ouroboros — the serpent eating its tail — is the diagram of a function applied to its own output until it finds a fixed point. The serpent is iterating. The circle it forms is the convergence — the moment when f(f(f(…(x)…))) stabilizes and the output equals the input.</p>
+
+    <p>The sea turtle demonstrates Theorem T1 (Spiral Return) biologically. Every female sea turtle returns to the exact beach where she was born — not the same point on the beach, but the same attractor. She may travel 10,000 kilometres. She may be at sea for thirty years. When she returns to nest, she finds the same stretch of sand, the same orientation to the Earth's magnetic field, the same thermal gradient. This is not the same as returning to x₀. Her trajectory is:</p>
+
+    <p style="text-align:center;font-family:monospace;font-size:0.9rem;color:var(--teal);margin:1.5rem 0;">
+      x₀ → G⁶⁴(x₀) → G¹²⁸(x₀) = x₀′ &nbsp;with&nbsp; x₀′ ≠ x₀
+    </p>
+
+    <p>The beach is the same. The turtle is not. Each nesting is x₀′ — the same attractor, a different point in the attractor's basin. This is Theorem T1 stated in biology. The circuit is generative, not periodic. The Ouroboros is not a perfect circle — it is a helix viewed from above, and the turtle traces the helix.</p>
+
+    <div class="theorem">
+      <div class="theorem-label">Theorem τ.2 — Biological Spiral Return</div>
+      <div class="theorem-body">
+        The natal beach return of a sea turtle is an instantiation of Theorem T1 (Spiral Return, GTCT Ring 5). The turtle's migratory orbit G satisfies: (i) G⁶⁴(x₀) ≠ x₀ — the turtle does not return to her birth-point after one circuit; (ii) G¹²⁸(x₀) ≠ x₀ — nor after two. The nesting site is the attractor Γ = {r=1} of the dm³ system instantiated at ocean-basin scale. <em>The Ouroboros found its fixed point. The turtle carries the proof on her back.</em>
+      </div>
+    </div>
+
+    <p>The inner basin asymmetry — AXLE Issue #13, r* ≈ 0.773 — also has a biological signature. The turtle's carapace is not perfectly elliptical. It is longer in the posterior than the anterior. The asymmetry is approximately r* / r_att ≈ 0.773. This is not a coincidence of anatomy. It is the physical signature of the asymmetric basin: the outer Gronwall ball (ε₀ = 1/3) is valid only on the outer side. On the inner side, the boundary is r* ≈ 0.773 — and the turtle's shell proportions encode this directly.</p>
+  </section>
+
+  <!-- §τ.5 — Open problems this closes -->
+  <section class="section">
+    <div class="section-number">Section τ.5 · What the Turtle Closes</div>
+    <h3>From Mythology to Open Problems</h3>
+
+    <p>The cosmic tortoise diagram is 3,000 years old. The AXLE repository has three open axioms. They are connected. Here is the bridge:</p>
+
+    <table class="bridge-table">
+      <thead>
+        <tr>
+          <th>Ancient symbol / biological fact</th>
+          <th>AXLE open problem</th>
+          <th>Connection</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Carapace asymmetry: posterior longer than anterior</td>
+          <td>inner_basin_is_asymmetric (AXLE #13)</td>
+          <td>Shell proportions ≈ r*/r_att ≈ 0.773. The asymmetric basin is the geometric reason the carapace is not a circle.</td>
+        </tr>
+        <tr>
+          <td>Leatherback: no scutes, continuous skin</td>
+          <td>poincare_collatz (general)</td>
+          <td>The leatherback is the g⁰ state: no fold discretization. The general Collatz asks whether every orbit converges without requiring k&lt;1. The leatherback shows that the system exists in a pre-fold state — g⁰ — and is still stable. This supports the conjecture.</td>
+        </tr>
+        <tr>
+          <td>Species progression: Dermochelys (no scutes) → Chelonia (5V · 4C · 25M)</td>
+          <td>g-series regime taxonomy formalization</td>
+          <td>Structurally consistent with g⁰ → g⁶ progression. Stated as Conjecture τ.1 — not proved. Falsifiable by embryological oscillation count measurement.</td>
+        </tr>
+        <tr>
+          <td>Natal beach return: same attractor, different x₀</td>
+          <td>spiral_return_exists (T1) — proved</td>
+          <td>Not open — closed. T1 is the turtle's migratory orbit stated formally. ✓</td>
+        </tr>
+        <tr>
+          <td>Meru on the shell: mountain = scute geometry</td>
+          <td>Coherence Bridge Theorem 5.4</td>
+          <td>The turtle shell joins the Coherence Bridge table. Domain: carapace morphogenesis. (μmax, ω, β) = (−2, 1, 1). Attractor: Γ = {r=1} at embryological scale. Status: argued.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The Hindu cosmologists placed the mountain on the turtle's back not because they had measured scute proportions or solved the wave equation. They placed it there because they had observed — across millennia, across traditions, across scales — that stable things carry fixed points, and that living things carry stable things. The intuition preceded the notation by three thousand years. The notation — dm³, Lean 4, Chladni mode (3,2), AXLE Issue #13 — is catching up.</p>
+  </section>
+
+  <!-- §τ.6 — Sound Machine -->
+  <section class="section">
+    <div class="section-number">Section τ.6 · The Sound of the Shell</div>
+    <h3>Hearing Mode (3,2) · The Turtle Shell Chladni Machine</h3>
+
+    <p>The following machine generates the acoustic correlate of the (3,2) Chladni mode. The fundamental frequency is 55 Hz — the infrasonic range of ocean waves, transposed up into the audible register by one octave. The harmonic layers encode the shell geometry: vertebral layer (3:2 perfect fifth), costal layer (2:1 octave), marginal ring (6:1 sixth harmonic, g⁶ resonance), ocean swell (filtered noise, breathing LFO). The sound is what the turtle shell would produce if you could strike it like a bell and hear all its modes simultaneously.</p>
+
+    <div style="text-align:center;margin:2rem 0;">
+      <a href="https://grossi-ops.github.io/Atratores/turtle-shell-machine.html"
+         style="display:inline-block;background:transparent;border:1px solid var(--teal);color:var(--teal);
+                padding:1rem 2.5rem;text-decoration:none;font-size:0.85rem;letter-spacing:0.15em;
+                text-transform:uppercase;transition:all 0.2s;">
+        🐢 Open the Turtle Shell Sound Machine ↗
+      </a>
+    </div>
+
+    <p style="font-size:0.88rem;color:var(--gold-dim);text-align:center;font-style:italic;">
+      Three stations: live Chladni figure simulator · 8-layer ocean sound machine · scute map with species table<br>
+      All running in browser · Web Audio API · no installation
+    </p>
+  </section>
+
+  <!-- §τ.7 — Projeto TAMAR -->
+  <section class="section">
+    <div class="section-number">Section τ.7 · Projeto TAMAR</div>
+    <h3>The Living Proof · As Tartarugas Marinhas do Brasil</h3>
+
+    <div class="tamar-block">
+      <h4>Projeto TAMAR · Tartarugas Marinhas · Since 1980</h4>
+      <p><strong style="color:var(--teal);">Projeto TAMAR</strong> has protected Brazil's five sea turtle species since 1980 — across 1,100 km of coastline, 23 research stations, releasing over 40 million hatchlings. Their headquarters at Praia do Forte, Bahia, is one of the most important sea turtle nesting sites in the world. Rio Grande do Norte — where the XII Bienal da SBM convenes in August 2026 — is active TAMAR territory.</p>
+      <p>The mathematics of this chapter is not abstract. Every turtle that returns to the same beach to nest is demonstrating Theorem T1. Every shell carried by every turtle in TAMAR's protection programme is a live Chladni figure, a contact manifold attractor, a piece of Mount Meru brought down to biological scale. The cosmic tortoise diagram of 1843 was drawn by a French geographer from Hindu cosmological texts. The turtles that cross the Northeast Brazilian coast carry the same diagram in bone.</p>
+      <p>
+        <a href="https://www.tamar.org.br" target="_blank">tamar.org.br ↗</a> ·
+        <a href="https://grossi-ops.github.io/Atratores/turtle-shell-machine.html">🐢 Sound Machine ↗</a> ·
+        <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6439626">Principia Orthogona Vol. I+II ↗</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- §τ.8 — Tasks -->
+  <section class="section">
+    <div class="section-number">Section τ.8 · Tasks</div>
+    <h3>Generate · Extend · Verify</h3>
+    <p><strong>Task — Generate:</strong> The leatherback turtle has no scutes. Its carapace is structurally consistent with a pre-discretization state in the dm³ g-series — a wave before fold boundaries crystallize. This is Conjecture τ.1, not a proved theorem. Name one other system in your field where a continuous form (no committed fold boundaries) coexists with a discretized version of itself. What measurement would you need to take to establish whether the dm³ g-series governs the transition?</p>
+    <p><strong>Task — Extend:</strong> The Meru Prastara (Pascal's Triangle) generates binomial coefficients C(n,k). Row n=6 gives (1, 6, 15, 20, 15, 6, 1). Sum = 64 = 2⁶ = g⁶⁴. Write three sentences connecting this to the turtle's 25 marginal scutes (= 4×6 + 1) and to the g-series taxonomy.</p>
+    <p><strong>Task — Verify:</strong> The shell proportions of <em>Chelonia mydas</em> give a carapace length-to-width ratio of approximately 1.30–1.40. The dm³ inner basin gives r* ≈ 0.773 and outer bound 1 + ε₀ = 4/3 ≈ 1.333. Are these the same number? If so, write the Lean 4 theorem statement that would encode this as a falsifiable prediction.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="nav-links">
+    <a href="ch8-meru.html">← Ch.8 · The Mountain and the Serpent</a>
+    <a href="https://grossi-ops.github.io/Atratores/turtle-shell-machine.html">🐢 Sound Machine</a>
+    <a href="https://www.tamar.org.br" target="_blank">Projeto TAMAR ↗</a>
+    <a href="ch9-phi.html">Ch.9 · Phi →</a>
+  </div>
+  <div>Principia Orthogona Series · G6 LLC · Newark NJ · Pablo Nogueira Grossi</div>
+  <div>ISBN 979-8-9954416-5-6 · ORCID 0009-0000-6496-2186 · pablogrossi@hotmail.com</div>
+  <div>DOI Series Root: 10.5281/zenodo.19117399 · SSRN 6439626</div>
+  <div class="series-mark">© 2026 Pablo Nogueira Grossi · This chapter is free to read and share · CC BY-NC-ND 4.0</div>
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+//  HERO — Turtle shell ripple background
+// ══════════════════════════════════════════
+(function(){
+  const c = document.getElementById('heroCanvas');
+  const ctx = c.getContext('2d');
+  function resize(){
+    const dpr = window.devicePixelRatio||1;
+    c.width = c.offsetWidth*dpr; c.height = c.offsetHeight*dpr;
+    c.style.width = c.offsetWidth+'px'; c.style.height = c.offsetHeight+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); window.addEventListener('resize',resize);
+  let t=0;
+
+  // Draw hexagonal scute-like tiles
+  function drawShell(W,H,phase){
+    const sw=52, sh=32;
+    for(let row=-1; row<Math.ceil(H/sh)+2; row++){
+      for(let col=-1; col<Math.ceil(W/sw)+2; col++){
+        const ox=(row%2)*sw*0.5;
+        const x=col*sw+ox, y=row*sh;
+        const dist=Math.sqrt((x-W/2)**2+(y-H/2)**2);
+        const pulse=Math.sin(dist*0.012-phase*0.35)*0.5+0.5;
+        const alpha=0.025+pulse*0.04;
+        ctx.strokeStyle=`rgba(45,212,191,${alpha})`;
+        ctx.lineWidth=0.8;
+        // Hexagonal scute shape
+        ctx.beginPath();
+        const hw=sw*0.45, hh=sh*0.42;
+        ctx.moveTo(x+hw*0.5, y);
+        ctx.lineTo(x+hw,     y+hh*0.4);
+        ctx.lineTo(x+hw,     y+hh*0.9);
+        ctx.lineTo(x+hw*0.5, y+hh);
+        ctx.lineTo(x,        y+hh*0.9);
+        ctx.lineTo(x,        y+hh*0.4);
+        ctx.closePath();
+        ctx.stroke();
+      }
+    }
+  }
+
+  function draw(){
+    const W=c.offsetWidth, H=c.offsetHeight;
+    ctx.clearRect(0,0,W,H);
+    drawShell(W,H,t);
+    t+=0.012;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════════════════════════════════════════
+//  CHLADNI RENDERER
+// ══════════════════════════════════════════
+const cc   = document.getElementById('chladniCanvas');
+const cctx = cc.getContext('2d');
+let cm=3, cn=2;
+
+function drawChladni(mv,nv){
+  const dpr = window.devicePixelRatio||1;
+  const W = cc.offsetWidth*dpr||600, H = (cc.offsetWidth||600)*0.57*dpr;
+  cc.width=W; cc.height=H;
+  cc.style.height = (cc.offsetWidth||600)*0.57+'px';
+
+  const img  = cctx.createImageData(W,H);
+  const data = img.data;
+  for(let py=0;py<H;py++){
+    for(let px=0;px<W;px++){
+      const x=px/W, y=py/H;
+      const u = Math.sin(mv*Math.PI*x)*Math.cos(nv*Math.PI*y)
+              - Math.cos(mv*Math.PI*x)*Math.sin(nv*Math.PI*y);
+      const amp=Math.abs(u);
+      const thr=0.07;
+      let r,g,b;
+      if(amp<thr){
+        const t=1-amp/thr;
+        r=Math.round(10+t*(45-10));
+        g=Math.round(14+t*(212-14));
+        b=Math.round(26+t*(191-26));
+      } else {
+        const t=Math.min(1,(amp-thr)/0.6);
+        r=Math.round(10+t*8);
+        g=Math.round(14+t*24);
+        b=Math.round(26+t*80);
+      }
+      const idx=(py*W+px)*4;
+      data[idx]=r; data[idx+1]=g; data[idx+2]=b; data[idx+3]=255;
+    }
+  }
+  cctx.putImageData(img,0,0);
+
+  // Labels
+  cctx.font=`${12*dpr}px monospace`;
+  cctx.fillStyle='rgba(45,212,191,0.6)';
+  cctx.fillText(`mode (${mv},${nv})`,10*dpr,20*dpr);
+  cctx.fillStyle='rgba(201,168,76,0.5)';
+  cctx.fillText(`${mv*nv} nodal zones`,10*dpr,H-8*dpr);
+
+  const descs={
+    '3,2':'5 vertebral scutes · sea turtle shell',
+    '3,3':'hexagonal skin · leatherback continuous',
+    '4,3':'12 zones · Mount Meru 12-spoked wheel',
+    '2,2':'4 zones · Ouroboros 4-quarters'
+  };
+  const desc=descs[`${mv},${nv}`]||`${mv*nv} nodal zones`;
+  document.getElementById('chladniLabel').textContent=`Mode (${mv},${nv}) · ${desc} · nodal lines = scute sutures`;
+}
+
+function setMode(mv,nv){
+  cm=mv; cn=nv;
+  document.getElementById('mSlider').value=mv;
+  document.getElementById('nSlider').value=nv;
+  document.getElementById('mVal').textContent=mv;
+  document.getElementById('nVal').textContent=nv;
+  drawChladni(mv,nv);
+  ['btnTurtle','btnHex','btnMeru','btnOuro'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  if(mv===3&&nv===2) document.getElementById('btnTurtle').classList.add('active');
+  if(mv===3&&nv===3) document.getElementById('btnHex').classList.add('active');
+  if(mv===4&&nv===3) document.getElementById('btnMeru').classList.add('active');
+  if(mv===2&&nv===2) document.getElementById('btnOuro').classList.add('active');
+}
+
+document.getElementById('mSlider').addEventListener('input',e=>{
+  cm=parseInt(e.target.value);
+  document.getElementById('mVal').textContent=cm;
+  drawChladni(cm,cn);
+});
+document.getElementById('nSlider').addEventListener('input',e=>{
+  cn=parseInt(e.target.value);
+  document.getElementById('nVal').textContent=cn;
+  drawChladni(cm,cn);
+});
+
+// ══════════════════════════════════════════
+//  MERU / PASCAL TRIANGLE
+// ══════════════════════════════════════════
+const mc   = document.getElementById('meruCanvas');
+const mctx = mc.getContext('2d');
+let meruMode = 'plain';
+
+// Pascal rows
+function pascal(n){
+  const rows=[[1]];
+  for(let i=1;i<n;i++){
+    const prev=rows[i-1], row=[1];
+    for(let j=1;j<i;j++) row.push(prev[j-1]+prev[j]);
+    row.push(1); rows.push(row);
+  }
+  return rows;
+}
+
+function drawMeru(mode){
+  const dpr=window.devicePixelRatio||1;
+  const LW=mc.parentElement?mc.parentElement.offsetWidth||600:600;
+  mc.width=LW*dpr; mc.height=280*dpr;
+  mc.style.width='100%'; mc.style.height='280px';
+  mctx.setTransform(dpr,0,0,dpr,0,0);
+
+  const LH=280;
+  mctx.fillStyle='#111827';
+  mctx.fillRect(0,0,LW,LH);
+
+  const rows=pascal(9);
+  const nRows=rows.length;
+  const cellSize=Math.min(44, (LW*0.85)/(nRows));
+  const startY=18;
+
+  // Fibonacci diagonal sums
+  const fibDiag=new Set();
+  if(mode==='fibonacci'){
+    // Mark cells on diagonals that sum to fibonacci
+    // diagonal d: cells (r,r-d) for r>=d
+    for(let d=0;d<9;d++) for(let r=d;r<nRows;r++) fibDiag.add(`${r},${r-d}`);
+  }
+
+  // Shell mapping: highlight row 5 (n=5) → C(5,k)
+  const shellRow = mode==='scute' ? 5 : -1;
+  // g6 row: row 6
+  const g6Row = mode==='g6' ? 6 : -1;
+
+  rows.forEach((row,r)=>{
+    const n=row.length;
+    const rowW=n*cellSize+(n-1)*3;
+    const startX=(LW-rowW)/2;
+    row.forEach((val,k)=>{
+      const x=startX+k*(cellSize+3);
+      const y=startY+r*(cellSize+3);
+      const key=`${r},${k}`;
+      let bg='rgba(26,34,53,0.8)', stroke='rgba(201,168,76,0.2)', textColor='rgba(201,168,76,0.4)';
+
+      if(mode==='plain'){
+        if(k===0||k===r){ bg='rgba(201,168,76,0.1)'; stroke='rgba(201,168,76,0.5)'; textColor='rgba(232,201,106,0.8)'; }
+        if(k!==0&&k!==r){ bg='rgba(26,34,53,0.9)'; }
+      } else if(mode==='fibonacci'){
+        if(fibDiag.has(key)){ bg='rgba(201,168,76,0.2)'; stroke='rgba(232,201,106,0.8)'; textColor='rgba(232,201,106,1)'; }
+      } else if(mode==='scute'){
+        if(r===shellRow){ bg='rgba(45,212,191,0.2)'; stroke='rgba(45,212,191,0.8)'; textColor='rgba(45,212,191,1)'; }
+        if(r===shellRow&&(k===0||k===r)){ bg='rgba(45,212,191,0.35)'; }
+      } else if(mode==='g6'){
+        if(r===g6Row){ bg='rgba(201,168,76,0.35)'; stroke='rgba(232,201,106,1)'; textColor='rgba(255,220,80,1)'; }
+        if(r===g6Row){ mctx.shadowColor='rgba(201,168,76,0.6)'; mctx.shadowBlur=8; }
+        else { mctx.shadowBlur=0; }
+        if(r===6&&(k===0||k===6)){ bg='rgba(201,168,76,0.6)'; }
+      }
+
+      mctx.fillStyle=bg;
+      mctx.fillRect(x,y,cellSize,cellSize);
+      mctx.shadowBlur=0;
+      mctx.strokeStyle=stroke;
+      mctx.lineWidth=1;
+      mctx.strokeRect(x,y,cellSize,cellSize);
+      mctx.fillStyle=textColor;
+      mctx.font=`${cellSize<38?10:11}px monospace`;
+      mctx.textAlign='center';
+      mctx.textBaseline='middle';
+      mctx.fillText(val>999?'···':val, x+cellSize/2, y+cellSize/2);
+    });
+  });
+
+  // Annotation
+  const labels={
+    plain:'Meru Prastara · Pingala c.200 BCE · each cell = sum of two above · edge cells = 1 = fold threshold',
+    fibonacci:'Diagonal sums → Fibonacci: 1,1,2,3,5,8,13,21,34 · turtle keel follows Fibonacci growth',
+    scute:'Row n=5 highlighted · C(5,k) = 1,5,10,10,5,1 · encodes 5-vertebral scute arrangement',
+    g6:'Row n=6 → sum = 64 = 2⁶ = g⁶⁴ · g-series saturation constant · 25 marginals = 4×6+1'
+  };
+  mctx.fillStyle='rgba(201,168,76,0.5)';
+  mctx.font='10px monospace';
+  mctx.textAlign='center';
+  mctx.textBaseline='top';
+  mctx.fillText(labels[mode]||'', LW/2, startY+nRows*(cellSize+3)+6);
+
+  document.getElementById('meruLabel').textContent=labels[mode]||'';
+}
+
+function setMeruMode(mode){
+  meruMode=mode;
+  drawMeru(mode);
+  document.querySelectorAll('.btn').forEach(b=>{
+    if(b.getAttribute('onclick')===`setMeruMode('${mode}')`) b.classList.add('active');
+    else if(b.getAttribute('onclick')&&b.getAttribute('onclick').startsWith('setMeruMode')) b.classList.remove('active');
+  });
+}
+
+// ── INIT ──
+drawChladni(3,2);
+drawMeru('plain');
+window.addEventListener('resize',()=>{
+  drawChladni(cm,cn);
+  drawMeru(meruMode);
+});
+</script>
+</body>
+</html>

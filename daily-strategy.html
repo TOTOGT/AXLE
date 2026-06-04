@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Strategy • CapitalGuard Trader</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <i class="fas fa-shield-alt text-emerald-600 text-2xl"></i>
+        <span class="font-bold text-2xl tracking-tight">CapitalGuard</span>
+      </div>
+      <div class="flex gap-8 text-sm font-medium">
+        <a href="index.html" class="hover:text-emerald-600">Home</a>
+        <a href="strategy.html" class="hover:text-emerald-600">Strategy</a>
+        <a href="daily-setups.html" class="text-emerald-600">Daily Strategy</a>
+        <a href="simulator.html" class="hover:text-emerald-600">Growth Simulator</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="max-w-6xl mx-auto px-6 py-12" id="content">
+    <!-- Section Title -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-5xl font-bold" id="page-title">Daily Strategy</h1>
+        <p class="text-xl text-gray-600">Focused trade ideas updated dynamically.</p>
+      </div>
+      <div class="text-right">
+        <p class="text-sm text-gray-500">Today is</p>
+        <p class="text-2xl font-semibold text-emerald-600" id="current-date"></p>
+      </div>
+    </div>
+
+    <!-- Strategy Container -->
+    <div id="strategy-container">
+      <!-- Dynamic content will appear here -->
+      <p class="text-gray-600 text-center text-xl">Loading today's strategy...</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Set today's date
+      const dateElement = document.getElementById('current-date');
+      const today = new Date();
+      dateElement.textContent = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+      // Fetch dynamic data (replace with your actual API endpoint)
+      const strategyContainer = document.getElementById('strategy-container');
+      try {
+        const response = await fetch('https://your-backend-api.com/daily-strategy');
+        const data = await response.json();
+        
+        // Replace content with the fetched strategy
+        strategyContainer.innerHTML = `
+          <div class="bg-white rounded-3xl shadow-sm p-10 mb-12 border border-emerald-100">
+            <div class="flex items-center gap-4">
+              <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-bold rounded-xl">ASSET</span>
+              <h2 class="text-4xl font-bold">${data.asset}</h2>
+            </div>
+
+            <!-- Strategy Details -->
+            <div class="mt-6">
+              <p class="text-lg"><strong>Current Price:</strong> $${data.currentPrice}</p>
+              <p class="text-lg"><strong>Buy Zone:</strong> $${data.buyZoneLow} - $${data.buyZoneHigh}</p>
+              <p class="text-lg"><strong>Stop Loss:</strong> $${data.stopLoss}</p>
+              <p class="text-lg"><strong>Target 1:</strong> $${data.target1}</p>
+              <p class="text-lg"><strong>Target 2:</strong> $${data.target2}</p>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        strategyContainer.innerHTML = `
+          <div class="text-red-500 text-center">
+            <p>Failed to load today's strategy data.</p>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

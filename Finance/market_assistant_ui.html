@@ -1,0 +1,103 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.root { padding: 1.5rem 0; }
+.header { margin-bottom: 1.5rem; }
+.header h2 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.header p { font-size: 14px; color: var(--color-text-secondary); }
+.capability-bar { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; margin-top: 0.75rem; }
+.cap-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary); }
+.cap-item i { font-size: 16px; color: var(--color-text-success); }
+.cap-label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+.section { margin-bottom: 1.5rem; }
+.section-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 0.75rem; }
+.btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; }
+.action-btn { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem; cursor: pointer; text-align: left; transition: background 0.15s; display: flex; align-items: center; gap: 10px; }
+.action-btn:hover { background: var(--color-background-secondary); }
+.action-btn i { font-size: 18px; color: var(--color-text-secondary); flex-shrink: 0; }
+.action-btn span { font-size: 13px; color: var(--color-text-primary); line-height: 1.3; }
+.ticker-row { display: flex; gap: 8px; }
+.ticker-input { flex: 1; padding: 0 12px; height: 36px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 14px; font-family: var(--font-sans); }
+.ticker-input::placeholder { color: var(--color-text-tertiary); }
+.go-btn { height: 36px; padding: 0 16px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.go-btn:hover { background: var(--color-background-secondary); }
+.disclaimer { border-top: 0.5px solid var(--color-border-tertiary); padding-top: 1rem; font-size: 12px; color: var(--color-text-tertiary); display: flex; gap: 8px; align-items: flex-start; }
+.disclaimer i { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+</style>
+
+<div class="root">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Live market research assistant — search prices, news, and trade ideas</h2>
+
+  <div class="header">
+    <h2>Market research assistant</h2>
+    <p>Live data via web search — no broker connection required</p>
+  </div>
+
+  <div class="capability-bar">
+    <div class="cap-label">What I can pull right now</div>
+    <div class="cap-grid">
+      <div class="cap-item"><i class="ti ti-chart-line" aria-hidden="true"></i> Live prices & quotes</div>
+      <div class="cap-item"><i class="ti ti-news" aria-hidden="true"></i> Breaking market news</div>
+      <div class="cap-item"><i class="ti ti-report-analytics" aria-hidden="true"></i> Earnings & fundamentals</div>
+      <div class="cap-item"><i class="ti ti-trending-up" aria-hidden="true"></i> Sector & index movers</div>
+      <div class="cap-item"><i class="ti ti-calendar-stats" aria-hidden="true"></i> Upcoming catalysts</div>
+      <div class="cap-item"><i class="ti ti-scale" aria-hidden="true"></i> Trade thesis analysis</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Quick actions</div>
+    <div class="btn-grid">
+      <button class="action-btn" onclick="sendPrompt('Give me a full market overview right now — major indices, top sector movers, and anything macro worth watching today.')">
+        <i class="ti ti-world" aria-hidden="true"></i>
+        <span>Today's market overview</span>
+      </button>
+      <button class="action-btn" onclick="sendPrompt('Scan for the top buy opportunities in the market today — momentum, value, or catalyst-driven. Give me 3–5 names with reasoning.')">
+        <i class="ti ti-zoom-money" aria-hidden="true"></i>
+        <span>Scan for buy opportunities ↗</span>
+      </button>
+      <button class="action-btn" onclick="sendPrompt('What are the biggest losers or sell candidates today? Show me names with red flags — earnings misses, breakdowns, or sector weakness.')">
+        <i class="ti ti-trending-down" aria-hidden="true"></i>
+        <span>Scan for sell candidates ↗</span>
+      </button>
+      <button class="action-btn" onclick="sendPrompt('What earnings reports are coming up in the next 2 weeks that could be major market movers? Give me the key names and what to watch.')">
+        <i class="ti ti-calendar-event" aria-hidden="true"></i>
+        <span>Upcoming earnings catalysts ↗</span>
+      </button>
+      <button class="action-btn" onclick="sendPrompt('Give me a macro briefing: Fed, rates, inflation, and anything in the news today that could move markets this week.')">
+        <i class="ti ti-building-bank" aria-hidden="true"></i>
+        <span>Macro & Fed watch ↗</span>
+      </button>
+      <button class="action-btn" onclick="sendPrompt('What are the hottest sectors and themes driving the market right now? Where is the money rotating?')">
+        <i class="ti ti-chart-pie" aria-hidden="true"></i>
+        <span>Sector rotation & themes ↗</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Look up a specific ticker</div>
+    <div class="ticker-row">
+      <input class="ticker-input" id="ticker" type="text" placeholder="e.g. NVDA, AAPL, BTC-USD, SPY" maxlength="20"
+        onkeydown="if(event.key==='Enter') lookupTicker()" />
+      <button class="go-btn" onclick="lookupTicker()">
+        <i class="ti ti-search" aria-hidden="true"></i> Analyze ↗
+      </button>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <i class="ti ti-info-circle" aria-hidden="true"></i>
+    <span>Research only — not financial advice. I can help you build a thesis, but buy/sell decisions are yours. Always verify data before trading.</span>
+  </div>
+</div>
+
+<script>
+function lookupTicker() {
+  const val = document.getElementById('ticker').value.trim().toUpperCase();
+  if (!val) return;
+  sendPrompt('Give me a full analysis of ' + val + ': current price, recent performance, key news, fundamentals snapshot, and your read on whether it looks like a buy, hold, or sell right now.');
+}
+</script>

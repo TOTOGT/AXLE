@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMMEs · The Operator Tokens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04040a;
+  --surface: #0d0d1a;
+  --card: #111120;
+  --border: #ffffff0f;
+  --accent1: #ff3cac;
+  --accent2: #00f5d4;
+  --accent3: #f7c948;
+  --text: #e8e8f0;
+  --muted: #666680;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--void);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  z-index: 1;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, #ff3cac18 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 30%, #00f5d418 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 50% 80%, #f7c94814 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: up 0.8s 0.2s forwards;
+}
+.hero-title {
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: up 0.8s 0.4s forwards;
+}
+.hero-title span:nth-child(1) { color: var(--accent1); }
+.hero-title span:nth-child(2) { color: var(--accent2); }
+.hero-title span:nth-child(3) { color: var(--accent3); }
+.hero-title span:nth-child(4) { color: var(--text); font-size: 0.45em; display: block; margin-top: 0.2em; letter-spacing: 0.02em; font-weight: 300; }
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: up 0.8s 0.6s forwards;
+}
+.hero-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: up 0.8s 0.8s forwards;
+}
+.btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2px;
+  border: 1px solid;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.btn-x    { color: var(--text);    border-color: #ffffff22; }
+.btn-x:hover { background: #ffffff0f; }
+.btn-tg   { color: var(--accent2); border-color: var(--accent2); }
+.btn-tg:hover { background: #00f5d415; }
+
+/* ── MINI TICKER ── */
+.mini-ticker {
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.mini-ticker-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: stretch;
+}
+@media (max-width: 700px) {
+  .mini-ticker-inner { grid-template-columns: 1fr; }
+  .mini-ticker-link-cell { border-top: 1px solid var(--border); }
+}
+.mini-tok {
+  padding: 1.1rem 1.5rem 1.1rem 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.mini-tok:first-child { padding-left: 0; }
+.mini-tok-row1 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.mini-tok-name {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.mini-tok-name.c1 { color: var(--accent1); }
+.mini-tok-name.c2 { color: var(--accent2); }
+.mini-tok-name.c3 { color: var(--accent3); }
+.mini-tok-price {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.mini-tok-change {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+}
+.mini-tok-change.pos { color: #00e676; }
+.mini-tok-change.neg { color: #ff3860; }
+.mini-tok-change.flat { color: var(--muted); }
+.mini-tok-mcap {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.mini-ticker-link-cell {
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 1.5rem;
+}
+.mini-ticker-link {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s;
+}
+.mini-ticker-link:hover { opacity: 0.75; }
+.mini-live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #00e676;
+  border-radius: 50%;
+  animation: blink 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+/* ── TRADE STRIP ── */
+.trade-strip {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.trade-strip-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.trade-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.trade-pill.c1 { color: var(--accent1); border-color: #ff3cac33; }
+.trade-pill.c1:hover { background: #ff3cac15; }
+.trade-pill.c2 { color: var(--accent2); border-color: #00f5d433; }
+.trade-pill.c2:hover { background: #00f5d415; }
+.trade-pill.c3 { color: var(--accent3); border-color: #f7c94833; }
+.trade-pill.c3:hover { background: #f7c94815; }
+
+/* ── TOKEN CARDS ── */
+.tokens {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.tokens-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 3rem;
+}
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.token-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.token-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.token-card.c1::before { background: var(--accent1); }
+.token-card.c2::before { background: var(--accent2); }
+.token-card.c3::before { background: var(--accent3); }
+.token-card:hover { transform: translateY(-4px); }
+.token-card.c1:hover { border-color: #ff3cac33; }
+.token-card.c2:hover { border-color: #00f5d433; }
+.token-card.c3:hover { border-color: #f7c94833; }
+.token-ticker {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.c1 .token-ticker { color: var(--accent1); }
+.c2 .token-ticker { color: var(--accent2); }
+.c3 .token-ticker { color: var(--accent3); }
+.token-name {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.token-desc {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+.token-balance {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: #ffffff30;
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-bottom: 1rem;
+}
+.token-balance span { color: var(--text); font-size: 0.9rem; }
+.token-trade-btn {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.55rem 1rem;
+  border: 1px solid;
+  transition: all 0.2s;
+  margin-top: 0.25rem;
+}
+.c1 .token-trade-btn { color: var(--accent1); border-color: #ff3cac44; }
+.c1 .token-trade-btn:hover { background: #ff3cac15; }
+.c2 .token-trade-btn { color: var(--accent2); border-color: #00f5d444; }
+.c2 .token-trade-btn:hover { background: #00f5d415; }
+.c3 .token-trade-btn { color: var(--accent3); border-color: #f7c94844; }
+.c3 .token-trade-btn:hover { background: #f7c94815; }
+.token-arrow {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  font-size: 1.2rem;
+  opacity: 0.2;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.token-card:hover .token-arrow { opacity: 0.8; transform: translate(3px, -3px); }
+/* ── MANIFESTO ── */
+.manifesto {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+  border-top: 1px solid var(--border);
+}
+.manifesto-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+.manifesto-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+.manifesto-body {
+  font-size: 1rem;
+  color: var(--muted);
+  line-height: 1.85;
+}
+.manifesto-body strong { color: var(--text); }
+.operator-chain {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  letter-spacing: 0.08em;
+  text-align: left;
+}
+.op-c { color: var(--accent1); }
+.op-k { color: var(--accent2); }
+.op-f { color: var(--accent3); }
+.op-u { color: #a78bfa; }
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+}
+footer p {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+footer a { color: var(--text); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+@keyframes up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="eyebrow">AXLE / EMMEs · Solana · G6 LLC</div>
+  <h1 class="hero-title">
+    <span>E</span><span>M</span><span>M</span><span>Es</span>
+    <span>Three operator tokens on Solana</span>
+  </h1>
+  <p class="hero-sub">
+    The opposite of capital protection.<br>
+    <strong style="color:var(--text)">C → K → F → U</strong> playing out in market structure —
+    compression, curvature, fold, unfold.
+    No trailing stops. No guidance targets. No disclaimers about risk management.
+  </p>
+  <div class="hero-links">
+    <a href="https://x.com/myemmecoin" target="_blank" class="btn btn-x">𝕏 @myemmecoin</a>
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank" class="btn btn-tg">↗ Telegram</a>
+    <a href="https://pablogrossi.my.canva.site/tokenomix-twitter-myemmecoin" target="_blank" class="btn btn-x">Tokenomics</a>
+    <a href="ticker.html" class="btn btn-tg">Live Ticker ↗</a>
+    <a href="theory.html" class="btn btn-x">21 Papers ↗</a>
+    <a href="collatz-engineering.html" class="btn btn-x" style="border-color:#00f5d440;color:#00f5d4">Collatz ↗</a>
+  </div>
+</section>
+
+<!-- ── MINI TICKER ── -->
+<div class="mini-ticker">
+  <div class="mini-ticker-inner">
+    <div class="mini-tok">
+      <div class="mini-tok-row1">
+        <span class="mini-tok-name c3">THEORY</span>
+        <span class="mini-tok-price" id="mt-price-THEORY">…</span>
+        <span class="mini-tok-change flat" id="mt-change-THEORY">…</span>
+      </div>
+      <div class="mini-tok-mcap" id="mt-mcap-THEORY">mcap …</div>
+    </div>
+    <div class="mini-tok">
+      <div class="mini-tok-row1">
+        <span class="mini-tok-name c2">PROBABY</span>
+        <span class="mini-tok-price" id="mt-price-PROBABY">…</span>
+        <span class="mini-tok-change flat" id="mt-change-PROBABY">…</span>
+      </div>
+      <div class="mini-tok-mcap" id="mt-mcap-PROBABY">mcap …</div>
+    </div>
+    <div class="mini-tok">
+      <div class="mini-tok-row1">
+        <span class="mini-tok-name c1">PROPAGAN</span>
+        <span class="mini-tok-price" id="mt-price-PROPAGAN">…</span>
+        <span class="mini-tok-change flat" id="mt-change-PROPAGAN">…</span>
+      </div>
+      <div class="mini-tok-mcap" id="mt-mcap-PROPAGAN">mcap …</div>
+    </div>
+    <div class="mini-ticker-link-cell">
+      <a href="ticker.html" class="mini-ticker-link">
+        <span class="mini-live-dot"></span>
+        Full ticker →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── TRADE STRIP ── -->
+<div class="trade-strip">
+  <span class="trade-strip-label">Trade now on Coinbook</span>
+  <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank" class="trade-pill c3">THEORY ↗</a>
+  <a href="https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin" target="_blank" class="trade-pill c2">PROBABY ↗</a>
+  <a href="https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin" target="_blank" class="trade-pill c1">PROPAGAN ↗</a>
+</div>
+
+<section class="tokens">
+  <div class="tokens-label">The Three Operators</div>
+  <div class="token-grid">
+    <a href="game-theory.html" class="token-card c3 reveal">
+      <div class="token-ticker">THEORY</div>
+      <div class="token-name">GAME THEORY</div>
+      <div class="token-desc">
+        The base layer. The rules nobody told you about.
+        Banned in China. On-chain game theory doesn't need your permission.
+      </div>
+      <div class="token-balance">
+        holdings &nbsp;<span>1,642,747.78</span>
+      </div>
+      <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin"
+         target="_blank"
+         class="token-trade-btn"
+         onclick="event.stopPropagation()">Trade on Coinbook ↗</a>
+      <div class="token-arrow">↗</div>
+    </a>
+    <a href="probability.html" class="token-card c2 reveal">
+      <div class="token-ticker">PROBABY</div>
+      <div class="token-name">PROBABILITY</div>
+      <div class="token-desc">
+        The mechanism. Every market move is a probability distribution.
+        You're always in one. Might as well know which.
+      </div>
+      <div class="token-balance">
+        holdings &nbsp;<span>10,834,092.25</span>
+      </div>
+      <a href="https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin"
+         target="_blank"
+         class="token-trade-btn"
+         onclick="event.stopPropagation()">Trade on Coinbook ↗</a>
+      <div class="token-arrow">↗</div>
+    </a>
+    <a href="propaganda.html" class="token-card c1 reveal">
+      <div class="token-ticker">PROPAGAN</div>
+      <div class="token-name">PROPAGANDA!</div>
+      <div class="token-desc">
+        The distribution layer. All price action is narrative.
+        All narrative is propaganda. The exclamation mark is load-bearing.
+      </div>
+      <div class="token-balance">
+        holdings &nbsp;<span>7,105,960.26</span>
+      </div>
+      <a href="https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin"
+         target="_blank"
+         class="token-trade-btn"
+         onclick="event.stopPropagation()">Trade on Coinbook ↗</a>
+      <div class="token-arrow">↗</div>
+    </a>
+  </div>
+</section>
+<section class="manifesto">
+  <div class="manifesto-inner reveal">
+    <h2 class="manifesto-title">The Operator Chain</h2>
+    <p class="manifesto-body">
+      The same sequence governs every generative transition —
+      in plasma, in biology, in market structure, on-chain.
+      <strong>It is not a metaphor.</strong>
+    </p>
+    <div class="operator-chain">
+      <span class="op-c">C</span> → <span class="op-k">K</span> → <span class="op-f">F</span> → <span class="op-u">U</span> → T → source<br><br>
+      <span class="op-c">PROPAGANDA</span> &nbsp; compresses attention<br>
+      <span class="op-k">PROBABILITY</span> &nbsp; drives curvature toward threshold<br>
+      <span class="op-f">GAME THEORY</span> &nbsp; is the fold — the commitment point<br>
+      <span class="op-u">market</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unfolds to new equilibrium
+    </div>
+    <p class="manifesto-body">
+      This is the <strong>Principia Orthogona</strong> framework instantiated
+      as a memecoin ecosystem. The mathematics is real.
+      The tokens are real. The risk is very real.
+      <strong>Do your own research. Or don't. That's also a game theory move.</strong>
+    </p>
+  </div>
+</section>
+<footer>
+  <p>
+    EMMEs · <a href="https://x.com/myemmecoin" target="_blank">@myemmecoin</a> ·
+    <a href="https://t.me/+WC_698vgYxVmZGQx" target="_blank">Telegram</a> ·
+    <a href="https://coinbook.fun/token/7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin" target="_blank">Coinbook · THEORY</a> ·
+    <a href="https://coinbook.fun/token/7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin" target="_blank">Coinbook · PROBABY</a> ·
+    <a href="https://coinbook.fun/token/67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin" target="_blank">Coinbook · PROPAGAN</a> ·
+    <a href="../Finance/index.html">CapitalGuard ↗</a> ·
+    <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">Principia Orthogona</a>
+  </p>
+  <p style="margin-top:0.8rem">Not financial advice. Not capital protection. Not for the faint of heart.</p>
+</footer>
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }});
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Mini ticker live data
+const MT = [
+  { ticker: 'THEORY',  address: '7xtJR6qfexz5ZAsTny77F2H7S7pgmpggiAn7tcnkcoin' },
+  { ticker: 'PROBABY', address: '7DgYPRJywzJRtY4rQZRhwNXECdiQ7gmyHQqA48ojcoin' },
+  { ticker: 'PROPAGAN',address: '67xb3dpRRGBwngBCvBDxvaPXJMJfJgAQuNK4E7Focoin' }
+];
+
+function fmtP(p) {
+  if (!p) return '—';
+  const n = parseFloat(p);
+  if (n < 0.000001) return '$' + n.toExponential(2);
+  if (n < 0.001) return '$' + n.toPrecision(4);
+  if (n < 1) return '$' + n.toFixed(6);
+  return '$' + n.toFixed(4);
+}
+function fmtM(n) {
+  if (!n) return '—';
+  if (n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return '$' + (n/1e3).toFixed(2) + 'K';
+  return '$' + n.toFixed(0);
+}
+
+async function fetchMiniTicker() {
+  try {
+    const addrs = MT.map(t => t.address).join(',');
+    const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${addrs}`);
+    const data = await res.json();
+    const pairs = data.pairs || [];
+    MT.forEach(tok => {
+      const tokenPairs = pairs.filter(p =>
+        p.baseToken?.address?.toLowerCase() === tok.address.toLowerCase()
+      );
+      const pair = tokenPairs.sort((a,b) => (b.liquidity?.usd||0)-(a.liquidity?.usd||0))[0];
+      if (!pair) return;
+      const ch = pair.priceChange?.h24;
+      const chCls = ch > 0 ? 'pos' : ch < 0 ? 'neg' : 'flat';
+      const chStr = ch !== null && ch !== undefined ? (ch > 0 ? '+' : '') + ch.toFixed(2) + '%' : '—';
+      const mcap = pair.marketCap || pair.fdv;
+
+      document.getElementById(`mt-price-${tok.ticker}`).textContent = fmtP(pair.priceUsd);
+      const chEl = document.getElementById(`mt-change-${tok.ticker}`);
+      chEl.textContent = chStr;
+      chEl.className = `mini-tok-change ${chCls}`;
+      document.getElementById(`mt-mcap-${tok.ticker}`).textContent = 'mcap ' + fmtM(mcap);
+    });
+  } catch(e) { /* fail silently on index */ }
+}
+
+fetchMiniTicker();
+setInterval(fetchMiniTicker, 30000);
+</script>
+</body>
+</html>

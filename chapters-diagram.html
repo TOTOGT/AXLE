@@ -3,984 +3,267 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chapter Map · The Mini-Beast · Book 3 · Principia Orthogona</title>
+<title>All Chapters · Book 3: The Mini-Beast · Principia Orthogona</title>
 <style>
-  :root {
-    --navy:  #1a2744;
-    --gold:  #c9a84c;
-    --cream: #faf7f0;
-    --smoke: #f0ece4;
-    --mid:   #3a4f7a;
-    --rule:  #8a7340;
-    --text:  #1c1c1c;
-    --light: #e8e2d4;
-    --c-col: #3a7a5a;   /* C operator — green */
-    --k-col: #7a4a2a;   /* K operator — amber */
-    --f-col: #2a4a8a;   /* F operator — blue */
-    --u-col: #6a2a7a;   /* U operator — purple */
-    --g-col: #8a2a2a;   /* Greek — deep red */
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Georgia', serif;
-    background: #0e1520;
-    color: white;
-    min-height: 100vh;
-  }
-
-  /* ── Nav ── */
-  nav {
-    background: rgba(26,39,68,0.95);
-    padding: 0.75rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(8px);
-  }
-  .nav-logo { color: var(--gold); font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.12em; }
-  .nav-back { color: rgba(255,255,255,0.5); font-family: sans-serif; font-size: 0.8rem; text-decoration: none; }
-  .nav-back:hover { color: var(--gold); }
-
-  /* ── Hero ── */
-  .hero {
-    text-align: center;
-    padding: 4rem 2rem 2rem;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 70%);
-  }
-  .hero-eyebrow {
-    font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.25em;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem;
-  }
-  .hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); color: white; margin-bottom: 0.5rem; }
-  .hero-sub { color: rgba(255,255,255,0.45); font-style: italic; font-size: 0.95rem; margin-bottom: 2rem; }
-  .gold-rule { width: 50px; height: 1px; background: var(--gold); margin: 0 auto 2rem; }
-
-  /* ── Operator legend ── */
-  .op-legend {
-    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-    margin-bottom: 3rem;
-  }
-  .op-pill {
-    font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.18em;
-    text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 2rem;
-    cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
-  }
-  .op-pill.c { background: rgba(58,122,90,0.2); border-color: rgba(58,122,90,0.5); color: #7acc9a; }
-  .op-pill.k { background: rgba(122,74,42,0.2); border-color: rgba(122,74,42,0.5); color: #ccaa7a; }
-  .op-pill.f { background: rgba(42,74,138,0.2); border-color: rgba(42,74,138,0.5); color: #7aaaee; }
-  .op-pill.u { background: rgba(106,42,122,0.2); border-color: rgba(106,42,122,0.5); color: #cc7aee; }
-  .op-pill.gr { background: rgba(138,42,42,0.2); border-color: rgba(138,42,42,0.5); color: #ee9a7a; }
-  .op-pill.active, .op-pill:hover { opacity: 1; transform: scale(1.05); }
-
-  /* ── Main SVG diagram container ── */
-  .diagram-wrap {
-    max-width: 1100px; margin: 0 auto; padding: 0 1rem 2rem;
-  }
-
-  /* ── Arc Canvas ── */
-  #arc-canvas { display: block; width: 100%; }
-
-  /* ── Chapter grid (below arc) ── */
-  .chapter-grid {
-    max-width: 1100px; margin: 3rem auto 0; padding: 0 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.8rem;
-  }
-  .ch-card {
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 1rem 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: block;
-    position: relative;
-    overflow: hidden;
-  }
-  .ch-card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
-  }
-  .ch-card.op-c { background: rgba(58,122,90,0.06); }
-  .ch-card.op-c::before { background: #3a7a5a; }
-  .ch-card.op-k { background: rgba(122,74,42,0.06); }
-  .ch-card.op-k::before { background: #7a4a2a; }
-  .ch-card.op-f { background: rgba(42,74,138,0.06); }
-  .ch-card.op-f::before { background: #2a4a8a; }
-  .ch-card.op-u { background: rgba(106,42,122,0.06); }
-  .ch-card.op-u::before { background: #6a2a7a; }
-  .ch-card.op-gr { background: rgba(138,42,42,0.06); }
-  .ch-card.op-gr::before { background: #8a2a2a; }
-  .ch-card.op-ext { background: rgba(80,80,80,0.08); }
-  .ch-card.op-ext::before { background: #666; }
-
-  .ch-card:hover {
-    border-color: rgba(201,168,76,0.35);
-    transform: translateY(-2px);
-    background: rgba(201,168,76,0.05);
-  }
-  .ch-num {
-    font-family: sans-serif; font-size: 0.62rem; letter-spacing: 0.15em;
-    text-transform: uppercase; margin-bottom: 0.3rem; opacity: 0.6;
-  }
-  .ch-name { font-size: 0.95rem; color: white; margin-bottom: 0.2rem; line-height: 1.3; }
-  .ch-op-tag {
-    font-family: 'Courier New', monospace; font-size: 0.72rem;
-    margin-bottom: 0.3rem;
-  }
-  .ch-desc { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: sans-serif; line-height: 1.5; }
-  .ch-week {
-    position: absolute; top: 0.8rem; right: 0.8rem;
-    font-family: sans-serif; font-size: 0.6rem; letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.25); text-transform: uppercase;
-  }
-  .ch-status {
-    display: inline-block; margin-top: 0.5rem;
-    font-family: sans-serif; font-size: 0.58rem; letter-spacing: 0.12em;
-    text-transform: uppercase; padding: 0.15rem 0.5rem;
-    border-radius: 1rem;
-  }
-  .ch-status.live { background: rgba(58,122,90,0.3); color: #7acc9a; border: 1px solid rgba(58,122,90,0.4); }
-  .ch-status.building { background: rgba(201,168,76,0.15); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
-  .ch-status.coming { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); }
-
-  /* ── Phase headers ── */
-  .phase-header {
-    max-width: 1100px; margin: 2.5rem auto 0.8rem; padding: 0 1rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .phase-op {
-    font-family: 'Courier New', monospace; font-size: 1.4rem; font-weight: bold;
-  }
-  .phase-op.c { color: #7acc9a; }
-  .phase-op.k { color: #ccaa7a; }
-  .phase-op.f { color: #7aaaee; }
-  .phase-op.u { color: #cc7aee; }
-  .phase-op.gr { color: #ee9a7a; }
-  .phase-op.ext { color: #aaa; }
-  .phase-info { flex: 1; }
-  .phase-name { font-size: 1rem; color: white; margin-bottom: 0.15rem; }
-  .phase-desc { font-size: 0.78rem; color: rgba(255,255,255,0.4); font-family: sans-serif; }
-  .phase-weeks {
-    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.25); text-transform: uppercase;
-  }
-  .phase-line {
-    flex: 1; height: 1px; background: rgba(255,255,255,0.07);
-  }
-
-  /* ── Tooltip ── */
-  .tooltip {
-    position: fixed; pointer-events: none;
-    background: var(--navy); border: 1px solid rgba(201,168,76,0.3);
-    padding: 0.6rem 0.9rem; font-family: sans-serif; font-size: 0.78rem;
-    color: white; z-index: 500; max-width: 220px;
-    transform: translate(12px, -50%);
-    opacity: 0; transition: opacity 0.15s;
-  }
-  .tooltip.visible { opacity: 1; }
-  .tooltip-title { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.2rem; }
-  .tooltip-sub { color: rgba(255,255,255,0.55); font-size: 0.72rem; }
-
-  /* ── Footer ── */
-  footer {
-    margin-top: 4rem; padding: 2rem;
-    text-align: center; font-family: sans-serif;
-    font-size: 0.72rem; color: rgba(255,255,255,0.25);
-    border-top: 1px solid rgba(255,255,255,0.06); line-height: 1.9;
-  }
-  footer a { color: var(--gold); text-decoration: none; }
+:root{--bg:#07070f;--bg2:#0d0d18;--gold:#c9a84c;--text:#d8d0c0;--dim:#7a7070;--rule:rgba(201,168,76,.15);--c:#4a9eff;--k:#e05a3a;--f:#50c878;--u:#c084fc;--g:#f5d87a;--t:#f9c74f;--inf:#a0d8ef;--eng:#40c8c0;--d2:#e07090;--sound:#c080e0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Georgia',serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+nav{position:sticky;top:0;z-index:100;background:rgba(7,7,15,.97);border-bottom:1px solid var(--rule);padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nl{font-size:.82rem;letter-spacing:.18em;color:var(--gold);text-decoration:none}
+.nls{display:flex;gap:1.2rem;font-size:.74rem;flex-wrap:wrap}
+.nls a{color:var(--dim);text-decoration:none;letter-spacing:.07em;transition:color .2s}
+.nls a:hover{color:var(--gold)}
+.hero{text-align:center;padding:3rem 2rem 1.8rem;border-bottom:1px solid var(--rule)}
+.hero h1{font-size:clamp(1.4rem,3.5vw,2.2rem);font-weight:400;letter-spacing:.12em;color:var(--gold);margin-bottom:.4rem}
+.hero p{font-size:.88rem;color:var(--dim);font-style:italic;margin-bottom:1.2rem}
+.chain{font-family:'Courier New',monospace;font-size:.95rem;letter-spacing:.15em;color:var(--dim)}
+.oc{color:var(--c)}.ok{color:var(--k)}.of{color:var(--f)}.ou{color:var(--u)}.og{color:var(--g)}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem;padding:1.2rem 2rem;border-bottom:1px solid var(--rule)}
+.leg{display:flex;align-items:center;gap:.35rem;font-size:.65rem;letter-spacing:.1em;padding:.22rem .65rem;border-radius:2px;border:1px solid;opacity:.85}
+.d8{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sh{padding:2rem 2rem .4rem;font-size:.7rem;letter-spacing:.2em;color:var(--gold);border-top:1px solid var(--rule);margin-top:1rem;text-transform:uppercase}
+.sd{padding:0 2rem .8rem;font-size:.8rem;color:var(--dim);font-style:italic}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:0 2rem}
+.grid.w3{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.card{background:var(--bg2);padding:1rem 1.1rem;transition:background .2s;position:relative;text-decoration:none;display:block;color:inherit}
+.card:hover{background:#111120}
+.cl{font-family:'Courier New',monospace;font-size:.67rem;letter-spacing:.14em;margin-bottom:.35rem;display:flex;align-items:center;gap:.4rem}
+.od{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ct{font-size:.88rem;font-weight:400;color:var(--text);margin-bottom:.2rem;line-height:1.35}
+.cs{font-size:.7rem;color:var(--dim);font-style:italic;line-height:1.4}
+.cb{position:absolute;top:.65rem;right:.75rem;font-size:.6rem;letter-spacing:.1em;padding:.12rem .4rem;border-radius:2px}
+.bc{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+.bb{background:rgba(80,200,120,.1);color:var(--f);border:1px solid rgba(80,200,120,.2)}
+.bp{background:rgba(74,158,255,.1);color:var(--c);border:1px solid rgba(74,158,255,.2)}
+.bs{background:rgba(192,132,252,.1);color:var(--u);border:1px solid rgba(192,132,252,.2)}
+.bx{background:rgba(160,216,239,.1);color:var(--inf);border:1px solid rgba(160,216,239,.2)}
+.bd{background:rgba(224,112,144,.1);color:var(--d2);border:1px solid rgba(224,112,144,.2)}
+.bz{background:rgba(192,128,224,.1);color:var(--sound);border:1px solid rgba(192,128,224,.2)}
+.bm{background:rgba(120,120,120,.1);color:#888;border:1px solid rgba(120,120,120,.2)}
+.locked{opacity:.38;cursor:default;pointer-events:none}
+.stats{display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;padding:2rem;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:2rem 0 0}
+.stat{text-align:center}
+.sn{font-size:1.8rem;font-weight:400;color:var(--gold);font-family:'Courier New',monospace}
+.sl{font-size:.68rem;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;margin-top:.2rem}
+footer{text-align:center;padding:2rem;font-size:.7rem;letter-spacing:.1em;color:var(--dim);border-top:1px solid var(--rule)}
+footer a{color:var(--gold);text-decoration:none}
+@media(max-width:600px){.grid,.grid.w3{margin:0}.sh,.sd{padding-left:1rem;padding-right:1rem}}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html" class="nav-back">← The Mini-Beast</a>
-  <span class="nav-logo">BOOK 3 · CHAPTER MAP · 17 CHAPTERS</span>
-  <a href="course-16weeks.html" class="nav-back" style="text-decoration:none;">16-Week Course →</a>
+  <a href="index.html" class="nl">⚜ PRINCIPIA ORTHOGONA ⚜</a>
+  <div class="nls">
+    <a href="chapters-diagram.html" style="color:var(--gold)">All Chapters</a>
+    <a href="journey.html">Journey</a>
+    <a href="living-book.html">Living Book</a>
+    <a href="course-16weeks.html">Course</a>
+    <a href="Sportal.html">Portal</a>
+    <a href="wellness-soundworks.html">Soundworks</a>
+    <a href="trilogy-sale.html">Get the Book</a>
+  </div>
 </nav>
 
 <div class="hero">
-  <div class="hero-eyebrow">Principia Orthogona · Book 3 · The Mini-Beast</div>
-  <h1>Chapter Map</h1>
-  <div class="hero-sub">G = U ∘ F ∘ K ∘ C — all 17 chapters, one operator chain</div>
-  <div class="gold-rule"></div>
-
-  <div class="op-legend">
-    <div class="op-pill c" onclick="filterPhase('c')">C · Compression · Wks 1–4</div>
-    <div class="op-pill k" onclick="filterPhase('k')">K · Curvature · Wks 5–8</div>
-    <div class="op-pill f" onclick="filterPhase('f')">F · Fold · Wks 9–12</div>
-    <div class="op-pill u" onclick="filterPhase('u')">U · Unfold · Wks 13–16</div>
-    <div class="op-pill gr" onclick="filterPhase('gr')">π→Ω · Recurrence Ladder</div>
-    <div class="op-pill" style="background:rgba(80,80,80,0.15);border-color:rgba(120,120,120,0.3);color:#aaa;" onclick="filterPhase('all')">All Chapters</div>
-  </div>
+  <h1>ALL CHAPTERS</h1>
+  <p>Book 3: The Mini-Beast · Principia Orthogona Vol. III · G6 LLC · Newark NJ · 2026</p>
+  <div class="chain">G = <span class="ou">U</span> ∘ <span class="of">F</span> ∘ <span class="ok">K</span> ∘ <span class="oc">C</span></div>
 </div>
 
-<!-- Arc Diagram -->
-<div class="diagram-wrap">
-  <canvas id="arc-canvas" height="260"></canvas>
+<div class="legend">
+  <div class="leg" style="color:var(--c);border-color:rgba(74,158,255,.3)"><span class="d8" style="background:var(--c)"></span>C — Compression</div>
+  <div class="leg" style="color:var(--k);border-color:rgba(224,90,58,.3)"><span class="d8" style="background:var(--k)"></span>K — Threshold</div>
+  <div class="leg" style="color:var(--f);border-color:rgba(80,200,120,.3)"><span class="d8" style="background:var(--f)"></span>F — Fold</div>
+  <div class="leg" style="color:var(--u);border-color:rgba(192,132,252,.3)"><span class="d8" style="background:var(--u)"></span>U — Unfolding</div>
+  <div class="leg" style="color:var(--g);border-color:rgba(245,216,122,.3)"><span class="d8" style="background:var(--g)"></span>G — Fixed Point</div>
+  <div class="leg" style="color:var(--t);border-color:rgba(249,199,79,.3)"><span class="d8" style="background:var(--t)"></span>T — Periodicity</div>
+  <div class="leg" style="color:var(--inf);border-color:rgba(160,216,239,.3)"><span class="d8" style="background:var(--inf)"></span>∞ — Meta/Sim</div>
+  <div class="leg" style="color:var(--eng);border-color:rgba(64,200,192,.3)"><span class="d8" style="background:var(--eng)"></span>EfR — Language</div>
+  <div class="leg" style="color:var(--d2);border-color:rgba(224,112,144,.3)"><span class="d8" style="background:var(--d2)"></span>D2 — Philosophy</div>
+  <div class="leg" style="color:var(--sound);border-color:rgba(192,128,224,.3)"><span class="d8" style="background:var(--sound)"></span>Sound</div>
+  <div class="leg" style="color:var(--c);border-color:rgba(74,158,255,.25)"><span class="d8" style="background:#3a7acc"></span>PT-BR</div>
 </div>
 
-<!-- Tooltip -->
-<div class="tooltip" id="tooltip">
-  <div class="tooltip-title" id="tt-title"></div>
-  <div class="tooltip-sub" id="tt-sub"></div>
+<!-- ENTRY POINTS -->
+<div class="sh" style="margin-top:1rem">Entry Points &amp; Navigation</div>
+<div class="sd">Hub pages, portals, journey maps, and structural scaffolding</div>
+<div class="grid">
+  <a href="index.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">HUB</span></div><div class="ct">G6 Geometry Hub / Cajueiro Soundworks</div><div class="cs">Main entry · Book 3, AXLE, Orthogenesis · Portuguese soundworks index</div></a>
+  <a href="index-geometry-hub.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">HUB</span></div><div class="ct">G6 Geometry Hub (full edition)</div><div class="cs">Course, Book 3, AXLE, Orthogenesis Lean 4, Journey Map — all in one</div></a>
+  <a href="prelude.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--gold)">PRELUDE</span></div><div class="ct">Prelude — The Book Begins</div><div class="cs">Operator legend · how to read · interactive spiral chapter map</div><span class="cb bc">A1→A2</span></a>
+  <a href="minibeast-pilot.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">PILOT</span></div><div class="ct">The Mini-Beast · Pilot Page</div><div class="cs">Book 3 pilot landing page · series overview · entry point</div></a>
+  <a href="journey.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">JOURNEY</span></div><div class="ct">Student Journey Map</div><div class="cs">41 chapters · 3-pass spiral navigator · CEFR timeline · localStorage progress</div><span class="cb bs">LIVE</span></a>
+  <a href="journey-v1-backup.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">ARCHIVE</span></div><div class="ct">Journey Map v1 (backup)</div><div class="cs">Earlier build of the spiral journey navigator</div></a>
+  <a href="series-layer-map.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">MAP</span></div><div class="ct">Series Layer Map</div><div class="cs">Principia Orthogona G¹–G⁵ · full series architecture visualised</div></a>
+  <a href="living-book.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--dim)">HUB</span></div><div class="ct">Living Book Hub</div><div class="cs">All chapters collected · dm³ track + EfR track · two parallel programs</div></a>
+  <a href="fractal-index.html" class="card"><div class="cl"><span class="od" style="background:var(--inf)"></span><span style="color:var(--inf)">VISUAL</span></div><div class="ct">dm³ Generative Attractor</div><div class="cs">Seven domains · animated canvas · G = U ∘ F ∘ K ∘ C in motion</div><span class="cb bs">LIVE</span></a>
+  <a href="classroom-index.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">CLASS</span></div><div class="ct">Book 3 Classroom Index</div><div class="cs">Teacher and student classroom navigation · structured access</div></a>
+  <a href="labyrinth.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--dim)">NAV</span></div><div class="ct">The Labyrinth</div><div class="cs">Extended navigation · alternate reading paths through Book 3</div></a>
+  <a href="course-16weeks.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">COURSE</span></div><div class="ct">16-Week Course</div><div class="cs">A1 → D1 · week-by-week schedule · 21 LLM prompts · 4 milestone papers</div></a>
+  <a href="course-16weeks-source.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">SOURCE</span></div><div class="ct">English for Researchers C1→D2 (source)</div><div class="cs">16-week program source HTML · full build</div></a>
 </div>
 
-<!-- ─────────────────────────────────── -->
-<!-- Phase C -->
-<!-- ─────────────────────────────────── -->
-<div class="phase-header" data-phase="c">
-  <span class="phase-op c">C</span>
-  <div class="phase-info">
-    <div class="phase-name">Compression — Biological Instantiations</div>
-    <div class="phase-desc">We perceive the unfolding first. Reading backward from visible output to hidden structure.</div>
-  </div>
-  <div class="phase-line"></div>
-  <div class="phase-weeks">Weeks 1–4 · A1→A2</div>
+<!-- CORE SEQUENCE -->
+<div class="sh" style="margin-top:2rem">Core Sequence — dm³ / Mini-Beast Track · Chapters 0–17</div>
+<div class="sd">The main arc: G = U ∘ F ∘ K ∘ C applied through biology, physics, markets, and mathematics</div>
+<div class="grid">
+  <a href="ch00-introduction.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">Ch 0</span></div><div class="ct">Introduction: One Equation, Many Rooms</div><div class="cs">The lemniscate and the analemma · the seed is the same</div><span class="cb bc">A2</span></a>
+  <a href="ch00-student-edition.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">Ch 0 · Student Ed.</span></div><div class="ct">How to Read This Book — Student Edition</div><div class="cs">A1 student-facing entry · operator chain introduced gently</div><span class="cb bc">A1→A2</span></a>
+  <a href="ch1.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--g)">Ch 1 · G</span></div><div class="ct">The Cajueiro Principle</div><div class="cs">The visible output conceals the hidden generator · first biological instantiations</div><span class="cb bc">A2</span></a>
+  <a href="ch01-cajueiro.html" class="card"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 1b · C</span></div><div class="ct">The Cajueiro Principle — Seed &amp; Fixed Point</div><div class="cs">The seed reading · C operator as origin · EfR companion</div><span class="cb bc">B1</span></a>
+  <a href="ch01-dm3-framework.html" class="card"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 1c · C</span></div><div class="ct">The dm³ Framework: A Review</div><div class="cs">Operators C K F U · κ* · contact normal form · 4-system parameter table</div><span class="cb bc">B1</span></a>
+  <a href="ch01-one-equation.html" class="card"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 1d · C</span></div><div class="ct">Ch 1 — One Equation, Many Rooms</div><div class="cs">Journey companion · operator chain entry-level · journey map linked</div><span class="cb bc">A2→B1</span></a>
+  <a href="ch2.html" class="card"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 2 · C</span></div><div class="ct">Generative Matrix</div><div class="cs">Compression · SVD · critical periods · myelination · growing up as rank increase</div><span class="cb bc">A2→B1</span></a>
+  <a href="ch02-biological.html" class="card"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 2b · C→K</span></div><div class="ct">Biological Instantiations: The Four Orbits</div><div class="cs">HPA · Neural · Circadian · Immune · μ_max ω β κ* all four</div><span class="cb bc">B1</span></a>
+  <a href="ch3-circadian.html" class="card"><div class="cl"><span class="od" style="background:var(--t)"></span><span style="color:var(--t)">Ch 3 · T</span></div><div class="ct">Circadian Regulation</div><div class="cs">Contact 3-manifold · Reeb flow · helical attractors · 24h orbit</div><span class="cb bc">B1</span></a>
+  <a href="ch03-plasma.html" class="card"><div class="cl"><span class="od" style="background:var(--k)"></span><span style="color:var(--k)">Ch 3b · K</span></div><div class="ct">Plasma-Sheet Reconnection</div><div class="cs">Magnetotail as dm³ · μ_max=−0.42 · κ*≈10⁻³ km⁻¹ · Cluster/MMS/Parker</div><span class="cb bc">B1→B2</span></a>
+  <a href="ch4-neural.html" class="card"><div class="cl"><span class="od" style="background:var(--k)"></span><span style="color:var(--k)">Ch 4 · K</span></div><div class="ct">Neural Oscillations</div><div class="cs">Theta-gamma coupling · K* coherence threshold · sleep consolidation</div><span class="cb bc">B1→B2</span></a>
+  <a href="ch04-markets.html" class="card"><div class="cl"><span class="od" style="background:var(--k)"></span><span style="color:var(--k)">Ch 4b · K</span></div><div class="ct">Market Volatility Manifolds</div><div class="cs">Flash crash as K event · μ_max=−0.67 · β=2.4 · NYSE TAQ 10⁹ ticks</div><span class="cb bc">B1→B2</span></a>
+  <a href="ch5-immune.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 5 · F</span></div><div class="ct">Immune Memory</div><div class="cs">Clonal selection · affinity maturation · memory cells as fold operator</div><span class="cb bc">B1→B2</span></a>
+  <a href="ch05-neural-coherence.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 5b · F</span></div><div class="ct">Neural Embedding &amp; the Coherence Bridge</div><div class="cs">Theorem 5.4 — six systems, one category dm³ · exact morphisms · coming</div><span class="cb bm">Coming</span></a>
+  <a href="ch6-resonance.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 6 · U</span></div><div class="ct">Resonance</div><div class="cs">Cymatics · archaeoacoustics · Schumann · universal scale structure</div><span class="cb bc">B2</span></a>
+  <a href="ch6-resonant.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 6b · U</span></div><div class="ct">The Resonant Chamber</div><div class="cs">Contact geometry in physical space · resonant chamber as threshold</div><span class="cb bc">B2</span></a>
+  <a href="ch06-pedagogy.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 6c · F</span></div><div class="ct">Pedagogy as Mathematical Necessity</div><div class="cs">CEFR → TOGT · 14-week program · three seed sentences</div><span class="cb bc">B2</span></a>
+  <a href="ch7-topological-orthogenesis.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--g)">Ch 7 · G</span></div><div class="ct">Topological Orthogenesis</div><div class="cs">Non-abelian anyons · braid groups · 6-direction coherence · weave of spacetime</div><span class="cb bc">B2</span></a>
+  <a href="ch7-crystalline.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 7b · F→U</span></div><div class="ct">The Crystalline Return</div><div class="cs">Wigner crystal · G6 crystal · 33.516 Hz Schumann coupling · dm³ architecture</div><span class="cb bc">B2→C1</span></a>
+  <a href="ch8-nested-infinities.html" class="card"><div class="cl"><span class="od" style="background:var(--inf)"></span><span style="color:var(--inf)">Ch 8 · ∞</span></div><div class="ct">Nested Infinities</div><div class="cs">Cantor · Mandelbrot · surreals · Gödel · renormalization</div><span class="cb bc">B2+</span></a>
+  <a href="ch8-axiomatic.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 8b · U</span></div><div class="ct">The Axiomatic Turn</div><div class="cs">Γ ⊢ φ · formal proof structure as U operator · Lean 4 first steps</div><span class="cb bc">C1</span></a>
+  <a href="ch8-meru.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 8c · U</span></div><div class="ct">The Mountain and the Serpent (Meru)</div><div class="cs">Sacred geometry as dm³ · Sri Yantra as contact manifold · Meru axis</div><span class="cb bb">BONUS</span></a>
+  <a href="ch9-phi.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 9 · F→U</span></div><div class="ct">φ — The Subcritical Approach</div><div class="cs">Golden ratio · Fibonacci · φ=1.618 below c*=3 · criticality threshold</div><span class="cb bc">C1</span></a>
+  <a href="ch10-lyapunov.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 10 · U</span></div><div class="ct">Lyapunov Stability</div><div class="cs">Stability exponents · attractors · convergence · μ_max = −2</div><span class="cb bc">D1</span></a>
+  <a href="ch11-spectral.html" class="card"><div class="cl"><span class="od" style="background:var(--k)"></span><span style="color:var(--k)">Ch 11 · K</span></div><div class="ct">Spectral Radius</div><div class="cs">Eigenvalues and the generator · ρ(ℒ) ≈ 0.751 · transfer operator</div><span class="cb bc">D1→D2</span></a>
+  <a href="ch12-conclusion.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--g)">Ch 12 · G</span></div><div class="ct">Fixed Point — The Conclusion as Attractor</div><div class="cs">Banach theorem closes the loop · G(x*) = x*</div><span class="cb bc">D1→D2</span></a>
+  <a href="ch13-revision.html" class="card"><div class="cl"><span class="od" style="background:var(--inf)"></span><span style="color:var(--inf)">Ch 13 · ∞</span></div><div class="ct">The Nirvana Machine — Revision as Annealing</div><div class="cs">Meta-operator at work · T → 0 · simulated annealing as U operator</div><span class="cb bc">D2</span></a>
+  <a href="ch14-axle.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--g)">Ch 14 · G</span></div><div class="ct">AXLE — The Sorry-Free Paper</div><div class="cs">Formal verification meets academic writing · Curry-Howard</div><span class="cb bc">D2</span></a>
+  <a href="ch15-entropy.html" class="card"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 15 · C</span></div><div class="ct">H — Entropy and the Compression Circle</div><div class="cs">Shannon entropy revisits C · how much compression remains</div><span class="cb bc">D2</span></a>
+  <a href="ch16-scale.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 16 · U</span></div><div class="ct">Scale Invariance</div><div class="cs">Self-similarity · renormalization group · B ∝ M³⁄⁴</div><span class="cb bc">D2</span></a>
+  <a href="ch17-epilogue.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--g)">Ch 17 · G</span></div><div class="ct">Epilogue — The Living Book</div><div class="cs">The full composition resolved · Gⁿ(x₀) → x* · reader becomes operator</div><span class="cb bc">D2</span></a>
 </div>
 
-<div class="chapter-grid" id="grid-c">
-
-  <a href="ch1-seed.html" class="ch-card op-c">
-    <div class="ch-week">Wk 1</div>
-    <div class="ch-num">Chapter 1</div>
-    <div class="ch-name">The Unfolding</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · The Cajueiro</div>
-    <div class="ch-desc">We see the tree. We ask what made it. Compression as first principle — working backward from U to C.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
-  <a href="ch2-allostatic.html" class="ch-card op-c">
-    <div class="ch-week">Wk 2</div>
-    <div class="ch-num">Chapter 2</div>
-    <div class="ch-name">The Allostatic Operator</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Stress as Compression</div>
-    <div class="ch-desc">How living systems survive chronic stress by compressing their operating range. Cortisol, HPA axis, allostatic load.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch3-circadian.html" class="ch-card op-c">
-    <div class="ch-week">Wk 3</div>
-    <div class="ch-num">Chapter 3</div>
-    <div class="ch-name">Circadian Regulation</div>
-    <div class="ch-op-tag" style="color:#7acc9a;">C · Time Compressed to 24h</div>
-    <div class="ch-desc">The cell compresses evolutionary time into a 24-hour orbit. CLOCK, BMAL1, and the feedback loop as C operator.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
+<!-- ENGLISH FOR RESEARCHERS -->
+<div class="sh" style="margin-top:2rem">English for Researchers Track — C1→D2</div>
+<div class="sd">Science through language. The operator chain as reading, writing, and research program.</div>
+<div class="grid">
+  <a href="ch01-cajueiro.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR Ch 1 · C</span></div><div class="ct">We Perceive the Unfolding First — Cajueiro</div><div class="cs">C operator as reading strategy · A2→B1</div><span class="cb bc">A2→B1</span></a>
+  <a href="ch02-reading.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR Ch 2 · C</span></div><div class="ct">Compressing the Abstract</div><div class="cs">Scientific reading at the threshold · finding κ* in a paper</div><span class="cb bc">B1</span></a>
+  <a href="ch03-sources.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR Ch 3 · K</span></div><div class="ct">Source Mapping</div><div class="cs">Citations · DOIs · literature chain · K in academic writing</div><span class="cb bc">B1→B2</span></a>
+  <a href="ch04-milestone1.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR M1 · F</span></div><div class="ct">Paper 1 — Your First Zenodo Publication</div><div class="cs">Milestone 1 · the fold — before and after you publish</div><span class="cb bc">B2→C1</span></a>
+  <a href="ch05-oscillations.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR Ch 5 · K→F</span></div><div class="ct">Neural Oscillations (EfR edition)</div><div class="cs">Science as language rhythm · reading and writing at B2→C1</div><span class="cb bc">B2</span></a>
+  <a href="ch06-argument.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR Ch 6 · F</span></div><div class="ct">The Argument Architecture</div><div class="cs">Academic argument as F operator · fold points in logic · C1→C2</div><span class="cb bc">C1→C2</span></a>
+  <a href="ch07-bridge.html" class="card"><div class="cl"><span class="od" style="background:var(--eng)"></span><span style="color:var(--eng)">EfR Ch 7 · U</span></div><div class="ct">The Bridge</div><div class="cs">From argument to publication · crossing into D1 · referenced from Ch 6</div><span class="cb bm">Coming</span></a>
 </div>
 
-<!-- ─────────────────────────────────── -->
-<!-- Phase K -->
-<!-- ─────────────────────────────────── -->
-<div class="phase-header" data-phase="k">
-  <span class="phase-op k">K</span>
-  <div class="phase-info">
-    <div class="phase-name">Curvature — The Threshold</div>
-    <div class="phase-desc">The line between description and argument. The moment the system commits to a new orbit.</div>
-  </div>
-  <div class="phase-line"></div>
-  <div class="phase-weeks">Weeks 5–8 · B1→B2</div>
+<!-- BONUS CHAPTERS -->
+<div class="sh" style="margin-top:2rem">Bonus Chapters — Extended Domains &amp; D2 Philosophy</div>
+<div class="sd">GTCT · Wigner · recurrence · topology · proteins · sacred geometry · D2 philosophy · Yuga</div>
+<div class="grid">
+  <a href="chE-gtct.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--g)">Bonus E</span></div><div class="ct">GTCT for Everyone</div><div class="cs">9 axioms · 12 operators · 4 theorems · full A1→D1 prompt library</div><span class="cb bb">BONUS</span></a>
+  <a href="ch-e-gtct.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--dim)">Bonus E (alt)</span></div><div class="ct">GTCT for Everyone — Alternate Build</div><div class="cs">Earlier/alternate edition of the GTCT bonus chapter</div><span class="cb bb">BONUS</span></a>
+  <a href="chW-wigner.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Bonus W</span></div><div class="ct">The Wigner Crystal in Living Systems</div><div class="cs">G6 Crystal · Schumann 33.516 Hz · G⁶:33 conjecture · six faces</div><span class="cb bb">BONUS</span></a>
+  <a href="chPI-recurrence.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Bonus π</span></div><div class="ct">The Recurrence Ladder</div><div class="cs">π φ μ η Δ Σ Ω → τ=2 · constants as operators on the number line</div><span class="cb bb">BONUS</span></a>
+  <a href="chapters-pi-phi-mu-eta-delta-sigma-omega.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Bonus π–Ω</span></div><div class="ct">Full Recurrence Ladder (extended)</div><div class="cs">All seven Greek-letter operators in one combined page</div><span class="cb bb">BONUS</span></a>
+  <a href="chLambda-polylaminin.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Bonus Λ</span></div><div class="ct">Polylaminin — Protein Shape Transformations</div><div class="cs">Λ operator · laminin protein structure as dm³ fold · biological geometry</div><span class="cb bb">BONUS</span></a>
+  <a href="chT-tubulin.html" class="card"><div class="cl"><span class="od" style="background:var(--inf)"></span><span style="color:var(--inf)">Bonus T</span></div><div class="ct">Tubulin as Computronium</div><div class="cs">Ulam's question · microtubule computation as dm³ · biological fold</div><span class="cb bb">BONUS</span></a>
+  <a href="ch-t-tubulin.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">Bonus T (alt)</span></div><div class="ct">Tubulin as Computronium (alt build)</div><div class="cs">Alternate build of the Tubulin chapter</div><span class="cb bb">BONUS</span></a>
+  <a href="ch-t-tubulina.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">Bonus T (PT)</span></div><div class="ct">Tubulina como Computrônio</div><div class="cs">Portuguese-facing build of the Tubulin chapter</div><span class="cb bp">PT-BR</span></a>
+  <a href="sample-chapter-tubulin.html" class="card"><div class="cl"><span class="od" style="background:var(--inf)"></span><span style="color:var(--dim)">Sample T</span></div><div class="ct">Tubulin — Public Sample</div><div class="cs">Free public sample chapter · microtubule computation as dm³</div><span class="cb bx">FREE</span></a>
+  <a href="sample-chapter-wigner.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--dim)">Sample W</span></div><div class="ct">Wigner Crystal — Public Sample</div><div class="cs">Free public sample · Wigner crystal as contact fold</div><span class="cb bx">FREE</span></a>
+  <a href="chapter-eta-dnls.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Bonus η · DNLS</span></div><div class="ct">Tribonacci / DNLS</div><div class="cs">η=1.839 · Discrete Nonlinear Schrödinger · long-time dynamics · critical λ</div><span class="cb bb">BONUS</span></a>
+  <a href="ch7-crystalline.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 7 · Crystalline</span></div><div class="ct">The Crystalline Return</div><div class="cs">Wigner crystal · G6 architecture · Schumann · moiré patterns</div><span class="cb bc">B2→C1</span></a>
+  <a href="ch8-meru.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 8 · Meru</span></div><div class="ct">The Mountain and the Serpent</div><div class="cs">Sacred geometry as dm³ · Sri Yantra as contact manifold · Meru axis</div><span class="cb bb">BONUS</span></a>
+  <a href="ch-d2-academic.html" class="card"><div class="cl"><span class="od" style="background:var(--d2)"></span><span style="color:var(--d2)">D2 · Epistemology</span></div><div class="ct">Evolutionary Epistemology and the Limits of Formalism</div><div class="cs">D2 philosophy · the honest sorry · avatar sequence as operator chain</div><span class="cb bd">D2</span></a>
+  <a href="ch-d2-parashurama.html" class="card"><div class="cl"><span class="od" style="background:var(--d2)"></span><span style="color:var(--d2)">D2 · Philosophy</span></div><div class="ct">The Paraśurāma Hinge</div><div class="cs">Internal transformation · K as formal hinge · Kalkī is here now · Lean sorry</div><span class="cb bd">D2</span></a>
+  <a href="yuga6.html" class="card"><div class="cl"><span class="od" style="background:var(--d2)"></span><span style="color:var(--d2)">D2 · Yoga-ESL</span></div><div class="ct">Yuga 6 — Yoga-ESL · The Origin</div><div class="cs">Source of the teaching · Yoga as operator chain · Śrī Brodānanda</div><span class="cb bd">D2</span></a>
+  <a href="guru-puja.html" class="card"><div class="cl"><span class="od" style="background:var(--d2)"></span><span style="color:var(--d2)">D2 · Ritual</span></div><div class="ct">Pratyakṣa Pāda Pūjā</div><div class="cs">Śrī Brodānanda · G6 LLC · the teacher's offering · guru puja</div><span class="cb bd">D2</span></a>
 </div>
 
-<div class="chapter-grid" id="grid-k">
-
-  <a href="ch4-neural.html" class="ch-card op-k">
-    <div class="ch-week">Wk 5</div>
-    <div class="ch-num">Chapter 4</div>
-    <div class="ch-name">Neural Oscillations</div>
-    <div class="ch-op-tag" style="color:#ccaa7a;">K · The Curvature Threshold</div>
-    <div class="ch-desc">κ* in the nervous system. Gamma, theta, delta — how oscillatory modes lock and switch. Entrainment as K.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-  <a href="ch5-immune.html" class="ch-card op-k">
-    <div class="ch-week">Wk 6</div>
-    <div class="ch-num">Chapter 5</div>
-    <div class="ch-name">Immune Adaptation</div>
-    <div class="ch-op-tag" style="color:#ccaa7a;">K · Committing to a New Orbit</div>
-    <div class="ch-desc">Th1/Th2 switching as a curvature threshold. The immune system commits — and cannot easily uncommit.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-  <a href="ch6-falsifiable.html" class="ch-card op-k">
-    <div class="ch-week">Wk 7</div>
-    <div class="ch-num">Chapter 6</div>
-    <div class="ch-name">Three Falsifiable Predictions</div>
-    <div class="ch-op-tag" style="color:#ccaa7a;">K · The Open Frontier</div>
-    <div class="ch-desc">What the series has not yet proved. Three predictions with explicit falsification conditions. The living chapter.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
+<!-- WRITING ARC (private) -->
+<div class="sh" style="margin-top:2rem">Writing Arc — Private Chapters</div>
+<div class="sd">Collaborator access required. Parallel writing arc of Book 3.</div>
+<div class="grid">
+  <div class="card locked"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 1 · C</span> 🔒</div><div class="ct">The Seed</div><div class="cs">C(x) = αx · the seed reading · standalone</div><span class="cb bc">B1</span></div>
+  <div class="card locked"><div class="cl"><span class="od" style="background:var(--c)"></span><span style="color:var(--c)">Ch 2 · C→K</span> 🔒</div><div class="ct">Allostatic Load</div><div class="cs">λ = Σwᵢsᵢ · allostasis as operator composition</div><span class="cb bc">B1</span></div>
+  <div class="card locked"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 6 · F</span> 🔒</div><div class="ct">Resonant Systems</div><div class="cs">Falsifiability as fold · resonance in argument structure</div><span class="cb bc">B2</span></div>
+  <div class="card locked"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">Ch 7 · F→U</span> 🔒</div><div class="ct">Crystalline Structure</div><div class="cs">Wigner crystal · moiré patterns · E = kT·ln(Ω)</div><span class="cb bc">B2→C1</span></div>
+  <div class="card locked"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">Ch 8 · U</span> 🔒</div><div class="ct">Axiomatic Foundations</div><div class="cs">Γ ⊢ φ · formal proof structure as U operator</div><span class="cb bc">C1</span></div>
 </div>
 
-<!-- ─────────────────────────────────── -->
-<!-- Phase F -->
-<!-- ─────────────────────────────────── -->
-<div class="phase-header" data-phase="f">
-  <span class="phase-op f">F</span>
-  <div class="phase-info">
-    <div class="phase-name">Fold — The Complete Circuit</div>
-    <div class="phase-desc">The structure folds into a complete form. Before and after. The topology changes.</div>
-  </div>
-  <div class="phase-line"></div>
-  <div class="phase-weeks">Weeks 9–12 · C1</div>
+<!-- SIMULATIONS -->
+<div class="sh" style="margin-top:2rem">Interactive Simulations</div>
+<div class="sd">Standalone computation tools — probing AXLE targets directly in the browser</div>
+<div class="grid">
+  <a href="sim-lyapunov.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">SIM · λ</span></div><div class="ct">Lyapunov Exponent — Syracuse Return Map</div><div class="cs">Live λ · adjustable N, seed n₀, noise σ · AXLE Target 5</div><span class="cb bs">LIVE</span></a>
+  <a href="spectral-radius.html" class="card"><div class="cl"><span class="od" style="background:var(--k)"></span><span style="color:var(--k)">SIM · ρ v1</span></div><div class="ct">Spectral Radius — Transfer Operator</div><div class="cs">Syracuse return map · Collatz visualizer · ρ(ℒ) ≈ 0.751 · v1</div><span class="cb bs">LIVE</span></a>
+  <a href="spectral-radius-v2.html" class="card"><div class="cl"><span class="od" style="background:var(--k)"></span><span style="color:var(--k)">SIM · ρ v2</span></div><div class="ct">Spectral Radius v2</div><div class="cs">Revised transfer operator · Ruelle–Perron–Frobenius · live at AXLE</div><span class="cb bs">LIVE</span></a>
+  <a href="wigner-fractal.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">SIM · dm³</span></div><div class="ct">Wigner Crystal Fold Diagram</div><div class="cs">Interactive dm³ fold · moiré angle selector · G6 crystal visualiser</div><span class="cb bs">LIVE</span></a>
+  <a href="collatz.html" class="card"><div class="cl"><span class="od" style="background:var(--f)"></span><span style="color:var(--f)">SIM · Collatz</span></div><div class="ct">Collatz as dm³ System</div><div class="cs">c=3 as triad fingerprint · 3×11=33 · crystal geometry corollary</div><span class="cb bs">LIVE</span></a>
+  <a href="sim-stormmanifold.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">SIM · Storm</span></div><div class="ct">Storm Manifold</div><div class="cs">Contact structure visualised in real time · atmospheric dm³</div><span class="cb bs">LIVE</span></a>
+  <a href="fractal-index.html" class="card"><div class="cl"><span class="od" style="background:var(--inf)"></span><span style="color:var(--inf)">SIM · Attractor</span></div><div class="ct">dm³ Generative Attractor</div><div class="cs">Seven domains · animated canvas · G = U ∘ F ∘ K ∘ C</div><span class="cb bs">LIVE</span></a>
+  <a href="simportal.html" class="card"><div class="cl"><span class="od" style="background:var(--u)"></span><span style="color:var(--u)">SIM · Portal</span></div><div class="ct">Simulation Portal</div><div class="cs">Entry point for all simulations · Collatz · Lyapunov · storm manifold</div></a>
 </div>
 
-<div class="chapter-grid" id="grid-f">
-
-  <a href="ch7-complete-circuit.html" class="ch-card op-f">
-    <div class="ch-week">Wk 9</div>
-    <div class="ch-num">Chapter 7</div>
-    <div class="ch-name">The Complete Circuit</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · g₃₃ = 33</div>
-    <div class="ch-desc">The operator chain closes. G = U ∘ F ∘ K ∘ C applied at every scale simultaneously. The saturated form.</div>
-    <span class="ch-status coming">Coming</span>
-  </a>
-
-  <a href="ch-e-gtct.html" class="ch-card op-f">
-    <div class="ch-week">Wk 10</div>
-    <div class="ch-num">Chapter E</div>
-    <div class="ch-name">GTCT — Generalized Trajectory</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Time Circuit Theory</div>
-    <div class="ch-desc">Generalized Trajectory &amp; Cycle Theory. How time-periodic orbits encode the fold. The circuit as limit cycle.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-t-tubulin.html" class="ch-card op-f">
-    <div class="ch-week">Wk 11</div>
-    <div class="ch-num">Chapter T</div>
-    <div class="ch-name">Tubulin as Computronium</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Biological Fold</div>
-    <div class="ch-desc">Ulam's question: what is the optimal physical substrate for computation? Tubulin answers it.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="wigner-fractal.html" class="ch-card op-f">
-    <div class="ch-week">Wk 12</div>
-    <div class="ch-num">Chapter W</div>
-    <div class="ch-name">The Wigner Crystal</div>
-    <div class="ch-op-tag" style="color:#7aaaee;">F · Physical Instantiation</div>
-    <div class="ch-desc">Electrons crystallize under extreme compression. Wigner's 1934 prediction — dm³ fold diagram.</div>
-    <span class="ch-status live">Live</span>
-  </a>
-
+<!-- PORTALS & ACCESS -->
+<div class="sh" style="margin-top:2rem">Portals, Purchase &amp; Access</div>
+<div class="sd">Student portals, purchase pages, access gates, and Newark clinic</div>
+<div class="grid">
+  <a href="Sportal.html" class="card"><div class="cl"><span class="od" style="background:var(--g)"></span><span style="color:var(--dim)">PORTAL</span></div><div class="ct">Student Portal (Sportal)</div><div class="cs">A1 → D2 · 21-prompt sequence · chapter access · progress tracking</div></a>
+  <a href="impa-portal.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">PORTAL</span></div><div class="ct">dm³ Soundworks / IMPA Portal</div><div class="cs">Chladni · sacred resonance · purchase portal · PayPal · Gumroad</div></a>
+  <a href="access-required.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">GATE</span></div><div class="ct">Chapter Access Gate</div><div class="cs">Paywall gate · dm³ Research Lab · paid chapter access page</div></a>
+  <a href="trilogy-sale.html" class="card"><div class="cl"><span class="od" style="background:var(--gold)"></span><span style="color:var(--dim)">SALES</span></div><div class="ct">Get the Trilogy</div><div class="cs">Principia Orthogona Vol. I · II · III · pricing and access</div></a>
+  <a href="229-ballantine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--dim)">CLINIC</span></div><div class="ct">229 Ballantine Pkwy — Clinic Fund</div><div class="cs">Membership tiers · free clinic · Newark NJ · supporter / patron</div></a>
 </div>
 
-<!-- ─────────────────────────────────── -->
-<!-- Phase U -->
-<!-- ─────────────────────────────────── -->
-<div class="phase-header" data-phase="u">
-  <span class="phase-op u">U</span>
-  <div class="phase-info">
-    <div class="phase-name">Unfold — Verification &amp; the Fixed Point</div>
-    <div class="phase-desc">The organism has grown. The paper has been published. The circuit closes at D2.</div>
-  </div>
-  <div class="phase-line"></div>
-  <div class="phase-weeks">Weeks 13–16 · D1→D2</div>
+<!-- SOUNDWORKS -->
+<div class="sh" style="margin-top:2rem">Sound Machines — Newark Wellness Soundworks</div>
+<div class="sd">Seven Web Audio machines. Ancient cures brought forward. All open access. dm³ as sound.</div>
+<div class="grid w3">
+  <a href="wellness-soundworks.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">HUB</span></div><div class="ct">Newark Wellness Soundworks</div><div class="cs">All seven machines · hub page · 229 Ballantine Pkwy · G6 LLC</div><span class="cb bz">SOUND</span></a>
+  <a href="newark-wellness.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">CLINIC</span></div><div class="ct">Newark Wellness Center</div><div class="cs">G6 LLC · 229 Ballantine Pkwy · free clinic · membership infrastructure</div><span class="cb bz">SOUND</span></a>
+  <a href="om-machine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">ॐ</span></div><div class="ct">Om Machine</div><div class="cs">136 Hz Earth year · 12 harmonics · fractal non-repeating drone</div><span class="cb bz">OPEN</span></a>
+  <a href="pranayama-machine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">🌬</span></div><div class="ct">Pranayama Machine</div><div class="cs">4-7-8 · box · Nāḍī Śodhana · breath cycle timer · tonal guidance</div><span class="cb bz">OPEN</span></a>
+  <a href="soham-machine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">सो हं</span></div><div class="ct">So-Haṃ Machine</div><div class="cs">So 126 Hz (inhale) · haṃ 108 Hz (exhale) · C→U operator as breath</div><span class="cb bz">OPEN</span></a>
+  <a href="g6-drone-machine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">⬡</span></div><div class="ct">G6 Drone Machine</div><div class="cs">dm³ invariants as sound · (T*,μmax,τ)=(2π,−2,2) · Schumann 7.83 Hz mod</div><span class="cb bz">OPEN</span></a>
+  <a href="sri-yantra-sakti-machine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">🔺</span></div><div class="ct">Śrī Yantra Śakti Machine</div><div class="cs">Nine triangles · just / Pythagorean / equal tuning · bindu pulse</div><span class="cb bz">OPEN</span></a>
+  <a href="hal-saflieni-resonance.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">🏛</span></div><div class="ct">Ħal Saflieni Temple Resonance</div><div class="cs">Oracle Chamber · 90–120 Hz sweep · 110 Hz peak · 3600 BCE Malta</div><span class="cb bz">OPEN</span></a>
+  <a href="hypogeum_temple_resonance.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">🏛 alt</span></div><div class="ct">Ħal Saflieni Resonance (alternate)</div><div class="cs">Second build of the Oracle Chamber resonance machine</div><span class="cb bz">OPEN</span></a>
+  <a href="swarnakarshana-bhairava-machine.html" class="card"><div class="cl"><span class="od" style="background:var(--sound)"></span><span style="color:var(--sound)">🌕</span></div><div class="ct">Swarnakarshana Bhairava Machine</div><div class="cs">Hrāṃ Hrīṃ Hrūṃ bīja triad · Om 136 Hz · gold-drawing abundance layer</div><span class="cb bz">OPEN</span></a>
+  <a href="impa-portal-patch.html" class="card"><div class="cl"><span class="od" style="background:var(--dim)"></span><span style="color:var(--dim)">PATCH</span></div><div class="ct">IMPA Portal Soundworks Patch</div><div class="cs">Insert block for impa-portal.html · Newark Wellness primary section</div></a>
 </div>
 
-<!-- (no dedicated U chapters yet — D2 is the course output itself) -->
-
-<!-- ─────────────────────────────────── -->
-<!-- Recurrence Ladder -->
-<!-- ─────────────────────────────────── -->
-<div class="phase-header" data-phase="gr">
-  <span class="phase-op gr">π→Ω</span>
-  <div class="phase-info">
-    <div class="phase-name">The Recurrence Ladder</div>
-    <div class="phase-desc">Seven Greek chapters. Each constant is a fixed point of a different recurrence. π to Ω spans the generative interval.</div>
-  </div>
-  <div class="phase-line"></div>
-  <div class="phase-weeks">Math Supplement · All levels</div>
+<!-- PORTUGUESE -->
+<div class="sh" style="margin-top:2rem">Edição Brasileira — Portuguese Track</div>
+<div class="sd">Sessões, capítulos e tradução completa em português · IMPA · Vol. IV · Mini-Curso</div>
+<div class="grid">
+  <a href="livro3-brasil.html" class="card"><div class="cl"><span class="od" style="background:#3a7acc"></span><span style="color:var(--c)">Livro 3</span></div><div class="ct">The Mini-Beast — Edição Brasil</div><div class="cs">Edição brasileira completa · G = U ∘ F ∘ K ∘ C em português</div><span class="cb bp">PT-BR</span></a>
+  <a href="capitulo-e-gtct-pt.html" class="card"><div class="cl"><span class="od" style="background:#3a7acc"></span><span style="color:var(--c)">Capítulo E · PT</span></div><div class="ct">O Circuito Temporal Generativo</div><div class="cs">GTCT para todos · versão em português · capítulo E completo</div><span class="cb bp">PT-BR</span></a>
+  <a href="sessao1-geometria-contato.html" class="card"><div class="cl"><span class="od" style="background:#3a7acc"></span><span style="color:var(--c)">Sessão S1</span></div><div class="ct">Geometria de Contato &amp; o Sistema dm³</div><div class="cs">Variedade M · forma α · campo de Reeb · Mini-Curso Vol. IV</div><span class="cb bp">PT-BR</span></a>
+  <a href="sessao2-teorema-bacia.html" class="card"><div class="cl"><span class="od" style="background:#3a7acc"></span><span style="color:var(--c)">Sessão S2</span></div><div class="ct">Teorema da Bacia Assimétrica</div><div class="cs">Bacia atratora · ponto fixo · Teorema de Banach demonstrado</div><span class="cb bp">PT-BR</span></a>
+  <a href="sessao3-esqueleto-lean.html" class="card"><div class="cl"><span class="od" style="background:#3a7acc"></span><span style="color:var(--c)">Sessão S3</span></div><div class="ct">Esqueleto Lean 4 &amp; AXLE Issue #12</div><div class="cs">Verificação formal · estrutura Lean 4 · AXLE Target 5</div><span class="cb bp">PT-BR</span></a>
 </div>
 
-<div class="chapter-grid" id="grid-gr" style="grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));">
-
-  <a href="ch-pi.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter π</div>
-    <div class="ch-name">Why Period = 2π</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">π</div>
-    <div class="ch-desc">Reeb geometry, limit cycle, contact structure. T* = 2π.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-phi.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter φ</div>
-    <div class="ch-name">Fibonacci as Subcritical dm³</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">φ</div>
-    <div class="ch-desc">φ = 1.618. Below c* = 3. Subcritical growth. The golden ratio as a stable fixed point.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-mu.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter μ</div>
-    <div class="ch-name">Lyapunov &amp; Chaos</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">μ</div>
-    <div class="ch-desc">Lyapunov exponent = −2. The boundary of stability. Sensitive dependence.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-eta.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter η</div>
-    <div class="ch-name">Tribonacci / 1.839</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">η</div>
-    <div class="ch-desc">Three-term recurrence. η = 1.839. Between φ and c*. The first supercritical rung.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-delta.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter Δ</div>
-    <div class="ch-name">Tetranacci / 1.927</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">Δ</div>
-    <div class="ch-desc">Four-term recurrence. Δ = 1.927. Approaching c* = 2 from below.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-sigma.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter Σ</div>
-    <div class="ch-name">Pentanacci / 1.966</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">Σ</div>
-    <div class="ch-desc">Five-term recurrence. Σ = 1.966. The ladder converges toward τ = 2.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-  <a href="ch-omega.html" class="ch-card op-gr">
-    <div class="ch-num">Chapter Ω</div>
-    <div class="ch-name">Hexabonacci → τ = 2</div>
-    <div class="ch-op-tag" style="color:#ee9a7a; font-size:1.4rem;">Ω</div>
-    <div class="ch-desc">Six-term recurrence converges to τ = 2. Complete Completeness. The fixed point of the operator chain.</div>
-    <span class="ch-status building">Building</span>
-  </a>
-
-</div>
-
-<!-- ─────────────────────────────────── -->
-<!-- What's Live vs Coming summary -->
-<!-- ─────────────────────────────────── -->
-<div style="max-width:1100px; margin: 3rem auto; padding: 0 1rem;">
-  <div style="border:1px solid rgba(201,168,76,0.2); padding: 2rem; background: rgba(201,168,76,0.03);">
-    <div style="font-family:sans-serif; font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem;">Living Book Status</div>
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:1rem; font-family:sans-serif; font-size:0.8rem;">
-      <div>
-        <div style="color:#7acc9a; margin-bottom:0.4rem;">● Live Now</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:1.9;">
-          Chapter 1 · The Unfolding<br>
-          Chapter W · Wigner Crystal<br>
-          course-16weeks.html<br>
-          Sportal (21 prompts)<br>
-          Recurrence Ladder (combined)
-        </div>
-      </div>
-      <div>
-        <div style="color:var(--gold); margin-bottom:0.4rem;">◑ Building</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:1.9;">
-          Chapter 2 · Allostatic<br>
-          Chapter E · GTCT<br>
-          Chapter T · Tubulin<br>
-          π · φ · μ · η · Δ · Σ · Ω (split)
-        </div>
-      </div>
-      <div>
-        <div style="color:rgba(255,255,255,0.25); margin-bottom:0.4rem;">○ Coming</div>
-        <div style="color:rgba(255,255,255,0.3); line-height:1.9;">
-          Chapter 3 · Circadian<br>
-          Chapter 4 · Neural<br>
-          Chapter 5 · Immune<br>
-          Chapter 6 · Falsifiable<br>
-          Chapter 7 · Complete Circuit
-        </div>
-      </div>
-      <div>
-        <div style="color:rgba(255,255,255,0.4); margin-bottom:0.4rem;">∞ Growing</div>
-        <div style="color:rgba(255,255,255,0.5); line-height:1.9;">
-          Buy once · All chapters included<br>
-          ISBN 979-8-9954416-6-3<br>
-          <a href="https://www.paypal.com/paypalme/pgrossi/21.31" style="color:var(--gold);">$19.99 → PayPal</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ─────────────────────────────────── -->
-<!-- g₃₃ Threshold Section             -->
-<!-- ─────────────────────────────────── -->
-<div style="max-width:1100px; margin: 4rem auto 0; padding: 0 1rem;">
-  <div id="g33-section" style="
-    background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.07) 0%, rgba(26,39,68,0.6) 70%);
-    border: 1px solid rgba(201,168,76,0.25);
-    padding: 3rem 2.5rem;
-    position: relative;
-    overflow: hidden;
-  ">
-
-    <!-- Faint "33" watermark -->
-    <div style="
-      position:absolute; right:2rem; top:50%; transform:translateY(-50%);
-      font-family:'Georgia',serif; font-size:clamp(6rem,16vw,12rem); font-weight:900;
-      color:rgba(201,168,76,0.05); line-height:1; pointer-events:none; user-select:none;
-    ">33</div>
-
-    <div style="max-width:680px; position:relative; z-index:1;">
-
-      <div style="font-family:sans-serif; font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">
-        The g₃₃ Threshold
-      </div>
-
-      <h2 style="font-size:clamp(1.4rem,3vw,2rem); color:white; margin-bottom:1rem; line-height:1.3;">
-        After 33 circles, something changes.
-      </h2>
-
-      <p style="font-family:'Georgia',serif; font-size:1.05rem; line-height:1.85; color:rgba(255,255,255,0.75); margin-bottom:1.4rem;">
-        One operator cycle is: you compress something, you find the threshold, you cross it, you unfold. That is one circle. C → K → F → U, back to the beginning. The 16-week course completes four full cycles — one per paper, one per phase. That is enough to make you a researcher.
-      </p>
-
-      <p style="font-family:'Georgia',serif; font-size:1.05rem; line-height:1.85; color:rgba(255,255,255,0.75); margin-bottom:1.4rem;">
-        But there is a deeper threshold. The series is built on the observation — empirical, not axiomatic — that a practitioner who has completed <strong style="color:var(--gold);">33 full operator cycles</strong> across different domains no longer needs the framework explained. They begin to see it everywhere without looking. The compression that had to be pointed out becomes the first thing they notice. The fold that was invisible becomes the event they are waiting for.
-      </p>
-
-      <p style="font-family:'Georgia',serif; font-size:1.05rem; line-height:1.85; color:rgba(255,255,255,0.75); margin-bottom:1.4rem;">
-        At 33 cycles, the operator chain is no longer a tool. It is the lens. A scientist is made when they can no longer look at a system without asking what it compressed to get here. A teacher is made when they can no longer watch someone struggle without seeing which operator they are stuck in.
-      </p>
-
-      <!-- g7 moment -->
-      <div style="
-        border: 1px solid rgba(180,120,255,0.3);
-        background: rgba(120,60,180,0.08);
-        padding: 1.4rem 1.8rem; margin-bottom: 1.5rem;
-        position: relative;
-      ">
-        <div style="
-          position:absolute; top:-0.65rem; left:1.2rem;
-          background:#0e1520; padding:0 0.6rem;
-          font-family:sans-serif; font-size:0.6rem; letter-spacing:0.2em;
-          text-transform:uppercase; color:rgba(180,120,255,0.8);
-        ">G7 — The Return</div>
-        <p style="font-family:'Georgia',serif; font-size:1.02rem; line-height:1.85; color:rgba(255,255,255,0.72); margin:0;">
-          The student who completes 33 cycles has visited G6 many times — the minimum viable seed, the compressed form, the fixed point at the origin of the operator chain. But at the 33rd cycle, something is different. They arrive at what looks like G6 again: the same compression, the same small beginning, the same question <em>what is the essential thing?</em> — and they recognize it from a different altitude. They are not at G6. They are at <strong style="color:rgba(180,120,255,0.9);">g7</strong>: the same structure, one order higher. The practitioner, the teacher, the scientist — these are not new roles. They are G6 at g7.
-        </p>
-      </div>
-
-      <!-- Cycle counter visual -->
-      <div style="margin-bottom: 2rem;">
-        <canvas id="circles-canvas" height="90" style="display:block; width:100%;"></canvas>
-        <div style="font-family:sans-serif; font-size:0.68rem; color:rgba(255,255,255,0.3); margin-top:0.6rem; letter-spacing:0.1em; text-align:center;">
-          Each circle = one complete operator cycle · C → K → F → U
-        </div>
-      </div>
-
-      <!-- The math -->
-      <div style="
-        background: rgba(0,0,0,0.35); border-left: 3px solid var(--gold);
-        padding: 1.2rem 1.6rem; margin-bottom: 1.5rem;
-        font-family: 'Courier New', monospace; font-size: 0.88rem; line-height: 2;
-      ">
-        <div style="font-family:sans-serif; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem;">The Fixed Point</div>
-        g₃₃ = 33  <span style="color:rgba(255,255,255,0.4);">· minimum cycles for a stable fixed point (single agent)</span><br>
-        Θ = g₃₃ + N × M  <span style="color:rgba(255,255,255,0.4);">· the D2 threshold across a community</span><br>
-        N = researchers sharing the orbit<br>
-        M = complete cycles each has run<br>
-        <span style="color:rgba(255,255,255,0.4);">───</span><br>
-        At Week 16 solo: N=1, M=4 → Θ = 33 + 4 = <span style="color:var(--gold);">37</span><br>
-        A class of 8, each at M=4: Θ = 33 + 8×4 = <span style="color:var(--gold);">65</span> — threshold crossed collectively.
-      </div>
-
-      <p style="font-family:'Georgia',serif; font-size:0.92rem; line-height:1.8; color:rgba(255,255,255,0.5); font-style:italic;">
-        The 33-cycle threshold is not a credential. There is no exam, no certificate, no ceremony. It is a structural change in how a person encounters new material — the way a musician stops hearing rhythm as a thing they are counting and starts hearing it as the shape of time. You will know when it has happened. You will be in the middle of reading something and you will think: <em>this is C</em> — before anyone has told you.
-      </p>
-
-    </div>
-  </div>
+<div class="stats">
+  <div class="stat"><div class="sn">80+</div><div class="sl">HTML Files</div></div>
+  <div class="stat"><div class="sn">17</div><div class="sl">Core Chapters</div></div>
+  <div class="stat"><div class="sn">7</div><div class="sl">EfR Chapters</div></div>
+  <div class="stat"><div class="sn">18</div><div class="sl">Bonus &amp; D2</div></div>
+  <div class="stat"><div class="sn">7</div><div class="sl">Sound Machines</div></div>
+  <div class="stat"><div class="sn">7</div><div class="sl">Simulations</div></div>
+  <div class="stat"><div class="sn">5</div><div class="sl">PT-BR Sessions</div></div>
+  <div class="stat"><div class="sn">A1→D2</div><div class="sl">CEFR Range</div></div>
 </div>
 
 <footer>
-  <div>Principia Orthogona · Book 3 · The Mini-Beast</div>
-  <div>G6 LLC · Newark, NJ · 2026 · ISBN 979-8-9954416-6-3</div>
-  <div style="margin-top:0.4rem;">
-    <a href="index.html">Book Index</a> ·
-    <a href="course-16weeks.html">16-Week Course</a> ·
-    <a href="sportal.html">Student Portal</a> ·
-    <a href="https://totogt.github.io/AXLE/" target="_blank">AXLE · Lean 4</a>
-  </div>
+  Book 3: The Mini-Beast &nbsp;·&nbsp; G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Principia Orthogona Vol. III &nbsp;·&nbsp; © 2026 G6 LLC &nbsp;·&nbsp; Newark NJ
+  <br><br>
+  <a href="trilogy-sale.html">Buy the Series</a> &nbsp;·&nbsp;
+  <a href="impa-portal.html">IMPA Portal</a> &nbsp;·&nbsp;
+  <a href="Sportal.html">Student Portal</a> &nbsp;·&nbsp;
+  <a href="wellness-soundworks.html">Soundworks</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub · TOTOGT/AXLE</a> &nbsp;·&nbsp;
+  <a href="https://doi.org/10.5281/zenodo.20026942" target="_blank">Zenodo</a>
 </footer>
 
-<script>
-/* ─────────────────────────────────── */
-/* Arc Diagram                         */
-/* ─────────────────────────────────── */
-const canvas = document.getElementById('arc-canvas');
-const ctx = canvas.getContext('2d');
-
-const chapters = [
-  // Bio core
-  { label:'Ch.1', name:'The Unfolding', op:'C', x:0.08, y:0.88, col:'#3a7a5a', week:'Wk 1', href:'ch1-seed.html', live:true },
-  { label:'Ch.2', name:'Allostatic Operator', op:'C', x:0.16, y:0.78, col:'#3a7a5a', week:'Wk 2', href:'ch2-allostatic.html', live:false },
-  { label:'Ch.3', name:'Circadian', op:'C', x:0.24, y:0.68, col:'#3a7a5a', week:'Wk 3', href:'ch3-circadian.html', live:false },
-  { label:'Ch.4', name:'Neural Oscillations', op:'K', x:0.33, y:0.52, col:'#7a4a2a', week:'Wk 5', href:'ch4-neural.html', live:false },
-  { label:'Ch.5', name:'Immune Adaptation', op:'K', x:0.41, y:0.38, col:'#7a4a2a', week:'Wk 6', href:'ch5-immune.html', live:false },
-  { label:'Ch.6', name:'Falsifiable Predictions', op:'K', x:0.49, y:0.22, col:'#7a4a2a', week:'Wk 7', href:'ch6-falsifiable.html', live:false },
-  { label:'Ch.7', name:'Complete Circuit', op:'F', x:0.57, y:0.13, col:'#2a4a8a', week:'Wk 9', href:'ch7-complete-circuit.html', live:false },
-  // Extended
-  { label:'Ch.E', name:'GTCT', op:'F', x:0.64, y:0.24, col:'#2a4a8a', week:'Wk 10', href:'ch-e-gtct.html', live:false },
-  { label:'Ch.T', name:'Tubulin', op:'F', x:0.71, y:0.36, col:'#2a4a8a', week:'Wk 11', href:'ch-t-tubulin.html', live:false },
-  { label:'Ch.W', name:'Wigner Crystal', op:'F', x:0.78, y:0.48, col:'#2a4a8a', week:'Wk 12', href:'wigner-fractal.html', live:true },
-  // Greek ladder
-  { label:'π', name:'Period = 2π', op:'π', x:0.84, y:0.60, col:'#8a2a2a', week:'Math', href:'ch-pi.html', live:false },
-  { label:'φ', name:'Fibonacci φ=1.618', op:'φ', x:0.875, y:0.69, col:'#8a2a2a', week:'Math', href:'ch-phi.html', live:false },
-  { label:'μ', name:'Lyapunov μ=-2', op:'μ', x:0.905, y:0.77, col:'#8a2a2a', week:'Math', href:'ch-mu.html', live:false },
-  { label:'η', name:'Tribonacci 1.839', op:'η', x:0.927, y:0.83, col:'#8a2a2a', week:'Math', href:'ch-eta.html', live:false },
-  { label:'Δ', name:'Tetranacci 1.927', op:'Δ', x:0.945, y:0.87, col:'#8a2a2a', week:'Math', href:'ch-delta.html', live:false },
-  { label:'Σ', name:'Pentanacci 1.966', op:'Σ', x:0.961, y:0.90, col:'#8a2a2a', week:'Math', href:'ch-sigma.html', live:false },
-  { label:'Ω', name:'Hexabonacci → τ=2', op:'Ω', x:0.975, y:0.93, col:'#8a2a2a', week:'Math', href:'ch-omega.html', live:false },
-];
-
-let W, H, nodes = [];
-let hoveredNode = null;
-const tooltip = document.getElementById('tooltip');
-
-function buildNodes() {
-  W = canvas.offsetWidth;
-  H = canvas.height = Math.max(220, Math.round(W * 0.24));
-  canvas.width = W;
-
-  // margin
-  const mx = W * 0.04, my = H * 0.10;
-  const aw = W - mx * 2, ah = H - my * 2;
-
-  nodes = chapters.map(ch => ({
-    ...ch,
-    px: mx + ch.x * aw,
-    py: my + ch.y * ah,
-    r: Math.max(6, W * 0.012),
-  }));
-}
-
-function drawArc() {
-  ctx.clearRect(0, 0, W, H);
-
-  // Background gradient
-  const bg = ctx.createRadialGradient(W*0.5, H*0.5, 0, W*0.5, H*0.5, W*0.6);
-  bg.addColorStop(0, 'rgba(26,39,68,0.5)');
-  bg.addColorStop(1, 'transparent');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
-
-  // Draw connecting curve through all nodes
-  if (nodes.length > 1) {
-    ctx.beginPath();
-    ctx.moveTo(nodes[0].px, nodes[0].py);
-    for (let i = 1; i < nodes.length; i++) {
-      const prev = nodes[i - 1];
-      const curr = nodes[i];
-      const cpx = (prev.px + curr.px) / 2;
-      ctx.bezierCurveTo(cpx, prev.py, cpx, curr.py, curr.px, curr.py);
-    }
-    ctx.strokeStyle = 'rgba(201,168,76,0.18)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-  }
-
-  // Phase region labels
-  const phases = [
-    { label: 'C  Compress', x: W*0.17, col: '#3a7a5a' },
-    { label: 'K  Curvature', x: W*0.40, col: '#7a4a2a' },
-    { label: 'F  Fold', x: W*0.64, col: '#2a4a8a' },
-    { label: 'π→Ω  Ladder', x: W*0.88, col: '#8a2a2a' },
-  ];
-  phases.forEach(p => {
-    ctx.font = `${Math.max(9,W*0.011)}px sans-serif`;
-    ctx.fillStyle = p.col + 'aa';
-    ctx.letterSpacing = '0.12em';
-    ctx.fillText(p.label, p.x, H * 0.06);
-  });
-
-  // Draw lines between adjacent nodes (colored by operator)
-  for (let i = 1; i < nodes.length; i++) {
-    const a = nodes[i-1], b = nodes[i];
-    ctx.beginPath();
-    ctx.moveTo(a.px, a.py);
-    ctx.lineTo(b.px, b.py);
-    ctx.strokeStyle = b.col + '55';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
-
-  // Draw nodes
-  nodes.forEach(n => {
-    const isHov = (hoveredNode === n);
-    const r = isHov ? n.r * 1.4 : n.r;
-
-    // Glow
-    if (isHov || n.live) {
-      const grd = ctx.createRadialGradient(n.px, n.py, 0, n.px, n.py, r * 2.5);
-      grd.addColorStop(0, n.col + (n.live ? 'aa' : '55'));
-      grd.addColorStop(1, 'transparent');
-      ctx.fillStyle = grd;
-      ctx.beginPath();
-      ctx.arc(n.px, n.py, r * 2.5, 0, Math.PI*2);
-      ctx.fill();
-    }
-
-    // Node circle
-    ctx.beginPath();
-    ctx.arc(n.px, n.py, r, 0, Math.PI*2);
-    ctx.fillStyle = n.live ? n.col : '#0e1520';
-    ctx.fill();
-    ctx.strokeStyle = isHov ? '#c9a84c' : n.col;
-    ctx.lineWidth = isHov ? 2 : 1.5;
-    ctx.stroke();
-
-    // Live dot indicator
-    if (n.live) {
-      ctx.beginPath();
-      ctx.arc(n.px + r*0.6, n.py - r*0.6, r*0.35, 0, Math.PI*2);
-      ctx.fillStyle = '#7acc9a';
-      ctx.fill();
-    }
-
-    // Label
-    const fs = Math.max(8, W * 0.010);
-    ctx.font = `bold ${fs}px sans-serif`;
-    ctx.fillStyle = isHov ? '#c9a84c' : 'rgba(255,255,255,0.75)';
-    ctx.textAlign = 'center';
-    ctx.fillText(n.label, n.px, n.py - r - 4);
-  });
-  ctx.textAlign = 'left';
-}
-
-function hitTest(mx, my) {
-  for (const n of nodes) {
-    const dx = mx - n.px, dy = my - n.py;
-    if (dx*dx + dy*dy < (n.r*2.5)*(n.r*2.5)) return n;
-  }
-  return null;
-}
-
-canvas.addEventListener('mousemove', e => {
-  const rect = canvas.getBoundingClientRect();
-  const mx = (e.clientX - rect.left) * (W / rect.width);
-  const my = (e.clientY - rect.top) * (H / rect.height);
-  const hit = hitTest(mx, my);
-  hoveredNode = hit;
-  drawArc();
-  if (hit) {
-    document.getElementById('tt-title').textContent = hit.label + ' · ' + hit.name;
-    document.getElementById('tt-sub').textContent = hit.op + ' operator · ' + hit.week + (hit.live ? ' · Live' : ' · Coming');
-    tooltip.style.left = e.clientX + 'px';
-    tooltip.style.top = e.clientY + 'px';
-    tooltip.classList.add('visible');
-    canvas.style.cursor = 'pointer';
-  } else {
-    tooltip.classList.remove('visible');
-    canvas.style.cursor = 'default';
-  }
-});
-
-canvas.addEventListener('mouseleave', () => {
-  hoveredNode = null;
-  tooltip.classList.remove('visible');
-  drawArc();
-});
-
-canvas.addEventListener('click', e => {
-  const rect = canvas.getBoundingClientRect();
-  const mx = (e.clientX - rect.left) * (W / rect.width);
-  const my = (e.clientY - rect.top) * (H / rect.height);
-  const hit = hitTest(mx, my);
-  if (hit) window.location.href = hit.href;
-});
-
-/* Touch support */
-canvas.addEventListener('touchstart', e => {
-  e.preventDefault();
-  const rect = canvas.getBoundingClientRect();
-  const t = e.touches[0];
-  const mx = (t.clientX - rect.left) * (W / rect.width);
-  const my = (t.clientY - rect.top) * (H / rect.height);
-  const hit = hitTest(mx, my);
-  if (hit) window.location.href = hit.href;
-}, { passive: false });
-
-/* Filter by phase */
-function filterPhase(phase) {
-  const allPhaseHeaders = document.querySelectorAll('.phase-header');
-  const allGrids = document.querySelectorAll('.chapter-grid');
-  const allCards = document.querySelectorAll('.ch-card');
-
-  if (phase === 'all') {
-    allPhaseHeaders.forEach(h => h.style.display = '');
-    allGrids.forEach(g => g.style.display = '');
-    allCards.forEach(c => c.style.opacity = '1');
-    return;
-  }
-
-  const opMap = { c:'op-c', k:'op-k', f:'op-f', u:'op-u', gr:'op-gr', ext:'op-ext' };
-  allCards.forEach(c => {
-    c.style.opacity = c.classList.contains(opMap[phase]) ? '1' : '0.15';
-  });
-}
-
-/* Init */
-function init() {
-  buildNodes();
-  drawArc();
-}
-window.addEventListener('resize', init);
-init();
-
-/* ─────────────────────────────────── */
-/* g₃₃ Circles Canvas                  */
-/* ─────────────────────────────────── */
-(function() {
-  const cc = document.getElementById('circles-canvas');
-  if (!cc) return;
-  const cx = cc.getContext('2d');
-  let cw, ch, tick = 0, rafId;
-  let highlighted = -1; // which circle is active during animation
-  const TOTAL = 33;
-  const G6_AT = 16;   // course end — researcher born
-  const G7_AT = 33;   // practitioner threshold — g7 reached
-
-  function resizeCC() {
-    cw = cc.offsetWidth;
-    cc.width = cw;
-    ch = cc.height = 90;
-  }
-
-  function drawCircles(progress) {
-    cx.clearRect(0, 0, cw, ch);
-
-    const r = Math.max(7, Math.min(12, cw / (TOTAL * 2.6)));
-    const gap = r * 2.5;
-    const total_w = TOTAL * gap;
-    const startX = (cw - total_w) / 2 + r;
-    const midY = ch / 2;
-
-    // G6 and G7 zone labels
-    const g6x = startX + (G6_AT - 1) * gap;
-    const g7x = startX + (G7_AT - 1) * gap;
-
-    // Shaded zone: G6 region (cycles 1–16)
-    cx.fillStyle = 'rgba(201,168,76,0.04)';
-    cx.fillRect(startX - r, midY - r*2.5, (G6_AT)*gap, r*5);
-
-    // Shaded zone: g7 region (17–33)
-    cx.fillStyle = 'rgba(150,80,200,0.04)';
-    cx.fillRect(startX - r + G6_AT*gap, midY - r*2.5, (TOTAL - G6_AT)*gap + r, r*5);
-
-    for (let i = 0; i < TOTAL; i++) {
-      const x = startX + i * gap;
-      const filled = i < Math.floor(progress * TOTAL);
-      const isCurrent = i === Math.floor(progress * TOTAL);
-      const isG6 = i === G6_AT - 1;
-      const isG7 = i === G7_AT - 1;
-
-      // Pulse for current circle
-      const pulse = isCurrent ? 1 + 0.25 * Math.sin(tick * 0.08) : 1;
-      const cr = r * pulse;
-
-      // Color
-      let col;
-      if (i < G6_AT) {
-        // C→K→F→U phases (4 colors, 4 circles each = 16)
-        const phase = Math.floor(i / 4) % 4;
-        const cols = ['#3a7a5a','#7a4a2a','#2a4a8a','#6a2a7a'];
-        col = cols[phase];
-      } else {
-        // g7 zone — richer purple/gold
-        col = '#8a4aaa';
-      }
-
-      if (filled || isCurrent) {
-        // Glow
-        const grd = cx.createRadialGradient(x, midY, 0, x, midY, cr*2.2);
-        grd.addColorStop(0, col + (isCurrent ? 'cc' : '66'));
-        grd.addColorStop(1, 'transparent');
-        cx.fillStyle = grd;
-        cx.beginPath();
-        cx.arc(x, midY, cr*2.2, 0, Math.PI*2);
-        cx.fill();
-
-        cx.beginPath();
-        cx.arc(x, midY, cr, 0, Math.PI*2);
-        cx.fillStyle = col;
-        cx.fill();
-      } else {
-        cx.beginPath();
-        cx.arc(x, midY, r, 0, Math.PI*2);
-        cx.strokeStyle = 'rgba(255,255,255,0.1)';
-        cx.lineWidth = 1;
-        cx.stroke();
-      }
-
-      // G6 marker
-      if (isG6 && filled) {
-        cx.font = `bold ${Math.max(8,r*0.85)}px sans-serif`;
-        cx.fillStyle = 'rgba(201,168,76,0.9)';
-        cx.textAlign = 'center';
-        cx.fillText('G6', x, midY - r - 5);
-      }
-
-      // G7 marker
-      if (isG7 && filled) {
-        cx.font = `bold ${Math.max(8,r*0.85)}px sans-serif`;
-        cx.fillStyle = 'rgba(200,150,255,0.95)';
-        cx.textAlign = 'center';
-        cx.fillText('G7', x, midY - r - 5);
-
-        // Crown glow
-        const grd2 = cx.createRadialGradient(x, midY, 0, x, midY, r*3.5);
-        grd2.addColorStop(0, 'rgba(200,150,255,0.25)');
-        grd2.addColorStop(1, 'transparent');
-        cx.fillStyle = grd2;
-        cx.beginPath();
-        cx.arc(x, midY, r*3.5, 0, Math.PI*2);
-        cx.fill();
-      }
-    }
-
-    // Connector line
-    const filledCount = Math.min(Math.floor(progress * TOTAL), TOTAL);
-    if (filledCount > 1) {
-      cx.beginPath();
-      cx.moveTo(startX, midY);
-      cx.lineTo(startX + (filledCount-1)*gap, midY);
-      cx.strokeStyle = 'rgba(201,168,76,0.15)';
-      cx.lineWidth = 1;
-      cx.stroke();
-    }
-
-    cx.textAlign = 'left';
-  }
-
-  // Animate once on load — run all 33 circles
-  let progress = 0;
-  function animateCircles() {
-    tick++;
-    if (progress < 1) progress = Math.min(1, progress + 0.006);
-    drawCircles(progress);
-    rafId = requestAnimationFrame(animateCircles);
-    if (progress >= 1) {
-      // keep ticking for pulse on last circle — but slow it
-      if (tick > 400) cancelAnimationFrame(rafId);
-    }
-  }
-
-  // Intersection observer — animate when section scrolls into view
-  const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      progress = 0; tick = 0;
-      animateCircles();
-      obs.disconnect();
-    }
-  }, { threshold: 0.3 });
-
-  resizeCC();
-  window.addEventListener('resize', () => { resizeCC(); drawCircles(progress); });
-  obs.observe(cc);
-})();
-</script>
 </body>
 </html>
