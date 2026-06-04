@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scientific Reading — A2 → C1 · Book 3 Chapters · Principia Orthogona</title>
+<meta name="description" content="Levelled reading for researchers. A2 · B1 · B2 · C1 — each level links to a Book 3 chapter with reading focus and LLM prompt.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --teal:    #0ABAB5;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(4,4,10,0.96); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: .6rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .6rem;
+}
+.nav-series { font-family: var(--mono); font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+.nav-back   { font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-back:hover { color: var(--gold); }
+.nav-links  { display: flex; gap: 1.2rem; }
+.nav-links a { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+
+/* ── HERO ── */
+.hero {
+  padding: 4rem 2rem 3rem; text-align: center;
+  border-bottom: 1px solid var(--rule); position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 40%, rgba(201,168,76,.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--teal); border: 1px solid currentColor; padding: .2rem .65rem;
+  display: inline-block; margin-bottom: 1.8rem;
+}
+.hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 400; letter-spacing: .06em; color: var(--gold); margin-bottom: .8rem; line-height: 1.2; }
+.hero-sub { font-size: .95rem; color: var(--muted); max-width: 560px; margin: 0 auto; font-style: italic; line-height: 1.7; }
+.hero-eq   { margin-top: 1.5rem; font-family: var(--mono); font-size: .85rem; letter-spacing: .12em; color: rgba(201,168,76,.45); }
+
+/* ── LEVEL SELECTOR ── */
+.selector-bar {
+  background: var(--surface); border-bottom: 1px solid var(--rule);
+  padding: 1.2rem 2rem;
+  display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+}
+.selector-label { font-family: var(--mono); font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.level-select-wrap { position: relative; }
+.level-select-wrap::after {
+  content: '▾'; position: absolute; right: .6rem; top: 50%;
+  transform: translateY(-50%); color: var(--gold); pointer-events: none; font-size: .65rem;
+}
+#levelSelect {
+  appearance: none; -webkit-appearance: none;
+  background: var(--card); color: var(--gold);
+  border: 1px solid var(--rule); border-radius: 2px;
+  font-family: var(--mono); font-size: .8rem; letter-spacing: .08em;
+  padding: .5rem 2rem .5rem .9rem; cursor: pointer;
+  min-width: 220px;
+}
+#levelSelect:focus { outline: none; border-color: var(--gold); }
+
+/* ── LEVEL BADGE ── */
+.level-badge {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--void);
+  background: var(--gold); padding: .15rem .6rem; display: inline-block;
+}
+
+/* ── MAIN ── */
+.main { max-width: 820px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+.level-panel { display: none; }
+.level-panel.active { display: block; }
+
+/* ── PANEL HEADER ── */
+.panel-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--rule); }
+.panel-level-tag { font-family: var(--mono); font-size: .6rem; letter-spacing: .25em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .5rem; }
+.panel-title { font-size: 1.5rem; font-weight: 400; color: var(--gold); margin-bottom: .4rem; }
+.panel-sub   { font-size: .92rem; color: var(--muted); font-style: italic; }
+.panel-math  { font-family: var(--mono); font-size: .78rem; color: rgba(201,168,76,.55); background: var(--surface); border: 1px solid var(--dim); padding: .3rem .7rem; display: inline-block; margin-top: .6rem; }
+
+/* ── READING CARD ── */
+.reading-card {
+  background: var(--card); border: 1px solid var(--rule);
+  border-top: 2px solid var(--gold); padding: 1.8rem;
+  margin-bottom: 1.5rem; position: relative;
+}
+.reading-card-label { font-family: var(--mono); font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--teal); margin-bottom: .6rem; display: block; }
+.reading-card-title { font-size: 1.1rem; color: var(--gold); margin-bottom: .5rem; }
+.reading-card-desc  { font-size: .92rem; color: rgba(232,228,216,.65); line-height: 1.72; margin-bottom: 1.2rem; }
+.reading-link {
+  display: inline-block; font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--void);
+  background: var(--gold); padding: .4rem 1rem; text-decoration: none;
+  transition: opacity .2s;
+}
+.reading-link:hover { opacity: .85; }
+
+/* ── FOCUS BOX ── */
+.focus-box {
+  background: var(--surface); border-left: 2px solid var(--teal);
+  padding: 1.2rem 1.5rem; margin-bottom: 1.5rem;
+}
+.focus-label { font-family: var(--mono); font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--teal); margin-bottom: .6rem; display: block; }
+.focus-list  { list-style: none; padding: 0; }
+.focus-list li { font-size: .9rem; color: rgba(232,228,216,.7); line-height: 1.65; padding: .25rem 0; border-bottom: 1px solid rgba(201,168,76,.08); padding-left: 1.2rem; position: relative; }
+.focus-list li::before { content: '→'; position: absolute; left: 0; color: var(--teal); font-family: var(--mono); font-size: .75rem; }
+.focus-list li:last-child { border-bottom: none; }
+
+/* ── OPERATOR CHAIN ── */
+.op-chain { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin: 1.2rem 0; }
+.op { font-family: var(--mono); font-size: .78rem; padding: .2rem .55rem; border-radius: 2px; }
+.op-c { background: rgba(10,186,181,.12); color: #0ABAB5; border: 1px solid rgba(10,186,181,.3); }
+.op-k { background: rgba(224,90,58,.12);  color: #e05a3a; border: 1px solid rgba(224,90,58,.3); }
+.op-f { background: rgba(80,200,120,.12); color: #50c878; border: 1px solid rgba(80,200,120,.3); }
+.op-u { background: rgba(192,132,252,.12);color: #c084fc; border: 1px solid rgba(192,132,252,.3); }
+.op-arr { color: var(--muted); font-size: .8rem; }
+.op.active-op { box-shadow: 0 0 0 1px var(--gold); }
+
+/* ── VOCAB BOX ── */
+.vocab-box { background: var(--surface); border: 1px solid var(--rule); padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; }
+.vocab-label { font-family: var(--mono); font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; display: block; }
+.vocab-grid  { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: .8rem; }
+.vocab-item  { padding: .6rem .8rem; background: var(--card); border-left: 2px solid rgba(201,168,76,.3); }
+.vocab-term  { font-family: var(--mono); font-size: .75rem; color: var(--gold); display: block; margin-bottom: .2rem; }
+.vocab-def   { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+/* ── PROMPT CARD ── */
+.prompt-card { background: var(--card); border-left: 2px solid var(--gold); padding: 1.3rem 1.5rem; margin-bottom: 1rem; }
+.prompt-number { font-family: var(--mono); font-size: .58rem; letter-spacing: .2em; color: var(--muted); text-transform: uppercase; margin-bottom: .4rem; }
+.prompt-title  { font-size: .95rem; color: var(--gold); margin-bottom: .6rem; }
+.prompt-text   { font-family: var(--mono); font-size: .78rem; line-height: 1.65; color: rgba(232,228,216,.65); background: var(--surface); border: 1px solid var(--dim); padding: .9rem 1.1rem; }
+.copy-btn {
+  display: inline-block; margin-top: .7rem; padding: .3rem .8rem;
+  background: transparent; color: var(--teal); font-family: var(--mono);
+  font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+  border: 1px solid rgba(10,186,181,.3); cursor: pointer; transition: all .2s;
+}
+.copy-btn:hover { background: rgba(10,186,181,.08); border-color: var(--teal); }
+.copy-btn.copied { color: var(--gold); border-color: rgba(201,168,76,.4); }
+
+/* ── CHAPTER NAV ── */
+.chapter-nav {
+  background: var(--surface); border-top: 1px solid var(--rule);
+  padding: 1rem 2rem; display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.ch-nav-link { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.ch-nav-link:hover { color: var(--gold); }
+.ch-nav-current { font-family: var(--mono); font-size: .6rem; color: var(--dim); letter-spacing: .1em; }
+
+/* ── FOOTER ── */
+footer { text-align: center; padding: 2.5rem 2rem; font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); }
+footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-series">Principia Orthogona</a>
+  <div class="nav-links">
+    <a href="portal.html">Student Portal</a>
+    <a href="ch01-cajueiro.html">Ch 1</a>
+    <a href="chapter-map.html">Chapter Map</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE ↗</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Book 3 · The Mini-Beast · Scientific Reading</div>
+  <h1>Reading at Every Level</h1>
+  <p class="hero-sub">Four readings. Four thresholds. Select your level, open the chapter, apply the operator.</p>
+  <div class="hero-eq">C → K → F → U · A2 · B1 · B2 · C1</div>
+</section>
+
+<!-- LEVEL SELECTOR -->
+<div class="selector-bar">
+  <span class="selector-label">Select your level</span>
+  <div class="level-select-wrap">
+    <select id="levelSelect" onchange="showLevel(this.value)">
+      <option value="a2">A2 — Pattern Recognition</option>
+      <option value="b1">B1 — Domain Entry</option>
+      <option value="b2">B2 — Domain Fluency</option>
+      <option value="c1">C1 — Research Generation</option>
+    </select>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="main">
+
+  <!-- ─── A2 ─────────────────────────────────────────────────────── -->
+  <div class="level-panel active" id="panel-a2">
+    <div class="panel-header">
+      <span class="panel-level-tag">Level A2 · Operator: C → K · Day 21 Threshold</span>
+      <div class="panel-title">Pattern Recognition Reading</div>
+      <div class="panel-sub">You can identify what changes and what stays the same. You are ready for science.</div>
+      <div class="panel-math">CEFR A2 = TOGT-2 · Science begins here · g₃₃ threshold: 33 cycles ahead</div>
+    </div>
+
+    <div class="op-chain">
+      <span class="op op-c active-op">C</span><span class="op-arr">∘</span>
+      <span class="op op-k active-op">K</span><span class="op-arr">∘</span>
+      <span class="op op-f" style="opacity:.35">F</span><span class="op-arr">∘</span>
+      <span class="op op-u" style="opacity:.35">U</span>
+      <span style="color:var(--muted);font-size:.78rem;margin-left:.4rem">← You are here</span>
+    </div>
+
+    <div class="reading-card">
+      <span class="reading-card-label">Book 3 · Chapter 1 · A2 Reading</span>
+      <div class="reading-card-title">The Cajueiro Principle</div>
+      <div class="reading-card-desc">
+        The opening chapter of The Mini-Beast. A seed falls into poor soil. Most seeds die there.
+        The cajueiro does not. This is the compression of the entire series in two paragraphs.
+        At A2, you read for the four-part pattern: what is compressed, where the threshold is, what folds, what unfolds.
+        You do not need to name the operators yet. Find them by feel.
+      </div>
+      <a href="book3/cajueiro_chapter1.html" class="reading-link">Open Chapter 1 — The Cajueiro →</a>
+    </div>
+
+    <div class="focus-box">
+      <span class="focus-label">A2 Reading Focus — What to look for</span>
+      <ul class="focus-list">
+        <li>What is the seed? What is the poor soil? (Compression C)</li>
+        <li>What is the moment the system reaches its limit? (Threshold K)</li>
+        <li>What changes — what folds, what breaks, what adapts? (Fold F)</li>
+        <li>What stable form does the system reach? (Unfolding U)</li>
+        <li>Find one sentence you do not understand. That sentence is your K.</li>
+      </ul>
+    </div>
+
+    <div class="vocab-box">
+      <span class="vocab-label">Key Vocabulary — A2</span>
+      <div class="vocab-grid">
+        <div class="vocab-item"><span class="vocab-term">seed</span><div class="vocab-def">The compressed potential of a full structure.</div></div>
+        <div class="vocab-item"><span class="vocab-term">stable configuration</span><div class="vocab-def">The form a system settles into after change.</div></div>
+        <div class="vocab-item"><span class="vocab-term">threshold</span><div class="vocab-def">The point where one process becomes another.</div></div>
+        <div class="vocab-item"><span class="vocab-term">persist</span><div class="vocab-def">To continue to exist through difficulty.</div></div>
+        <div class="vocab-item"><span class="vocab-term">resist</span><div class="vocab-def">To push against change; not the same as survive.</div></div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">A2 Reading Prompt</div>
+      <div class="prompt-title">Compress the cajueiro</div>
+      <div class="prompt-text" id="p-a2">I have read Chapter 1 of The Mini-Beast (The Cajueiro Principle). I am at level A2. Here is my 3-sentence compression of what I read: [write your 3 sentences here — one for C, one for K, one for U]. Does each sentence capture one phase of the operator sequence? What is missing? What word or phrase shows me I am at the threshold K?</div>
+      <button class="copy-btn" onclick="copyP('p-a2', this)">COPY PROMPT</button>
+    </div>
+  </div>
+
+  <!-- ─── B1 ─────────────────────────────────────────────────────── -->
+  <div class="level-panel" id="panel-b1">
+    <div class="panel-header">
+      <span class="panel-level-tag">Level B1 · Operator: K → F · Curvature Constraint</span>
+      <div class="panel-title">Domain Entry Reading</div>
+      <div class="panel-sub">You follow extended argument, ask research questions, and begin generating rather than receiving.</div>
+      <div class="panel-math">ε* = 1/3 · curvature threshold · entering the domain</div>
+    </div>
+
+    <div class="op-chain">
+      <span class="op op-c" style="opacity:.35">C</span><span class="op-arr">∘</span>
+      <span class="op op-k active-op">K</span><span class="op-arr">∘</span>
+      <span class="op op-f active-op">F</span><span class="op-arr">∘</span>
+      <span class="op op-u" style="opacity:.35">U</span>
+      <span style="color:var(--muted);font-size:.78rem;margin-left:.4rem">← You are here</span>
+    </div>
+
+    <div class="reading-card">
+      <span class="reading-card-label">Book 3 · Chapter 2 · B1 Reading</span>
+      <div class="reading-card-title">Biological Instantiations</div>
+      <div class="reading-card-desc">
+        The operator chain C → K → F → U running in living systems.
+        Allostatic load, cellular adaptation, the HPA axis. This chapter instantiates the abstract operators
+        in concrete biology — you can track each phase through the language of physiology.
+        At B1, you read for the operator chain: find C, K, F, U in the domain language, then map them back to the formalism.
+      </div>
+      <a href="ch02-biological.html" class="reading-link">Open Chapter 2 — Biological Instantiations →</a>
+    </div>
+
+    <div class="focus-box">
+      <span class="focus-label">B1 Reading Focus — What to look for</span>
+      <ul class="focus-list">
+        <li>Where does the text compress information? Name the operation explicitly (C).</li>
+        <li>Find the threshold event — when the system exceeds its current capacity (K).</li>
+        <li>Identify the fold: what topological change occurs? What breaks to allow new form? (F)</li>
+        <li>What is the new stable state? Could the system return to the original? (U)</li>
+        <li>Find one technical term you cannot define. Write a one-sentence definition from context only.</li>
+      </ul>
+    </div>
+
+    <div class="vocab-box">
+      <span class="vocab-label">Key Vocabulary — B1</span>
+      <div class="vocab-grid">
+        <div class="vocab-item"><span class="vocab-term">allostasis</span><div class="vocab-def">Stability achieved through change, not by resisting it.</div></div>
+        <div class="vocab-item"><span class="vocab-term">instantiate</span><div class="vocab-def">To make an abstract structure concrete in a specific domain.</div></div>
+        <div class="vocab-item"><span class="vocab-term">invariant</span><div class="vocab-def">A quantity that does not change under the operation.</div></div>
+        <div class="vocab-item"><span class="vocab-term">cascade</span><div class="vocab-def">A sequence of events where each triggers the next.</div></div>
+        <div class="vocab-item"><span class="vocab-term">attractor</span><div class="vocab-def">The state a system returns to after perturbation.</div></div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">B1 Reading Prompt</div>
+      <div class="prompt-title">Map the operators in biology</div>
+      <div class="prompt-text" id="p-b1">I have read Chapter 2 of The Mini-Beast (Biological Instantiations). I am at B1. I found the four operators as follows — C: [your sentence], K: [your sentence], F: [your sentence], U: [your sentence]. Is each mapping correct? Which one is weakest? Give me a better sentence for the weakest one and explain why it is an improvement.</div>
+      <button class="copy-btn" onclick="copyP('p-b1', this)">COPY PROMPT</button>
+    </div>
+  </div>
+
+  <!-- ─── B2 ─────────────────────────────────────────────────────── -->
+  <div class="level-panel" id="panel-b2">
+    <div class="panel-header">
+      <span class="panel-level-tag">Level B2 · Operator: F · Folding · Domain Fluency</span>
+      <div class="panel-title">Domain Fluency Reading</div>
+      <div class="panel-sub">You read unsimplified academic text, generate multi-step argument, and fold across disciplines.</div>
+      <div class="panel-math">F: folding · τ = 2 · reading as cross-domain translation</div>
+    </div>
+
+    <div class="op-chain">
+      <span class="op op-c" style="opacity:.35">C</span><span class="op-arr">∘</span>
+      <span class="op op-k" style="opacity:.35">K</span><span class="op-arr">∘</span>
+      <span class="op op-f active-op">F</span><span class="op-arr">∘</span>
+      <span class="op op-u" style="opacity:.35">U</span>
+      <span style="color:var(--muted);font-size:.78rem;margin-left:.4rem">← You are here</span>
+    </div>
+
+    <div class="reading-card">
+      <span class="reading-card-label">Book 3 · Chapter 3 · B2 Reading</span>
+      <div class="reading-card-title">Plasma-Sheet Reconnection</div>
+      <div class="reading-card-desc">
+        The same operator sequence G = U ∘ F ∘ K ∘ C running in plasma physics.
+        Magnetic reconnection, the Sweet–Parker model, field-line topology change.
+        This is an unfamiliar domain — and that is the point. At B2, you fold the biology you know
+        into the physics you are meeting. You are not learning plasma physics. You are finding the operators.
+        The domain is the obstacle that becomes the entry point.
+      </div>
+      <a href="ch03-plasma.html" class="reading-link">Open Chapter 3 — Plasma-Sheet Reconnection →</a>
+    </div>
+
+    <div class="focus-box">
+      <span class="focus-label">B2 Reading Focus — What to look for</span>
+      <ul class="focus-list">
+        <li>The paper comes from physics. Map it to the GTCT operators before you understand the physics.</li>
+        <li>Find the exact sentence where the system crosses the threshold K. Underline it.</li>
+        <li>What is the invariant the author is protecting? Name it in one clause.</li>
+        <li>Where does this chapter connect to Chapter 2 (biology)? What is the same structure in a different domain?</li>
+        <li>Write two sentences comparing this to something you already know. That connection is F — the fold.</li>
+      </ul>
+    </div>
+
+    <div class="vocab-box">
+      <span class="vocab-label">Key Vocabulary — B2</span>
+      <div class="vocab-grid">
+        <div class="vocab-item"><span class="vocab-term">reconnection</span><div class="vocab-def">Topological change in field lines — the fold event in plasma.</div></div>
+        <div class="vocab-item"><span class="vocab-term">topology</span><div class="vocab-def">The properties of a structure preserved under continuous deformation.</div></div>
+        <div class="vocab-item"><span class="vocab-term">singular</span><div class="vocab-def">A point where the normal description breaks down — often where F occurs.</div></div>
+        <div class="vocab-item"><span class="vocab-term">dissipation</span><div class="vocab-def">Energy loss during the fold — the cost of the transition.</div></div>
+        <div class="vocab-item"><span class="vocab-term">dm³</span><div class="vocab-def">The three-dimensional contact manifold on which all GTCT operators act.</div></div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">B2 Reading Prompt</div>
+      <div class="prompt-title">Fold biology into physics</div>
+      <div class="prompt-text" id="p-b2">I have read Chapter 3 of The Mini-Beast (Plasma-Sheet Reconnection). I am at B2. I want to fold the biology from Chapter 2 into the plasma physics from Chapter 3. Here is my comparison: [write 2–3 sentences showing what the two chapters share structurally]. Where is my comparison strongest? Where is it weakest? What mathematical object is the same in both domains? Push back on any point where I am describing a surface similarity rather than a structural identity.</div>
+      <button class="copy-btn" onclick="copyP('p-b2', this)">COPY PROMPT</button>
+    </div>
+  </div>
+
+  <!-- ─── C1 ─────────────────────────────────────────────────────── -->
+  <div class="level-panel" id="panel-c1">
+    <div class="panel-header">
+      <span class="panel-level-tag">Level C1 · Operator: U · Unfolding · Research Generation</span>
+      <div class="panel-title">Research Generation Reading</div>
+      <div class="panel-sub">You generate knowledge that did not exist before you arrived. You are the researcher. You produce, transmit, extend.</div>
+      <div class="panel-math">U: unfold · T* = 2π · full cycle complete</div>
+    </div>
+
+    <div class="op-chain">
+      <span class="op op-c" style="opacity:.35">C</span><span class="op-arr">∘</span>
+      <span class="op op-k" style="opacity:.35">K</span><span class="op-arr">∘</span>
+      <span class="op op-f" style="opacity:.35">F</span><span class="op-arr">∘</span>
+      <span class="op op-u active-op">U</span>
+      <span style="color:var(--muted);font-size:.78rem;margin-left:.4rem">← You are here</span>
+    </div>
+
+    <div class="reading-card">
+      <span class="reading-card-label">Book 3 · Chapter 6 · C1 Reading</span>
+      <div class="reading-card-title">Argument Architecture</div>
+      <div class="reading-card-desc">
+        How a research argument is built. The operator chain not as biology or physics, but as the structure
+        of academic argument itself — the C → K → F → U of a paper, a claim, a theorem.
+        At C1, you read not to receive but to critique and extend. You identify where the argument is strong,
+        where it is unsupported, and where you would push it further. Then you produce one claim that goes beyond the text.
+      </div>
+      <a href="ch06-argument.html" class="reading-link">Open Chapter 6 — Argument Architecture →</a>
+    </div>
+
+    <div class="focus-box">
+      <span class="focus-label">C1 Reading Focus — What to look for</span>
+      <ul class="focus-list">
+        <li>What is the central claim? State it in one falsifiable sentence.</li>
+        <li>Where is the weakest step in the argument? What evidence is missing?</li>
+        <li>What does the text assume the reader already knows? Name three assumptions.</li>
+        <li>Where does the argument stop? What question remains open after the last sentence?</li>
+        <li>Write one original claim that extends beyond the text. This is U — your unfolding.</li>
+      </ul>
+    </div>
+
+    <div class="vocab-box">
+      <span class="vocab-label">Key Vocabulary — C1</span>
+      <div class="vocab-grid">
+        <div class="vocab-item"><span class="vocab-term">falsifiable</span><div class="vocab-def">A claim that could in principle be proved wrong — the mark of a scientific statement.</div></div>
+        <div class="vocab-item"><span class="vocab-term">warrant</span><div class="vocab-def">The evidence or reasoning that supports a claim.</div></div>
+        <div class="vocab-item"><span class="vocab-term">generalize</span><div class="vocab-def">To extend a result beyond the specific case where it was proved.</div></div>
+        <div class="vocab-item"><span class="vocab-term">conjecture</span><div class="vocab-def">A claim believed to be true but not yet proved.</div></div>
+        <div class="vocab-item"><span class="vocab-term">sorry</span><div class="vocab-def">In Lean 4: a named gap — an honest marker of what remains to be proved.</div></div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">C1 Reading Prompt</div>
+      <div class="prompt-title">Extend the argument</div>
+      <div class="prompt-text" id="p-c1">I have read Chapter 6 of The Mini-Beast (Argument Architecture). I am at C1. Here is the central claim of the chapter as I understand it: [write your one-sentence statement]. Here is the weakest step in the argument: [write your critique]. Here is my original extension — one claim that goes beyond what the chapter says: [write your claim]. Evaluate: (1) Is my statement of the central claim accurate? (2) Is my critique well-targeted? (3) Is my extension genuinely new, or am I restating what the chapter already says? Push back on (3) hardest.</div>
+      <button class="copy-btn" onclick="copyP('p-c1', this)">COPY PROMPT</button>
+    </div>
+  </div>
+
+</div><!-- main -->
+
+<!-- CHAPTER NAV -->
+<div class="chapter-nav">
+  <a href="ch01-cajueiro.html" class="ch-nav-link">← Ch 1 · The Cajueiro</a>
+  <span class="ch-nav-current">Ch 2 · Scientific Reading · A2 → C1</span>
+  <a href="ch03-sources.html" class="ch-nav-link">Ch 3 · Source Mapping →</a>
+</div>
+
+<footer>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  Principia Orthogona · Book 3: The Mini-Beast · ISBN 979-8-9954416-6-3 ·
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub ↗</a>
+</footer>
+
+<script>
+function showLevel(code) {
+  document.querySelectorAll('.level-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + code).classList.add('active');
+}
+
+function copyP(id, btn) {
+  const text = document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'COPY PROMPT'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
