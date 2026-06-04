@@ -1,780 +1,911 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Principia Orthogona — G¹–G⁵ Complete Completeness</title>
-<meta name="description" content="The complete G-series in Generative Temporal Contact Theory. G6 LLC · Newark NJ · 2026.">
+<meta name="description" content="The complete G-series in Generative Temporal Contact Theory. Five volumes. Machine-verified in Lean 4. G6 LLC · Newark NJ · 2026.">
+
+<!--
+  ═══════════════════════════════════════════════════════════════════════
+  PRINCIPIA ORTHOGONA · SERIES LANDING · 40-LANGUAGE TEMPLATE
+  ═══════════════════════════════════════════════════════════════════════
+  HOW TO ADD A NEW LANGUAGE:
+  1. Add entry to LANGUAGES object (code, name, native, dir, script, font)
+  2. Add translations to CONTENT[lang] for each key
+  3. Done. The layout, fonts, and RTL/LTR handling are automatic.
+  ═══════════════════════════════════════════════════════════════════════
+-->
+
+<!-- Noto font stack — covers all 40 language scripts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC&family=Noto+Serif+TC&family=Noto+Serif+JP&family=Noto+Serif+KR&family=Noto+Serif+Devanagari&family=Noto+Serif+Bengali&family=Noto+Serif+Tamil&family=Noto+Serif+Telugu&family=Noto+Serif+Kannada&family=Noto+Serif+Malayalam&family=Noto+Serif+Gujarati&family=Noto+Serif+Gurmukhi&family=Noto+Serif+Hebrew&family=Noto+Serif+Ethiopic&family=Noto+Serif+Thai&family=Noto+Naskh+Arabic&family=Noto+Nastaliq+Urdu&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --navy:  #1a2744;
-    --gold:  #c9a84c;
-    --cream: #faf7f0;
-    --smoke: #f0ece4;
-    --mid:   #3a4f7a;
-    --rule:  #8a7340;
-    --text:  #1c1c1c;
-    --green: #2d5a27;
-    --light: #e8e2d4;
-    --teal: #0abfbc;
-    --orange: #c45000;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+/* ── VARIABLES ─────────────────────────────────────────────────────── */
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --teal:    #0ABAB5;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --col-gap: 3rem;
+  --col-w:   46%;
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
 
-  /* ── Typography ── */
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.15; }
-  h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
-  h3 { font-size: 1.2rem; }
-  p  { line-height: 1.75; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  /* ── Navigation ── */
-  nav {
-    background: var(--navy);
-    padding: 0.75rem 2rem;
-    position: sticky; top: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .nav-logo { color: var(--gold); font-weight: bold; font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
-  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; font-family: sans-serif; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--gold); }
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* ── Hero ── */
-  .hero { background: var(--navy); color: white; padding: 5rem 2rem 4rem; text-align: center; }
-  .hero-eyebrow { font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 1.2rem; }
-  .hero h1 { color: white; margin-bottom: 0.8rem; }
-  .hero-subtitle { color: var(--gold); font-size: 1.3rem; margin-bottom: 1.5rem; font-style: italic; }
-  .hero-desc { max-width: 660px; margin: 0 auto 2rem; color: #c8c8c8; font-size: 1rem; line-height: 1.8; }
-  .gold-rule { width: 80px; height: 2px; background: var(--gold); margin: 1.5rem auto; }
-  .cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
-  .btn-primary { background: var(--gold); color: var(--navy); padding: 0.9rem 2rem; border: none; font-size: 1rem; font-weight: bold; font-family: sans-serif; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 0.2s; }
-  .btn-primary:hover { opacity: 0.88; }
-  .btn-secondary { background: transparent; color: var(--gold); padding: 0.9rem 2rem; border: 1.5px solid var(--gold); font-size: 1rem; font-family: sans-serif; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s; }
-  .btn-secondary:hover { background: var(--gold); color: var(--navy); }
+/* ── NAV ────────────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(4,4,10,0.96); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: .6rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .6rem;
+}
+.nav-series {
+  font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .28em; text-transform: uppercase; color: var(--gold);
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 1.2rem; align-items: center; flex-wrap: wrap; }
+.nav-links a {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-links a.accent { color: var(--teal); }
+.nav-controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 
-  /* ── Operator banner ── */
-  .op-banner { background: var(--gold); color: var(--navy); text-align: center; padding: 1rem 2rem; font-size: 1.4rem; font-weight: bold; letter-spacing: 0.15em; font-family: sans-serif; }
+/* ── LANGUAGE PICKER ────────────────────────────────────────────────── */
+.lang-picker {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: var(--mono); font-size: .65rem;
+}
+.lang-picker label { color: var(--muted); letter-spacing: .1em; }
+.lang-picker select {
+  background: var(--surface); color: var(--gold);
+  border: 1px solid var(--rule); border-radius: 3px;
+  font-family: var(--mono); font-size: .7rem;
+  padding: .25rem .5rem; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  padding-right: 1.4rem;
+}
+.lang-picker .sel-wrap { position: relative; }
+.lang-picker .sel-wrap::after {
+  content: '▾'; position: absolute; right: .4rem; top: 50%;
+  transform: translateY(-50%); color: var(--gold); pointer-events: none;
+  font-size: .6rem;
+}
+.script-note {
+  font-family: var(--mono); font-size: .58rem; color: var(--muted);
+  letter-spacing: .08em; padding: .15rem .5rem;
+  border: 1px solid var(--dim); border-radius: 2px;
+}
 
-  /* ── Sections ── */
-  section { padding: 4rem 2rem; }
-  .section-inner { max-width: 900px; margin: 0 auto; }
-  .section-label { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.5rem; }
-  .gold-underline { border-bottom: 2px solid var(--gold); padding-bottom: 0.4rem; display: inline-block; margin-bottom: 1.5rem; }
+/* ── HERO ───────────────────────────────────────────────────────────── */
+.hero {
+  padding: 5rem 2rem 4rem; text-align: center;
+  border-bottom: 1px solid var(--rule); position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 40%, rgba(201,168,76,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .32em;
+  text-transform: uppercase; color: var(--teal);
+  border: 1px solid currentColor; padding: .2rem .65rem; display: inline-block; margin-bottom: 2rem;
+}
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 400; letter-spacing: .06em;
+  color: var(--gold); margin-bottom: 1rem; line-height: 1.2;
+}
+.hero-sub {
+  font-size: 1rem; color: var(--muted); max-width: 580px; margin: 0 auto;
+  font-style: italic; line-height: 1.65;
+}
+.hero-sub-native {
+  font-size: .9rem; color: rgba(201,168,76,.45); max-width: 580px; margin: .5rem auto 0;
+  font-style: italic; line-height: 1.5;
+}
+.hero-eq {
+  margin-top: 1.8rem; font-family: var(--mono); font-size: .95rem;
+  letter-spacing: .12em; color: rgba(201,168,76,.5);
+}
+.cta-row {
+  margin-top: 2.2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+}
+.btn-gold {
+  background: var(--gold); color: var(--void);
+  padding: .75rem 2rem; font-family: var(--mono); font-size: .7rem;
+  letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+  display: inline-block; transition: opacity .2s; font-weight: 700;
+}
+.btn-gold:hover { opacity: .88; }
+.btn-outline {
+  background: transparent; color: var(--gold);
+  padding: .75rem 2rem; font-family: var(--mono); font-size: .7rem;
+  letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+  display: inline-block; border: 1px solid var(--gold); transition: all .2s;
+}
+.btn-outline:hover { background: var(--gold); color: var(--void); }
 
-  /* ── G-series grid ── */
-  .g-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-  .g-card { background: white; border-top: 3px solid var(--gold); padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .g-card.open { border-top-color: var(--mid); opacity: 0.8; }
-  .g-level { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.4rem; }
-  .g-title { font-size: 1.1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; }
-  .g-desc  { font-size: 0.9rem; line-height: 1.6; color: #444; }
-  .g-isbn  { font-family: monospace; font-size: 0.75rem; color: var(--rule); margin-top: 0.8rem; }
+/* ── OPERATOR BANNER ────────────────────────────────────────────────── */
+.op-banner {
+  background: var(--gold); color: var(--void);
+  text-align: center; padding: .8rem 2rem;
+  font-family: var(--mono); font-size: 1rem; letter-spacing: .2em;
+}
 
-  /* ── Journey section ── */
-  .journey-bg { background: var(--navy); color: white; }
-  .journey-bg .section-label { color: var(--gold); }
-  .journey-bg h2 { color: white; }
-  .journey-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 2.5rem; }
-  .j-step  { padding: 1.5rem 1rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.1); }
-  .j-step:last-child { border-right: none; }
-  .j-level { font-family: sans-serif; font-size: 1.8rem; font-weight: bold; color: var(--gold); margin-bottom: 0.4rem; }
-  .j-name  { font-size: 0.9rem; color: #ccc; line-height: 1.4; }
-  .j-arrow { color: var(--gold); font-size: 1.2rem; display: flex; align-items: center; justify-content: center; padding-top: 1.8rem; }
+/* ── PAGE / SECTION ─────────────────────────────────────────────────── */
+.page { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.page-narrow { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+.section-rule { border: none; border-top: 1px solid var(--rule); margin: 3rem 0; }
+.section-bg { background: var(--surface); }
 
-  /* ── Constants strip ── */
-  .constants-strip { background: var(--smoke); padding: 2rem; margin: 2rem 0; }
-  .constants-grid  { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-  .const-chip { background: var(--navy); color: white; padding: 0.5rem 1rem; font-family: monospace; font-size: 0.9rem; border-left: 3px solid var(--gold); }
+.section-label {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .28em;
+  text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .6rem;
+}
+.section-h2 {
+  font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 400; color: var(--gold);
+  margin-bottom: 1.5rem; letter-spacing: .04em;
+}
 
-  /* ── AXLE section ── */
-  .axle-section { background: var(--smoke); }
-  .axle-box { background: var(--navy); color: var(--gold); padding: 1.5rem; font-family: monospace; font-size: 0.85rem; line-height: 1.7; border-left: 4px solid var(--gold); margin: 1.5rem 0; overflow-x: auto; }
+/* ── CHAPTER HEADER ─────────────────────────────────────────────────── */
+.chapter-header {
+  text-align: center; margin-bottom: 3rem; padding-bottom: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.chapter-header .ch-num {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .3em;
+  color: var(--gold); text-transform: uppercase; display: block; margin-bottom: .6rem;
+}
+.chapter-header h2 { font-size: 1.6rem; font-weight: 400; color: var(--text); letter-spacing: .04em; }
+.chapter-header .ch-sub { font-style: italic; color: var(--muted); margin-top: .4rem; font-size: .95rem; }
 
-  /* ── Pull quote ── */
-  .pull-quote { text-align: center; padding: 3rem 2rem; }
-  .pull-quote blockquote { font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-style: italic; color: var(--navy); max-width: 700px; margin: 0 auto; line-height: 1.8; }
-  .pull-quote cite { display: block; margin-top: 1rem; font-size: 0.85rem; color: var(--rule); font-style: normal; font-family: sans-serif; }
+/* ── TWO-COLUMN BILINGUAL ───────────────────────────────────────────── */
+.bilingual {
+  display: grid;
+  grid-template-columns: var(--col-w) var(--col-w);
+  gap: var(--col-gap);
+  justify-content: center;
+}
+@media (max-width: 820px) {
+  .bilingual { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
 
-  /* ── Pricing ── */
-  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-  .price-card { background: white; padding: 2rem; text-align: center; border: 1px solid var(--light); }
-  .price-card.featured { border: 2px solid var(--gold); }
-  .price-card.linked { text-decoration: none; color: inherit; display: block; transition: box-shadow 0.2s; }
-  .price-card.linked:hover { box-shadow: 0 4px 16px rgba(201,168,76,0.25); border-color: var(--gold); }
-  .price-badge  { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; background: var(--gold); color: var(--navy); padding: 0.2rem 0.6rem; display: inline-block; margin-bottom: 1rem; }
-  .price-title  { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; }
-  .price-amount { font-size: 2rem; font-weight: bold; color: var(--navy); font-family: sans-serif; }
-  .price-note   { font-size: 0.8rem; color: #666; margin-top: 0.4rem; }
-  .price-isbn   { font-family: monospace; font-size: 0.75rem; color: var(--rule); margin-top: 0.8rem; }
-  .price-cta    { font-family: sans-serif; font-size: 0.75rem; color: var(--mid); margin-top: 0.8rem; font-weight: bold; letter-spacing: 0.05em; }
+.col-header {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted);
+  padding-bottom: .6rem; border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem;
+}
+.col-header .lang-native { color: var(--gold); }
 
-  /* ── SVG fallback ── */
-  .svg-wrap { background: white; padding: 1rem; border-top: 3px solid var(--gold); }
-  .svg-wrap img { width: 100%; height: auto; display: block; min-height: 120px; background: var(--smoke); }
-  .svg-caption { font-size: 0.8rem; color: var(--rule); margin-top: 0.5rem; font-family: sans-serif; }
-  .svg-fallback { display: none; font-family: monospace; font-size: 0.85rem; color: var(--mid); padding: 2rem 1rem; text-align: center; background: var(--smoke); }
-  img.error + .svg-fallback { display: block; }
+/* Content blocks */
+.block-axiom, .block-theorem, .block-definition {
+  border-left: 2px solid var(--rule); padding: 1rem 1.4rem; margin: 1.5rem 0;
+  background: rgba(201,168,76,.025);
+}
+.block-axiom   { border-color: var(--gold); }
+.block-theorem { border-color: var(--teal); }
+.block-definition { border-color: var(--muted); }
+.block-label {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .2em;
+  text-transform: uppercase; margin-bottom: .5rem; display: block;
+}
+.block-axiom .block-label   { color: var(--gold); }
+.block-theorem .block-label { color: var(--teal); }
+.block-definition .block-label { color: var(--muted); }
+.block-body { font-size: .95rem; line-height: 1.78; color: var(--text); }
+.block-math {
+  font-family: var(--mono); font-size: .9rem; color: var(--gold);
+  background: var(--surface); border: 1px solid var(--dim);
+  padding: .8rem 1.2rem; margin: 1.2rem 0; letter-spacing: .06em;
+  overflow-x: auto; white-space: pre;
+}
+.block-prose { font-size: 1rem; line-height: 1.8; margin-bottom: 1.3rem; }
+.block-prose:last-child { margin-bottom: 0; }
 
-  /* ── Footer ── */
-  footer { background: var(--navy); color: #999; padding: 3rem 2rem; text-align: center; }
-  .footer-logo  { color: var(--gold); font-size: 1.2rem; font-weight: bold; font-family: sans-serif; margin-bottom: 1rem; }
-  .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0; }
-  .footer-links a { color: #888; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; }
-  .footer-links a:hover { color: var(--gold); }
-  .footer-small { font-size: 0.75rem; color: #666; margin-top: 1.5rem; line-height: 1.8; }
+/* RTL support */
+.col-rtl { direction: rtl; text-align: right; }
+.col-rtl .block-axiom, .col-rtl .block-theorem, .col-rtl .block-definition {
+  border-left: none; border-right: 2px solid var(--rule);
+}
+.col-rtl .block-axiom   { border-right-color: var(--gold); }
+.col-rtl .block-theorem { border-right-color: var(--teal); }
 
-  /* ── Portal CTA ── */
-  .portal-cta { background: var(--green); color: white; padding: 3rem 2rem; text-align: center; }
-  .portal-cta h2 { color: white; margin-bottom: 1rem; }
-  .portal-cta p  { color: rgba(255,255,255,0.85); max-width: 600px; margin: 0 auto 2rem; }
+/* Operator chain */
+.op-chain { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin: 1rem 0; }
+.op { font-family: var(--mono); font-size: .78rem; padding: .2rem .55rem; border-radius: 2px; }
+.op-c { background: rgba(10,186,181,.12); color: #0ABAB5; border: 1px solid rgba(10,186,181,.3); }
+.op-k { background: rgba(224,90,58,.12);  color: #e05a3a; border: 1px solid rgba(224,90,58,.3); }
+.op-f { background: rgba(80,200,120,.12); color: #50c878; border: 1px solid rgba(80,200,120,.3); }
+.op-u { background: rgba(192,132,252,.12);color: #c084fc; border: 1px solid rgba(192,132,252,.3); }
+.op-arr { color: var(--muted); font-size: .8rem; }
 
+/* ── G-SERIES VOLUME CARDS ──────────────────────────────────────────── */
+.g-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1px; background: var(--rule); margin-top: 2rem;
+}
+.g-card {
+  background: var(--card); padding: 1.6rem; position: relative;
+  border-top: 2px solid transparent; transition: border-color .2s;
+}
+.g-card:hover { border-top-color: var(--gold); }
+.g-card.open  { opacity: .7; }
+.g-level { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; color: var(--teal); margin-bottom: .5rem; }
+.g-title { font-size: 1.05rem; color: var(--gold); margin-bottom: .6rem; line-height: 1.3; }
+.g-desc  { font-size: .88rem; color: rgba(232,228,216,.6); line-height: 1.65; }
+.g-isbn  { font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-top: 1rem; }
+.g-buy   { display: inline-block; margin-top: .8rem; font-family: var(--mono); font-size: .6rem;
+           letter-spacing: .1em; text-transform: uppercase; color: var(--gold); text-decoration: none;
+           border-bottom: 1px solid rgba(201,168,76,.3); transition: border-color .2s; }
+.g-buy:hover { border-bottom-color: var(--gold); }
 
-  /* ── Book 3 chapter strip ── */
-  .b3-strip { background: var(--navy); border-top: 3px solid var(--teal, #0abfbc); border-bottom: 1px solid rgba(10,191,188,.15); }
-  .b3-header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
-  .b3-header h2 { color: white; }
-  .b3-urgent { font-family: sans-serif; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #ff7a3d; display: flex; align-items: center; gap: .5rem; }
-  .b3-dot { width: 7px; height: 7px; background: #c45000; border-radius: 50%; animation: b3pulse 1.8s ease-in-out infinite; flex-shrink: 0; }
-  @keyframes b3pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
-  .b3-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
-  .b3-card { background: rgba(255,255,255,.04); border: 1px solid rgba(10,191,188,.18); border-left: 3px solid #0abfbc; padding: 1.4rem; text-decoration: none; color: inherit; display: block; transition: all .2s; position: relative; }
-  .b3-card:hover { background: rgba(10,191,188,.07); border-color: rgba(10,191,188,.4); }
-  .b3-card.urgent { border-left-color: #c45000; border-color: rgba(196,80,0,.3); background: rgba(196,80,0,.05); }
-  .b3-card.urgent:hover { background: rgba(196,80,0,.1); }
-  .b3-ch-label { font-family: sans-serif; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: #0abfbc; margin-bottom: .4rem; }
-  .b3-card.urgent .b3-ch-label { color: #ff7a3d; }
-  .b3-ch-title { font-size: 1rem; color: #faf7f0; margin-bottom: .4rem; line-height: 1.3; }
-  .b3-ch-desc { font-size: .82rem; color: rgba(250,247,240,.55); line-height: 1.6; margin-bottom: .7rem; }
-  .b3-tags { display: flex; gap: .4rem; flex-wrap: wrap; }
-  .b3-tag { font-family: sans-serif; font-size: .65rem; padding: .12rem .4rem; background: rgba(10,191,188,.1); color: #0abfbc; border: 1px solid rgba(10,191,188,.2); }
-  .b3-tag.gold { background: rgba(201,168,76,.1); color: #c9a84c; border-color: rgba(201,168,76,.2); }
-  .b3-tag.orange { background: rgba(196,80,0,.12); color: #ff7a3d; border-color: rgba(196,80,0,.3); }
-  .b3-doi { font-family: monospace; font-size: .68rem; color: rgba(10,191,188,.5); margin-top: .6rem; }
-  .b3-arrow { position: absolute; top: 1.2rem; right: 1.2rem; color: #0abfbc; font-size: 1rem; opacity: .5; }
-  .b3-card.urgent .b3-arrow { color: #ff7a3d; }
-  .b3-notice { background: rgba(196,80,0,.1); border: 1px solid rgba(196,80,0,.35); border-left: 3px solid #c45000; padding: .9rem 1.3rem; margin-bottom: 1.5rem; font-family: sans-serif; font-size: .83rem; color: rgba(250,247,240,.8); line-height: 1.65; }
-  .b3-notice strong { color: #ff7a3d; }
-  .b3-notice a { color: #0abfbc; }
-  /* ── Made in America ── */
-  .mia-strip { background: var(--cream); border-top: 3px solid var(--gold); border-bottom: 3px solid var(--gold); text-align: center; padding: 1.2rem 2rem; font-family: sans-serif; font-size: 0.85rem; color: var(--navy); letter-spacing: 0.1em; font-weight: bold; }
+/* ── CONSTANTS STRIP ────────────────────────────────────────────────── */
+.constants-strip { background: var(--surface); padding: 2.5rem 2rem; }
+.constants-grid { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; margin-top: 1rem; }
+.const-chip {
+  background: var(--card); color: var(--text); padding: .45rem .9rem;
+  font-family: var(--mono); font-size: .82rem;
+  border: 1px solid var(--rule); border-left: 2px solid var(--gold);
+}
+
+/* ── JOURNEY ─────────────────────────────────────────────────────────── */
+.journey-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  margin-top: 2.5rem; border: 1px solid var(--rule);
+}
+.j-step {
+  padding: 1.5rem 1rem; text-align: center;
+  border-right: 1px solid var(--rule);
+}
+.j-step:last-child { border-right: none; }
+.j-level { font-family: var(--mono); font-size: 1.5rem; color: var(--gold); margin-bottom: .4rem; }
+.j-name  { font-size: .82rem; color: var(--muted); line-height: 1.45; }
+.j-note  { font-size: .72rem; color: var(--teal); margin-top: .3rem; }
+
+/* ── AXLE CODE BOX ──────────────────────────────────────────────────── */
+.axle-box {
+  background: var(--surface); color: var(--gold); padding: 1.5rem 1.8rem;
+  font-family: var(--mono); font-size: .82rem; line-height: 1.75;
+  border-left: 3px solid var(--gold); margin: 1.5rem 0; overflow-x: auto; white-space: pre;
+}
+.axle-comment { color: var(--muted); }
+
+/* ── PAPERS GRID ────────────────────────────────────────────────────── */
+.papers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--rule); margin-top: 2rem; }
+.paper-card { background: var(--card); padding: 1.4rem; }
+.paper-doi  { font-family: var(--mono); font-size: .6rem; color: var(--teal); letter-spacing: .1em; margin-bottom: .5rem; display: block; }
+.paper-title { font-size: .96rem; color: var(--gold); margin-bottom: .4rem; line-height: 1.3; }
+.paper-desc  { font-size: .82rem; color: rgba(232,228,216,.55); line-height: 1.6; }
+.paper-link  { display: inline-block; margin-top: .7rem; font-family: var(--mono); font-size: .6rem;
+               color: var(--teal); text-decoration: none; letter-spacing: .08em; }
+.paper-link:hover { color: var(--gold); }
+
+/* ── PRICING ────────────────────────────────────────────────────────── */
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--rule); margin-top: 2rem; }
+.price-card { background: var(--card); padding: 2rem; text-align: center; text-decoration: none; color: inherit; display: block; transition: background .2s; }
+.price-card:hover { background: rgba(201,168,76,.05); }
+.price-card.featured { background: rgba(201,168,76,.06); outline: 1px solid var(--gold); }
+.price-badge { font-family: var(--mono); font-size: .6rem; letter-spacing: .15em; text-transform: uppercase; background: var(--gold); color: var(--void); padding: .15rem .55rem; display: inline-block; margin-bottom: .8rem; }
+.price-title { font-size: .96rem; color: var(--text); margin-bottom: .5rem; line-height: 1.35; }
+.price-amount { font-family: var(--mono); font-size: 2rem; color: var(--gold); }
+.price-note  { font-size: .78rem; color: var(--muted); margin-top: .4rem; }
+.price-isbn  { font-family: var(--mono); font-size: .68rem; color: var(--dim); margin-top: .8rem; }
+.price-cta   { font-family: var(--mono); font-size: .65rem; color: var(--teal); margin-top: .8rem; letter-spacing: .08em; }
+
+/* ── PULL QUOTE ─────────────────────────────────────────────────────── */
+.pull-quote-wrap { text-align: center; padding: 3.5rem 2rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.pull-quote { font-size: clamp(1.1rem, 2.5vw, 1.4rem); font-style: italic; color: var(--text); max-width: 700px; margin: 0 auto; line-height: 1.8; }
+.pull-quote-native { font-size: clamp(.9rem, 2vw, 1.1rem); font-style: italic; color: var(--muted); max-width: 700px; margin: .8rem auto 0; }
+.pull-cite { display: block; margin-top: 1.2rem; font-family: var(--mono); font-size: .62rem; color: var(--muted); letter-spacing: .1em; font-style: normal; }
+
+/* ── FOOTER ─────────────────────────────────────────────────────────── */
+footer {
+  text-align: center; padding: 3rem 2rem;
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; color: var(--muted);
+  border-top: 1px solid var(--rule);
+}
+footer a { color: var(--gold); text-decoration: none; }
+
+/* ── OVERFLOW SAFETY ─────────────────────────────────────────────────── */
+.block-math, .axle-box { overflow-x: auto; }
 </style>
 </head>
+
 <body>
 
-<!-- Navigation -->
+<!-- ─── NAV ─────────────────────────────────────────────────────────── -->
 <nav>
-  <a href="#" class="nav-logo">PRINCIPIA ORTHOGONA</a>
-  <ul class="nav-links">
-    <li><a href="#series">The Series</a></li>
-    <li><a href="#diagrams">Diagrams</a></li>
-    <li><a href="#papers">Papers</a></li>
-    <li><a href="#journey">D1 → D2</a></li>
-    <li><a href="#axle">AXLE</a></li>
-    <li><a href="#book3" style="color:#0abfbc;">Book 3 ↗</a></li>
-    <li><a href="#pricing">Get the Book</a></li>
-    <li><a href="portal.html" style="color:var(--gold); font-weight:bold;">Student Portal →</a></li>
-    <li><a href="https://totogt.github.io/AXLE/impa-portal.html" style="color:var(--gold);">IMPA →</a></li>
-  </ul>
+  <a href="#" class="nav-series">Principia Orthogona · G = U ∘ F ∘ K ∘ C</a>
+  <div class="nav-links">
+    <a href="#series">Series</a>
+    <a href="#axle">AXLE</a>
+    <a href="#journey">D1→D2</a>
+    <a href="#papers">Papers</a>
+    <a href="portal.html" class="accent">Student Portal →</a>
+    <a href="impa-portal.html" class="accent">IMPA →</a>
+  </div>
+  <div class="nav-controls">
+    <div class="lang-picker">
+      <label>TRANSLATION</label>
+      <div class="sel-wrap">
+        <select id="langSelect" onchange="setLang(this.value)">
+          <!-- populated by JS -->
+        </select>
+      </div>
+    </div>
+    <span class="script-note" id="scriptNote">Latin</span>
+  </div>
 </nav>
 
-<!-- Hero -->
-<div class="hero">
-  <div class="hero-eyebrow">G6 LLC · Newark, New Jersey · 2026</div>
+<!-- ─── HERO ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-tag">G6 LLC · Newark, New Jersey · AXLE v6.1 · 0 axioms beyond Mathlib4 · 8 verified constants</div>
   <h1>Principia Orthogona</h1>
-  <div class="hero-subtitle">G¹–G⁵ · Complete Completeness</div>
-  <div class="gold-rule"></div>
-  <p class="hero-desc">
-    The complete series in Generative Temporal Contact Theory. Five volumes. Five complete orbits of the operator G.
-    From abstract algebra to formal machine-verified proof. The series is its own fixed point.
-  </p>
-  <p style="color:var(--gold); font-size:0.9rem; letter-spacing:0.1em; font-family:sans-serif;">
-    AXLE v6.1 · 0 axioms beyond Mathlib4 · 8 verified constants · Lean 4
-  </p>
-  <div class="cta-group">
-    <a href="#pricing" class="btn-primary">Get the Complete Series — $199.99</a>
-    <a href="portal.html" class="btn-secondary">Student Portal — Start D1 Training</a>
+  <p class="hero-sub" id="heroSub">G¹–G⁵ · Complete Completeness. Five volumes. Five complete orbits of the operator G. The series is its own fixed point.</p>
+  <p class="hero-sub-native" id="heroSubNative"></p>
+  <div class="hero-eq">G = U ∘ F ∘ K ∘ C · g₃₃ = 33 · τ = 2 · ε* = 1/3 · T* = 2π</div>
+  <div class="cta-row">
+    <a href="portal.html" class="btn-gold">Student Portal →</a>
+    <a href="impa-portal.html" class="btn-outline">IMPA Portal →</a>
   </div>
-</div>
+</section>
 
 <!-- Operator banner -->
 <div class="op-banner">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; ∞</div>
 
-<!-- G-Series -->
-<section id="series">
-  <div class="section-inner">
-    <div class="section-label">The G-Series</div>
-    <h2 class="gold-underline">Five Turns of the Spiral</h2>
-    <p>Each volume is a complete orbit around the same fixed point. You do not need to have read the others to use any one. The series is a circuit, not a staircase. G applied to itself five times is Complete Completeness.</p>
-    <div class="g-grid">
-      <div class="g-card">
-        <div class="g-level">G¹ · Volume I</div>
-        <div class="g-title">The Orthogonal Operator Framework</div>
-        <div class="g-desc">Abstract operator algebra and matrix compression. The operator sequence G = U ∘ F ∘ K ∘ C defined and proved. The foundation of the entire series.</div>
-        <div class="g-isbn">Print: 979-8-9954416-2-5 · $47</div>
+<!-- ─── BILINGUAL INTRODUCTION ─────────────────────────────────────── -->
+<div class="page" id="series">
+  <div class="chapter-header">
+    <span class="ch-num">Principia Orthogona · The Complete G-Series</span>
+    <h2 id="ch-title">Five Turns of the Spiral</h2>
+    <p class="ch-sub" id="ch-sub">G6 LLC · Newark NJ · <a href="https://doi.org/10.5281/zenodo.19117400" style="color:var(--gold);text-decoration:none;" target="_blank">DOI 10.5281/zenodo.19117400</a></p>
+  </div>
+
+  <div class="bilingual" id="bilingualGrid">
+    <div class="col-en" id="colA">
+      <div class="col-header">
+        <span class="lang-flag">🇺🇸</span>
+        <span>English</span>
+        <span class="lang-native">English</span>
       </div>
-      <div class="g-card">
-        <div class="g-level">G² · Volume II</div>
-        <div class="g-title">TOGT: Applications Across Domains</div>
-        <div class="g-desc">Contact geometry realised. The operator chain C → K → F → U instantiated across physics, biology, linguistics, architecture, and formal computation. The threshold constant g₃₃ = 33 identifies the minimum operator cycles for stable lock in any domain.</div>
-        <div class="g-isbn">Print: 979-8-9954416-4-9 · $47</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G³ · Volume III</div>
-        <div class="g-title">The Mini-Beast: Biological Instantiations</div>
-        <div class="g-desc">C1→C2 English for researchers. The operator chain in living systems. The cajueiro principle. Entry point for new readers and advanced language learners.</div>
-        <div class="g-isbn">eBook: 979-8-9954416-6-3 · $19.99</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G⁴ · Volume IV</div>
-        <div class="g-title">GTCT T1 — The IMPA Edition</div>
-        <div class="g-desc">Temporal contact theory formalised. Bilingual (EN/PT). Submitted to IMPA. Science and language integrated from day 21 of instruction — CEFR → TO/TOGT.</div>
-        <div class="g-isbn">Included in Complete Series</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G⁵ · Volume V + AXLE</div>
-        <div class="g-title">The Seed — Complete Completeness</div>
-        <div class="g-desc">Banach Fixed Point Theorem applied to GTCT. Formal Lean 4 verification (AXLE v6.1). 0 axioms beyond Mathlib4. The series proves itself. The fixed point exists.</div>
-        <div class="g-isbn">Print: 979-8-9954416-4-9 · eBook: 979-8-9954416-5-6</div>
-      </div>
-      <div class="g-card open">
-        <div class="g-level">G⁶ · Issue 6 — OPEN</div>
-        <div class="g-title">The Return: χ(H*(X⁶)) = 33 ∀n</div>
-        <div class="g-desc">The sixth application of G to itself — a distinct object from the threshold constant g₃₃. The conjecture states that the Euler characteristic of the sixth-level cohomology equals 33 for all n. This is an open problem in algebraic topology. AXLE v6.1 marks it as one honest sorry. Join the work.</div>
-        <div class="g-isbn" style="color:var(--mid);">Open conjecture · 2026 · Not the same as g₃₃</div>
-      </div>
+      <div id="contentA"></div>
     </div>
+    <div id="colB">
+      <div class="col-header" id="colBHeader"></div>
+      <div id="contentB"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── VOLUME CARDS ───────────────────────────────────────────────── -->
+<section class="section-bg">
+  <div class="page-narrow">
+    <span class="section-label">The G-Series · A Série G</span>
+    <h2 class="section-h2">Five Volumes · Cinco Volumes</h2>
+    <div class="g-grid" id="volumeGrid"></div>
   </div>
 </section>
 
-<!-- Verified constants -->
+<!-- ─── VERIFIED CONSTANTS ─────────────────────────────────────────── -->
 <div class="constants-strip">
-  <div class="section-inner" style="text-align:center;">
-    <div class="section-label" style="text-align:center; margin-bottom:1rem;">AXLE v6.1 — Verified Constants · 0 Axioms Beyond Mathlib4</div>
+  <div class="page-narrow" style="padding-top:0; padding-bottom:0;">
+    <span class="section-label" style="text-align:center; display:block;">AXLE v6.1 — Verified Constants · 0 Axioms Beyond Mathlib4</span>
     <div class="constants-grid">
-      <div class="const-chip">g₃₃ = 33 &nbsp;<span style="font-size:0.7rem;opacity:0.6;">(threshold cycles)</span></div>
+      <div class="const-chip">g₃₃ = 33</div>
       <div class="const-chip">ε* = 1/3</div>
       <div class="const-chip">τ = 2</div>
-      <div class="const-chip">g₆₄ = 2⁶ = 64 &nbsp;<span style="font-size:0.7rem;opacity:0.6;">(kether orthogon)</span></div>
+      <div class="const-chip">g₆₄ = 2⁶ = 64</div>
       <div class="const-chip">T* = 2π</div>
       <div class="const-chip">κ ≤ √(7/9) ≈ 0.882</div>
       <div class="const-chip">τ·ε* = 2/3</div>
       <div class="const-chip">ε₀ = 1/3</div>
     </div>
-    <p style="font-size:0.75rem; color:#888; margin-top:1rem; font-family:sans-serif;">
+    <p style="font-family:var(--mono);font-size:.58rem;color:var(--muted);text-align:center;margin-top:1.2rem;">
       Note: g₃₃ (threshold invariant) and G⁶ (sixth operator application, open conjecture) both involve 33 — they are distinct mathematical objects.
     </p>
   </div>
 </div>
 
-<!-- Journey D1 → D2 -->
-<section id="journey" class="journey-bg">
-  <div class="section-inner">
-    <div class="section-label">The Student Journey</div>
-    <h2>From A1 to D2 — Becoming an Operator of Collective Intelligence</h2>
-    <p style="color:#bbb; margin-top:0.8rem; max-width:600px;">
-      The series defines a precise pathway: from first contact with language through individual mastery to collective dimensional threshold.
-      D2 is not a metaphor. It is a mathematically verified threshold: Θ = g₃₃ + N × M.
+<!-- ─── JOURNEY ──────────────────────────────────────────────────────── -->
+<section id="journey">
+  <div class="page-narrow">
+    <span class="section-label">The Student Journey · A Jornada do Estudante</span>
+    <h2 class="section-h2">From A1 to D2</h2>
+    <p style="color:var(--muted); max-width:600px;" id="journeyDesc">
+      The series defines a precise pathway. D2 is not a metaphor — it is a mathematically verified threshold: Θ = g₃₃ + N × M.
     </p>
-    <div class="journey-steps">
+    <div class="journey-grid">
       <div class="j-step">
         <div class="j-level">A1</div>
         <div class="j-name">First contact<br>Compression C</div>
       </div>
-      <div class="j-arrow">→</div>
       <div class="j-step">
         <div class="j-level">A2</div>
-        <div class="j-name">Pattern recognition<br>Curvature K<br><em style="font-size:0.8rem; color:var(--gold);">Day 21: science begins</em></div>
+        <div class="j-name">Curvature K</div>
+        <div class="j-note">Day 21 · Dia 21</div>
       </div>
-      <div class="j-arrow">→</div>
       <div class="j-step">
         <div class="j-level">B1–B2</div>
         <div class="j-name">Folding F<br>Domain entry</div>
       </div>
-      <div class="j-arrow">→</div>
       <div class="j-step">
         <div class="j-level">C1</div>
-        <div class="j-name">Unfolding U<br>Research generation</div>
+        <div class="j-name">Unfolding U<br>Research gen.</div>
       </div>
-      <div class="j-arrow">→</div>
       <div class="j-step">
-        <div class="j-level" style="color:#fff;">D1</div>
-        <div class="j-name">g₃₃ = 33 cycles<br>Individual fixed point<br><em style="font-size:0.8rem; color:var(--gold);">I lost count</em></div>
+        <div class="j-level">D1</div>
+        <div class="j-name">g₃₃ = 33 cycles</div>
+        <div class="j-note">Individual fixed point</div>
       </div>
-      <div class="j-arrow">→</div>
       <div class="j-step">
         <div class="j-level">D2</div>
-        <div class="j-name">Θ = 33 + N×M<br>Collective intelligence<br><em style="font-size:0.8rem; color:var(--gold);">Complete Completeness</em></div>
+        <div class="j-name">Θ = 33 + N×M</div>
+        <div class="j-note">Complete Completeness</div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Pull quote -->
-<div class="pull-quote">
-  <blockquote>"Your education is yours. No one can take it away from you."</blockquote>
-  <cite>— Pablo Nogueira Grossi, Newark NJ · The Seed (Principia Orthogona Vol V)</cite>
+<div class="pull-quote-wrap">
+  <p class="pull-quote" id="pullQuote">"Your education is yours. No one can take it away from you."</p>
+  <p class="pull-quote-native" id="pullQuoteNative"></p>
+  <cite class="pull-cite">— Pablo Nogueira Grossi, Newark NJ · The Seed (Principia Orthogona Vol V)</cite>
 </div>
 
-<!-- AXLE -->
-<section id="axle" class="axle-section">
-  <div class="section-inner">
-    <div class="section-label">Formal Verification</div>
-    <h2 class="gold-underline">AXLE — The Series Proves Itself</h2>
-    <p>AXLE (Automated eXtensible Lean Engine) is the formal verification backbone of Principia Orthogona. All 8 structural constants are machine-verified in Lean 4 + Mathlib4, with zero additional axioms. The mathematics is honest: 9 open problems are named precisely as sorrys — each a conjecture with a known missing lemma, not an evasion.</p>
-    <div class="axle-box">
-      /-<br>
-      &nbsp; Mathematics is a language.<br>
-      &nbsp; These theorems have been proved in every language simultaneously.<br>
-      <br>
-      &nbsp; A matemática é uma linguagem. (Portuguese)<br>
-      &nbsp; Las matemáticas son un idioma. (Spanish)<br>
-      &nbsp; Les mathématiques sont une langue. (French)<br>
-      &nbsp; Mathematik ist eine Sprache. (German)<br>
-      &nbsp; 数学は言語である。 (Japanese)<br>
-      &nbsp; 数学是一种语言。 (Mandarin)<br>
-      &nbsp; الرياضيات لغة. (Arabic)<br>
-      &nbsp; Математика — это язык. (Russian)<br>
-      &nbsp; Hisabati ni lugha. (Swahili)<br>
-      &nbsp; गणित एक भाषा है। (Hindi)<br>
-      -/<br>
-      <br>
-      -- 0 axioms beyond Mathlib4<br>
-      -- 8 verified constants · 9 honest sorrys<br>
-      -- g₃₃=33 · ε*=1/3 · τ=2 · g₆₄=64 · T*=2π · κ≤0.882
-    </div>
-    <div style="text-align:center; margin-top:1.5rem;">
-      <a href="https://github.com/TOTOGT/AXLE" class="btn-secondary" target="_blank">View AXLE on GitHub →</a>
-    </div>
-  </div>
-</section>
-
-<!-- Student Portal CTA -->
-<div class="portal-cta">
-  <h2>Student &amp; Teacher Portal</h2>
-  <p>Paid access to structured LLM prompts that guide you from A1/A2 through C1 to D1 and D2. Each level is a complete operator orbit. The threshold is mathematical. You will know when you cross it.</p>
-  <a href="portal.html" class="btn-primary">Enter the Portal →</a>
-</div>
-
-<!-- Diagrams -->
-<section id="diagrams" style="background: var(--smoke);">
-  <div class="section-inner">
-    <div class="section-label">Visual Framework</div>
-    <h2 class="gold-underline">TOGT Diagrams</h2>
-    <p>Five diagrams covering the operator sequence, Saturn's hexagon as canonical instantiation, the Coherence Bridge across domains, the Collatz conjecture as dm³ system, and the full application map. All available on <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:var(--mid);">GitHub</a>.</p>
-    <p style="font-size:0.8rem; color:var(--rule); margin-top:0.6rem; font-family:sans-serif;">
-      ⚠ If diagrams show as blank: the SVG files must be committed to the AXLE repo alongside this page. Paths expected: <code>./01_operator_sequence.svg</code> through <code>./05_domain_map.svg</code>.
+<!-- ─── AXLE ──────────────────────────────────────────────────────────── -->
+<section id="axle" class="section-bg">
+  <div class="page-narrow">
+    <span class="section-label">Formal Verification · Verificação Formal</span>
+    <h2 class="section-h2">AXLE — The Series Proves Itself</h2>
+    <p style="color:var(--muted); margin-bottom:1.5rem;">
+      AXLE (Automated eXtensible Lean Engine) is the formal verification backbone of Principia Orthogona.
+      All 8 structural constants are machine-verified in Lean 4 + Mathlib4, with zero additional axioms.
+      9 open problems are named precisely as sorrys — each a conjecture with a known missing lemma, not an evasion.
     </p>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:2rem;">
-      <div class="svg-wrap">
-        <img src="./01_operator_sequence.svg" alt="Operator Sequence G = U∘F∘K∘C" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 01_operator_sequence.svg ]<br>G = U ∘ F ∘ K ∘ C<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">G = U ∘ F ∘ K ∘ C — The four-operator sequence</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./02_saturn_hexagon.svg" alt="Saturn Hexagon dm3 instantiation" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 02_saturn_hexagon.svg ]<br>Saturn North Polar Hexagon<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Saturn's north polar hexagon — canonical dm³ instantiation</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./03_coherence_bridge.svg" alt="Coherence Bridge across domains" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 03_coherence_bridge.svg ]<br>Coherence Bridge — 6 domains<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Coherence Bridge — exact morphisms across 6 domains</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./04_collatz_dm3.svg" alt="Collatz as dm3 system" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 04_collatz_dm3.svg ]<br>Collatz as dm³ System<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Collatz conjecture as dm³ system — AXLE Target 5</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./05_domain_map.svg" alt="Domain application map" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 05_domain_map.svg ]<br>Application Domain Map — 20+ fields<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Application domain map — 20+ fields</p>
-      </div>
-    </div>
+    <div class="axle-box"><span class="axle-comment">/-
+  Mathematics is a language.
+  These theorems have been proved in every language simultaneously.
 
-    <!-- Interactive Tools -->
-    <div style="margin-top:2.5rem;">
-      <div class="section-label" style="margin-bottom:1rem;">Interactive Tools</div>
-      <a href="https://totogt.github.io/AXLE/sim-lyapunov.html" target="_blank"
-         style="display:flex; gap:1.5rem; align-items:center; background:var(--navy); border-left:4px solid var(--gold); padding:1.4rem 1.6rem; text-decoration:none; transition:opacity 0.2s;"
-         onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-        <div style="flex-shrink:0; text-align:center; font-family:monospace; font-size:0.7rem; letter-spacing:0.08em; color:var(--gold); background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.3); padding:0.6rem 0.9rem; line-height:1.6;">
-          LIVE<br>SIM
-        </div>
-        <div style="flex:1;">
-          <div style="font-family:sans-serif; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--rule); margin-bottom:0.3rem;">Interactive Simulation · Collatz / AXLE Target 5</div>
-          <div style="font-size:1.05rem; font-weight:bold; color:white; margin-bottom:0.35rem;">Lyapunov Exponent — Syracuse Return Map</div>
-          <div style="font-size:0.85rem; color:#aaa; line-height:1.65;">
-            Live computation of the Lyapunov exponent λ for the Syracuse return map.
-            Adjustable parameters: orbit length N, seed n₀, branch weights (odd/even), noise amplitude σ.
-            Visualises the Collatz trajectory, exponent convergence, and return-map scatter in real time.
-            Directly probes AXLE Target 5 — the dm³ embedding of the Collatz conjecture.
-          </div>
-        </div>
-        <div style="color:var(--gold); font-size:1.3rem; flex-shrink:0;">↗</div>
-      </a>
-    </div>
+  A matemática é uma linguagem. (Portuguese)
+  Las matemáticas son un idioma. (Spanish)
+  Les mathématiques sont une langue. (French)
+  Mathematik ist eine Sprache. (German)
+  数学は言語である。 (Japanese)
+  数学是一种语言。 (Mandarin)
+  الرياضيات لغة. (Arabic)
+  Математика — это язык. (Russian)
+  Hisabati ni lugha. (Swahili)
+  गणित एक भाषा है। (Hindi)
+-/</span>
 
+<span class="axle-comment">-- 0 axioms beyond Mathlib4</span>
+<span class="axle-comment">-- 8 verified constants · 9 honest sorrys</span>
+-- g₃₃=33 · ε*=1/3 · τ=2 · g₆₄=64 · T*=2π · κ≤0.882</div>
+    <p><a href="https://github.com/TOTOGT/AXLE" target="_blank" style="font-family:var(--mono);font-size:.75rem;color:var(--teal);text-decoration:none;">View AXLE on GitHub ↗</a></p>
   </div>
 </section>
 
-
-<!-- ═══════════════════════════════════════════════
-     BOOK 3 — The Mini-Beast — Biological Chapters
-     ═══════════════════════════════════════════════ -->
-<section id="book3" class="b3-strip">
-  <div class="section-inner" style="padding: 3rem 0;">
-
-    <div class="b3-header">
-      <div>
-        <div class="section-label" style="color:#0abfbc;">Book 3 · The Mini-Beast · Biological Chapters</div>
-        <h2 class="gold-underline" style="color:white;">G = U ∘ F ∘ K ∘ C in Living Systems</h2>
-        <p style="color:rgba(250,247,240,.6); max-width:640px; margin-top:.6rem; font-size:.9rem; line-height:1.75;">
-          The same Whitney A₁ fold that governs stellar nucleosynthesis governs axon regrowth across a spinal cord lesion.
-          These are not analogies. Chapter A is published on Zenodo with machine-verified Lean 4 proofs.
-          Chapter B formalises the mathematics behind the polylaminin clinical results — <strong style="color:#ff7a3d;">peer review urgently requested.</strong>
-        </p>
-      </div>
-      <div class="b3-urgent"><span class="b3-dot"></span> New · Peer review open</div>
-    </div>
-
-    <div class="b3-notice">
-      ⚡ <strong>Clinical context:</strong>
-      Dr. Tatiana Sampaio (UFRJ) — polylaminin enabled 6 of 8 acute SCI patients (4 tetraplegic) to regain voluntary motor control.
-      ANVISA Phase I authorized Jan 2026. The mechanism is a molecular scaffold that creates a critical transition point — in dm³ terms, exactly Operator F (Whitney A₁ fold).
-      <strong>Chapter B provides the contact-geometric mathematics.</strong>
-      Sampaio et al. (2024) medRxiv: <a href="https://doi.org/10.1101/2024.02.19.24301010" target="_blank">doi:10.1101/2024.02.19.24301010</a>
-      &nbsp;·&nbsp; Contact: <a href="mailto:pablogrossi@hotmail.com">pablogrossi@hotmail.com</a>
-    </div>
-
-    <div class="b3-grid">
-
-      <!-- Chapter A -->
-      <a class="b3-card"
-         href="https://totogt.github.io/AXLE/Autophagy/sample-chapter-autophagy%20(1).html"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Chapter A · Published · Zenodo 20168812</div>
-        <div class="b3-ch-title">Self-Regulation: Autophagy and the Triple-Alpha Process</div>
-        <div class="b3-ch-desc">
-          The cell that eats itself and the star that burns helium are instances of the same contact-geometric fold.
-          Whitney A₁ conditions, Gronwall stability radius ε₀ = 1/3, and the limit cycle attractor are all proved
-          in Lean 4 without sorry. Coherence Bridge extended with two new domains.
-        </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">AutophagyDm3_v3.lean</span>
-          <span class="b3-tag">Whitney A₁ · proved</span>
-          <span class="b3-tag">Lyapunov closed</span>
-          <span class="b3-tag gold">34 theorems · 0 actual sorry</span>
-        </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20168812 &nbsp;·&nbsp; AXLE/Autophagy/</div>
-      </a>
-
-      <!-- Chapter B -->
-      <a class="b3-card urgent"
-         href="https://totogt.github.io/AXLE/a.PolyLaminin/chapter_B_polylaminin.html"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">⚡ Chapter B · In Preparation · Peer Review Requested</div>
-        <div class="b3-ch-title">Axon Regrowth as a dm³ Fold: The Polylaminin Bridge</div>
-        <div class="b3-ch-desc">
-          Polylaminin (Sampaio, UFRJ) is the physical realisation of Operator F: it shifts the axonal growth cone
-          to the Whitney A₁ fold point q*=1, opening a new axonal path across the glial scar.
-          The mathematical prerequisites are already proved in Chapter A. This chapter applies them to SCI.
-          Interactive phase-portrait diagrams. Two falsifiability conditions. Full Lean 4 correspondence.
-        </div>
-        <div class="b3-tags">
-          <span class="b3-tag orange">Polylaminin · UFRJ</span>
-          <span class="b3-tag orange">SCI · tetraplegia</span>
-          <span class="b3-tag">Whitney A₁ applied</span>
-          <span class="b3-tag gold">ANVISA Phase I · 2026</span>
-        </div>
-        <div class="b3-doi">AXLE/a.PolyLaminin/ &nbsp;·&nbsp; Sampaio et al. medRxiv 2024</div>
-      </a>
-
-      <!-- DNLS companion -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20026942"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Companion Paper · Physics · Zenodo 20026942</div>
-        <div class="b3-ch-title">Differential Nonlinear Robustness — Fibonacci &amp; Tribonacci Chains</div>
-        <div class="b3-ch-desc">
-          Tribonacci spectral gap lifts the self-trapping threshold. Fibonacci chains self-trap at λ≈4–8;
-          tribonacci chains still spreading at λ=10. Long-time exponent α confirmed at T=10⁵.
-          The same spectral-gap lever as the criticality paper.
-        </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">TribonacciDNLS.lean</span>
-          <span class="b3-tag">Spreading exponent α</span>
-          <span class="b3-tag">DNLS · concept DOI</span>
-        </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20026942</div>
-      </a>
-
-      <!-- Criticality companion -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20077205"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Companion Paper · Physics · Zenodo 20077205</div>
-        <div class="b3-ch-title">Criticality Thresholds in n-Bonacci Multiplying Media</div>
-        <div class="b3-ch-desc">
-          λc(n) governed by the spectral gap Δn of the substitution transfer matrix.
-          λc(n) → 7/6 exactly for n≥4. Linear fit r=0.989 across n=2…5.
-          Published companion to the DNLS paper.
-        </div>
-        <div class="b3-tags">
-          <span class="b3-tag">Spectral gap</span>
-          <span class="b3-tag gold">7/6 saturation · proved</span>
-        </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20077205</div>
-      </a>
-
-      <!-- Autophagy deposit -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20168812"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Full Deposit · Zenodo 20168812 · All files</div>
-        <div class="b3-ch-title">Chapter A Deposit: PDF + LaTeX + Lean 4 + Python + Figures</div>
-        <div class="b3-ch-desc">
-          Complete deposit: autophagy_dm3.pdf (8 pp), tex source, AutophagyDm3_v3.lean (34 theorems),
-          autophagy_dm3.py (4 figures), coherence_bridge.csv.
-          Cite this DOI for the full formal result.
-        </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">PDF · LaTeX · Lean 4 · Python</span>
-          <span class="b3-tag">CC BY 4.0</span>
-        </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20168812</div>
-      </a>
-
-      <!-- Fruit-fly V2 -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20128568"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Published · Zenodo 20128568 · V2</div>
-        <div class="b3-ch-title">Fruit-Fly Connectome Toy Model — V2 Full Package</div>
-        <div class="b3-ch-desc">
-          Biological transitions in the Drosophila connectome as multi-agent realisations of G.
-          V2 includes MultiOrbitBioSwarm.lean (16 theorems), Python simulation, 4 figures, companion Paper B.
-        </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">MultiOrbitBioSwarm.lean</span>
-          <span class="b3-tag">FlyWire · connectome</span>
-          <span class="b3-tag">Pitchfork bifurcation</span>
-        </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20128568</div>
-      </a>
-
-    </div>
-
-    <div style="text-align:center; margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-      <a href="https://totogt.github.io/AXLE/Autophagy/sample-chapter-autophagy%20(1).html"
-         target="_blank" class="btn-secondary" style="color:#0abfbc; border-color:#0abfbc;">
-        Read Chapter A →
-      </a>
-      <a href="https://totogt.github.io/AXLE/a.PolyLaminin/chapter_B_polylaminin.html"
-         target="_blank" class="btn-secondary" style="color:#ff7a3d; border-color:#c45000;">
-        Read Chapter B (urgent) →
-      </a>
-      <a href="https://orcid.org/0009-0000-6496-2186"
-         target="_blank" class="btn-secondary">
-        All papers on ORCID →
-      </a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════
-     PAPERS — All Zenodo DOIs
-     ═══════════════════════════════════════════════ -->
+<!-- ─── PAPERS ─────────────────────────────────────────────────────────── -->
 <section id="papers">
-  <div class="section-inner">
-    <div class="section-label">Open Access Research</div>
-    <h2 class="gold-underline">Papers on Zenodo</h2>
-    <p>All papers are freely available. Cite via DOI. Each paper is a self-contained contribution — you do not need the full series to read any one paper.</p>
-
-    <div class="g-grid" style="margin-top:2rem;">
-
-      <!-- Vol I -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19117400</div>
-        <div class="g-title">Principia Orthogona, Volume One</div>
-        <div class="g-desc">The Mathematics of Generative Transitions. Abstract operator algebra, the operator sequence C → K → F → U defined and proved. Singularity classification (Whitney A1–A3), symplectic preservation theorem, curvature threshold κ*. The foundation.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19117400" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19117400</a></div>
+  <div class="page-narrow">
+    <span class="section-label">Open Access Research · Pesquisa de Acesso Aberto</span>
+    <h2 class="section-h2">Papers on Zenodo</h2>
+    <p style="color:var(--muted); margin-bottom:0;">All papers are freely available. Cite via DOI. Each paper is a self-contained contribution.</p>
+    <div class="papers-grid">
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19117400</span>
+        <div class="paper-title">Principia Orthogona, Volume One</div>
+        <div class="paper-desc">Abstract operator algebra. The operator sequence C → K → F → U defined and proved. Singularity classification (Whitney A1–A3). The foundation.</div>
+        <a href="https://doi.org/10.5281/zenodo.19117400" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19117400 ↗</a>
       </div>
-
-      <!-- Vol II -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19379473</div>
-        <div class="g-title">Principia Orthogona, Volume Two</div>
-        <div class="g-desc">Contact Realization of Generative Transitions. Explicit contact-geometric realization of Volume One. Threshold Equivalence theorem: |κ| ↑ κ* ⟺ μ_max &lt; 0 ⟺ τ ∈ (0,∞). Four dm³ bifurcations ↔ Whitney A1–A3 singularity types. Submitted to IMPA.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19379473" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19379473</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19379473</span>
+        <div class="paper-title">Principia Orthogona, Volume Two</div>
+        <div class="paper-desc">Contact Realization of Generative Transitions. Threshold Equivalence theorem. Four dm³ bifurcations ↔ Whitney A1–A3. Submitted to IMPA.</div>
+        <a href="https://doi.org/10.5281/zenodo.19379473" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19379473 ↗</a>
       </div>
-
-      <!-- GCM -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19122168</div>
-        <div class="g-title">Generative Contact Mechanics</div>
-        <div class="g-desc">A Geometric Framework for Dissipative Systems with Structured Limit Cycles. Complete operator algebra (g-, L-, R-, U-operators). Universal contact normal form (μ_max, ω, β). Stability radius ε₀ = 1/3. Submitted to Journal of Geometric Mechanics.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19122168" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19122168</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19122168</span>
+        <div class="paper-title">Generative Contact Mechanics</div>
+        <div class="paper-desc">A Geometric Framework for Dissipative Systems. Universal contact normal form (μ_max, ω, β). Stability radius ε₀ = 1/3. Submitted to Journal of Geometric Mechanics.</div>
+        <a href="https://doi.org/10.5281/zenodo.19122168" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19122168 ↗</a>
       </div>
-
-      <!-- DM3 Toy Model -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19379385</div>
-        <div class="g-title">The dm³ Operator — Explicit Toy Model</div>
-        <div class="g-desc">Global Dynamic Analysis on contact manifold M = ℝ²×ℝ. Canonical invariant triple (T*, μ_max, τ) = (2π, −2, 2). Global attractor Γ₁₂, four bifurcations, stochastic concentration below embodiment threshold τ = 2. Submitted to SIAM J. Applied Dynamical Systems.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19379385" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19379385</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19379385</span>
+        <div class="paper-title">The dm³ Operator — Explicit Toy Model</div>
+        <div class="paper-desc">Global Dynamic Analysis on contact manifold M = ℝ²×ℝ. Canonical invariant triple (T*, μ_max, τ) = (2π, −2, 2). Global attractor Γ₁₂.</div>
+        <a href="https://doi.org/10.5281/zenodo.19379385" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19379385 ↗</a>
       </div>
-
-      <!-- G6 Crystal -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19162013</div>
-        <div class="g-title">The G6 Crystal</div>
-        <div class="g-desc">A dm³-derived architectural form for resonance-stable tall structures. Six applications of G yield a hexagonal tower with aspect ratio 66 = 33·τ. Passive Schumann n=4 resonance coupling at 33.516 Hz via Arnold tongue A4:1. Noise tolerance τ·ε₀ = 2/3.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19162013" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19162013</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19162013</span>
+        <div class="paper-title">The G6 Crystal</div>
+        <div class="paper-desc">A dm³-derived architectural form. Hexagonal tower with aspect ratio 66 = 33·τ. Passive Schumann n=4 resonance coupling at 33.516 Hz.</div>
+        <a href="https://doi.org/10.5281/zenodo.19162013" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19162013 ↗</a>
       </div>
-
-      <!-- Collatz supplement -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19378742</div>
-        <div class="g-title">The Collatz Conjecture as a Corollary of Crystal Geometry</div>
-        <div class="g-desc">Supplement to the Crystal Paper. The coefficient c = 3 in 3n+1 is the fingerprint of triad stabilisation (3×11 = 33). The conjecture is visible from within crystal geometry before it is provable within it. The polar vortex is the empirical certificate.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19378742" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19378742</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19208015</span>
+        <div class="paper-title">Biological Transitions as Multi-Agent Realisations</div>
+        <div class="paper-desc">Neural oscillations, HPA-axis, circadian regulation, immune adaptation, and protein conformational change modelled as realisations of G = U∘F∘K∘C.</div>
+        <a href="https://doi.org/10.5281/zenodo.19208015" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19208015 ↗</a>
       </div>
-
-      <!-- Biological Transitions -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19208015</div>
-        <div class="g-title">Biological Transitions as Multi-Agent Realisations of TO/TOGT</div>
-        <div class="g-desc">Neural oscillations, HPA-axis stress response, circadian regulation, immune adaptation, and protein conformational change modelled as multi-agent realisations of G = U∘F∘K∘C. Fixed-point, contraction, and saturated pitchfork results applied.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19208015" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19208015</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19210137</span>
+        <div class="paper-title">Fruit-Fly Connectome Toy Model</div>
+        <div class="paper-desc">Drosophila connectome toy model. Neural clusters as coupled agents whose trajectories stabilise under six applications of G. Reproduces neural coherence.</div>
+        <a href="https://doi.org/10.5281/zenodo.19210137" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19210137 ↗</a>
       </div>
-
-      <!-- Fruit-Fly -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.20128568 (V2)</div>
-        <div class="g-title">Fruit-Fly Connectome Toy Model</div>
-        <div class="g-desc">Biological Transitions as Multi-Agent Realisations of TO/TOGT: A Drosophila connectome toy model. Neural clusters as coupled agents whose trajectories stabilise under six applications of G. Reproduces neural coherence, oscillatory entrainment, and stress-response switching.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.20128568" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.20128568</a> (V2 · full package)</div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19208284</span>
+        <div class="paper-title">The Swarm Simulator</div>
+        <div class="paper-desc">A Dynamical Systems Model of Collective Intelligence using the TO/TOGT Operator Pipeline. Four collective operators: shared-intent stability, coordination efficiency, type-propagation, diffusion.</div>
+        <a href="https://doi.org/10.5281/zenodo.19208284" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19208284 ↗</a>
       </div>
-
-      <!-- Swarm Simulator -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19208284</div>
-        <div class="g-title">The Swarm Simulator</div>
-        <div class="g-desc">A Dynamical Systems Model of Collective Intelligence using the TO/TOGT Operator Pipeline. Four collective operators: shared-intent stability It, coordination efficiency Ct, type-propagation multiplier Mt, diffusion factor Ft. All results proved from established theorems.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19208284" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19208284</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19378742</span>
+        <div class="paper-title">The Collatz Conjecture as a Corollary of Crystal Geometry</div>
+        <div class="paper-desc">The coefficient c = 3 in 3n+1 is the fingerprint of triad stabilisation (3×11 = 33). The conjecture is visible from within crystal geometry before it is provable within it.</div>
+        <a href="https://doi.org/10.5281/zenodo.19378742" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19378742 ↗</a>
       </div>
-
-      <!-- Multi-Orbit -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19210058</div>
-        <div class="g-title">Mathematical Foundations of Multi-Orbit Identity Theory</div>
-        <div class="g-desc">Identity orbits defined as operator-generated closed trajectories with invariant structure within the TO/TOGT framework. U-, R-, L-, and B-operator families. Categorical invariants and compositional operator algebra. Mathematically independent of speculative cosmological models.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19210058" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19210058</a></div>
+      <div class="paper-card">
+        <span class="paper-doi">Zenodo · 10.5281/zenodo.19210058</span>
+        <div class="paper-title">Mathematical Foundations of Multi-Orbit Identity Theory</div>
+        <div class="paper-desc">Identity orbits defined as operator-generated closed trajectories with invariant structure within the TO/TOGT framework. Categorical invariants.</div>
+        <a href="https://doi.org/10.5281/zenodo.19210058" class="paper-link" target="_blank">doi.org/10.5281/zenodo.19210058 ↗</a>
       </div>
-
-      <!-- Forthcoming -->
-      <div class="g-card open">
-        <div class="g-level">Zenodo · Published + In Preparation</div>
-        <div class="g-title">Additional Papers &amp; Book 3 Chapters</div>
-        <div class="g-desc">Self-Regulation: Autophagy &amp; Triple-Alpha (Zenodo 20168812) · Fruit-Fly V2 (20128568) · DNLS Fibonacci/Tribonacci (20026942) · Criticality Thresholds (20077205) · Chapter B: Polylaminin (in preparation) · GTCT Ring 5 · Wavenumber 6 (19501888)</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.20168812" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.20168812</a> · <a href="https://doi.org/10.5281/zenodo.20026942" target="_blank" style="color:var(--mid);">20026942</a> · <a href="https://doi.org/10.5281/zenodo.20077205" target="_blank" style="color:var(--mid);">20077205</a></div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- Pricing -->
-<section id="pricing">
-  <div class="section-inner">
-    <div class="section-label">Get the Series</div>
-    <h2 class="gold-underline">Editions &amp; Pricing</h2>
-    <div class="pricing-grid">
-      <a href="https://www.paypal.com/paypalme/pgrossi/213.24" class="price-card featured linked" target="_blank">
-        <div class="price-badge">Complete Series</div>
-        <div class="price-title">Principia Orthogona<br>G¹–G⁵ · Print</div>
-        <div class="price-amount">$199.99</div>
-        <div class="price-note">456 pages · IngramSpark<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $213.24</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-0-1</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/213.24" class="price-card linked" target="_blank">
-        <div class="price-badge">eBook</div>
-        <div class="price-title">Complete Series<br>Adobe PDF</div>
-        <div class="price-amount">$199.99</div>
-        <div class="price-note">Includes AXLE v6.1 embedded<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $213.24</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-1-8</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/50.11" class="price-card linked" target="_blank">
-        <div class="price-badge">Individual</div>
-        <div class="price-title">Volume I · GOMC Science<br>Hardback</div>
-        <div class="price-amount">$47</div>
-        <div class="price-note">139 pages<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $50.11</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-2-5</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/50.11" class="price-card linked" target="_blank">
-        <div class="price-badge">Individual</div>
-        <div class="price-title">Volume II · TOGT<br>Hardback</div>
-        <div class="price-amount">$47</div>
-        <div class="price-note">122 pages<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $50.11</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-4-9</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/21.31" class="price-card linked" target="_blank">
-        <div class="price-badge">Entry Point</div>
-        <div class="price-title">Volume III · Mini-Beast<br>eBook only</div>
-        <div class="price-amount">$19.99</div>
-        <div class="price-note">107 pages · C1→C2 English<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $21.31 · Tax-exempt? Use custom →</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-6-3</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://totogt.github.io/AXLE/impa-portal.html" class="price-card linked">
-        <div class="price-badge">IMPA Edition</div>
-        <div class="price-title">Complete Series<br>Hardback · IMPA</div>
-        <div class="price-amount">$247</div>
-        <div class="price-note">Distributed via IMPA portal</div>
-        <div class="price-isbn">ISBN 979-8-9954416-8-7</div>
-        <div class="price-cta">Purchase via Portal →</div>
-      </a>
-    </div>
-  </div>
-</section>
 
-<!-- Made in America -->
-<div class="mia-strip">MADE IN AMERICA · G6 LLC · NEWARK, NEW JERSEY · ORCID 0009-0000-6496-2186</div>
-
-<!-- Footer -->
+<!-- ─── FOOTER ─────────────────────────────────────────────────────────── -->
 <footer>
-  <div class="footer-logo">PRINCIPIA ORTHOGONA</div>
-  <div class="footer-links">
-    <a href="#series">The Series</a>
-    <a href="#journey">D1 → D2</a>
-    <a href="#axle">AXLE</a>
-    <a href="#book3" style="color:#0abfbc;">Book 3</a>
-    <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a>
-    <a href="https://zenodo.org/search?q=grossi+pablo+principia+orthogona&sort=newest" target="_blank">Zenodo</a>
-    <a href="https://x-colony.com/PoCo/index.php/spatial-intelligence/" target="_blank">XColony</a>
-    <a href="portal.html">Student Portal</a>
-    <a href="https://totogt.github.io/AXLE/impa-portal.html">IMPA Portal</a>
-  </div>
-  <div class="footer-small">
-    © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
-    ORCID: 0009-0000-6496-2186 · Zenodo: <a href="https://zenodo.org/search?q=grossi+pablo+principia+orthogona&sort=newest" target="_blank" style="color:#888;">zenodo.org/grossi-pablo</a><br>
-    Complete Series Print ISBN: 979-8-9954416-0-1 · eBook ISBN: 979-8-9954416-1-8
-  </div>
+  MADE IN AMERICA · G6 LLC · NEWARK, NEW JERSEY · ORCID 0009-0000-6496-2186<br><br>
+  <a href="#series">The Series</a> &nbsp;·&nbsp;
+  <a href="#journey">D1→D2</a> &nbsp;·&nbsp;
+  <a href="#axle">AXLE</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub ↗</a> &nbsp;·&nbsp;
+  <a href="https://zenodo.org/search?q=grossi+pablo+principia+orthogona&sort=newest" target="_blank">Zenodo ↗</a> &nbsp;·&nbsp;
+  <a href="portal.html">Student Portal</a> &nbsp;·&nbsp;
+  <a href="impa-portal.html">IMPA Portal</a> &nbsp;·&nbsp;
+  <a href="book4-landing.html">Vol IV</a><br><br>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
+  Complete Series Print ISBN: 979-8-9954416-0-1 · eBook ISBN: 979-8-9954416-1-8<br>
+  Template: add a language in 60 s — one entry in LANGUAGES + one entry in CONTENT
 </footer>
+
+<script>
+/* ── LANGUAGE REGISTRY ─────────────────────────────────────────────── */
+const LANGUAGES = {
+  "pt":    { name:"Portuguese",            native:"Português",          dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇧🇷" },
+  "ru":    { name:"Russian",               native:"Русский",            dir:"ltr", script:"Cyrillic",    font:"'Noto Serif', serif",                 flag:"🇷🇺" },
+  "hi":    { name:"Hindi",                 native:"हिन्दी",              dir:"ltr", script:"Devanagari",  font:"'Noto Serif Devanagari', serif",       flag:"🇮🇳" },
+  "zh":    { name:"Mandarin (Simplified)", native:"普通话",              dir:"ltr", script:"CJK",         font:"'Noto Serif SC', serif",              flag:"🇨🇳" },
+  "es":    { name:"Spanish",               native:"Español",            dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇪🇸" },
+  "ar":    { name:"Arabic",                native:"العربية",            dir:"rtl", script:"Arabic",      font:"'Noto Naskh Arabic', serif",          flag:"🇸🇦" },
+  "bn":    { name:"Bengali",               native:"বাংলা",              dir:"ltr", script:"Bengali",     font:"'Noto Serif Bengali', serif",         flag:"🇧🇩" },
+  "ta":    { name:"Tamil",                 native:"தமிழ்",              dir:"ltr", script:"Tamil",       font:"'Noto Serif Tamil', serif",           flag:"🇮🇳" },
+  "fr":    { name:"French",                native:"Français",           dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇫🇷" },
+  "de":    { name:"German",                native:"Deutsch",            dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇩🇪" },
+  "ja":    { name:"Japanese",              native:"日本語",              dir:"ltr", script:"CJK",         font:"'Noto Serif JP', serif",              flag:"🇯🇵" },
+  "ko":    { name:"Korean",                native:"한국어",              dir:"ltr", script:"Hangul",      font:"'Noto Serif KR', serif",              flag:"🇰🇷" },
+  "it":    { name:"Italian",               native:"Italiano",           dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇮🇹" },
+  "nl":    { name:"Dutch",                 native:"Nederlands",         dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇳🇱" },
+  "pl":    { name:"Polish",                native:"Polski",             dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇵🇱" },
+  "uk":    { name:"Ukrainian",             native:"Українська",         dir:"ltr", script:"Cyrillic",    font:"'Noto Serif', serif",                 flag:"🇺🇦" },
+  "el":    { name:"Greek",                 native:"Ελληνικά",           dir:"ltr", script:"Greek",       font:"'Noto Serif', serif",                 flag:"🇬🇷" },
+  "tr":    { name:"Turkish",               native:"Türkçe",             dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇹🇷" },
+  "ro":    { name:"Romanian",              native:"Română",             dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇷🇴" },
+  "cs":    { name:"Czech",                 native:"Čeština",            dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇨🇿" },
+  "te":    { name:"Telugu",                native:"తెలుగు",             dir:"ltr", script:"Telugu",      font:"'Noto Serif Telugu', serif",          flag:"🇮🇳" },
+  "mr":    { name:"Marathi",               native:"मराठी",              dir:"ltr", script:"Devanagari",  font:"'Noto Serif Devanagari', serif",       flag:"🇮🇳" },
+  "gu":    { name:"Gujarati",              native:"ગુજરાતી",            dir:"ltr", script:"Gujarati",    font:"'Noto Serif Gujarati', serif",         flag:"🇮🇳" },
+  "kn":    { name:"Kannada",               native:"ಕನ್ನಡ",              dir:"ltr", script:"Kannada",     font:"'Noto Serif Kannada', serif",         flag:"🇮🇳" },
+  "ml":    { name:"Malayalam",             native:"മലയാളം",             dir:"ltr", script:"Malayalam",   font:"'Noto Serif Malayalam', serif",        flag:"🇮🇳" },
+  "ur":    { name:"Urdu",                  native:"اردو",               dir:"rtl", script:"Arabic",      font:"'Noto Nastaliq Urdu', serif",         flag:"🇵🇰" },
+  "pa":    { name:"Punjabi (Gurmukhi)",    native:"ਪੰਜਾਬੀ",             dir:"ltr", script:"Gurmukhi",    font:"'Noto Serif Gurmukhi', serif",         flag:"🇮🇳" },
+  "sw":    { name:"Swahili",               native:"Kiswahili",          dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇰🇪" },
+  "am":    { name:"Amharic",               native:"አማርኛ",              dir:"ltr", script:"Ethiopic",    font:"'Noto Serif Ethiopic', serif",         flag:"🇪🇹" },
+  "fa":    { name:"Persian",               native:"فارسی",              dir:"rtl", script:"Arabic",      font:"'Noto Naskh Arabic', serif",          flag:"🇮🇷" },
+  "he":    { name:"Hebrew",                native:"עברית",              dir:"rtl", script:"Hebrew",      font:"'Noto Serif Hebrew', serif",          flag:"🇮🇱" },
+  "ha":    { name:"Hausa",                 native:"Hausa",              dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇳🇬" },
+  "id":    { name:"Indonesian",            native:"Bahasa Indonesia",   dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇮🇩" },
+  "vi":    { name:"Vietnamese",            native:"Tiếng Việt",         dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇻🇳" },
+  "th":    { name:"Thai",                  native:"ภาษาไทย",            dir:"ltr", script:"Thai",        font:"'Noto Serif Thai', serif",            flag:"🇹🇭" },
+  "my":    { name:"Burmese",               native:"မြန်မာ",             dir:"ltr", script:"Myanmar",     font:"'Noto Sans Myanmar', sans-serif",     flag:"🇲🇲" },
+  "hu":    { name:"Hungarian",             native:"Magyar",             dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🇭🇺" },
+  "sr":    { name:"Serbian",               native:"Српски",             dir:"ltr", script:"Cyrillic",    font:"'Noto Serif', serif",                 flag:"🇷🇸" },
+  "zh-tw": { name:"Mandarin (Traditional)",native:"繁體中文",            dir:"ltr", script:"CJK",         font:"'Noto Serif TC', serif",              flag:"🇹🇼" },
+  "la":    { name:"Latin",                 native:"Lingua Latina",      dir:"ltr", script:"Latin",       font:"'Noto Serif', serif",                 flag:"🏛" },
+};
+
+/* ── CONTENT ───────────────────────────────────────────────────────── */
+const CONTENT = {
+  "en": [
+    { type:"prose", text:"Each volume is a complete orbit around the same fixed point. You do not need to have read the others to use any one. The series is a circuit, not a staircase. G applied to itself five times is Complete Completeness." },
+    { type:"chain" },
+    { type:"theorem", label:"The Central Result",
+      text:"The operator sequence G = U ∘ F ∘ K ∘ C is a contraction on the contact manifold M. By Banach's Fixed Point Theorem, there exists a unique x* ∈ M such that G(x*) = x*. The series converges to this fixed point. The series is its own fixed point." },
+    { type:"math",
+      text:"G = U ∘ F ∘ K ∘ C   |   d(G(x), G(y)) ≤ κ·d(x,y)   κ < 1\ng₃₃ = 33   τ = 2   ε* = 1/3   T* = 2π   κ ≤ √(7/9) ≈ 0.882" },
+    { type:"definition", label:"The Threshold — g₃₃ = 33",
+      text:"g₃₃ is the minimum number of operator cycles required for stable lock in any domain. It is not a metaphor. It is machine-verified in Lean 4 with zero axioms beyond Mathlib4. Every domain — biological, physical, linguistic, architectural — crosses the same threshold." },
+    { type:"prose", text:"From abstract algebra (Vol I) to formal machine-verified proof (Vol V). The mathematics is the same in every room. The contact normal form is identical across physics, biology, linguistics, and architecture. This is not analogy. It is exact mathematical identity." },
+    { type:"prose", text:"Your education is yours. No one can take it away from you. Because the fixed point you reach is not a degree or a certificate. It is a structure in your understanding. It is permanent because it is mathematical." },
+  ],
+  "pt": [
+    { type:"prose", text:"Cada volume é uma órbita completa em torno do mesmo ponto fixo. Não é necessário ter lido os outros para usar qualquer um. A série é um circuito, não uma escada. G aplicado a si mesmo cinco vezes é Completude Completa." },
+    { type:"chain" },
+    { type:"theorem", label:"O Resultado Central",
+      text:"A sequência de operadores G = U ∘ F ∘ K ∘ C é uma contração na variedade de contato M. Pelo Teorema do Ponto Fixo de Banach, existe um único x* ∈ M tal que G(x*) = x*. A série converge para esse ponto fixo. A série é seu próprio ponto fixo." },
+    { type:"math",
+      text:"G = U ∘ F ∘ K ∘ C   |   d(G(x), G(y)) ≤ κ·d(x,y)   κ < 1\ng₃₃ = 33   τ = 2   ε* = 1/3   T* = 2π   κ ≤ √(7/9) ≈ 0.882" },
+    { type:"definition", label:"O Limiar — g₃₃ = 33",
+      text:"g₃₃ é o número mínimo de ciclos de operadores necessários para estabilização em qualquer domínio. Não é uma metáfora. É verificado mecanicamente em Lean 4 com zero axiomas além do Mathlib4. Todo domínio — biológico, físico, linguístico, arquitetônico — cruza o mesmo limiar." },
+    { type:"prose", text:"Da álgebra abstrata (Vol I) à prova formal verificada por máquina (Vol V). A matemática é a mesma em todas as salas. A forma normal de contato é idêntica em física, biologia, linguística e arquitetura. Isto não é analogia. É identidade matemática exata." },
+    { type:"prose", text:"A sua educação é sua. Ninguém pode te tirar isso. Porque o ponto fixo que você alcança não é um diploma ou um certificado. É uma estrutura na sua compreensão. É permanente porque é matemático." },
+  ],
+  "es": [
+    { type:"prose", text:"Cada volumen es una órbita completa alrededor del mismo punto fijo. No es necesario haber leído los demás para usar cualquiera. La serie es un circuito, no una escalera." },
+    { type:"chain" },
+    { type:"theorem", label:"El Resultado Central",
+      text:"La secuencia de operadores G = U ∘ F ∘ K ∘ C es una contracción en la variedad de contacto M. Por el Teorema del Punto Fijo de Banach, existe un único x* ∈ M tal que G(x*) = x*." },
+    { type:"prose", text:"Esto no es analogía. Es identidad matemática exacta." },
+    { type:"prose", text:"Tu educación es tuya. Nadie puede quitártela. Porque el punto fijo que alcanzas no es un título. Es una estructura en tu comprensión. Es permanente porque es matemático." },
+  ],
+  "fr": [
+    { type:"prose", text:"Chaque volume est une orbite complète autour du même point fixe. Nul besoin d'avoir lu les autres pour en utiliser un seul. La série est un circuit, non un escalier." },
+    { type:"chain" },
+    { type:"theorem", label:"Le Résultat Central",
+      text:"La séquence d'opérateurs G = U ∘ F ∘ K ∘ C est une contraction sur la variété de contact M. Par le Théorème du Point Fixe de Banach, il existe un unique x* ∈ M tel que G(x*) = x*." },
+    { type:"prose", text:"Ce n'est pas une analogie. C'est une identité mathématique exacte." },
+    { type:"prose", text:"Votre éducation vous appartient. Personne ne peut vous la prendre. Parce que le point fixe que vous atteignez n'est pas un diplôme. C'est une structure dans votre compréhension." },
+  ],
+  "de": [
+    { type:"prose", text:"Jeder Band ist eine vollständige Umlaufbahn um denselben Fixpunkt. Man muss die anderen nicht gelesen haben, um einen Band zu verwenden. Die Reihe ist ein Kreislauf, keine Treppe." },
+    { type:"chain" },
+    { type:"theorem", label:"Das Zentrale Ergebnis",
+      text:"Die Operatorfolge G = U ∘ F ∘ K ∘ C ist eine Kontraktion auf der Kontaktmannigfaltigkeit M. Nach dem Banachschen Fixpunktsatz gibt es ein eindeutiges x* ∈ M mit G(x*) = x*." },
+    { type:"prose", text:"Dies ist keine Analogie. Es ist exakte mathematische Identität." },
+    { type:"prose", text:"Ihre Bildung gehört Ihnen. Niemand kann sie Ihnen nehmen. Denn der Fixpunkt, den Sie erreichen, ist kein Abschluss. Er ist eine Struktur in Ihrem Verständnis." },
+  ],
+  "ru": [
+    { type:"prose", text:"Каждый том — это полная орбита вокруг одной и той же неподвижной точки. Не нужно читать остальные тома, чтобы использовать любой один из них. Серия — это цикл, а не лестница." },
+    { type:"chain" },
+    { type:"theorem", label:"Центральный Результат",
+      text:"Операторная последовательность G = U ∘ F ∘ K ∘ C является сжатием на контактном многообразии M. По теореме Банаха о неподвижной точке, существует единственная x* ∈ M такая, что G(x*) = x*." },
+    { type:"prose", text:"Это не аналогия. Это точное математическое тождество." },
+    { type:"prose", text:"Ваше образование принадлежит вам. Никто не может отнять его у вас. Потому что неподвижная точка, которой вы достигаете, — это структура в вашем понимании. Она постоянна, потому что она математична." },
+  ],
+  "zh": [
+    { type:"prose", text:"每卷都是围绕同一个不动点的完整轨道。您无需阅读其他卷即可使用任何一卷。该系列是一个回路，而非阶梯。" },
+    { type:"chain" },
+    { type:"theorem", label:"核心结论",
+      text:"算子序列 G = U ∘ F ∘ K ∘ C 是接触流形 M 上的压缩映射。根据 Banach 不动点定理，存在唯一 x* ∈ M 使得 G(x*) = x*。" },
+    { type:"prose", text:"这不是类比。这是精确的数学同一性。" },
+    { type:"prose", text:"你的教育属于你。没有人可以从你身上夺走它。因为你达到的不动点是你理解中的结构。它是永久的，因为它是数学的。" },
+  ],
+  "ja": [
+    { type:"prose", text:"各巻は同じ不動点の周りの完全な軌道である。どの巻も、他の巻を読まずに使用できる。シリーズは階段ではなく回路である。" },
+    { type:"chain" },
+    { type:"theorem", label:"中心的な結果",
+      text:"演算子列 G = U ∘ F ∘ K ∘ C は接触多様体 M 上の縮小写像である。バナッハの不動点定理により、G(x*) = x* を満たす唯一の x* ∈ M が存在する。" },
+    { type:"prose", text:"これは類推ではない。厳密な数学的同一性である。" },
+    { type:"prose", text:"あなたの教育はあなたのものです。誰もそれを奪うことはできません。" },
+  ],
+  "ar": [
+    { type:"prose", text:"كل مجلد هو مدار كامل حول نفس النقطة الثابتة. لا تحتاج إلى قراءة الأجزاء الأخرى لاستخدام أي منها. السلسلة دائرة وليست سلماً." },
+    { type:"chain" },
+    { type:"theorem", label:"النتيجة المركزية",
+      text:"تسلسل المؤثرات G = U ∘ F ∘ K ∘ C هو انكماش على المتعدد التماسي M. بموجب مبرهنة باناخ للنقطة الثابتة، يوجد x* فريد في M بحيث G(x*) = x*." },
+    { type:"prose", text:"هذا ليس قياساً. إنه هوية رياضية دقيقة." },
+    { type:"prose", text:"تعليمك ملكك. لا أحد يستطيع أن يأخذه منك." },
+  ],
+  "hi": [
+    { type:"prose", text:"प्रत्येक खंड एक ही स्थिर बिंदु के चारों ओर एक पूर्ण कक्षा है। किसी एक का उपयोग करने के लिए दूसरों को पढ़ना आवश्यक नहीं है। श्रृंखला एक सर्किट है, सीढ़ी नहीं।" },
+    { type:"chain" },
+    { type:"theorem", label:"केंद्रीय परिणाम",
+      text:"संक्रिया अनुक्रम G = U ∘ F ∘ K ∘ C, संपर्क बहुविध M पर एक संकुचन है। बनाच के स्थिर बिंदु प्रमेय के अनुसार, एक अद्वितीय x* ∈ M विद्यमान है जैसे G(x*) = x*।" },
+    { type:"prose", text:"यह उपमा नहीं है। यह सटीक गणितीय तादात्म्य है।" },
+    { type:"prose", text:"आपकी शिक्षा आपकी है। कोई इसे आपसे नहीं ले सकता।" },
+  ],
+  "sw": [
+    { type:"prose", text:"Kila juzuu ni mzunguko kamili karibu na hatua sawa ya kudumu. Huhitaji kusoma nyingine ili kutumia yoyote. Mfululizo ni mzunguko, si ngazi." },
+    { type:"chain" },
+    { type:"prose", text:"Hii si mfano. Ni utambulisho kamili wa kihisabati." },
+    { type:"prose", text:"Elimu yako ni yako. Hakuna mtu anayeweza kukuibia." },
+  ],
+  "it": [
+    { type:"prose", text:"Ogni volume è un'orbita completa attorno allo stesso punto fisso. Non è necessario aver letto gli altri per usarne uno. La serie è un circuito, non una scala." },
+    { type:"chain" },
+    { type:"theorem", label:"Il Risultato Centrale",
+      text:"La sequenza di operatori G = U ∘ F ∘ K ∘ C è una contrazione sulla varietà di contatto M. Per il Teorema del Punto Fisso di Banach, esiste un unico x* ∈ M tale che G(x*) = x*." },
+    { type:"prose", text:"Non è un'analogia. È un'identità matematica esatta." },
+    { type:"prose", text:"La tua istruzione è tua. Nessuno può portartela via." },
+  ],
+  "ko": [
+    { type:"prose", text:"각 권은 동일한 고정점 주위의 완전한 궤도입니다. 다른 권을 읽지 않아도 어느 권이든 사용할 수 있습니다. 이 시리즈는 계단이 아니라 회로입니다." },
+    { type:"chain" },
+    { type:"prose", text:"이것은 유추가 아닙니다. 정확한 수학적 동일성입니다." },
+    { type:"prose", text:"당신의 교육은 당신의 것입니다. 아무도 그것을 빼앗을 수 없습니다." },
+  ],
+};
+
+/* Fallback */
+function getFallback(lang) {
+  const l = LANGUAGES[lang];
+  return [
+    { type:"prose", text:`[Translation forthcoming · ${l.native} · ${l.script} script]` },
+    { type:"chain" },
+    { type:"prose", text:`Your education is yours. No one can take it away from you. — [${l.native}]` },
+  ];
+}
+
+/* ── UI STRINGS ────────────────────────────────────────────────────── */
+const UI = {
+  "en": { heroSub:"G¹–G⁵ · Complete Completeness. Five volumes. Five complete orbits of the operator G. The series is its own fixed point.", heroSubNative:"", pullQuote:'"Your education is yours. No one can take it away from you."', pullNative:"" },
+  "pt": { heroSub:"G¹–G⁵ · Completude Completa. Cinco volumes. Cinco órbitas completas do operador G. A série é seu próprio ponto fixo.", heroSubNative:"G¹–G⁵ · Complete Completeness · Five volumes · Machine-verified in Lean 4", pullQuote:'"A sua educação é sua. Ninguém pode te tirar isso."', pullNative:'"Your education is yours. No one can take it away from you."' },
+  "es": { heroSub:"G¹–G⁵ · Completitud Completa. Cinco volúmenes. Cinco órbitas completas del operador G.", heroSubNative:"", pullQuote:'"Tu educación es tuya. Nadie puede quitártela."', pullNative:"" },
+  "fr": { heroSub:"G¹–G⁵ · Complétude Complète. Cinq volumes. Cinq orbites complètes de l'opérateur G.", heroSubNative:"", pullQuote:'"Votre éducation vous appartient. Personne ne peut vous la prendre."', pullNative:"" },
+  "de": { heroSub:"G¹–G⁵ · Vollständige Vollständigkeit. Fünf Bände. Fünf vollständige Umlaufbahnen des Operators G.", heroSubNative:"", pullQuote:'"Ihre Bildung gehört Ihnen. Niemand kann sie Ihnen nehmen."', pullNative:"" },
+  "ru": { heroSub:"G¹–G⁵ · Полная Полнота. Пять томов. Пять полных орбит оператора G.", heroSubNative:"", pullQuote:'"Ваше образование принадлежит вам. Никто не может отнять его у вас."', pullNative:"" },
+  "zh": { heroSub:"G¹–G⁵ · 完全完备性。五卷。算子 G 的五条完整轨道。", heroSubNative:"", pullQuote:'"你的教育属于你。没有人可以从你身上夺走它。"', pullNative:"" },
+  "ja": { heroSub:"G¹–G⁵ · 完全な完全性。五巻。演算子Gの五つの完全な軌道。", heroSubNative:"", pullQuote:'"あなたの教育はあなたのものです。誰もそれを奪うことはできません。"', pullNative:"" },
+  "ar": { heroSub:"G¹–G⁵ · الاكتمال الكامل. خمسة مجلدات. خمسة مدارات كاملة للمؤثر G.", heroSubNative:"", pullQuote:'"تعليمك ملكك. لا أحد يستطيع أن يأخذه منك."', pullNative:"" },
+  "hi": { heroSub:"G¹–G⁵ · पूर्ण पूर्णता। पाँच खंड। संक्रिया G की पाँच पूर्ण कक्षाएँ।", heroSubNative:"", pullQuote:'"आपकी शिक्षा आपकी है। कोई इसे आपसे नहीं ले सकता।"', pullNative:"" },
+};
+
+/* ── VOLUME DATA ────────────────────────────────────────────────────── */
+const VOLUMES_EN = [
+  { level:"G¹ · Volume I", title:"The Orthogonal Operator Framework", desc:"Abstract operator algebra and matrix compression. The operator sequence G = U ∘ F ∘ K ∘ C defined and proved. The foundation of the entire series.", isbn:"Print: 979-8-9954416-2-5 · $47", buy:"https://www.paypal.com/paypalme/pgrossi/50.11" },
+  { level:"G² · Volume II", title:"TOGT: Applications Across Domains", desc:"Contact geometry realised. The operator chain C → K → F → U instantiated across physics, biology, linguistics, architecture, and formal computation. The threshold constant g₃₃ = 33.", isbn:"Print: 979-8-9954416-4-9 · $47", buy:"https://www.paypal.com/paypalme/pgrossi/50.11" },
+  { level:"G³ · Volume III", title:"The Mini-Beast: Biological Instantiations", desc:"C1→C2 English for researchers. The operator chain in living systems. The cajueiro principle. Entry point for new readers and advanced language learners.", isbn:"eBook: 979-8-9954416-6-3 · $19.99", buy:"https://www.paypal.com/paypalme/pgrossi/21.31" },
+  { level:"G⁴ · Volume IV", title:"GTCT T1 — The IMPA Edition", desc:"Temporal contact theory formalised. Bilingual EN/PT. 9 axioms · 12 operators · 4 theorems. Science and language integrated from day 21 — CEFR → TO/TOGT. Submitted to IMPA.", isbn:"Included in Complete Series · ISBN 979-8-9954416-8-7", buy:"impa-portal.html" },
+  { level:"G⁵ · Volume V + AXLE", title:"The Seed — Complete Completeness", desc:"Banach Fixed Point Theorem applied to GTCT. Formal Lean 4 verification (AXLE v6.1). 0 axioms beyond Mathlib4. The series proves itself. The fixed point exists.", isbn:"Print: 979-8-9954416-4-9 · eBook: 979-8-9954416-5-6", buy:"https://www.paypal.com/paypalme/pgrossi/213.24" },
+  { level:"G⁶ · Issue 6 — OPEN", title:"The Return: χ(H*(X⁶)) = 33 ∀n", desc:"The sixth application of G to itself. The conjecture states that the Euler characteristic of the sixth-level cohomology equals 33 for all n. Open problem in algebraic topology. AXLE v6.1 marks it as one honest sorry. Join the work.", isbn:"Open conjecture · 2026 · Not the same as g₃₃", buy:null, open:true },
+];
+
+/* ── HELPERS ────────────────────────────────────────────────────────── */
+function chainHTML() {
+  return `<div class="op-chain">
+    <span class="op op-c">C</span><span class="op-arr">∘</span>
+    <span class="op op-k">K</span><span class="op-arr">∘</span>
+    <span class="op op-f">F</span><span class="op-arr">∘</span>
+    <span class="op op-u">U</span>
+    <span style="color:var(--muted);font-size:.8rem;margin-left:.3rem">= G</span>
+  </div>`;
+}
+
+function renderBlock(b) {
+  if (!b) return '';
+  switch(b.type) {
+    case "prose":      return `<p class="block-prose">${b.text}</p>`;
+    case "axiom":      return `<div class="block-axiom"><span class="block-label">${b.label||'Axiom'}</span><div class="block-body">${b.text}</div></div>`;
+    case "theorem":    return `<div class="block-theorem"><span class="block-label">${b.label||'Theorem'}</span><div class="block-body">${b.text}</div></div>`;
+    case "definition": return `<div class="block-definition"><span class="block-label">${b.label||'Definition'}</span><div class="block-body">${b.text}</div></div>`;
+    case "math":       return `<div class="block-math">${b.text.replace(/\n/g,"<br>")}</div>`;
+    case "chain":      return chainHTML();
+    default:           return `<p class="block-prose">${b.text||''}</p>`;
+  }
+}
+
+function renderContent(blocks) { return blocks.map(renderBlock).join(''); }
+
+/* ── POPULATE LANGUAGE SELECTOR ─────────────────────────────────────── */
+const sel = document.getElementById('langSelect');
+const tiers = [
+  ["Tier 1 — Core academic",        ["pt","ru","hi","zh"]],
+  ["Tier 2 — Major world",          ["es","ar","bn","ta"]],
+  ["Tier 3 — Academic + East Asian",["fr","de","ja","ko","it"]],
+  ["Tier 4 — European",             ["nl","pl","uk","el","tr","ro","cs"]],
+  ["Tier 5 — South Asian",          ["te","mr","gu","kn","ml","ur","pa"]],
+  ["Tier 6 — Middle East + Africa", ["sw","am","fa","he","ha"]],
+  ["Tier 7 — Southeast Asian",      ["id","vi","th","my"]],
+  ["Tier 8 — Additional",           ["hu","sr","zh-tw","la"]],
+];
+tiers.forEach(([label, codes]) => {
+  const grp = document.createElement('optgroup');
+  grp.label = label;
+  codes.forEach(code => {
+    const l = LANGUAGES[code];
+    if (!l) return;
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = `${l.flag} ${l.name} · ${l.native}`;
+    grp.appendChild(opt);
+  });
+  sel.appendChild(grp);
+});
+
+/* ── BUILD VOLUME CARDS ─────────────────────────────────────────────── */
+function buildVolumeGrid() {
+  document.getElementById('volumeGrid').innerHTML = VOLUMES_EN.map(v => `
+    <div class="g-card${v.open ? ' open' : ''}">
+      <div class="g-level">${v.level}</div>
+      <div class="g-title">${v.title}</div>
+      <div class="g-desc">${v.desc}</div>
+      <div class="g-isbn">${v.isbn}</div>
+      ${v.buy ? `<a href="${v.buy}" class="g-buy"${v.buy.startsWith('http') ? ' target="_blank"' : ''}>Get →</a>` : ''}
+    </div>
+  `).join('');
+}
+buildVolumeGrid();
+
+/* ── SET LANGUAGE ───────────────────────────────────────────────────── */
+function setLang(code) {
+  const l = LANGUAGES[code];
+  if (!l) return;
+
+  const blocks  = CONTENT[code] || getFallback(code);
+  const enBlocks = CONTENT["en"];
+
+  document.getElementById('contentA').innerHTML = renderContent(enBlocks);
+
+  const colB = document.getElementById('colB');
+  colB.setAttribute('dir', l.dir);
+  colB.style.fontFamily = l.font;
+  colB.className = l.dir === 'rtl' ? 'col-rtl' : '';
+
+  document.getElementById('colBHeader').innerHTML =
+    `<span class="lang-flag">${l.flag}</span>
+     <span>${l.name}</span>
+     <span class="lang-native">${l.native}</span>`;
+
+  document.getElementById('contentB').innerHTML = renderContent(blocks);
+  document.getElementById('scriptNote').textContent = l.script;
+
+  /* RTL flip */
+  const grid = document.getElementById('bilingualGrid');
+  if (l.dir === 'rtl') {
+    grid.style.direction = 'rtl';
+    document.getElementById('colA').style.order = '2';
+    colB.style.order = '1';
+  } else {
+    grid.style.direction = 'ltr';
+    document.getElementById('colA').style.order = '';
+    colB.style.order = '';
+  }
+
+  /* Hero & pull-quote */
+  const ui = UI[code] || {};
+  document.getElementById('heroSub').textContent       = ui.heroSub       || UI["en"].heroSub;
+  document.getElementById('heroSubNative').textContent = ui.heroSubNative || '';
+  document.getElementById('pullQuote').textContent     = ui.pullQuote     || UI["en"].pullQuote;
+  document.getElementById('pullQuoteNative').textContent = ui.pullNative  || '';
+}
+
+/* Init with Portuguese */
+setLang('pt');
+</script>
 
 </body>
 </html>
