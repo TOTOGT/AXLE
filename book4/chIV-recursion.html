@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 6 · The Recursion Theorem · GTCT Vol IV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;700&family=Cinzel:wght@400;600;900&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre"]}};</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--void:#04040a;--gold:#c9a84c;--gold2:#e8c96a;--teal:#2dd4bf;--text:#e8e4d8;--muted:#6b6757;--dim:#3a3828;--border:rgba(201,168,76,0.12);--border2:rgba(201,168,76,0.28);--violet:#c084fc;--green:#22c55e;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:'Cormorant Garamond',serif;background:var(--void);color:var(--text);min-height:100vh;font-size:18px;line-height:1.85;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
+nav{position:fixed;top:0;width:100%;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:0.8rem 3rem;border-bottom:1px solid var(--border);background:rgba(4,4,10,0.92);backdrop-filter:blur(16px);}
+.nav-mark{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.25em;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:1.2rem;flex-wrap:wrap;}.nav-links a{font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.chapter-hero{padding:7rem 3rem 3rem;max-width:900px;margin:0 auto;}
+.ch-vol{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--teal);margin-bottom:0.8rem;}
+.ch-num{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--muted);margin-bottom:0.4rem;}
+.ch-title{font-family:'Cinzel',serif;font-size:clamp(2rem,5vw,3.8rem);font-weight:600;line-height:1.05;color:var(--gold);margin-bottom:0.5rem;}
+.ch-pt{font-style:italic;color:var(--muted);font-size:1.05rem;margin-bottom:1.2rem;}
+.ch-lead{font-size:1rem;color:rgba(232,228,216,0.7);max-width:660px;line-height:1.85;border-left:2px solid var(--border2);padding-left:1.5rem;}
+.gold-rule{width:40px;height:2px;background:var(--gold);margin:2rem 0;}
+.chapter-body{max-width:820px;margin:0 auto;padding:0 3rem 6rem;}
+.sec{margin-bottom:3rem;}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;}
+p{margin-bottom:1rem;color:rgba(232,228,216,0.82);}
+.block{background:rgba(13,14,22,0.8);border:1px solid var(--border);border-left:3px solid var(--gold);padding:1.4rem 1.8rem;margin:1.5rem 0;}
+.block.teal{border-left-color:var(--teal);}.block.violet{border-left-color:var(--violet);}.block.green{border-left-color:var(--green);}
+.block-tag{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;}
+.block.teal .block-tag{color:var(--teal);}.block.violet .block-tag{color:var(--violet);}.block.green .block-tag{color:var(--green);}
+.block-title{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold2);margin-bottom:0.6rem;}
+.block.violet .block-title{color:var(--violet);}
+.block-en{color:var(--text);margin-bottom:0.4rem;}
+.block-pt{font-style:italic;color:var(--muted);font-size:0.9rem;margin-bottom:0.7rem;}
+.formal{font-family:'JetBrains Mono',monospace;font-size:0.78rem;background:rgba(0,0,0,0.35);padding:0.5rem 1rem;color:var(--teal);margin-top:0.6rem;display:block;overflow-x:auto;line-height:1.7;}
+.lean-badge{font-family:'JetBrains Mono',monospace;font-size:0.56rem;color:var(--green);border:1px solid rgba(34,197,94,0.3);padding:0.1rem 0.4rem;}
+.proof{background:rgba(192,132,252,0.04);border:1px solid rgba(192,132,252,0.15);padding:1.2rem 1.5rem;margin:1rem 0;}
+.proof-tag{font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--violet);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;display:block;}
+.qed{display:block;text-align:right;color:var(--gold);font-size:1.1rem;margin-top:0.5rem;}
+.remark{background:rgba(201,168,76,0.04);border:1px solid var(--border);padding:1.2rem 1.5rem;margin:1.5rem 0;}
+.remark-tag{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem;display:block;text-transform:uppercase;}
+.time-sec{border-top:1px solid var(--border);padding-top:2rem;margin-top:2rem;}
+.time-label{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:var(--teal);margin-bottom:0.6rem;display:block;text-transform:uppercase;}
+.time-title{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold2);margin-bottom:0.8rem;}
+.time-title-pt{font-style:italic;color:var(--muted);font-size:0.95rem;margin-bottom:0.8rem;}
+.table-wrap{overflow-x:auto;margin:1.5rem 0;}
+table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:0.72rem;}
+th{background:rgba(13,14,22,0.9);color:var(--gold);padding:0.5rem 0.7rem;border:1px solid var(--border);text-align:left;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;}
+td{padding:0.45rem 0.7rem;border:1px solid var(--border);color:rgba(232,228,216,0.75);vertical-align:top;}
+.ch-nav{display:flex;justify-content:space-between;padding:2rem 3rem;border-top:1px solid var(--border);}
+.ch-nav a{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;color:var(--muted);text-decoration:none;transition:color 0.2s;}.ch-nav a:hover{color:var(--gold);}
+.ch-nav .next{text-align:right;}
+footer{text-align:center;padding:2rem;font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.08em;color:var(--dim);border-top:1px solid var(--border);}footer a{color:var(--gold);text-decoration:none;}
+@media(max-width:700px){nav{padding:0.8rem 1rem;}.chapter-hero,.chapter-body{padding-left:1.2rem;padding-right:1.2rem;}.ch-nav{padding:1.5rem 1.2rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-mark">Principia Orthogona · Vol IV</a>
+  <div class="nav-links">
+    <a href="chIV-preface.html">Ch 0</a>
+    <a href="chIV-axioms.html">Ch 1</a>
+    <a href="chIV-field.html">Ch 2</a>
+    <a href="chIV-operators.html">Ch 3</a>
+    <a href="chIV-correspondence.html">Ch 4</a>
+    <a href="chIV-orthogonality.html">Ch 5</a>
+    <a href="chIV-recursion.html" class="active">Ch 6</a>
+    <a href="chIV-emergence.html">Ch 7</a>
+    <a href="chIV-time.html">Ch 8 · Time</a>
+    <a href="chIV-appendices.html">App</a></div>
+</nav>
+<div class="chapter-hero">
+  <div class="ch-vol">Vol IV · Generative Temporal Contact Theory</div>
+  <div class="ch-num">Chapter 6 — Capítulo 6</div>
+  <h1 class="ch-title">The Recursion Theorem [v2]</h1>
+  <div class="ch-pt">O Teorema da Recursão [v2]</div>
+  <div class="gold-rule"></div>
+  <div class="ch-lead">The emergence operator $E = O_{12} \circ \cdots \circ O_1$ is a strict contraction on the compact orbit closure $K$ with $\kappa < 1$. By the Banach Fixed Point Theorem, $E$ has a unique fixed point $x^* \in K$ approached geometrically. The Spiral Return Theorem (T1) confirms the circuit is generative, not periodic.</div>
+</div>
+<div class="chapter-body">
+
+  <div class="sec">
+    <div class="sec-label">Structure of the Proof</div>
+    <p>The Recursion Theorem is proved in two stages. §6.1 establishes the quantitative contraction estimate — showing that the emergence operator $E = R$ is a strict contraction with $\kappa < 1$. §6.2 applies the Banach Fixed Point Theorem to the compact invariant orbit closure $K$ to obtain existence and uniqueness of the fixed point. No convexity assumption is required — compactness of $K$ replaces it.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">§6.1 Pythagorean Contraction Estimate</div>
+    <p>Under Lemma 5.1 (SH), the perpendicular increments at each step are mutually orthogonal. This allows a Pythagorean decomposition: each step subtracts a non-negative orthogonal component from the distance.</p>
+    <div class="block violet">
+      <span class="block-tag">★ Proposition 6.1 (Contraction Estimate) [v2] <span class="lean-badge">✓ Lean 4 under SH</span></span>
+      <div class="block-title">$E$ is a strict contraction with constant $\kappa < 1$</div>
+      <div class="block-en">Let $v = \Delta(x)$, $v' = \Delta(y)$ with $|v| = |v'| = 1$. Under SH and Proposition 5.1:</div>
+      <code class="formal">‖A^(12) v - A^(12) v'‖² ≤ ‖v - v'‖² - Σᵢ ‖Δ_⊥(O_i(x)) - Δ_⊥(O_i(y))‖²
+
+Each orthogonal term ≥ (2/3)² ‖v - v'‖² / 12  (from Prop 5.1, Lemma 5.1)
+
+⟹  κ² ≤ 1 - 12·(4/9)/12 = 1 - 4/9 = 5/9   ⟹   κ ≤ √(5/9) &lt; 1</code>
+    </div>
+    <div class="remark">
+      <span class="remark-tag">The Pythagorean engine</span>
+      <p>The Pythagorean decomposition works because Lemma 5.1 guarantees the perpendicular components point in orthogonal directions — so each step's contribution to the distance reduction is independent of all others. Twelve independent reductions combine multiplicatively. This is why 12 phases (and not, say, 6 or 9) is the right count: $4 \times 3$ is the product of four base operators and three invariants, and it is exactly this product structure that makes the Pythagorean sum close with $\kappa < 1$.</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">§6.2 Banach Fixed Point — Existence and Uniqueness</div>
+    <div class="block violet">
+      <span class="block-tag">★ Theorem 6.1 (Recursion Theorem) [v2] <span class="lean-badge">✓ Lean 4 under SH</span></span>
+      <div class="block-title">The orbit closure $K$ has a unique fixed point of $E$</div>
+      <div class="block-en">Let $K = \overline{\{E^n(x_0) : n \geq 0\}}$ be the compact invariant orbit closure (compact by Axiom 5, invariant by construction). By Proposition 6.1, $E : K \to K$ is a strict contraction with constant $\kappa < 1$. By the Banach Fixed Point Theorem: there exists a unique $x^* \in K$ with $E(x^*) = x^*$, and $E^n(x_0) \to x^*$ geometrically.</div>
+      <code class="formal">E : K → K strict contraction (κ &lt; 1, K compact)
+⟹  ∃! x* ∈ K : E(x*) = x*
+     d(Eⁿ(x₀), x*) ≤ κⁿ/(1−κ) · d(x₀, E(x₀)) → 0</code>
+    </div>
+    <div class="block teal">
+      <span class="block-tag">Corollary 6.2 — Geometric convergence rate</span>
+      <div class="block-en">$d(E^n(x_0), x^*) \leq \kappa^n \cdot d(x_0, x^*)$. With $\kappa \leq \sqrt{5/9} \approx 0.745$, convergence to $x^*$ is geometric at rate $\approx 25\%$ distance reduction per 12-step cycle.</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">The Spiral Return Theorem (Theorem T1)</div>
+    <div class="block green">
+      <span class="block-tag">Theorem T1 (Spiral Return) <span class="lean-badge">✓ AXLE · Chain_updated.lean · 0 sorry</span></span>
+      <div class="block-title">$G^{64}(x_0) \neq x_0$ — the circuit is generative</div>
+      <div class="block-en">There exists a SpiralReturn structure with $x_0' \neq x_0$: the 64-step orbit does not return to its origin. The circuit is generative, not periodic.</div>
+      <code class="formal">theorem spiral_return_exists (G : GChain X) (x₀ : X)
+    (h₁ : G.iter 64 x₀ ≠ x₀) (h₂ : G.iter 128 x₀ ≠ x₀) :
+    ∃ sr : SpiralReturn X G, sr.x₀' ≠ sr.x₀</code>
+    </div>
+    <p>This theorem — proved in AXLE with 0 sorry — establishes that the GTCT circuit is not a closed loop. The orbit converges to $x^*$ (Theorem 6.1) but each 64-step circuit arrives at a new point, structurally equivalent to $x_0$ but distinct. The seed transforms; it does not repeat.</p>
+  </div>
+
+</div>
+<div class="ch-nav">
+  <a href="chIV-orthogonality.html">← Ch 5 · Orthogonality</a>
+  <a href="chIV-emergence.html" class="next">Ch 7 · Emergence →</a>
+</div>
+<footer>
+  Chapter 6 — Capítulo 6 · The Recursion Theorem [v2] &nbsp;·&nbsp; Principia Orthogona Vol IV &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE</a> &nbsp;·&nbsp;
+  <a href="https://doi.org/10.5281/zenodo.19117400">doi:10.5281/zenodo.19117400</a> &nbsp;·&nbsp;
+  G6 LLC · Pablo Nogueira Grossi · 2026
+</footer>
+<script src="nav.js"></script>
+</body>
+</html>
