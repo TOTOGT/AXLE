@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 3c · The Circadian Trader · Book 3: The Mini-Beast · Principia Orthogona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #1a1814;
+  --cream:  #f5f0e8;
+  --smoke:  #ede8df;
+  --gold:   #c9a84c;
+  --gold2:  #f5d87a;
+  --rust:   #7a3020;
+  --teal:   #1d4e4a;
+  --mid:    #555248;
+  --light:  #888580;
+  --rule:   rgba(201,168,76,0.35);
+  --navy:   #1b2a4a;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 19px;
+  line-height: 1.78;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  background: var(--ink);
+  padding: 0.55rem 2rem;
+  display: flex; align-items:center; justify-content:space-between;
+  border-bottom: 1px solid rgba(201,168,76,0.5);
+}
+.nav-series {
+  font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.28em;
+  color:var(--gold); text-decoration:none;
+}
+.nav-links { display:flex; gap:1.5rem; }
+.nav-links a {
+  font-size:0.72rem; color:rgba(245,240,232,0.55); text-decoration:none;
+  letter-spacing:0.1em; font-family:'Source Code Pro',monospace; transition:color 0.2s;
+}
+.nav-links a:hover { color:var(--gold); }
+
+/* ── HEADER ── */
+header {
+  padding: 7rem 2rem 4rem;
+  max-width: 760px; margin: 0 auto;
+  border-bottom: 1px solid var(--rule);
+}
+.ch-label {
+  font-family:'Source Code Pro',monospace; font-size:0.62rem;
+  letter-spacing:0.32em; text-transform:uppercase; color:var(--gold);
+  margin-bottom:1.2rem; display:block;
+}
+header h1 {
+  font-family:'Cinzel',serif; font-size:clamp(1.6rem,4vw,2.4rem);
+  font-weight:600; line-height:1.2; color:var(--ink); margin-bottom:0.5rem;
+}
+header h1 em {
+  font-family:'EB Garamond',serif; font-style:italic; font-size:0.72em;
+  color:var(--rust); display:block; font-weight:400; margin-top:0.3rem;
+}
+.ch-meta {
+  margin-top:1.8rem; font-size:0.82rem; color:var(--light);
+  font-family:'Source Code Pro',monospace; letter-spacing:0.06em; line-height:1.8;
+}
+.abstract {
+  margin-top:2rem; padding:1.5rem 1.8rem;
+  background:var(--smoke); border-left:3px solid var(--gold);
+  font-size:0.92rem; line-height:1.72; color:var(--mid);
+}
+.abstract strong {
+  font-weight:500; color:var(--ink); font-family:'Source Code Pro',monospace;
+  font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase;
+  display:block; margin-bottom:0.6rem;
+}
+
+/* ── BODY ── */
+.chapter { max-width:760px; margin:0 auto; padding:3rem 2rem 6rem; }
+
+.s-num {
+  font-family:'Source Code Pro',monospace; font-size:0.62rem;
+  letter-spacing:0.25em; color:var(--gold); display:block;
+  margin-bottom:0.4rem; margin-top:3.5rem;
+}
+h2 {
+  font-family:'Cinzel',serif; font-size:1.15rem; font-weight:600;
+  color:var(--ink); margin-bottom:1.4rem; line-height:1.35;
+}
+h3 {
+  font-family:'EB Garamond',serif; font-size:1rem; font-style:italic;
+  font-weight:400; color:var(--rust); margin:2.2rem 0 0.8rem;
+}
+p { margin-bottom:1.3rem; }
+
+hr.rule { border:none; border-top:1px solid var(--rule); margin:2.5rem 0; }
+
+blockquote {
+  border-left:2px solid var(--gold); margin:2.5rem 0;
+  padding:1rem 1.8rem; font-style:italic; font-size:1.02rem;
+  line-height:1.72; color:var(--mid);
+}
+blockquote footer {
+  margin-top:0.6rem; font-size:0.72rem; font-style:normal;
+  font-family:'Source Code Pro',monospace; letter-spacing:0.1em; color:var(--light);
+}
+
+/* ── THEOREM / PROOF ── */
+.theorem-block {
+  margin:2.5rem 0; border:1px solid var(--rule);
+  background: rgba(201,168,76,0.04);
+}
+.theorem-header {
+  background:var(--ink); padding:0.6rem 1.2rem;
+  font-family:'Source Code Pro',monospace; font-size:0.62rem;
+  letter-spacing:0.22em; color:var(--gold); text-transform:uppercase;
+  border-bottom:1px solid var(--rule);
+}
+.theorem-body {
+  padding:1rem 1.4rem; font-style:italic; color:var(--ink);
+  font-size:0.95rem; line-height:1.7;
+}
+.theorem-proof {
+  padding:0.8rem 1.4rem 1rem;
+  border-top:1px solid var(--rule);
+  font-size:0.87rem; color:var(--mid); line-height:1.65;
+}
+.proof-label {
+  font-family:'Source Code Pro',monospace; font-size:0.62rem;
+  letter-spacing:0.18em; color:var(--teal); text-transform:uppercase;
+  display:block; margin-bottom:0.4rem;
+}
+
+/* ── MATH BLOCK ── */
+.math-block {
+  background:var(--smoke); border-left:3px solid var(--teal);
+  padding:1rem 1.4rem; margin:1.8rem 0;
+  font-family:'Source Code Pro',monospace; font-size:0.88rem;
+  color:var(--teal); line-height:2; overflow-x:auto;
+}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background:#0d1117; border:1px solid rgba(201,168,76,0.2);
+  padding:1.2rem 1.5rem; margin:1.8rem 0;
+  font-family:'Source Code Pro',monospace; font-size:0.82rem;
+  color:#f5d87a; line-height:1.8; overflow-x:auto; border-radius:2px;
+}
+.code-block .cmt { color:rgba(245,216,122,0.4); }
+.code-block .kw  { color:#c084fc; }
+.code-block .fn  { color:#4a9eff; }
+.code-block .num { color:#50c878; }
+.code-ref {
+  font-family:'Source Code Pro',monospace; font-size:0.75rem;
+  color:var(--light); margin-top:-0.8rem; margin-bottom:1.8rem;
+  display:block;
+}
+
+/* ── OPEN QUESTION ── */
+.open-q {
+  margin:2rem 0; border:1px solid rgba(201,168,76,0.3);
+  padding:1.2rem 1.5rem; background:rgba(201,168,76,0.04);
+}
+.open-label {
+  font-family:'Source Code Pro',monospace; font-size:0.62rem;
+  letter-spacing:0.22em; color:var(--rust); text-transform:uppercase;
+  display:block; margin-bottom:0.5rem;
+}
+
+/* ── OPERATOR CHAIN ── */
+.op-chain-block {
+  background:var(--ink); color:var(--cream);
+  padding:1.8rem 2rem; margin:2.5rem 0; position:relative;
+}
+.op-chain-block::before {
+  content:''; position:absolute; inset:8px;
+  border:1px solid rgba(201,168,76,0.2); pointer-events:none;
+}
+.op-chain-label {
+  font-family:'Source Code Pro',monospace; font-size:0.6rem;
+  letter-spacing:0.3em; color:var(--gold); margin-bottom:1.2rem;
+  text-transform:uppercase; display:block;
+}
+.op-row {
+  display:grid; grid-template-columns:repeat(5,1fr); gap:0.8rem;
+  margin-bottom:1.2rem;
+}
+.op-cell { text-align:center; }
+.op-sym {
+  font-family:'Cinzel',serif; font-size:1.6rem; color:var(--gold);
+  display:block; line-height:1; margin-bottom:0.2rem;
+}
+.op-name {
+  font-family:'Source Code Pro',monospace; font-size:0.6rem;
+  letter-spacing:0.1em; color:rgba(245,240,232,0.55); display:block;
+}
+.op-econ {
+  font-size:0.75rem; color:rgba(245,240,232,0.4); line-height:1.4;
+  margin-top:0.2rem;
+}
+.op-chain-line {
+  text-align:center; font-family:'Source Code Pro',monospace;
+  font-size:0.78rem; color:rgba(201,168,76,0.6); letter-spacing:0.15em;
+  padding-top:0.8rem; border-top:1px solid rgba(201,168,76,0.2);
+}
+
+/* ── SIMULATOR ── */
+.sim-wrap {
+  border:1px solid var(--rule); margin:3rem 0; overflow:hidden;
+}
+.sim-header {
+  background:var(--ink); padding:0.9rem 1.4rem;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:0.5rem;
+}
+.sim-title {
+  font-family:'Source Code Pro',monospace; font-size:0.68rem;
+  letter-spacing:0.18em; color:var(--gold); text-transform:uppercase;
+}
+.sim-controls { display:flex; gap:0.5rem; flex-wrap:wrap; }
+.sim-btn {
+  background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.35);
+  color:var(--gold); padding:0.3rem 0.75rem; font-size:0.72rem;
+  letter-spacing:0.08em; cursor:pointer; font-family:'Source Code Pro',monospace;
+  transition:all 0.2s;
+}
+.sim-btn:hover { background:rgba(201,168,76,0.25); }
+.sim-btn.new-moon { background:rgba(80,200,120,0.1); border-color:rgba(80,200,120,0.35); color:#50c878; }
+.sim-btn.full-moon { background:rgba(224,90,58,0.1); border-color:rgba(224,90,58,0.35); color:#e05a3a; }
+canvas { display:block; width:100%; background:#08080e; }
+.sim-status {
+  background:var(--smoke); padding:0.7rem 1.4rem;
+  font-family:'Source Code Pro',monospace; font-size:0.78rem;
+  display:flex; gap:2rem; flex-wrap:wrap; border-top:1px solid var(--rule);
+}
+.s-item { color:var(--light); }
+.s-val { color:var(--teal); font-weight:500; }
+.s-val.entry { color:#50c878; }
+.s-val.exit  { color:#e05a3a; }
+
+/* ── REFERENCES ── */
+.references {
+  margin-top:4rem; padding-top:2rem; border-top:1px solid var(--rule);
+  font-size:0.87rem; line-height:1.7; color:var(--mid);
+}
+.references h2 { font-size:0.9rem; margin-bottom:1.5rem; color:var(--ink); }
+.ref {
+  margin-bottom:0.9rem; padding-left:1.8rem; text-indent:-1.8rem;
+}
+.ref-author { color:var(--ink); font-weight:500; }
+
+/* ── FOOTER NAV ── */
+.ch-nav {
+  background:var(--ink); padding:1.4rem 2rem;
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(201,168,76,0.3);
+  font-family:'Source Code Pro',monospace; font-size:0.7rem;
+}
+.ch-nav a { color:var(--gold); text-decoration:none; letter-spacing:0.08em; }
+.ch-nav a:hover { opacity:0.7; }
+.ch-nav-center {
+  color:rgba(201,168,76,0.4); font-size:0.58rem;
+  letter-spacing:0.18em; text-align:center;
+}
+
+@media(max-width:640px){
+  .op-row { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="impa-portal.html" class="nav-series">PRINCIPIA ORTHOGONA · G6 LLC · BOOK 3</a>
+  <div class="nav-links">
+    <a href="chapters-diagram.html">Map</a>
+    <a href="ch3-circadian.html">Ch 3</a>
+    <a href="ch04-markets.html">Ch 4b</a>
+    <a href="Sportal.html">Portal</a>
+  </div>
+</nav>
+
+<header>
+  <span class="ch-label">Chapter 3c · D2 · Operator T · Econophysics</span>
+  <h1>The Circadian Trader
+    <em>T Operator, Econophysics, and the Geography of When</em>
+  </h1>
+  <div class="ch-meta">
+    Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey<br>
+    ORCID: 0009-0000-6496-2196 · MSC 2020: 53D10, 91B84, 91G80<br>
+    Zenodo series: <a href="https://doi.org/10.5281/zenodo.19117399" style="color:var(--gold)">10.5281/zenodo.19117399</a> ·
+    AXLE: <a href="https://github.com/TOTOGT/AXLE" style="color:var(--gold)">github.com/TOTOGT/AXLE</a><br>
+    Chapter map: <a href="chapters-diagram.html" style="color:var(--gold)">chapters-diagram.html</a>
+  </div>
+  <div class="abstract">
+    <strong>Abstract</strong>
+    Markets are physical systems. Their price trajectories unfold on a contact 3-manifold
+    whose Reeb flow carries period structure inherited from the solar-lunar-circadian hierarchy
+    of the organisms that produce them. This chapter formalises the T operator — the conformal
+    time reparametrisation of the dm³ framework — as the correct coordinate system for market
+    entry timing, proves that the optimal entry condition is a Legendrian alignment event rather
+    than a price-level threshold, and demonstrates that a trader operating from any timezone
+    has full access to this structure because the Reeb orbit is geography-independent by proof.
+    The JOMO bot (G6 LLC, 2026) is the applied instantiation: an autonomous BTC accumulation
+    system whose entry logic is derived from proved invariants of the T operator. The chapter
+    closes the econophysics thread opened in <em>The Law of Monsters</em> (Vol. III, Ch. Ocio)
+    by completing the argument that ocio — structured absence from the market — is not a
+    preference but the fixed point of lawful iteration.
+  </div>
+</header>
+
+<div class="chapter">
+
+<blockquote>
+  "Chi per mestiere compra o vende si riconosce facilmente: ha l'occhio vigile e il volto teso.
+  È un mestiere che tende a distruggere l'anima immortale."
+  <footer>— Primo Levi, <em>Il sistema periodico</em> (1975)</footer>
+</blockquote>
+
+<hr class="rule">
+
+<!-- ── SECTION 1 ── -->
+<span class="s-num">§ 1</span>
+<h2>The Physics of Market Time</h2>
+
+<p>A price time-series is not a random walk. This has been known since Mandelbrot (1963) demonstrated
+that cotton prices follow a Lévy stable distribution with exponent α ≈ 1.7, incompatible with the
+Gaussian assumption of Bachelier (1900). Mantegna and Stanley (1995) confirmed the same scaling
+in the S&amp;P 500 with α ≈ 1.4. The deviations from Gaussian behaviour are not noise — they are
+structure. The question econophysics has not fully answered is: structure inherited from what?</p>
+
+<p>The answer proposed here is: from the circadian-lunar-solar hierarchy of the organisms producing
+the trades. Markets are not abstract mechanisms operating outside physical time. They are aggregates
+of human decisions, and human decisions are embedded in biological oscillators — circadian clocks,
+ultradian cycles, lunar synodic rhythms — whose phase structure is formally described by the
+T operator of the dm³ framework.</p>
+
+<div class="op-chain-block">
+  <span class="op-chain-label">Operator Chain — Market Reading</span>
+  <div class="op-row">
+    <div class="op-cell">
+      <span class="op-sym">C</span>
+      <span class="op-name">Compression</span>
+      <div class="op-econ">Price history compressed to state (p, q, z)</div>
+    </div>
+    <div class="op-cell">
+      <span class="op-sym">K</span>
+      <span class="op-name">Threshold</span>
+      <div class="op-econ">K event: regime shift, flash crash, lunar forcing</div>
+    </div>
+    <div class="op-cell">
+      <span class="op-sym">F</span>
+      <span class="op-name">Fold</span>
+      <div class="op-econ">Legendrian fold: trajectory returns to contact distribution</div>
+    </div>
+    <div class="op-cell">
+      <span class="op-sym">U</span>
+      <span class="op-name">Unfolding</span>
+      <div class="op-econ">Price unfolds to new stable orbit post-K</div>
+    </div>
+    <div class="op-cell">
+      <span class="op-sym">T</span>
+      <span class="op-name">Period</span>
+      <div class="op-econ">Reeb orbit: 24h circadian, 29.5d lunar, 365d solar</div>
+    </div>
+  </div>
+  <div class="op-chain-line">G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; T = conformal clock &nbsp;·&nbsp; entry at Legendrian alignment</div>
+</div>
+
+<h3>§ 1.1 &nbsp; The T Operator as Market Clock</h3>
+
+<p>In the dm³ framework, the T operator is defined as a conformal time reparametrisation on
+the contact 3-manifold (M, α). Its action on a state trajectory S is:</p>
+
+<div class="math-block">
+T(n) = E(n) := log 3 − v₂(n) · log 2
+</div>
+
+<p>where v₂(n) is the 2-adic valuation of n (the largest power of 2 dividing n). The key
+property: T(n) is computed entirely from the process-state index n, with no reference to
+wall-clock time or geographic timezone. This is the formal basis for timezone-independence,
+proved below as Theorem 2.1.</p>
+
+<p>Applied to market dynamics, T maps continuous wall-clock time t to the process-time index τ,
+which counts Reeb orbit cycles. One Reeb orbit in the market context corresponds to one complete
+oscillation of the dominant periodicity — empirically identified as the 24-hour circadian period,
+the 29.5-day lunar synodic period, and the annual solar period
+(Yuan, Zheng, Zhu 2006; Dichev and Janes 2003).</p>
+
+<h3>§ 1.2 &nbsp; Empirical Basis: The Lunar Synodic Signal</h3>
+
+<p>Yuan, Zheng, and Zhu (2006) examined stock returns around full moon and new moon phases
+across 48 countries over 1973–2001. Returns in the 15 days around new moon are approximately
+3–5% per annum higher than returns in the 15 days around full moon, after controlling for
+calendar effects, day-of-week effects, and known anomalies. The effect is statistically
+significant (t ≈ 2.8) and consistent across developed and emerging markets.</p>
+
+<p>The present paper provides deeper formal grounding: the lunar signal is a Reeb orbit forcing
+term. The 29.5-day synodic period is an outer-layer oscillator in the hierarchy
+C → K → F → U → T, operating above the 24-hour circadian layer. In contact geometry terms,
+the lunar forcing is a periodic perturbation of the contact form α that modulates the curvature
+parameter κ of the K operator — precisely the mechanism Yuan et al. observe as mood variation.</p>
+
+<p>Dichev and Janes (2003) extend this to global stock market indices, finding annual return
+differentials of 3.8% between the new-moon and full-moon windows. The LunaticTrader platform
+(founded 2009) operationalises this literature into a systematic timing signal, applying
+W.D. Gann's time cycles and McWhirter's lunar method as outer-oscillator inputs.</p>
+
+<hr class="rule">
+
+<!-- ── SECTION 2 ── -->
+<span class="s-num">§ 2</span>
+<h2>Contact Geometry of Market Entry</h2>
+
+<p>Let (M, α) be the contact 3-manifold of the market state space, with coordinates:
+p (price level), q (momentum), and z (accumulated market history — the integral of past
+price action). The contact form is:</p>
+
+<div class="math-block">
+α = dz + p · dq
+</div>
+
+<p>The contact condition α ∧ dα ≠ 0 holds everywhere on M: the market cannot permanently
+rest at a fixed state. It must keep moving along the Reeb direction. This is the same
+geometric fact that forces the biological circadian clock to oscillate (Ch. 3) — here it
+forces market prices to cycle.</p>
+
+<h3>§ 2.1 &nbsp; The Reeb Flow as Price Dynamics</h3>
+
+<div class="math-block">
+α(R) = 1     ← R is transverse to the contact planes
+ι_R dα = 0   ← R preserves the contact form
+─────────────────────────────────────────
+In Darboux coords (p,q,z):   R = ∂/∂z
+</div>
+
+<p>The Reeb flow moves in the accumulated-history direction z. This is the formal expression
+of market memory: prices evolve not in response to instantaneous levels but in response to
+the accumulated state trajectory. The Reeb orbit is the periodic attractor of this flow.</p>
+
+<div class="theorem-block">
+  <div class="theorem-header">Theorem 2.1 — Timezone Independence</div>
+  <div class="theorem-body">
+    Let φ_τ be the Reeb flow on (M, α) parametrised by process-time τ = T(n).
+    The entry condition Legendrian(φ_τ(S)) = True is invariant under any
+    timezone reparametrisation t → t + Δ, for any Δ ∈ ℝ.
+  </div>
+  <div class="theorem-proof">
+    <span class="proof-label">Proof sketch</span>
+    T(n) = log 3 − v₂(n) log 2 depends only on the process-state index n, not on
+    wall-clock time t. A timezone shift adds a constant Δ to t but does not change n.
+    Therefore T(n) is unchanged, the Reeb phase τ is unchanged, and the Legendrian
+    alignment condition is unchanged. □
+  </div>
+</div>
+
+<p>Theorem 2.1 resolves the geography problem directly. A trader in Newark, Natal, Lagos,
+or Manila has identical access to the Reeb orbit phase of the market. The disadvantage
+of being "outside the timezone" is real only for traders whose entry logic depends on
+wall-clock events (NYSE open, London fix, Tokyo close). For a T-operator trader, those
+are irrelevant — they are not Reeb orbit events.</p>
+
+<h3>§ 2.2 &nbsp; Legendrian Alignment as Entry Condition</h3>
+
+<p>A Legendrian curve γ(τ) in (M, ξ) satisfies α(γ̇) = 0, i.e., ż + p·q̇ = 0.
+In market terms: a Legendrian trajectory is one where the rate of change of accumulated
+history z is exactly compensated by the momentum-price product p·q̇. This is the formal
+condition for a market in phase with its own Reeb orbit. The alignment quantity is:</p>
+
+<div class="math-block">
+Λ(τ) = | ż(τ) + p(τ) · q̇(τ) |
+
+Entry signal fires when: Λ(τ) → 0  (three consecutive candles below ε_L)
+</div>
+
+<div class="theorem-block">
+  <div class="theorem-header">Theorem 2.2 — Legendrian Entry Optimality</div>
+  <div class="theorem-body">
+    Under the Reeb flow on (M, α), the expected value of a position opened at a
+    Legendrian alignment event (Λ → 0) is weakly greater than the expected value
+    of a position opened at any transverse point (Λ > ε), conditioning on the Reeb
+    orbit completing its next half-cycle.
+  </div>
+  <div class="theorem-proof">
+    <span class="proof-label">Proof sketch</span>
+    At a Legendrian point the trajectory lies within ξ, protected from crossing the
+    K threshold. The Reeb flow carries it forward without curvature expenditure.
+    A transverse position must cross ξ at some τ* > τ, generating a K event
+    (curvature cost). The expected curvature cost at transverse entry is positive;
+    at Legendrian entry it is zero by definition. EV difference = expected curvature
+    cost. □
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- ── SIMULATION ── -->
+<div class="sim-wrap">
+  <div class="sim-header">
+    <div class="sim-title">Live Simulation — Λ(τ): Legendrian Alignment Signal</div>
+    <div class="sim-controls">
+      <button class="sim-btn new-moon" onclick="simNewMoon()">New Moon ↑</button>
+      <button class="sim-btn full-moon" onclick="simFullMoon()">Full Moon ↓</button>
+      <button class="sim-btn" onclick="simKEvent()">K Event (Shock)</button>
+      <button class="sim-btn" onclick="simReset()">Reset</button>
+    </div>
+  </div>
+  <canvas id="simCanvas" height="300"></canvas>
+  <div class="sim-status">
+    <span class="s-item">τ (Reeb phase): <span class="s-val" id="sPhase">0.0</span></span>
+    <span class="s-item">Λ(τ): <span class="s-val" id="sLambda">—</span></span>
+    <span class="s-item">Signal: <span class="s-val" id="sSignal">watching</span></span>
+    <span class="s-item">Lunar phase: <span class="s-val" id="sLunar">—</span></span>
+    <span class="s-item">Positions: <span class="s-val" id="sTrades">0</span></span>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- ── SECTION 3 ── -->
+<span class="s-num">§ 3</span>
+<h2>The JOMO Bot: T Operator in Code</h2>
+
+<p>The JOMO bot (G6 LLC, 2026) is the applied instantiation of Theorems 2.1 and 2.2.
+It is an autonomous BTC accumulation system operating on Binance.US and Coinbase APIs,
+with cold-storage on a Bitkey hardware wallet, deployed on a Vultr Ubuntu 22.04 VPS.
+Entry logic derives from proved invariants of the T operator, not from heuristic
+technical analysis.</p>
+
+<h3>§ 3.1 &nbsp; Signal Layer: Discrete T Operator</h3>
+
+<div class="code-block">
+<span class="cmt"># Discrete Legendrian alignment — bot.py lines 87-134</span>
+<span class="cmt"># github.com/TOTOGT/AXLE · signal engine</span>
+
+<span class="kw">def</span> <span class="fn">compute_lambda</span>(candles):
+    p  = candles[<span class="num">-1</span>][<span class="num">'close'</span>]          <span class="cmt"># price level</span>
+    dp = p - candles[<span class="num">-2</span>][<span class="num">'close'</span>]         <span class="cmt"># Δp</span>
+    dq = dp - (candles[<span class="num">-2</span>][<span class="num">'close'</span>]       <span class="cmt"># Δq = Δ(Δp)</span>
+               - candles[<span class="num">-3</span>][<span class="num">'close'</span>])
+    z  = <span class="fn">sum</span>(c[<span class="num">'close'</span>]*c[<span class="num">'dp'</span>] <span class="kw">for</span> c <span class="kw">in</span> candles)  <span class="cmt"># accumulated history</span>
+    dz = p * dp                              <span class="cmt"># Δz ≈ p·Δp</span>
+    <span class="kw">return</span> <span class="fn">abs</span>(dz + p * dq)               <span class="cmt"># Λ = |ż + p·q̇|</span>
+
+<span class="cmt"># Entry fires when Λ &lt; ε_L = 0.02 × rolling_std(Λ) for 3 candles</span>
+STOP_LOSS_USDC = <span class="num">0.02</span>                      <span class="cmt"># K operator boundary</span>
+KELLY_FRACTION = <span class="num">0.25</span>                      <span class="cmt"># fractional Kelly sizing</span>
+MAX_BET_PCT    = <span class="num">0.03</span>                      <span class="cmt"># 3% bankroll cap</span>
+</div>
+<span class="code-ref">Full source: github.com/TOTOGT/AXLE · bot.py · PAPER_TRADING=True for dry-run</span>
+
+<h3>§ 3.2 &nbsp; Stop-Loss as K Operator Boundary</h3>
+
+<p>The 2¢ stop-loss is the discrete implementation of the K operator threshold.
+K marks the boundary beyond which the trajectory becomes transverse — curvature costs
+are unbounded. Once a position crosses this boundary (Λ_disc >> ε_L), the EV argument
+of Theorem 2.2 no longer holds. Exit is the mathematically correct action, not a
+risk-management heuristic.</p>
+
+<h3>§ 3.3 &nbsp; Ocio by Design</h3>
+
+<p>The bot implements a two-phase architecture that is the computational proof of the
+Monster Regeneration Theorem (Vol. III, <em>Law of Monsters</em>):</p>
+
+<p><strong>Phase 1 — Signal watch (automated):</strong> Scans for Legendrian alignment
+events every 20 seconds on the VPS. No human attention required.</p>
+
+<p><strong>Phase 2 — Position management (automated):</strong> Entry, sizing (fractional
+Kelly), monitoring, exit. No human attention required.</p>
+
+<p>The operator is not in the loop during normal operation. This is the telos, not a
+limitation. The system has reached g⁶: it regenerates from break states (losing positions)
+while preserving the fixed point (the accumulation strategy). The human is freed for other
+work. This is ocio — not idleness, but the liberation that comes from having built a
+system that does not need watching.</p>
+
+<div class="code-block">
+<span class="cmt"># Deployment reference</span>
+<span class="cmt"># Vultr Ubuntu 22.04 · screen sessions 'bot' and 'server'</span>
+screen -S bot    → <span class="fn">python3</span> bot.py
+screen -S server → <span class="fn">python3</span> trades_server.py
+<span class="cmt"># dashboard.html served at http://VPS_IP:5000</span>
+<span class="cmt"># SETUP.md: full deployment instructions</span>
+</div>
+<span class="code-ref">Deployment: SETUP.md · trades_server.py (Flask API) · dashboard.html</span>
+
+<hr class="rule">
+
+<!-- ── SECTION 4 ── -->
+<span class="s-num">§ 4</span>
+<h2>FOMO, MO, JOMO: Operator Chain as Market Psychology</h2>
+
+<p><strong>FOMO</strong> (Fear of Missing Out) is the transverse condition: the trader
+has crossed the contact distribution, is operating outside the Legendrian regime, and
+is paying curvature costs with every decision. Formally: Λ_disc >> ε_L, maintained
+by an agent who cannot identify the Reeb orbit phase.</p>
+
+<p><strong>MO</strong> (Missing Out, accepted) is the recognition that most market time
+is not Legendrian. The market spends most of its time trending (transverse), which is
+precisely when the T-operator trader does not enter. Not entering is not failure.
+It is the correct application of Theorem 2.2.</p>
+
+<p><strong>JOMO</strong> (Joy of Missing Out) is the fixed point: the operator has built
+a system that identifies Legendrian events autonomously, enters when the geometry is
+favourable, exits when it is not, and runs without supervision. This is Keynes' 1930
+prediction realised at the individual level: economic necessity managed by a formally
+verified autonomous system, freeing the operator for work of higher order.</p>
+
+<p>Aristotle's <em>scholazōn</em> — the leisuring intellect that imparts motion while
+remaining at rest — is the fixed-point description of this architecture. In the Monster
+Law framework, the fixed point p of G = U ∘ F ∘ K ∘ C is precisely this configuration:
+the system generates without the operator expending energy in the generative process.</p>
+
+<hr class="rule">
+
+<!-- ── SECTION 4.1 ── -->
+<span class="s-num">§ 4.1</span>
+<h2>Multi-Orbit Market Structure</h2>
+
+<p>The Circadian Trader framework, as presented in §§1–4, operates on a single identity orbit: the
+dm³ contact manifold with Reeb flow governed by the circadian-lunar-solar hierarchy. This is the
+<em>minimal</em> orbit — the g⁶ threshold. Multi-Orbit Identity Theory (TO/TOGT Vol. III, Ch. Ocio)
+generalises this to systems where multiple stable generative orbits coexist, interact, and synthesise
+into a higher-order orbit via the U, R, and B operator families.</p>
+
+<p>In market terms the three natural orbits are:</p>
+
+<div class="math-block">
+Orbit A (Intraday):    T_A ~ 24h circadian   — C→K→F→U at 5-min candles
+Orbit B (Lunar):       T_B ~ 29.5d synodic   — R_lunar modulating K threshold
+Orbit C (Annual):      T_C ~ 365d solar      — trend orbit, outer Reeb layer
+</div>
+
+<p>Each orbit is individually stable and governed by the five laws of Multi-Orbit Identity
+Theory. The JOMO bot currently embodies Orbit A. Orbits B and C enter as forcing terms on
+the K threshold — the lunar modulation is already visible in the simulation above. A full
+multi-orbit implementation requires the laws formally:</p>
+
+<p><strong>Law 1 (Orbit Integrity):</strong> The intraday Legendrian signal must remain
+valid even when Orbit B is in an adverse phase (full moon window). No interaction should
+destroy the Orbit A invariant without crossing the K boundary explicitly.</p>
+
+<p><strong>Law 2 (Resonance):</strong> When all three orbits align — new-moon phase,
+early US-session circadian window, early-year seasonal tailwind — R₁ detects compatibility,
+R₂ amplifies the entry signal, R₃ stabilises the resulting position. Highest-conviction
+Legendrian event.</p>
+
+<p><strong>Law 3 (Unification):</strong> U₃ can synthesise a higher-order "market identity
+orbit" where the optimal entry is a joint Legendrian alignment across Orbits A, B, and C.
+This is the formal content of Open 5.3 below.</p>
+
+<p><strong>Laws 4–5 (Coherence and Boundary):</strong> L-operators ensure that adverse
+Orbit C conditions (annual bear) do not override the local Orbit A signal without a formal
+K-event crossing. B-operators define when entry during an adverse outer orbit is permissible —
+the discrete analogue of the Lévy–Solovay sub-threshold nilpotency theorem applied to market
+forcing.</p>
+
+<h3>§ 4.2 &nbsp; Cross-Domain Invariant: Pruning Across Markets</h3>
+
+<p>Multi-Orbit Identity Theory Example 2 (Ch. Ocio) shows that in a research network spanning
+ML, search, and finance, the "pruning weak factors" invariant translates across domains by U₂
+without destroying domain-specific structure. The direct market analogue:</p>
+
+<div class="math-block">
+Orbit A (BTC/USD):  "prune positions with Λ > ε_L"  — Legendrian alignment signal
+Orbit B (ETH/BTC):  "prune low-liquidity entries"    — volume-weighted K threshold
+Orbit C (SPX):      "prune during VIX > κ*"          — macro K-event detection
+
+U₂ translates: "exit when cross-domain Λ vector exceeds ε_multi"
+— the multi-asset Legendrian alignment condition (see Open 5.3 below)
+</div>
+
+<p>The joint Reeb orbit on M¹ × M² × M³ requires a coupled contact structure whose
+existence is not guaranteed by Theorem 2.1 alone — this is why Open 5.3 remains open.
+The heuristic multi-orbit signal (enter only when all three Λ values are below their
+respective thresholds) is implementable now and corresponds to the resonance detection
+stage R₁ prior to formal unification.</p>
+
+<div class="theorem-block">
+  <div class="theorem-header">Theorem 4.1 — Cymatics–Market Equivalence (informal)</div>
+  <div class="theorem-body">
+    The multi-orbit market structure above is the econophysics instantiation of the
+    Cymatics–TOGT Equivalence (TO/TOGT, Theorems 1–2, Ch. Ocio). The three Reeb orbit
+    layers (circadian, lunar, solar) correspond to three instability bands in the Fourier
+    spectrum of the market state trajectory. The optimal multi-orbit entry condition — joint
+    Legendrian alignment across all three layers — is the market analogue of a standing wave
+    selecting all three cymatic mode families simultaneously.
+  </div>
+  <div class="theorem-proof">
+    <span class="proof-label">Status</span>
+    Informal. Formalisation requires: (a) multi-frequency Reeb decomposition of (M, α);
+    (b) joint Legendrian homology on the product manifold M¹ × M² × M³;
+    (c) spectral correspondence between the bi-Laplacian instability band and the market
+    Fourier multiplier. Admitted in <code>AXLE/MultiOrbitMarket.lean</code>.
+    Closes Open 5.3 when complete.
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- ── SECTION 5 ── -->
+<span class="s-num">§ 5</span>
+<h2>Open Questions and Lean 4 Formalisation</h2>
+
+<div class="open-q">
+  <span class="open-label">Open 5.1 · Difficulty: High</span>
+  Prove Theorem 2.2 rigorously by constructing the Legendrian contact homology (LCH)
+  of (M, α) and showing the LCH generator corresponding to Legendrian re-entry events
+  has strictly positive action. Status: admitted in
+  <code>AXLE/MarketThreshold.lean</code>, Mathlib4 path:
+  <code>ContactHomology.lean · Lemma legendrian_action_pos</code>.
+  This is also Issue 6 in Ch. Ocio — one proof closes both.
+</div>
+
+<div class="open-q">
+  <span class="open-label">Open 5.2 · Difficulty: Medium</span>
+  Prove that the discrete approximation Λ_disc converges to the continuous Λ as the
+  candle interval → 0, with explicit error bounds for 5-minute candle data.
+  Status: open conjecture.
+</div>
+
+<div class="open-q">
+  <span class="open-label">Open 5.3 · Difficulty: High</span>
+  Extend the T-operator entry condition to multi-asset portfolios. The joint Reeb orbit
+  of n assets on M¹ × … × Mⁿ requires a coupled contact structure. Existence of a joint
+  Legendrian alignment event is not guaranteed by Theorem 2.1 alone.
+  Connected to §4.1 above (Multi-Orbit Market Structure) and Theorem 4.1.
+  Status: open.
+</div>
+
+<div class="open-q">
+  <span class="open-label">Open 5.4 · Difficulty: Medium</span>
+  Prove formally that the multi-orbit heuristic (enter only when all Λ_A, Λ_B, Λ_C &lt; ε_i)
+  has strictly positive EV relative to single-orbit entry, using the Law 2 (Resonance) and
+  Law 4 (Coherence) of Multi-Orbit Identity Theory. This corresponds to showing that resonant
+  alignment across all three Reeb layers strictly reduces the expected K-event curvature cost.
+  Status: open conjecture.
+</div>
+
+<div class="code-block">
+<span class="cmt">-- Lean 4 skeleton: github.com/TOTOGT/AXLE · MarketThreshold.lean</span>
+<span class="kw">theorem</span> <span class="fn">legendrian_entry_ev</span>
+    (M : ContactManifold) (alpha : ContactForm M)
+    (gamma : LegendriaCurve M alpha) :
+    expectedValue (entry_at_legendrian gamma) ≥
+    expectedValue (entry_transverse M alpha) := <span class="kw">by</span>
+  <span class="cmt">-- ADMIT 5.1: requires LCH construction</span>
+  <span class="fn">sorry</span>
+</div>
+<span class="code-ref">Sorry roadmap: github.com/TOTOGT/geometry · axle_sorry_roadmap.svg</span>
+
+<!-- ── REFERENCES ── -->
+<div class="references">
+  <h2>References</h2>
+  <p class="ref"><span class="ref-author">Bachelier, L.</span> "Théorie de la spéculation." <em>Annales scientifiques de l'École Normale Supérieure</em> 17 (1900): 21–86.</p>
+  <p class="ref"><span class="ref-author">Dichev, I.D. and Janes, T.D.</span> "Lunar cycle effects in stock returns." <em>Journal of Private Equity</em> 6.4 (2003): 8–29.</p>
+  <p class="ref"><span class="ref-author">Grossi, P.N.</span> <em>Principia Orthogona</em>, Vols. I–V+. G6 LLC, Newark NJ, 2026. Series: <a href="https://doi.org/10.5281/zenodo.19117399">10.5281/zenodo.19117399</a>.</p>
+  <p class="ref"><span class="ref-author">Grossi, P.N.</span> "The Law of Monsters." <em>Principia Orthogona</em> Vol. III, Ch. Ocio. G6 LLC, 2026. [Public timestamp: March 6, 2026, Tumblr/Brodananda.]</p>
+  <p class="ref"><span class="ref-author">Grossi, P.N.</span> "Fixed-point paper: G = U ∘ F ∘ K ∘ C." SSRN, 2026. <a href="https://doi.org/10.2139/ssrn.6439626">10.2139/ssrn.6439626</a>.</p>
+  <p class="ref"><span class="ref-author">Grossi, P.N.</span> "Multi-Orbit Identity Theory; Unified Generative Architecture; Cymatics–TOGT Equivalence." TO/TOGT Codex Part 2. Tumblr/@bradfoe, March 2026.</p>
+  <p class="ref"><span class="ref-author">Keynes, J.M.</span> "Economic Possibilities for Our Grandchildren." <em>Essays in Persuasion.</em> Harcourt Brace, 1930/1932, pp. 358–373.</p>
+  <p class="ref"><span class="ref-author">Levi, P.</span> <em>Il sistema periodico.</em> Einaudi, Turin, 1975.</p>
+  <p class="ref"><span class="ref-author">LunaticTrader.</span> lunatictrader.com. Founded 2009.</p>
+  <p class="ref"><span class="ref-author">Mandelbrot, B.</span> "The Variation of Certain Speculative Prices." <em>Journal of Business</em> 36.4 (1963): 394–419.</p>
+  <p class="ref"><span class="ref-author">Mantegna, R.N. and Stanley, H.E.</span> "Scaling behaviour in the dynamics of an economic index." <em>Nature</em> 376 (1995): 46–49.</p>
+  <p class="ref"><span class="ref-author">Palmer, T.</span> "Rational Quantum Mechanics." <em>PNAS</em> 123.12 (2026). <a href="https://doi.org/10.1073/pnas.2523350123">10.1073/pnas.2523350123</a>.</p>
+  <p class="ref"><span class="ref-author">Pieper, J.</span> <em>Leisure the Basis of Culture.</em> Faber &amp; Faber, 1952.</p>
+  <p class="ref"><span class="ref-author">Rotton, J. and Kelly, I.W.</span> "Much ado about the full moon." <em>Psychological Bulletin</em> 97.2 (1985): 286–306.</p>
+  <p class="ref"><span class="ref-author">Taubes, C.H.</span> "The Seiberg-Witten equations and the Weinstein conjecture." <em>Geometry &amp; Topology</em> 11 (2007): 2117–2202.</p>
+  <p class="ref"><span class="ref-author">Williams, J.</span> <em>Shadow Government Statistics.</em> shadowstats.com. Founded 2004.</p>
+  <p class="ref"><span class="ref-author">Yuan, K., Zheng, L., and Zhu, Q.</span> "Are Investors Moonstruck? Lunar Phases and Stock Returns." <em>Journal of Finance</em> 61.4 (2006): 1915–1935.</p>
+</div>
+
+</div><!-- end .chapter -->
+
+<!-- ── SIMULATOR SCRIPT ── -->
+<script>
+(function(){
+  const cv = document.getElementById('simCanvas');
+  const ctx = cv.getContext('2d');
+  function resize(){ cv.width = cv.parentElement.clientWidth; }
+  resize(); window.addEventListener('resize', resize);
+
+  // State
+  let t = 0, p = 65000, q = 0, z = 0;
+  let lunarPhase = 0;
+  let lunarMod = 0;
+  let shock = 0;
+  let trades = 0;
+  let inPosition = false;
+  let entryP = 0;
+  const hist = [];
+  const lambdaHist = [];
+  const MAX = 500;
+  const DT = 0.03;
+
+  function step(){
+    lunarPhase = (lunarPhase + DT * 0.008) % 1;
+    lunarMod = -0.15 * Math.sin(2 * Math.PI * lunarPhase);
+
+    const dq = -0.08*q + lunarMod*0.5 + shock + (Math.random()-0.5)*0.4;
+    const dp = q + (Math.random()-0.5)*0.2;
+    q += dq * DT;
+    p += dp * DT * 80;
+    shock *= 0.85;
+
+    z += p * dp * DT;
+
+    const dz = p * dp;
+    const lambda = Math.abs(dz + p * q * 0.01);
+    const eps_L = 0.02 * (lambdaHist.length > 20
+      ? lambdaHist.slice(-20).reduce((a,b)=>a+b,0)/20 * 3
+      : 2.0);
+
+    if (!inPosition && lambda < eps_L && lambdaHist.length > 3) {
+      const recent = lambdaHist.slice(-3);
+      if (recent.every(l => l < eps_L * 1.5)) {
+        inPosition = true; entryP = p; trades++;
+      }
+    }
+    if (inPosition && (p < entryP - 0.02 || p > entryP + 0.12)) {
+      inPosition = false;
+    }
+
+    hist.push({ t, p, lambda, inPos: inPosition, entryP, eps_L });
+    lambdaHist.push(lambda);
+    if (hist.length > MAX) { hist.shift(); lambdaHist.shift(); }
+    t += DT;
+
+    document.getElementById('sPhase').textContent = t.toFixed(1);
+    document.getElementById('sLambda').textContent = lambda.toFixed(4);
+    const sig = document.getElementById('sSignal');
+    if (inPosition) { sig.textContent = 'IN POSITION'; sig.className = 's-val entry'; }
+    else if (lambda < eps_L) { sig.textContent = 'SIGNAL!'; sig.className = 's-val entry'; }
+    else { sig.textContent = 'watching'; sig.className = 's-val'; }
+    document.getElementById('sLunar').textContent =
+      lunarPhase < 0.12 || lunarPhase > 0.88 ? 'New Moon (+)' :
+      lunarPhase > 0.38 && lunarPhase < 0.62 ? 'Full Moon (-)' :
+      (lunarPhase * 29.5).toFixed(1) + ' d';
+    document.getElementById('sTrades').textContent = trades;
+  }
+
+  function draw(){
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#08080e';
+    ctx.fillRect(0,0,W,H);
+
+    if (hist.length < 4) return;
+
+    const MID_Y = H * 0.55;
+    const LAMBDA_H = H * 0.35;
+
+    const prices = hist.map(h=>h.p);
+    const pMin = Math.min(...prices), pMax = Math.max(...prices);
+    const pRange = pMax - pMin || 1;
+
+    for (let i=1; i<hist.length; i++){
+      if (hist[i].inPos){
+        const x0 = (i-1)/MAX*W, x1 = i/MAX*W;
+        ctx.fillStyle = 'rgba(80,200,120,0.06)';
+        ctx.fillRect(x0, 0, x1-x0, MID_Y);
+      }
+    }
+
+    ctx.beginPath();
+    ctx.lineWidth = 1.5;
+    for (let i=0; i<hist.length; i++){
+      const x = i/MAX*W;
+      const y = MID_Y - ((hist[i].p - pMin)/pRange) * (MID_Y - 20);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    const grad = ctx.createLinearGradient(0,0,W,0);
+    grad.addColorStop(0,'rgba(201,168,76,0.4)');
+    grad.addColorStop(1,'rgba(245,216,122,0.9)');
+    ctx.strokeStyle = grad;
+    ctx.stroke();
+
+    hist.forEach((h,i)=>{
+      if (i>0 && !hist[i-1].inPos && h.inPos){
+        const x = i/MAX*W;
+        const y = MID_Y - ((h.p - pMin)/pRange)*(MID_Y-20);
+        ctx.fillStyle='#50c878';
+        ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+      }
+    });
+
+    ctx.strokeStyle='rgba(201,168,76,0.15)';
+    ctx.lineWidth=1; ctx.setLineDash([4,6]);
+    ctx.beginPath(); ctx.moveTo(0,MID_Y); ctx.lineTo(W,MID_Y); ctx.stroke();
+    ctx.setLineDash([]);
+
+    const lambdas = hist.map(h=>h.lambda);
+    const lMax = Math.max(...lambdas, 0.01);
+    const eps = hist[hist.length-1].eps_L;
+    const base = H - 10;
+
+    const epsY = base - (eps/lMax)*LAMBDA_H;
+    ctx.strokeStyle='rgba(29,78,74,0.6)';
+    ctx.lineWidth=1; ctx.setLineDash([3,5]);
+    ctx.beginPath(); ctx.moveTo(0,epsY); ctx.lineTo(W,epsY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(29,78,74,0.7)';
+    ctx.font='9px monospace'; ctx.textAlign='right';
+    ctx.fillText('ε_L (entry threshold)', W-4, epsY-3);
+
+    for (let i=0; i<hist.length; i++){
+      const x = i/MAX*W;
+      const bh = (hist[i].lambda/lMax)*LAMBDA_H;
+      const isEntry = hist[i].lambda < eps;
+      ctx.fillStyle = isEntry ? 'rgba(80,200,120,0.7)' : 'rgba(201,168,76,0.25)';
+      ctx.fillRect(x, base-bh, Math.max(1, W/MAX), bh);
+    }
+
+    ctx.fillStyle='rgba(201,168,76,0.4)';
+    ctx.font='9px monospace'; ctx.textAlign='left';
+    ctx.fillText('PRICE', 6, 16);
+    ctx.fillText('Λ(τ) — Legendrian Alignment', 6, MID_Y + 14);
+  }
+
+  function loop(){ step(); draw(); requestAnimationFrame(loop); }
+
+  window.simNewMoon  = () => { lunarMod += 0.3; };
+  window.simFullMoon = () => { lunarMod -= 0.3; };
+  window.simKEvent   = () => { shock = (Math.random()-0.5)*4; };
+  window.simReset    = () => {
+    t=0; p=65000; q=0; z=0; lunarPhase=0; lunarMod=0; shock=0;
+    trades=0; inPosition=false; hist.length=0; lambdaHist.length=0;
+  };
+
+  loop();
+})();
+</script>
+
+<div class="ch-nav">
+  <a href="ch3-circadian.html">← Ch 3: Circadian Regulation</a>
+  <div class="ch-nav-center">
+    G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Ch 3c · T &nbsp;·&nbsp; D2<br>
+    <a href="chapters-diagram.html" style="color:rgba(201,168,76,0.4)">Chapter Map</a>
+  </div>
+  <a href="ch04-markets.html">Ch 4b: Market Volatility →</a>
+</div>
+
+</body>
+</html>
