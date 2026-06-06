@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cap. 2 — Modelagem e Aplicações · CBM 1997 · IMPA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[['$','$']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root{--bg:#0e0f0d;--bg2:#141610;--bg3:#1c1f18;--bg4:#232620;--surface:#1a1d17;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.13);--ink:#e8e4d8;--ink2:#b8b4a6;--ink3:#7a7870;--green:#4caf7d;--green-dim:#2d6b4a;--green-bg:rgba(76,175,125,0.08);--amber:#d4a44c;--amber-dim:#7a5e28;--amber-bg:rgba(212,164,76,0.08);--mono:'JetBrains Mono',monospace;--serif:'EB Garamond',Georgia,serif;--display:'Cormorant Garamond',Georgia,serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.8;min-height:100vh}
+.lang-bar{background:var(--bg4);border-bottom:1px solid var(--border);padding:.45rem 1.5rem;display:flex;align-items:center;gap:1rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);position:sticky;top:0;z-index:200}
+.lang-btn{background:none;border:1px solid var(--border2);color:var(--ink2);font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.3em .8em;cursor:pointer;border-radius:2px;transition:all .15s}
+.lang-btn.active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.lang-btn:not(.active):hover{color:var(--ink)}
+.lang-bar-right{margin-left:auto;color:var(--ink3);font-size:.52rem}
+.site-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;white-space:nowrap;position:sticky;top:38px;z-index:190}
+.site-nav::-webkit-scrollbar{display:none}
+.nav-brand{font-family:var(--mono);font-size:.6rem;font-weight:500;letter-spacing:.18em;color:var(--amber);padding:.9rem 1.2rem .9rem 0;border-right:1px solid var(--border);margin-right:.8rem;flex-shrink:0;text-decoration:none}
+.nav-links{display:flex;align-items:center;list-style:none}
+.nav-links a{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink3);text-decoration:none;padding:.9rem .7rem;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--green);border-bottom-color:var(--green)}
+.ch-hero{background:var(--bg2);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.ch-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at -10% 120%,rgba(76,175,125,.06) 0%,transparent 55%),radial-gradient(ellipse 40% 50% at 110% 0%,rgba(212,164,76,.04) 0%,transparent 50%);pointer-events:none}
+.ch-wm{position:absolute;right:-.05em;bottom:-.2em;font-family:var(--display);font-size:clamp(14rem,28vw,34rem);font-weight:300;color:rgba(255,255,255,.022);line-height:1;pointer-events:none;user-select:none;letter-spacing:-.05em}
+.ch-hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:4rem 2rem 3.5rem}
+.ch-eyebrow{font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
+.ch-eyebrow::before{content:'⚜';opacity:.5;font-size:.7em}
+.ch-num-display{font-family:var(--display);font-size:.9rem;font-weight:300;color:var(--ink3);margin-bottom:.3rem;letter-spacing:.08em}
+.ch-hero-inner h1{font-family:var(--display);font-size:clamp(2rem,5vw,3.6rem);font-weight:300;line-height:1.1;color:var(--ink);letter-spacing:-.01em;margin-bottom:.5em}
+.ch-hero-inner h1 em{font-style:italic;color:var(--ink2)}
+.ch-meta{display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem;padding-top:1.8rem;border-top:1px solid var(--border)}
+.meta-pill{font-family:var(--mono);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);background:var(--bg3);border:1px solid var(--border2);padding:.3em .75em;border-radius:2px}
+.meta-pill.green{color:var(--green);border-color:var(--green-dim);background:var(--green-bg)}
+.ch-nav-pills{margin-left:auto;display:flex;gap:.5rem}
+.ch-nav-pill{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);border:1px solid var(--amber-dim);background:var(--amber-bg);padding:.3em .75em;border-radius:2px;text-decoration:none;transition:background .15s,color .15s}
+.ch-nav-pill:hover{background:var(--amber);color:#1a1200}
+.impa-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:.9rem 2rem;display:flex;align-items:center;gap:1.2rem}
+.impa-logo{font-family:var(--display);font-size:1.4rem;font-weight:600;letter-spacing:.1em;color:var(--green)}
+.impa-div{width:1px;height:1.8rem;background:var(--border2)}
+.impa-detail{font-family:var(--mono);font-size:.52rem;letter-spacing:.09em;color:var(--ink3);text-transform:uppercase;line-height:1.7}
+/* SECTION NAV */
+.sec-nav{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:3rem}
+.sec-nav a{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);border:1px solid var(--border);padding:.3em .75em;border-radius:2px;text-decoration:none;transition:all .15s}
+.sec-nav a:hover{color:var(--green);border-color:var(--green-dim);background:var(--green-bg)}
+.body-wrap{max-width:780px;margin:0 auto;padding:3rem 2rem 6rem}
+body.lang-en [data-pt]{display:none}
+body.lang-pt [data-en]{display:none}
+.sec-label{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:.8rem}
+.section-block{margin-bottom:4.5rem;padding-bottom:4.5rem;border-bottom:1px solid var(--border);scroll-margin-top:90px}
+.section-block:last-child{border-bottom:none}
+h2.sec-h{font-family:var(--display);font-size:1.85rem;font-weight:300;color:var(--ink);margin-bottom:.25em;display:flex;align-items:baseline;gap:.8rem}
+h2.sec-h::after{content:'';flex:1;height:1px;background:var(--border2)}
+h3.sub-h{font-family:var(--display);font-size:1.25rem;font-weight:600;color:var(--ink2);margin:2rem 0 .7rem}
+h4.ssub-h{font-family:var(--mono);font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin:1.8rem 0 .7rem}
+p.prose{font-size:.97rem;color:var(--ink2);margin-bottom:1.1em;text-align:justify;hyphens:auto;line-height:1.8}
+p.prose strong{color:var(--ink);font-weight:600}
+p.prose em{font-style:italic}
+.drop-cap::first-letter{font-family:var(--display);float:left;font-size:4em;line-height:.72;margin:.06em .1em 0 0;color:var(--green);font-weight:600}
+.eq-box{background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--green-dim);padding:1.3rem 1.8rem;margin:1.8rem 0;overflow-x:auto}
+.eq-box.amber{border-left-color:var(--amber-dim)}
+.eq-label{font-family:var(--mono);font-size:.48rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:.65rem}
+.eq-note{font-size:.8rem;color:var(--ink3);margin-top:.8rem;line-height:1.55}
+.example{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber-dim);padding:1.3rem 1.6rem;margin:1.8rem 0}
+.example-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--amber);margin-bottom:.7rem}
+/* CASE STUDY CARD */
+.case-card{background:var(--surface);border:1px solid var(--border);padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden}
+.case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green-dim)}
+.case-card.amber::before{background:var(--amber-dim)}
+.case-num{font-family:var(--mono);font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+.case-card.amber .case-num{color:var(--amber)}
+.case-title{font-family:var(--display);font-size:1.2rem;font-weight:600;color:var(--ink);margin-bottom:.8rem}
+/* PRIME VISUAL */
+.prime-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:4px;margin:1.5rem 0}
+.prime-cell{height:40px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.7rem;border-radius:2px;border:1px solid var(--border)}
+.prime-cell.prime{background:var(--green-bg);border-color:var(--green-dim);color:var(--green);font-weight:500}
+.prime-cell.nonprime{background:var(--bg3);color:var(--ink3)}
+/* TAGS */
+.tag-row{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem}
+.tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;color:var(--green);background:var(--green-bg);border:1px solid var(--green-dim);padding:.22em .55em;border-radius:2px}
+.tag.amber{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-dim)}
+/* FOOTER NAV */
+.ch-footer-nav{display:flex;justify-content:space-between;align-items:center;padding:2rem 0;border-top:1px solid var(--border);margin-top:4rem}
+.cfn-link{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-decoration:none;display:flex;align-items:center;gap:.5em;border:1px solid var(--amber-dim);padding:.5em 1em;border-radius:2px;transition:background .15s}
+.cfn-link:hover{background:var(--amber-bg)}
+.cfn-center{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;text-align:center}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.8rem;text-align:center;font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+footer a{color:var(--ink3);text-decoration:none}
+footer a:hover{color:var(--ink)}
+.fleur{color:var(--amber);margin:0 .5em}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.ch-hero-inner>*{animation:fadeUp .6s ease both}
+.ch-hero-inner>*:nth-child(1){animation-delay:.05s}.ch-hero-inner>*:nth-child(2){animation-delay:.12s}.ch-hero-inner>*:nth-child(3){animation-delay:.2s}.ch-hero-inner>*:nth-child(4){animation-delay:.3s}.ch-hero-inner>*:nth-child(5){animation-delay:.42s}
+@media(max-width:640px){.ch-nav-pills{display:none}.ch-wm{display:none}}
+</style>
+</head>
+<body class="lang-pt">
+
+<div class="lang-bar">
+  <span>Idioma · Language</span>
+  <button class="lang-btn active" onclick="setLang('pt')" id="btn-pt">Português</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">English</button>
+  <span class="lang-bar-right">Nachbin &amp; Tabak · CBM 1997 · Cap. 2 · pp. 28–80</span>
+</div>
+
+<nav class="site-nav">
+  <a href="https://totogt.github.io/geometry/index.html" class="nav-brand">⚜ PRINCIPIA ORTHOGONA ⚜</a>
+  <ul class="nav-links">
+    <li><a href="https://totogt.github.io/geometry/prelude.html">Prelude</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch1.html">Ch 1</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch2.html">Ch 2</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch3-circadian.html">Ch 3</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch4-neural.html">Ch 4</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch5-immune.html">Ch 5</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch6-resonance.html">Ch 6</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch7-crystalline.html">Ch 7</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch8-axiomatic.html">Ch 8</a></li>
+    <li><a href="https://totogt.github.io/geometry/impa-portal.html" class="active">IMPA</a></li>
+    <li><a href="https://totogt.github.io/geometry/Sportal.html">Portal</a></li>
+  </ul>
+</nav>
+
+<header class="ch-hero">
+  <div class="ch-wm" aria-hidden="true">2</div>
+  <div class="ch-hero-inner">
+    <div class="ch-eyebrow">Equações Diferenciais em Modelagem Matemática Computacional</div>
+    <div class="ch-num-display" data-pt>Capítulo 2 · pp. 28–80</div>
+    <div class="ch-num-display" data-en>Chapter 2 · pp. 28–80</div>
+    <h1>
+      <span data-pt>Modelagem e <em>Aplicações</em></span>
+      <span data-en>Modeling and <em>Applications</em></span>
+    </h1>
+    <div class="ch-meta">
+      <span class="meta-pill green">§ 2.1 · §2.2 · §2.3 · §2.4</span>
+      <span class="meta-pill" data-pt>4 estudos de caso</span><span class="meta-pill" data-en>4 case studies</span>
+      <span class="meta-pill">Lotka-Volterra · Advecção-difusão · Enchentes</span>
+      <div class="ch-nav-pills">
+        <a class="ch-nav-pill" href="CBM-ch1.html">← <span data-pt>Cap. 1</span><span data-en>Ch. 1</span></a>
+        <a class="ch-nav-pill" href="CBM-apendA.html"><span data-pt>Apênd. A</span><span data-en>App. A</span> →</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="impa-bar">
+  <div class="impa-logo">IMPA</div>
+  <div class="impa-div"></div>
+  <div class="impa-detail">Nachbin &amp; Tabak · 21º Colóquio Brasileiro de Matemática · 1997</div>
+  <a class="ch-nav-pill" style="margin-left:auto" href="https://math.nyu.edu/~tabak/publications/CBM.pdf" target="_blank">PDF ↗</a>
+</div>
+
+<main class="body-wrap">
+
+  <!-- SECTION NAV -->
+  <nav class="sec-nav" aria-label="Sections">
+    <a href="#sec21" data-pt>§2.1 Populações</a><a href="#sec21" data-en>§2.1 Populations</a>
+    <a href="#sec22" data-pt>§2.2 Cigarras &amp; números primos</a><a href="#sec22" data-en>§2.2 Cicadas &amp; primes</a>
+    <a href="#sec23" data-pt>§2.3 Dispersão de poluentes</a><a href="#sec23" data-en>§2.3 Pollutant dispersion</a>
+    <a href="#sec24" data-pt>§2.4 Enchentes em rios</a><a href="#sec24" data-en>§2.4 River flooding</a>
+  </nav>
+
+  <!-- §2.1 POPULATIONS -->
+  <section class="section-block" id="sec21">
+    <div class="sec-label">§ 2.1</div>
+    <h2 class="sec-h">
+      <span data-pt>Modelo para a dinâmica de populações</span>
+      <span data-en>Model for population dynamics</span>
+    </h2>
+
+    <p class="prose drop-cap" data-pt>Vamos começar exercitando o processo de tradução português → matematiquês. Este modelo é usado para simular diversos tipos de populações, variando de micro-organismos a animais competindo no contexto presa-predador. Como exemplo ilustrativo, começamos com o caso mais simples possível. Seja $N(t)$ a população de uma dada espécie em um dado instante $t$.</p>
+    <p class="prose drop-cap" data-en>Let us begin by practicing the Portuguese → mathese translation process. This model is used to simulate various types of populations, ranging from micro-organisms to animals competing in a predator-prey context. As an illustrative example, we start with the simplest possible case. Let $N(t)$ be the population of a given species at time $t$.</p>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Equação de crescimento exponencial (2.1)</div>
+      <div class="eq-label" data-en>Exponential growth equation (2.1)</div>
+      $$\frac{dN}{dt}(t) = rN(t), \quad N(0) = N_0$$
+      <p class="eq-note" data-pt>$r &gt; 0$: crescimento (taxa de natalidade dominante); $r &lt; 0$: decrescimento (mortalidade dominante). Solução exata: $N(t) = N_0 e^{rt}$. Problema sério: crescimento ilimitado para $r > 0$.</p>
+      <p class="eq-note" data-en>$r &gt; 0$: growth (birth rate dominant); $r &lt; 0$: decay (mortality dominant). Exact solution: $N(t) = N_0 e^{rt}$. Serious problem: unlimited growth for $r > 0$.</p>
+    </div>
+
+    <h3 class="sub-h" data-pt>A equação logística</h3>
+    <h3 class="sub-h" data-en>The logistic equation</h3>
+
+    <p class="prose" data-pt>O modelo exponencial não é realista: a população cresce indefinidamente. Precisamos de um modelo que capture a desaceleração natural quando a população se torna muito grande (limitação de recursos). Propõe-se $f(N) = r\left(1 - \dfrac{N}{M}\right)$, onde $M$ é a capacidade de carga do ambiente.</p>
+    <p class="prose" data-en>The exponential model is not realistic: population grows without bound. We need a model that captures the natural slowdown when the population becomes very large (resource limitation). We propose $f(N) = r\left(1 - \dfrac{N}{M}\right)$, where $M$ is the carrying capacity of the environment.</p>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Equação logística (2.2)</div>
+      <div class="eq-label" data-en>Logistic equation (2.2)</div>
+      $$\frac{dN}{dt}(t) = f(N)\,N(t) = r\!\left(1 - \frac{N}{M}\right)N(t), \quad N(0) = N_0$$
+      <p class="eq-note" data-pt>Propriedades: (a) crescimento exponencial para $N \ll M$; (b) desaceleração quando $N \in [M/2,\, M]$; (c) $f(N) &lt; 0$ para $N \gg 1$ → mortalidade dominante.</p>
+      <p class="eq-note" data-en>Properties: (a) exponential growth for $N \ll M$; (b) slowdown when $N \in [M/2,\, M]$; (c) $f(N) &lt; 0$ for $N \gg 1$ → mortality dominant.</p>
+    </div>
+
+    <h3 class="sub-h" data-pt>O sistema presa-predador (Lotka-Volterra)</h3>
+    <h3 class="sub-h" data-en>The predator-prey system (Lotka-Volterra)</h3>
+
+    <p class="prose" data-pt>O modelo mais completo inclui duas espécies: presa $N(t)$ e predador $P(t)$. A interação mútua (os predadores comem as presas; a disponibilidade de presas sustenta os predadores) produz um ciclo populacional oscilatório — um dos fenômenos mais belos da dinâmica não-linear.</p>
+    <p class="prose" data-en>The more complete model includes two species: prey $N(t)$ and predator $P(t)$. Their mutual interaction (predators eat prey; prey availability sustains predators) produces oscillatory population cycles — one of the most beautiful phenomena in nonlinear dynamics.</p>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Sistema de Lotka-Volterra (presa-predador)</div>
+      <div class="eq-label" data-en>Lotka-Volterra system (predator-prey)</div>
+      $$\frac{dN}{dt} = \alpha N - \beta NP \qquad \text{(presa / prey)}$$
+      $$\frac{dP}{dt} = -\gamma P + \delta NP \qquad \text{(predador / predator)}$$
+      <p class="eq-note" data-pt>$\alpha$: taxa de crescimento das presas; $\beta$: taxa de predação; $\gamma$: taxa de mortalidade dos predadores; $\delta$: eficiência de conversão de presas em predadores.</p>
+      <p class="eq-note" data-en>$\alpha$: prey growth rate; $\beta$: predation rate; $\gamma$: predator mortality rate; $\delta$: prey-to-predator conversion efficiency.</p>
+    </div>
+
+    <div class="tag-row">
+      <span class="tag" data-pt>Pontos de equilíbrio</span><span class="tag" data-en>Equilibrium points</span>
+      <span class="tag" data-pt>Campo vetorial</span><span class="tag" data-en>Vector field</span>
+      <span class="tag">MATLAB: LV.m</span>
+      <span class="tag" data-pt>Órbitas fechadas</span><span class="tag" data-en>Closed orbits</span>
+    </div>
+  </section>
+
+  <!-- §2.2 CICADAS -->
+  <section class="section-block" id="sec22">
+    <div class="sec-label">§ 2.2</div>
+    <h2 class="sec-h">
+      <span data-pt>Por que as expectativas de vida das cigarras são números primos?</span>
+      <span data-en>Why are cicada life cycles prime numbers?</span>
+    </h2>
+
+    <h3 class="sub-h" data-pt>2.2.1 · Cigarras periódicas</h3>
+    <h3 class="sub-h" data-en>2.2.1 · Periodic cicadas</h3>
+
+    <p class="prose drop-cap" data-pt>Você provavelmente já escutou cigarras cantando numa preguiçosa tarde de verão no campo. No entanto, talvez você não tenha se dado conta de que as cigarras passam a maior parte de suas vidas debaixo da terra, saindo por apenas duas semanas — período em que cantam, se reproduzem e morrem. As duas espécies de cigarras que vivem na parte leste e sul dos Estados Unidos são surpreendentes: passam, respectivamente, <strong>dezessete</strong> e <strong>treze</strong> anos debaixo da terra!</p>
+    <p class="prose drop-cap" data-en>You have probably heard cicadas singing on a lazy summer afternoon in the countryside. However, you may not have realized that cicadas spend most of their lives underground, emerging for just two weeks — during which they sing, reproduce, and die. The two cicada species living in the eastern and southern United States are remarkable: they spend <strong>seventeen</strong> and <strong>thirteen</strong> years underground, respectively!</p>
+
+    <p class="prose" data-pt>De repente, elas aparecem todas de uma vez, em poucos dias, em áreas de algumas centenas de quilômetros de raio. Os ovos são colocados em árvores; as ninfas caem na terra e penetram no solo. O comportamento estranho dessas cigarras periódicas requer uma explicação: por que elas esperam por tanto tempo? Uma explicação plausível é dada por Jay Gould e envolve o conceito de <em>saciação do predador</em> ("predator satiation").</p>
+    <p class="prose" data-en>Suddenly they all emerge at once, within a few days, over areas spanning hundreds of kilometers. Eggs are laid in trees; nymphs fall to the ground and burrow into the soil. The strange behavior of these periodic cicadas requires explanation: why do they wait so long? A plausible explanation was given by Jay Gould and involves the concept of <em>predator satiation</em>.</p>
+
+    <!-- PRIME NUMBER GRID -->
+    <div style="margin:2rem 0">
+      <div style="font-family:var(--mono);font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:.8rem" data-pt>Números 1–20: primos destacados — ciclos das cigarras</div>
+      <div style="font-family:var(--mono);font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:.8rem" data-en>Numbers 1–20: primes highlighted — cicada cycles</div>
+      <div class="prime-grid" id="prime-grid"></div>
+      <div style="font-size:.78rem;color:var(--ink3);margin-top:.5rem" data-pt>13 e 17 são primos: não são múltiplos de nenhum número menor (exceto 1). Isso é a chave evolutiva.</div>
+      <div style="font-size:.78rem;color:var(--ink3);margin-top:.5rem" data-en>13 and 17 are prime: not multiples of any smaller number (except 1). This is the evolutionary key.</div>
+    </div>
+
+    <h3 class="sub-h" data-pt>2.2.2 · Ressonância</h3>
+    <h3 class="sub-h" data-en>2.2.2 · Resonance</h3>
+
+    <p class="prose" data-pt>Cada aparição das cigarras funciona como um pequeno "empurrão" na população dos pássaros predadores. Se esses empurrões acontecerem regularmente, a um múltiplo da expectativa de vida dos pássaros, essa espécie irá prosperar — levando eventualmente as cigarras à extinção. As cigarras mais adequadas à sobrevivência são aquelas que emergem num número <strong>primo</strong> de anos, pois primos não são múltiplos de nenhum número (a expectativa de vida dos predadores) — garantindo que os picos raramente coincidam.</p>
+    <p class="prose" data-en>Each cicada emergence acts as a small "push" on the bird predator population. If these pushes happen regularly, at a multiple of the birds' life expectancy, that species will thrive — eventually driving the cicadas to extinction. The cicadas best suited for survival are those that emerge after a <strong>prime</strong> number of years, since primes are not multiples of any number (the predators' life expectancy) — ensuring that peaks rarely coincide.</p>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Condição de ressonância — quando dois ciclos se sobrepõem</div>
+      <div class="eq-label" data-en>Resonance condition — when two cycles overlap</div>
+      $$\text{lcm}(T_\text{cigarra},\, T_\text{predador}) = T_\text{cigarra} \times T_\text{predador} \iff \gcd(T_\text{cigarra}, T_\text{predador}) = 1$$
+      <p class="eq-note" data-pt>Se $T_\text{cigarra}$ é primo e $T_\text{predador}$ não é múltiplo de $T_\text{cigarra}$, os picos coincidem apenas a cada $T_\text{cigarra} \times T_\text{predador}$ anos — raramente.</p>
+      <p class="eq-note" data-en>If $T_\text{cicada}$ is prime and $T_\text{predator}$ is not a multiple of $T_\text{cicada}$, peaks coincide only every $T_\text{cicada} \times T_\text{predator}$ years — very rarely.</p>
+    </div>
+
+    <h3 class="sub-h" data-pt>2.2.3 · Um modelo para as cigarras</h3>
+    <h3 class="sub-h" data-en>2.2.3 · A model for the cicadas</h3>
+
+    <p class="prose" data-pt>O modelo matemático usa um oscilador forçado para representar as populações de cigarras e pássaros. As cigarras fornecem um impulso periódico (força externa) sobre a dinâmica dos pássaros. A ressonância ocorre quando a frequência do forçamento (1/$T_\text{cigarra}$) coincide com a frequência natural do oscilador (1/$T_\text{predador}$).</p>
+    <p class="prose" data-en>The mathematical model uses a forced oscillator to represent cicada and bird populations. The cicadas provide a periodic impulse (external force) on the bird dynamics. Resonance occurs when the forcing frequency ($1/T_\text{cicada}$) coincides with the natural frequency of the oscillator ($1/T_\text{predator}$).</p>
+
+    <div class="eq-box amber">
+      <div class="eq-label" data-pt>Oscilador forçado — modelo das cigarras</div>
+      <div class="eq-label" data-en>Forced oscillator — cicada model</div>
+      $$\frac{d^2 P}{dt^2} + \omega_0^2 P = F_0 \sum_k \delta(t - kT)$$
+      <p class="eq-note" data-pt>$P(t)$: população de pássaros; $\omega_0 = 2\pi/T_\text{pred}$: frequência natural; $F_0$: amplitude do impulso; $\delta$: delta de Dirac (impulso instantâneo na emergência).</p>
+      <p class="eq-note" data-en>$P(t)$: bird population; $\omega_0 = 2\pi/T_\text{pred}$: natural frequency; $F_0$: impulse amplitude; $\delta$: Dirac delta (instantaneous impulse at emergence).</p>
+    </div>
+
+    <div class="tag-row">
+      <span class="tag">MATLAB: oscil.m · cigarras.m</span>
+      <span class="tag" data-pt>Números primos: 13 · 17</span><span class="tag" data-en>Primes: 13 · 17</span>
+      <span class="tag" data-pt>Jay Gould · saciação do predador</span><span class="tag" data-en>Jay Gould · predator satiation</span>
+    </div>
+  </section>
+
+  <!-- §2.3 POLLUTANTS -->
+  <section class="section-block" id="sec23">
+    <div class="sec-label">§ 2.3</div>
+    <h2 class="sec-h">
+      <span data-pt>Modelo para a dispersão de poluentes no ar</span>
+      <span data-en>Model for air pollutant dispersion</span>
+    </h2>
+
+    <p class="prose drop-cap" data-pt>Nesta seção apresentaremos um modelo simplificado para estudar a dispersão de poluentes no ar. Considere uma chaminé de fábrica soltando fumaça tóxica com concentração inicial $\alpha$. Uma pessoa a distância $d$ da fábrica consulta sobre a qualidade do ar na vizinhança. Vamos considerar a pior situação possível: o vento sopra na direção da casa com velocidade máxima $U$.</p>
+    <p class="prose drop-cap" data-en>In this section we present a simplified model to study air pollutant dispersion. Consider a factory chimney emitting toxic smoke with initial concentration $\alpha$. A person at distance $d$ from the factory wants to know about air quality in the neighborhood. We consider the worst possible situation: wind blows toward the house at maximum speed $U$.</p>
+
+    <p class="prose" data-pt>Dois mecanismos físicos são relevantes: (1) <strong>Advecção</strong> — a nuvem é transportada pelo vento sem mudar de forma; (2) <strong>Difusão</strong> — a nuvem se espalha ao mesmo tempo em que a concentração diminui, como uma gota de tinta em água.</p>
+    <p class="prose" data-en>Two physical mechanisms are relevant: (1) <strong>Advection</strong> — the cloud is transported by the wind without changing shape; (2) <strong>Diffusion</strong> — the cloud spreads while the concentration decreases, like a drop of ink in water.</p>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Equação de advecção pura (2.15)</div>
+      <div class="eq-label" data-en>Pure advection equation (2.15)</div>
+      $$\frac{\partial c}{\partial t} + U\frac{\partial c}{\partial x} = 0, \quad c(x,0) = c_0(x)$$
+      <p class="eq-note" data-pt>Solução exata: $c(x,t) = c_0(\xi)$, $\xi(x,t) = x - Ut$. O perfil inicial $c_0$ se translada à direita com velocidade $U$, sem deformação.</p>
+      <p class="eq-note" data-en>Exact solution: $c(x,t) = c_0(\xi)$, $\xi(x,t) = x - Ut$. The initial profile $c_0$ translates rightward at speed $U$, without distortion.</p>
+    </div>
+
+    <div class="eq-box amber">
+      <div class="eq-label" data-pt>Equação de advecção-difusão (EDP completa)</div>
+      <div class="eq-label" data-en>Advection-diffusion equation (full PDE)</div>
+      $$\frac{\partial c}{\partial t} + U\frac{\partial c}{\partial x} = \nu\frac{\partial^2 c}{\partial x^2}$$
+      <p class="eq-note" data-pt>$\nu &gt; 0$: coeficiente de difusão (viscosidade cinemática). A difusão atenua gradientes e espalha a nuvem. Discretização: diferenças finitas no espaço e no tempo.</p>
+      <p class="eq-note" data-en>$\nu &gt; 0$: diffusion coefficient (kinematic viscosity). Diffusion damps gradients and spreads the cloud. Discretization: finite differences in space and time.</p>
+    </div>
+
+    <h3 class="sub-h" data-pt>Discretização numérica</h3>
+    <h3 class="sub-h" data-en>Numerical discretization</h3>
+
+    <p class="prose" data-pt>Usando diferenças finitas centrais no espaço e Euler explícito no tempo (método FTCS — Forward Time, Centered Space):</p>
+    <p class="prose" data-en>Using centered finite differences in space and explicit Euler in time (FTCS method — Forward Time, Centered Space):</p>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Método FTCS — advecção-difusão discreta</div>
+      <div class="eq-label" data-en>FTCS method — discrete advection-diffusion</div>
+      $$c_j^{n+1} = c_j^n - U\frac{\Delta t}{2\Delta x}\bigl(c_{j+1}^n - c_{j-1}^n\bigr) + \nu\frac{\Delta t}{\Delta x^2}\bigl(c_{j+1}^n - 2c_j^n + c_{j-1}^n\bigr)$$
+      <p class="eq-note" data-pt>Condição de estabilidade (CFL): $U\Delta t/\Delta x \leq 1$ e $\nu\Delta t/\Delta x^2 \leq 1/2$. Para o método implícito, usar o algoritmo de Thomas (sistema tridiagonal).</p>
+      <p class="eq-note" data-en>Stability condition (CFL): $U\Delta t/\Delta x \leq 1$ and $\nu\Delta t/\Delta x^2 \leq 1/2$. For the implicit method, use the Thomas algorithm (tridiagonal system).</p>
+    </div>
+
+    <div class="tag-row">
+      <span class="tag">MATLAB: advex.m · advim.m · crank.m</span>
+      <span class="tag">CFL</span>
+      <span class="tag" data-pt>Algoritmo de Thomas</span><span class="tag" data-en>Thomas algorithm</span>
+      <span class="tag" data-pt>Sistema tridiagonal</span><span class="tag" data-en>Tridiagonal system</span>
+    </div>
+  </section>
+
+  <!-- §2.4 FLOODS -->
+  <section class="section-block" id="sec24">
+    <div class="sec-label">§ 2.4</div>
+    <h2 class="sec-h">
+      <span data-pt>Modelo para enchentes em rios</span>
+      <span data-en>Model for river flooding</span>
+    </h2>
+
+    <p class="prose drop-cap" data-pt>Nesta seção estudaremos um modelo simples para a simulação de enchentes em rios. A estrutura matemática desses modelos tem muito em comum com o modelo de advecção e difusão de poluentes estudado na seção anterior. Os dois modelos podem ser combinados para estudar a difusão de poluentes em rios.</p>
+    <p class="prose drop-cap" data-en>In this section we study a simple model for the simulation of river flooding. The mathematical structure of these models has much in common with the pollutant advection-diffusion model studied in the previous section. The two models can be combined to study pollutant diffusion in rivers.</p>
+
+    <p class="prose" data-pt>Um fato óbvio sobre o mapa de um rio: <em>o rio é muito mais longo do que largo</em>. Isso nos permite reduzir o modelo de 2D para 1D (ao longo do eixo $x$ do rio), trabalhando com a seção transversal média $S(x,t)$ do escoamento.</p>
+    <p class="prose" data-en>An obvious fact about a river map: <em>the river is much longer than it is wide</em>. This allows us to reduce the model from 2D to 1D (along the river axis $x$), working with the average cross-sectional area $S(x,t)$ of the flow.</p>
+
+    <h3 class="sub-h" data-pt>2.4.1 · Um modelo cinemático</h3>
+    <h3 class="sub-h" data-en>2.4.1 · A kinematic model</h3>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Lei de conservação — equação de enchente (2.4.1)</div>
+      <div class="eq-label" data-en>Conservation law — flood equation (2.4.1)</div>
+      $$\frac{\partial S}{\partial t} + \frac{\partial}{\partial x}\!\left(\frac{S^2}{2}\right) = 0 \qquad \Longleftrightarrow \qquad S_t + S\, S_x = 0$$
+      <p class="eq-note" data-pt>Lei de conservação hiperbólica não-linear. $S(x,t)$: seção transversal do rio. A forma não-conservativa $S_t + S S_x = 0$ é mais simples de analisar mas menos adequada para ondas de choque.</p>
+      <p class="eq-note" data-en>Nonlinear hyperbolic conservation law. $S(x,t)$: river cross-section. The non-conservative form $S_t + S S_x = 0$ is simpler to analyze but less suitable for shock waves.</p>
+    </div>
+
+    <h3 class="sub-h" data-pt>2.4.2 · Modelos numéricos</h3>
+    <h3 class="sub-h" data-en>2.4.2 · Numerical models</h3>
+
+    <div class="example">
+      <div class="example-label" data-pt>Método não-conservativo — Rio1.m</div>
+      <div class="example-label" data-en>Non-conservative method — Rio1.m</div>
+      <p class="prose" data-pt>Discretização retrógrada no espaço, progressiva no tempo (Euler explícito):</p>
+      <p class="prose" data-en>Backward spatial differencing, forward in time (explicit Euler):</p>
+      $$S_j^{n+1} = S_j^n - \frac{\Delta t}{\Delta x}\, S_j^n\!\left(S_j^n - S_{j-1}^n\right)$$
+      <p class="prose" data-pt>Simples, mas pode produzir soluções fisicamente incorretas na presença de ondas de choque (descontinuidades).</p>
+      <p class="prose" data-en>Simple, but may produce physically incorrect solutions in the presence of shock waves (discontinuities).</p>
+    </div>
+
+    <div class="example">
+      <div class="example-label" data-pt>Método conservativo — Rio2.m</div>
+      <div class="example-label" data-en>Conservative method — Rio2.m</div>
+      <p class="prose" data-pt>Discretização da forma divergente (conservativa) da EDP:</p>
+      <p class="prose" data-en>Discretization of the divergence (conservative) form of the PDE:</p>
+      $$S_j^{n+1} = S_j^n - \frac{\Delta t}{\Delta x}\!\left[\frac{(S_j^n)^2}{2} - \frac{(S_{j-1}^n)^2}{2}\right]$$
+      <p class="prose" data-pt>Conserva a quantidade física correta e produz resultados corretos mesmo na presença de ondas de choque. Preferível para simulações realistas.</p>
+      <p class="prose" data-en>Conserves the correct physical quantity and produces correct results even in the presence of shock waves. Preferred for realistic simulations.</p>
+    </div>
+
+    <h3 class="sub-h" data-pt>2.4.3 · Um exercício de escoamento no tráfego</h3>
+    <h3 class="sub-h" data-en>2.4.3 · A traffic flow exercise</h3>
+
+    <p class="prose" data-pt>A mesma equação de conservação $\rho_t + q(\rho)_x = 0$ modela o tráfego de automóveis, onde $\rho(x,t)$ é a densidade de carros e $q(\rho) = \rho v(\rho)$ é o fluxo (carros/hora). Um engarrafamento é matematicamente idêntico a uma onda de choque numa enchente.</p>
+    <p class="prose" data-en>The same conservation equation $\rho_t + q(\rho)_x = 0$ models automobile traffic, where $\rho(x,t)$ is car density and $q(\rho) = \rho v(\rho)$ is the flow (cars/hour). A traffic jam is mathematically identical to a shock wave in a flood.</p>
+
+    <div class="tag-row">
+      <span class="tag">MATLAB: Rio1.m · Rio2.m</span>
+      <span class="tag" data-pt>Ondas de choque</span><span class="tag" data-en>Shock waves</span>
+      <span class="tag" data-pt>Lei de conservação</span><span class="tag" data-en>Conservation law</span>
+      <span class="tag" data-pt>Tráfego rodoviário</span><span class="tag" data-en>Road traffic</span>
+    </div>
+  </section>
+
+  <div class="ch-footer-nav">
+    <a class="cfn-link" href="CBM-ch1.html">← <span data-pt>Cap. 1 — Introdução</span><span data-en>Ch. 1 — Introduction</span></a>
+    <div class="cfn-center">
+      <span data-pt>Capítulo 2 · Nachbin &amp; Tabak · IMPA 1997</span>
+      <span data-en>Chapter 2 · Nachbin &amp; Tabak · IMPA 1997</span>
+    </div>
+    <a class="cfn-link" href="CBM-apendA.html"><span data-pt>Apênd. A — MATLAB</span><span data-en>App. A — MATLAB</span> →</a>
+  </div>
+</main>
+
+<footer>
+  <span class="fleur">⚜</span>
+  © 1997 André Nachbin &amp; Esteban Tabak ·
+  <a href="https://impa.br" target="_blank">IMPA</a> ·
+  21º Colóquio Brasileiro de Matemática
+  <span class="fleur">⚜</span>
+  <a href="https://totogt.github.io/geometry/impa-portal.html">Principia Orthogona</a>
+  <span class="fleur">⚜</span>
+  HTML 2025
+</footer>
+
+<script>
+function setLang(l){document.body.className='lang-'+l;document.getElementById('btn-pt').className='lang-btn'+(l==='pt'?' active':'');document.getElementById('btn-en').className='lang-btn'+(l==='en'?' active':'');document.documentElement.lang=l==='pt'?'pt-BR':'en';}
+// Prime number grid
+(function(){
+  const primes=new Set([2,3,5,7,11,13,17,19]);
+  const grid=document.getElementById('prime-grid');
+  if(!grid)return;
+  for(let i=1;i<=20;i++){
+    const d=document.createElement('div');
+    d.className='prime-cell '+(primes.has(i)?'prime':'nonprime');
+    d.textContent=i;
+    if(i===13||i===17)d.style.outline='2px solid var(--amber)';
+    grid.appendChild(d);
+  }
+})();
+</script>
+</body>
+</html>
