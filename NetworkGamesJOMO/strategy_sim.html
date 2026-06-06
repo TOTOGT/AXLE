@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JOMO — Strategy Sim</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0b0b12;color:#e2e8f0;font-family:ui-monospace,'SF Mono','Fira Code',monospace;padding:18px;font-size:13px}
+h1{color:#a78bfa;margin-bottom:14px;font-size:1.05em;letter-spacing:.1em}
+
+.top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+.ctrl{display:flex;flex-direction:column;gap:4px}
+label{font-size:.68em;color:#64748b;letter-spacing:.05em}
+input[type=range]{width:92px;accent-color:#6366f1}
+.modes{display:flex;gap:6px;align-items:center;padding-bottom:2px}
+.pill{padding:4px 13px;border-radius:20px;border:1px solid #4f46e5;color:#818cf8;
+      font-size:.7em;cursor:pointer;transition:.15s;user-select:none}
+.pill.active{background:#4f46e5;color:#fff;border-color:#6366f1}
+button{background:#4f46e5;color:#fff;border:none;padding:7px 15px;border-radius:6px;
+       cursor:pointer;font-family:inherit;font-size:.78em;letter-spacing:.04em}
+button:hover{background:#6366f1}
+
+.grid{display:grid;grid-template-columns:1fr 380px;gap:14px}
+.card{background:#111120;border:1px solid #1e1e30;border-radius:10px;padding:14px}
+
+/* chart */
+#mainChart{display:block}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:.7em}
+th{color:#64748b;text-align:right;padding:5px 6px;border-bottom:1px solid #1e1e30;
+   font-weight:normal;letter-spacing:.04em}
+th:first-child{text-align:left}
+td{padding:4px 6px;text-align:right;border-bottom:1px solid #15151f}
+td:first-child{text-align:left;white-space:nowrap}
+tr.bold-row{background:#1a1830}
+tr:hover td{background:#17172a}
+.pos{color:#4ade80}.neg{color:#f87171}.dim{color:#64748b}
+
+/* architecture box */
+.arch{margin-top:10px;padding:10px 12px;background:#0b0b12;border-radius:6px;
+      font-size:.68em;color:#64748b;line-height:1.9}
+.arch strong{color:#a78bfa}
+.arch .arr{color:#4f46e5}
+
+/* insight */
+.insight{margin-top:10px;padding:10px 12px;background:#16122a;
+         border-left:3px solid #7c3aed;border-radius:0 6px 6px 0;
+         font-size:.7em;color:#c4b5fd;line-height:1.8}
+.insight b{color:#e2d9ff}
+
+/* divider labels */
+.sec-label{font-size:.62em;letter-spacing:.12em;color:#4f46e5;margin-bottom:6px;
+           text-transform:uppercase}
+
+/* legend fix */
+canvas{max-width:100%}
+</style>
+</head>
+<body>
+
+<h1>⟁ JOMO — STRATEGY SIMULATOR</h1>
+
+<div class="top">
+  <div class="ctrl">
+    <label>Days &nbsp;<span id="vDays">500</span></label>
+    <input type="range" id="slDays" min="200" max="2000" step="100" value="500"
+      oninput="document.getElementById('vDays').textContent=this.value">
+  </div>
+  <div class="ctrl">
+    <label>Capital &nbsp;$<span id="vCap">10,000</span></label>
+    <input type="range" id="slCap" min="1000" max="100000" step="1000" value="10000"
+      oninput="document.getElementById('vCap').textContent=(+this.value).toLocaleString()">
+  </div>
+  <div class="ctrl">
+    <label>Regime Stickiness &nbsp;<span id="vStick">0.93</span></label>
+    <input type="range" id="slStick" min="0.80" max="0.99" step="0.01" value="0.93"
+      oninput="document.getElementById('vStick').textContent=(+this.value).toFixed(2)">
+  </div>
+  <div class="modes">
+    <span class="pill active" id="mChain" onclick="setMode('chain')">Chain</span>
+    <span class="pill"        id="mLean"  onclick="setMode('lean')">Lean</span>
+  </div>
+  <button onclick="runSim()">▶ &nbsp;Re-seed &amp; Run</button>
+</div>
+
+<div class="grid">
+  <!-- LEFT: chart -->
+  <div class="card">
+    <div class="sec-label">Equity curves — all strategies</div>
+    <canvas id="mainChart" height="360"></canvas>
+  </div>
+
+  <!-- RIGHT: stats + arch + insight -->
+  <div class="card">
+    <div class="sec-label">Performance</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Strategy</th>
+          <th>Ret %</th>
+          <th>Sharpe</th>
+          <th>MaxDD</th>
+          <th>Trades</th>
+          <th>Win%</th>
+        </tr>
+      </thead>
+      <tbody id="tBody"></tbody>
+    </table>
+
+    <!-- architecture panel -->
+    <div class="arch">
+      <div id="aChain">
+        <strong>Chain</strong> &mdash; sequential gates (precision)<br>
+        <span class="arr">Diurnal</span> ▸ <span class="arr">HMM regime</span>
+          ▸ <span class="arr">Markov confirm</span> ▸ Kelly size ▸ Entry<br>
+        Arbitrage ——————————————————— ▸ parallel (always)
+      </div>
+      <div id="aLean" style="display:none">
+        <strong>Lean</strong> &mdash; parallel vote (recall)<br>
+        Markov + HMM + Diurnal + Circadian<br>
+        <span class="arr">Σ ≥ 3 votes</span> → Kelly size → Entry<br>
+        Arbitrage ——————————————————— ▸ parallel (always)
+      </div>
+    </div>
+
+    <div class="insight" id="insight">Simulating…</div>
+  </div>
+</div>
+
+<script>
+// ── Seeded PRNG (LCG) + Box-Muller ───────────────────────────────
+let _s = Date.now() >>> 0;
+const rand  = () => { _s = (Math.imul(1664525, _s) + 1013904223) >>> 0; return _s / 2**32; };
+const randn = () => Math.sqrt(-2 * Math.log(rand() + 1e-9)) * Math.cos(2 * Math.PI * rand());
+
+// ── SYNTHETIC MARKET DATA ─────────────────────────────────────────
+// Generates N daily bars: {ret, regime, hour (0-23), dow (0-6)}
+// Session hours (13-17 UTC London/NY, 07-09 UTC Tokyo/London) get +25% drift bonus
+function genData(N, stick) {
+  const RG = ['BULL', 'BEAR', 'SIDE'];
+  const MU  = { BULL: 0.0030, BEAR: -0.0025, SIDE: 0.0002 };
+  const SIG = { BULL: 0.018,  BEAR: 0.030,   SIDE: 0.010  };
+  const q = (1 - stick) / 2;
+  const TR = {
+    BULL: [stick,      q * 0.7,  q * 1.3 ],
+    BEAR: [q * 0.5,    stick,    q * 1.5 ],
+    SIDE: [q * 1.1,    q * 0.5,  stick + q * 0.4]
+  };
+  let rg = 'BULL';
+  const D = [{ ret: 0, regime: rg, hour: 12, dow: 1 }];
+  for (let i = 1; i < N; i++) {
+    const h   = Math.floor(rand() * 24);
+    const dow = i % 7;
+    const boost = dSig(h) ? 1.25 : 1.0;   // session overlap has more institutional flow
+    const ret = MU[rg] * boost + SIG[rg] * randn();
+    D.push({ ret, regime: rg, hour: h, dow });
+    // regime transition
+    const p = TR[rg], r = rand(); let c = 0;
+    for (let j = 0; j < 3; j++) { c += p[j]; if (r < c) { rg = RG[j]; break; } }
+  }
+  return D;
+}
+
+// ── SIGNAL FUNCTIONS ──────────────────────────────────────────────
+
+// Visible Markov: 3-state (UP/FLAT/DOWN) from last 20 returns
+// Signal when UP state is self-persistent >= threshold
+function mSig(rets, thr = 0.87) {
+  if (rets.length < 8) return false;
+  const sl = rets.slice(-20).map(r => r > 0.005 ? 2 : r < -0.005 ? 0 : 1);
+  const last = sl.at(-1);
+  let tot = 0, self = 0;
+  for (let i = 1; i < sl.length; i++)
+    if (sl[i - 1] === last) { tot++; if (sl[i] === last) self++; }
+  return last === 2 && tot > 0 && self / tot >= thr;
+}
+
+// Diurnal: session-overlap hours (objective, market-structure based)
+function dSig(h) { return (h >= 13 && h <= 17) || (h >= 7 && h <= 9); }
+
+// Circadian: behavioral (Tue-Thu, business hours, avoid Monday open / Friday close)
+function cSig(h, dow) {
+  if (dow >= 5) return false;                     // weekend
+  if (dow === 0 && h < 6)  return false;          // Monday pre-open
+  if (dow === 4 && h >= 15) return false;         // Friday fade
+  return h >= 9 && h <= 17;
+}
+
+// HMM: simulates Viterbi-decoded regime with 85% accuracy (represents trained model)
+function hSig(D, i) {
+  const t = D[i].regime;
+  const detected = rand() < 0.85 ? t : ['BULL', 'BEAR', 'SIDE'][Math.floor(rand() * 3)];
+  return detected === 'BULL';
+}
+
+// Kelly position sizing (fraction of bankroll, capped)
+function kSz(pnls, cap = 0.25) {
+  const N = Math.min(30, pnls.length);
+  if (N < 5) return 0.08;
+  const sl = pnls.slice(-N);
+  const ws = sl.filter(x => x > 0), ls = sl.filter(x => x < 0);
+  if (!ws.length) return 0.02;
+  const p = ws.length / N;
+  const b = (ws.reduce((s, x) => s + x, 0) / ws.length) /
+            Math.abs(ls.reduce((s, x) => s + x, 0) / (ls.length || 1));
+  return Math.min(Math.max(0, (p * (b + 1) - 1) / b), cap);
+}
+
+// ── BACKTEST ENGINE ───────────────────────────────────────────────
+// sigFn(D, i, retHistory) → signal (1=long, -1=short, 0=flat)
+// szFn(pnls) → position size as fraction of capital
+// cRetFn (optional) → overrides market return (for arbitrage fixed payoff)
+function bt(D, sigFn, szFn, cRetFn = null) {
+  let cap = 1.0;
+  const curve = [1.0], pnls = [], hist = [];
+  for (let i = 1; i < D.length; i++) {
+    const sig = sigFn(D, i, hist);
+    if (sig !== 0) {
+      const sz = szFn(pnls);
+      const r  = cRetFn ? cRetFn() : D[i].ret;
+      const p  = sig * sz * r;
+      cap *= 1 + p;
+      pnls.push(p);
+    }
+    hist.push(D[i].ret);
+    curve.push(cap);
+  }
+  return { curve, pnls };
+}
+
+// ── STATS ─────────────────────────────────────────────────────────
+function st(curve, pnls) {
+  const totalRet = (curve.at(-1) - 1) * 100;
+  const dr = curve.slice(1).map((v, i) => v / curve[i] - 1);
+  const mu = dr.reduce((s, x) => s + x, 0) / dr.length;
+  const sig = Math.sqrt(dr.reduce((s, x) => s + (x - mu) ** 2, 0) / dr.length);
+  const sharpe = sig > 1e-7 ? (mu / sig) * Math.sqrt(252) : 0;
+  let pk = 0, dd = 0;
+  for (const v of curve) { if (v > pk) pk = v; dd = Math.max(dd, (pk - v) / pk); }
+  const wr = pnls.length ? pnls.filter(x => x > 0).length / pnls.length * 100 : 0;
+  return {
+    ret:    +totalRet.toFixed(1),
+    sh:     +sharpe.toFixed(2),
+    dd:     +(dd * 100).toFixed(1),
+    trades: pnls.length,
+    wr:     +wr.toFixed(0)
+  };
+}
+
+// ── STRATEGY DEFINITIONS ──────────────────────────────────────────
+function buildStrats() {
+  return [
+    {
+      n: 'Buy & Hold', c: '#475569', dash: [5, 3],
+      fn: () => 1,
+      sz: () => 1.0
+    },
+    {
+      n: 'Kelly', c: '#38bdf8',
+      fn: (D, i, h) => h.length > 5 ? 1 : 0,
+      sz: (p) => kSz(p)
+    },
+    {
+      n: 'Markov', c: '#f97316',
+      fn: (D, i, h) => mSig(h) ? 1 : 0,
+      sz: (p) => kSz(p)
+    },
+    {
+      n: 'Diurnal', c: '#eab308',
+      fn: (D, i)    => dSig(D[i].hour) ? 1 : 0,
+      sz: ()        => 0.20
+    },
+    {
+      n: 'Circadian', c: '#d97706',
+      fn: (D, i)    => cSig(D[i].hour, D[i].dow) ? 1 : 0,
+      sz: ()        => 0.18
+    },
+    {
+      // Arbitrage: independent alpha — fixed payoff, not correlated with BTC regime
+      n: 'Arbitrage', c: '#22c55e',
+      fn: () => rand() < 0.08 ? 1 : 0,
+      sz: () => 0.15,
+      cr: () => rand() < 0.65 ? 0.02 : -0.015   // 65% hit, 2% win / 1.5% loss
+    },
+    {
+      n: 'HMM', c: '#c084fc',
+      fn: (D, i)    => hSig(D, i) ? 1 : 0,
+      sz: (p)       => kSz(p)
+    },
+    {
+      n: 'Markov+HMM', c: '#ec4899',
+      fn: (D, i, h) => (mSig(h) && hSig(D, i)) ? 1 : 0,
+      sz: (p)       => kSz(p, 0.35)
+    },
+    {
+      // Chain: ALL gates must pass (precision over recall)
+      n: 'Chain', c: '#a78bfa', bold: true,
+      fn: (D, i, h) => {
+        if (!dSig(D[i].hour)) return 0;   // gate 1: session overlap
+        if (!hSig(D, i))      return 0;   // gate 2: HMM regime BULL
+        if (!mSig(h))         return 0;   // gate 3: Markov persist
+        return 1;
+      },
+      sz: (p) => kSz(p, 0.35)
+    },
+    {
+      // Lean: majority vote (recall over precision)
+      n: 'Lean', c: '#34d399', bold: true,
+      fn: (D, i, h) => {
+        const votes = [
+          mSig(h)                          ? 1 : 0,
+          dSig(D[i].hour)                  ? 1 : 0,
+          cSig(D[i].hour, D[i].dow)        ? 1 : 0,
+          hSig(D, i)                       ? 1 : 0
+        ];
+        return votes.reduce((s, v) => s + v, 0) >= 3 ? 1 : 0;
+      },
+      sz: (p) => kSz(p, 0.30)
+    }
+  ];
+}
+
+// ── MAIN ──────────────────────────────────────────────────────────
+let _chart = null;
+let _mode  = 'chain';
+
+function setMode(m) {
+  _mode = m;
+  document.getElementById('mChain').classList.toggle('active', m === 'chain');
+  document.getElementById('mLean').classList.toggle('active',  m === 'lean');
+  document.getElementById('aChain').style.display = m === 'chain' ? 'block' : 'none';
+  document.getElementById('aLean').style.display  = m === 'lean'  ? 'block' : 'none';
+  runSim();
+}
+
+function runSim() {
+  _s = Date.now() >>> 0;   // re-seed on each run
+
+  const N     = +document.getElementById('slDays').value;
+  const CAP   = +document.getElementById('slCap').value;
+  const STICK = +document.getElementById('slStick').value;
+
+  const D = genData(N, STICK);
+  const strats = buildStrats();
+
+  const results = strats.map(s => {
+    const r = bt(D, s.fn, s.sz, s.cr || null);
+    return { ...s, ...st(r.curve, r.pnls),
+             curve: r.curve.map(v => +(v * CAP).toFixed(2)) };
+  });
+
+  // ── Equity chart ───────────────────────────────────────────────
+  const ctx = document.getElementById('mainChart');
+  if (_chart) _chart.destroy();
+  _chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array.from({ length: N }, (_, i) => i),
+      datasets: results.map(s => ({
+        label:           s.n,
+        data:            s.curve,
+        borderColor:     s.c,
+        backgroundColor: 'transparent',
+        borderWidth:     s.bold ? 2.5 : 1.3,
+        pointRadius:     0,
+        tension:         0.3,
+        borderDash:      s.dash || []
+      }))
+    },
+    options: {
+      animation: false,
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: { display: false },
+        y: {
+          grid:  { color: '#1a1a2e' },
+          ticks: { color: '#64748b', callback: v => '$' + v.toLocaleString() },
+          title: { display: true, text: 'Portfolio Value', color: '#4f46e5', font: { size: 10 } }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10, padding: 7 }
+        },
+        tooltip: {
+          backgroundColor: '#1e1e2e', titleColor: '#a78bfa', bodyColor: '#e2e8f0',
+          callbacks: {
+            label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
+          }
+        }
+      }
+    }
+  });
+
+  // ── Stats table (sorted by Sharpe) ────────────────────────────
+  const sorted = [...results].sort((a, b) => b.sh - a.sh);
+  document.getElementById('tBody').innerHTML = sorted.map(s => `
+    <tr class="${s.bold ? 'bold-row' : ''}">
+      <td><span style="color:${s.c}">●</span>&nbsp;${s.n}</td>
+      <td class="${s.ret >= 0 ? 'pos' : 'neg'}">${s.ret > 0 ? '+' : ''}${s.ret}%</td>
+      <td class="${s.sh >= 1.5 ? 'pos' : s.sh >= 0.5 ? '' : s.sh >= 0 ? 'dim' : 'neg'}">${s.sh}</td>
+      <td class="neg">-${s.dd}%</td>
+      <td>${s.trades}</td>
+      <td>${s.wr}%</td>
+    </tr>`).join('');
+
+  // ── Insight ────────────────────────────────────────────────────
+  const get = n => results.find(s => s.n === n);
+  const chain    = get('Chain');
+  const lean     = get('Lean');
+  const hmm      = get('HMM');
+  const markov   = get('Markov');
+  const diurnal  = get('Diurnal');
+  const circ     = get('Circadian');
+  const arb      = get('Arbitrage');
+  const bah      = get('Buy & Hold');
+
+  const ensWinner  = chain.sh > lean.sh ? 'Chain' : 'Lean';
+  const ensMargin  = Math.abs(chain.sh - lean.sh).toFixed(2);
+  const timing     = diurnal.sh >= circ.sh
+    ? `Diurnal ≥ Circadian (${diurnal.sh} vs ${circ.sh}) — market-structure beats behavior`
+    : `Circadian > Diurnal (${circ.sh} vs ${diurnal.sh}) — behavioral timing wins`;
+  const hmmLine    = hmm.sh > markov.sh + 0.15
+    ? `HMM (${hmm.sh}) outperforms Markov (${markov.sh}) → upgrade btcMarkov.py`
+    : `Markov (${markov.sh}) ≈ HMM (${hmm.sh}) — visible chain is sufficient`;
+  const chainTrades = chain.trades;
+  const leanTrades  = lean.trades;
+  const tradeRatio  = leanTrades > 0 ? (chainTrades / leanTrades * 100).toFixed(0) : '—';
+  const arbNote     = arb.sh > 0
+    ? `Arbitrage Sharpe ${arb.sh} — orthogonal alpha, always parallel`
+    : `Arbitrage Sharpe ${arb.sh} — bad luck this run, edge is structural`;
+
+  // Chain vs Lean structural insight
+  const structNote = chain.sh > lean.sh
+    ? 'Chain confirmed: sequential gates concentrate alpha into fewer, higher-quality trades.'
+    : 'Lean confirmed: diversified votes capture regime transitions Chain\'s gates miss.';
+
+  document.getElementById('insight').innerHTML = `
+    <b>⟁ ${N}d sim findings:</b><br>
+    • <b>${ensWinner}</b> wins by Sharpe Δ${ensMargin}<br>
+    • Chain fires ${chainTrades} trades — Lean fires ${leanTrades} (${tradeRatio}% ratio)<br>
+    • ${timing}<br>
+    • ${hmmLine}<br>
+    • ${arbNote}<br>
+    • B&H: ${bah.ret > 0 ? '+' : ''}${bah.ret}% — regime-dominant baseline<br>
+    <br>
+    <b>Verdict:</b> ${structNote}
+  `;
+}
+
+runSim();
+</script>
+</body>
+</html>
