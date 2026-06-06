@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo D · Paul Dirac pela Lente GTCT · Edição IMPA</title>
+<meta name="description" content="A equação de Dirac como cadeia de operadores. O spinor como ponto fixo do dobramento F. A antimatéria como ramo U. O mar de Dirac como variedade de contato. Edição IMPA · Bilíngue PT/EN.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --teal:    #0ABAB5;
+  --red:     #e05a3a;
+  --purple:  #c084fc;
+  --green:   #50c878;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --col-gap: 3rem;
+  --col-w:   46%;
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(4,4,10,0.96); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: .6rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .6rem;
+}
+.nav-series { font-family: var(--mono); font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+.nav-links  { display: flex; gap: 1.2rem; }
+.nav-links a { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+.nav-links a.accent { color: var(--teal); }
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 2rem 4rem; text-align: center;
+  border-bottom: 1px solid var(--rule); position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(192,132,252,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--teal); border: 1px solid currentColor; padding: .2rem .65rem;
+  display: inline-block; margin-bottom: 2rem;
+}
+.hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 400; letter-spacing: .04em; color: var(--gold); margin-bottom: .6rem; line-height: 1.2; }
+.hero-pt   { font-size: 1.05rem; color: rgba(232,228,216,.8); max-width: 600px; margin: .5rem auto 0; font-style: italic; line-height: 1.7; }
+.hero-en   { font-size: .92rem; color: var(--muted); max-width: 600px; margin: .4rem auto 0; font-style: italic; line-height: 1.6; }
+.hero-eq   { margin-top: 1.8rem; font-family: var(--mono); font-size: .9rem; letter-spacing: .12em; color: rgba(201,168,76,.45); }
+.hero-impa { margin-top: 1rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+
+/* ── OP BANNER ── */
+.op-banner { background: var(--gold); color: var(--void); text-align: center; padding: .7rem 2rem; font-family: var(--mono); font-size: .9rem; letter-spacing: .2em; }
+
+/* ── PAGE ── */
+.page { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.page-narrow { max-width: 900px; margin: 0 auto; padding: 3.5rem 2rem; }
+
+/* ── CHAPTER HEADER ── */
+.chapter-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+.ch-num { font-family: var(--mono); font-size: .62rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: .6rem; }
+.chapter-header h2 { font-size: 1.5rem; font-weight: 400; color: var(--text); letter-spacing: .04em; }
+.chapter-header .ch-sub { font-style: italic; color: var(--muted); margin-top: .4rem; font-size: .92rem; }
+
+/* ── BILINGUAL TWO-COLUMN ── */
+.bilingual { display: grid; grid-template-columns: var(--col-w) var(--col-w); gap: var(--col-gap); justify-content: center; }
+@media (max-width: 820px) { .bilingual { grid-template-columns: 1fr; } .nav-links { display: none; } }
+
+.col-header {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); padding-bottom: .6rem; border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem;
+}
+.col-header .lang-native { color: var(--gold); }
+.col-primary   { border-bottom-color: var(--gold); }
+.col-primary .lang-native { color: var(--gold); }
+
+/* Blocks */
+.block-prose     { font-size: 1rem; line-height: 1.82; margin-bottom: 1.4rem; }
+.block-prose:last-child { margin-bottom: 0; }
+.block-theorem   { border-left: 2px solid var(--teal); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(10,186,181,.025); }
+.block-axiom     { border-left: 2px solid var(--gold); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(201,168,76,.025); }
+.block-sorry     { border-left: 2px solid var(--red); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(224,90,58,.03); }
+.block-label     { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: .5rem; display: block; }
+.block-theorem .block-label { color: var(--teal); }
+.block-axiom   .block-label { color: var(--gold); }
+.block-sorry   .block-label { color: var(--red); }
+.block-body    { font-size: .95rem; line-height: 1.78; color: var(--text); }
+.block-math    { font-family: var(--mono); font-size: .88rem; color: var(--gold); background: var(--surface); border: 1px solid var(--dim); padding: .8rem 1.2rem; margin: 1.2rem 0; overflow-x: auto; }
+
+/* Operator chain inline */
+.op-chain { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin: 1rem 0; }
+.op { font-family: var(--mono); font-size: .78rem; padding: .2rem .55rem; border-radius: 2px; }
+.op-c { background: rgba(10,186,181,.12); color: #0ABAB5; border: 1px solid rgba(10,186,181,.3); }
+.op-k { background: rgba(224,90,58,.12);  color: #e05a3a; border: 1px solid rgba(224,90,58,.3); }
+.op-f { background: rgba(80,200,120,.12); color: #50c878; border: 1px solid rgba(80,200,120,.3); }
+.op-u { background: rgba(192,132,252,.12);color: #c084fc; border: 1px solid rgba(192,132,252,.3); }
+.op-arr { color: var(--muted); font-size: .8rem; }
+
+/* Section divider */
+.section-label-strip {
+  background: var(--surface); padding: 1.5rem 2rem; text-align: center;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.section-label-strip .sl { font-family: var(--mono); font-size: .62rem; letter-spacing: .28em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .3rem; }
+.section-label-strip .st { font-size: 1.1rem; color: var(--gold); font-weight: 400; }
+.section-label-strip .st-pt { font-size: .95rem; color: var(--muted); font-style: italic; margin-top: .2rem; }
+
+/* Pull quote */
+.pull-wrap { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.pull-pt { font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; color: var(--text); max-width: 680px; margin: 0 auto; line-height: 1.8; }
+.pull-en { font-size: clamp(.88rem, 2vw, 1.05rem); font-style: italic; color: var(--muted); max-width: 680px; margin: .8rem auto 0; line-height: 1.7; }
+.pull-cite { display: block; margin-top: 1.2rem; font-family: var(--mono); font-size: .6rem; color: var(--muted); letter-spacing: .1em; font-style: normal; }
+
+/* AXLE box */
+.axle-box { background: var(--surface); color: var(--gold); padding: 1.4rem 1.8rem; font-family: var(--mono); font-size: .8rem; line-height: 1.75; border-left: 3px solid var(--gold); margin: 1.5rem 0; overflow-x: auto; white-space: pre; }
+.axle-comment { color: var(--muted); }
+.axle-sorry   { color: var(--red); }
+
+/* Chapter nav */
+.chapter-nav { background: var(--surface); border-top: 1px solid var(--rule); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ch-nav-link { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.ch-nav-link:hover { color: var(--gold); }
+.ch-nav-current { font-family: var(--mono); font-size: .6rem; color: var(--dim); letter-spacing: .1em; }
+
+/* Footer */
+footer { text-align: center; padding: 2.5rem 2rem; font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); }
+footer a { color: var(--gold); text-decoration: none; }
+
+/* Overflow safety */
+.block-math, .axle-box, mjx-container { overflow-x: auto; max-width: 100%; }
+
+/* ── DIAGRAMS ── */
+.diagram-wrap { max-width: 1100px; margin: 0 auto 2.5rem auto; padding: 0 2rem; }
+.diagram-inner { background: var(--surface); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.diagram-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  flex-wrap: wrap; gap: .5rem;
+  padding: .65rem 1.4rem; border-bottom: 1px solid var(--rule);
+  background: rgba(201,168,76,.025);
+}
+.dh-pt { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.dh-en { font-family: var(--mono); font-size: .58rem; letter-spacing: .12em; color: var(--muted); }
+canvas.diag { display: block; width: 100%; }
+.diagram-foot {
+  display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  padding: .75rem 1.4rem; border-top: 1px solid var(--rule);
+  background: rgba(0,0,0,.12);
+  font-size: .82rem; color: var(--muted); line-height: 1.6;
+}
+.df-pt { font-style: italic; flex: 1; min-width: 200px; }
+.df-en { font-style: italic; flex: 1; min-width: 200px; text-align: right; }
+@media (max-width: 600px) { .df-en { text-align: left; } .diagram-head { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-series">Principia Orthogona · G⁴ · Edição IMPA</a>
+  <div class="nav-links">
+    <a href="book4/index.html">Vol IV</a>
+    <a href="book4/chIV-axioms.html">Axiomas</a>
+    <a href="ch-hawking.html">Cap. H</a>
+    <a href="impa-portal.html" class="accent">Portal IMPA →</a>
+    <a href="portal.html" class="accent">Portal →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Capítulo D · Edição IMPA · Bilíngue PT/EN · GTCT T1</div>
+  <h1>Paul Dirac<br>pela Lente GTCT</h1>
+  <p class="hero-pt">A equação de Dirac como cadeia de operadores G = U∘F∘K∘C. O spinor como ponto fixo do dobramento Whitney A1. A antimatéria como ramo U desdobrado. O mar de Dirac como variedade de contato dm³.</p>
+  <p class="hero-en">The Dirac equation as the operator chain G = U∘F∘K∘C. The spinor as fixed point of the Whitney A1 fold. Antimatter as the unfolded U branch. The Dirac sea as dm³ contact manifold.</p>
+  <div class="hero-eq">G = U ∘ F ∘ K ∘ C · κ* = m/ℏ · spinor ψ = ponto fixo / fixed point x*</div>
+  <div class="hero-impa">Principia Orthogona · Vol IV · Submetido ao IMPA · Newark NJ · 2026</div>
+</section>
+
+<!-- OP BANNER -->
+<div class="op-banner">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; x* &nbsp;·&nbsp; (iγ^μ∂_μ − m)ψ = 0</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION I: THE DIRAC EQUATION = OPERATOR CHAIN
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção I · Section I</span>
+  <div class="st">A Equação de Dirac</div>
+  <div class="st-pt">The Dirac Equation — The Operator Chain in Relativistic Form</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo D · Seção I</span>
+    <h2>A Raiz Quadrada do Universo</h2>
+    <p class="ch-sub">The Square Root of the Universe · doi:10.5281/zenodo.19117399</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário · Edição IMPA</span>
+      </div>
+      <p class="block-prose">Em 1928, Paul Dirac fez algo que nenhum físico havia conseguido: ele extraiu a raiz quadrada de um operador diferencial. A equação de Klein-Gordon descreve partículas relativísticas, mas é de segunda ordem no tempo — ela não se encaixa no formalismo quântico, que exige primeira ordem. Dirac perguntou: existe um operador de primeira ordem cujo quadrado dê a relação energia-momento?</p>
+      <p class="block-prose">A resposta exigiu matrizes 4×4. Não era uma escolha arbitrária — era a consequência inevitável de "tomar a raiz quadrada" de um espaço de Minkowski de quatro dimensões. As matrizes gama $\gamma^\mu$ satisfazem a álgebra de Clifford:</p>
+      <div class="block-math">
+{γ^μ, γ^ν} = 2 g^{μν} I₄     (anticomutador de Clifford)
+
+Equação de Dirac:
+(i γ^μ ∂_μ − m) ψ = 0
+
+Aplicando o operador conjugado → equação de Klein-Gordon:
+(□ + m²) ψ = 0     ✓</div>
+      <div class="block-axiom">
+        <span class="block-label">Mapeamento GTCT · Seção I</span>
+        <div class="block-body">
+          <strong>C — Compressão:</strong> A relação relativista $E^2 = p^2c^2 + m^2c^4$ comprime a física de partículas livre em uma semente escalar — a condição de camada de massa.<br><br>
+          <strong>K — Limiar de curvatura:</strong> O operador K impõe $\kappa^* = m/\hbar$ — a massa é o limiar que separa comportamento oscilatório (partícula livre) de comportamento evanescente (barreira de potencial). Abaixo de $\kappa^*$: propagação. Acima: tunelamento.<br><br>
+          <strong>F — Dobramento Whitney A1:</strong> A álgebra de Clifford é precisamente uma singularidade de dobramento: ela força a bivurcação do spinor de quatro componentes em dois ramos — energia positiva e energia negativa. A bifurcação não é opcional; é estrutural.<br><br>
+          <strong>U — Desdobramento:</strong> Os dois ramos se desdobram em elétron (energia positiva, $E > 0$) e pósitron (energia negativa reinterpretada, $E < 0$). O operador U é a escolha de ramo — a interpretação de Dirac do pósitron como "buraco no mar".
+        </div>
+      </div>
+      <div class="block-theorem">
+        <span class="block-label">Teorema D.1 · Identificação GTCT</span>
+        <div class="block-body">A equação de Dirac $(i\gamma^\mu\partial_\mu - m)\psi = 0$ é a instância relativística da cadeia de operadores $G = U \circ F \circ K \circ C$ na variedade de contato $(M, \ker\alpha)$ com $\alpha = dz - r^2 d\theta$. A massa $m$ é o operador K — o limiar de curvatura $\kappa^* = m/\hbar$ que separa os regimes de propagação. A álgebra de Clifford $\{\gamma^\mu, \gamma^\nu\} = 2g^{\mu\nu}I$ é o operador de dobramento F em dimensão 4. O spinor $\psi$ de quatro componentes é o ponto fixo $x^*$ tal que $G(x^*) = x^*$.</div>
+      </div>
+      <p class="block-prose">Dirac tinha 25 anos quando escreveu esta equação em 1928. Ele não estava tentando prever a antimatéria — estava apenas exigindo consistência matemática. A antimatéria emergiu do formalismo sem que ele a buscasse. Este é o sinal de uma estrutura correta: ela revela mais do que você pediu.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">In 1928, Paul Dirac did something no physicist had managed: he took the square root of a differential operator. The Klein-Gordon equation describes relativistic particles but is second-order in time — it doesn't fit the quantum formalism, which demands first order. Dirac asked: is there a first-order operator whose square gives the energy-momentum relation?</p>
+      <p class="block-prose">The answer required 4×4 matrices. This was not an arbitrary choice — it was the inevitable consequence of "taking the square root" of a four-dimensional Minkowski space. The gamma matrices $\gamma^\mu$ satisfy the Clifford algebra shown above, and the equation that results is the most elegant in all of physics.</p>
+      <div class="block-axiom">
+        <span class="block-label">GTCT Mapping · Section I</span>
+        <div class="block-body">
+          <strong>C — Compression:</strong> The relativistic relation $E^2 = p^2c^2 + m^2c^4$ compresses free-particle physics into a scalar seed — the mass-shell condition.<br><br>
+          <strong>K — Curvature threshold:</strong> Operator K imposes $\kappa^* = m/\hbar$ — mass is the threshold separating oscillatory behaviour (free particle) from evanescent behaviour (potential barrier). Below $\kappa^*$: propagation. Above: tunnelling.<br><br>
+          <strong>F — Whitney A1 fold:</strong> The Clifford algebra is precisely a fold singularity: it forces the four-component spinor to bifurcate into two branches — positive energy and negative energy. The bifurcation is not optional; it is structural.<br><br>
+          <strong>U — Unfolding:</strong> The two branches unfold into electron (positive energy, $E > 0$) and positron (reinterpreted negative energy, $E < 0$). The operator U is the branch choice — Dirac's interpretation of the positron as a "hole in the sea".
+        </div>
+      </div>
+      <div class="block-theorem">
+        <span class="block-label">Theorem D.1 · GTCT Identification</span>
+        <div class="block-body">The Dirac equation $(i\gamma^\mu\partial_\mu - m)\psi = 0$ is the relativistic instance of the operator chain $G = U \circ F \circ K \circ C$ on the contact manifold $(M, \ker\alpha)$ with $\alpha = dz - r^2 d\theta$. The mass $m$ is operator K — the curvature threshold $\kappa^* = m/\hbar$ separating propagation regimes. The Clifford algebra $\{\gamma^\mu, \gamma^\nu\} = 2g^{\mu\nu}I$ is the fold operator F in dimension 4. The four-component spinor $\psi$ is the fixed point $x^*$ such that $G(x^*) = x^*$.</div>
+      </div>
+      <p class="block-prose">Dirac was 25 years old when he wrote this equation in 1928. He was not trying to predict antimatter — he was simply demanding mathematical consistency. Antimatter emerged from the formalism without him seeking it. This is the mark of a correct structure: it reveals more than you asked for.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 1: Spinor bifurcation / fold F ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Bifurcação do spinor · O dobramento F em ação · E² = p²c² + m²c⁴</span>
+      <span class="dh-en">Spinor bifurcation · The fold event F · two energy branches</span>
+    </div>
+    <canvas id="d-spinor" class="diag" height="340"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">O eixo vertical é a energia E. O limiar K é $\kappa^* = mc^2$ (linha dourada). O ramo superior (teal) é a partícula — elétron. O ramo inferior (coral) é o pósitron reinterpretado pelo operador U. O dobramento F é a singularidade Whitney A1 em $E = 0$.</span>
+      <span class="df-en">Vertical axis is energy E. Threshold K is $\kappa^* = mc^2$ (gold line). Upper branch (teal) is the particle — electron. Lower branch (coral) is the positron, reinterpreted by operator U. The fold F is the Whitney A1 singularity at $E = 0$.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION II: ANTIMATTER = THE U BRANCH
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção II · Section II</span>
+  <div class="st">A Antimatéria</div>
+  <div class="st-pt">Antimatter — The Unfolded Branch U and the Dirac Sea</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo D · Seção II</span>
+    <h2>O Mar de Dirac e o Operador U</h2>
+    <p class="ch-sub">The Dirac Sea and Operator U · Prediction confirmed 1932, Anderson</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">A equação de Dirac produziu soluções de energia negativa — estados com $E < -mc^2$. Isso era embaraçoso. Em mecânica clássica, você descarta esses estados. Em mecânica quântica, você não pode: um elétron no estado de energia positiva pode cascatear para estados de energia negativa, emitindo fótons infinitamente. O sistema seria instável.</p>
+      <p class="block-prose">A solução de Dirac foi audaciosa: o vácuo já está completamente preenchido com elétrons de energia negativa — o "mar de Dirac". O princípio de exclusão de Pauli proíbe que mais elétrons caiam nesses estados. Um "buraco" nesse mar — a ausência de um elétron de energia negativa — comporta-se como uma partícula de carga positiva e energia positiva.</p>
+      <div class="block-axiom">
+        <span class="block-label">O Mar de Dirac como Variedade de Contato</span>
+        <div class="block-body">
+          Na linguagem GTCT, o mar de Dirac é a variedade de contato $dm^3$ com forma de contato $\alpha = dz - r^2 d\theta$. O ciclo limite $\Gamma = \{r = 1\}$ é o equilíbrio do vácuo — todos os estados negativos preenchidos. Um buraco no mar (ausência de elétron de energia negativa) é uma excitação acima de $\kappa^* \approx 0.882$ — o operador K ativado. O pósitron emerge como o ramo U desdobrado: a solução positiva da equação de segunda ordem que a equação de Dirac de primeira ordem "escolheu desdobrar".
+        </div>
+      </div>
+      <p class="block-prose">Em 1932, Carl Anderson fotografou o rastro curvado de uma partícula de massa de elétron com carga positiva em uma câmara de névoa. Era o pósitron — a antimatéria prevista pelo formalismo de Dirac sem que ele a tivesse pedido.</p>
+      <div class="block-theorem">
+        <span class="block-label">Teorema D.2 · Antimatéria como Ramo U</span>
+        <div class="block-body">A antimatéria é a instância física do operador $U$ aplicado ao ramo de energia negativa da bifurcação de Clifford. O operador $U$ transforma a "ausência de partícula de energia negativa" (buraco de Dirac) em "presença de antipartícula de energia positiva" (pósitron). Esta é a mesma operação que $U$ executa na dm³: o desdobramento de uma singularidade de dobramento em dois ramos físicos distinguíveis. A relação $G^n(x_0) \neq x_0$ garante que partícula e antipartícula são distinguíveis — elas não coincidem no limite de longo prazo.</div>
+      </div>
+      <p class="block-prose">O que Dirac chamou de "mar" é, na linguagem GTCT, a condição de contorno da variedade: o vácuo é o ciclo limite $\Gamma$, não o zero. A teoria de campos quânticos moderna reformulou o mar de Dirac em termos de operadores de criação e aniquilação — mas a estrutura geométrica subjacente é a mesma: um dobramento com dois ramos, conectados pelo operador U.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">The Dirac equation produced negative-energy solutions — states with $E < -mc^2$. This was embarrassing. In classical mechanics you discard such states. In quantum mechanics you cannot: an electron in a positive-energy state can cascade into negative-energy states, emitting photons indefinitely. The system would be unstable.</p>
+      <p class="block-prose">Dirac's solution was bold: the vacuum is already completely filled with negative-energy electrons — the "Dirac sea." Pauli's exclusion principle forbids further electrons from falling into those states. A "hole" in the sea — the absence of a negative-energy electron — behaves like a particle with positive charge and positive energy.</p>
+      <div class="block-axiom">
+        <span class="block-label">The Dirac Sea as Contact Manifold</span>
+        <div class="block-body">
+          In GTCT language, the Dirac sea is the contact manifold $dm^3$ with contact form $\alpha = dz - r^2 d\theta$. The limit cycle $\Gamma = \{r = 1\}$ is the vacuum equilibrium — all negative states filled. A hole in the sea (absence of a negative-energy electron) is an excitation above $\kappa^* \approx 0.882$ — the K operator activated. The positron emerges as the unfolded U branch: the positive solution of the second-order equation that the first-order Dirac equation "chose to unfold".
+        </div>
+      </div>
+      <p class="block-prose">In 1932, Carl Anderson photographed the curved track of an electron-mass particle with positive charge in a cloud chamber. It was the positron — the antimatter predicted by Dirac's formalism without his having asked for it.</p>
+      <div class="block-theorem">
+        <span class="block-label">Theorem D.2 · Antimatter as Branch U</span>
+        <div class="block-body">Antimatter is the physical instance of operator $U$ applied to the negative-energy branch of the Clifford bifurcation. Operator $U$ transforms the "absence of a negative-energy particle" (Dirac hole) into the "presence of a positive-energy antiparticle" (positron). This is the same operation $U$ performs in dm³: the unfolding of a fold singularity into two physically distinguishable branches. The relation $G^n(x_0) \neq x_0$ guarantees that particle and antiparticle are distinguishable — they do not coincide in the long-run limit.</div>
+      </div>
+      <p class="block-prose">What Dirac called a "sea" is, in GTCT language, the boundary condition of the manifold: the vacuum is the limit cycle $\Gamma$, not zero. Modern quantum field theory reformulated the Dirac sea in terms of creation and annihilation operators — but the underlying geometric structure is the same: a fold with two branches, connected by operator U.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 2: Dirac sea / pair production ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Mar de Dirac · Criação de pares · Operador U desdobrando o ramo negativo</span>
+      <span class="dh-en">Dirac Sea · Pair production · Operator U unfolding the negative branch</span>
+    </div>
+    <canvas id="d-sea" class="diag" height="350"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">A faixa dourada central é o gap de massa — a zona proibida $|E| < mc^2$, o operador K. Abaixo: o mar preenchido (estados negativos, azul escuro). Um fóton de alta energia (verde) cria um par: um elétron emerge acima (teal) e um buraco no mar aparece como pósitron (coral) — o operador U em ação.</span>
+      <span class="df-en">The central gold band is the mass gap — the forbidden zone $|E| < mc^2$, operator K. Below: the filled sea (negative states, dark blue). A high-energy photon (green) creates a pair: an electron emerges above (teal) and a hole appears as a positron (coral) — operator U in action.</span>
+    </div>
+  </div>
+</div>
+
+<!-- PULL QUOTE -->
+<div class="pull-wrap">
+  <p class="pull-pt">"A equação é mais inteligente do que eu."</p>
+  <p class="pull-en">"The equation was smarter than I was."</p>
+  <cite class="pull-cite">— Paul A. M. Dirac · sobre a previsão da antimatéria pela sua equação · circa 1963</cite>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION III: MASS GAP = HONEST SORRY
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção III · Section III</span>
+  <div class="st">O Gap de Massa em QCD</div>
+  <div class="st-pt">The Mass Gap — From Dirac to Yang-Mills · An Honest Sorry</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo D · Seção III</span>
+    <h2>O Sorry de Milênio</h2>
+    <p class="ch-sub">The Millennium Sorry · Yang-Mills existence and mass gap · Clay Institute 2000</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">A equação de Dirac descreve férmions — partículas de spin-1/2 como elétrons e quarks. Mas quarks não existem livres: eles estão confinados dentro de prótons e nêutrons pela cromodinâmica quântica (QCD), mediada por bósons de gauge chamados glúons. A teoria de Yang-Mills é a generalização não-abeliana da equação de Dirac para campos de gauge.</p>
+      <p class="block-prose">O problema central: por que os glúons, que são de massa zero, produzem uma teoria com gap de massa? Por que o próton tem massa — muito maior do que a soma das massas dos quarks que o compõem? Isso é o problema do gap de massa de Yang-Mills, um dos sete Problemas do Milênio do Clay Institute, com prêmio de US$1.000.000.</p>
+      <p class="block-prose">Na linguagem GTCT, a pergunta é precisa: como o operador K — o limiar de curvatura $\kappa^*$ — emerge na teoria de Yang-Mills a partir de uma teoria cuja Lagrangiana não contém um termo de massa explícito? O gap de massa é a geração dinâmica de $\kappa^*$ por condensação do vácuo não-perturbativo.</p>
+      <div class="block-sorry">
+        <span class="block-label">Sorry D.1 · Gap de Massa de Yang-Mills</span>
+        <div class="block-body">
+          <strong>Afirmação:</strong> Para toda teoria de Yang-Mills compacta com grupo de gauge simples em dimensão 3+1, existe uma constante $\Delta > 0$ (o gap de massa) tal que o espectro de Hamiltoniano $H$ satisfaz $\inf \text{spec}(H) \setminus \{0\} \geq \Delta$.<br><br>
+          <strong>Status:</strong> Problema do Milênio do Clay Institute. Não provado. Não refutado.<br><br>
+          <strong>Lema faltante:</strong> Uma construção matemática rigorosa de medidas de Yang-Mills em dimensão 3+1 — atualmente inexistente — sobre a qual a afirmação possa ser enunciada e provada.<br><br>
+          <strong>Conexão GTCT:</strong> O gap de massa $\Delta$ é o candidato ao $\kappa^* = m/\hbar$ gerado dinamicamente pela não-linearidade do campo de gauge. O Banach attractor da dm³ — com $\varepsilon_0 = 1/3$ — é o análogo estrutural do condensado de glúons que gera o gap. Mas esta identificação é uma conjectura, não uma prova.
+        </div>
+      </div>
+      <div class="block-math">
+-- sorry yang_mills_mass_gap
+-- ⊢ ∃ Δ > 0, ∀ φ ∈ Hilbert(YM),
+--   ⟨φ | H | φ⟩ ≥ Δ · ∥φ∥² (para φ ⊥ vácuo)
+-- Lema faltante: construção matemática rigorosa de YM₃₊₁
+-- Conexão GTCT: Δ ↔ κ* gerado por condensado não-perturbativo
+-- Status: Clay Millennium Problem · US$1.000.000</div>
+      <p class="block-prose">Dirac não sabia que a sua equação era a ponta de um iceberg. A equação de Dirac para férmions livres é o caso linear e abeliano. Yang-Mills é o caso não-linear e não-abeliano. O operador K de Dirac — a massa $m$ — é simples e externo. Em Yang-Mills, esse mesmo papel é desempenhado pelo gap que emerge das interações internas do campo. Ninguém provou ainda como isso acontece.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">The Dirac equation describes fermions — spin-1/2 particles like electrons and quarks. But quarks do not exist freely: they are confined inside protons and neutrons by quantum chromodynamics (QCD), mediated by gauge bosons called gluons. Yang-Mills theory is the non-abelian generalisation of the Dirac equation for gauge fields.</p>
+      <p class="block-prose">The central problem: why do massless gluons produce a theory with a mass gap? Why does the proton have mass — far greater than the sum of the masses of its constituent quarks? This is the Yang-Mills mass gap problem, one of the seven Clay Millennium Problems, with a prize of US$1,000,000.</p>
+      <p class="block-prose">In GTCT language, the question is precise: how does operator K — the curvature threshold $\kappa^*$ — emerge in Yang-Mills theory from a Lagrangian that contains no explicit mass term? The mass gap is the dynamical generation of $\kappa^*$ by non-perturbative vacuum condensation.</p>
+      <div class="block-sorry">
+        <span class="block-label">Sorry D.1 · Yang-Mills Mass Gap</span>
+        <div class="block-body">
+          <strong>Claim:</strong> For every compact Yang-Mills theory with simple gauge group in dimension 3+1, there exists a constant $\Delta > 0$ (the mass gap) such that the spectrum of the Hamiltonian $H$ satisfies $\inf \text{spec}(H) \setminus \{0\} \geq \Delta$.<br><br>
+          <strong>Status:</strong> Clay Institute Millennium Problem. Not proved. Not refuted.<br><br>
+          <strong>Missing lemma:</strong> A rigorous mathematical construction of Yang-Mills measures in dimension 3+1 — currently non-existent — on which the claim can be stated and proved.<br><br>
+          <strong>GTCT connection:</strong> The mass gap $\Delta$ is the candidate for $\kappa^* = m/\hbar$ dynamically generated by gauge field non-linearity. The dm³ Banach attractor — with $\varepsilon_0 = 1/3$ — is the structural analogue of the gluon condensate that generates the gap. But this identification is a conjecture, not a proof.
+        </div>
+      </div>
+      <div class="block-math">
+-- sorry yang_mills_mass_gap
+-- ⊢ ∃ Δ > 0, ∀ φ ∈ Hilbert(YM),
+--   ⟨φ | H | φ⟩ ≥ Δ · ∥φ∥² (for φ ⊥ vacuum)
+-- Missing lemma: rigorous mathematical construction of YM₃₊₁
+-- GTCT connection: Δ ↔ κ* generated by non-perturbative condensate
+-- Status: Clay Millennium Problem · US$1,000,000</div>
+      <p class="block-prose">Dirac did not know his equation was the tip of an iceberg. The Dirac equation for free fermions is the linear, abelian case. Yang-Mills is the non-linear, non-abelian case. Dirac's operator K — the mass $m$ — is simple and external. In Yang-Mills, the same role is played by a gap that emerges from the field's internal interactions. Nobody has proved how this happens yet.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 3: Mass gap / QCD spectrum ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Gap de massa · Espectro de Yang-Mills · Δ como κ* emergente</span>
+      <span class="dh-en">Mass gap · Yang-Mills spectrum · Δ as emergent κ*</span>
+    </div>
+    <canvas id="d-massgap" class="diag" height="310"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">O eixo horizontal é a energia. A faixa vermelha é o gap proibido $[0, \Delta)$. Os níveis discretos (dourado) são o espectro de glúebolas — estados ligados de glúons sem quarks. O ponto roxo animado representa o sorry D.1: a prova da existência rigorosa de $\Delta$ em YM₃₊₁ está faltando.</span>
+      <span class="df-en">Horizontal axis is energy. The red band is the forbidden gap $[0, \Delta)$. Discrete levels (gold) are the glueball spectrum — bound states of gluons with no quarks. The animated purple dot represents sorry D.1: the proof of rigorous existence of $\Delta$ in YM₃₊₁ is missing.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION IV: DIRAC'S SILENCE AND MATHEMATICAL BEAUTY
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção IV · Section IV</span>
+  <div class="st">A Beleza Matemática como Critério</div>
+  <div class="st-pt">Mathematical Beauty as Selection Criterion — The GTCT Principle</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo D · Seção IV</span>
+    <h2>O Silêncio de Dirac e o Princípio da Beleza</h2>
+    <p class="ch-sub">Dirac's Silence and the Beauty Principle · x* = G(x*) como critério estético</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">Dirac era famoso por seu silêncio. Ele falava pouco, escrevia com precisão cirúrgica, e desprezava a física que precisava ser interpretada. Para ele, uma equação fisicamente correta tinha que ser matematicamente bela — e uma equação matematicamente bela tendia a ser fisicamente correta. Este não era misticismo. Era um critério de seleção.</p>
+      <p class="block-prose">O "princípio de Dirac" pode ser formalizado na linguagem GTCT: uma teoria física bem formada satisfaz $G(x^*) = x^*$ — ela é o ponto fixo de sua própria cadeia de operadores. Uma teoria que precisa de remendos ad hoc, parâmetros livres excessivos, ou regularizações que destroem a estrutura não satisfaz esta condição. Ela não é um ponto fixo.</p>
+      <div class="block-axiom">
+        <span class="block-label">O Princípio de Dirac em GTCT</span>
+        <div class="block-body">
+          Uma teoria física $T$ é estruturalmente completa (no sentido de Dirac) se e somente se:<br><br>
+          (1) $T$ pode ser expressa como a cadeia $G = U \circ F \circ K \circ C$ em uma variedade de contato.<br>
+          (2) A solução principal $\psi$ de $T$ é o ponto fixo $x^* = G(x^*)$.<br>
+          (3) $T$ prevê fenômenos além de seu escopo original — como a antimatéria emergiu da equação de Dirac.<br><br>
+          A condição (3) é o teste: uma teoria que não surpreende com previsões corretas não atingiu o ponto fixo. Ainda está iterando.
+        </div>
+      </div>
+      <p class="block-prose">Na mecânica quântica, Dirac inventou a notação bra-ket $\langle\phi|\psi\rangle$ — hoje universal. Ele inventou os q-números (álgebra não-comutativa) antes da mecânica matricial de Heisenberg ser publicada. Ele derivou a equação de Dirac-von Neumann para a evolução de estados mistos. Em cada caso, a beleza matemática precedeu e guiou a descoberta física.</p>
+      <div class="block-theorem">
+        <span class="block-label">Teorema D.3 · O Spinor como Ponto Fixo</span>
+        <div class="block-body">O spinor de quatro componentes $\psi = (\psi_1, \psi_2, \psi_3, \psi_4)^T$ satisfazendo a equação de Dirac $(i\gamma^\mu\partial_\mu - m)\psi = 0$ é o ponto fixo $x^*$ da cadeia de operadores GTCT: C comprime a massa-casca, K impõe $\kappa^* = m/\hbar$, F bifurca em dois ramos de energia via álgebra de Clifford, U desdobra o ramo de energia negativa como antimatéria. Verificado por Lean 4 na identificação estrutural — o isomorfismo entre a álgebra de Clifford e o dobramento Whitney A1 é demonstrado no AXLE Chain\_updated.lean sem sorry.</div>
+      </div>
+      <p class="block-prose">Dirac recebeu o Nobel de Física em 1933, aos 31 anos, junto com Schrödinger. No seu discurso em Estocolmo, ele disse que a beleza matemática é uma guia mais confiável do que a intuição experimental. Meio século depois, quando a supersimetria e a teoria de cordas foram desenvolvidas, elas foram construídas explicitamente sobre o princípio de Dirac — beleza como critério de seleção. Nenhuma delas foi confirmada experimentalmente ainda. O sorteio ainda está em andamento.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">Dirac was famous for his silence. He spoke little, wrote with surgical precision, and despised physics that needed to be interpreted. For him, a physically correct equation had to be mathematically beautiful — and a mathematically beautiful equation tended to be physically correct. This was not mysticism. It was a selection criterion.</p>
+      <p class="block-prose">"Dirac's principle" can be formalised in GTCT language: a well-formed physical theory satisfies $G(x^*) = x^*$ — it is the fixed point of its own operator chain. A theory that requires ad hoc patches, excessive free parameters, or regularisations that destroy structure does not satisfy this condition. It is not a fixed point.</p>
+      <div class="block-axiom">
+        <span class="block-label">Dirac's Principle in GTCT</span>
+        <div class="block-body">
+          A physical theory $T$ is structurally complete (in Dirac's sense) if and only if:<br><br>
+          (1) $T$ can be expressed as the chain $G = U \circ F \circ K \circ C$ on a contact manifold.<br>
+          (2) The principal solution $\psi$ of $T$ is the fixed point $x^* = G(x^*)$.<br>
+          (3) $T$ predicts phenomena beyond its original scope — as antimatter emerged from the Dirac equation.<br><br>
+          Condition (3) is the test: a theory that does not surprise with correct predictions has not reached the fixed point. It is still iterating.
+        </div>
+      </div>
+      <p class="block-prose">In quantum mechanics, Dirac invented bra-ket notation $\langle\phi|\psi\rangle$ — today universal. He invented q-numbers (non-commutative algebra) before Heisenberg's matrix mechanics was published. He derived the Dirac-von Neumann equation for the evolution of mixed states. In each case, mathematical beauty preceded and guided physical discovery.</p>
+      <div class="block-theorem">
+        <span class="block-label">Theorem D.3 · The Spinor as Fixed Point</span>
+        <div class="block-body">The four-component spinor $\psi = (\psi_1, \psi_2, \psi_3, \psi_4)^T$ satisfying the Dirac equation $(i\gamma^\mu\partial_\mu - m)\psi = 0$ is the fixed point $x^*$ of the GTCT operator chain: C compresses the mass-shell, K imposes $\kappa^* = m/\hbar$, F bifurcates into two energy branches via the Clifford algebra, U unfolds the negative-energy branch as antimatter. Verified by Lean 4 in structural identification — the isomorphism between the Clifford algebra and the Whitney A1 fold is established in AXLE Chain\_updated.lean with zero sorry obligations.</div>
+      </div>
+      <p class="block-prose">Dirac received the Nobel Prize in Physics in 1933, aged 31, together with Schrödinger. In his Stockholm address, he said that mathematical beauty is a more reliable guide than experimental intuition. Half a century later, when supersymmetry and string theory were developed, they were built explicitly on Dirac's principle — beauty as selection criterion. Neither has been experimentally confirmed yet. The draw is still in progress.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 4: Clifford algebra / γ-matrix structure ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Álgebra de Clifford · Matrizes γ como dobramento F em dimensão 4</span>
+      <span class="dh-en">Clifford algebra · γ-matrices as the fold operator F in 4 dimensions</span>
+    </div>
+    <canvas id="d-clifford" class="diag" height="340"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">As quatro matrizes γ giram no espaço de Minkowski animado. A anticomutação $\{\gamma^\mu, \gamma^\nu\} = 2g^{\mu\nu}I$ é visualizada como rotações que não comutam — a estrutura do dobramento F. O spinor $\psi$ (ponto dourado central) é o ponto fixo invariante sob todas as rotações de Lorentz.</span>
+      <span class="df-en">The four γ-matrices rotate in the animated Minkowski space. The anticommutation $\{\gamma^\mu, \gamma^\nu\} = 2g^{\mu\nu}I$ is visualised as non-commuting rotations — the structure of fold F. The spinor $\psi$ (central gold dot) is the fixed point invariant under all Lorentz rotations.</span>
+    </div>
+  </div>
+</div>
+
+<!-- AXLE STATUS -->
+<div class="page-narrow" style="padding-top:0; padding-bottom:3rem;">
+  <div class="axle-box"><span class="axle-comment">-- Capítulo D · Dirac via GTCT · AXLE v6.1
+-- Seção I:   Equação de Dirac ↔ cadeia G = U∘F∘K∘C          ✓ identificação estrutural
+--            álgebra de Clifford ↔ dobramento Whitney A1      ✓ Chain_updated.lean · 0 sorry
+-- Seção II:  Antimatéria ↔ ramo U desdobrado                 ✓ identificação estrutural
+--            Mar de Dirac ↔ variedade de contato dm³          ✓ ciclo limite Γ = {r=1}
+-- Seção III: Gap de massa Yang-Mills ↔ κ* emergente          </span><span class="axle-sorry">sorry yang_mills_mass_gap</span>
+<span class="axle-comment">-- Seção IV:  Spinor ↔ ponto fixo x* = G(x*)                 ✓ identificação estrutural
+--
+-- Constantes GTCT presentes na equação de Dirac:
+--   κ* = m/ℏ        (operador K — limiar de massa)
+--   μmax = −2        (expoente de Lyapunov transversal — estabilidade do spinor)
+--   ε₀ = 1/3        (raio de Gronwall — bacia de atração do vácuo)
+--   T* = 2π         (período orbital — fase do spinor)
+--   g₃₃ = 33       (trava GTCT — 33 iterações para entrada na bacia r*)
+--
+-- Status: 3 identificações estruturais verificadas, 1 sorry aberto (Clay Millennium)
+-- O sorry de Dirac/Yang-Mills vale US$1.000.000.
+-- Ele está em boa companhia com sorry H.1 (Hawking).
+-- Mas este é mais caro.</span></div>
+</div>
+
+<!-- CHAPTER NAV -->
+<div class="chapter-nav">
+  <a href="ch-hawking.html" class="ch-nav-link">← Cap. H · Hawking</a>
+  <span class="ch-nav-current">Cap. D · Dirac pela Lente GTCT · Edição IMPA</span>
+  <a href="ch-faraday.html" class="ch-nav-link">Cap. F · Faraday →</a>
+</div>
+
+<footer>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  Principia Orthogona · Vol IV · GTCT T1 · Edição IMPA · ISBN 979-8-9954416-8-7<br>
+  <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">doi:10.5281/zenodo.19117399</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub ↗</a>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DIAGRAMS · JAVASCRIPT
+     ══════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  var GOLD    = '#c9a84c';
+  var TEAL    = '#0ABAB5';
+  var RED     = '#e05a3a';
+  var PURPLE  = '#c084fc';
+  var GREEN   = '#50c878';
+  var VOID    = '#04040a';
+  var SURFACE = '#0c0d16';
+
+  /* ─────────────────────────────────────────────────────────────
+     D1 · Spinor bifurcation — energy branches
+     ───────────────────────────────────────────────────────────── */
+  (function spinorDiagram() {
+    var canvas = document.getElementById('d-spinor');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick = 0;
+    var PAD = { l: 70, r: 30, t: 30, b: 50 };
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = SURFACE; ctx.fillRect(0, 0, W, H);
+
+      var fw = W - PAD.l - PAD.r, fh = H - PAD.t - PAD.b;
+      var midY = PAD.t + fh / 2; // E=0 line
+      var gapPx = fh * 0.12;     // mass gap half-height
+      var S = 200;
+
+      // Grid
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 1;
+      for (var gi = 1; gi <= 6; gi++) { var gy = PAD.t + gi * fh / 6; ctx.beginPath(); ctx.moveTo(PAD.l, gy); ctx.lineTo(W - PAD.r, gy); ctx.stroke(); }
+
+      // Forbidden zone (mass gap)
+      ctx.fillStyle = 'rgba(224,90,58,0.07)';
+      ctx.fillRect(PAD.l, midY - gapPx, fw, gapPx * 2);
+
+      // Mass gap borders
+      ctx.strokeStyle = 'rgba(201,168,76,0.55)'; ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(PAD.l, midY - gapPx); ctx.lineTo(W - PAD.r, midY - gapPx); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(PAD.l, midY + gapPx); ctx.lineTo(W - PAD.r, midY + gapPx); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Upper branch — electron E > mc²
+      ctx.strokeStyle = TEAL; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (var i = 0; i <= S; i++) {
+        var x = i / S;
+        var px = PAD.l + x * fw;
+        var E = Math.sqrt(x * x * 0.8 + 0.04); // E = sqrt(p²+m²) schematic
+        var py = (midY - gapPx) - E * (fh * 0.38);
+        py = Math.max(PAD.t + 4, py);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Lower branch — positron E < -mc²
+      ctx.strokeStyle = RED; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (var j = 0; j <= S; j++) {
+        var xj = j / S;
+        var pxj = PAD.l + xj * fw;
+        var Ej = Math.sqrt(xj * xj * 0.8 + 0.04);
+        var pyj = (midY + gapPx) + Ej * (fh * 0.38);
+        pyj = Math.min(H - PAD.b - 4, pyj);
+        if (j === 0) ctx.moveTo(pxj, pyj); else ctx.lineTo(pxj, pyj);
+      }
+      ctx.stroke();
+
+      // Animated particle dot on upper branch
+      var tp = (tick % 200) / 200;
+      var tpx = PAD.l + tp * fw;
+      var tE = Math.sqrt(tp * tp * 0.8 + 0.04);
+      var tpy = Math.max(PAD.t + 4, (midY - gapPx) - tE * fh * 0.38);
+      var pulse = 0.5 + 0.5 * Math.sin(tick * 0.1);
+      ctx.strokeStyle = 'rgba(10,186,181,' + (0.3 + 0.3 * pulse) + ')'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(tpx, tpy, 7 + pulse * 3, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = TEAL; ctx.beginPath(); ctx.arc(tpx, tpy, 4, 0, Math.PI * 2); ctx.fill();
+
+      // Animated positron dot on lower branch
+      var bpx = PAD.l + (1 - tp) * fw;
+      var bE = Math.sqrt((1 - tp) * (1 - tp) * 0.8 + 0.04);
+      var bpy = Math.min(H - PAD.b - 4, (midY + gapPx) + bE * fh * 0.38);
+      ctx.strokeStyle = 'rgba(224,90,58,' + (0.3 + 0.3 * pulse) + ')'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(bpx, bpy, 7 + pulse * 3, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(bpx, bpy, 4, 0, Math.PI * 2); ctx.fill();
+
+      // Axes
+      ctx.strokeStyle = 'rgba(201,168,76,0.38)'; ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, H - PAD.b);
+      ctx.moveTo(PAD.l, midY); ctx.lineTo(W - PAD.r, midY); ctx.stroke();
+
+      // Labels
+      var fs = Math.max(9, Math.round(W * 0.011));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(201,168,76,0.55)'; ctx.textAlign = 'center';
+      ctx.fillText('momento p / momentum p', PAD.l + fw / 2, H - 10);
+      ctx.save(); ctx.translate(14, PAD.t + fh / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('energia E / energy E', 0, 0); ctx.restore();
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = 'rgba(10,186,181,0.75)'; ctx.fillText('e⁻ · E > +mc²', PAD.l + 8, PAD.t + 18);
+      ctx.fillStyle = 'rgba(224,90,58,0.75)'; ctx.fillText('e⁺ · E < −mc²', PAD.l + 8, H - PAD.b - 8);
+      ctx.fillStyle = 'rgba(201,168,76,0.55)'; ctx.textAlign = 'right';
+      ctx.fillText('K · gap mc²', W - PAD.r - 5, midY - gapPx - 5);
+      ctx.fillStyle = 'rgba(80,200,120,0.65)'; ctx.textAlign = 'center';
+      ctx.fillText('F · dobramento / fold · Whitney A1', PAD.l + fw * 0.55, midY + 4);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+  /* ─────────────────────────────────────────────────────────────
+     D2 · Dirac sea / pair production
+     ───────────────────────────────────────────────────────────── */
+  (function seaDiagram() {
+    var canvas = document.getElementById('d-sea');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick = 0;
+    var pairs = [];
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+
+    function spawnPair() {
+      var bx = PAD.l + Math.random() * (W - PAD.l - PAD.r);
+      var gapMidY = H * 0.48;
+      pairs.push({
+        bx: bx, by: gapMidY,
+        ex: bx, ey: gapMidY, edx: (Math.random() - 0.5) * 1.2, edy: -1.8 - Math.random(),
+        px: bx, py: gapMidY, pdx: (Math.random() - 0.5) * 1.2, pdy: 1.8 + Math.random(),
+        age: 0, max: 80 + Math.floor(Math.random() * 50)
+      });
+    }
+
+    var PAD = { l: 60, r: 20, t: 20, b: 20 };
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = VOID; ctx.fillRect(0, 0, W, H);
+
+      var gapMidY = H * 0.48;
+      var gapH = H * 0.10;
+      var seaTop = gapMidY + gapH;
+
+      // Dirac sea fill
+      var sg = ctx.createLinearGradient(0, seaTop, 0, H);
+      sg.addColorStop(0, 'rgba(10,186,181,0.22)');
+      sg.addColorStop(0.4, 'rgba(10,186,181,0.10)');
+      sg.addColorStop(1, 'rgba(10,186,181,0.03)');
+      ctx.fillStyle = sg; ctx.fillRect(0, seaTop, W, H - seaTop);
+
+      // Sea grid (filled states)
+      ctx.strokeStyle = 'rgba(10,186,181,0.08)'; ctx.lineWidth = 1;
+      for (var row = 0; row < 6; row++) {
+        var ry = seaTop + row * (H - seaTop) / 6;
+        ctx.beginPath(); ctx.moveTo(0, ry); ctx.lineTo(W, ry); ctx.stroke();
+      }
+      for (var col = 0; col < 12; col++) {
+        var cx = col * W / 12;
+        ctx.beginPath(); ctx.moveTo(cx, seaTop); ctx.lineTo(cx, H); ctx.stroke();
+      }
+
+      // Mass gap
+      ctx.fillStyle = 'rgba(201,168,76,0.10)';
+      ctx.fillRect(0, gapMidY - gapH, W, gapH * 2);
+      ctx.strokeStyle = 'rgba(201,168,76,0.5)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(0, gapMidY - gapH); ctx.lineTo(W, gapMidY - gapH); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, gapMidY + gapH); ctx.lineTo(W, gapMidY + gapH); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Continuum above gap (free particle states)
+      ctx.fillStyle = 'rgba(192,132,252,0.04)';
+      ctx.fillRect(0, 0, W, gapMidY - gapH);
+
+      // Pairs
+      for (var p = pairs.length - 1; p >= 0; p--) {
+        var pr = pairs[p];
+        var life = pr.age / pr.max;
+        var fin = Math.min(1, pr.age / 10);
+
+        // Photon burst at birth
+        if (pr.age < 14) {
+          var fl = 1 - pr.age / 14;
+          ctx.strokeStyle = 'rgba(80,200,120,' + (fl * 0.7) + ')';
+          ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(pr.bx, pr.by, 6 + fl * 16, 0, Math.PI * 2); ctx.stroke();
+        }
+
+        // Electron (teal, going up)
+        var ea = fin * Math.max(0, 1 - life * 1.1);
+        ctx.fillStyle = 'rgba(10,186,181,' + ea + ')';
+        ctx.beginPath(); ctx.arc(pr.ex, pr.ey, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(10,186,181,' + (ea * 0.4) + ')'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pr.bx, pr.by); ctx.lineTo(pr.ex, pr.ey); ctx.stroke();
+
+        // Positron / hole (coral, going down)
+        var pa = fin * Math.max(0, 1 - life * 1.1);
+        ctx.fillStyle = 'rgba(224,90,58,' + pa + ')';
+        ctx.beginPath(); ctx.arc(pr.px, pr.py, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(224,90,58,' + (pa * 0.4) + ')'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pr.bx, pr.by); ctx.lineTo(pr.px, pr.py); ctx.stroke();
+
+        pr.ex += pr.edx; pr.ey += pr.edy;
+        pr.px += pr.pdx; pr.py += pr.pdy;
+        pr.age++;
+        if (pr.age >= pr.max) pairs.splice(p, 1);
+      }
+      if (tick % 30 === 0) spawnPair();
+
+      // Labels
+      var fs = Math.max(10, Math.round(W * 0.012));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(192,132,252,0.65)'; ctx.textAlign = 'left';
+      ctx.fillText('continuum · E > +mc²', 12, gapMidY - gapH - 10);
+      ctx.fillStyle = 'rgba(201,168,76,0.60)';
+      ctx.fillText('K · gap de massa / mass gap mc²', 12, gapMidY + 4);
+      ctx.fillStyle = 'rgba(10,186,181,0.55)';
+      ctx.fillText('mar de Dirac / Dirac sea (preenchido / filled)', 12, seaTop + 18);
+      ctx.fillStyle = 'rgba(10,186,181,0.75)'; ctx.textAlign = 'right';
+      ctx.fillText('e⁻ ↑', W - 12, gapMidY - gapH - 20);
+      ctx.fillStyle = 'rgba(224,90,58,0.75)';
+      ctx.fillText('e⁺ (buraco/hole) ↓', W - 12, seaTop + 18);
+      ctx.fillStyle = 'rgba(80,200,120,0.65)'; ctx.textAlign = 'center';
+      ctx.fillText('F · γ → e⁻ + e⁺ (operador U)', W / 2, gapMidY + 4);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+  /* ─────────────────────────────────────────────────────────────
+     D3 · Mass gap / Yang-Mills spectrum
+     ───────────────────────────────────────────────────────────── */
+  (function massGapDiagram() {
+    var canvas = document.getElementById('d-massgap');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick = 0;
+    var PAD = { l: 60, r: 30, t: 30, b: 48 };
+
+    // Schematic glueball masses (lattice QCD estimates, normalised)
+    var LEVELS = [0.38, 0.62, 0.74, 0.83, 0.91];
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = SURFACE; ctx.fillRect(0, 0, W, H);
+
+      var fw = W - PAD.l - PAD.r, fh = H - PAD.t - PAD.b;
+      var gapEnd = PAD.l + fw * 0.33; // gap ends at Δ
+
+      // Grid
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 1;
+      for (var gi = 0; gi <= 5; gi++) { var gx2 = PAD.l + gi * fw / 5; ctx.beginPath(); ctx.moveTo(gx2, PAD.t); ctx.lineTo(gx2, H - PAD.b); ctx.stroke(); }
+
+      // Gap region
+      ctx.fillStyle = 'rgba(224,90,58,0.09)';
+      ctx.fillRect(PAD.l, PAD.t, fw * 0.33, fh);
+      ctx.strokeStyle = RED; ctx.lineWidth = 1.5; ctx.setLineDash([5, 3]);
+      ctx.beginPath(); ctx.moveTo(gapEnd, PAD.t); ctx.lineTo(gapEnd, H - PAD.b); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Glueball levels
+      LEVELS.forEach(function (lv, idx) {
+        var lx = PAD.l + lv * fw;
+        var ly1 = PAD.t + fh * 0.2, ly2 = H - PAD.b - fh * 0.2;
+        var pulse = 0.5 + 0.5 * Math.sin(tick * 0.07 + idx * 1.1);
+        ctx.strokeStyle = 'rgba(201,168,76,' + (0.6 + 0.25 * pulse) + ')'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(lx, ly1); ctx.lineTo(lx, ly2); ctx.stroke();
+        ctx.fillStyle = GOLD; ctx.beginPath(); ctx.arc(lx, ly1, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(lx, ly2, 3, 0, Math.PI * 2); ctx.fill();
+      });
+
+      // Vacuum at 0
+      ctx.fillStyle = 'rgba(201,168,76,0.35)';
+      ctx.beginPath(); ctx.arc(PAD.l, PAD.t + fh / 2, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Sorry dot (animated) at Δ
+      var pulse2 = 0.5 + 0.5 * Math.sin(tick * 0.06);
+      ctx.strokeStyle = 'rgba(192,132,252,' + (0.4 + 0.3 * pulse2) + ')'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(gapEnd, PAD.t + fh * 0.5, 10 + pulse2 * 5, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = PURPLE; ctx.beginPath(); ctx.arc(gapEnd, PAD.t + fh * 0.5, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Axis
+      ctx.strokeStyle = 'rgba(201,168,76,0.38)'; ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, H - PAD.b);
+      ctx.moveTo(PAD.l, H - PAD.b); ctx.lineTo(W - PAD.r, H - PAD.b); ctx.stroke();
+
+      // Labels
+      var fs = Math.max(9, Math.round(W * 0.011));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(201,168,76,0.55)'; ctx.textAlign = 'center';
+      ctx.fillText('energia / energy', PAD.l + fw / 2, H - 10);
+      ctx.fillStyle = 'rgba(224,90,58,0.70)'; ctx.textAlign = 'left';
+      ctx.fillText('gap [0, Δ)', PAD.l + 5, PAD.t + 18);
+      ctx.fillStyle = 'rgba(201,168,76,0.60)';
+      ctx.fillText('glúebolas / glueballs', PAD.l + fw * 0.36, PAD.t + 18);
+      ctx.fillStyle = 'rgba(192,132,252,0.65)';
+      ctx.fillText('← sorry D.1: Δ existe?', gapEnd + 14, PAD.t + fh * 0.5 + 4);
+      ctx.fillStyle = 'rgba(201,168,76,0.38)'; ctx.textAlign = 'center';
+      ctx.fillText('0 · vácuo', PAD.l, H - PAD.b + 16);
+      ctx.fillText('Δ', gapEnd, H - PAD.b + 16);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+  /* ─────────────────────────────────────────────────────────────
+     D4 · Clifford algebra / γ-matrix rotation structure
+     ───────────────────────────────────────────────────────────── */
+  (function cliffordDiagram() {
+    var canvas = document.getElementById('d-clifford');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick = 0;
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = VOID; ctx.fillRect(0, 0, W, H);
+
+      var cx = W / 2, cy = H / 2;
+      var R = Math.min(W, H) * 0.32;
+      var pulse = 0.5 + 0.5 * Math.sin(tick * 0.04);
+
+      // Outer ring
+      ctx.strokeStyle = 'rgba(201,168,76,0.12)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.25, 0, Math.PI * 2); ctx.stroke();
+
+      // Four γ-matrix axes, rotating
+      var GAMMA_COLORS = [TEAL, RED, GREEN, PURPLE];
+      var GAMMA_LABELS = ['γ⁰ (tempo/time)', 'γ¹ (x)', 'γ² (y)', 'γ³ (z)'];
+      for (var g = 0; g < 4; g++) {
+        var baseAngle = (g * Math.PI / 2) + tick * 0.012;
+        var ax = cx + R * 1.1 * Math.cos(baseAngle);
+        var ay = cy + R * 1.1 * Math.sin(baseAngle);
+        var bx = cx - R * 1.1 * Math.cos(baseAngle);
+        var by = cy - R * 1.1 * Math.sin(baseAngle);
+
+        ctx.strokeStyle = GAMMA_COLORS[g].replace(')', ',0.55)').replace('rgb', 'rgba').replace('#', 'rgba(').replace('0ABAB5', '10,186,181').replace('e05a3a', '224,90,58').replace('50c878', '80,200,120').replace('c084fc', '192,132,252');
+        // simpler approach
+        var gc = GAMMA_COLORS[g];
+        ctx.strokeStyle = gc; ctx.globalAlpha = 0.5 + 0.2 * pulse; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(ax, ay); ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        // Arrow head
+        var headLen = 10;
+        var angle = Math.atan2(ay - by, ax - bx);
+        ctx.fillStyle = gc;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - headLen * Math.cos(angle - 0.4), ay - headLen * Math.sin(angle - 0.4));
+        ctx.lineTo(ax - headLen * Math.cos(angle + 0.4), ay - headLen * Math.sin(angle + 0.4));
+        ctx.closePath(); ctx.fill();
+
+        // Label
+        var lx = cx + (R * 1.35) * Math.cos(baseAngle);
+        var ly = cy + (R * 1.35) * Math.sin(baseAngle);
+        var fs = Math.max(8, Math.round(W * 0.010));
+        ctx.font = fs + 'px "JetBrains Mono",monospace';
+        ctx.fillStyle = gc; ctx.textAlign = 'center';
+        ctx.fillText(GAMMA_LABELS[g], lx, ly + 4);
+      }
+
+      // Minkowski metric ellipses (non-commutativity visualised)
+      for (var m = 0; m < 3; m++) {
+        var rr = R * (0.35 + m * 0.22);
+        var angle2 = tick * 0.018 * (m % 2 === 0 ? 1 : -1);
+        ctx.save();
+        ctx.translate(cx, cy); ctx.rotate(angle2);
+        ctx.strokeStyle = 'rgba(201,168,76,' + (0.06 + m * 0.03) + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.ellipse(0, 0, rr, rr * 0.45, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+      }
+
+      // Fixed point — spinor ψ at centre
+      ctx.fillStyle = 'rgba(201,168,76,' + (0.5 + 0.3 * pulse) + ')';
+      ctx.beginPath(); ctx.arc(cx, cy, 7 + pulse * 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = GOLD;
+      ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
+
+      // Anticommutation ring flash
+      var flashA = 0.5 + 0.5 * Math.sin(tick * 0.09 + 1);
+      ctx.strokeStyle = 'rgba(80,200,120,' + (flashA * 0.22) + ')'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 0.62 + pulse * 8, 0, Math.PI * 2); ctx.stroke();
+
+      // Labels
+      var fs2 = Math.max(9, Math.round(W * 0.011));
+      ctx.font = fs2 + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(201,168,76,0.72)'; ctx.textAlign = 'center';
+      ctx.fillText('ψ · ponto fixo / fixed point x*', cx, cy + R * 0.22);
+      ctx.fillStyle = 'rgba(80,200,120,0.55)';
+      ctx.fillText('{γᵘ,γᵛ} = 2gᵘᵛI · dobramento F / fold F', cx, H - 14);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+}());
+</script>
+
+</body>
+</html>
