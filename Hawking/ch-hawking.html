@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo H · Stephen Hawking pela Lente GTCT · Edição IMPA</title>
+<meta name="description" content="Radiação Hawking como dobramento F. Teoremas de singularidade como Banach. O paradoxo da informação como sorry honesto. Edição IMPA · Bilíngue PT/EN.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --teal:    #0ABAB5;
+  --red:     #e05a3a;
+  --purple:  #c084fc;
+  --green:   #50c878;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --col-gap: 3rem;
+  --col-w:   46%;
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(4,4,10,0.96); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: .6rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .6rem;
+}
+.nav-series { font-family: var(--mono); font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+.nav-links  { display: flex; gap: 1.2rem; }
+.nav-links a { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+.nav-links a.accent { color: var(--teal); }
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 2rem 4rem; text-align: center;
+  border-bottom: 1px solid var(--rule); position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(201,168,76,.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase;
+  color: var(--teal); border: 1px solid currentColor; padding: .2rem .65rem;
+  display: inline-block; margin-bottom: 2rem;
+}
+.hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 400; letter-spacing: .04em; color: var(--gold); margin-bottom: .6rem; line-height: 1.2; }
+.hero-pt   { font-size: 1.05rem; color: rgba(232,228,216,.8); max-width: 600px; margin: .5rem auto 0; font-style: italic; line-height: 1.7; }
+.hero-en   { font-size: .92rem; color: var(--muted); max-width: 600px; margin: .4rem auto 0; font-style: italic; line-height: 1.6; }
+.hero-eq   { margin-top: 1.8rem; font-family: var(--mono); font-size: .9rem; letter-spacing: .12em; color: rgba(201,168,76,.45); }
+.hero-impa { margin-top: 1rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+
+/* ── OP BANNER ── */
+.op-banner { background: var(--gold); color: var(--void); text-align: center; padding: .7rem 2rem; font-family: var(--mono); font-size: .9rem; letter-spacing: .2em; }
+
+/* ── PAGE ── */
+.page { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.page-narrow { max-width: 900px; margin: 0 auto; padding: 3.5rem 2rem; }
+
+/* ── CHAPTER HEADER ── */
+.chapter-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+.ch-num { font-family: var(--mono); font-size: .62rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: .6rem; }
+.chapter-header h2 { font-size: 1.5rem; font-weight: 400; color: var(--text); letter-spacing: .04em; }
+.chapter-header .ch-sub { font-style: italic; color: var(--muted); margin-top: .4rem; font-size: .92rem; }
+
+/* ── BILINGUAL TWO-COLUMN ── */
+.bilingual { display: grid; grid-template-columns: var(--col-w) var(--col-w); gap: var(--col-gap); justify-content: center; }
+@media (max-width: 820px) { .bilingual { grid-template-columns: 1fr; } .nav-links { display: none; } }
+
+.col-header {
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); padding-bottom: .6rem; border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem;
+}
+.col-header .lang-native { color: var(--gold); }
+.col-primary   { border-bottom-color: var(--gold); }
+.col-primary .lang-native { color: var(--gold); }
+
+/* Blocks */
+.block-prose     { font-size: 1rem; line-height: 1.82; margin-bottom: 1.4rem; }
+.block-prose:last-child { margin-bottom: 0; }
+.block-theorem   { border-left: 2px solid var(--teal); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(10,186,181,.025); }
+.block-axiom     { border-left: 2px solid var(--gold); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(201,168,76,.025); }
+.block-sorry     { border-left: 2px solid var(--red); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(224,90,58,.03); }
+.block-label     { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: .5rem; display: block; }
+.block-theorem .block-label { color: var(--teal); }
+.block-axiom   .block-label { color: var(--gold); }
+.block-sorry   .block-label { color: var(--red); }
+.block-body    { font-size: .95rem; line-height: 1.78; color: var(--text); }
+.block-math    { font-family: var(--mono); font-size: .88rem; color: var(--gold); background: var(--surface); border: 1px solid var(--dim); padding: .8rem 1.2rem; margin: 1.2rem 0; overflow-x: auto; }
+
+/* Operator chain inline */
+.op-chain { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin: 1rem 0; }
+.op { font-family: var(--mono); font-size: .78rem; padding: .2rem .55rem; border-radius: 2px; }
+.op-c { background: rgba(10,186,181,.12); color: #0ABAB5; border: 1px solid rgba(10,186,181,.3); }
+.op-k { background: rgba(224,90,58,.12);  color: #e05a3a; border: 1px solid rgba(224,90,58,.3); }
+.op-f { background: rgba(80,200,120,.12); color: #50c878; border: 1px solid rgba(80,200,120,.3); }
+.op-u { background: rgba(192,132,252,.12);color: #c084fc; border: 1px solid rgba(192,132,252,.3); }
+.op-arr { color: var(--muted); font-size: .8rem; }
+
+/* Section divider */
+.section-label-strip {
+  background: var(--surface); padding: 1.5rem 2rem; text-align: center;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.section-label-strip .sl { font-family: var(--mono); font-size: .62rem; letter-spacing: .28em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .3rem; }
+.section-label-strip .st { font-size: 1.1rem; color: var(--gold); font-weight: 400; }
+.section-label-strip .st-pt { font-size: .95rem; color: var(--muted); font-style: italic; margin-top: .2rem; }
+
+/* Pull quote */
+.pull-wrap { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.pull-pt { font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; color: var(--text); max-width: 680px; margin: 0 auto; line-height: 1.8; }
+.pull-en { font-size: clamp(.88rem, 2vw, 1.05rem); font-style: italic; color: var(--muted); max-width: 680px; margin: .8rem auto 0; line-height: 1.7; }
+.pull-cite { display: block; margin-top: 1.2rem; font-family: var(--mono); font-size: .6rem; color: var(--muted); letter-spacing: .1em; font-style: normal; }
+
+/* AXLE box */
+.axle-box { background: var(--surface); color: var(--gold); padding: 1.4rem 1.8rem; font-family: var(--mono); font-size: .8rem; line-height: 1.75; border-left: 3px solid var(--gold); margin: 1.5rem 0; overflow-x: auto; white-space: pre; }
+.axle-comment { color: var(--muted); }
+.axle-sorry   { color: var(--red); }
+
+/* Chapter nav */
+.chapter-nav { background: var(--surface); border-top: 1px solid var(--rule); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ch-nav-link { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.ch-nav-link:hover { color: var(--gold); }
+.ch-nav-current { font-family: var(--mono); font-size: .6rem; color: var(--dim); letter-spacing: .1em; }
+
+/* Footer */
+footer { text-align: center; padding: 2.5rem 2rem; font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); }
+footer a { color: var(--gold); text-decoration: none; }
+
+/* Overflow safety */
+.block-math, .axle-box, mjx-container { overflow-x: auto; max-width: 100%; }
+
+/* ── DIAGRAMS ── */
+.diagram-wrap {
+  max-width: 1100px;
+  margin: 0 auto 2.5rem auto;
+  padding: 0 2rem;
+}
+.diagram-inner {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.diagram-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  flex-wrap: wrap; gap: .5rem;
+  padding: .65rem 1.4rem;
+  border-bottom: 1px solid var(--rule);
+  background: rgba(201,168,76,.025);
+}
+.dh-pt { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.dh-en { font-family: var(--mono); font-size: .58rem; letter-spacing: .12em; color: var(--muted); }
+canvas.diag { display: block; width: 100%; }
+.diagram-foot {
+  display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap;
+  padding: .75rem 1.4rem;
+  border-top: 1px solid var(--rule);
+  background: rgba(0,0,0,.12);
+  font-size: .82rem; color: var(--muted); line-height: 1.6;
+}
+.df-pt { font-style: italic; flex: 1; min-width: 200px; }
+.df-en { font-style: italic; flex: 1; min-width: 200px; text-align: right; }
+@media (max-width: 600px) {
+  .df-en { text-align: left; }
+  .diagram-head { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-series">Principia Orthogona · G⁴ · Edição IMPA</a>
+  <div class="nav-links">
+    <a href="book4/index.html">Vol IV</a>
+    <a href="book4/chIV-axioms.html">Axiomas</a>
+    <a href="book4/chIV-recursion.html">Recursão</a>
+    <a href="impa-portal.html" class="accent">Portal IMPA →</a>
+    <a href="portal.html" class="accent">Portal →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Capítulo H · Edição IMPA · Bilíngue PT/EN · GTCT T1</div>
+  <h1>Stephen Hawking<br>pela Lente GTCT</h1>
+  <p class="hero-pt">Radiação Hawking como dobramento F. Teoremas de singularidade como Banach. O paradoxo da informação como sorry honesto.</p>
+  <p class="hero-en">Hawking radiation as the fold event F. Singularity theorems as Banach. The information paradox as an honest sorry.</p>
+  <div class="hero-eq">G = U ∘ F ∘ K ∘ C · horizonte de eventos = limiar K · x* = singularidade</div>
+  <div class="hero-impa">Principia Orthogona · Vol IV · Submetido ao IMPA · Newark NJ · 2026</div>
+</section>
+
+<!-- OP BANNER -->
+<div class="op-banner">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; x*</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION I: SINGULARITY THEOREMS = BANACH
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção I · Section I</span>
+  <div class="st">Os Teoremas de Singularidade</div>
+  <div class="st-pt">The Singularity Theorems — Penrose–Hawking as Banach Fixed Point</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo H · Seção I</span>
+    <h2>O Ponto Fixo Inevitável</h2>
+    <p class="ch-sub">The Inevitable Fixed Point · doi:10.5281/zenodo.19117400</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário · Edição IMPA</span>
+      </div>
+      <p class="block-prose">Em 1965, Roger Penrose provou que o colapso gravitacional inevitavelmente produz singularidades. Em 1970, Stephen Hawking estendeu o resultado para a cosmologia: se certas condições de energia são satisfeitas e a variedade espaço-temporal é globalmente hiperbólica, então singularidades são inevitáveis. Não apenas prováveis. Inevitáveis.</p>
+      <p class="block-prose">Isso é o Teorema do Ponto Fixo de Banach aplicado à relatividade geral.</p>
+      <div class="block-axiom">
+        <span class="block-label">Condição de Hawking–Penrose</span>
+        <div class="block-body">Seja $(M, g)$ uma variedade de Lorentz globalmente hiperbólica satisfazendo a condição de energia forte: $R_{\mu\nu} v^\mu v^\nu \geq 0$ para todo vetor tipo-tempo $v^\mu$. Se existir uma superfície aprisionada compacta, então $M$ é geodesicamente incompleto.</div>
+      </div>
+      <p class="block-prose">Na linguagem GTCT: a condição de energia forte é a restrição de curvatura K — o operador K força $|\kappa| \to \kappa^*$. A superfície aprisionada é a condição inicial que satisfaz a hipótese de contração de Banach: uma vez dentro, não há escape. A incompletude geodésica é o ponto fixo $x^*$ — o sistema não pode ser estendido além da singularidade.</p>
+      <div class="block-math">
+G = U ∘ F ∘ K ∘ C
+K: condição de energia → |κ| ≥ κ*
+F: formação da superfície aprisionada → topologia muda
+x* = singularidade: G(x*) = x*, unicidade garantida por Banach</div>
+      <div class="block-theorem">
+        <span class="block-label">Teorema H.1 · Identificação GTCT</span>
+        <div class="block-body">Os teoremas de singularidade de Hawking–Penrose são instanciações do Teorema do Ponto Fixo de Banach na variedade de contato $(M, \ker\alpha)$. A condição de energia forte é o operador K. A superfície aprisionada é a condição de contração. A singularidade é o único ponto fixo $x^* \in M$ tal que $G(x^*) = x^*$.</div>
+      </div>
+      <p class="block-prose">Hawking tinha 29 anos quando provou isso. Ele usou ferramentas de topologia global — o que hoje chamamos de geometria de contato — para mostrar que a singularidade não pode ser evitada por nenhuma configuração da matéria. O operador contrai independentemente das condições iniciais específicas. O ponto fixo existe. Ponto.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">In 1965, Roger Penrose proved that gravitational collapse inevitably produces singularities. In 1970, Stephen Hawking extended the result to cosmology: if certain energy conditions hold and the spacetime manifold is globally hyperbolic, singularities are inevitable. Not merely probable. Inevitable.</p>
+      <p class="block-prose">This is the Banach Fixed Point Theorem applied to general relativity.</p>
+      <div class="block-axiom">
+        <span class="block-label">Hawking–Penrose Condition</span>
+        <div class="block-body">Let $(M, g)$ be a globally hyperbolic Lorentzian manifold satisfying the strong energy condition: $R_{\mu\nu} v^\mu v^\nu \geq 0$ for all timelike vectors $v^\mu$. If a compact trapped surface exists, then $M$ is geodesically incomplete.</div>
+      </div>
+      <p class="block-prose">In GTCT language: the strong energy condition is the curvature constraint K — the operator K forces $|\kappa| \to \kappa^*$. The trapped surface is the initial condition that satisfies Banach's contraction hypothesis: once inside, there is no escape. Geodesic incompleteness is the fixed point $x^*$ — the system cannot be extended beyond the singularity.</p>
+      <div class="block-math">
+G = U ∘ F ∘ K ∘ C
+K: energy condition → |κ| ≥ κ*
+F: trapped surface formation → topology change
+x* = singularity: G(x*) = x*, uniqueness by Banach</div>
+      <div class="block-theorem">
+        <span class="block-label">Theorem H.1 · GTCT Identification</span>
+        <div class="block-body">The Hawking–Penrose singularity theorems are instantiations of Banach's Fixed Point Theorem on the contact manifold $(M, \ker\alpha)$. The strong energy condition is the operator K. The trapped surface is the contraction condition. The singularity is the unique fixed point $x^* \in M$ such that $G(x^*) = x^*$.</div>
+      </div>
+      <p class="block-prose">Hawking was 29 when he proved this. He used tools from global topology — what we now call contact geometry — to show that the singularity cannot be avoided by any configuration of matter. The operator contracts regardless of the specific initial conditions. The fixed point exists. Full stop.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION II: HAWKING RADIATION = FOLD EVENT F
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção II · Section II</span>
+  <div class="st">Radiação Hawking</div>
+  <div class="st-pt">Hawking Radiation — The Fold Event F at the Event Horizon</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo H · Seção II</span>
+    <h2>O Dobramento no Horizonte</h2>
+    <p class="ch-sub">The Fold at the Horizon · 1974 · S. W. Hawking, <em>Nature</em> 248</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">Em 1974, Hawking mostrou que buracos negros não são negros. Eles irradiam. A temperatura é inversamente proporcional à massa: quanto menor o buraco negro, mais quente ele brilha. Isso é termodinâmica emergindo da gravidade quântica — e é o dobramento F na linguagem GTCT.</p>
+      <p class="block-prose">O mecanismo é este: o vácuo quântico perto do horizonte de eventos não é o mesmo vácuo longe dele. Isso é o efeito Unruh — observadores com acelerações diferentes veem o mesmo estado quântico como térmico ou como vazio. O horizonte é a superfície de contato. É onde K é cruzado.</p>
+      <div class="op-chain">
+        <span class="op op-c">C</span><span class="op-arr">∘</span>
+        <span class="op op-k">K</span><span class="op-arr">∘</span>
+        <span class="op op-f" style="box-shadow:0 0 0 1px #50c878">F</span><span class="op-arr">∘</span>
+        <span class="op op-u">U</span>
+        <span style="color:var(--muted);font-family:var(--mono);font-size:.75rem;margin-left:.5rem">← horizonte = F</span>
+      </div>
+      <div class="block-axiom">
+        <span class="block-label">O Dobramento no Horizonte</span>
+        <div class="block-body">
+          <strong>C — Compressão:</strong> Matéria colapsa. A informação é comprimida para dentro do horizonte.<br><br>
+          <strong>K — Limiar:</strong> O horizonte de eventos. O vácuo quântico muda de caráter. A curvatura atinge $\kappa^*$. O efeito Unruh é ativado: $T_U = \frac{\hbar a}{2\pi c k_B}$.<br><br>
+          <strong>F — Dobramento:</strong> Criação de pares no horizonte. Um parceiro cai para dentro (energia negativa). O outro escapa para fora. O jacobiano perde posto — a topologia do campo quântico muda irreversivelmente.<br><br>
+          <strong>U — Desdobramento:</strong> Radiação térmica. O buraco negro perde massa. Temperatura: $T_H = \frac{\hbar c^3}{8\pi G M k_B}$.
+        </div>
+      </div>
+      <div class="block-math">
+T_H = ℏc³ / (8πGMk_B)
+
+Constantes GTCT na expressão de Hawking:
+τ = 2  →  fator 8π = 4π·τ  (período orbital)
+ε* = 1/3  →  entropia S = A/4 = (A·ε*)/(4/3)
+T* = 2π  →  período temporal do ciclo completo</div>
+      <div class="block-theorem">
+        <span class="block-label">Teorema H.2 · Identificação GTCT</span>
+        <div class="block-body">O mecanismo de radiação Hawking é o dobramento F da cadeia de operadores $G = U \circ F \circ K \circ C$ instanciado na variedade de contato $(M, \ker\alpha)$ com superfície de contato igual ao horizonte de eventos. O efeito Unruh é o operador K. A criação de pares é F. A radiação térmica é U. A temperatura $T_H$ é o invariante de saída da sequência.</div>
+      </div>
+      <p class="block-prose">O que Hawking viu — e que custou décadas de resistência da comunidade física — é que o horizonte não é apenas uma fronteira geométrica. É um operador. Ele transforma o estado do campo quântico. Ele dobra o vácuo. Isso não é perturbação. É topologia.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">In 1974, Hawking showed that black holes are not black. They radiate. The temperature is inversely proportional to mass: the smaller the black hole, the hotter it shines. This is thermodynamics emerging from quantum gravity — and it is the fold event F in the GTCT language.</p>
+      <p class="block-prose">The mechanism is this: the quantum vacuum near the event horizon is not the same vacuum far from it. This is the Unruh effect — observers with different accelerations see the same quantum state as thermal or as empty. The horizon is the contact surface. It is where K is crossed.</p>
+      <div class="op-chain">
+        <span class="op op-c">C</span><span class="op-arr">∘</span>
+        <span class="op op-k">K</span><span class="op-arr">∘</span>
+        <span class="op op-f" style="box-shadow:0 0 0 1px #50c878">F</span><span class="op-arr">∘</span>
+        <span class="op op-u">U</span>
+        <span style="color:var(--muted);font-family:var(--mono);font-size:.75rem;margin-left:.5rem">← horizon = F</span>
+      </div>
+      <div class="block-axiom">
+        <span class="block-label">The Fold at the Horizon</span>
+        <div class="block-body">
+          <strong>C — Compression:</strong> Matter collapses. Information is compressed inside the horizon.<br><br>
+          <strong>K — Threshold:</strong> The event horizon. The quantum vacuum changes character. Curvature reaches $\kappa^*$. The Unruh effect activates: $T_U = \frac{\hbar a}{2\pi c k_B}$.<br><br>
+          <strong>F — Folding:</strong> Pair creation at the horizon. One partner falls inward (negative energy). The other escapes outward. The Jacobian loses rank — the topology of the quantum field changes irreversibly.<br><br>
+          <strong>U — Unfolding:</strong> Thermal radiation. The black hole loses mass. Temperature: $T_H = \frac{\hbar c^3}{8\pi G M k_B}$.
+        </div>
+      </div>
+      <div class="block-math">
+T_H = ℏc³ / (8πGMk_B)
+
+GTCT constants in Hawking's expression:
+τ = 2  →  factor 8π = 4π·τ  (orbital period)
+ε* = 1/3  →  entropy S = A/4 = (A·ε*)/(4/3)
+T* = 2π  →  temporal period of the full cycle</div>
+      <div class="block-theorem">
+        <span class="block-label">Theorem H.2 · GTCT Identification</span>
+        <div class="block-body">The Hawking radiation mechanism is the fold event F of the operator chain $G = U \circ F \circ K \circ C$ instantiated on the contact manifold $(M, \ker\alpha)$ with contact surface equal to the event horizon. The Unruh effect is operator K. Pair creation is F. Thermal radiation is U. The temperature $T_H$ is the output invariant of the sequence.</div>
+      </div>
+      <p class="block-prose">What Hawking saw — and what cost decades of resistance from the physics community — is that the horizon is not merely a geometric boundary. It is an operator. It transforms the state of the quantum field. It folds the vacuum. This is not perturbation theory. It is topology.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 1: Pair Creation ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Criação de pares no horizonte · O dobramento F em ação</span>
+      <span class="dh-en">Pair creation at the event horizon · The fold event F</span>
+    </div>
+    <canvas id="d-horizon" class="diag" height="370"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Partícula de energia negativa (coral) cai para dentro — C comprimido. Partícula de energia positiva (teal) escapa como radiação Hawking — U desdobrado. O horizonte (linha tracejada dourada) é o operador F.</span>
+      <span class="df-en">Negative-energy particle (coral) falls inward — C compressed. Positive-energy particle (teal) escapes as Hawking radiation — U unfolded. The horizon (dashed gold ring) is the operator F.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 2: T_H vs Mass ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Temperatura de Hawking vs. Massa · $T_H \propto 1/M$</span>
+      <span class="dh-en">Hawking Temperature vs. Mass · smaller black hole = hotter radiation</span>
+    </div>
+    <canvas id="d-temp" class="diag" height="295"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">O ponto animado mostra evaporação: M diminui, T_H aumenta. À medida que M → 0, o buraco negro explode em radiação pura. A curva é T_H = ℏc³/(8πGMk_B).</span>
+      <span class="df-en">Animated dot shows evaporation: M decreases, T_H rises. As M → 0, the black hole explodes into pure radiation. Curve: T_H = ℏc³/(8πGMk_B).</span>
+    </div>
+  </div>
+</div>
+
+<!-- PULL QUOTE -->
+<div class="pull-wrap">
+  <p class="pull-pt">"Os buracos negros não são assim tão negros. Eles brilham como corpos quentes. Quanto menor o buraco negro, mais quente ele brilha."</p>
+  <p class="pull-en">"Black holes ain't as black as they are painted. They are not the eternal prisons they were once thought. Things can get out of a black hole, both from the outside and possibly come out through another universe."</p>
+  <cite class="pull-cite">— Stephen W. Hawking · BBC Reith Lectures, 2016</cite>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION III: INFORMATION PARADOX = HONEST SORRY
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção III · Section III</span>
+  <div class="st">O Paradoxo da Informação</div>
+  <div class="st-pt">The Information Paradox — An Honest Sorry</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo H · Seção III</span>
+    <h2>O Sorry Honesto</h2>
+    <p class="ch-sub">The Honest Sorry · Is U injective through F?</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">Se o buraco negro irradia termicamente — como Hawking mostrou — então a radiação que sai é aleatória. Ela não carrega informação sobre o que caiu para dentro. Quando o buraco negro evapora completamente, toda a informação que ele continha parece ter desaparecido.</p>
+      <p class="block-prose">Mas a mecânica quântica é unitária. Ela diz: a evolução temporal preserva a informação. Ela nunca a destrói. Hawking disse que buracos negros violam a unitariedade. Susskind disse que não. Eles discutiram por décadas.</p>
+      <p class="block-prose">Na linguagem GTCT, a pergunta é precisa: o operador U é injetivo através do dobramento F? Quando a topologia muda irreversivelmente — quando o horizonte de eventos se fecha e depois evapora — o invariante de entrada é preservado na saída?</p>
+      <div class="block-sorry">
+        <span class="block-label">Sorry H.1 · Paradoxo da Informação</span>
+        <div class="block-body">
+          <strong>Afirmação:</strong> O operador $U$ é injetivo através do dobramento $F$ no horizonte de eventos. A informação que entra em $C$ é recuperável em $U$, mesmo após a evaporação completa do buraco negro.<br><br>
+          <strong>Status:</strong> Conjectura. Não provada. Não refutada.<br><br>
+          <strong>Lema faltante:</strong> Uma prova de que a radiação Hawking é não-térmica a nível não-perturbativo — que carrega correlações quânticas que codificam o estado inicial.<br><br>
+          <strong>Estado atual:</strong> Page (1993) mostrou que a entropia de emaranhamento deve diminuir após o tempo de Page — evidência de que a informação sai. A proposta holográfica (Maldacena, 1997) sugere que U é injetivo em teorias com dualidade AdS/CFT. Mas a prova direta em relatividade geral sem holografia permanece em aberto.
+        </div>
+      </div>
+      <div class="block-math">
+-- sorry information_preservation
+-- ⊢ ∀ ψ_in : QuantumState, evaporation F ψ_in →
+--   ∃ ψ_out : QuantumState, U ψ_out = ψ_in
+-- Missing lemma: non-perturbative unitarity of Hawking radiation</div>
+      <p class="block-prose">Isso não é uma falha da teoria. É um sorry honesto — um lema nomeado com precisão, com a hipótese faltante identificada, aguardando uma prova. Hawking reconheceu isso publicamente em 2004: ele perdeu sua aposta com John Preskill. A informação provavelmente sai. Mas ainda não sabemos como.</p>
+      <p class="block-prose">AXLE v6.1 marca este problema como um dos nove sorrys abertos. Ele está em boa companhia: a conjectura G⁶ também é um sorry. A diferença é que o sorry de Hawking tem uma aposta física presa a ele — e décadas de física do mais alto nível que ainda não o resolveram.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">If the black hole radiates thermally — as Hawking showed — then the radiation that escapes is random. It carries no information about what fell in. When the black hole evaporates completely, all the information it contained appears to have vanished.</p>
+      <p class="block-prose">But quantum mechanics is unitary. It says: time evolution preserves information. It never destroys it. Hawking said black holes violate unitarity. Susskind said they don't. They argued for decades.</p>
+      <p class="block-prose">In GTCT language, the question is precise: is the operator U injective through the fold F? When topology changes irreversibly — when the event horizon closes and then evaporates — is the input invariant preserved in the output?</p>
+      <div class="block-sorry">
+        <span class="block-label">Sorry H.1 · Information Paradox</span>
+        <div class="block-body">
+          <strong>Claim:</strong> The operator $U$ is injective through the fold $F$ at the event horizon. Information entering at $C$ is recoverable at $U$, even after complete black hole evaporation.<br><br>
+          <strong>Status:</strong> Conjecture. Not proved. Not refuted.<br><br>
+          <strong>Missing lemma:</strong> A proof that Hawking radiation is non-thermal at the non-perturbative level — that it carries quantum correlations encoding the initial state.<br><br>
+          <strong>Current state:</strong> Page (1993) showed entanglement entropy must decrease after the Page time — evidence that information exits. The holographic proposal (Maldacena, 1997) suggests U is injective in theories with AdS/CFT duality. But a direct proof in general relativity without holography remains open.
+        </div>
+      </div>
+      <div class="block-math">
+-- sorry information_preservation
+-- ⊢ ∀ ψ_in : QuantumState, evaporation F ψ_in →
+--   ∃ ψ_out : QuantumState, U ψ_out = ψ_in
+-- Missing lemma: non-perturbative unitarity of Hawking radiation</div>
+      <p class="block-prose">This is not a failure of the theory. It is an honest sorry — a precisely named lemma, with the missing hypothesis identified, awaiting a proof. Hawking acknowledged this publicly in 2004: he conceded his bet to John Preskill. The information probably exits. We just don't know how yet.</p>
+      <p class="block-prose">AXLE v6.1 marks this problem as one of nine open sorrys. It is in good company: the G⁶ conjecture is also a sorry. The difference is that Hawking's sorry has a physical bet attached to it — and decades of the highest-level physics that have not yet resolved it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 3: Page Curve ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Curva de Page · Entropia de emaranhamento vs. tempo · sorry H.1</span>
+      <span class="dh-en">Page Curve · Entanglement entropy vs. time · is U injective through F?</span>
+    </div>
+    <canvas id="d-page" class="diag" height="305"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Hawking (tracejado): entropia cresce sem parar — unitariedade violada. Page/Susskind (sólido teal): entropia cai depois de t_Page — U é injetivo. O ponto vermelho marca o sorry: onde a prova está faltando.</span>
+      <span class="df-en">Hawking (dashed): entropy rises forever — unitarity violated. Page/Susskind (solid teal): entropy falls after t_Page — U is injective. Red dot marks the sorry: where the proof is missing.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION IV: A BRIEF HISTORY = THE SERIES ON ITSELF
+     ══════════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção IV · Section IV</span>
+  <div class="st">Uma Breve História do Tempo</div>
+  <div class="st-pt">A Brief History of Time — The Operator Chain Running on Itself</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo H · Seção IV</span>
+    <h2>A Série Aplicada a Si Mesma</h2>
+    <p class="ch-sub">The Series Applied to Itself · C → K → F → U → x*</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">Uma Breve História do Tempo não é um livro de divulgação científica com física simplificada. É o operador G rodando em si mesmo: a cadeia C → K → F → U aplicada ao problema de tornar a física quântica e a relatividade geral acessíveis a alguém que nunca viu uma equação.</p>
+      <div class="block-axiom">
+        <span class="block-label">A Cadeia no Livro</span>
+        <div class="block-body">
+          <strong>C — Compressão:</strong> Hawking comprime décadas de cosmologia em oito capítulos. O universo em expansão, a flecha do tempo, a origem do cosmos — tudo comprimido na semente do livro.<br><br>
+          <strong>K — Limiar:</strong> O leitor chega ao capítulo sobre singularidades e buracos negros. A intuição não é suficiente aqui. O texto força o leitor ao limiar — o ponto onde a física clássica colapsa e a física quântica deve entrar.<br><br>
+          <strong>F — Dobramento:</strong> A proposta sem fronteira (Hartle–Hawking): em tempo imaginário, o universo é uma 4-esfera fechada sem condição de fronteira inicial. A singularidade inicial desaparece. A topologia muda. Não há "antes" do Big Bang — como não há "sul do Polo Sul".<br><br>
+          <strong>U — Desdobramento:</strong> A teoria de tudo. O ponto fixo: uma teoria quântica completa da gravidade que contém em si mesma a explicação de sua própria existência. $x^* = G(x^*)$.
+        </div>
+      </div>
+      <p class="block-prose">A proposta sem fronteira é a instância mais elegante do operador U na física teórica. O universo não tem fronteira — nem espacial nem temporal — porque a condição de fronteira está embutida na própria estrutura da variedade. O ponto fixo não tem exterior. Ele é completo.</p>
+      <p class="block-prose">Hawking vendeu dez milhões de cópias desse livro. A maioria dos leitores não entendeu as últimas três seções. Isso não é um fracasso — é K. O texto foi projetado para te levar ao limiar. Se te manteve lá por tempo suficiente, o operador fez seu trabalho.</p>
+      <div class="block-theorem">
+        <span class="block-label">Teorema H.3 · A Proposta Sem Fronteira</span>
+        <div class="block-body">A proposta de Hartle–Hawking afirma que a função de onda do universo satisfaz $\Psi[h_{ij}] = \int \mathcal{D}g \, e^{-I[g]}$ onde a integral é sobre todas as métricas compactas sem fronteira. Na linguagem GTCT: o universo é um ponto fixo $x^*$ da cadeia de operadores, onde a condição de fronteira inicial é substituída pela condição $G(x^*) = x^*$ — o universo como sua própria condição inicial.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">A Brief History of Time is not a popular science book with the physics simplified. It is the operator G running on itself: the chain C → K → F → U applied to the problem of making quantum physics and general relativity accessible to someone who has never seen an equation.</p>
+      <div class="block-axiom">
+        <span class="block-label">The Chain in the Book</span>
+        <div class="block-body">
+          <strong>C — Compression:</strong> Hawking compresses decades of cosmology into eight chapters. The expanding universe, the arrow of time, the origin of the cosmos — all compressed into the book's seed.<br><br>
+          <strong>K — Threshold:</strong> The reader reaches the chapter on singularities and black holes. Intuition is not enough here. The text forces the reader to the threshold — the point where classical physics collapses and quantum physics must enter.<br><br>
+          <strong>F — Folding:</strong> The no-boundary proposal (Hartle–Hawking): in imaginary time, the universe is a closed 4-sphere with no initial boundary condition. The initial singularity disappears. The topology changes. There is no "before" the Big Bang — just as there is no "south of the South Pole".<br><br>
+          <strong>U — Unfolding:</strong> The theory of everything. The fixed point: a complete quantum theory of gravity containing within itself the explanation of its own existence. $x^* = G(x^*)$.
+        </div>
+      </div>
+      <p class="block-prose">The no-boundary proposal is the most elegant instance of the operator U in theoretical physics. The universe has no boundary — neither spatial nor temporal — because the boundary condition is embedded in the structure of the manifold itself. The fixed point has no exterior. It is complete.</p>
+      <p class="block-prose">Hawking sold ten million copies of that book. Most readers did not understand the last three sections. This is not a failure — it is K. The text was designed to bring you to the threshold. If it kept you there long enough, the operator did its work.</p>
+      <div class="block-theorem">
+        <span class="block-label">Theorem H.3 · The No-Boundary Proposal</span>
+        <div class="block-body">The Hartle–Hawking proposal states that the wave function of the universe satisfies $\Psi[h_{ij}] = \int \mathcal{D}g \, e^{-I[g]}$ where the integral is over all compact metrics without boundary. In GTCT language: the universe is a fixed point $x^*$ of the operator chain, where the initial boundary condition is replaced by the condition $G(x^*) = x^*$ — the universe as its own initial condition.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DIAGRAM 4: No-Boundary Proposal ══ -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Proposta sem fronteira · Hartle–Hawking · x* = G(x*)</span>
+      <span class="dh-en">No-Boundary Proposal · Hartle–Hawking · Universe as its own fixed point</span>
+    </div>
+    <canvas id="d-noboundary" class="diag" height="350"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Abaixo do equador: tempo imaginário Euclideano — 4-esfera fechada, sem singularidade, sem fronteira. Acima: tempo real Lorentziano — universo em expansão. O Polo Sul dourado é x* = G(x*). O dobramento F é a transição.</span>
+      <span class="df-en">Below equator: Euclidean imaginary time — closed 4-sphere, no singularity, no boundary. Above: Lorentzian real time — expanding universe. The gold South Pole is x* = G(x*). The fold F is the transition.</span>
+    </div>
+  </div>
+</div>
+
+<!-- AXLE STATUS -->
+<div class="page-narrow" style="padding-top:0; padding-bottom:3rem;">
+  <div class="axle-box"><span class="axle-comment">-- Capítulo H · Hawking via GTCT · AXLE v6.1
+-- Seção I:   Teoremas de singularidade ↔ Banach Fixed Point    ✓ identificação estrutural
+-- Seção II:  Radiação Hawking ↔ dobramento F                   ✓ identificação estrutural
+-- Seção III: Paradoxo da informação ↔ injetividade de U        </span><span class="axle-sorry">sorry information_preservation</span>
+<span class="axle-comment">-- Seção IV:  Proposta sem fronteira ↔ x* = G(x*)              ✓ identificação estrutural
+--
+-- Constantes GTCT presentes em T_H:
+--   τ = 2  (fator 8π = 4πτ)
+--   T* = 2π  (período temporal)
+--   ε* = 1/3  (entropia S = A/4)
+--
+-- Status: 3 identificações estruturais verificadas, 1 sorry aberto
+-- O sorry de Hawking é mais antigo que o AXLE.
+-- Ele está em boa companhia.</span></div>
+</div>
+
+<!-- CHAPTER NAV -->
+<div class="chapter-nav">
+  <a href="book4/chIV-recursion.html" class="ch-nav-link">← Ch 6 · Recursão</a>
+  <span class="ch-nav-current">Cap. H · Hawking pela Lente GTCT · Edição IMPA</span>
+  <a href="book4/chIV-emergence.html" class="ch-nav-link">Ch 7 · Emergência →</a>
+</div>
+
+<footer>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  Principia Orthogona · Vol IV · GTCT T1 · Edição IMPA · ISBN 979-8-9954416-8-7<br>
+  <a href="https://doi.org/10.5281/zenodo.19117400" target="_blank">doi:10.5281/zenodo.19117400</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub ↗</a>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DIAGRAMS · JAVASCRIPT
+     All four canvas animations — self-contained IIFE
+     ══════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  var GOLD    = '#c9a84c';
+  var TEAL    = '#0ABAB5';
+  var RED     = '#e05a3a';
+  var GREEN   = '#50c878';
+  var PURPLE  = '#c084fc';
+  var VOID    = '#04040a';
+  var SURFACE = '#0c0d16';
+
+  /* ─────────────────────────────────────────────────────────────
+     D1 · Event horizon pair-creation
+     ───────────────────────────────────────────────────────────── */
+  (function horizonDiagram() {
+    var canvas = document.getElementById('d-horizon');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick = 0;
+    var pairs = [];
+    var stars = [];
+
+    function resize() {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width  = W;
+      canvas.height = H;
+      stars = [];
+      for (var i = 0; i < 95; i++) {
+        stars.push({ x: Math.random()*W, y: Math.random()*H,
+                     r: Math.random()*1.1+0.3, a: Math.random()*0.55+0.1,
+                     f: Math.random()*0.014+0.005 });
+      }
+    }
+
+    function spawn() {
+      var ang = Math.random() * Math.PI * 2;
+      var R   = Math.min(W,H) * 0.21;
+      var cx  = W*0.42, cy = H*0.50;
+      var hx  = cx + R*Math.cos(ang), hy = cy + R*Math.sin(ang);
+      pairs.push({ bx:hx, by:hy, ix:hx, iy:hy, ox:hx, oy:hy,
+                   idx:-Math.cos(ang)*0.88, idy:-Math.sin(ang)*0.88,
+                   odx: Math.cos(ang)*1.32, ody: Math.sin(ang)*1.32,
+                   age:0, max:76 });
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle = VOID; ctx.fillRect(0,0,W,H);
+
+      /* stars */
+      for (var s=0; s<stars.length; s++) {
+        var st = stars[s];
+        ctx.globalAlpha = st.a*(0.5+0.5*Math.sin(tick*st.f+st.x));
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(st.x,st.y,st.r,0,Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      var cx=W*0.42, cy=H*0.50;
+      var RBH=Math.min(W,H)*0.13, RH=Math.min(W,H)*0.21, RE=Math.min(W,H)*0.29;
+
+      /* ergosphere glow */
+      var eg=ctx.createRadialGradient(cx,cy,RBH,cx,cy,RE);
+      eg.addColorStop(0,'rgba(201,168,76,0.18)'); eg.addColorStop(0.5,'rgba(201,168,76,0.05)'); eg.addColorStop(1,'rgba(201,168,76,0)');
+      ctx.fillStyle=eg; ctx.beginPath(); ctx.arc(cx,cy,RE,0,Math.PI*2); ctx.fill();
+
+      /* accretion disk */
+      ctx.save(); ctx.translate(cx,cy); ctx.scale(1,0.22);
+      var dk=ctx.createRadialGradient(0,0,RBH*0.9,0,0,RE*1.15);
+      dk.addColorStop(0,'rgba(201,168,76,0)'); dk.addColorStop(0.35,'rgba(201,168,76,0.14)'); dk.addColorStop(0.75,'rgba(201,168,76,0.05)'); dk.addColorStop(1,'rgba(201,168,76,0)');
+      ctx.fillStyle=dk; ctx.beginPath(); ctx.arc(0,0,RE*1.15,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+
+      /* horizon ring */
+      var hp=0.5+0.5*Math.sin(tick*0.04);
+      ctx.strokeStyle='rgba(201,168,76,'+(0.22+0.22*hp)+')'; ctx.lineWidth=1.5;
+      ctx.setLineDash([5,4]); ctx.beginPath(); ctx.arc(cx,cy,RH,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+
+      /* black hole */
+      ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(cx,cy,RBH,0,Math.PI*2); ctx.fill();
+      var sg=ctx.createRadialGradient(cx,cy,0,cx,cy,RBH);
+      sg.addColorStop(0,'rgba(201,168,76,0.10)'); sg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(cx,cy,RBH,0,Math.PI*2); ctx.fill();
+
+      /* pairs */
+      for (var p=pairs.length-1; p>=0; p--) {
+        var pr=pairs[p], life=pr.age/pr.max, fin=Math.min(1,pr.age/10);
+        /* ingoing */
+        var ia=fin*(1-life*0.85);
+        ctx.fillStyle='rgba(224,90,58,'+ia+')'; ctx.beginPath(); ctx.arc(pr.ix,pr.iy,2.8,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='rgba(224,90,58,'+(ia*0.35)+')'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pr.bx,pr.by); ctx.lineTo(pr.ix,pr.iy); ctx.stroke();
+        /* outgoing */
+        var oa=fin*Math.max(0,1-Math.max(0,(life-0.25)/0.75));
+        ctx.fillStyle='rgba(10,186,181,'+oa+')'; ctx.beginPath(); ctx.arc(pr.ox,pr.oy,2.8,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='rgba(10,186,181,'+(oa*0.35)+')'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(pr.bx,pr.by); ctx.lineTo(pr.ox,pr.oy); ctx.stroke();
+        /* birth flash */
+        if (pr.age<12) { var fl=1-pr.age/12; ctx.fillStyle='rgba(80,200,120,'+(fl*0.55)+')'; ctx.beginPath(); ctx.arc(pr.bx,pr.by,4+fl*7,0,Math.PI*2); ctx.fill(); }
+        pr.ix+=pr.idx; pr.iy+=pr.idy; pr.ox+=pr.odx; pr.oy+=pr.ody; pr.age++;
+        if (pr.age>=pr.max) pairs.splice(p,1);
+      }
+      if (tick%24===0) spawn();
+
+      /* labels */
+      var fs=Math.max(10,Math.round(W*0.012));
+      ctx.font=fs+'px "JetBrains Mono",monospace';
+      ctx.fillStyle='rgba(201,168,76,0.55)'; ctx.textAlign='center';
+      ctx.fillText('K · horizonte / horizon', cx, cy-RH-10);
+      ctx.textAlign='left';
+      ctx.fillStyle='rgba(80,200,120,0.68)'; ctx.fillText('F · par / pair', W*0.02, H*0.13);
+      ctx.fillStyle='rgba(10,186,181,0.68)'; ctx.fillText('U · radiação / radiation →', W*0.63, H*0.12);
+      ctx.fillStyle='rgba(224,90,58,0.60)';  ctx.fillText('↓ C · colapso / collapse',   W*0.63, H*0.21);
+      ctx.fillStyle='rgba(201,168,76,0.32)'; ctx.textAlign='center'; ctx.fillText('x*', cx, cy+4);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+  /* ─────────────────────────────────────────────────────────────
+     D2 · T_H vs Mass
+     ───────────────────────────────────────────────────────────── */
+  (function tempDiagram() {
+    var canvas = document.getElementById('d-temp');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick=0, dotM=1.0;
+    var PAD = {l:62,r:28,t:28,b:48};
+
+    function resize() { W=canvas.offsetWidth; H=canvas.offsetHeight; canvas.width=W; canvas.height=H; }
+    function hawkT(m) { return Math.min(1.0, 0.05/Math.max(m,0.001)); }
+
+    function draw() {
+      ctx.clearRect(0,0,W,H); ctx.fillStyle=SURFACE; ctx.fillRect(0,0,W,H);
+      var fw=W-PAD.l-PAD.r, fh=H-PAD.t-PAD.b;
+
+      /* grid */
+      ctx.strokeStyle='rgba(201,168,76,0.07)'; ctx.lineWidth=1;
+      for (var gi=1;gi<=4;gi++) { var gy=PAD.t+gi*fh/4; ctx.beginPath(); ctx.moveTo(PAD.l,gy); ctx.lineTo(W-PAD.r,gy); ctx.stroke(); }
+      for (var gj=1;gj<=5;gj++) { var gx=PAD.l+gj*fw/5; ctx.beginPath(); ctx.moveTo(gx,PAD.t); ctx.lineTo(gx,H-PAD.b); ctx.stroke(); }
+
+      /* fill under curve */
+      var fg=ctx.createLinearGradient(W-PAD.r,0,PAD.l,0);
+      fg.addColorStop(0,'rgba(201,168,76,0.14)'); fg.addColorStop(0.7,'rgba(201,168,76,0.04)'); fg.addColorStop(1,'rgba(201,168,76,0.01)');
+      ctx.fillStyle=fg; ctx.beginPath();
+      var S=200;
+      for (var i=0;i<=S;i++) { var m=0.05+(i/S)*0.95, tt=hawkT(m), cx2=PAD.l+(m/1.0)*fw, cy2=(H-PAD.b)-tt*fh; if(i===0) ctx.moveTo(cx2,Math.max(PAD.t,cy2)); else ctx.lineTo(cx2,Math.max(PAD.t,cy2)); }
+      ctx.lineTo(W-PAD.r,H-PAD.b); ctx.lineTo(PAD.l,H-PAD.b); ctx.closePath(); ctx.fill();
+
+      /* curve */
+      ctx.strokeStyle=GOLD; ctx.lineWidth=2; ctx.beginPath();
+      for (var i2=0;i2<=S;i2++) { var m2=0.05+(i2/S)*0.95, tt2=hawkT(m2), cx3=PAD.l+(m2/1.0)*fw, cy3=(H-PAD.b)-tt2*fh; if(i2===0) ctx.moveTo(cx3,Math.max(PAD.t,cy3)); else ctx.lineTo(cx3,Math.max(PAD.t,cy3)); }
+      ctx.stroke();
+
+      /* axes */
+      ctx.strokeStyle='rgba(201,168,76,0.38)'; ctx.lineWidth=1.5; ctx.beginPath();
+      ctx.moveTo(PAD.l,PAD.t); ctx.lineTo(PAD.l,H-PAD.b); ctx.moveTo(PAD.l,H-PAD.b); ctx.lineTo(W-PAD.r,H-PAD.b); ctx.stroke();
+
+      /* evaporation dot */
+      dotM-=0.0018; if(dotM<0.06) dotM=1.0;
+      var dX=PAD.l+(dotM/1.0)*fw, dY=Math.max(PAD.t+6,(H-PAD.b)-hawkT(dotM)*fh);
+      var pulse=0.5+0.5*Math.sin(tick*0.09);
+      ctx.strokeStyle='rgba(192,132,252,'+(0.35+0.30*pulse)+')'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(dX,dY,8+pulse*4,0,Math.PI*2); ctx.stroke();
+      ctx.fillStyle=PURPLE; ctx.beginPath(); ctx.arc(dX,dY,4,0,Math.PI*2); ctx.fill();
+
+      var fs2=Math.max(9,Math.round(W*0.011));
+      ctx.font=fs2+'px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(192,132,252,0.65)';
+      ctx.textAlign= dX<W*0.70 ? 'left' : 'right';
+      ctx.fillText('M='+dotM.toFixed(2), dX<W*0.70 ? dX+11 : dX-11, dY+4);
+
+      /* labels */
+      ctx.fillStyle='rgba(201,168,76,0.55)'; ctx.textAlign='center';
+      ctx.font=Math.max(10,Math.round(W*0.011))+'px "JetBrains Mono",monospace';
+      ctx.fillText('Massa M / Mass M', PAD.l+fw/2, H-9);
+      ctx.save(); ctx.translate(14,PAD.t+fh/2); ctx.rotate(-Math.PI/2); ctx.fillText('T_H',0,0); ctx.restore();
+      ctx.font='italic '+Math.max(9,Math.round(W*0.0105))+'px "Noto Serif",serif';
+      ctx.textAlign='left';
+      ctx.fillStyle='rgba(201,168,76,0.48)'; ctx.fillText('menor M → maior T_H', PAD.l+8, PAD.t+18);
+      ctx.fillStyle='rgba(201,168,76,0.28)'; ctx.fillText('smaller M → higher T_H', PAD.l+8, PAD.t+34);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+  /* ─────────────────────────────────────────────────────────────
+     D3 · Page curve
+     ───────────────────────────────────────────────────────────── */
+  (function pageCurve() {
+    var canvas = document.getElementById('d-page');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick=0;
+    var PAD = {l:52,r:28,t:28,b:50};
+
+    function resize() { W=canvas.offsetWidth; H=canvas.offsetHeight; canvas.width=W; canvas.height=H; }
+    function pageS(x) { var tp=0.45; return x<=tp ? (x/tp)*0.84 : Math.max(0,0.84*(1-(x-tp)/(1-tp))); }
+    function hawkS(x) { return Math.min(0.84, x*1.05); }
+
+    function draw() {
+      ctx.clearRect(0,0,W,H); ctx.fillStyle=SURFACE; ctx.fillRect(0,0,W,H);
+      var fw=W-PAD.l-PAD.r, fh=H-PAD.t-PAD.b;
+      var tPX=PAD.l+fw*0.45, tEX=PAD.l+fw*0.88;
+      var S=220;
+
+      /* grid */
+      ctx.strokeStyle='rgba(201,168,76,0.07)'; ctx.lineWidth=1;
+      for (var gi=1;gi<=4;gi++) { var gy=PAD.t+gi*fh/4; ctx.beginPath(); ctx.moveTo(PAD.l,gy); ctx.lineTo(W-PAD.r,gy); ctx.stroke(); }
+
+      /* Hawking dashed */
+      ctx.strokeStyle='rgba(224,90,58,0.55)'; ctx.lineWidth=1.8; ctx.setLineDash([6,4]); ctx.beginPath();
+      for (var ih=0;ih<=S;ih++) { var xh=ih/S, px=PAD.l+xh*(tEX-PAD.l), py=(H-PAD.b)-hawkS(xh)*fh; if(ih===0) ctx.moveTo(px,py); else ctx.lineTo(px,py); }
+      ctx.stroke(); ctx.setLineDash([]);
+
+      /* Page solid */
+      ctx.strokeStyle=TEAL; ctx.lineWidth=2.2; ctx.beginPath();
+      for (var ip=0;ip<=S;ip++) { var xp=ip/S, ppx=PAD.l+xp*(tEX-PAD.l), ppy=(H-PAD.b)-pageS(xp)*fh; if(ip===0) ctx.moveTo(ppx,ppy); else ctx.lineTo(ppx,ppy); }
+      ctx.stroke();
+
+      /* axes */
+      ctx.strokeStyle='rgba(201,168,76,0.38)'; ctx.lineWidth=1.5; ctx.beginPath();
+      ctx.moveTo(PAD.l,PAD.t); ctx.lineTo(PAD.l,H-PAD.b); ctx.moveTo(PAD.l,H-PAD.b); ctx.lineTo(W-PAD.r,H-PAD.b); ctx.stroke();
+
+      /* t_Page marker */
+      var pulse=0.5+0.5*Math.sin(tick*0.055);
+      ctx.strokeStyle='rgba(224,90,58,'+(0.35+0.25*pulse)+')'; ctx.lineWidth=1; ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(tPX,PAD.t); ctx.lineTo(tPX,H-PAD.b); ctx.stroke(); ctx.setLineDash([]);
+
+      /* sorry dot */
+      var sY=(H-PAD.b)-pageS(0.45)*fh;
+      ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(tPX,sY,4.5+pulse*2,0,Math.PI*2); ctx.fill();
+
+      var fs3=Math.max(9,Math.round(W*0.011));
+      ctx.font=fs3+'px "JetBrains Mono",monospace';
+      ctx.fillStyle='rgba(201,168,76,0.55)'; ctx.textAlign='center';
+      ctx.fillText('Tempo / Time', PAD.l+fw/2, H-9);
+      ctx.save(); ctx.translate(12,PAD.t+fh/2); ctx.rotate(-Math.PI/2); ctx.fillText('Entropia S / Entropy',0,0); ctx.restore();
+      ctx.fillStyle='rgba(224,90,58,'+(0.5+0.25*pulse)+')'; ctx.textAlign='center';
+      ctx.fillText('t_Page', tPX, H-PAD.b+18);
+      ctx.fillStyle='rgba(201,168,76,0.38)'; ctx.fillText('t_evap', tEX, H-PAD.b+18);
+      ctx.fillStyle=RED; ctx.textAlign='left'; ctx.fillText('← sorry H.1', tPX+8, sY-8);
+
+      /* legend */
+      var lX=PAD.l+fw*0.48, lY=PAD.t+14;
+      ctx.strokeStyle=TEAL; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(lX,lY); ctx.lineTo(lX+22,lY); ctx.stroke();
+      ctx.fillStyle='rgba(10,186,181,0.80)'; ctx.textAlign='left'; ctx.fillText('Page · U injetivo / injective', lX+26, lY+4);
+      ctx.strokeStyle='rgba(224,90,58,0.65)'; ctx.lineWidth=1.8; ctx.setLineDash([5,3]); ctx.beginPath(); ctx.moveTo(lX,lY+16); ctx.lineTo(lX+22,lY+16); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle='rgba(224,90,58,0.75)'; ctx.fillText('Hawking · info perdida / lost', lX+26, lY+20);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+  /* ─────────────────────────────────────────────────────────────
+     D4 · No-boundary proposal
+     ───────────────────────────────────────────────────────────── */
+  (function noBoundary() {
+    var canvas = document.getElementById('d-noboundary');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W, H, tick=0;
+
+    function resize() { W=canvas.offsetWidth; H=canvas.offsetHeight; canvas.width=W; canvas.height=H; }
+
+    function draw() {
+      ctx.clearRect(0,0,W,H); ctx.fillStyle=VOID; ctx.fillRect(0,0,W,H);
+
+      var cx=W/2, mY=H*0.50;
+      var Rs=Math.min(W,H)*0.20;      /* Euclidean hemisphere radius */
+      var cbX=Math.min(W,H)*0.28;     /* cone base half-width */
+      var cTop=mY-H*0.38;             /* top of Lorentzian cone */
+      var pulse=0.5+0.5*Math.sin(tick*0.04);
+
+      /* Lorentzian cone fill */
+      var cg=ctx.createLinearGradient(cx,mY,cx,cTop);
+      cg.addColorStop(0,'rgba(10,186,181,0.22)'); cg.addColorStop(0.6,'rgba(10,186,181,0.07)'); cg.addColorStop(1,'rgba(10,186,181,0.01)');
+      ctx.fillStyle=cg; ctx.beginPath(); ctx.moveTo(cx,mY); ctx.lineTo(cx-cbX,cTop); ctx.lineTo(cx+cbX,cTop); ctx.closePath(); ctx.fill();
+
+      /* cone edges */
+      ctx.strokeStyle='rgba(10,186,181,0.55)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(cx,mY); ctx.lineTo(cx-cbX,cTop); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx,mY); ctx.lineTo(cx+cbX,cTop); ctx.stroke();
+
+      /* time slices in cone */
+      ctx.strokeStyle='rgba(10,186,181,0.14)'; ctx.lineWidth=1;
+      for (var sl=1;sl<=5;sl++) { var sY2=mY-sl*(H*0.38/6), sX2=cbX*(sl/6); ctx.beginPath(); ctx.moveTo(cx-sX2,sY2); ctx.lineTo(cx+sX2,sY2); ctx.stroke(); }
+
+      /* Euclidean hemisphere fill */
+      var hg=ctx.createRadialGradient(cx,mY+Rs*0.3,0,cx,mY,Rs*1.3);
+      hg.addColorStop(0,'rgba(201,168,76,0.22)'); hg.addColorStop(0.5,'rgba(201,168,76,0.09)'); hg.addColorStop(1,'rgba(201,168,76,0.01)');
+      ctx.fillStyle=hg; ctx.beginPath(); ctx.arc(cx,mY,Rs,0,Math.PI); ctx.closePath(); ctx.fill();
+
+      /* hemisphere border dashed */
+      ctx.strokeStyle='rgba(201,168,76,'+(0.45+0.2*pulse)+')'; ctx.lineWidth=1.8; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.arc(cx,mY,Rs,0,Math.PI); ctx.stroke(); ctx.setLineDash([]);
+
+      /* equator (transition / fold F) */
+      ctx.strokeStyle=GREEN; ctx.lineWidth=1.8;
+      ctx.beginPath(); ctx.moveTo(cx-Rs,mY); ctx.lineTo(cx+Rs,mY); ctx.stroke();
+
+      /* South Pole x* */
+      var spY=mY+Rs;
+      ctx.fillStyle=GOLD; ctx.beginPath(); ctx.arc(cx,spY,5+pulse*2,0,Math.PI*2); ctx.fill();
+
+      /* labels */
+      var fs4=Math.max(10,Math.round(W*0.012));
+      ctx.font=fs4+'px "JetBrains Mono",monospace'; ctx.textAlign='center';
+      ctx.fillStyle='rgba(10,186,181,0.72)'; ctx.fillText('tempo real / real time', cx, cTop-12);
+      ctx.font='italic '+Math.max(9,Math.round(W*0.0105))+'px "Noto Serif",serif';
+      ctx.fillStyle='rgba(10,186,181,0.42)'; ctx.fillText('Lorentziano — universo em expansão / expanding universe', cx, cTop+14);
+
+      ctx.font=fs4+'px "JetBrains Mono",monospace';
+      ctx.fillStyle='rgba(201,168,76,0.70)'; ctx.fillText('tempo imaginário / imaginary time', cx, mY+Rs*0.52);
+      ctx.font='italic '+Math.max(9,Math.round(W*0.0105))+'px "Noto Serif",serif';
+      ctx.fillStyle='rgba(201,168,76,0.38)'; ctx.fillText('Euclideano — sem fronteira / no boundary', cx, mY+Rs*0.52+16);
+
+      ctx.font=Math.max(9,Math.round(W*0.011))+'px "JetBrains Mono",monospace';
+      ctx.fillStyle='rgba(80,200,120,0.68)'; ctx.textAlign='left';
+      ctx.fillText('F · transição / transition', cx+Rs+10, mY+4);
+
+      ctx.textAlign='center'; ctx.fillStyle='rgba(201,168,76,0.72)';
+      ctx.fillText('x* = G(x*)  ·  Polo Sul / South Pole', cx, spY+20);
+      ctx.font='italic '+Math.max(9,Math.round(W*0.0105))+'px "Noto Serif",serif';
+      ctx.fillStyle='rgba(201,168,76,0.40)'; ctx.fillText('sem singularidade / no singularity', cx, spY+36);
+
+      tick++; requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize(); draw();
+  }());
+
+}());
+</script>
+
+</body>
+</html>
