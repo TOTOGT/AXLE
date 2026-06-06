@@ -883,21 +883,44 @@ footer a{color:var(--gold);text-decoration:none}
 </footer>
 
 <script>
+// ── HELPERS ───────────────────────────────────────────────────────────────
+// Derive drawing dimensions directly from canvas buffer — never from offsetWidth/Height,
+// which can be stale until the browser reflows after cv.width is set.
+function cvDims(cv){ const dpr=devicePixelRatio||1; return [cv.width/dpr, cv.height/dpr]; }
+function cvResize(cv, ctx, hAttr){
+  const dpr = devicePixelRatio||1;
+  const parent = cv.parentElement;
+  const w = parent.getBoundingClientRect().width || parent.offsetWidth || 700;
+  const h = hAttr || parseInt(cv.getAttribute('height')||'320');
+  cv.width  = Math.round(w * dpr);
+  cv.height = Math.round(h * dpr);
+  cv.style.width  = w + 'px';
+  cv.style.height = h + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
 // ── STAR FIELD ────────────────────────────────────────────────────────────
 (function(){
   const cv = document.getElementById('starCanvas');
   const ctx = cv.getContext('2d');
-  function resize(){ const w=cv.offsetWidth||window.innerWidth; const h=cv.offsetHeight||window.innerHeight; cv.width=w*devicePixelRatio; cv.height=h*devicePixelRatio; ctx.scale(devicePixelRatio,devicePixelRatio); draw(); }
   const stars = Array.from({length:200}, ()=>([Math.random(), Math.random(), Math.random()*1.5+0.3, Math.random()*0.8+0.2]));
+  function resize(){
+    const dpr=devicePixelRatio||1;
+    const w=cv.parentElement.offsetWidth||window.innerWidth;
+    const h=cv.parentElement.offsetHeight||window.innerHeight;
+    cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+    cv.style.width=w+'px'; cv.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0); draw();
+  }
   function draw(){
-    ctx.clearRect(0,0,cv.width,cv.height);
-    const W=cv.offsetWidth, H=cv.offsetHeight;
+    const [W,H]=cvDims(cv);
+    ctx.clearRect(0,0,W,H);
     stars.forEach(([x,y,r,a])=>{
       ctx.beginPath(); ctx.arc(x*W, y*H, r, 0, Math.PI*2);
       ctx.fillStyle=`rgba(255,255,255,${a})`; ctx.fill();
     });
   }
-  new ResizeObserver(resize).observe(cv); resize();
+  new ResizeObserver(resize).observe(cv.parentElement); resize();
 })();
 
 // ── ORBIT CANVAS ──────────────────────────────────────────────────────────
@@ -905,9 +928,10 @@ footer a{color:var(--gold);text-decoration:none}
   const cv = document.getElementById('orbitCanvas');
   const ctx = cv.getContext('2d');
   let t = 0;
-  function resize(){ const r=cv.getBoundingClientRect(); const w=r.width||cv.offsetWidth||cv.parentElement.offsetWidth||600; const h=r.height||cv.offsetHeight||parseInt(cv.getAttribute('height')||320); cv.width=w*devicePixelRatio; cv.height=h*devicePixelRatio; ctx.scale(devicePixelRatio,devicePixelRatio); }
+  function resize(){ cvResize(cv, ctx, 320); }
   function draw(){
-    const W=cv.offsetWidth, H=cv.offsetHeight;
+    const [W,H]=cvDims(cv);
+    if(!W||!H){requestAnimationFrame(draw);return;}
     ctx.fillStyle='#f8f6f0'; ctx.fillRect(0,0,W,H);
     const cx=W/2, cy=H/2;
 
@@ -971,9 +995,10 @@ footer a{color:var(--gold);text-decoration:none}
 (function(){
   const cv = document.getElementById('networkCanvas');
   const ctx = cv.getContext('2d');
-  function resize(){ const r=cv.getBoundingClientRect(); const w=r.width||cv.offsetWidth||cv.parentElement.offsetWidth||600; const h=r.height||cv.offsetHeight||parseInt(cv.getAttribute('height')||320); cv.width=w*devicePixelRatio; cv.height=h*devicePixelRatio; ctx.scale(devicePixelRatio,devicePixelRatio); }
+  function resize(){ cvResize(cv, ctx, 200); draw(); }
   function draw(){
-    const W=cv.offsetWidth, H=cv.offsetHeight;
+    const [W,H]=cvDims(cv);
+    if(!W||!H)return;
     ctx.fillStyle='#f8f6f0'; ctx.fillRect(0,0,W,H);
     const nodes=[
       {x:W*0.15,y:H*0.5,label:'A',sub:'Production\nBasin',col:'#639922'},
@@ -1017,9 +1042,10 @@ footer a{color:var(--gold);text-decoration:none}
 (function(){
   const cv = document.getElementById('valueGapCanvas');
   const ctx = cv.getContext('2d');
-  function resize(){ const r=cv.getBoundingClientRect(); const w=r.width||cv.offsetWidth||cv.parentElement.offsetWidth||600; const h=r.height||cv.offsetHeight||parseInt(cv.getAttribute('height')||320); cv.width=w*devicePixelRatio; cv.height=h*devicePixelRatio; ctx.scale(devicePixelRatio,devicePixelRatio); }
+  function resize(){ cvResize(cv, ctx, 300); draw(); }
   function draw(){
-    const W=cv.offsetWidth, H=cv.offsetHeight;
+    const [W,H]=cvDims(cv);
+    if(!W||!H)return;
     const pad={l:55,r:20,t:20,b:40};
     const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
     ctx.fillStyle='#f8f6f0'; ctx.fillRect(0,0,W,H);
