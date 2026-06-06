@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Setups • Lunch Money</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/technicalindicators@3.1.0/dist/browser.js"></script>
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    :root {
+      --void: #07080d;
+      --surface: #0e0f14;
+      --surface2: #13141a;
+      --accent: #10b981;
+      --accent2: #059669;
+      --gold: #f7c948;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --text: #e8eaf0;
+      --muted: #5a5e6e;
+      --border: rgba(16,185,129,0.12);
+      --border2: rgba(16,185,129,0.25);
+      --discord: #5865F2;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--void); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); background: var(--void); position: sticky; top: 0; z-index: 50; }
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-logo span { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-logo small { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
+    nav a { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+    nav a:hover, nav a.active { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; }
+
+    /* DISCORD BANNER */
+    .discord-bar { background: var(--discord); padding: 0.7rem 2rem; text-align: center; font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; color: #fff; }
+    .discord-bar a { color: #c5c9ff; text-decoration: underline; }
+
+    /* HERO */
+    .hero { padding: 5rem 2rem 3rem; max-width: 1100px; margin: 0 auto; }
+    .hero-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero-meta { display: flex; align-items: center; gap: 1.5rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .price-block { display: flex; flex-direction: column; }
+    .price-block .pl { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .price-block .pv { font-size: 2.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .price-block .ps { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* MAIN GRID */
+    .main-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 1px; background: var(--border); border: 1px solid var(--border); max-width: 1100px; margin: 3rem auto; }
+    @media (max-width: 860px) { .main-grid { grid-template-columns: 1fr; } }
+    .panel { background: var(--surface); padding: 2rem; }
+    .panel-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+
+    /* CHART */
+    #chart-container { width: 100%; height: 340px; }
+
+    /* ORBIT SCORES */
+    .orbit-stack { display: flex; flex-direction: column; gap: 1rem; }
+    .orbit-card { background: var(--surface2); border: 1px solid var(--border); padding: 1.25rem 1.5rem; }
+    .orbit-card.bull { border-left: 3px solid var(--accent); }
+    .orbit-card.bear { border-left: 3px solid var(--red); }
+    .orbit-card.neut { border-left: 3px solid var(--amber); }
+    .oc-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+    .oc-name { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .oc-badge { font-family: 'Space Mono', monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; }
+    .oc-badge.bull { color: var(--accent); }
+    .oc-badge.bear { color: var(--red); }
+    .oc-badge.neut { color: var(--amber); }
+    .oc-sub { font-size: 0.78rem; color: var(--muted); }
+
+    /* LAMBDA BAR */
+    .lambda-wrap { margin-top: 1.5rem; }
+    .lambda-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+    .lambda-label span { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .lambda-label strong { font-family: 'Space Mono', monospace; font-size: 0.9rem; color: var(--text); }
+    .lambda-track { background: var(--surface2); height: 6px; border-radius: 3px; overflow: hidden; border: 1px solid var(--border2); }
+    .lambda-fill { height: 100%; border-radius: 3px; transition: width 0.3s, background 0.3s; }
+
+    /* ENTRY ZONE */
+    .entry-section { margin-top: 1.5rem; }
+    .entry-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .entry-item .label { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.25rem; }
+    .entry-item .value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+    .entry-item.accent .value { color: var(--accent); }
+    .entry-item.gold   .value { color: var(--gold); }
+    .entry-item.red    .value { color: var(--red); }
+
+    /* THEORY NOTE */
+    .theory-note { max-width: 1100px; margin: 0 auto 4rem; border: 1px solid var(--border); background: var(--surface); padding: 1.5rem 2rem; }
+    .theory-note p { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+    .theory-note a { color: var(--accent); text-decoration: none; }
+
+    /* ETORO */
+    .etoro-block { max-width: 1100px; margin: 0 auto 4rem; border: 1px solid var(--border); background: var(--surface); padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .etoro-block p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 500px; }
+    .etoro-block p strong { color: var(--text); }
+    .btn-etoro { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; background: #1E90FF; color: #fff; padding: 0.9rem 1.8rem; text-decoration: none; white-space: nowrap; flex-shrink: 0; transition: opacity 0.2s; }
+    .btn-etoro:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; }
+    footer p { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer .disclaimer { margin-top: 1rem; font-size: 0.58rem; color: var(--muted); opacity: 0.6; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+
+    /* LOADING STATE */
+    .loading-msg { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--muted); padding: 3rem; text-align: center; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <span>🥪 Lunch Money</span>
+    <small>by CapitalGuard</small>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="strategy.html">Strategy</a>
+    <a href="daily-setups.html" class="active">Daily Setups</a>
+    <a href="simulator.html">Simulator</a>
+  </div>
+</nav>
+
+<div class="discord-bar">
+  <i class="fab fa-discord"></i>
+  &nbsp;<strong>Trading Masterclass coming to Discord</strong> — Learn the full Lunch Money strategy live ·
+  <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank">Join the server →</a>
+</div>
+
+<div class="hero">
+  <div class="hero-label">Daily Setups · BTCUSDT · Multi-Orbit Scanner</div>
+  <h1>Read the<br><em>orbit.</em><br>Pick your entry.</h1>
+  <div class="hero-meta">
+    <div class="price-block">
+      <span class="pl">BTC / USDT</span>
+      <span class="pv" id="btc-price">—</span>
+      <span class="ps" id="data-source">● Loading live data…</span>
+    </div>
+  </div>
+</div>
+
+<div class="main-grid">
+  <!-- CHART PANEL -->
+  <div class="panel">
+    <div class="panel-label">BTCUSDT · 1D · VWMA5 · SMA9 · SMA21</div>
+    <div id="chart-container"><div class="loading-msg">Fetching live candles…</div></div>
+  </div>
+
+  <!-- ORBIT + ENTRY PANEL -->
+  <div class="panel">
+    <div class="panel-label">Orbit Alignment · A/B/C Scores</div>
+
+    <div class="orbit-stack">
+      <div class="orbit-card neut" id="card-a">
+        <div class="oc-header">
+          <span class="oc-name">Orbit A · 24H Circadian</span>
+          <span class="oc-badge neut" id="badge-a">—</span>
+        </div>
+        <div class="oc-sub" id="sub-a">SMA9 / SMA21 · RSI 45–75</div>
+      </div>
+      <div class="orbit-card neut" id="card-b">
+        <div class="oc-header">
+          <span class="oc-name">Orbit B · 29.5D Lunar</span>
+          <span class="oc-badge neut" id="badge-b">—</span>
+        </div>
+        <div class="oc-sub" id="sub-b">Price vs SMA30 · Volume ratio</div>
+      </div>
+      <div class="orbit-card neut" id="card-c">
+        <div class="oc-header">
+          <span class="oc-name">Orbit C · 365D Annual</span>
+          <span class="oc-badge neut" id="badge-c">—</span>
+        </div>
+        <div class="oc-sub" id="sub-c">Price vs SMA50 (+1%)</div>
+      </div>
+    </div>
+
+    <!-- Λ ALIGNMENT BAR -->
+    <div class="lambda-wrap">
+      <div class="lambda-label">
+        <span>Λ Legendrian Alignment</span>
+        <strong id="lambda-val">—</strong>
+      </div>
+      <div class="lambda-track">
+        <div class="lambda-fill" id="lambda-fill" style="width:0%;background:var(--amber)"></div>
+      </div>
+    </div>
+
+    <!-- ENTRY ZONE -->
+    <div class="entry-section">
+      <div class="panel-label" style="margin-top:1.5rem">Entry Zone</div>
+      <div class="entry-grid">
+        <div class="entry-item accent">
+          <div class="label">Entry Low</div>
+          <div class="value" id="entry-low">—</div>
+        </div>
+        <div class="entry-item accent">
+          <div class="label">Entry High</div>
+          <div class="value" id="entry-high">—</div>
+        </div>
+        <div class="entry-item red">
+          <div class="label">Stop</div>
+          <div class="value" id="stop-val">—</div>
+        </div>
+        <div class="entry-item gold">
+          <div class="label">T1 / T2 / T3</div>
+          <div class="value" id="targets">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THEORY NOTE -->
+<div class="theory-note">
+  <p>
+    Orbit scoring is based on Legendrian alignment Λ(τ)→0 at orbit confluence.
+    Orbit A = 24h circadian (SMA9/SMA21 + RSI), Orbit B = 29.5d lunar (SMA30 + volume),
+    Orbit C = 365d annual (SMA50). Theoretical basis:
+    <a href="ch3c-econophysics.html">Econophysics & Orbit Structure</a>.
+    Live candles via Binance public REST — no API key required.
+  </p>
+</div>
+
+<!-- ETORO -->
+<div class="etoro-block">
+  <p><strong>Trade with me on eToro.</strong> I'm using eToro for the Lunch Money challenge — fractional shares, tight spreads, and a clean mobile interface. Sign up with my link and we both get rewarded.</p>
+  <a href="https://etoro.tw/42BDbbL" target="_blank" class="btn-etoro">Join eToro ↗</a>
+</div>
+
+<footer>
+  <p>
+    <a href="https://x.com/unitedWeStreamU" target="_blank">@unitedWeStreamU</a> ·
+    <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank">Discord Masterclass</a> ·
+    Lunch Money © 2026
+  </p>
+  <p class="disclaimer">
+    For educational purposes only. Not financial advice. Real trading involves losing days, slippage, spreads, and emotional execution errors.
+    Past performance is not indicative of future results. Never risk money you cannot afford to lose.
+  </p>
+</footer>
+
+<script>
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  function toYMD(ms) {
+    const d = new Date(ms);
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth()+1).padStart(2,'0');
+    const day = String(d.getUTCDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+  const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+
+  // ─── Live BTC data from Binance public API ────────────────────────────────────
+  async function loadAndRun() {
+    let raw;
+    try {
+      const res = await fetch(
+        'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=50',
+        { cache: 'no-store' }
+      );
+      if (!res.ok) throw new Error('Binance fetch failed');
+      const data = await res.json();
+      raw = data.map(k => ({
+        t: toYMD(k[0]),
+        o: parseFloat(k[1]),
+        h: parseFloat(k[2]),
+        l: parseFloat(k[3]),
+        c: parseFloat(k[4]),
+        v: parseFloat(k[5]),
+      }));
+      document.getElementById('data-source').textContent = '● Live — Binance BTCUSDT 1D';
+      document.getElementById('data-source').style.color = 'var(--accent)';
+    } catch(e) {
+      console.warn('Binance unavailable:', e.message);
+      raw = FALLBACK_RAW;
+      try {
+        const cg = await fetch(
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
+        );
+        const cgData = await cg.json();
+        if (cgData.bitcoin) raw[raw.length-1].c = cgData.bitcoin.usd;
+      } catch(_) {}
+      document.getElementById('data-source').textContent = '● Fallback data';
+      document.getElementById('data-source').style.color = 'var(--amber)';
+    }
+    runScanner(raw);
+  }
+
+  // Fallback static data
+  const FALLBACK_RAW = [
+    {t:'2026-03-18',o:81200,h:83100,l:80500,c:82400,v:28400},
+    {t:'2026-03-25',o:80200,h:81900,l:79800,c:81400,v:30100},
+    {t:'2026-04-01',o:81200,h:82100,l:79800,c:80500,v:34200},
+    {t:'2026-04-08',o:78000,h:79200,l:77300,c:78800,v:30200},
+    {t:'2026-04-15',o:82900,h:84100,l:82200,c:83600,v:29400},
+    {t:'2026-04-22',o:81800,h:82700,l:80400,c:80900,v:37800},
+    {t:'2026-04-29',o:79000,h:80200,l:78400,c:79800,v:34100},
+    {t:'2026-05-06',o:77200,h:78400,l:76500,c:77800,v:42100},
+    {t:'2026-05-13',o:75900,h:77200,l:75100,c:76500,v:40200},
+    {t:'2026-05-20',o:77300,h:78600,l:76800,c:77900,v:31400},
+    {t:'2026-05-21',o:77900,h:79200,l:77400,c:78600,v:29800},
+    {t:'2026-05-22',o:78600,h:79800,l:77800,c:79200,v:28200},
+    {t:'2026-05-23',o:79200,h:80400,l:78600,c:79800,v:26900},
+  ];
+
+  // ─── Main scanner ─────────────────────────────────────────────────────────────
+  function runScanner(raw) {
+    const closes  = raw.map(d => d.c);
+    const volumes = raw.map(d => d.v);
+    const last    = closes[closes.length - 1];
+
+    document.getElementById('btc-price').textContent =
+      '$' + last.toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+    // ─── Indicators ─────────────────────────────────────────────────────────────
+    const sma9  = technicalindicators.SMA.calculate({ period: 9,  values: closes });
+    const sma21 = technicalindicators.SMA.calculate({ period: 21, values: closes });
+    const sma30 = technicalindicators.SMA.calculate({ period: 30, values: closes });
+    const sma50 = technicalindicators.SMA.calculate({ period: 50, values: closes });
+    const rsi   = technicalindicators.RSI.calculate({ period: 14, values: closes });
+
+    // VWMA5
+    const vwmaLen = 5;
+    const vwma5 = [];
+    for (let i = vwmaLen - 1; i < raw.length; i++) {
+      let sumPV = 0, sumV = 0;
+      for (let j = i - vwmaLen + 1; j <= i; j++) {
+        const tp = (raw[j].h + raw[j].l + raw[j].c) / 3;
+        sumPV += tp * raw[j].v; sumV += raw[j].v;
+      }
+      vwma5.push(sumV > 0 ? sumPV / sumV : raw[i].c);
+    }
+
+    const a9   = sma9[sma9.length - 1];
+    const a21  = sma21[sma21.length - 1];
+    const b30  = sma30[sma30.length - 1];
+    const c50  = sma50[sma50.length - 1];
+    const rsiV = rsi[rsi.length - 1];
+
+    const avgVol = volumes.reduce((a,b)=>a+b,0) / volumes.length;
+    const lastVol = volumes[volumes.length-1];
+    const volRatio = lastVol / avgVol;
+
+    // ─── Orbit scoring (0=BEAR, 1=NEUT, 2=BULL) ─────────────────────────────────
+    let scoreA, scoreB, scoreC;
+    if (a9 > a21 && rsiV > 45 && rsiV < 75) scoreA = 2;
+    else if (a9 < a21 || rsiV < 35)          scoreA = 0;
+    else                                      scoreA = 1;
+
+    if (last > b30 && volRatio > 0.9)         scoreB = 2;
+    else if (last < b30 * 0.98)               scoreB = 0;
+    else                                      scoreB = 1;
+
+    if (last > c50 * 1.01)                    scoreC = 2;
+    else if (last < c50 * 0.99)               scoreC = 0;
+    else                                      scoreC = 1;
+
+    function applyOrbit(cardId, badgeId, subId, score, subText) {
+      const card  = document.getElementById(cardId);
+      const badge = document.getElementById(badgeId);
+      const sub   = document.getElementById(subId);
+      const cls   = score === 2 ? 'bull' : score === 0 ? 'bear' : 'neut';
+      const lbl   = score === 2 ? 'BULL' : score === 0 ? 'BEAR' : 'NEUT';
+      card.className  = 'orbit-card ' + cls;
+      badge.className = 'oc-badge ' + cls;
+      badge.textContent = lbl;
+      sub.textContent   = subText;
+    }
+    applyOrbit('card-a','badge-a','sub-a', scoreA,
+      `SMA9 ${fmt(a9)} · SMA21 ${fmt(a21)} · RSI ${rsiV.toFixed(1)}`);
+    applyOrbit('card-b','badge-b','sub-b', scoreB,
+      `Price vs SMA30 ${fmt(b30)} · Vol ratio ${volRatio.toFixed(2)}x`);
+    applyOrbit('card-c','badge-c','sub-c', scoreC,
+      `Price vs SMA50 ${fmt(c50)}`);
+
+    // ─── Λ alignment ─────────────────────────────────────────────────────────────
+    const composite = scoreA + scoreB + scoreC; // 0–6
+    const lambda = Math.abs(composite - 3) / 3; // 0 = max divergence, 1 = perfect bull or bear
+    const lambdaPct = Math.round(lambda * 100);
+    const fillColor = composite >= 5 ? 'var(--accent)' : composite <= 1 ? 'var(--red)' : 'var(--amber)';
+    document.getElementById('lambda-val').textContent = lambdaPct + '%';
+    const fill = document.getElementById('lambda-fill');
+    fill.style.width = lambdaPct + '%';
+    fill.style.background = fillColor;
+
+    // ─── Entry zone ──────────────────────────────────────────────────────────────
+    const entryLow  = Math.min(a9, a21) * 0.997;
+    const entryHigh = Math.max(a9, a21) * 1.002;
+    const stop      = entryLow * (1 - 0.008);
+    const t1        = entryHigh * 1.010;
+    const t2        = entryHigh * 1.020;
+    const t3        = entryHigh * 1.035;
+
+    document.getElementById('entry-low').textContent  = fmt(entryLow);
+    document.getElementById('entry-high').textContent = fmt(entryHigh);
+    document.getElementById('stop-val').textContent   = fmt(stop);
+    document.getElementById('targets').textContent    =
+      fmt(t1) + ' / ' + fmt(t2) + ' / ' + fmt(t3);
+
+    // ─── Lightweight Charts ──────────────────────────────────────────────────────
+    const container = document.getElementById('chart-container');
+    container.innerHTML = '';
+    const chart = LightweightCharts.createChart(container, {
+      width: container.clientWidth,
+      height: 340,
+      layout: { background: { color: 'transparent' }, textColor: '#5a5e6e' },
+      grid: { vertLines: { color: 'rgba(16,185,129,0.06)' }, horzLines: { color: 'rgba(16,185,129,0.06)' } },
+      crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+      rightPriceScale: { borderColor: 'rgba(16,185,129,0.12)' },
+      timeScale: { borderColor: 'rgba(16,185,129,0.12)', timeVisible: true },
+    });
+
+    const candleSeries = chart.addCandlestickSeries({
+      upColor: '#10b981', downColor: '#ef4444',
+      borderUpColor: '#10b981', borderDownColor: '#ef4444',
+      wickUpColor: '#10b981', wickDownColor: '#ef4444',
+    });
+    candleSeries.setData(raw.map(d => ({
+      time: d.t, open: d.o, high: d.h, low: d.l, close: d.c,
+    })));
+
+    // VWMA5 (gold)
+    const vwma5Series = chart.addLineSeries({ color: '#f7c948', lineWidth: 2, title: 'VWMA5' });
+    const vStart = raw.length - vwma5.length;
+    vwma5Series.setData(vwma5.map((v, i) => ({ time: raw[vStart + i].t, value: v })));
+
+    // SMA9 (emerald dashed)
+    const sma9Series = chart.addLineSeries({ color: '#10b981', lineWidth: 1, lineStyle: 2, title: 'SMA9' });
+    const s9Start = raw.length - sma9.length;
+    sma9Series.setData(sma9.map((v, i) => ({ time: raw[s9Start + i].t, value: v })));
+
+    // SMA21 (blue dashed)
+    const sma21Series = chart.addLineSeries({ color: '#6366f1', lineWidth: 1, lineStyle: 2, title: 'SMA21' });
+    const s21Start = raw.length - sma21.length;
+    sma21Series.setData(sma21.map((v, i) => ({ time: raw[s21Start + i].t, value: v })));
+
+    chart.timeScale().fitContent();
+
+    window.addEventListener('resize', () => {
+      chart.applyOptions({ width: container.clientWidth });
+    });
+  }
+
+  // Kick off
+  loadAndRun();
+</script>
+</body>
+</html>
