@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equações Diferenciais em Modelagem Matemática Computacional — IMPA 1997</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script>
+  MathJax = { tex: { inlineMath: [['$','$']] }, options: { skipHtmlTags: ['script','noscript','style','textarea'] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root {
+  --bg:#0e0f0d; --bg2:#141610; --bg3:#1c1f18; --bg4:#232620;
+  --surface:#1a1d17; --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.13);
+  --ink:#e8e4d8; --ink2:#b8b4a6; --ink3:#7a7870;
+  --green:#4caf7d; --green-dim:#2d6b4a; --green-bg:rgba(76,175,125,0.08);
+  --amber:#d4a44c; --amber-dim:#7a5e28; --amber-bg:rgba(212,164,76,0.08);
+  --mono:'JetBrains Mono',monospace; --serif:'EB Garamond',Georgia,serif;
+  --display:'Cormorant Garamond',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);line-height:1.75;min-height:100vh}
+
+/* LANG BAR */
+.lang-bar{background:var(--bg4);border-bottom:1px solid var(--border);padding:.45rem 1.5rem;display:flex;align-items:center;gap:1rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);position:sticky;top:0;z-index:200}
+.lang-btn{background:none;border:1px solid var(--border2);color:var(--ink2);font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.3em .8em;cursor:pointer;border-radius:2px;transition:all .15s}
+.lang-btn.active{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.lang-btn:not(.active):hover{color:var(--ink)}
+.lang-bar-right{margin-left:auto;color:var(--ink3);font-size:.52rem;letter-spacing:.1em}
+
+/* NAV */
+.site-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;white-space:nowrap;position:sticky;top:38px;z-index:190}
+.site-nav::-webkit-scrollbar{display:none}
+.nav-brand{font-family:var(--mono);font-size:.6rem;font-weight:500;letter-spacing:.18em;color:var(--amber);padding:.9rem 1.2rem .9rem 0;border-right:1px solid var(--border);margin-right:.8rem;flex-shrink:0;text-decoration:none}
+.nav-brand:hover{color:var(--ink)}
+.nav-links{display:flex;align-items:center;list-style:none}
+.nav-links a{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--ink3);text-decoration:none;padding:.9rem .7rem;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* HERO */
+.hero{background:var(--bg2);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at -10% 120%,rgba(76,175,125,.07) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 110% -10%,rgba(212,164,76,.05) 0%,transparent 50%);pointer-events:none}
+.hero-wm{position:absolute;right:-.05em;bottom:-.2em;font-family:var(--display);font-size:clamp(16rem,32vw,38rem);font-weight:300;color:rgba(255,255,255,.025);line-height:1;pointer-events:none;user-select:none;letter-spacing:-.05em}
+.hero-inner{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:5rem 2rem 4.5rem}
+.hero-eyebrow{font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:1.8rem;display:flex;align-items:center;gap:.8rem}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'⚜';opacity:.5;font-size:.7em}
+.hero h1{font-family:var(--display);font-size:clamp(2.2rem,5vw,4rem);font-weight:300;line-height:1.12;color:var(--ink);margin-bottom:.4em;letter-spacing:-.01em}
+.hero h1 em{font-style:italic;color:var(--ink2)}
+.hero-alt{font-family:var(--display);font-size:1.15rem;font-weight:300;font-style:italic;color:var(--ink3);margin-bottom:3rem}
+.authors{display:flex;flex-wrap:wrap;gap:2rem;margin-bottom:3.5rem}
+.author{border-left:2px solid var(--green-dim);padding-left:1rem}
+.author-name{font-family:var(--display);font-size:1.15rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.author-inst{font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;color:var(--ink3);margin-top:.25em}
+.hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:1.5rem;padding-top:2.2rem;border-top:1px solid var(--border)}
+.meta-item{display:flex;flex-direction:column;gap:.15em}
+.meta-lbl{font-family:var(--mono);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.meta-val{font-family:var(--display);font-size:.95rem;color:var(--ink2)}
+.meta-rule{width:1px;height:2.2rem;background:var(--border)}
+.dl-btn{margin-left:auto;display:inline-flex;align-items:center;gap:.55em;background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber);text-decoration:none;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:.7em 1.3em;border-radius:2px;transition:background .2s,color .2s}
+.dl-btn:hover{background:var(--amber);color:#1a1200}
+
+/* IMPA BAR */
+.impa-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:1.1rem 2rem;display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap}
+.impa-logo{font-family:var(--display);font-size:1.6rem;font-weight:600;letter-spacing:.1em;color:var(--green)}
+.impa-divider{width:1px;height:2rem;background:var(--border2)}
+.impa-detail{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;color:var(--ink3);line-height:1.8;text-transform:uppercase}
+.impa-right{margin-left:auto;font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;color:var(--ink3);text-align:right;text-transform:uppercase}
+
+/* MAIN */
+.main{max-width:860px;margin:0 auto;padding:4rem 2rem 6rem}
+
+/* LANG SWITCHING */
+body.lang-en [data-pt]{display:none}
+body.lang-pt [data-en]{display:none}
+
+.sec-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);margin-bottom:1rem}
+.rule-h{font-family:var(--display);font-size:2rem;font-weight:300;color:var(--ink);margin-bottom:2.5rem;display:flex;align-items:baseline;gap:1rem}
+.rule-h::after{content:'';flex:1;height:1px;background:var(--border2)}
+
+/* PREFACE */
+.pref-grid{display:grid;grid-template-columns:200px 1px 1fr;gap:2.5rem;margin-bottom:5rem;padding-bottom:5rem;border-bottom:1px solid var(--border)}
+.pref-aside h2{font-family:var(--display);font-size:2.2rem;font-weight:300;font-style:italic;color:var(--green);line-height:1.1;position:sticky;top:6rem}
+.pref-rule{background:var(--border2)}
+.pref-body p{font-size:.95rem;color:var(--ink2);margin-bottom:1.2em;text-align:justify;hyphens:auto}
+.pref-body p:first-of-type::first-letter{font-family:var(--display);float:left;font-size:4.2em;line-height:.72;margin:.06em .1em 0 0;color:var(--green);font-weight:600}
+
+/* TOC */
+.toc-section{margin-bottom:5rem;padding-bottom:5rem;border-bottom:1px solid var(--border)}
+.toc{display:flex;flex-direction:column;gap:.3rem}
+.toc-ch{border-left:2px solid var(--green-dim);margin-bottom:1.5rem;padding-left:1.1rem}
+.toc-ch.app{border-left-color:var(--amber-dim)}
+.ch-row{display:flex;justify-content:space-between;align-items:baseline;padding:.55rem 0}
+.ch-num{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--green);text-transform:uppercase;margin-right:.7rem;flex-shrink:0}
+.toc-ch.app .ch-num{color:var(--amber)}
+.ch-title{font-family:var(--display);font-size:1.2rem;font-weight:600;color:var(--ink);flex:1}
+.ch-pg{font-family:var(--mono);font-size:.6rem;color:var(--ink3);margin-left:1rem}
+.sec-rows{display:flex;flex-direction:column}
+.sec-row{display:flex;justify-content:space-between;align-items:baseline;padding:.28rem 0;border-top:1px solid var(--border)}
+.sec-num{font-family:var(--mono);font-size:.58rem;color:var(--amber);min-width:2.3rem;flex-shrink:0}
+.sec-title{font-size:.88rem;color:var(--ink2);flex:1}
+.subsecs{padding-left:.9rem}
+.sub-row{display:flex;justify-content:space-between;align-items:baseline;padding:.2rem 0}
+.sub-num{font-family:var(--mono);font-size:.52rem;color:var(--ink3);min-width:2.6rem;flex-shrink:0}
+.sub-title{font-size:.8rem;font-style:italic;color:var(--ink3);flex:1}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:5rem}
+.ch-card{background:var(--surface);border:1px solid var(--border);padding:1.8rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+.ch-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.ch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--green-dim)}
+.ch-card.app::before{background:var(--amber-dim)}
+.ch-card.app{grid-column:1/-1}
+.card-bg{position:absolute;right:-.05em;bottom:-.15em;font-family:var(--display);font-size:7rem;font-weight:300;color:rgba(255,255,255,.025);line-height:1;pointer-events:none;user-select:none}
+.card-num-lbl{font-family:var(--mono);font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--green);margin-bottom:.5rem}
+.ch-card.app .card-num-lbl{color:var(--amber)}
+.card-title{font-family:var(--display);font-size:1.3rem;font-weight:600;color:var(--ink);margin-bottom:.9rem;line-height:1.2}
+.card-desc{font-size:.82rem;color:var(--ink2);line-height:1.65;margin-bottom:1.1rem}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag{font-family:var(--mono);font-size:.5rem;letter-spacing:.08em;color:var(--green);background:var(--green-bg);border:1px solid var(--green-dim);padding:.22em .55em;border-radius:2px}
+.ch-card.app .tag{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-dim)}
+
+/* EQUATIONS */
+.eq-box{background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--green-dim);padding:1.5rem 2rem;margin:2.5rem 0;font-size:1.05rem;color:var(--ink);overflow-x:auto}
+.eq-box.amber{border-left-color:var(--amber-dim)}
+.eq-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:.8rem}
+.eq-note{font-size:.8rem;color:var(--ink3);margin-top:1rem}
+
+/* CONCEPTS */
+.concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:2.5rem 0}
+.concept{background:var(--surface);padding:1.4rem}
+.concept-sym{font-family:var(--display);font-size:1.6rem;font-weight:300;color:var(--green);line-height:1;margin-bottom:.5rem}
+.concept-name{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:.4rem}
+.concept-desc{font-size:.78rem;color:var(--ink3);line-height:1.55}
+
+/* EXCERPT */
+.intro-section{margin-bottom:5rem;padding-bottom:5rem;border-bottom:1px solid var(--border)}
+.excerpt{background:var(--surface);border:1px solid var(--border);padding:2.2rem 2.5rem;margin-bottom:1.5rem;position:relative}
+.excerpt::before{content:'"';position:absolute;top:-.3em;left:.5rem;font-family:var(--display);font-size:5rem;color:var(--green-dim);line-height:1;pointer-events:none}
+.excerpt-text{font-family:var(--display);font-size:1.15rem;font-style:italic;color:var(--ink2);line-height:1.75;padding-left:.5rem}
+.excerpt-src{font-family:var(--mono);font-size:.55rem;letter-spacing:.12em;color:var(--ink3);text-align:right;margin-top:1rem;text-transform:uppercase}
+
+/* BIBLIO */
+.biblio{background:var(--bg3);border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+.biblio-cell{padding:2rem;border-right:1px solid var(--border)}
+.biblio-cell:last-child{border-right:none}
+.b-lbl{font-family:var(--mono);font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+.b-val{font-family:var(--display);font-size:.95rem;color:var(--ink2);line-height:1.6}
+.b-val a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.b-val a:hover{color:var(--ink)}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+footer a{color:var(--ink3);text-decoration:none}
+footer a:hover{color:var(--ink)}
+.fleur{color:var(--amber);margin:0 .5em}
+
+/* ANIMATION */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.hero-inner>*{animation:fadeUp .65s ease both}
+.hero-inner>*:nth-child(1){animation-delay:.05s}
+.hero-inner>*:nth-child(2){animation-delay:.15s}
+.hero-inner>*:nth-child(3){animation-delay:.25s}
+.hero-inner>*:nth-child(4){animation-delay:.35s}
+.hero-inner>*:nth-child(5){animation-delay:.48s}
+
+@media(max-width:700px){
+  .pref-grid{grid-template-columns:1fr}.pref-rule{display:none}.pref-aside h2{position:static;margin-bottom:1.5rem}
+  .cards-grid{grid-template-columns:1fr}
+  .biblio{grid-template-columns:1fr}.biblio-cell{border-right:none;border-bottom:1px solid var(--border)}.biblio-cell:last-child{border-bottom:none}
+  .dl-btn{margin-left:0}.hero-meta{flex-direction:column;align-items:flex-start}.meta-rule{display:none}
+  .impa-right{display:none}.hero-wm{display:none}
+}
+</style>
+</head>
+<body class="lang-pt">
+
+<!-- TRANSLATION BAR -->
+<div class="lang-bar">
+  <span>Idioma · Language</span>
+  <button class="lang-btn active" onclick="setLang('pt')" id="btn-pt">Português</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">English</button>
+  <span class="lang-bar-right">Nachbin &amp; Tabak · CBM 1997 · ISBN 85-244-0127-3</span>
+</div>
+
+<!-- PRINCIPIA NAV -->
+<nav class="site-nav">
+  <a href="https://totogt.github.io/geometry/index.html" class="nav-brand">⚜ PRINCIPIA ORTHOGONA ⚜</a>
+  <ul class="nav-links">
+    <li><a href="https://totogt.github.io/geometry/prelude.html">Prelude</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch1.html">Ch 1</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch2.html">Ch 2</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch3-circadian.html">Ch 3</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch3c-econophysics.html">Ch 3c</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch4-neural.html">Ch 4</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch5-immune.html">Ch 5</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch6-resonance.html">Ch 6</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch7-crystalline.html">Ch 7</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch8-axiomatic.html">Ch 8</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch9-phi.html">Ch 9</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch10-lyapunov.html">Ch 10</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch11-spectral.html">Ch 11</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch12-conclusion.html">Ch 12</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch17-epilogue.html">Epilogue</a></li>
+    <li><a href="https://totogt.github.io/geometry/chH-collatz.html">Collatz</a></li>
+    <li><a href="https://totogt.github.io/geometry/ch-ocio.html">Ocio</a></li>
+    <li><a href="https://totogt.github.io/geometry/overture.html">Overture</a></li>
+    <li><a href="https://totogt.github.io/geometry/impa-portal.html" class="active">IMPA</a></li>
+    <li><a href="https://totogt.github.io/geometry/Sportal.html">Portal</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-wm" aria-hidden="true">21</div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">21º Colóquio Brasileiro de Matemática · IMPA · Julho 1997</div>
+    <h1>
+      <span data-pt>Equações Diferenciais em<br><em>Modelagem Matemática Computacional</em></span>
+      <span data-en>Differential Equations in<br><em>Computational Mathematical Modeling</em></span>
+    </h1>
+    <p class="hero-alt" data-pt>Differential Equations in Computational Mathematical Modeling</p>
+    <p class="hero-alt" data-en>Equações Diferenciais em Modelagem Matemática Computacional</p>
+    <div class="authors">
+      <div class="author">
+        <div class="author-name">André Nachbin</div>
+        <div class="author-inst">IMPA · Rio de Janeiro, Brasil</div>
+      </div>
+      <div class="author">
+        <div class="author-name">Esteban Tabak</div>
+        <div class="author-inst">Courant Institute of Mathematical Sciences · NYU, USA</div>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-lbl" data-pt>Publicado</span><span class="meta-lbl" data-en>Published</span>
+        <span class="meta-val">21–25 Julho 1997</span>
+      </div>
+      <div class="meta-rule"></div>
+      <div class="meta-item">
+        <span class="meta-lbl">ISBN</span>
+        <span class="meta-val">85-244-0127-3</span>
+      </div>
+      <div class="meta-rule"></div>
+      <div class="meta-item">
+        <span class="meta-lbl" data-pt>Páginas</span><span class="meta-lbl" data-en>Pages</span>
+        <span class="meta-val">106</span>
+      </div>
+      <div class="meta-rule"></div>
+      <div class="meta-item">
+        <span class="meta-lbl" data-pt>Capa</span><span class="meta-lbl" data-en>Cover</span>
+        <span class="meta-val">Sara Müller</span>
+      </div>
+      <a class="dl-btn" href="https://math.nyu.edu/~tabak/publications/CBM.pdf" target="_blank">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-pt>Baixar PDF</span><span data-en>Download PDF</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- IMPA BAR -->
+<div class="impa-bar">
+  <div class="impa-logo">IMPA</div>
+  <div class="impa-divider"></div>
+  <div class="impa-detail">Instituto de Matemática Pura e Aplicada<br>Estrada Dona Castorina, 110 · Jardim Botânico · 22460-320 · Rio de Janeiro, RJ, Brasil</div>
+  <div class="impa-right">Conselho Nacional de<br>Desenvolvimento Científico e Tecnológico</div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- PREFÁCIO -->
+  <section>
+    <div class="sec-label" data-pt>Abertura</div>
+    <div class="sec-label" data-en>Opening</div>
+    <div class="pref-grid">
+      <div class="pref-aside">
+        <h2><span data-pt>Prefácio</span><span data-en>Preface</span></h2>
+      </div>
+      <div class="pref-rule"></div>
+      <div class="pref-body">
+        <p data-pt>Este mini-curso foi preparado com o intuito de introduzir o aluno de graduação à Modelagem Matemática e Computacional. O enfoque principal é dado a questões de modelagem — tanto física, quanto matemática e numérica. O uso do computador é feito como um "laboratório matemático".</p>
+        <p data-en>This mini-course was designed to introduce undergraduate students to Mathematical and Computational Modeling. The main focus is on modeling questions — physical, mathematical, and numerical alike. The computer is used as a "mathematical laboratory".</p>
+        <p data-pt>Hoje em dia percebe-se uma dificuldade generalizada, universal — nas melhores universidades, tanto nacionais como no exterior —, do aluno em conseguir transformar um problema apresentado em palavras em um problema matemático. Essa dificuldade se faz na passagem do modelo físico para o modelo matemático. Na introdução, fazemos uma analogia com o processo de tradução entre duas linguagens: a do português e a da matemática.</p>
+        <p data-en>A widespread difficulty is observed today — in the best universities, both in Brazil and abroad — in students' ability to transform a problem stated in words into a mathematical problem. This difficulty lies precisely in the transition from the physical model to the mathematical model. In the introduction, we draw an analogy with translation between two languages: Portuguese and mathematics.</p>
+        <p data-pt>Os modelos matemáticos usados neste livro serão equações diferenciais ordinárias e parciais (edo e edp). Conceitos básicos serão introduzidos e depois verificados através de experimentos computacionais. Não será esperado do aluno nenhum conhecimento prévio de edo's ou de edp's.</p>
+        <p data-en>The mathematical models used in this book are ordinary and partial differential equations (ODE and PDE). Basic concepts will be introduced and then verified through computational experiments. No prior knowledge of ODEs or PDEs is expected.</p>
+        <p data-pt>Parte dessas notas surgiram a partir de dois cursos de verão no IMPA e de um mini-curso no XIX CNMAC em Goiânia de 1996 (ministrados por A. Nachbin). Os autores agradecem ao Prof. Martin Tygel, Prof. Marco Antônio Raupp, Beata Gundelach, Mônica Souza e Prof. Dan Marchesin pela revisão do texto.</p>
+        <p data-en>Part of these notes grew out of two summer courses at IMPA and a mini-course at the XIX CNMAC in Goiânia in 1996 (taught by A. Nachbin). The authors thank Prof. Martin Tygel, Prof. Marco Antônio Raupp, Beata Gundelach, Mônica Souza, and Prof. Dan Marchesin for reviewing the text.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXCERPT + EQUATIONS -->
+  <section class="intro-section">
+    <div class="sec-label" data-pt>Trecho — Capítulo 1</div>
+    <div class="sec-label" data-en>Excerpt — Chapter 1</div>
+    <h2 class="rule-h">
+      <span data-pt>O Matemático como Tradutor</span>
+      <span data-en>The Mathematician as Translator</span>
+    </h2>
+    <div class="excerpt">
+      <p class="excerpt-text" data-pt>Os problemas em Matemática Aplicada são em geral apresentados em palavras, sem fórmulas. O matemático aplicado deve se acostumar a fazer o papel de um <strong>tradutor simultâneo</strong>, realizando a tradução do problema em palavras — em português — para o problema na linguagem matemática — "em matematiquês" — e vice-versa.</p>
+      <p class="excerpt-text" data-en>Problems in Applied Mathematics are generally presented in words, without formulas. The applied mathematician must learn to act as a <strong>simultaneous translator</strong>, converting the problem from words into the language of mathematics — "mathese" — and back again.</p>
+      <div class="excerpt-src" data-pt>— Nachbin &amp; Tabak, Capítulo 1 · §1.1.1</div>
+      <div class="excerpt-src" data-en>— Nachbin &amp; Tabak, Chapter 1 · §1.1.1</div>
+    </div>
+
+    <div class="eq-box">
+      <div class="eq-label" data-pt>Exemplo central — crescimento populacional</div>
+      <div class="eq-label" data-en>Central example — population growth</div>
+      $\dfrac{dN}{dt} = \lambda N, \quad \lambda > 0$
+      <p class="eq-note" data-pt>onde $N(t)$ é a população no instante $t$ e $\lambda$ é a constante de proporcionalidade.</p>
+      <p class="eq-note" data-en>where $N(t)$ is the population at time $t$ and $\lambda$ is the proportionality constant.</p>
+    </div>
+
+    <div class="eq-box amber">
+      <div class="eq-label" data-pt>Método de Euler explícito — discretização temporal</div>
+      <div class="eq-label" data-en>Explicit Euler method — time discretization</div>
+      $N^{n+1} = N^n + \Delta t \cdot f(N^n), \qquad f(N) = \lambda N$
+      <p class="eq-note" data-pt>A solução numérica avança passo a passo, aproximando a derivada por diferenças finitas avançadas.</p>
+      <p class="eq-note" data-en>The numerical solution advances step by step, approximating the derivative with forward finite differences.</p>
+    </div>
+
+    <div class="concepts-grid">
+      <div class="concept">
+        <div class="concept-sym">edo</div>
+        <div class="concept-name" data-pt>Equação Diferencial Ordinária</div>
+        <div class="concept-name" data-en>Ordinary Differential Equation</div>
+        <div class="concept-desc" data-pt>Relação entre função desconhecida e suas derivadas em relação a uma única variável.</div>
+        <div class="concept-desc" data-en>Relation between an unknown function and its derivatives in a single independent variable.</div>
+      </div>
+      <div class="concept">
+        <div class="concept-sym">edp</div>
+        <div class="concept-name" data-pt>Equação Diferencial Parcial</div>
+        <div class="concept-name" data-en>Partial Differential Equation</div>
+        <div class="concept-desc" data-pt>Derivadas parciais em múltiplas variáveis independentes — espaço e tempo.</div>
+        <div class="concept-desc" data-en>Partial derivatives with respect to multiple independent variables — space and time.</div>
+      </div>
+      <div class="concept">
+        <div class="concept-sym">Δt</div>
+        <div class="concept-name" data-pt>Passo de tempo</div>
+        <div class="concept-name" data-en>Time step</div>
+        <div class="concept-desc" data-pt>O incremento discreto do método numérico. Controla precisão e estabilidade.</div>
+        <div class="concept-desc" data-en>Discrete increment in the numerical method. Controls accuracy and stability.</div>
+      </div>
+      <div class="concept">
+        <div class="concept-sym">λ</div>
+        <div class="concept-name" data-pt>Taxa de crescimento</div>
+        <div class="concept-name" data-en>Growth rate</div>
+        <div class="concept-desc" data-pt>Constante na EDO de população. Positivo → crescimento; negativo → decaimento.</div>
+        <div class="concept-desc" data-en>Constant in the population ODE. Positive → growth; negative → decay.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLE OF CONTENTS -->
+  <section class="toc-section">
+    <div class="sec-label" data-pt>Estrutura</div>
+    <div class="sec-label" data-en>Structure</div>
+    <h2 class="rule-h">
+      <span data-pt>Índice</span><span data-en>Table of Contents</span>
+    </h2>
+    <div class="toc">
+
+      <div class="toc-ch">
+        <div class="ch-row">
+          <span class="ch-num" data-pt>Cap. 1</span><span class="ch-num" data-en>Ch. 1</span>
+          <span class="ch-title" data-pt>Introdução</span><span class="ch-title" data-en>Introduction</span>
+          <span class="ch-pg">p. 1</span>
+        </div>
+        <div class="sec-rows">
+          <div class="sec-row">
+            <span class="sec-num">1.1</span>
+            <span class="sec-title" data-pt>Visão geral do assunto</span><span class="sec-title" data-en>Overview of the subject</span>
+            <span class="ch-pg">1</span>
+          </div>
+          <div class="subsecs">
+            <div class="sub-row"><span class="sub-num">1.1.1</span><span class="sub-title" data-pt>O problema e o tradutor simultâneo</span><span class="sub-title" data-en>The problem and the simultaneous translator</span><span class="ch-pg">1</span></div>
+            <div class="sub-row"><span class="sub-num">1.1.2</span><span class="sub-title" data-pt>O modelo matemático</span><span class="sub-title" data-en>The mathematical model</span><span class="ch-pg">2</span></div>
+            <div class="sub-row"><span class="sub-num">1.1.3</span><span class="sub-title" data-pt>Validação</span><span class="sub-title" data-en>Validation</span><span class="ch-pg">4</span></div>
+          </div>
+          <div class="sec-row">
+            <span class="sec-num">1.2</span>
+            <span class="sec-title" data-pt>Introdução à solução numérica de equações diferenciais</span><span class="sec-title" data-en>Introduction to numerical solution of differential equations</span>
+            <span class="ch-pg">6</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="toc-ch">
+        <div class="ch-row">
+          <span class="ch-num" data-pt>Cap. 2</span><span class="ch-num" data-en>Ch. 2</span>
+          <span class="ch-title" data-pt>Modelagem e aplicações</span><span class="ch-title" data-en>Modeling and applications</span>
+          <span class="ch-pg">p. 28</span>
+        </div>
+        <div class="sec-rows">
+          <div class="sec-row"><span class="sec-num">2.1</span><span class="sec-title" data-pt>Modelo para a dinâmica de populações</span><span class="sec-title" data-en>Model for population dynamics</span><span class="ch-pg">28</span></div>
+          <div class="sec-row"><span class="sec-num">2.2</span><span class="sec-title" data-pt>Por que as expectativas de vida das cigarras são números primos?</span><span class="sec-title" data-en>Why are cicada life cycles prime numbers?</span><span class="ch-pg">37</span></div>
+          <div class="subsecs">
+            <div class="sub-row"><span class="sub-num">2.2.1</span><span class="sub-title" data-pt>Cigarras periódicas</span><span class="sub-title" data-en>Periodic cicadas</span><span class="ch-pg">37</span></div>
+            <div class="sub-row"><span class="sub-num">2.2.2</span><span class="sub-title" data-pt>Ressonância</span><span class="sub-title" data-en>Resonance</span><span class="ch-pg">39</span></div>
+            <div class="sub-row"><span class="sub-num">2.2.3</span><span class="sub-title" data-pt>Um modelo para as cigarras</span><span class="sub-title" data-en>A model for the cicadas</span><span class="ch-pg">43</span></div>
+          </div>
+          <div class="sec-row"><span class="sec-num">2.3</span><span class="sec-title" data-pt>Modelo para a dispersão de poluentes no ar</span><span class="sec-title" data-en>Model for air pollutant dispersion</span><span class="ch-pg">50</span></div>
+          <div class="sec-row"><span class="sec-num">2.4</span><span class="sec-title" data-pt>Modelo para enchentes em rios</span><span class="sec-title" data-en>Model for river flooding</span><span class="ch-pg">66</span></div>
+          <div class="subsecs">
+            <div class="sub-row"><span class="sub-num">2.4.1</span><span class="sub-title" data-pt>Um modelo cinemático</span><span class="sub-title" data-en>A kinematic model</span><span class="ch-pg">66</span></div>
+            <div class="sub-row"><span class="sub-num">2.4.2</span><span class="sub-title" data-pt>Modelos numéricos</span><span class="sub-title" data-en>Numerical models</span><span class="ch-pg">73</span></div>
+            <div class="sub-row"><span class="sub-num">2.4.3</span><span class="sub-title" data-pt>Um exercício de escoamento no tráfego</span><span class="sub-title" data-en>A traffic flow exercise</span><span class="ch-pg">79</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toc-ch app">
+        <div class="ch-row">
+          <span class="ch-num" data-pt>Apênd. A</span><span class="ch-num" data-en>App. A</span>
+          <span class="ch-title" data-pt>Arquivos MATLAB (m-files)</span><span class="ch-title" data-en>MATLAB Files (m-files)</span>
+          <span class="ch-pg">p. 81</span>
+        </div>
+        <div class="sec-rows">
+          <div class="sec-row"><span class="sec-num">A.1</span><span class="sec-title" data-pt>Solução numérica de EDOs</span><span class="sec-title" data-en>Numerical solution of ODEs</span><span class="ch-pg">82</span></div>
+          <div class="subsecs">
+            <div class="sub-row"><span class="sub-num">A.1.1</span><span class="sub-title" data-pt>Euler explícito</span><span class="sub-title" data-en>Explicit Euler</span><span class="ch-pg">82</span></div>
+            <div class="sub-row"><span class="sub-num">A.1.2</span><span class="sub-title" data-pt>Euler implícito</span><span class="sub-title" data-en>Implicit Euler</span><span class="ch-pg">83</span></div>
+            <div class="sub-row"><span class="sub-num">A.1.3</span><span class="sub-title" data-pt>Regra do trapézio</span><span class="sub-title" data-en>Trapezoidal rule</span><span class="ch-pg">84</span></div>
+          </div>
+          <div class="sec-row"><span class="sec-num">A.2</span><span class="sec-title" data-pt>Dinâmica de populações</span><span class="sec-title" data-en>Population dynamics</span><span class="ch-pg">84</span></div>
+          <div class="sec-row"><span class="sec-num">A.3</span><span class="sec-title" data-pt>Modelo das cigarras</span><span class="sec-title" data-en>Cicada model</span><span class="ch-pg">85</span></div>
+          <div class="sec-row"><span class="sec-num">A.4</span><span class="sec-title" data-pt>Dispersão de poluentes</span><span class="sec-title" data-en>Pollutant dispersion</span><span class="ch-pg">91</span></div>
+          <div class="sec-row"><span class="sec-num">A.5</span><span class="sec-title" data-pt>Enchente no rio</span><span class="sec-title" data-en>River flooding</span><span class="ch-pg">95</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CHAPTER CARDS -->
+  <section>
+    <div class="sec-label" data-pt>Conteúdo</div>
+    <div class="sec-label" data-en>Content</div>
+    <h2 class="rule-h">
+      <span data-pt>Os Capítulos</span><span data-en>The Chapters</span>
+    </h2>
+    <div class="cards-grid">
+
+      <div class="ch-card">
+        <div class="card-bg" aria-hidden="true">1</div>
+        <div class="card-num-lbl" data-pt>Capítulo 1 · pp. 1–27</div>
+        <div class="card-num-lbl" data-en>Chapter 1 · pp. 1–27</div>
+        <div class="card-title" data-pt>Introdução</div>
+        <div class="card-title" data-en>Introduction</div>
+        <p class="card-desc" data-pt>O matemático aplicado como tradutor simultâneo entre o mundo físico e o matemático. Introdução à solução numérica: discretização, erros, Euler explícito e implícito, regra do trapézio, estabilidade e validação.</p>
+        <p class="card-desc" data-en>The applied mathematician as simultaneous translator between the physical and mathematical worlds. Introduction to numerical solutions: discretization, errors, explicit and implicit Euler, trapezoidal rule, stability, and validation.</p>
+        <div class="tags">
+          <span class="tag">EDO</span>
+          <span class="tag" data-pt>Discretização</span><span class="tag" data-en>Discretization</span>
+          <span class="tag">Euler</span>
+          <span class="tag" data-pt>Estabilidade</span><span class="tag" data-en>Stability</span>
+        </div>
+      </div>
+
+      <div class="ch-card">
+        <div class="card-bg" aria-hidden="true">2</div>
+        <div class="card-num-lbl" data-pt>Capítulo 2 · pp. 28–80</div>
+        <div class="card-num-lbl" data-en>Chapter 2 · pp. 28–80</div>
+        <div class="card-title" data-pt>Modelagem e Aplicações</div>
+        <div class="card-title" data-en>Modeling and Applications</div>
+        <p class="card-desc" data-pt>Quatro estudos de caso: dinâmica de populações (Lotka-Volterra), o mistério dos números primos nas cigarras e ressonância, dispersão de poluentes por advecção-difusão, enchentes em rios e tráfego.</p>
+        <p class="card-desc" data-en>Four case studies: population dynamics (Lotka-Volterra), the prime-number mystery of periodic cicadas and resonance, pollutant dispersion via advection-diffusion, river flooding and traffic flow.</p>
+        <div class="tags">
+          <span class="tag">Lotka-Volterra</span>
+          <span class="tag" data-pt>Números primos</span><span class="tag" data-en>Prime numbers</span>
+          <span class="tag" data-pt>Ressonância</span><span class="tag" data-en>Resonance</span>
+          <span class="tag">EDP</span>
+        </div>
+      </div>
+
+      <div class="ch-card app">
+        <div class="card-bg" aria-hidden="true">A</div>
+        <div class="card-num-lbl" data-pt>Apêndice A · pp. 81–106</div>
+        <div class="card-num-lbl" data-en>Appendix A · pp. 81–106</div>
+        <div class="card-title" data-pt>Arquivos MATLAB (m-files)</div>
+        <div class="card-title" data-en>MATLAB Files (m-files)</div>
+        <p class="card-desc" data-pt>Listagens completas: Euler explícito e implícito, regra do trapézio, campo vetorial, oscilador forçado, modelo predador-presa das cigarras, advecção-difusão (explícito e implícito), algoritmo de Thomas para sistemas tridiagonais, enchente conservativa e não-conservativa.</p>
+        <p class="card-desc" data-en>Complete listings: explicit and implicit Euler, the trapezoidal rule, vector field, forced oscillator, cicada predator-prey model, advection-diffusion (explicit and implicit), the Thomas algorithm for tridiagonal systems, conservative and non-conservative flood models.</p>
+        <div class="tags">
+          <span class="tag">MATLAB</span>
+          <span class="tag" data-pt>Algoritmo de Thomas</span><span class="tag" data-en>Thomas algorithm</span>
+          <span class="tag" data-pt>Oscilador forçado</span><span class="tag" data-en>Forced oscillator</span>
+          <span class="tag" data-pt>Método conservativo</span><span class="tag" data-en>Conservative method</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BIBLIO -->
+  <div class="biblio">
+    <div class="biblio-cell">
+      <div class="b-lbl" data-pt>Instituição</div><div class="b-lbl" data-en>Institution</div>
+      <div class="b-val">Instituto de Matemática Pura e Aplicada — IMPA<br>Jardim Botânico · Rio de Janeiro · Brasil</div>
+    </div>
+    <div class="biblio-cell">
+      <div class="b-lbl" data-pt>Evento</div><div class="b-lbl" data-en>Event</div>
+      <div class="b-val">21º Colóquio Brasileiro de Matemática<br>21–25 Julho de 1997 · ISBN 85-244-0127-3</div>
+    </div>
+    <div class="biblio-cell">
+      <div class="b-lbl" data-pt>PDF original</div><div class="b-lbl" data-en>Original PDF</div>
+      <div class="b-val">
+        <a href="https://math.nyu.edu/~tabak/publications/CBM.pdf" target="_blank">math.nyu.edu/~tabak/publications/CBM.pdf</a><br>
+        <span data-pt>Cortesia de Esteban Tabak · NYU Courant</span>
+        <span data-en>Courtesy of Esteban Tabak · NYU Courant</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="fleur">⚜</span>
+  © 1997 André Nachbin &amp; Esteban Tabak ·
+  <a href="https://impa.br" target="_blank">IMPA</a> ·
+  21º Colóquio Brasileiro de Matemática
+  <span class="fleur">⚜</span>
+  <a href="https://totogt.github.io/geometry/impa-portal.html">Principia Orthogona</a>
+  <span class="fleur">⚜</span>
+  HTML 2025
+</footer>
+
+<script>
+function setLang(l){
+  document.body.className='lang-'+l;
+  document.getElementById('btn-pt').className='lang-btn'+(l==='pt'?' active':'');
+  document.getElementById('btn-en').className='lang-btn'+(l==='en'?' active':'');
+  document.documentElement.lang=l==='pt'?'pt-BR':'en';
+}
+</script>
+</body>
+</html>
