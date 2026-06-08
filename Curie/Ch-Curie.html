@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo C · Pierre & Marie Curie pela Lente GTCT · Edição IMPA</title>
+<meta name="description" content="A Lei de Curie como operador K. A singularidade de Curie-Weiss como dobramento F. O mar de spins como variedade de contato dm³. A temperatura de Curie como κ*. Edição IMPA · Bilíngue PT/EN.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["\\[","\\]"]]}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --teal:    #0ABAB5;
+  --red:     #e05a3a;
+  --purple:  #c084fc;
+  --green:   #50c878;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --col-gap: 3rem;
+  --col-w:   46%;
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(4,4,10,0.96); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: .6rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .6rem;
+}
+.nav-series { font-family: var(--mono); font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
+.nav-links  { display: flex; gap: 1.2rem; }
+.nav-links a { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--gold); }
+.nav-links a.accent { color: var(--teal); }
+
+.hero {
+  padding: 5rem 2rem 4rem; text-align: center;
+  border-bottom: 1px solid var(--rule); position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(224,90,58,.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag { font-family: var(--mono); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase; color: var(--teal); border: 1px solid currentColor; padding: .2rem .65rem; display: inline-block; margin-bottom: 2rem; }
+.hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 400; letter-spacing: .04em; color: var(--gold); margin-bottom: .6rem; line-height: 1.2; }
+.hero-pt   { font-size: 1.05rem; color: rgba(232,228,216,.8); max-width: 600px; margin: .5rem auto 0; font-style: italic; line-height: 1.7; }
+.hero-en   { font-size: .92rem; color: var(--muted); max-width: 600px; margin: .4rem auto 0; font-style: italic; line-height: 1.6; }
+.hero-eq   { margin-top: 1.8rem; font-family: var(--mono); font-size: .9rem; letter-spacing: .12em; color: rgba(201,168,76,.45); }
+.hero-impa { margin-top: 1rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+
+.op-banner { background: var(--gold); color: var(--void); text-align: center; padding: .7rem 2rem; font-family: var(--mono); font-size: .9rem; letter-spacing: .2em; }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.page-narrow { max-width: 900px; margin: 0 auto; padding: 3.5rem 2rem; }
+
+.chapter-header { text-align: center; margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+.ch-num { font-family: var(--mono); font-size: .62rem; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: .6rem; }
+.chapter-header h2 { font-size: 1.5rem; font-weight: 400; color: var(--text); letter-spacing: .04em; }
+.chapter-header .ch-sub { font-style: italic; color: var(--muted); margin-top: .4rem; font-size: .92rem; }
+
+.bilingual { display: grid; grid-template-columns: var(--col-w) var(--col-w); gap: var(--col-gap); justify-content: center; }
+@media (max-width: 820px) { .bilingual { grid-template-columns: 1fr; } .nav-links { display: none; } }
+
+.col-header { font-family: var(--mono); font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); padding-bottom: .6rem; border-bottom: 1px solid var(--rule); margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem; }
+.col-header .lang-native { color: var(--gold); }
+.col-primary { border-bottom-color: var(--gold); }
+.col-primary .lang-native { color: var(--gold); }
+
+.block-prose     { font-size: 1rem; line-height: 1.82; margin-bottom: 1.4rem; }
+.block-prose:last-child { margin-bottom: 0; }
+.block-theorem   { border-left: 2px solid var(--teal); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(10,186,181,.025); }
+.block-axiom     { border-left: 2px solid var(--gold); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(201,168,76,.025); }
+.block-sorry     { border-left: 2px solid var(--red); padding: 1rem 1.4rem; margin: 1.5rem 0; background: rgba(224,90,58,.03); }
+.block-label     { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: .5rem; display: block; }
+.block-theorem .block-label { color: var(--teal); }
+.block-axiom   .block-label { color: var(--gold); }
+.block-sorry   .block-label { color: var(--red); }
+.block-body    { font-size: .95rem; line-height: 1.78; color: var(--text); }
+.block-math    { font-family: var(--mono); font-size: .88rem; color: var(--gold); background: var(--surface); border: 1px solid var(--dim); padding: .8rem 1.2rem; margin: 1.2rem 0; overflow-x: auto; }
+
+.op-chain { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin: 1rem 0; }
+.op { font-family: var(--mono); font-size: .78rem; padding: .2rem .55rem; border-radius: 2px; }
+.op-c { background: rgba(10,186,181,.12); color: #0ABAB5; border: 1px solid rgba(10,186,181,.3); }
+.op-k { background: rgba(224,90,58,.12);  color: #e05a3a; border: 1px solid rgba(224,90,58,.3); }
+.op-f { background: rgba(80,200,120,.12); color: #50c878; border: 1px solid rgba(80,200,120,.3); }
+.op-u { background: rgba(192,132,252,.12);color: #c084fc; border: 1px solid rgba(192,132,252,.3); }
+.op-arr { color: var(--muted); font-size: .8rem; }
+
+.section-label-strip { background: var(--surface); padding: 1.5rem 2rem; text-align: center; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.section-label-strip .sl { font-family: var(--mono); font-size: .62rem; letter-spacing: .28em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .3rem; }
+.section-label-strip .st { font-size: 1.1rem; color: var(--gold); font-weight: 400; }
+.section-label-strip .st-pt { font-size: .95rem; color: var(--muted); font-style: italic; margin-top: .2rem; }
+
+.pull-wrap { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.pull-pt { font-size: clamp(1rem, 2.5vw, 1.3rem); font-style: italic; color: var(--text); max-width: 680px; margin: 0 auto; line-height: 1.8; }
+.pull-en { font-size: clamp(.88rem, 2vw, 1.05rem); font-style: italic; color: var(--muted); max-width: 680px; margin: .8rem auto 0; line-height: 1.7; }
+.pull-cite { display: block; margin-top: 1.2rem; font-family: var(--mono); font-size: .6rem; color: var(--muted); letter-spacing: .1em; font-style: normal; }
+
+.axle-box { background: var(--surface); color: var(--gold); padding: 1.4rem 1.8rem; font-family: var(--mono); font-size: .8rem; line-height: 1.75; border-left: 3px solid var(--gold); margin: 1.5rem 0; overflow-x: auto; white-space: pre; }
+.axle-comment { color: var(--muted); }
+.axle-sorry   { color: var(--red); }
+
+.chapter-nav { background: var(--surface); border-top: 1px solid var(--rule); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ch-nav-link { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color .2s; }
+.ch-nav-link:hover { color: var(--gold); }
+.ch-nav-current { font-family: var(--mono); font-size: .6rem; color: var(--dim); letter-spacing: .1em; }
+
+footer { text-align: center; padding: 2.5rem 2rem; font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); }
+footer a { color: var(--gold); text-decoration: none; }
+
+.block-math, .axle-box, mjx-container { overflow-x: auto; max-width: 100%; }
+
+.diagram-wrap { max-width: 1100px; margin: 0 auto 2.5rem auto; padding: 0 2rem; }
+.diagram-inner { background: var(--surface); border: 1px solid var(--rule); border-radius: 2px; overflow: hidden; }
+.diagram-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .5rem; padding: .65rem 1.4rem; border-bottom: 1px solid var(--rule); background: rgba(201,168,76,.025); }
+.dh-pt { font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.dh-en { font-family: var(--mono); font-size: .58rem; letter-spacing: .12em; color: var(--muted); }
+canvas.diag { display: block; width: 100%; }
+.diagram-foot { display: flex; justify-content: space-between; gap: 2rem; flex-wrap: wrap; padding: .75rem 1.4rem; border-top: 1px solid var(--rule); background: rgba(0,0,0,.12); font-size: .82rem; color: var(--muted); line-height: 1.6; }
+.df-pt { font-style: italic; flex: 1; min-width: 200px; }
+.df-en { font-style: italic; flex: 1; min-width: 200px; text-align: right; }
+@media (max-width: 600px) { .df-en { text-align: left; } .diagram-head { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-series">Principia Orthogona · G⁴ · Edição IMPA</a>
+  <div class="nav-links">
+    <a href="book4/index.html">Vol IV</a>
+    <a href="ch-dirac.html">Cap. D</a>
+    <a href="ch-hawking.html">Cap. H</a>
+    <a href="impa-portal.html" class="accent">Portal IMPA →</a>
+    <a href="portal.html" class="accent">Portal →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">Capítulo C · Edição IMPA · Bilíngue PT/EN · GTCT T1</div>
+  <h1>Pierre & Marie Curie<br>pela Lente GTCT</h1>
+  <p class="hero-pt">A Lei de Curie como operador K impondo κ* = T_C. A singularidade de Curie-Weiss como dobramento Whitney A1. O mar de spins como variedade de contato dm³. A temperatura de Curie como ponto fixo x*.</p>
+  <p class="hero-en">Curie's Law as operator K imposing κ* = T_C. The Curie-Weiss singularity as the Whitney A1 fold. The spin sea as the dm³ contact manifold. The Curie temperature as fixed point x*.</p>
+  <div class="hero-eq">G = U ∘ F ∘ K ∘ C · χ = C/T · κ* = T_C · x* = transição de fase</div>
+  <div class="hero-impa">Principia Orthogona · Vol IV · Submetido ao IMPA · Newark NJ · 2026</div>
+</section>
+
+<div class="op-banner">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; x* &nbsp;·&nbsp; χ(T→T_C) → ∞</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION I: CURIE'S LAW = OPERATOR K
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção I · Section I</span>
+  <div class="st">A Lei de Curie</div>
+  <div class="st-pt">Curie's Law — The Curvature Threshold K and the Paramagnetic Manifold</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo C · Seção I</span>
+    <h2>O Operador do Frio</h2>
+    <p class="ch-sub">The Cold Operator · Pierre Curie, 1895 · χ = C/T</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário · Edição IMPA</span>
+      </div>
+      <p class="block-prose">Em 1895, Pierre Curie descobriu que a susceptibilidade magnética dos materiais paramagnéticos diminui com o aumento da temperatura de maneira precisa e universal: χ = C/T. Quanto mais quente, menos o material responde ao campo magnético — a agitação térmica destrói o alinhamento dos momentos magnéticos atômicos.</p>
+      <p class="block-prose">Esta é uma das leis mais simples da física — uma proporção inversa. Mas o que ela revela, na linguagem GTCT, é a estrutura do operador K. A temperatura T não é apenas energia cinética. É o parâmetro que controla a distância ao limiar de curvatura κ* = T_C. Acima de T_C: paramagnetismo. Abaixo: ferromagnetismo. O limiar é a temperatura de Curie.</p>
+      <div class="block-math">
+Lei de Curie:  χ = C/T
+
+Onde:
+  χ = susceptibilidade magnética (adimensional em SI)
+  C = constante de Curie (K) — invariante do material
+  T = temperatura absoluta (K)
+
+Constante de Curie (derivação microscópica):
+  C = μ₀ n g² μ_B² J(J+1) / (3 k_B)
+
+  μ₀  = permeabilidade do vácuo
+  n   = densidade de momentos magnéticos
+  g   = fator de Landé
+  μ_B = magnéton de Bohr
+  J   = número quântico de momento angular total
+  k_B = constante de Boltzmann</div>
+      <div class="block-axiom">
+        <span class="block-label">Mapeamento GTCT · Lei de Curie</span>
+        <div class="block-body">
+          <strong>C — Compressão:</strong> O campo magnético externo $B$ comprime os momentos atômicos — cada momento tende a se alinhar com $B$. A magnetização $M = \chi B$ é a semente comprimida.<br><br>
+          <strong>K — Limiar de curvatura:</strong> A temperatura $T$ é o operador K. Ela impõe o limiar $\kappa^* = T_C$. Para $T \gg T_C$, o sistema está em regime de compressão fraca — os momentos flutuam livremente. A Lei de Curie é o regime $T \gg T_C$ do operador K.<br><br>
+          <strong>F — Dobramento:</strong> Em $T = T_C$, o denominador da Lei de Curie-Weiss se anula — χ → ∞. Esta é a singularidade Whitney A1: o jacobiano da aplicação temperatura→magnetização perde posto. A topologia do sistema de spins muda.<br><br>
+          <strong>U — Desdobramento:</strong> Abaixo de $T_C$, a magnetização espontânea emerge sem campo externo. O operador U desdobra o estado ordenado — o ferromagneto é o ponto fixo $x^*$ do ciclo completo.
+        </div>
+      </div>
+      <div class="block-theorem">
+        <span class="block-label">Teorema C.1 · Identificação GTCT</span>
+        <div class="block-body">A Lei de Curie $\chi = C/T$ é a instanciação do operador K da cadeia $G = U \circ F \circ K \circ C$ no regime paramagnético ($T > T_C$). A constante de Curie $C$ é o invariante estrutural do material — análogo ao $\kappa^* \approx 0.882$ do dm³. A temperatura $T$ parametriza a distância ao limiar $T_C$. A divergência $\chi \to \infty$ quando $T \to T_C^+$ é o sinal do dobramento F iminente: o sistema está na borda da singularidade Whitney A1.</div>
+      </div>
+      <p class="block-prose">Pierre Curie mediu isso com ímãs e câmaras de temperatura controlada em Paris, no final do século XIX. Ele não sabia que estava mapeando a geometria de contato de uma variedade de spins. Mas a lei que encontrou tem a mesma estrutura que o operador K da dm³: uma restrição de curvatura que separa dois regimes topologicamente distintos.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">In 1895, Pierre Curie discovered that the magnetic susceptibility of paramagnetic materials decreases with increasing temperature in a precise and universal way: χ = C/T. The hotter the material, the less it responds to an applied magnetic field — thermal agitation destroys the alignment of atomic magnetic moments.</p>
+      <p class="block-prose">This is one of the simplest laws in physics — an inverse proportion. But what it reveals, in GTCT language, is the structure of operator K. Temperature T is not merely kinetic energy. It is the parameter controlling the distance to the curvature threshold κ* = T_C. Above T_C: paramagnetism. Below: ferromagnetism. The threshold is the Curie temperature.</p>
+      <div class="block-math">
+Curie's Law:  χ = C/T
+
+Where:
+  χ = magnetic susceptibility (dimensionless in SI)
+  C = Curie constant (K) — material invariant
+  T = absolute temperature (K)
+
+Curie Constant (microscopic derivation):
+  C = μ₀ n g² μ_B² J(J+1) / (3 k_B)
+
+  μ₀  = permeability of free space
+  n   = number density of magnetic moments
+  g   = Landé g-factor
+  μ_B = Bohr magneton
+  J   = total angular momentum quantum number
+  k_B = Boltzmann constant</div>
+      <div class="block-axiom">
+        <span class="block-label">GTCT Mapping · Curie's Law</span>
+        <div class="block-body">
+          <strong>C — Compression:</strong> The external magnetic field $B$ compresses atomic moments — each moment tends to align with $B$. The magnetisation $M = \chi B$ is the compressed seed.<br><br>
+          <strong>K — Curvature threshold:</strong> Temperature $T$ is the operator K. It imposes the threshold $\kappa^* = T_C$. For $T \gg T_C$, the system is in the weak compression regime — moments fluctuate freely. Curie's Law is the $T \gg T_C$ limit of operator K.<br><br>
+          <strong>F — Fold:</strong> At $T = T_C$, the denominator of the Curie-Weiss Law vanishes — χ → ∞. This is the Whitney A1 singularity: the Jacobian of the temperature→magnetisation map loses rank. The topology of the spin system changes.<br><br>
+          <strong>U — Unfolding:</strong> Below $T_C$, spontaneous magnetisation emerges without any external field. Operator U unfolds the ordered state — the ferromagnet is the fixed point $x^*$ of the full cycle.
+        </div>
+      </div>
+      <div class="block-theorem">
+        <span class="block-label">Theorem C.1 · GTCT Identification</span>
+        <div class="block-body">Curie's Law $\chi = C/T$ is the instantiation of operator K of the chain $G = U \circ F \circ K \circ C$ in the paramagnetic regime ($T > T_C$). The Curie constant $C$ is the structural invariant of the material — analogous to $\kappa^* \approx 0.882$ in dm³. Temperature $T$ parametrises the distance to the threshold $T_C$. The divergence $\chi \to \infty$ as $T \to T_C^+$ is the signal of the imminent fold F: the system is at the edge of the Whitney A1 singularity.</div>
+      </div>
+      <p class="block-prose">Pierre Curie measured this with magnets and temperature-controlled chambers in Paris at the end of the nineteenth century. He did not know he was mapping the contact geometry of a spin manifold. But the law he found has the same structure as the K operator of dm³: a curvature constraint that separates two topologically distinct regimes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGRAM 1: χ vs T — Curie and Curie-Weiss curves -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Susceptibilidade χ vs. Temperatura · Lei de Curie e Lei de Curie-Weiss · κ* = T_C</span>
+      <span class="dh-en">Susceptibility χ vs. Temperature · Curie's Law and Curie-Weiss Law · κ* = T_C</span>
+    </div>
+    <canvas id="d-curie" class="diag" height="320"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Linha dourada: Lei de Curie pura χ = C/T (paramagnetismo ideal). Linha teal: Lei de Curie-Weiss χ = C/(T−T_C). O ponto de singularidade (vermelho animado) em T = T_C é o dobramento F — χ → ∞. O operador K é a distância T − T_C.</span>
+      <span class="df-en">Gold line: pure Curie's Law χ = C/T (ideal paramagnet). Teal line: Curie-Weiss Law χ = C/(T−T_C). The singularity point (animated red) at T = T_C is the fold F — χ → ∞. Operator K is the distance T − T_C.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION II: CURIE-WEISS = FOLD F
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção II · Section II</span>
+  <div class="st">A Lei de Curie-Weiss</div>
+  <div class="st-pt">Curie-Weiss Law — The Whitney A1 Fold and the Phase Transition</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo C · Seção II</span>
+    <h2>A Singularidade de Weiss</h2>
+    <p class="ch-sub">The Weiss Singularity · Pierre-Ernest Weiss, 1907 · χ = C/(T − T_C)</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">Pierre-Ernest Weiss estendeu a lei de Curie em 1907 para incluir as interações entre momentos magnéticos vizinhos — o "campo molecular" que cada spin sente dos seus vizinhos. O resultado foi a Lei de Curie-Weiss: χ = C/(T − T_C). O denominador não é mais simplesmente T, mas a distância ao limiar crítico T_C.</p>
+      <p class="block-prose">Quando T → T_C de cima, χ → ∞. O material responde infinitamente a qualquer campo, por menor que seja. Esta divergência não é uma falha da teoria — é o sinal de uma mudança de fase. A topologia do espaço de estados muda. Isso é o dobramento F.</p>
+      <div class="op-chain">
+        <span class="op op-c">C</span><span class="op-arr">∘</span>
+        <span class="op op-k">K</span><span class="op-arr">∘</span>
+        <span class="op op-f" style="box-shadow:0 0 0 1px #50c878">F</span><span class="op-arr">∘</span>
+        <span class="op op-u">U</span>
+        <span style="color:var(--muted);font-family:var(--mono);font-size:.75rem;margin-left:.5rem">← T_C = F</span>
+      </div>
+      <div class="block-axiom">
+        <span class="block-label">A Singularidade Whitney A1 em T_C</span>
+        <div class="block-body">
+          A Lei de Curie-Weiss $\chi = C/(T - T_C)$ tem exatamente a forma de uma singularidade Whitney A1 na variável $\tau = T - T_C$:<br><br>
+          $\chi(\tau) = C/\tau$ — divergência de tipo $1/\tau$ com expoente crítico $\gamma = 1$.<br><br>
+          Na linguagem dm³, o potencial de dobramento $V(q) = q^3 - 3q$ tem um ponto crítico duplo em $q = 1$ (o ponto fixo $\kappa^*$). A aproximação local perto do ponto crítico dá exatamente a mesma forma funcional $\sim 1/(q - \kappa^*)$.<br><br>
+          O campo molecular de Weiss $H_m = \lambda M$ é o operador de acoplamento — ele transforma a interação microscópica entre spins em um campo efetivo que atua sobre cada spin individualmente. Este é o operador C na linguagem GTCT: a compressão das correlações de muitos corpos numa semente escalar.
+        </div>
+      </div>
+      <div class="block-math">
+Lei de Curie-Weiss:  χ = C / (T − T_C)
+
+Campo molecular de Weiss: H_eff = H + λM
+  λ = constante de campo molecular (acoplamento de exchange)
+
+Na variedade dm³, a temperatura de Curie:
+  T_C = C·λ = κ* (limiar de curvatura)
+
+Expoente crítico da teoria de campo médio:
+  χ ~ (T − T_C)^{−γ},  γ = 1  (Weiss)
+  γ ≈ 1.24  (experimental — além do campo médio)
+  Diferença: o sorry C.1</div>
+      <div class="block-theorem">
+        <span class="block-label">Teorema C.2 · Dobramento F em T_C</span>
+        <div class="block-body">A divergência da susceptibilidade $\chi \to \infty$ em $T \to T_C^+$ na Lei de Curie-Weiss é o dobramento F da cadeia de operadores $G = U \circ F \circ K \circ C$. O denominador $(T - T_C)$ é a distância ao limiar de curvatura $\kappa^* = T_C$ no espaço de parâmetros da variedade de spins. O expoente crítico $\gamma = 1$ da teoria de campo médio é determinado pelo expoente de Lyapunov transverso $\mu_{max} = -2$ do dm³: $\gamma_{MF} = |\mu_{max}|/2 = 1$. Verificado em AXLE: Chain\_updated.lean, 0 sorry no núcleo.</div>
+      </div>
+      <p class="block-prose">O campo molecular de Weiss — a ideia de que cada spin vê um campo efetivo gerado pelos seus vizinhos — foi revolucionário. É a primeira instância do que hoje chamamos de teoria de campo médio: substituir correlações de muitos corpos por um campo escalar efetivo. Na linguagem GTCT, essa é exatamente a operação C: comprimir a informação de muitos graus de liberdade numa semente.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">Pierre-Ernest Weiss extended Curie's law in 1907 to include interactions between neighbouring magnetic moments — the "molecular field" that each spin feels from its neighbours. The result was the Curie-Weiss Law: χ = C/(T − T_C). The denominator is no longer simply T, but the distance to the critical threshold T_C.</p>
+      <p class="block-prose">As T → T_C from above, χ → ∞. The material responds infinitely to any field, however small. This divergence is not a failure of the theory — it is the signature of a phase transition. The topology of the state space changes. This is the fold F.</p>
+      <div class="op-chain">
+        <span class="op op-c">C</span><span class="op-arr">∘</span>
+        <span class="op op-k">K</span><span class="op-arr">∘</span>
+        <span class="op op-f" style="box-shadow:0 0 0 1px #50c878">F</span><span class="op-arr">∘</span>
+        <span class="op op-u">U</span>
+        <span style="color:var(--muted);font-family:var(--mono);font-size:.75rem;margin-left:.5rem">← T_C = F</span>
+      </div>
+      <div class="block-axiom">
+        <span class="block-label">The Whitney A1 Singularity at T_C</span>
+        <div class="block-body">
+          The Curie-Weiss Law $\chi = C/(T - T_C)$ has exactly the form of a Whitney A1 singularity in the variable $\tau = T - T_C$:<br><br>
+          $\chi(\tau) = C/\tau$ — a $1/\tau$ divergence with critical exponent $\gamma = 1$.<br><br>
+          In the dm³ language, the fold potential $V(q) = q^3 - 3q$ has a double critical point at $q = 1$ (the fixed point $\kappa^*$). The local approximation near the critical point gives exactly the same functional form $\sim 1/(q - \kappa^*)$.<br><br>
+          Weiss's molecular field $H_m = \lambda M$ is the coupling operator — it converts the microscopic interaction between spins into an effective field acting on each spin individually. This is the operator C in GTCT language: compressing the many-body correlations into a scalar seed.
+        </div>
+      </div>
+      <div class="block-math">
+Curie-Weiss Law:  χ = C / (T − T_C)
+
+Weiss molecular field: H_eff = H + λM
+  λ = molecular field constant (exchange coupling)
+
+On the dm³ manifold, the Curie temperature:
+  T_C = C·λ = κ* (curvature threshold)
+
+Mean-field critical exponent:
+  χ ~ (T − T_C)^{−γ},  γ = 1  (Weiss)
+  γ ≈ 1.24  (experimental — beyond mean field)
+  Difference: sorry C.1</div>
+      <div class="block-theorem">
+        <span class="block-label">Theorem C.2 · Fold F at T_C</span>
+        <div class="block-body">The divergence of susceptibility $\chi \to \infty$ as $T \to T_C^+$ in the Curie-Weiss Law is the fold event F of the operator chain $G = U \circ F \circ K \circ C$. The denominator $(T - T_C)$ is the distance to the curvature threshold $\kappa^* = T_C$ in the parameter space of the spin manifold. The mean-field critical exponent $\gamma = 1$ is determined by the transverse Lyapunov exponent $\mu_{max} = -2$ of dm³: $\gamma_{MF} = |\mu_{max}|/2 = 1$. Verified in AXLE: Chain\_updated.lean, 0 sorry in core.</div>
+      </div>
+      <p class="block-prose">Weiss's molecular field — the idea that each spin sees an effective field generated by its neighbours — was revolutionary. It is the first instance of what we now call mean-field theory: replacing many-body correlations with an effective scalar field. In GTCT language, this is exactly the operation C: compressing the information of many degrees of freedom into a seed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGRAM 2: Spin domain animation — order/disorder transition -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Mar de spins · Transição ferromagnética → paramagnética · O dobramento F em T_C</span>
+      <span class="dh-en">Spin sea · Ferromagnetic → paramagnetic transition · Fold F at T_C</span>
+    </div>
+    <canvas id="d-spins" class="diag" height="340"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Cada seta é um spin atômico. Abaixo de T_C (esquerda): domínios alinhados — o operador U desdobrado, estado ferromagnético. Acima de T_C (direita): spins aleatórios — o operador K ativo, regime paramagnético. A zona central animada é o dobramento F.</span>
+      <span class="df-en">Each arrow is an atomic spin. Below T_C (left): aligned domains — operator U unfolded, ferromagnetic state. Above T_C (right): random spins — operator K active, paramagnetic regime. The animated central zone is the fold F.</span>
+    </div>
+  </div>
+</div>
+
+<!-- PULL QUOTE -->
+<div class="pull-wrap">
+  <p class="pull-pt">"A ciência tem muito charme. Um cientista no seu laboratório não é apenas um técnico: é também uma criança colocada perante fenômenos naturais que o impressionam como um conto de fadas."</p>
+  <p class="pull-en">"Science has great beauty. A scientist in his laboratory is not only a technician: he is also a child placed before natural phenomena which impress him as a fairy tale."</p>
+  <cite class="pull-cite">— Marie Skłodowska Curie · autobiografia · 1923</cite>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION III: CRITICAL EXPONENTS = HONEST SORRY
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção III · Section III</span>
+  <div class="st">Os Expoentes Críticos</div>
+  <div class="st-pt">Critical Exponents — Mean Field vs. Reality · An Honest Sorry</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo C · Seção III</span>
+    <h2>O Sorry de Weiss</h2>
+    <p class="ch-sub">The Weiss Sorry · γ = 1 (campo médio) vs. γ ≈ 1.24 (experimental)</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">A Lei de Curie-Weiss prediz χ ~ (T − T_C)^{−1}, ou seja, expoente crítico γ = 1. Mas o que se mede experimentalmente é γ ≈ 1.24 para ferromagnetos tridimensionais com simetria de Heisenberg (como o níquel), e γ ≈ 1.32 para simetria de Ising em 3D. Existe uma discrepância sistemática entre a teoria de campo médio e o experimento.</p>
+      <p class="block-prose">Essa discrepância não é um erro de medida. É a assinatura de correlações de muitos corpos que a teoria de campo médio de Weiss ignora. Perto de T_C, os spins se correlacionam em distâncias muito maiores do que a escala de troca — o comprimento de correlação ξ diverge como ξ ~ (T − T_C)^{−ν}. O campo médio de Weiss usa ξ → ∞ implicitamente, mas não captura a geometria correta das flutuações.</p>
+      <p class="block-prose">Na linguagem GTCT, a pergunta é precisa: o expoente de Lyapunov transverso μ_max = −2 do dm³ determina o expoente crítico γ = 1 do campo médio. Mas o expoente real requer correções além do campo médio — flutuações acima da dimensão crítica superior d_c = 4. Em dimensão d = 3, as flutuações são relevantes e o expoente muda. Isso é o Grupo de Renormalização de Wilson — e é um sorry honesto da dm³.</p>
+      <div class="block-sorry">
+        <span class="block-label">Sorry C.1 · Expoentes Críticos Além do Campo Médio</span>
+        <div class="block-body">
+          <strong>Afirmação:</strong> Os expoentes críticos da transição ferromagnética ($\gamma$, $\nu$, $\beta$, $\eta$) são determinados pelo expoente de Lyapunov transverso $\mu_{max}$ da dm³ via o grupo de renormalização.<br><br>
+          <strong>Status:</strong> Parcialmente estabelecido. $\gamma_{MF} = |\mu_{max}|/2 = 1$ é verificado para campo médio. A correção para $d = 3$ requer o grupo de renormalização de Wilson-Fisher, que vai além da estrutura atual do dm³.<br><br>
+          <strong>Lema faltante:</strong> Uma derivação da função beta do grupo de renormalização a partir da estrutura de operadores da dm³ — especificamente, o mapeamento entre a expansão $\varepsilon = 4 - d$ e a perturbação do ponto fixo $\kappa^*$ na variedade de contato.<br><br>
+          <strong>Estado atual:</strong> Wilson e Fisher (1972) calcularam $\gamma = 1 + \varepsilon/6 + O(\varepsilon^2)$ para $\varepsilon = 4 - d$. Para $d = 3$ ($\varepsilon = 1$): $\gamma \approx 1.167$, próximo do valor experimental $\approx 1.24$. A derivação a partir de primeiros princípios dm³ permanece aberta.
+        </div>
+      </div>
+      <div class="block-math">
+-- sorry critical_exponents_beyond_mean_field
+-- ⊢ ∀ d : ℕ, d < 4 →
+--   γ(d) = |μ_max| / 2 + correction(d, dm3_contact_structure)
+-- Lema faltante: função beta do RG a partir da variedade dm³
+-- Wilson-Fisher (1972): γ = 1 + ε/6 + O(ε²), ε = 4 - d
+-- dm3 dá: γ_MF = 1 (campo médio) ✓
+-- dm3 não dá ainda: γ(d=3) ≈ 1.24 ✗ (sorry C.1)</div>
+      <p class="block-prose">Este sorry é honesto e preciso. O dm³ captura o campo médio exatamente. Não captura as flutuações de muitos corpos em dimensão crítica. A diferença entre γ = 1 e γ = 1.24 é a diferença entre ignorar e incluir as flutuações topológicas da variedade de spins. Marie Curie mediu isso. Wilson ganhou o Nobel por explicar isso. A dm³ ainda está chegando lá.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">The Curie-Weiss Law predicts χ ~ (T − T_C)^{−1}, i.e., critical exponent γ = 1. But what is measured experimentally is γ ≈ 1.24 for three-dimensional ferromagnets with Heisenberg symmetry (like nickel), and γ ≈ 1.32 for 3D Ising symmetry. There is a systematic discrepancy between mean-field theory and experiment.</p>
+      <p class="block-prose">This discrepancy is not a measurement error. It is the signature of many-body correlations that Weiss's mean-field theory ignores. Near T_C, spins correlate over distances much larger than the exchange scale — the correlation length ξ diverges as ξ ~ (T − T_C)^{−ν}. Weiss's mean field implicitly uses ξ → ∞, but does not capture the correct geometry of fluctuations.</p>
+      <p class="block-prose">In GTCT language, the question is precise: the transverse Lyapunov exponent μ_max = −2 of dm³ determines the mean-field critical exponent γ = 1. But the real exponent requires corrections beyond mean field — fluctuations above the upper critical dimension d_c = 4. In dimension d = 3, fluctuations are relevant and the exponent changes. This is Wilson's Renormalisation Group — and it is an honest sorry of dm³.</p>
+      <div class="block-sorry">
+        <span class="block-label">Sorry C.1 · Critical Exponents Beyond Mean Field</span>
+        <div class="block-body">
+          <strong>Claim:</strong> The critical exponents of the ferromagnetic transition ($\gamma$, $\nu$, $\beta$, $\eta$) are determined by the transverse Lyapunov exponent $\mu_{max}$ of dm³ via the renormalisation group.<br><br>
+          <strong>Status:</strong> Partially established. $\gamma_{MF} = |\mu_{max}|/2 = 1$ is verified for mean field. The correction to $d = 3$ requires the Wilson-Fisher renormalisation group, which goes beyond the current dm³ structure.<br><br>
+          <strong>Missing lemma:</strong> A derivation of the renormalisation group beta function from the dm³ operator structure — specifically, the mapping between the $\varepsilon = 4 - d$ expansion and the perturbation of the fixed point $\kappa^*$ on the contact manifold.<br><br>
+          <strong>Current state:</strong> Wilson and Fisher (1972) computed $\gamma = 1 + \varepsilon/6 + O(\varepsilon^2)$ for $\varepsilon = 4 - d$. For $d = 3$ ($\varepsilon = 1$): $\gamma \approx 1.167$, close to the experimental value $\approx 1.24$. The derivation from dm³ first principles remains open.
+        </div>
+      </div>
+      <div class="block-math">
+-- sorry critical_exponents_beyond_mean_field
+-- ⊢ ∀ d : ℕ, d < 4 →
+--   γ(d) = |μ_max| / 2 + correction(d, dm3_contact_structure)
+-- Missing lemma: RG beta function from dm³ contact manifold
+-- Wilson-Fisher (1972): γ = 1 + ε/6 + O(ε²), ε = 4 - d
+-- dm3 gives: γ_MF = 1 (mean field) ✓
+-- dm3 does not yet give: γ(d=3) ≈ 1.24 ✗ (sorry C.1)</div>
+      <p class="block-prose">This sorry is honest and precise. dm³ captures mean field exactly. It does not yet capture many-body fluctuations in critical dimension. The difference between γ = 1 and γ = 1.24 is the difference between ignoring and including the topological fluctuations of the spin manifold. Marie Curie measured this. Wilson won the Nobel for explaining it. dm³ is still getting there.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGRAM 3: Critical exponent — χ divergence with γ=1 vs γ=1.24 -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Expoentes críticos · Campo médio (γ=1) vs. experimental (γ≈1.24) · sorry C.1</span>
+      <span class="dh-en">Critical exponents · Mean field (γ=1) vs. experiment (γ≈1.24) · sorry C.1</span>
+    </div>
+    <canvas id="d-exponent" class="diag" height="305"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Curva dourada: χ ~ (T−T_C)^{−1} (campo médio de Weiss, dm³ resolve). Curva teal: χ ~ (T−T_C)^{−1.24} (experimental, Heisenberg 3D). O ponto vermelho animado marca o sorry C.1: a diferença entre as duas curvas é o lema faltante — o grupo de renormalização de Wilson-Fisher a partir da estrutura dm³.</span>
+      <span class="df-en">Gold curve: χ ~ (T−T_C)^{−1} (Weiss mean field, dm³ resolves). Teal curve: χ ~ (T−T_C)^{−1.24} (experimental, 3D Heisenberg). The animated red dot marks sorry C.1: the gap between curves is the missing lemma — the Wilson-Fisher RG from dm³ structure.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SECTION IV: 5D+t RESOLUTION = dm³ CONTACT MANIFOLD
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-label-strip">
+  <span class="sl">Seção IV · Section IV</span>
+  <div class="st">A Resolução em 5D+t</div>
+  <div class="st-pt">The 5D+t Resolution — Contact Manifold dm³ Bypasses the Curie Singularity</div>
+</div>
+
+<div class="page">
+  <div class="chapter-header">
+    <span class="ch-num">Capítulo C · Seção IV</span>
+    <h2>A Variedade de Contato do Ímã</h2>
+    <p class="ch-sub">The Magnet's Contact Manifold · G = U ∘ F ∘ K ∘ C · x* = G(x*)</p>
+  </div>
+
+  <div class="bilingual">
+    <div>
+      <div class="col-header col-primary">
+        <span>🇧🇷</span><span>Português</span><span class="lang-native">Primário</span>
+      </div>
+      <p class="block-prose">A singularidade χ → ∞ em T = T_C parece, em 3D, uma catástrofe: o denominador zera, a física explode. Mas no espaço 5D+t da variedade dm³, a singularidade se resolve em uma trajetória suave. A temperatura de Curie T_C não é um ponto singular — é o κ* da variedade de contato, o limiar onde a topologia muda de maneira ordenada e determinística.</p>
+      <p class="block-prose">O sistema de spins em 5D+t é descrito pelo vetor de estado $X = (x, y, z, w, v)$, onde $(x, y, z)$ é o espaço físico, $w$ é o eixo de alinhamento magnético ortogenético, e $v$ é o eixo de energia topográfica (temperatura). O ciclo dm³ completo é $G = U \circ F \circ K \circ C$ nesta variedade, e o ferromagneto é o ponto fixo $x^* = G(x^*)$.</p>
+      <div class="block-axiom">
+        <span class="block-label">A Variedade dm³ do Ímã</span>
+        <div class="block-body">
+          <strong>Forma de contato:</strong> $\alpha = dz - r^2 d\theta$ em $M = \mathbb{R}^2_+ \times \mathbb{R}$ com $r = \sqrt{w^2 + M^2}$ (alinhamento magnético) e $\theta$ parametrizando a fase do domínio.<br><br>
+          <strong>Ciclo limite:</strong> $\Gamma = \{r = 1\}$ — o estado ferromagnético completamente ordenado, $M = M_s$ (magnetização de saturação).<br><br>
+          <strong>Raio de estabilidade:</strong> $\varepsilon_0 = 1/3$ — o limiar de Gronwall. Perturbações térmicas menores que $\varepsilon_0$ da saturação são absorvidas pelo ciclo limite; perturbações maiores que $\varepsilon_0$ mas menores que $r^* \approx 0.773$ conduzem ao ciclo; perturbações acima de $\kappa^* \approx 0.882$ ultrapassam o limiar de dobradura — a transição de fase.<br><br>
+          <strong>Resolução da singularidade:</strong> Em 3D, $\chi(\tau) = C/\tau$ diverge. Em 5D+t, a trajetória contorna a singularidade via rotação no plano $(w, v)$: o sistema passa por $T_C$ deslocando-se no eixo de alinhamento $w$, não no eixo de energia $v$. Nenhum denominador zera na variedade completa.
+        </div>
+      </div>
+      <div class="block-theorem">
+        <span class="block-label">Teorema C.3 · O Ferromagneto como Ponto Fixo</span>
+        <div class="block-body">O estado ferromagnético (magnetização espontânea $M_s$ abaixo de $T_C$) é o ponto fixo $x^*$ da cadeia de operadores $G = U \circ F \circ K \circ C$ na variedade de contato dm³ com $\alpha = dz - r^2 d\theta$. A existência de $x^*$ é garantida pelo Teorema do Ponto Fixo de Banach aplicado ao mapa de retorno de Poincaré do fluxo dm³: $\text{gronwall\_contraction}$ (AXLE v6.2, Gronwall\_Closure.lean, 0 sorry). A unicidade de $x^*$ segue da injetividade do operador $U$ nesta variedade (identificação estrutural verificada em Chain\_updated.lean).</div>
+      </div>
+      <p class="block-prose">Marie Curie descobriu a radioatividade estudando materiais que a Lei de Curie também descreve — o urânio e o rádio são paramagnéticos. O prêmio Nobel de Física (1903, com Pierre e Becquerel) e de Química (1911, sozinha) reconheceram uma física que, em retrospecto, é toda geometria de contato: emissão radioativa como dobramento F, decaimento como fluxo em direção ao ponto fixo $x^*$, semi-vida como período $T^* = 2\pi$ do ciclo dm³.</p>
+    </div>
+
+    <div>
+      <div class="col-header">
+        <span>🇺🇸</span><span>English</span><span class="lang-native">Secondary</span>
+      </div>
+      <p class="block-prose">The singularity χ → ∞ at T = T_C looks, in 3D, like a catastrophe: the denominator vanishes, the physics explodes. But in the 5D+t space of the dm³ manifold, the singularity resolves into a smooth trajectory. The Curie temperature T_C is not a singular point — it is the κ* of the contact manifold, the threshold where the topology changes in an orderly, deterministic way.</p>
+      <p class="block-prose">The spin system in 5D+t is described by the state vector $X = (x, y, z, w, v)$, where $(x, y, z)$ is physical space, $w$ is the orthogenetic magnetic alignment axis, and $v$ is the topographical energy axis (temperature). The complete dm³ cycle is $G = U \circ F \circ K \circ C$ on this manifold, and the ferromagnet is the fixed point $x^* = G(x^*)$.</p>
+      <div class="block-axiom">
+        <span class="block-label">The dm³ Manifold of the Magnet</span>
+        <div class="block-body">
+          <strong>Contact form:</strong> $\alpha = dz - r^2 d\theta$ on $M = \mathbb{R}^2_+ \times \mathbb{R}$ with $r = \sqrt{w^2 + M^2}$ (magnetic alignment) and $\theta$ parametrising domain phase.<br><br>
+          <strong>Limit cycle:</strong> $\Gamma = \{r = 1\}$ — the fully ordered ferromagnetic state, $M = M_s$ (saturation magnetisation).<br><br>
+          <strong>Stability radius:</strong> $\varepsilon_0 = 1/3$ — the Gronwall threshold. Thermal perturbations smaller than $\varepsilon_0$ from saturation are absorbed by the limit cycle; perturbations larger than $\varepsilon_0$ but smaller than $r^* \approx 0.773$ are drawn to the cycle; perturbations above $\kappa^* \approx 0.882$ cross the fold threshold — the phase transition.<br><br>
+          <strong>Singularity resolution:</strong> In 3D, $\chi(\tau) = C/\tau$ diverges. In 5D+t, the trajectory navigates around the singularity via rotation in the $(w, v)$ plane: the system passes through $T_C$ by shifting along the alignment axis $w$, not the energy axis $v$. No denominator vanishes on the full manifold.
+        </div>
+      </div>
+      <div class="block-theorem">
+        <span class="block-label">Theorem C.3 · The Ferromagnet as Fixed Point</span>
+        <div class="block-body">The ferromagnetic state (spontaneous magnetisation $M_s$ below $T_C$) is the fixed point $x^*$ of the operator chain $G = U \circ F \circ K \circ C$ on the dm³ contact manifold with $\alpha = dz - r^2 d\theta$. The existence of $x^*$ is guaranteed by Banach's Fixed Point Theorem applied to the Poincaré return map of the dm³ flow: $\text{gronwall\_contraction}$ (AXLE v6.2, Gronwall\_Closure.lean, 0 sorry). The uniqueness of $x^*$ follows from the injectivity of operator $U$ on this manifold (structural identification verified in Chain\_updated.lean).</div>
+      </div>
+      <p class="block-prose">Marie Curie discovered radioactivity by studying materials that Curie's Law also describes — uranium and radium are paramagnetic. The Nobel Prize in Physics (1903, with Pierre and Becquerel) and in Chemistry (1911, alone) recognised physics that, in retrospect, is entirely contact geometry: radioactive emission as fold event F, decay as flow toward fixed point $x^*$, half-life as period $T^* = 2\pi$ of the dm³ cycle.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGRAM 4: 5D+t manifold — singularity resolution -->
+<div class="diagram-wrap">
+  <div class="diagram-inner">
+    <div class="diagram-head">
+      <span class="dh-pt">Variedade 5D+t · Resolução da singularidade de Curie · x* = G(x*)</span>
+      <span class="dh-en">5D+t Manifold · Resolution of Curie singularity · x* = G(x*)</span>
+    </div>
+    <canvas id="d-manifold" class="diag" height="350"></canvas>
+    <div class="diagram-foot">
+      <span class="df-pt">Projeção 2D do espaço (v = temperatura, w = alinhamento magnético). A singularidade 3D (linha vermelha tracejada) existe apenas em w = 0. A trajetória dm³ (teal) contorna a singularidade via rotação no plano (v, w). O ponto fixo dourado x* é o ferromagneto — o ciclo limite Γ = {r = 1}.</span>
+      <span class="df-en">2D projection of (v = temperature, w = magnetic alignment) space. The 3D singularity (dashed red) exists only at w = 0. The dm³ trajectory (teal) navigates around it via rotation in the (v, w) plane. The gold fixed point x* is the ferromagnet — the limit cycle Γ = {r = 1}.</span>
+    </div>
+  </div>
+</div>
+
+<!-- AXLE STATUS -->
+<div class="page-narrow" style="padding-top:0; padding-bottom:3rem;">
+  <div class="axle-box"><span class="axle-comment">-- Capítulo C · Curie via GTCT · AXLE v6.2
+-- Seção I:   Lei de Curie χ=C/T ↔ operador K                   ✓ identificação estrutural
+--            Constante de Curie C ↔ invariante κ* da dm³        ✓ identificação estrutural
+-- Seção II:  Lei de Curie-Weiss ↔ dobramento Whitney A1         ✓ identificação estrutural
+--            γ_MF = 1 ↔ μ_max = −2 via γ = |μ_max|/2           ✓ identificação estrutural
+-- Seção III: Expoentes críticos além do campo médio             </span><span class="axle-sorry">sorry critical_exponents_beyond_mean_field</span>
+<span class="axle-comment">--            γ(d=3) ≈ 1.24 ← RG de Wilson-Fisher não derivado da dm³ ainda
+-- Seção IV:  Ferromagneto ↔ ponto fixo x* = G(x*)               ✓ Gronwall_Closure.lean
+--            Singularidade 3D ↔ resolução 5D+t na dm³            ✓ identificação estrutural
+--
+-- Constantes GTCT presentes nas fórmulas de Curie:
+--   κ* = T_C          (limiar de curvatura = temperatura de Curie)
+--   μ_max = −2        (expoente de Lyapunov → γ_MF = 1)
+--   ε₀ = 1/3          (raio de Gronwall — bacia do estado ordenado)
+--   T* = 2π           (período temporal — ciclo de domínio magnético)
+--
+-- Status: 4 identificações estruturais verificadas, 1 sorry aberto
+-- O sorry de Curie é mais difícil do que parece: γ(d=3) ≠ 1 é um fato
+-- robusto que requer grupo de renormalização completo — Prêmio Nobel 1982 (Wilson).
+-- Ele está em boa companhia com sorry H.1 (Hawking) e sorry D.1 (Yang-Mills).</span></div>
+</div>
+
+<!-- CHAPTER NAV -->
+<div class="chapter-nav">
+  <a href="ch-dirac.html" class="ch-nav-link">← Cap. D · Dirac</a>
+  <span class="ch-nav-current">Cap. C · Curie pela Lente GTCT · Edição IMPA</span>
+  <a href="ch-hawking.html" class="ch-nav-link">Cap. H · Hawking →</a>
+</div>
+
+<footer>
+  © 2026 Pablo Nogueira Grossi / G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  Principia Orthogona · Vol IV · GTCT T1 · Edição IMPA · ISBN 979-8-9954416-8-7<br>
+  <a href="https://doi.org/10.5281/zenodo.19117399" target="_blank">doi:10.5281/zenodo.19117399</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub ↗</a>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var GOLD = '#c9a84c', TEAL = '#0ABAB5', RED = '#e05a3a';
+  var PURPLE = '#c084fc', GREEN = '#50c878';
+  var VOID = '#04040a', SURFACE = '#0c0d16';
+
+  /* ── D1: χ vs T — Curie and Curie-Weiss ── */
+  (function curieCurves() {
+    var canvas = document.getElementById('d-curie');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d'), W, H, tick = 0;
+    var PAD = { l: 65, r: 30, t: 30, b: 48 };
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = SURFACE; ctx.fillRect(0, 0, W, H);
+      var fw = W - PAD.l - PAD.r, fh = H - PAD.t - PAD.b;
+      var TC_frac = 0.38; // T_C at 38% of x-axis
+      var TC_px = PAD.l + TC_frac * fw;
+      var S = 400, C_const = 0.18;
+
+      // Grid
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 1;
+      for (var gi = 1; gi <= 5; gi++) { var gy = PAD.t + gi * fh / 5; ctx.beginPath(); ctx.moveTo(PAD.l, gy); ctx.lineTo(W - PAD.r, gy); ctx.stroke(); }
+
+      // T_C marker
+      var pulse = 0.5 + 0.5 * Math.sin(tick * 0.06);
+      ctx.strokeStyle = 'rgba(224,90,58,' + (0.25 + 0.2 * pulse) + ')'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(TC_px, PAD.t); ctx.lineTo(TC_px, H - PAD.b); ctx.stroke(); ctx.setLineDash([]);
+
+      // Curie law χ = C/T (gold, full range)
+      ctx.strokeStyle = GOLD; ctx.lineWidth = 2; ctx.beginPath();
+      for (var i = 0; i <= S; i++) {
+        var xf = i / S, T = 0.05 + xf * 0.95;
+        var chi = Math.min(C_const / T, 1.0);
+        var px = PAD.l + xf * fw, py = (H - PAD.b) - chi * fh;
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, Math.max(PAD.t + 2, py));
+      }
+      ctx.stroke();
+
+      // Curie-Weiss χ = C/(T - TC) for T > TC (teal)
+      ctx.strokeStyle = TEAL; ctx.lineWidth = 2.2; ctx.beginPath(); var started = false;
+      for (var j = 0; j <= S; j++) {
+        var xfj = j / S, Tj = 0.05 + xfj * 0.95;
+        if (Tj <= TC_frac + 0.005) { started = false; continue; }
+        var tau = Tj - TC_frac;
+        var chiCW = Math.min(C_const / tau, 1.0);
+        var pxj = PAD.l + xfj * fw, pyj = (H - PAD.b) - chiCW * fh;
+        pyj = Math.max(PAD.t + 2, pyj);
+        if (!started) { ctx.moveTo(pxj, pyj); started = true; } else ctx.lineTo(pxj, pyj);
+      }
+      ctx.stroke();
+
+      // Ferromagnetic region (below TC, teal fill)
+      ctx.fillStyle = 'rgba(10,186,181,0.07)';
+      ctx.fillRect(PAD.l, PAD.t, TC_px - PAD.l, fh);
+
+      // Axes
+      ctx.strokeStyle = 'rgba(201,168,76,0.38)'; ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, H - PAD.b);
+      ctx.moveTo(PAD.l, H - PAD.b); ctx.lineTo(W - PAD.r, H - PAD.b); ctx.stroke();
+
+      // Singularity dot
+      ctx.strokeStyle = 'rgba(224,90,58,' + (0.5 + 0.35 * pulse) + ')'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(TC_px, PAD.t + 8 + pulse * 6, 7 + pulse * 4, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(TC_px, PAD.t + 8 + pulse * 6, 4, 0, Math.PI * 2); ctx.fill();
+
+      // Labels
+      var fs = Math.max(9, Math.round(W * 0.011));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(201,168,76,0.55)'; ctx.textAlign = 'center';
+      ctx.fillText('Temperatura T / Temperature T', PAD.l + fw / 2, H - 10);
+      ctx.save(); ctx.translate(14, PAD.t + fh / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('χ (susceptibilidade)', 0, 0); ctx.restore();
+      ctx.fillStyle = GOLD; ctx.textAlign = 'right'; ctx.fillText('χ = C/T (Curie)', W - PAD.r - 5, PAD.t + 20);
+      ctx.fillStyle = TEAL; ctx.fillText('χ = C/(T−T_C) (Curie-Weiss)', W - PAD.r - 5, PAD.t + 36);
+      ctx.fillStyle = 'rgba(224,90,58,0.75)'; ctx.textAlign = 'center';
+      ctx.fillText('T_C = κ*', TC_px, H - PAD.b + 16);
+      ctx.fillStyle = 'rgba(10,186,181,0.5)'; ctx.textAlign = 'left';
+      ctx.fillText('← ferromagneto / ferromagnet', PAD.l + 5, PAD.t + 18);
+      ctx.fillStyle = 'rgba(80,200,120,0.65)'; ctx.textAlign = 'center';
+      ctx.fillText('F · dobramento / fold', TC_px, PAD.t + 52);
+
+      tick++; requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', resize); resize(); draw();
+  }());
+
+  /* ── D2: Spin domain animation ── */
+  (function spinSea() {
+    var canvas = document.getElementById('d-spins');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d'), W, H, tick = 0;
+    var ROWS = 10, COLS = 22, spins = [];
+
+    function resize() {
+      W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H;
+      spins = [];
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          spins.push({ r: r, c: c, angle: (c < COLS * 0.42) ? 0 : Math.random() * Math.PI * 2, noise: Math.random() * 0.3 });
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = VOID; ctx.fillRect(0, 0, W, H);
+      var cw = W / COLS, ch = H / ROWS;
+      var TC_frac = 0.47, TC_px = W * TC_frac;
+      var pulse = 0.5 + 0.5 * Math.sin(tick * 0.04);
+
+      spins.forEach(function (sp) {
+        var px = (sp.c + 0.5) * cw, py = (sp.r + 0.5) * ch;
+        var xFrac = px / W;
+        // Temperature controls disorder
+        var disorder = Math.max(0, (xFrac - TC_frac) / (1 - TC_frac));
+        // Animate angles
+        if (xFrac < TC_frac - 0.08) {
+          sp.angle = sp.noise * 0.15 * Math.sin(tick * 0.02 + sp.c * 0.3);
+        } else if (xFrac > TC_frac + 0.08) {
+          sp.angle += (Math.random() - 0.5) * 0.08;
+        } else {
+          sp.angle += (Math.random() - 0.5) * 0.15 * pulse;
+        }
+
+        var len = Math.min(cw, ch) * 0.36;
+        var ax = px + len * Math.cos(sp.angle - Math.PI / 2);
+        var ay = py + len * Math.sin(sp.angle - Math.PI / 2);
+        var bx = px - len * Math.cos(sp.angle - Math.PI / 2);
+        var by = py - len * Math.sin(sp.angle - Math.PI / 2);
+
+        var col = xFrac < TC_frac - 0.08 ? TEAL : xFrac > TC_frac + 0.08 ? 'rgba(201,168,76,0.45)' : GREEN;
+        ctx.strokeStyle = col; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(ax, ay); ctx.stroke();
+        // Arrowhead
+        var ang = Math.atan2(ay - by, ax - bx);
+        var hl = 5;
+        ctx.fillStyle = col; ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - hl * Math.cos(ang - 0.5), ay - hl * Math.sin(ang - 0.5));
+        ctx.lineTo(ax - hl * Math.cos(ang + 0.5), ay - hl * Math.sin(ang + 0.5));
+        ctx.closePath(); ctx.fill();
+      });
+
+      // T_C divider
+      ctx.strokeStyle = 'rgba(80,200,120,' + (0.4 + 0.25 * pulse) + ')'; ctx.lineWidth = 2; ctx.setLineDash([6, 4]);
+      ctx.beginPath(); ctx.moveTo(TC_px, 0); ctx.lineTo(TC_px, H); ctx.stroke(); ctx.setLineDash([]);
+
+      // Labels
+      var fs = Math.max(10, Math.round(W * 0.012));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(10,186,181,0.65)'; ctx.textAlign = 'center';
+      ctx.fillText('T < T_C · ordenado / ordered', W * 0.23, H - 12);
+      ctx.fillStyle = 'rgba(201,168,76,0.55)';
+      ctx.fillText('T > T_C · desordenado / disordered', W * 0.73, H - 12);
+      ctx.fillStyle = 'rgba(80,200,120,0.7)';
+      ctx.fillText('F · T_C = κ*', TC_px, 18);
+
+      tick++; requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', resize); resize(); draw();
+  }());
+
+  /* ── D3: Critical exponents γ=1 vs γ=1.24 ── */
+  (function critExp() {
+    var canvas = document.getElementById('d-exponent');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d'), W, H, tick = 0;
+    var PAD = { l: 65, r: 30, t: 30, b: 48 };
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+    function chiMF(tau) { return Math.min(0.04 / tau, 1.0); }
+    function chiExp(tau) { return Math.min(0.04 / Math.pow(tau, 1.24), 1.0); }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = SURFACE; ctx.fillRect(0, 0, W, H);
+      var fw = W - PAD.l - PAD.r, fh = H - PAD.t - PAD.b;
+      var S = 300;
+
+      // Grid
+      ctx.strokeStyle = 'rgba(201,168,76,0.06)'; ctx.lineWidth = 1;
+      for (var gi = 1; gi <= 5; gi++) { var gy = PAD.t + gi * fh / 5; ctx.beginPath(); ctx.moveTo(PAD.l, gy); ctx.lineTo(W - PAD.r, gy); ctx.stroke(); }
+
+      // MF curve γ=1 (gold)
+      ctx.strokeStyle = GOLD; ctx.lineWidth = 2; ctx.beginPath(); var s1 = false;
+      for (var i = 0; i <= S; i++) {
+        var xf = i / S, tau = 0.008 + xf * 0.55;
+        var chi = chiMF(tau), px = PAD.l + xf * fw, py = Math.max(PAD.t + 2, (H - PAD.b) - chi * fh);
+        if (!s1) { ctx.moveTo(px, py); s1 = true; } else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+
+      // Experimental γ=1.24 (teal)
+      ctx.strokeStyle = TEAL; ctx.lineWidth = 2.2; ctx.beginPath(); var s2 = false;
+      for (var j = 0; j <= S; j++) {
+        var xfj = j / S, tauj = 0.008 + xfj * 0.55;
+        var chij = chiExp(tauj), pxj = PAD.l + xfj * fw, pyj = Math.max(PAD.t + 2, (H - PAD.b) - chij * fh);
+        if (!s2) { ctx.moveTo(pxj, pyj); s2 = true; } else ctx.lineTo(pxj, pyj);
+      }
+      ctx.stroke();
+
+      // Sorry dot at τ≈0.05 where gap is visible
+      var sorryTau = 0.05, sorryFrac = (sorryTau - 0.008) / 0.55;
+      var sorryPx = PAD.l + sorryFrac * fw;
+      var sorryMF = Math.max(PAD.t + 2, (H - PAD.b) - chiMF(sorryTau) * fh);
+      var sorryExp = Math.max(PAD.t + 2, (H - PAD.b) - chiExp(sorryTau) * fh);
+      var pulse = 0.5 + 0.5 * Math.sin(tick * 0.07);
+
+      // Gap indicator
+      ctx.strokeStyle = 'rgba(224,90,58,' + (0.5 + 0.3 * pulse) + ')'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(sorryPx, sorryExp); ctx.lineTo(sorryPx, sorryMF); ctx.stroke();
+      ctx.fillStyle = RED; ctx.beginPath(); ctx.arc(sorryPx, (sorryMF + sorryExp) / 2, 5 + pulse * 3, 0, Math.PI * 2); ctx.fill();
+
+      // Axes
+      ctx.strokeStyle = 'rgba(201,168,76,0.38)'; ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.moveTo(PAD.l, PAD.t); ctx.lineTo(PAD.l, H - PAD.b);
+      ctx.moveTo(PAD.l, H - PAD.b); ctx.lineTo(W - PAD.r, H - PAD.b); ctx.stroke();
+
+      // Labels
+      var fs = Math.max(9, Math.round(W * 0.011));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(201,168,76,0.55)'; ctx.textAlign = 'center';
+      ctx.fillText('τ = T − T_C (distância ao limiar / distance to threshold)', PAD.l + fw / 2, H - 10);
+      ctx.save(); ctx.translate(14, PAD.t + fh / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('χ (susceptibilidade)', 0, 0); ctx.restore();
+      ctx.fillStyle = GOLD; ctx.textAlign = 'left'; ctx.fillText('γ = 1 (campo médio / mean field) · dm³ ✓', PAD.l + 8, PAD.t + 18);
+      ctx.fillStyle = TEAL; ctx.fillText('γ = 1.24 (exp. Heisenberg 3D)', PAD.l + 8, PAD.t + 34);
+      ctx.fillStyle = 'rgba(224,90,58,0.75)'; ctx.textAlign = 'left';
+      ctx.fillText('← sorry C.1', sorryPx + 8, (sorryMF + sorryExp) / 2 + 4);
+
+      tick++; requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', resize); resize(); draw();
+  }());
+
+  /* ── D4: 5D+t manifold — singularity resolution ── */
+  (function manifold5D() {
+    var canvas = document.getElementById('d-manifold');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d'), W, H, tick = 0;
+
+    function resize() { W = canvas.offsetWidth; H = canvas.offsetHeight; canvas.width = W; canvas.height = H; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H); ctx.fillStyle = VOID; ctx.fillRect(0, 0, W, H);
+      var cx = W / 2, cy = H / 2;
+      var pulse = 0.5 + 0.5 * Math.sin(tick * 0.04);
+
+      // Axes (v = horizontal, w = vertical)
+      ctx.strokeStyle = 'rgba(201,168,76,0.25)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W * 0.1, cy); ctx.lineTo(W * 0.9, cy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx, H * 0.08); ctx.lineTo(cx, H * 0.92); ctx.stroke();
+
+      // T_C singularity line (v = T_C, w = 0) — only at w=0
+      ctx.strokeStyle = 'rgba(224,90,58,0.55)'; ctx.lineWidth = 1.8; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(cx, cy - 8); ctx.lineTo(cx, cy + 8); ctx.stroke(); ctx.setLineDash([]);
+      // Vertical line at v = T_C
+      ctx.strokeStyle = 'rgba(224,90,58,0.2)'; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+      ctx.beginPath(); ctx.moveTo(cx, H * 0.08); ctx.lineTo(cx, H * 0.92); ctx.stroke(); ctx.setLineDash([]);
+
+      // dm³ trajectory bypassing singularity
+      // Goes: left (ferromagnet) → approaches T_C → arcs through w-axis → emerges right (paramagnet)
+      var t = (tick * 0.018) % (2 * Math.PI);
+      var Rx = W * 0.22, Ry = H * 0.30;
+      ctx.strokeStyle = TEAL; ctx.lineWidth = 2.5; ctx.beginPath();
+      for (var a = -Math.PI; a <= 0; a += 0.04) {
+        var vv = cx + Rx * Math.cos(a);
+        var wv = cy + Ry * Math.sin(a);
+        if (a === -Math.PI) ctx.moveTo(vv, wv); else ctx.lineTo(vv, wv);
+      }
+      ctx.stroke();
+
+      // Animated dot on trajectory
+      var dotA = -Math.PI + (t % Math.PI);
+      var dotX = cx + Rx * Math.cos(dotA);
+      var dotY = cy + Ry * Math.sin(dotA);
+      ctx.strokeStyle = 'rgba(10,186,181,' + (0.4 + 0.3 * pulse) + ')'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(dotX, dotY, 8 + pulse * 4, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = TEAL; ctx.beginPath(); ctx.arc(dotX, dotY, 4, 0, Math.PI * 2); ctx.fill();
+
+      // Fixed point x* (ferromagnet) — left side
+      var xstarX = cx - Rx, xstarY = cy;
+      ctx.fillStyle = 'rgba(201,168,76,' + (0.6 + 0.3 * pulse) + ')';
+      ctx.beginPath(); ctx.arc(xstarX, xstarY, 8 + pulse * 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = GOLD; ctx.beginPath(); ctx.arc(xstarX, xstarY, 5, 0, Math.PI * 2); ctx.fill();
+
+      // Paramagnetic state — right side
+      ctx.fillStyle = 'rgba(192,132,252,0.45)';
+      ctx.beginPath(); ctx.arc(cx + Rx, cy, 6, 0, Math.PI * 2); ctx.fill();
+
+      // Singularity cross at (T_C, 0) = (cx, cy)
+      ctx.strokeStyle = 'rgba(224,90,58,' + (0.7 + 0.2 * pulse) + ')'; ctx.lineWidth = 2;
+      var cs = 8;
+      ctx.beginPath(); ctx.moveTo(cx - cs, cy - cs); ctx.lineTo(cx + cs, cy + cs); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx + cs, cy - cs); ctx.lineTo(cx - cs, cy + cs); ctx.stroke();
+
+      // Contact manifold surface (ellipse)
+      ctx.strokeStyle = 'rgba(80,200,120,0.15)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.ellipse(cx, cy, Rx * 1.05, Ry * 1.05, 0, 0, Math.PI * 2); ctx.stroke();
+
+      // Labels
+      var fs = Math.max(9, Math.round(W * 0.011));
+      ctx.font = fs + 'px "JetBrains Mono",monospace';
+      ctx.fillStyle = 'rgba(201,168,76,0.55)'; ctx.textAlign = 'center';
+      ctx.fillText('v (temperatura / temperature T)', W * 0.85, cy + 16);
+      ctx.save(); ctx.translate(W * 0.12, cy); ctx.rotate(-Math.PI / 2); ctx.fillText('w (alinhamento / alignment M)', 0, 0); ctx.restore();
+      ctx.fillStyle = GOLD; ctx.textAlign = 'left'; ctx.fillText('x* · ferromagneto / ferromagnet', xstarX - Rx * 0.4, xstarY - 18);
+      ctx.fillStyle = PURPLE; ctx.textAlign = 'right'; ctx.fillText('paramagnet', cx + Rx + W * 0.05, cy - 12);
+      ctx.fillStyle = 'rgba(224,90,58,0.75)'; ctx.textAlign = 'center';
+      ctx.fillText('singularidade 3D / 3D singularity', cx, cy - Ry * 0.35);
+      ctx.fillStyle = TEAL; ctx.fillText('trajetória dm³ contorna / dm³ bypasses', cx, cy + Ry + 22);
+      ctx.fillStyle = 'rgba(80,200,120,0.55)'; ctx.fillText('variedade de contato / contact manifold Γ', cx, H * 0.1);
+
+      tick++; requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', resize); resize(); draw();
+  }());
+}());
+</script>
+</body>
+</html>
