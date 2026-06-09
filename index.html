@@ -3,778 +3,851 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Principia Orthogona — G¹–G⁵ Complete Completeness</title>
-<meta name="description" content="The complete G-series in Generative Temporal Contact Theory. G6 LLC · Newark NJ · 2026.">
+<title>AXLE — Principia Orthogona Repository Navigator</title>
 <style>
-  :root {
-    --navy:  #1a2744;
-    --gold:  #c9a84c;
-    --cream: #faf7f0;
-    --smoke: #f0ece4;
-    --mid:   #3a4f7a;
-    --rule:  #8a7340;
-    --text:  #1c1c1c;
-    --green: #2d5a27;
-    --light: #e8e2d4;
-    --teal: #0abfbc;
-    --orange: #c45000;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+:root {
+  --void:#04040a; --surface:#0c0d16; --card:#10111c; --card2:#13141f;
+  --gold:#c9a84c; --teal:#0ABAB5; --green:#22c55e; --red:#ef4444;
+  --text:#e8e4d8; --muted:#6b6757; --dim:#1e1f2e; --rule:rgba(201,168,76,0.15);
+  --mono:'JetBrains Mono','Fira Code','Courier New',monospace;
+  --serif:Georgia,'Times New Roman',serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--mono);background:var(--void);color:var(--text);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased;}
 
-  /* ── Typography ── */
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.15; }
-  h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
-  h3 { font-size: 1.2rem; }
-  p  { line-height: 1.75; }
+/* NAV */
+nav{position:sticky;top:0;z-index:300;background:rgba(4,4,10,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:.55rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.nav-brand{color:var(--gold);font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;gap:.7rem;}
+.nav-brand .ax{font-size:1.1rem;font-weight:700;}
+.nav-links{display:flex;gap:1.4rem;}
+.nav-links a{color:var(--muted);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-stat{font-size:.58rem;color:var(--muted);letter-spacing:.1em;}
+.nav-stat span{color:var(--gold);}
 
-  /* ── Navigation ── */
-  nav {
-    background: var(--navy);
-    padding: 0.75rem 2rem;
-    position: sticky; top: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .nav-logo { color: var(--gold); font-weight: bold; font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
-  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
-  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; font-family: sans-serif; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--gold); }
+/* HERO */
+.hero{padding:4.5rem 2rem 3.5rem;text-align:center;border-bottom:1px solid var(--rule);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(201,168,76,.05) 0%,transparent 70%);pointer-events:none;}
+.hero-tag{font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--teal);border:1px solid currentColor;padding:.2rem .7rem;display:inline-block;margin-bottom:1.8rem;}
+.hero h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:700;letter-spacing:.12em;color:var(--gold);margin-bottom:.4rem;line-height:1.1;}
+.hero-sub{font-size:.8rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:1.2rem;}
+.op-chain{font-size:.9rem;letter-spacing:.12em;color:rgba(201,168,76,.5);margin:1rem 0;}
+.op-chain .op{color:var(--gold);}
 
-  /* ── Hero ── */
-  .hero { background: var(--navy); color: white; padding: 5rem 2rem 4rem; text-align: center; }
-  .hero-eyebrow { font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 1.2rem; }
-  .hero h1 { color: white; margin-bottom: 0.8rem; }
-  .hero-subtitle { color: var(--gold); font-size: 1.3rem; margin-bottom: 1.5rem; font-style: italic; }
-  .hero-desc { max-width: 660px; margin: 0 auto 2rem; color: #c8c8c8; font-size: 1rem; line-height: 1.8; }
-  .gold-rule { width: 80px; height: 2px; background: var(--gold); margin: 1.5rem auto; }
-  .cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
-  .btn-primary { background: var(--gold); color: var(--navy); padding: 0.9rem 2rem; border: none; font-size: 1rem; font-weight: bold; font-family: sans-serif; cursor: pointer; text-decoration: none; display: inline-block; transition: opacity 0.2s; }
-  .btn-primary:hover { opacity: 0.88; }
-  .btn-secondary { background: transparent; color: var(--gold); padding: 0.9rem 2rem; border: 1.5px solid var(--gold); font-size: 1rem; font-family: sans-serif; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s; }
-  .btn-secondary:hover { background: var(--gold); color: var(--navy); }
+/* SEARCH */
+.search-bar{max-width:700px;margin:2rem auto 0;position:relative;}
+.search-bar input{width:100%;background:var(--surface);border:1px solid rgba(201,168,76,.25);color:var(--text);font-family:var(--mono);font-size:.78rem;padding:.7rem 1rem .7rem 2.8rem;outline:none;transition:border-color .2s;}
+.search-bar input:focus{border-color:rgba(201,168,76,.6);}
+.search-bar input::placeholder{color:var(--muted);}
+.search-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.85rem;}
+.search-count{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--muted);}
+.search-hint{text-align:center;font-size:.58rem;color:var(--muted);margin-top:.5rem;letter-spacing:.1em;}
 
-  /* ── Operator banner ── */
-  .op-banner { background: var(--gold); color: var(--navy); text-align: center; padding: 1rem 2rem; font-size: 1.4rem; font-weight: bold; letter-spacing: 0.15em; font-family: sans-serif; }
+/* TABS */
+.tabs-bar{display:flex;gap:0;border-bottom:1px solid var(--rule);overflow-x:auto;background:var(--surface);padding:0 2rem;}
+.tab-btn{font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);background:none;border:none;padding:.7rem 1.2rem;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 
-  /* ── Sections ── */
-  section { padding: 4rem 2rem; }
-  .section-inner { max-width: 900px; margin: 0 auto; }
-  .section-label { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.5rem; }
-  .gold-underline { border-bottom: 2px solid var(--gold); padding-bottom: 0.4rem; display: inline-block; margin-bottom: 1.5rem; }
+/* MAIN LAYOUT */
+.main{padding:2rem;}
 
-  /* ── G-series grid ── */
-  .g-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-  .g-card { background: white; border-top: 3px solid var(--gold); padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .g-card.open { border-top-color: var(--mid); opacity: 0.8; }
-  .g-level { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.4rem; }
-  .g-title { font-size: 1.1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; }
-  .g-desc  { font-size: 0.9rem; line-height: 1.6; color: #444; }
-  .g-isbn  { font-family: monospace; font-size: 0.75rem; color: var(--rule); margin-top: 0.8rem; }
+/* STATS ROW */
+.stats-row{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:2rem;padding:1rem 1.4rem;background:var(--surface);border:1px solid var(--rule);}
+.stat-item{display:flex;flex-direction:column;gap:.15rem;}
+.stat-num{font-size:1.4rem;font-weight:700;color:var(--gold);}
+.stat-label{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
 
-  /* ── Journey section ── */
-  .journey-bg { background: var(--navy); color: white; }
-  .journey-bg .section-label { color: var(--gold); }
-  .journey-bg h2 { color: white; }
-  .journey-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0; margin-top: 2.5rem; }
-  .j-step  { padding: 1.5rem 1rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.1); }
-  .j-step:last-child { border-right: none; }
-  .j-level { font-family: sans-serif; font-size: 1.8rem; font-weight: bold; color: var(--gold); margin-bottom: 0.4rem; }
-  .j-name  { font-size: 0.9rem; color: #ccc; line-height: 1.4; }
-  .j-arrow { color: var(--gold); font-size: 1.2rem; display: flex; align-items: center; justify-content: center; padding-top: 1.8rem; }
+/* SECTION */
+.section{margin-bottom:3rem;}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--rule);margin-bottom:1rem;cursor:pointer;user-select:none;}
+.section-head:hover .section-title{color:var(--text);}
+.section-title{font-size:.65rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);}
+.section-meta{font-size:.58rem;color:var(--muted);letter-spacing:.1em;}
+.section-caret{color:var(--muted);font-size:.7rem;transition:transform .2s;}
+.section.collapsed .section-caret{transform:rotate(-90deg);}
+.section.collapsed .section-body{display:none;}
 
-  /* ── Constants strip ── */
-  .constants-strip { background: var(--smoke); padding: 2rem; margin: 2rem 0; }
-  .constants-grid  { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-  .const-chip { background: var(--navy); color: white; padding: 0.5rem 1rem; font-family: monospace; font-size: 0.9rem; border-left: 3px solid var(--gold); }
+/* FOLDER GRID */
+.folder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.folder-card{background:var(--card);border:1px solid var(--rule);padding:1rem 1.2rem;transition:border-color .2s;}
+.folder-card:hover{border-color:rgba(201,168,76,.4);}
+.folder-name{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem;}
+.folder-files{display:flex;flex-direction:column;gap:.25rem;}
+.folder-files a{color:var(--text);text-decoration:none;font-size:.7rem;padding:.18rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:center;gap:.5rem;transition:color .2s;}
+.folder-files a:hover{color:var(--gold);}
+.folder-files a:last-child{border-bottom:none;}
+.file-ext{font-size:.58rem;padding:.05rem .35rem;border-radius:2px;min-width:2.8rem;text-align:center;flex-shrink:0;}
+.ext-html{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.2);}
+.ext-lean{background:rgba(10,186,181,.1);color:var(--teal);border:1px solid rgba(10,186,181,.2);}
+.ext-py{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2);}
+.ext-pdf{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.ext-md{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1);}
+.ext-other{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid rgba(255,255,255,.08);}
+.folder-more{font-size:.6rem;color:var(--muted);margin-top:.4rem;font-style:italic;}
 
-  /* ── AXLE section ── */
-  .axle-section { background: var(--smoke); }
-  .axle-box { background: var(--navy); color: var(--gold); padding: 1.5rem; font-family: monospace; font-size: 0.85rem; line-height: 1.7; border-left: 4px solid var(--gold); margin: 1.5rem 0; overflow-x: auto; }
+/* FILE GRID */
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.5rem;}
+.file-entry{background:var(--card);border:1px solid var(--rule);padding:.55rem .8rem;display:flex;align-items:center;gap:.6rem;text-decoration:none;transition:border-color .2s;}
+.file-entry:hover{border-color:rgba(201,168,76,.4);}
+.file-entry-name{font-size:.7rem;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-entry:hover .file-entry-name{color:var(--gold);}
 
-  /* ── Pull quote ── */
-  .pull-quote { text-align: center; padding: 3rem 2rem; }
-  .pull-quote blockquote { font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-style: italic; color: var(--navy); max-width: 700px; margin: 0 auto; line-height: 1.8; }
-  .pull-quote cite { display: block; margin-top: 1rem; font-size: 0.85rem; color: var(--rule); font-style: normal; font-family: sans-serif; }
+/* LEAN LIST */
+.lean-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.4rem;}
+.lean-entry{background:var(--card);border:1px solid rgba(10,186,181,.12);padding:.5rem .8rem;display:flex;align-items:center;gap:.6rem;text-decoration:none;transition:border-color .2s;}
+.lean-entry:hover{border-color:rgba(10,186,181,.4);}
+.lean-name{font-size:.7rem;color:var(--text);flex:1;}
+.lean-entry:hover .lean-name{color:var(--teal);}
 
-  /* ── Pricing ── */
-  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-  .price-card { background: white; padding: 2rem; text-align: center; border: 1px solid var(--light); }
-  .price-card.featured { border: 2px solid var(--gold); }
-  .price-card.linked { text-decoration: none; color: inherit; display: block; transition: box-shadow 0.2s; }
-  .price-card.linked:hover { box-shadow: 0 4px 16px rgba(201,168,76,0.25); border-color: var(--gold); }
-  .price-badge  { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; background: var(--gold); color: var(--navy); padding: 0.2rem 0.6rem; display: inline-block; margin-bottom: 1rem; }
-  .price-title  { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; }
-  .price-amount { font-size: 2rem; font-weight: bold; color: var(--navy); font-family: sans-serif; }
-  .price-note   { font-size: 0.8rem; color: #666; margin-top: 0.4rem; }
-  .price-isbn   { font-family: monospace; font-size: 0.75rem; color: var(--rule); margin-top: 0.8rem; }
-  .price-cta    { font-family: sans-serif; font-size: 0.75rem; color: var(--mid); margin-top: 0.8rem; font-weight: bold; letter-spacing: 0.05em; }
+/* OP LADDER */
+.op-ladder{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.7rem;}
+.op-card{background:var(--card);border:1px solid var(--rule);padding:1rem 1.2rem;text-decoration:none;transition:all .2s;display:block;}
+.op-card:hover{border-color:rgba(201,168,76,.5);background:var(--card2);}
+.op-card .op-sym{font-size:2rem;color:var(--gold);line-height:1;margin-bottom:.4rem;}
+.op-card .op-name{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
+.op-card .op-val{font-size:.7rem;color:var(--teal);}
+.op-card .op-file{font-size:.6rem;color:var(--muted);margin-top:.3rem;font-style:italic;}
 
-  /* ── SVG fallback ── */
-  .svg-wrap { background: white; padding: 1rem; border-top: 3px solid var(--gold); }
-  .svg-wrap img { width: 100%; height: auto; display: block; min-height: 120px; background: var(--smoke); }
-  .svg-caption { font-size: 0.8rem; color: var(--rule); margin-top: 0.5rem; font-family: sans-serif; }
-  .svg-fallback { display: none; font-family: monospace; font-size: 0.85rem; color: var(--mid); padding: 2rem 1rem; text-align: center; background: var(--smoke); }
-  img.error + .svg-fallback { display: block; }
+/* HIDDEN */
+.hidden{display:none!important;}
+.no-results{text-align:center;padding:3rem;color:var(--muted);font-size:.75rem;letter-spacing:.15em;}
 
-  /* ── Footer ── */
-  footer { background: var(--navy); color: #999; padding: 3rem 2rem; text-align: center; }
-  .footer-logo  { color: var(--gold); font-size: 1.2rem; font-weight: bold; font-family: sans-serif; margin-bottom: 1rem; }
-  .footer-links { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0; }
-  .footer-links a { color: #888; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; }
-  .footer-links a:hover { color: var(--gold); }
-  .footer-small { font-size: 0.75rem; color: #666; margin-top: 1.5rem; line-height: 1.8; }
+/* FOOTER */
+footer{border-top:1px solid var(--rule);padding:2rem;text-align:center;color:var(--muted);font-size:.6rem;letter-spacing:.12em;}
+footer a{color:var(--gold);text-decoration:none;}
 
-  /* ── Portal CTA ── */
-  .portal-cta { background: var(--green); color: white; padding: 3rem 2rem; text-align: center; }
-  .portal-cta h2 { color: white; margin-bottom: 1rem; }
-  .portal-cta p  { color: rgba(255,255,255,0.85); max-width: 600px; margin: 0 auto 2rem; }
-
-
-  /* ── Book 3 chapter strip ── */
-  .b3-strip { background: var(--navy); border-top: 3px solid var(--teal, #0abfbc); border-bottom: 1px solid rgba(10,191,188,.15); }
-  .b3-header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
-  .b3-header h2 { color: white; }
-  .b3-urgent { font-family: sans-serif; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #ff7a3d; display: flex; align-items: center; gap: .5rem; }
-  .b3-dot { width: 7px; height: 7px; background: #c45000; border-radius: 50%; animation: b3pulse 1.8s ease-in-out infinite; flex-shrink: 0; }
-  @keyframes b3pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
-  .b3-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
-  .b3-card { background: rgba(255,255,255,.04); border: 1px solid rgba(10,191,188,.18); border-left: 3px solid #0abfbc; padding: 1.4rem; text-decoration: none; color: inherit; display: block; transition: all .2s; position: relative; }
-  .b3-card:hover { background: rgba(10,191,188,.07); border-color: rgba(10,191,188,.4); }
-  .b3-card.urgent { border-left-color: #c45000; border-color: rgba(196,80,0,.3); background: rgba(196,80,0,.05); }
-  .b3-card.urgent:hover { background: rgba(196,80,0,.1); }
-  .b3-ch-label { font-family: sans-serif; font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: #0abfbc; margin-bottom: .4rem; }
-  .b3-card.urgent .b3-ch-label { color: #ff7a3d; }
-  .b3-ch-title { font-size: 1rem; color: #faf7f0; margin-bottom: .4rem; line-height: 1.3; }
-  .b3-ch-desc { font-size: .82rem; color: rgba(250,247,240,.55); line-height: 1.6; margin-bottom: .7rem; }
-  .b3-tags { display: flex; gap: .4rem; flex-wrap: wrap; }
-  .b3-tag { font-family: sans-serif; font-size: .65rem; padding: .12rem .4rem; background: rgba(10,191,188,.1); color: #0abfbc; border: 1px solid rgba(10,191,188,.2); }
-  .b3-tag.gold { background: rgba(201,168,76,.1); color: #c9a84c; border-color: rgba(201,168,76,.2); }
-  .b3-tag.orange { background: rgba(196,80,0,.12); color: #ff7a3d; border-color: rgba(196,80,0,.3); }
-  .b3-doi { font-family: monospace; font-size: .68rem; color: rgba(10,191,188,.5); margin-top: .6rem; }
-  .b3-arrow { position: absolute; top: 1.2rem; right: 1.2rem; color: #0abfbc; font-size: 1rem; opacity: .5; }
-  .b3-card.urgent .b3-arrow { color: #ff7a3d; }
-  .b3-notice { background: rgba(196,80,0,.1); border: 1px solid rgba(196,80,0,.35); border-left: 3px solid #c45000; padding: .9rem 1.3rem; margin-bottom: 1.5rem; font-family: sans-serif; font-size: .83rem; color: rgba(250,247,240,.8); line-height: 1.65; }
-  .b3-notice strong { color: #ff7a3d; }
-  .b3-notice a { color: #0abfbc; }
-  /* ── Made in America ── */
-  .mia-strip { background: var(--cream); border-top: 3px solid var(--gold); border-bottom: 3px solid var(--gold); text-align: center; padding: 1.2rem 2rem; font-family: sans-serif; font-size: 0.85rem; color: var(--navy); letter-spacing: 0.1em; font-weight: bold; }
+@media(max-width:600px){.folder-grid,.file-grid,.lean-grid,.op-ladder{grid-template-columns:1fr;}.main{padding:1rem;}.nav-stat{display:none;}}
 </style>
 </head>
 <body>
 
-<!-- Navigation -->
 <nav>
-  <a href="#" class="nav-logo">PRINCIPIA ORTHOGONA</a>
-  <ul class="nav-links">
-    <li><a href="#series">The Series</a></li>
-    <li><a href="#diagrams">Diagrams</a></li>
-    <li><a href="#papers">Papers</a></li>
-    <li><a href="#journey">D1 → D2</a></li>
-    <li><a href="#axle">AXLE</a></li>
-    <li><a href="#book3" style="color:#0abfbc;">Book 3 ↗</a></li>
-    <li><a href="#pricing">Get the Book</a></li>
-    <li><a href="portal.html" style="color:var(--gold); font-weight:bold;">Student Portal →</a></li>
-    <li><a href="https://totogt.github.io/AXLE/impa-portal.html" style="color:var(--gold);">IMPA →</a></li>
-  </ul>
+  <a class="nav-brand" href="index.html">
+    <span class="ax">AXLE</span>
+    <span>Principia Orthogona</span>
+  </a>
+  <div class="nav-links">
+    <a href="chapters-diagram.html">Chapter Map</a>
+    <a href="impa-portal.html">IMPA Portal</a>
+    <a href="living-book.html">Living Book</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub ↗</a>
+    <a href="https://totogt.github.io/geometry/" target="_blank">geometry ↗</a>
+  </div>
+  <div class="nav-stat">G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; τ = <span>2</span> &nbsp;·&nbsp; ε₀ = <span>⅓</span></div>
 </nav>
 
-<!-- Hero -->
 <div class="hero">
-  <div class="hero-eyebrow">G6 LLC · Newark, New Jersey · 2026</div>
-  <h1>Principia Orthogona</h1>
-  <div class="hero-subtitle">G¹–G⁵ · Complete Completeness</div>
-  <div class="gold-rule"></div>
-  <p class="hero-desc">
-    The complete series in Generative Temporal Contact Theory. Five volumes. Five complete orbits of the operator G.
-    From abstract algebra to formal machine-verified proof. The series is its own fixed point.
-  </p>
-  <p style="color:var(--gold); font-size:0.9rem; letter-spacing:0.1em; font-family:sans-serif;">
-    AXLE v6.1 · 0 axioms beyond Mathlib4 · 8 verified constants · Lean 4
-  </p>
-  <div class="cta-group">
-    <a href="#pricing" class="btn-primary">Get the Complete Series — $199.99</a>
-    <a href="portal.html" class="btn-secondary">Student Portal — Start D1 Training</a>
+  <div class="hero-tag">AXLE · Lean 4 · dm³ · Contact Geometry</div>
+  <h1>AXLE</h1>
+  <div class="hero-sub">Principia Orthogona · G6 LLC · Newark NJ · 2026</div>
+  <div class="op-chain">
+    <span class="op">π</span> → <span class="op">φ</span> → <span class="op">μ</span> → <span class="op">η</span> → <span class="op">Δ</span> → <span class="op">Σ</span> → <span class="op">Ω</span> → τ = 2
   </div>
+  <div class="search-bar">
+    <span class="search-icon">⌕</span>
+    <input type="text" id="searchInput" placeholder="search files, folders, chapters…" autocomplete="off">
+    <span class="search-count" id="searchCount"></span>
+  </div>
+  <div class="search-hint">press / to search · esc to clear</div>
 </div>
 
-<!-- Operator banner -->
-<div class="op-banner">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; ∞</div>
-
-<!-- G-Series -->
-<section id="series">
-  <div class="section-inner">
-    <div class="section-label">The G-Series</div>
-    <h2 class="gold-underline">Five Turns of the Spiral</h2>
-    <p>Each volume is a complete orbit around the same fixed point. You do not need to have read the others to use any one. The series is a circuit, not a staircase. G applied to itself five times is Complete Completeness.</p>
-    <div class="g-grid">
-      <div class="g-card">
-        <div class="g-level">G¹ · Volume I</div>
-        <div class="g-title">The Orthogonal Operator Framework</div>
-        <div class="g-desc">Abstract operator algebra and matrix compression. The operator sequence G = U ∘ F ∘ K ∘ C defined and proved. The foundation of the entire series.</div>
-        <div class="g-isbn">Print: 979-8-9954416-2-5 · $47</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G² · Volume II</div>
-        <div class="g-title">TOGT: Applications Across Domains</div>
-        <div class="g-desc">Contact geometry realised. The operator chain C → K → F → U instantiated across physics, biology, linguistics, architecture, and formal computation. The threshold constant g₃₃ = 33 identifies the minimum operator cycles for stable lock in any domain.</div>
-        <div class="g-isbn">Print: 979-8-9954416-4-9 · $47</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G³ · Volume III</div>
-        <div class="g-title">The Mini-Beast: Biological Instantiations</div>
-        <div class="g-desc">C1→C2 English for researchers. The operator chain in living systems. The cajueiro principle. Entry point for new readers and advanced language learners.</div>
-        <div class="g-isbn">eBook: 979-8-9954416-6-3 · $19.99</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G⁴ · Volume IV</div>
-        <div class="g-title">GTCT T1 — The IMPA Edition</div>
-        <div class="g-desc">Temporal contact theory formalised. Bilingual (EN/PT). Submitted to IMPA. Science and language integrated from day 21 of instruction — CEFR → TO/TOGT.</div>
-        <div class="g-isbn">Included in Complete Series</div>
-      </div>
-      <div class="g-card">
-        <div class="g-level">G⁵ · Volume V + AXLE</div>
-        <div class="g-title">The Seed — Complete Completeness</div>
-        <div class="g-desc">Banach Fixed Point Theorem applied to GTCT. Formal Lean 4 verification (AXLE v6.1). 0 axioms beyond Mathlib4. The series proves itself. The fixed point exists.</div>
-        <div class="g-isbn">Print: 979-8-9954416-4-9 · eBook: 979-8-9954416-5-6</div>
-      </div>
-      <div class="g-card open">
-        <div class="g-level">G⁶ · Issue 6 — OPEN</div>
-        <div class="g-title">The Return: χ(H*(X⁶)) = 33 ∀n</div>
-        <div class="g-desc">The sixth application of G to itself — a distinct object from the threshold constant g₃₃. The conjecture states that the Euler characteristic of the sixth-level cohomology equals 33 for all n. This is an open problem in algebraic topology. AXLE v6.1 marks it as one honest sorry. Join the work.</div>
-        <div class="g-isbn" style="color:var(--mid);">Open conjecture · 2026 · Not the same as g₃₃</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Verified constants -->
-<div class="constants-strip">
-  <div class="section-inner" style="text-align:center;">
-    <div class="section-label" style="text-align:center; margin-bottom:1rem;">AXLE v6.1 — Verified Constants · 0 Axioms Beyond Mathlib4</div>
-    <div class="constants-grid">
-      <div class="const-chip">g₃₃ = 33 &nbsp;<span style="font-size:0.7rem;opacity:0.6;">(threshold cycles)</span></div>
-      <div class="const-chip">ε* = 1/3</div>
-      <div class="const-chip">τ = 2</div>
-      <div class="const-chip">g₆₄ = 2⁶ = 64 &nbsp;<span style="font-size:0.7rem;opacity:0.6;">(kether orthogon)</span></div>
-      <div class="const-chip">T* = 2π</div>
-      <div class="const-chip">κ ≤ √(7/9) ≈ 0.882</div>
-      <div class="const-chip">τ·ε* = 2/3</div>
-      <div class="const-chip">ε₀ = 1/3</div>
-    </div>
-    <p style="font-size:0.75rem; color:#888; margin-top:1rem; font-family:sans-serif;">
-      Note: g₃₃ (threshold invariant) and G⁶ (sixth operator application, open conjecture) both involve 33 — they are distinct mathematical objects.
-    </p>
-  </div>
+<div class="tabs-bar">
+  <button class="tab-btn active" data-tab="all">All</button>
+  <button class="tab-btn" data-tab="chapters">Operators</button>
+  <button class="tab-btn" data-tab="portals">Portals</button>
+  <button class="tab-btn" data-tab="root">Root HTML</button>
+  <button class="tab-btn" data-tab="folders">Folders</button>
+  <button class="tab-btn" data-tab="lean">Lean</button>
+  <button class="tab-btn" data-tab="papers">Papers</button>
 </div>
 
-<!-- Journey D1 → D2 -->
-<section id="journey" class="journey-bg">
-  <div class="section-inner">
-    <div class="section-label">The Student Journey</div>
-    <h2>From A1 to D2 — Becoming an Operator of Collective Intelligence</h2>
-    <p style="color:#bbb; margin-top:0.8rem; max-width:600px;">
-      The series defines a precise pathway: from first contact with language through individual mastery to collective dimensional threshold.
-      D2 is not a metaphor. It is a mathematically verified threshold: Θ = g₃₃ + N × M.
-    </p>
-    <div class="journey-steps">
-      <div class="j-step">
-        <div class="j-level">A1</div>
-        <div class="j-name">First contact<br>Compression C</div>
-      </div>
-      <div class="j-arrow">→</div>
-      <div class="j-step">
-        <div class="j-level">A2</div>
-        <div class="j-name">Pattern recognition<br>Curvature K<br><em style="font-size:0.8rem; color:var(--gold);">Day 21: science begins</em></div>
-      </div>
-      <div class="j-arrow">→</div>
-      <div class="j-step">
-        <div class="j-level">B1–B2</div>
-        <div class="j-name">Folding F<br>Domain entry</div>
-      </div>
-      <div class="j-arrow">→</div>
-      <div class="j-step">
-        <div class="j-level">C1</div>
-        <div class="j-name">Unfolding U<br>Research generation</div>
-      </div>
-      <div class="j-arrow">→</div>
-      <div class="j-step">
-        <div class="j-level" style="color:#fff;">D1</div>
-        <div class="j-name">g₃₃ = 33 cycles<br>Individual fixed point<br><em style="font-size:0.8rem; color:var(--gold);">I lost count</em></div>
-      </div>
-      <div class="j-arrow">→</div>
-      <div class="j-step">
-        <div class="j-level">D2</div>
-        <div class="j-name">Θ = 33 + N×M<br>Collective intelligence<br><em style="font-size:0.8rem; color:var(--gold);">Complete Completeness</em></div>
+<div class="main" id="mainContent">
+
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">30+</div><div class="stat-label">Folders</div></div>
+    <div class="stat-item"><div class="stat-num">100+</div><div class="stat-label">HTML Files</div></div>
+    <div class="stat-item"><div class="stat-num">40+</div><div class="stat-label">Lean Proofs</div></div>
+    <div class="stat-item"><div class="stat-num">15+</div><div class="stat-label">Papers</div></div>
+    <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">Volumes</div></div>
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">Operators</div></div>
+    <div class="stat-item"><div class="stat-num" style="color:var(--teal);">τ=2</div><div class="stat-label">Threshold</div></div>
+  </div>
+
+  <!-- OPERATOR CHAIN -->
+  <div class="section" data-tab-group="chapters all">
+    <div class="section-head" onclick="toggleSection(this)">
+      <div class="section-title">⬡ Operator Chain — n-bonacci Recurrence Ladder</div>
+      <div style="display:flex;align-items:center;gap:.8rem;"><div class="section-meta">π → φ → μ → η → Δ → Σ → Ω → τ=2</div><div class="section-caret">▾</div></div>
+    </div>
+    <div class="section-body">
+      <div class="op-ladder">
+        <a class="op-card" href="chPI-recurrence.html" data-search="pi recurrence period operator chapter ladder">
+          <div class="op-sym">π</div><div class="op-name">Recurrence Ladder</div>
+          <div class="op-val">T* = 2π</div><div class="op-file">chPI-recurrence.html</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/ch9-phi.html" target="_blank" data-search="phi fibonacci golden ratio nested infinities operator chapter">
+          <div class="op-sym">φ</div><div class="op-name">Nested Infinities</div>
+          <div class="op-val">≈ 1.618</div><div class="op-file">ch9-phi.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/chMu-lyapunov.html" target="_blank" data-search="mu lyapunov stability operator chapter">
+          <div class="op-sym">μ</div><div class="op-name">Lyapunov Stability</div>
+          <div class="op-val">−2</div><div class="op-file">chMu-lyapunov.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="chapter-eta-dnls.html" data-search="eta tribonacci DNLS operator chapter">
+          <div class="op-sym">η</div><div class="op-name">Tribonacci · DNLS</div>
+          <div class="op-val">≈ 1.839</div><div class="op-file">chapter-eta-dnls.html</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/chDelta-tetranacci.html" target="_blank" data-search="delta tetranacci operator chapter">
+          <div class="op-sym">Δ</div><div class="op-name">Tetranacci</div>
+          <div class="op-val">≈ 1.927</div><div class="op-file">chDelta-tetranacci.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/chSigma-pentanacci.html" target="_blank" data-search="sigma pentanacci operator chapter">
+          <div class="op-sym">Σ</div><div class="op-name">Pentanacci</div>
+          <div class="op-val">≈ 1.966</div><div class="op-file">chSigma-pentanacci.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/chOmega-hexabonacci.html" target="_blank" data-search="omega hexabonacci threshold tau embodiment operator chapter">
+          <div class="op-sym">Ω</div><div class="op-name">Hexabonacci → τ</div>
+          <div class="op-val">→ τ = 2</div><div class="op-file">chOmega-hexabonacci.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="chW-wigner.html" data-search="W wigner crystal operator chapter dm3">
+          <div class="op-sym">W</div><div class="op-name">Wigner Crystal</div>
+          <div class="op-val">ε₀ = ⅓</div><div class="op-file">chW-wigner.html</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/chT-tubulin.html" target="_blank" data-search="tau tubulin embodiment threshold T operator chapter">
+          <div class="op-sym">τ</div><div class="op-name">Tubulin · Embodiment</div>
+          <div class="op-val">τ = 2</div><div class="op-file">chT-tubulin.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="chE-gtct.html" data-search="E GTCT galilean confluence operator chapter Vol IV">
+          <div class="op-sym">E</div><div class="op-name">GTCT · Galilean</div>
+          <div class="op-val">Vol IV</div><div class="op-file">chE-gtct.html</div>
+        </a>
+        <a class="op-card" href="https://totogt.github.io/geometry/chLambda-polylaminin.html" target="_blank" data-search="lambda polylaminin operator chapter extra">
+          <div class="op-sym">Λ</div><div class="op-name">Polylaminin</div>
+          <div class="op-val">Extra</div><div class="op-file">chLambda-polylaminin.html (geometry ↗)</div>
+        </a>
+        <a class="op-card" href="spectral-radius.html" data-search="rho spectral radius collatz operator chapter">
+          <div class="op-sym">ρ</div><div class="op-name">Spectral Radius · Collatz</div>
+          <div class="op-val">Collatz → dm³</div><div class="op-file">spectral-radius.html</div>
+        </a>
       </div>
     </div>
   </div>
-</section>
 
-<!-- Pull quote -->
-<div class="pull-quote">
-  <blockquote>"Your education is yours. No one can take it away from you."</blockquote>
-  <cite>— Pablo Nogueira Grossi, Newark NJ · The Seed (Principia Orthogona Vol V)</cite>
-</div>
-
-<!-- AXLE -->
-<section id="axle" class="axle-section">
-  <div class="section-inner">
-    <div class="section-label">Formal Verification</div>
-    <h2 class="gold-underline">AXLE — The Series Proves Itself</h2>
-    <p>AXLE (Automated eXtensible Lean Engine) is the formal verification backbone of Principia Orthogona. All 8 structural constants are machine-verified in Lean 4 + Mathlib4, with zero additional axioms. The mathematics is honest: 9 open problems are named precisely as sorrys — each a conjecture with a known missing lemma, not an evasion.</p>
-    <div class="axle-box">
-      /-<br>
-      &nbsp; Mathematics is a language.<br>
-      &nbsp; These theorems have been proved in every language simultaneously.<br>
-      <br>
-      &nbsp; A matemática é uma linguagem. (Portuguese)<br>
-      &nbsp; Las matemáticas son un idioma. (Spanish)<br>
-      &nbsp; Les mathématiques sont une langue. (French)<br>
-      &nbsp; Mathematik ist eine Sprache. (German)<br>
-      &nbsp; 数学は言語である。 (Japanese)<br>
-      &nbsp; 数学是一种语言。 (Mandarin)<br>
-      &nbsp; الرياضيات لغة. (Arabic)<br>
-      &nbsp; Математика — это язык. (Russian)<br>
-      &nbsp; Hisabati ni lugha. (Swahili)<br>
-      &nbsp; गणित एक भाषा है। (Hindi)<br>
-      -/<br>
-      <br>
-      -- 0 axioms beyond Mathlib4<br>
-      -- 8 verified constants · 9 honest sorrys<br>
-      -- g₃₃=33 · ε*=1/3 · τ=2 · g₆₄=64 · T*=2π · κ≤0.882
+  <!-- PORTALS -->
+  <div class="section" data-tab-group="portals all">
+    <div class="section-head" onclick="toggleSection(this)">
+      <div class="section-title">◈ Portals · Sample Chapters · Membership</div>
+      <div style="display:flex;align-items:center;gap:.8rem;"><div class="section-meta">public-facing · Gumroad · IMPA</div><div class="section-caret">▾</div></div>
     </div>
-    <div style="text-align:center; margin-top:1.5rem;">
-      <a href="https://github.com/TOTOGT/AXLE" class="btn-secondary" target="_blank">View AXLE on GitHub →</a>
+    <div class="section-body">
+      <div class="file-grid">
+        <a class="file-entry" href="impa-portal.html" data-search="impa portal membership gumroad series"><span class="file-ext ext-html">html</span><span class="file-entry-name">impa-portal.html</span></a>
+        <a class="file-entry" href="aimpa-portal.html" data-search="impa portal alternate a"><span class="file-ext ext-html">html</span><span class="file-entry-name">aimpa-portal.html</span></a>
+        <a class="file-entry" href="impaportal.html" data-search="impa portal"><span class="file-ext ext-html">html</span><span class="file-entry-name">impaportal.html</span></a>
+        <a class="file-entry" href="ARCHIVEimpa-portal.html" data-search="impa portal archive old"><span class="file-ext ext-html">html</span><span class="file-entry-name">ARCHIVEimpa-portal.html</span></a>
+        <a class="file-entry" href="impa-portal (2).html" data-search="impa portal 2 variant"><span class="file-ext ext-html">html</span><span class="file-entry-name">impa-portal (2).html</span></a>
+        <a class="file-entry" href="sample-chapter-tubulin.html" data-search="sample tubulin chapter tau public demo paywall"><span class="file-ext ext-html">html</span><span class="file-entry-name">sample-chapter-tubulin.html</span></a>
+        <a class="file-entry" href="sample-chapter-wigner.html" data-search="sample wigner chapter crystal public demo paywall"><span class="file-ext ext-html">html</span><span class="file-entry-name">sample-chapter-wigner.html</span></a>
+        <a class="file-entry" href="sample-chapter-autophagy.html" data-search="sample autophagy chapter public demo"><span class="file-ext ext-html">html</span><span class="file-entry-name">sample-chapter-autophagy.html</span></a>
+        <a class="file-entry" href="homepage.html" data-search="homepage landing home page"><span class="file-ext ext-html">html</span><span class="file-entry-name">homepage.html</span></a>
+        <a class="file-entry" href="portal.html" data-search="portal hub navigation"><span class="file-ext ext-html">html</span><span class="file-entry-name">portal.html</span></a>
+        <a class="file-entry" href="Sportal.html" data-search="sportal simulation portal S"><span class="file-ext ext-html">html</span><span class="file-entry-name">Sportal.html</span></a>
+        <a class="file-entry" href="simportal.html" data-search="simportal sim portal simulation"><span class="file-ext ext-html">html</span><span class="file-entry-name">simportal.html</span></a>
+        <a class="file-entry" href="simportal2.html" data-search="simportal 2 simulation"><span class="file-ext ext-html">html</span><span class="file-entry-name">simportal2.html</span></a>
+        <a class="file-entry" href="chapters-diagram.html" data-search="chapters diagram map all files"><span class="file-ext ext-html">html</span><span class="file-entry-name">chapters-diagram.html</span></a>
+        <a class="file-entry" href="chapters-pi-phi-mu-eta-delta-sigma-omega.html" data-search="chapters operator chain pi phi mu eta delta sigma omega"><span class="file-ext ext-html">html</span><span class="file-entry-name">chapters-pi-phi…omega.html</span></a>
+        <a class="file-entry" href="chapters.html" data-search="chapters list all"><span class="file-ext ext-html">html</span><span class="file-entry-name">chapters.html</span></a>
+        <a class="file-entry" href="chapter-map.html" data-search="chapter map visual"><span class="file-ext ext-html">html</span><span class="file-entry-name">chapter-map.html</span></a>
+        <a class="file-entry" href="living-book.html" data-search="living book G1 G5 hub series"><span class="file-ext ext-html">html</span><span class="file-entry-name">living-book.html</span></a>
+        <a class="file-entry" href="book3-starter-index.html" data-search="book 3 starter index mini beast"><span class="file-ext ext-html">html</span><span class="file-entry-name">book3-starter-index.html</span></a>
+        <a class="file-entry" href="book4-landing.html" data-search="book 4 landing GTCT vol IV"><span class="file-ext ext-html">html</span><span class="file-entry-name">book4-landing.html</span></a>
+        <a class="file-entry" href="trilogy-sale.html" data-search="trilogy sale gumroad membership"><span class="file-ext ext-html">html</span><span class="file-entry-name">trilogy-sale.html</span></a>
+        <a class="file-entry" href="publishing_note.html" data-search="publishing note ISBN zenodo"><span class="file-ext ext-html">html</span><span class="file-entry-name">publishing_note.html</span></a>
+        <a class="file-entry" href="access-required.html" data-search="access required paywall member"><span class="file-ext ext-html">html</span><span class="file-entry-name">access-required.html</span></a>
+        <a class="file-entry" href="course-16weeks.html" data-search="course 16 weeks curriculum syllabus"><span class="file-ext ext-html">html</span><span class="file-entry-name">course-16weeks.html</span></a>
+        <a class="file-entry" href="uceda_signup_card_v2.html" data-search="uceda signup card v2"><span class="file-ext ext-html">html</span><span class="file-entry-name">uceda_signup_card_v2.html</span></a>
+      </div>
     </div>
   </div>
-</section>
 
-<!-- Student Portal CTA -->
-<div class="portal-cta">
-  <h2>Student &amp; Teacher Portal</h2>
-  <p>Paid access to structured LLM prompts that guide you from A1/A2 through C1 to D1 and D2. Each level is a complete operator orbit. The threshold is mathematical. You will know when you cross it.</p>
-  <a href="portal.html" class="btn-primary">Enter the Portal →</a>
-</div>
-
-<!-- Diagrams -->
-<section id="diagrams" style="background: var(--smoke);">
-  <div class="section-inner">
-    <div class="section-label">Visual Framework</div>
-    <h2 class="gold-underline">TOGT Diagrams</h2>
-    <p>Five diagrams covering the operator sequence, Saturn's hexagon as canonical instantiation, the Coherence Bridge across domains, the Collatz conjecture as dm³ system, and the full application map. All available on <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:var(--mid);">GitHub</a>.</p>
-    <p style="font-size:0.8rem; color:var(--rule); margin-top:0.6rem; font-family:sans-serif;">
-      ⚠ If diagrams show as blank: the SVG files must be committed to the AXLE repo alongside this page. Paths expected: <code>./01_operator_sequence.svg</code> through <code>./05_domain_map.svg</code>.
-    </p>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:2rem;">
-      <div class="svg-wrap">
-        <img src="./01_operator_sequence.svg" alt="Operator Sequence G = U∘F∘K∘C" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 01_operator_sequence.svg ]<br>G = U ∘ F ∘ K ∘ C<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">G = U ∘ F ∘ K ∘ C — The four-operator sequence</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./02_saturn_hexagon.svg" alt="Saturn Hexagon dm3 instantiation" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 02_saturn_hexagon.svg ]<br>Saturn North Polar Hexagon<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Saturn's north polar hexagon — canonical dm³ instantiation</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./03_coherence_bridge.svg" alt="Coherence Bridge across domains" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 03_coherence_bridge.svg ]<br>Coherence Bridge — 6 domains<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Coherence Bridge — exact morphisms across 6 domains</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./04_collatz_dm3.svg" alt="Collatz as dm3 system" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 04_collatz_dm3.svg ]<br>Collatz as dm³ System<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Collatz conjecture as dm³ system — AXLE Target 5</p>
-      </div>
-      <div class="svg-wrap">
-        <img src="./05_domain_map.svg" alt="Domain application map" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div class="svg-fallback">[ 05_domain_map.svg ]<br>Application Domain Map — 20+ fields<br><small>File not yet committed to repo</small></div>
-        <p class="svg-caption">Application domain map — 20+ fields</p>
+  <!-- ROOT CHAPTERS -->
+  <div class="section" data-tab-group="root all">
+    <div class="section-head" onclick="toggleSection(this)">
+      <div class="section-title">◉ Root HTML — Numbered Chapters &amp; Theme Pages</div>
+      <div style="display:flex;align-items:center;gap:.8rem;"><div class="section-meta">root-level HTML files</div><div class="section-caret">▾</div></div>
+    </div>
+    <div class="section-body">
+      <div class="file-grid">
+        <a class="file-entry" href="ch00-introduction.html" data-search="ch00 introduction chapter zero"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch00-introduction.html</span></a>
+        <a class="file-entry" href="ch01-cajueiro.html" data-search="ch01 cajueiro chapter one seed"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch01-cajueiro.html</span></a>
+        <a class="file-entry" href="ch01-dm3-framework.html" data-search="ch01 dm3 framework"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch01-dm3-framework.html</span></a>
+        <a class="file-entry" href="ch01-one-equation.html" data-search="ch01 one equation"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch01-one-equation.html</span></a>
+        <a class="file-entry" href="ch02-biological.html" data-search="ch02 biological allostatic"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch02-biological.html</span></a>
+        <a class="file-entry" href="ch02-reading.html" data-search="ch02 reading"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch02-reading.html</span></a>
+        <a class="file-entry" href="ch03-plasma.html" data-search="ch03 plasma physics"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch03-plasma.html</span></a>
+        <a class="file-entry" href="ch03-sources.html" data-search="ch03 sources references"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch03-sources.html</span></a>
+        <a class="file-entry" href="ch04-markets.html" data-search="ch04 markets finance dm3"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch04-markets.html</span></a>
+        <a class="file-entry" href="ch04-milestone1.html" data-search="ch04 milestone 1"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch04-milestone1.html</span></a>
+        <a class="file-entry" href="ch05-oscillations.html" data-search="ch05 oscillations immune memory"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch05-oscillations.html</span></a>
+        <a class="file-entry" href="ch06-argument.html" data-search="ch06 argument"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch06-argument.html</span></a>
+        <a class="file-entry" href="ch06-pedagogy.html" data-search="ch06 pedagogy teaching"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch06-pedagogy.html</span></a>
+        <a class="file-entry" href="ch6-resonant.html" data-search="ch6 resonant cardiac resonance"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch6-resonant.html</span></a>
+        <a class="file-entry" href="ch-d2-academic.html" data-search="ch d2 academic D2"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch-d2-academic.html</span></a>
+        <a class="file-entry" href="ch-d2-parashurama.html" data-search="ch d2 parashurama D2 mythic"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch-d2-parashurama.html</span></a>
+        <a class="file-entry" href="ch-e-gtct.html" data-search="ch e gtct galilean confluence"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch-e-gtct.html</span></a>
+        <a class="file-entry" href="ch-hawking.html" data-search="ch hawking radiation cosmology"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch-hawking.html</span></a>
+        <a class="file-entry" href="ch-tau-tartaruga (1).html" data-search="ch tau tartaruga tubulin turtle"><span class="file-ext ext-html">html</span><span class="file-entry-name">ch-tau-tartaruga (1).html</span></a>
+        <a class="file-entry" href="collatz.html" data-search="collatz dm3 spectral rho conjecture"><span class="file-ext ext-html">html</span><span class="file-entry-name">collatz.html</span></a>
+        <a class="file-entry" href="spectral-radius.html" data-search="spectral radius rho collatz dm3"><span class="file-ext ext-html">html</span><span class="file-entry-name">spectral-radius.html</span></a>
+        <a class="file-entry" href="spectral-radius-v2.html" data-search="spectral radius v2 rho collatz"><span class="file-ext ext-html">html</span><span class="file-entry-name">spectral-radius-v2.html</span></a>
+        <a class="file-entry" href="full-chapter-autophagy.html" data-search="full chapter autophagy biology dm3"><span class="file-ext ext-html">html</span><span class="file-entry-name">full-chapter-autophagy.html</span></a>
+        <a class="file-entry" href="enceladus_principia_analysis.html" data-search="enceladus principia analysis saturn NASA moon"><span class="file-ext ext-html">html</span><span class="file-entry-name">enceladus_principia_analysis.html</span></a>
+        <a class="file-entry" href="lexical-generativity-ijl.html" data-search="lexical generativity IJL linguistics journal"><span class="file-ext ext-html">html</span><span class="file-entry-name">lexical-generativity-ijl.html</span></a>
+        <a class="file-entry" href="daily-strategy.html" data-search="daily strategy finance trading"><span class="file-ext ext-html">html</span><span class="file-entry-name">daily-strategy.html</span></a>
+        <a class="file-entry" href="newark-wellness.html" data-search="newark wellness health dm3 applied"><span class="file-ext ext-html">html</span><span class="file-entry-name">newark-wellness.html</span></a>
+        <a class="file-entry" href="wellness-soundworks.html" data-search="wellness sound works applied dm3"><span class="file-ext ext-html">html</span><span class="file-entry-name">wellness-soundworks.html</span></a>
+        <a class="file-entry" href="wigner-fractal.html" data-search="wigner fractal crystal dm3"><span class="file-ext ext-html">html</span><span class="file-entry-name">wigner-fractal.html</span></a>
+        <a class="file-entry" href="minibeast-pilot.html" data-search="minibeast pilot book 3 mini beast vol III"><span class="file-ext ext-html">html</span><span class="file-entry-name">minibeast-pilot.html</span></a>
+        <a class="file-entry" href="sim.html" data-search="sim simulation operator dm3"><span class="file-ext ext-html">html</span><span class="file-entry-name">sim.html</span></a>
+        <a class="file-entry" href="sim-lyapunov.html" data-search="sim lyapunov simulation mu stability"><span class="file-ext ext-html">html</span><span class="file-entry-name">sim-lyapunov.html</span></a>
+        <a class="file-entry" href="sim-stormmanifold.html" data-search="sim storm manifold simulation contact geometry"><span class="file-ext ext-html">html</span><span class="file-entry-name">sim-stormmanifold.html</span></a>
+        <a class="file-entry" href="229-ballantine.html" data-search="229 ballantine parkway newark"><span class="file-ext ext-html">html</span><span class="file-entry-name">229-ballantine.html</span></a>
+        <a class="file-entry" href="GameTheory_Full_Pack.html" data-search="game theory full pack JOMO network"><span class="file-ext ext-html">html</span><span class="file-entry-name">GameTheory_Full_Pack.html</span></a>
+        <a class="file-entry" href="GameTheory_Full_Pack (1).html" data-search="game theory full pack 1 variant"><span class="file-ext ext-html">html</span><span class="file-entry-name">GameTheory_Full_Pack (1).html</span></a>
+        <a class="file-entry" href="Lesson07_Alpha_Submission_v2.html" data-search="lesson 07 alpha submission AULA"><span class="file-ext ext-html">html</span><span class="file-entry-name">Lesson07_Alpha_Submission_v2.html</span></a>
+        <a class="file-entry" href="Lesson07_Alpha_Submission (1).html" data-search="lesson 07 alpha submission 1 AULA"><span class="file-ext ext-html">html</span><span class="file-entry-name">Lesson07_Alpha_Submission (1).html</span></a>
+        <a class="file-entry" href="oldindex.html" data-search="old index archive previous"><span class="file-ext ext-html">html</span><span class="file-entry-name">oldindex.html</span></a>
+        <a class="file-entry" href="index2.html" data-search="index 2 alternate second"><span class="file-ext ext-html">html</span><span class="file-entry-name">index2.html</span></a>
       </div>
     </div>
+  </div>
 
-    <!-- Interactive Tools -->
-    <div style="margin-top:2.5rem;">
-      <div class="section-label" style="margin-bottom:1rem;">Interactive Tools</div>
-      <a href="https://totogt.github.io/AXLE/sim-lyapunov.html" target="_blank"
-         style="display:flex; gap:1.5rem; align-items:center; background:var(--navy); border-left:4px solid var(--gold); padding:1.4rem 1.6rem; text-decoration:none; transition:opacity 0.2s;"
-         onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-        <div style="flex-shrink:0; text-align:center; font-family:monospace; font-size:0.7rem; letter-spacing:0.08em; color:var(--gold); background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.3); padding:0.6rem 0.9rem; line-height:1.6;">
-          LIVE<br>SIM
-        </div>
-        <div style="flex:1;">
-          <div style="font-family:sans-serif; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--rule); margin-bottom:0.3rem;">Interactive Simulation · Collatz / AXLE Target 5</div>
-          <div style="font-size:1.05rem; font-weight:bold; color:white; margin-bottom:0.35rem;">Lyapunov Exponent — Syracuse Return Map</div>
-          <div style="font-size:0.85rem; color:#aaa; line-height:1.65;">
-            Live computation of the Lyapunov exponent λ for the Syracuse return map.
-            Adjustable parameters: orbit length N, seed n₀, branch weights (odd/even), noise amplitude σ.
-            Visualises the Collatz trajectory, exponent convergence, and return-map scatter in real time.
-            Directly probes AXLE Target 5 — the dm³ embedding of the Collatz conjecture.
+  <!-- FOLDERS -->
+  <div class="section" data-tab-group="folders all">
+    <div class="section-head" onclick="toggleSection(this)">
+      <div class="section-title">▤ Subdirectories — 30 Folders</div>
+      <div style="display:flex;align-items:center;gap:.8rem;"><div class="section-meta">all repos · all domains · all volumes</div><div class="section-caret">▾</div></div>
+    </div>
+    <div class="section-body">
+      <div class="folder-grid">
+
+        <div class="folder-card" data-search="AULA lessons curriculum pedagogy vitruvian cajueiro caela voynich">
+          <div class="folder-name">📁 AULA</div>
+          <div class="folder-files">
+            <a href="AULA/index.html"><span class="file-ext ext-html">html</span>index.html</a>
+            <a href="AULA/Lesson01_Vitruvian_Approximation.html"><span class="file-ext ext-html">html</span>Lesson01_Vitruvian_Approximation.html</a>
+            <a href="AULA/Lesson02_Cajueiro_Principle.html"><span class="file-ext ext-html">html</span>Lesson02_Cajueiro_Principle.html</a>
+            <a href="AULA/Lesson02b_Galilean_Confluence.html"><span class="file-ext ext-html">html</span>Lesson02b_Galilean_Confluence.html</a>
+            <a href="AULA/Lesson03_Number33.html"><span class="file-ext ext-html">html</span>Lesson03_Number33.html</a>
+            <a href="AULA/Lesson03b_Chladni_Plates.html"><span class="file-ext ext-html">html</span>Lesson03b_Chladni_Plates.html</a>
+            <a href="AULA/Lesson04_USA_Top10.html"><span class="file-ext ext-html">html</span>Lesson04_USA_Top10.html</a>
+            <a href="AULA/Lesson07_Alpha_Submission_v2.html"><span class="file-ext ext-html">html</span>Lesson07_Alpha_Submission_v2.html</a>
+            <a href="AULA/caela-framework.html"><span class="file-ext ext-html">html</span>caela-framework.html</a>
+            <a href="AULA/g6-earth-house.html"><span class="file-ext ext-html">html</span>g6-earth-house.html</a>
+            <a href="AULA/voynich-caela-lesson.html"><span class="file-ext ext-html">html</span>voynich-caela-lesson.html</a>
           </div>
         </div>
-        <div style="color:var(--gold); font-size:1.3rem; flex-shrink:0;">↗</div>
-      </a>
-    </div>
 
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════════
-     BOOK 3 — The Mini-Beast — Biological Chapters
-     ═══════════════════════════════════════════════ -->
-<section id="book3" class="b3-strip">
-  <div class="section-inner" style="padding: 3rem 0;">
-
-    <div class="b3-header">
-      <div>
-        <div class="section-label" style="color:#0abfbc;">Book 3 · The Mini-Beast · Biological Chapters</div>
-        <h2 class="gold-underline" style="color:white;">G = U ∘ F ∘ K ∘ C in Living Systems</h2>
-        <p style="color:rgba(250,247,240,.6); max-width:640px; margin-top:.6rem; font-size:.9rem; line-height:1.75;">
-          The same Whitney A₁ fold that governs stellar nucleosynthesis governs axon regrowth across a spinal cord lesion.
-          These are not analogies. Chapter A is published on Zenodo with machine-verified Lean 4 proofs.
-          Chapter B formalises the mathematics behind the polylaminin clinical results — <strong style="color:#ff7a3d;">peer review urgently requested.</strong>
-        </p>
-      </div>
-      <div class="b3-urgent"><span class="b3-dot"></span> New · Peer review open</div>
-    </div>
-
-    <div class="b3-notice">
-      ⚡ <strong>Clinical context:</strong>
-      Dr. Tatiana Sampaio (UFRJ) — polylaminin enabled 6 of 8 acute SCI patients (4 tetraplegic) to regain voluntary motor control.
-      ANVISA Phase I authorized Jan 2026. The mechanism is a molecular scaffold that creates a critical transition point — in dm³ terms, exactly Operator F (Whitney A₁ fold).
-      <strong>Chapter B provides the contact-geometric mathematics.</strong>
-      Sampaio et al. (2024) medRxiv: <a href="https://doi.org/10.1101/2024.02.19.24301010" target="_blank">doi:10.1101/2024.02.19.24301010</a>
-      &nbsp;·&nbsp; Contact: <a href="mailto:pablogrossi@hotmail.com">pablogrossi@hotmail.com</a>
-    </div>
-
-    <div class="b3-grid">
-
-      <!-- Chapter A -->
-      <a class="b3-card"
-         href="https://totogt.github.io/AXLE/Autophagy/sample-chapter-autophagy%20(1).html"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Chapter A · Published · Zenodo 20168812</div>
-        <div class="b3-ch-title">Self-Regulation: Autophagy and the Triple-Alpha Process</div>
-        <div class="b3-ch-desc">
-          The cell that eats itself and the star that burns helium are instances of the same contact-geometric fold.
-          Whitney A₁ conditions, Gronwall stability radius ε₀ = 1/3, and the limit cycle attractor are all proved
-          in Lean 4 without sorry. Coherence Bridge extended with two new domains.
+        <div class="folder-card" data-search="book3 mini beast vol III chapters B3 eBook">
+          <div class="folder-name">📁 book3 — Vol III Mini-Beast</div>
+          <div class="folder-files">
+            <a href="book3/Book1.html"><span class="file-ext ext-html">html</span>Book1.html</a>
+            <a href="book3/Sportal.html"><span class="file-ext ext-html">html</span>Sportal.html</a>
+            <a href="book3/Enceladus.html"><span class="file-ext ext-html">html</span>Enceladus.html</a>
+            <a href="book3/GameTheory_Full_Pack.html"><span class="file-ext ext-html">html</span>GameTheory_Full_Pack.html</a>
+            <a href="book3/229-ballantine.html"><span class="file-ext ext-html">html</span>229-ballantine.html</a>
+            <a href="book3/cajueiro_chapter1.html"><span class="file-ext ext-html">html</span>cajueiro_chapter1.html</a>
+            <a href="book3/ch-d2-academic.html"><span class="file-ext ext-html">html</span>ch-d2-academic.html</a>
+            <a href="book3/ch-e-gtct.html"><span class="file-ext ext-html">html</span>ch-e-gtct.html</a>
+            <a href="book3/ch-ocio.html"><span class="file-ext ext-html">html</span>ch-ocio.html</a>
+            <a href="book3/ch00-introduction.html"><span class="file-ext ext-html">html</span>ch00-introduction.html</a>
+            <a href="book3/ch00-student-edition.html"><span class="file-ext ext-html">html</span>ch00-student-edition.html</a>
+            <a href="book3/access-required_copy.html"><span class="file-ext ext-html">html</span>access-required_copy.html</a>
+          </div>
+          <div class="folder-more">+ more chapters in /book3/</div>
         </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">AutophagyDm3_v3.lean</span>
-          <span class="b3-tag">Whitney A₁ · proved</span>
-          <span class="b3-tag">Lyapunov closed</span>
-          <span class="b3-tag gold">34 theorems · 0 actual sorry</span>
+
+        <div class="folder-card" data-search="book4 vol IV GTCT formal theory axioms operators orthogonality chIV">
+          <div class="folder-name">📁 book4 — Vol IV GTCT</div>
+          <div class="folder-files">
+            <a href="book4/chIV-preface.html"><span class="file-ext ext-html">html</span>chIV-preface.html</a>
+            <a href="book4/chIV-axioms.html"><span class="file-ext ext-html">html</span>chIV-axioms.html</a>
+            <a href="book4/chIV-operators.html"><span class="file-ext ext-html">html</span>chIV-operators.html</a>
+            <a href="book4/chIV-orthogonality.html"><span class="file-ext ext-html">html</span>chIV-orthogonality.html</a>
+            <a href="book4/chIV-field.html"><span class="file-ext ext-html">html</span>chIV-field.html</a>
+            <a href="book4/chIV-recursion.html"><span class="file-ext ext-html">html</span>chIV-recursion.html</a>
+            <a href="book4/chIV-time.html"><span class="file-ext ext-html">html</span>chIV-time.html</a>
+            <a href="book4/chIV-emergence.html"><span class="file-ext ext-html">html</span>chIV-emergence.html</a>
+            <a href="book4/chIV-slu.html"><span class="file-ext ext-html">html</span>chIV-slu.html</a>
+            <a href="book4/chIV-correspondence.html"><span class="file-ext ext-html">html</span>chIV-correspondence.html</a>
+            <a href="book4/chIV-appendices.html"><span class="file-ext ext-html">html</span>chIV-appendices.html</a>
+            <a href="book4/chE-gtct.html"><span class="file-ext ext-html">html</span>chE-gtct.html</a>
+            <a href="book4/chE-gtct-alt.html"><span class="file-ext ext-html">html</span>chE-gtct-alt.html</a>
+            <a href="book4/chTau-tartaruga.html"><span class="file-ext ext-html">html</span>chTau-tartaruga.html</a>
+            <a href="book4/ch-faraday.html"><span class="file-ext ext-html">html</span>ch-faraday.html</a>
+            <a href="book4/ch01.html"><span class="file-ext ext-html">html</span>ch01.html – ch11 arc</a>
+            <a href="book4/gomc-opus.html"><span class="file-ext ext-html">html</span>gomc-opus.html</a>
+            <a href="book4/ch00-student-edition.html"><span class="file-ext ext-html">html</span>ch00-student-edition.html</a>
+            <a href="book4/ch11-catgt.html"><span class="file-ext ext-html">html</span>ch11-catgt.html</a>
+          </div>
         </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20168812 &nbsp;·&nbsp; AXLE/Autophagy/</div>
-      </a>
 
-      <!-- Chapter B -->
-      <a class="b3-card urgent"
-         href="https://totogt.github.io/AXLE/a.PolyLaminin/chapter_B_polylaminin.html"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">⚡ Chapter B · In Preparation · Peer Review Requested</div>
-        <div class="b3-ch-title">Axon Regrowth as a dm³ Fold: The Polylaminin Bridge</div>
-        <div class="b3-ch-desc">
-          Polylaminin (Sampaio, UFRJ) is the physical realisation of Operator F: it shifts the axonal growth cone
-          to the Whitney A₁ fold point q*=1, opening a new axonal path across the glial scar.
-          The mathematical prerequisites are already proved in Chapter A. This chapter applies them to SCI.
-          Interactive phase-portrait diagrams. Two falsifiability conditions. Full Lean 4 correspondence.
+        <div class="folder-card" data-search="book5 vol V dimensional theory complete completeness banach constants chV">
+          <div class="folder-name">📁 book5 — Vol V</div>
+          <div class="folder-files">
+            <a href="book5/index.html"><span class="file-ext ext-html">html</span>index.html</a>
+            <a href="book5/chV-preface.html"><span class="file-ext ext-html">html</span>chV-preface.html</a>
+            <a href="book5/chV-banach.html"><span class="file-ext ext-html">html</span>chV-banach.html</a>
+            <a href="book5/chV-constants.html"><span class="file-ext ext-html">html</span>chV-constants.html</a>
+          </div>
         </div>
-        <div class="b3-tags">
-          <span class="b3-tag orange">Polylaminin · UFRJ</span>
-          <span class="b3-tag orange">SCI · tetraplegia</span>
-          <span class="b3-tag">Whitney A₁ applied</span>
-          <span class="b3-tag gold">ANVISA Phase I · 2026</span>
+
+        <div class="folder-card" data-search="CatGT category theory lean axioms dm3 GOMC G6 Mahlo criticality">
+          <div class="folder-name">📁 CatGT</div>
+          <div class="folder-files">
+            <a href="CatGT/CATGT_fixed.html"><span class="file-ext ext-html">html</span>CATGT_fixed.html</a>
+            <a href="CatGT/CATGT_v2.html"><span class="file-ext ext-html">html</span>CATGT_v2.html</a>
+            <a href="CatGT/GOMC.html"><span class="file-ext ext-html">html</span>GOMC.html</a>
+            <a href="CatGT/GOMC2.html"><span class="file-ext ext-html">html</span>GOMC2.html</a>
+            <a href="CatGT/33.html"><span class="file-ext ext-html">html</span>33.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/CatGT/Main.lean" target="_blank"><span class="file-ext ext-lean">lean</span>Main.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/CatGT/AXLE.lean" target="_blank"><span class="file-ext ext-lean">lean</span>AXLE.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/CatGT/G6.lean" target="_blank"><span class="file-ext ext-lean">lean</span>G6.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/CatGT/dm3_Criticality_gtct.lean" target="_blank"><span class="file-ext ext-lean">lean</span>dm3_Criticality_gtct.lean</a>
+          </div>
+          <div class="folder-more">+ 15 more .lean files in /CatGT/</div>
         </div>
-        <div class="b3-doi">AXLE/a.PolyLaminin/ &nbsp;·&nbsp; Sampaio et al. medRxiv 2024</div>
-      </a>
 
-      <!-- DNLS companion -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20026942"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Companion Paper · Physics · Zenodo 20026942</div>
-        <div class="b3-ch-title">Differential Nonlinear Robustness — Fibonacci &amp; Tribonacci Chains</div>
-        <div class="b3-ch-desc">
-          Tribonacci spectral gap lifts the self-trapping threshold. Fibonacci chains self-trap at λ≈4–8;
-          tribonacci chains still spreading at λ=10. Long-time exponent α confirmed at T=10⁵.
-          The same spectral-gap lever as the criticality paper.
+        <div class="folder-card" data-search="DNLS discrete nonlinear schrodinger tribonacci eta wave tribonacci chapter copilot">
+          <div class="folder-name">📁 DNLS</div>
+          <div class="folder-files">
+            <a href="DNLS/chapter-eta-dnls.html"><span class="file-ext ext-html">html</span>chapter-eta-dnls.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/DNLS/TribonacciDNLS.lean" target="_blank"><span class="file-ext ext-lean">lean</span>TribonacciDNLS.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/DNLS/dnls_long_time.py" target="_blank"><span class="file-ext ext-py">py</span>dnls_long_time.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/DNLS/dnls_nbonacci.py" target="_blank"><span class="file-ext ext-py">py</span>dnls_nbonacci.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/DNLS/analyze_long_time.py" target="_blank"><span class="file-ext ext-py">py</span>analyze_long_time.py</a>
+          </div>
+          <div class="folder-more">+ figures, copilot briefs in /DNLS/</div>
         </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">TribonacciDNLS.lean</span>
-          <span class="b3-tag">Spreading exponent α</span>
-          <span class="b3-tag">DNLS · concept DOI</span>
+
+        <div class="folder-card" data-search="EMMEs game theory probability propaganda collatz engineering theory ticker">
+          <div class="folder-name">📁 EMMEs</div>
+          <div class="folder-files">
+            <a href="EMMEs/index.html"><span class="file-ext ext-html">html</span>index.html</a>
+            <a href="EMMEs/collatz-engineering.html"><span class="file-ext ext-html">html</span>collatz-engineering.html</a>
+            <a href="EMMEs/game-theory.html"><span class="file-ext ext-html">html</span>game-theory.html</a>
+            <a href="EMMEs/probability.html"><span class="file-ext ext-html">html</span>probability.html</a>
+            <a href="EMMEs/theory.html"><span class="file-ext ext-html">html</span>theory.html</a>
+            <a href="EMMEs/ticker.html"><span class="file-ext ext-html">html</span>ticker.html</a>
+            <a href="EMMEs/propaganda.html"><span class="file-ext ext-html">html</span>propaganda.html</a>
+            <a href="EMMEs/probaby.html"><span class="file-ext ext-html">html</span>probaby.html</a>
+            <a href="EMMEs/propagan.html"><span class="file-ext ext-html">html</span>propagan.html</a>
+          </div>
         </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20026942</div>
-      </a>
 
-      <!-- Criticality companion -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20077205"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Companion Paper · Physics · Zenodo 20077205</div>
-        <div class="b3-ch-title">Criticality Thresholds in n-Bonacci Multiplying Media</div>
-        <div class="b3-ch-desc">
-          λc(n) governed by the spectral gap Δn of the substitution transfer matrix.
-          λc(n) → 7/6 exactly for n≥4. Linear fit r=0.989 across n=2…5.
-          Published companion to the DNLS paper.
+        <div class="folder-card" data-search="Enceladus principia saturn NASA analysis moon ocean">
+          <div class="folder-name">📁 Enceladus</div>
+          <div class="folder-files">
+            <a href="Enceladus/enceladus_principia_analysis.html"><span class="file-ext ext-html">html</span>enceladus_principia_analysis.html</a>
+          </div>
         </div>
-        <div class="b3-tags">
-          <span class="b3-tag">Spectral gap</span>
-          <span class="b3-tag gold">7/6 saturation · proved</span>
+
+        <div class="folder-card" data-search="Faraday electromagnetism dm3 induction paper figures python">
+          <div class="folder-name">📁 Faraday</div>
+          <div class="folder-files">
+            <a href="Faraday/faraday_explainer.html"><span class="file-ext ext-html">html</span>faraday_explainer.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Faraday/Faraday_EM_dm3_Grossi2026.pdf" target="_blank"><span class="file-ext ext-pdf">pdf</span>Faraday_EM_dm3_Grossi2026.pdf</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Faraday/build_faraday_paper.py" target="_blank"><span class="file-ext ext-py">py</span>build_faraday_paper.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Faraday/faraday_figures.py" target="_blank"><span class="file-ext ext-py">py</span>faraday_figures.py</a>
+          </div>
         </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20077205</div>
-      </a>
 
-      <!-- Autophagy deposit -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20168812"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Full Deposit · Zenodo 20168812 · All files</div>
-        <div class="b3-ch-title">Chapter A Deposit: PDF + LaTeX + Lean 4 + Python + Figures</div>
-        <div class="b3-ch-desc">
-          Complete deposit: autophagy_dm3.pdf (8 pp), tex source, AutophagyDm3_v3.lean (34 theorems),
-          autophagy_dm3.py (4 figures), coherence_bridge.csv.
-          Cite this DOI for the full formal result.
+        <div class="folder-card" data-search="Finance markets BTC ETH trading WorldQuant dashboard strategy NVDA simulator">
+          <div class="folder-name">📁 Finance</div>
+          <div class="folder-files">
+            <a href="Finance/index.html"><span class="file-ext ext-html">html</span>index.html</a>
+            <a href="Finance/Lesson4.html"><span class="file-ext ext-html">html</span>Lesson4.html</a>
+            <a href="Finance/33.html"><span class="file-ext ext-html">html</span>33.html</a>
+            <a href="Finance/btc_eth_grid_bot_backtest.html"><span class="file-ext ext-html">html</span>btc_eth_grid_bot_backtest.html</a>
+            <a href="Finance/daily-setups.html"><span class="file-ext ext-html">html</span>daily-setups.html</a>
+            <a href="Finance/market_assistant_ui.html"><span class="file-ext ext-html">html</span>market_assistant_ui.html</a>
+            <a href="Finance/simulator.html"><span class="file-ext ext-html">html</span>simulator.html</a>
+            <a href="Finance/strategy.html"><span class="file-ext ext-html">html</span>strategy.html</a>
+            <a href="Finance/nvda_daily_setup_june1_2026.html"><span class="file-ext ext-html">html</span>nvda_daily_setup_june1_2026.html</a>
+            <a href="Finance/nvda_tp234_reality_check.html"><span class="file-ext ext-html">html</span>nvda_tp234_reality_check.html</a>
+          </div>
         </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">PDF · LaTeX · Lean 4 · Python</span>
-          <span class="b3-tag">CC BY 4.0</span>
+
+        <div class="folder-card" data-search="Autophagy dm3 biology lean knacci spine pdf sample chapter">
+          <div class="folder-name">📁 Autophagy</div>
+          <div class="folder-files">
+            <a href="Autophagy/sample-chapter-autophagy.html"><span class="file-ext ext-html">html</span>sample-chapter-autophagy.html</a>
+            <a href="Autophagy/sample-chapter-autophagy (1).html"><span class="file-ext ext-html">html</span>sample-chapter-autophagy (1).html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Autophagy/AutophagyDm3_v2.lean" target="_blank"><span class="file-ext ext-lean">lean</span>AutophagyDm3_v2.lean</a>
+          </div>
         </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20168812</div>
-      </a>
 
-      <!-- Fruit-fly V2 -->
-      <a class="b3-card"
-         href="https://doi.org/10.5281/zenodo.20128568"
-         target="_blank">
-        <span class="b3-arrow">↗</span>
-        <div class="b3-ch-label">Published · Zenodo 20128568 · V2</div>
-        <div class="b3-ch-title">Fruit-Fly Connectome Toy Model — V2 Full Package</div>
-        <div class="b3-ch-desc">
-          Biological transitions in the Drosophila connectome as multi-agent realisations of G.
-          V2 includes MultiOrbitBioSwarm.lean (16 theorems), Python simulation, 4 figures, companion Paper B.
+        <div class="folder-card" data-search="BioPhysics multi agent TOGT biology pitchfork convergence lean python">
+          <div class="folder-name">📁 BioPhysics</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/BioPhysics/MultiAgentTogt.lean" target="_blank"><span class="file-ext ext-lean">lean</span>MultiAgentTogt.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/BioPhysics/multi_agent_togt.py" target="_blank"><span class="file-ext ext-py">py</span>multi_agent_togt.py</a>
+          </div>
         </div>
-        <div class="b3-tags">
-          <span class="b3-tag gold">MultiOrbitBioSwarm.lean</span>
-          <span class="b3-tag">FlyWire · connectome</span>
-          <span class="b3-tag">Pitchfork bifurcation</span>
+
+        <div class="folder-card" data-search="Intelligence swarm simulator lean convergence contraction dm3">
+          <div class="folder-name">📁 Intelligence</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Intelligence/SwarmSimulator.lean" target="_blank"><span class="file-ext ext-lean">lean</span>SwarmSimulator.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Intelligence/swarm_simulator.py" target="_blank"><span class="file-ext ext-py">py</span>swarm_simulator.py</a>
+          </div>
         </div>
-        <div class="b3-doi">doi.org/10.5281/zenodo.20128568</div>
-      </a>
 
-    </div>
+        <div class="folder-card" data-search="SWARM multi orbit contraction fixed point lean python figures">
+          <div class="folder-name">📁 SWARM</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/SWARM/SwarmSimulator.lean" target="_blank"><span class="file-ext ext-lean">lean</span>SwarmSimulator.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/SWARM/swarm_simulator.py" target="_blank"><span class="file-ext ext-py">py</span>swarm_simulator.py</a>
+          </div>
+        </div>
 
-    <div style="text-align:center; margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-      <a href="https://totogt.github.io/AXLE/Autophagy/sample-chapter-autophagy%20(1).html"
-         target="_blank" class="btn-secondary" style="color:#0abfbc; border-color:#0abfbc;">
-        Read Chapter A →
-      </a>
-      <a href="https://totogt.github.io/AXLE/a.PolyLaminin/chapter_B_polylaminin.html"
-         target="_blank" class="btn-secondary" style="color:#ff7a3d; border-color:#c45000;">
-        Read Chapter B (urgent) →
-      </a>
-      <a href="https://orcid.org/0009-0000-6496-2186"
-         target="_blank" class="btn-secondary">
-        All papers on ORCID →
-      </a>
-    </div>
+        <div class="folder-card" data-search="Multi Orbit Theory lean orbit resonance csv python">
+          <div class="folder-name">📁 Multi-Orbit-Theory</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Multi-Orbit-Theory/MultiOrbitTogt.lean" target="_blank"><span class="file-ext ext-lean">lean</span>MultiOrbitTogt.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Multi-Orbit-Theory/multi_orbit_togt.py" target="_blank"><span class="file-ext ext-py">py</span>multi_orbit_togt.py</a>
+          </div>
+        </div>
 
-  </div>
-</section>
+        <div class="folder-card" data-search="FruitFly bioswarm multi orbit swarm lean dm3 pitchfork">
+          <div class="folder-name">📁 FruitFly</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/FruitFly/MultiOrbitBioSwarm.lean" target="_blank"><span class="file-ext ext-lean">lean</span>MultiOrbitBioSwarm.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/FruitFly/multi_orbit_bioswarm.py" target="_blank"><span class="file-ext ext-py">py</span>multi_orbit_bioswarm.py</a>
+          </div>
+        </div>
 
-<!-- ═══════════════════════════════════════════════
-     PAPERS — All Zenodo DOIs
-     ═══════════════════════════════════════════════ -->
-<section id="papers">
-  <div class="section-inner">
-    <div class="section-label">Open Access Research</div>
-    <h2 class="gold-underline">Papers on Zenodo</h2>
-    <p>All papers are freely available. Cite via DOI. Each paper is a self-contained contribution — you do not need the full series to read any one paper.</p>
+        <div class="folder-card" data-search="NetworkGamesJOMO network games JOMO game theory positional dominance">
+          <div class="folder-name">📁 NetworkGamesJOMO</div>
+          <div class="folder-files">
+            <a href="NetworkGamesJOMO/GameTheory_Full_Pack.html"><span class="file-ext ext-html">html</span>GameTheory_Full_Pack.html</a>
+            <a href="NetworkGamesJOMO/GameTheory_Full_Pack (1).html"><span class="file-ext ext-html">html</span>GameTheory_Full_Pack (1).html</a>
+            <a href="https://github.com/TOTOGT/AXLE/tree/main/NetworkGamesJOMO/Theory" target="_blank"><span class="file-ext ext-other">dir</span>Theory/ ↗</a>
+          </div>
+        </div>
 
-    <div class="g-grid" style="margin-top:2rem;">
+        <div class="folder-card" data-search="Papers nbonacci criticality diffusion nuclear zeolite figures generate">
+          <div class="folder-name">📁 Papers</div>
+          <div class="folder-files">
+            <a href="Papers/sample-chapter-autophagy.html"><span class="file-ext ext-html">html</span>sample-chapter-autophagy.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Papers/nbonacci_diffusion_draft.pdf" target="_blank"><span class="file-ext ext-pdf">pdf</span>nbonacci_diffusion_draft.pdf</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Papers/generate_all_figures.py" target="_blank"><span class="file-ext ext-py">py</span>generate_all_figures.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Papers/nbonacci_criticality.py" target="_blank"><span class="file-ext ext-py">py</span>nbonacci_criticality.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Papers/AutophagyDm3.lean" target="_blank"><span class="file-ext ext-lean">lean</span>AutophagyDm3.lean</a>
+          </div>
+        </div>
 
-      <!-- Vol I -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19117400</div>
-        <div class="g-title">Principia Orthogona, Volume One</div>
-        <div class="g-desc">The Mathematics of Generative Transitions. Abstract operator algebra, the operator sequence C → K → F → U defined and proved. Singularity classification (Whitney A1–A3), symplectic preservation theorem, curvature threshold κ*. The foundation.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19117400" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19117400</a></div>
+        <div class="folder-card" data-search="PrincipiaOrthogona1 principia vol 1 lean GOMC contact geometry phase portrait">
+          <div class="folder-name">📁 PrincipiaOrthogona1 — Vol I</div>
+          <div class="folder-files">
+            <a href="PrincipiaOrthogona1/principia_vol1.html"><span class="file-ext ext-html">html</span>principia_vol1.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona1/PrincipiaVol1.lean" target="_blank"><span class="file-ext ext-lean">lean</span>PrincipiaVol1.lean</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="PrincipiaOrthogona v2 principia vol 2 dashboard lean TOGT volume two">
+          <div class="folder-name">📁 PrincipiaOrthogona_v2 — Vol II</div>
+          <div class="folder-files">
+            <a href="PrincipiaOrthogona_v2/dashboard.html"><span class="file-ext ext-html">html</span>dashboard.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona_v2/VolumeTwo.lean" target="_blank"><span class="file-ext ext-lean">lean</span>VolumeTwo.lean</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="PolyLaminin lambda chapter book3 index polylaminin principia">
+          <div class="folder-name">📁 a.PolyLaminin</div>
+          <div class="folder-files">
+            <a href="a.PolyLaminin/Lesson7.html"><span class="file-ext ext-html">html</span>Lesson7.html</a>
+            <a href="a.PolyLaminin/book3_index.html"><span class="file-ext ext-html">html</span>book3_index.html</a>
+            <a href="a.PolyLaminin/chapter_B_polylaminin.html"><span class="file-ext ext-html">html</span>chapter_B_polylaminin.html</a>
+            <a href="a.PolyLaminin/principia_vol1.html"><span class="file-ext ext-html">html</span>principia_vol1.html</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="SBM cajueiro chapter 1 brazil mathematical society IMPA">
+          <div class="folder-name">📁 SBM</div>
+          <div class="folder-files">
+            <a href="SBM/cajueiro_chapter1.html"><span class="file-ext ext-html">html</span>cajueiro_chapter1.html</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="Lexicon generativity IJL coherence bridge yaml linguistics">
+          <div class="folder-name">📁 Lexicon</div>
+          <div class="folder-files">
+            <a href="Lexicon/lexical-generativity-ijl.html"><span class="file-ext ext-html">html</span>lexical-generativity-ijl.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Lexicon/coherence_bridge_v8_4.yaml" target="_blank"><span class="file-ext ext-other">yaml</span>coherence_bridge_v8_4.yaml</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/Lexicon/coherence_bridge_v8_3.yaml" target="_blank"><span class="file-ext ext-other">yaml</span>coherence_bridge_v8_3.yaml</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="Hospiteller Manahattae manhattan urban geometry">
+          <div class="folder-name">📁 Hospiteller</div>
+          <div class="folder-files">
+            <a href="Hospiteller/Manahattae.html"><span class="file-ext ext-html">html</span>Manahattae.html</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="DigitalHerbarium JSX react plant digital herbarium">
+          <div class="folder-name">📁 DigitalHerbarium</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/DigitalHerbarium/DigitalHerbarium.jsx" target="_blank"><span class="file-ext ext-other">jsx</span>DigitalHerbarium.jsx</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="lean proof library AXLE main formal ground truth contraction dm3 euler">
+          <div class="folder-name">📁 lean — Core Proof Library</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/AXLE.lean" target="_blank"><span class="file-ext ext-lean">lean</span>AXLE.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/AXLE_V8.lean" target="_blank"><span class="file-ext ext-lean">lean</span>AXLE_V8.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/Main.lean" target="_blank"><span class="file-ext ext-lean">lean</span>Main.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/discreteDm3.lean" target="_blank"><span class="file-ext ext-lean">lean</span>discreteDm3.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/gtct_t1.lean" target="_blank"><span class="file-ext ext-lean">lean</span>gtct_t1.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/gronwall_contraction_below_stability_radius.lean" target="_blank"><span class="file-ext ext-lean">lean</span>gronwall_contraction…</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/dm3_euler_preservation.lean" target="_blank"><span class="file-ext ext-lean">lean</span>dm3_euler_preservation.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/lean/regeneration_loop_invariant.lean" target="_blank"><span class="file-ext ext-lean">lean</span>regeneration_loop_invariant.lean</a>
+          </div>
+          <div class="folder-more">+ 10 more .lean files in /lean/</div>
+        </div>
+
+        <div class="folder-card" data-search="assignments lessons homework pedagogy btc markov">
+          <div class="folder-name">📁 assignments</div>
+          <div class="folder-files">
+            <a href="assignments/Lesson7.html"><span class="file-ext ext-html">html</span>Lesson7.html</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/assignments/btcMarkov.py" target="_blank"><span class="file-ext ext-py">py</span>btcMarkov.py</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="AnuclearPhysics nuclear physics B TOGT latex paper submission">
+          <div class="folder-name">📁 AnuclearPhysics</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/AnuclearPhysics/NuclearPhysicsB_latex.pdf" target="_blank"><span class="file-ext ext-pdf">pdf</span>NuclearPhysicsB_latex.pdf</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/AnuclearPhysics/TOGTnuclearPhysicsB.latex" target="_blank"><span class="file-ext ext-other">tex</span>TOGTnuclearPhysicsB.latex</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="scripts python c92 fourier pipeline sampler analysis">
+          <div class="folder-name">📁 scripts</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/scripts/c92_fourier.py" target="_blank"><span class="file-ext ext-py">py</span>c92_fourier.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/scripts/c92_pipeline.py" target="_blank"><span class="file-ext ext-py">py</span>c92_pipeline.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/scripts/c92_sampler.py" target="_blank"><span class="file-ext ext-py">py</span>c92_sampler.py</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="simulations connectome simple operator python dm3">
+          <div class="folder-name">📁 simulations</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/simulations/connectome_loader.py" target="_blank"><span class="file-ext ext-py">py</span>connectome_loader.py</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/simulations/simple_to_operator.py" target="_blank"><span class="file-ext ext-py">py</span>simple_to_operator.py</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="mappings domain docs WaveNumber6 wavenumber lean documentation">
+          <div class="folder-name">📁 mappings · docs · WaveNumber6</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/mappings/domain_mappings.md" target="_blank"><span class="file-ext ext-md">md</span>mappings/domain_mappings.md</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/docs/index.md" target="_blank"><span class="file-ext ext-md">md</span>docs/index.md</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/WaveNumber6/Wavenumber6.lean" target="_blank"><span class="file-ext ext-lean">lean</span>WaveNumber6/Wavenumber6.lean</a>
+          </div>
+        </div>
+
+        <div class="folder-card" data-search="GTCT book4 folder lean dm3 criticality axioms dimensional operators">
+          <div class="folder-name">📁 GTCT</div>
+          <div class="folder-files">
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/GTCT/AXLE.lean" target="_blank"><span class="file-ext ext-lean">lean</span>AXLE.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/GTCT/dm3_Criticality_gtct.lean" target="_blank"><span class="file-ext ext-lean">lean</span>dm3_Criticality_gtct.lean</a>
+            <a href="https://github.com/TOTOGT/AXLE/blob/main/GTCT/Criticality_Principle.lean" target="_blank"><span class="file-ext ext-lean">lean</span>Criticality_Principle.lean</a>
+          </div>
+        </div>
+
       </div>
-
-      <!-- Vol II -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19379473</div>
-        <div class="g-title">Principia Orthogona, Volume Two</div>
-        <div class="g-desc">Contact Realization of Generative Transitions. Explicit contact-geometric realization of Volume One. Threshold Equivalence theorem: |κ| ↑ κ* ⟺ μ_max &lt; 0 ⟺ τ ∈ (0,∞). Four dm³ bifurcations ↔ Whitney A1–A3 singularity types. Submitted to IMPA.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19379473" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19379473</a></div>
-      </div>
-
-      <!-- GCM -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19122168</div>
-        <div class="g-title">Generative Contact Mechanics</div>
-        <div class="g-desc">A Geometric Framework for Dissipative Systems with Structured Limit Cycles. Complete operator algebra (g-, L-, R-, U-operators). Universal contact normal form (μ_max, ω, β). Stability radius ε₀ = 1/3. Submitted to Journal of Geometric Mechanics.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19122168" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19122168</a></div>
-      </div>
-
-      <!-- DM3 Toy Model -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19379385</div>
-        <div class="g-title">The dm³ Operator — Explicit Toy Model</div>
-        <div class="g-desc">Global Dynamic Analysis on contact manifold M = ℝ²×ℝ. Canonical invariant triple (T*, μ_max, τ) = (2π, −2, 2). Global attractor Γ₁₂, four bifurcations, stochastic concentration below embodiment threshold τ = 2. Submitted to SIAM J. Applied Dynamical Systems.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19379385" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19379385</a></div>
-      </div>
-
-      <!-- G6 Crystal -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19162013</div>
-        <div class="g-title">The G6 Crystal</div>
-        <div class="g-desc">A dm³-derived architectural form for resonance-stable tall structures. Six applications of G yield a hexagonal tower with aspect ratio 66 = 33·τ. Passive Schumann n=4 resonance coupling at 33.516 Hz via Arnold tongue A4:1. Noise tolerance τ·ε₀ = 2/3.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19162013" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19162013</a></div>
-      </div>
-
-      <!-- Collatz supplement -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19378742</div>
-        <div class="g-title">The Collatz Conjecture as a Corollary of Crystal Geometry</div>
-        <div class="g-desc">Supplement to the Crystal Paper. The coefficient c = 3 in 3n+1 is the fingerprint of triad stabilisation (3×11 = 33). The conjecture is visible from within crystal geometry before it is provable within it. The polar vortex is the empirical certificate.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19378742" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19378742</a></div>
-      </div>
-
-      <!-- Biological Transitions -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19208015</div>
-        <div class="g-title">Biological Transitions as Multi-Agent Realisations of TO/TOGT</div>
-        <div class="g-desc">Neural oscillations, HPA-axis stress response, circadian regulation, immune adaptation, and protein conformational change modelled as multi-agent realisations of G = U∘F∘K∘C. Fixed-point, contraction, and saturated pitchfork results applied.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19208015" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19208015</a></div>
-      </div>
-
-      <!-- Fruit-Fly -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.20128568 (V2)</div>
-        <div class="g-title">Fruit-Fly Connectome Toy Model</div>
-        <div class="g-desc">Biological Transitions as Multi-Agent Realisations of TO/TOGT: A Drosophila connectome toy model. Neural clusters as coupled agents whose trajectories stabilise under six applications of G. Reproduces neural coherence, oscillatory entrainment, and stress-response switching.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.20128568" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.20128568</a> (V2 · full package)</div>
-      </div>
-
-      <!-- Swarm Simulator -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19208284</div>
-        <div class="g-title">The Swarm Simulator</div>
-        <div class="g-desc">A Dynamical Systems Model of Collective Intelligence using the TO/TOGT Operator Pipeline. Four collective operators: shared-intent stability It, coordination efficiency Ct, type-propagation multiplier Mt, diffusion factor Ft. All results proved from established theorems.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19208284" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19208284</a></div>
-      </div>
-
-      <!-- Multi-Orbit -->
-      <div class="g-card">
-        <div class="g-level">Zenodo · 10.5281/zenodo.19210058</div>
-        <div class="g-title">Mathematical Foundations of Multi-Orbit Identity Theory</div>
-        <div class="g-desc">Identity orbits defined as operator-generated closed trajectories with invariant structure within the TO/TOGT framework. U-, R-, L-, and B-operator families. Categorical invariants and compositional operator algebra. Mathematically independent of speculative cosmological models.</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.19210058" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.19210058</a></div>
-      </div>
-
-      <!-- Forthcoming -->
-      <div class="g-card open">
-        <div class="g-level">Zenodo · Published + In Preparation</div>
-        <div class="g-title">Additional Papers &amp; Book 3 Chapters</div>
-        <div class="g-desc">Self-Regulation: Autophagy &amp; Triple-Alpha (Zenodo 20168812) · Fruit-Fly V2 (20128568) · DNLS Fibonacci/Tribonacci (20026942) · Criticality Thresholds (20077205) · Chapter B: Polylaminin (in preparation) · GTCT Ring 5 · Wavenumber 6 (19501888)</div>
-        <div class="g-isbn"><a href="https://doi.org/10.5281/zenodo.20168812" target="_blank" style="color:var(--mid);">doi.org/10.5281/zenodo.20168812</a> · <a href="https://doi.org/10.5281/zenodo.20026942" target="_blank" style="color:var(--mid);">20026942</a> · <a href="https://doi.org/10.5281/zenodo.20077205" target="_blank" style="color:var(--mid);">20077205</a></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- Pricing -->
-<section id="pricing">
-  <div class="section-inner">
-    <div class="section-label">Get the Series</div>
-    <h2 class="gold-underline">Editions &amp; Pricing</h2>
-    <div class="pricing-grid">
-      <a href="https://www.paypal.com/paypalme/pgrossi/213.24" class="price-card featured linked" target="_blank">
-        <div class="price-badge">Complete Series</div>
-        <div class="price-title">Principia Orthogona<br>G¹–G⁵ · Print</div>
-        <div class="price-amount">$199.99</div>
-        <div class="price-note">456 pages · IngramSpark<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $213.24</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-0-1</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/213.24" class="price-card linked" target="_blank">
-        <div class="price-badge">eBook</div>
-        <div class="price-title">Complete Series<br>Adobe PDF</div>
-        <div class="price-amount">$199.99</div>
-        <div class="price-note">Includes AXLE v6.1 embedded<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $213.24</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-1-8</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/50.11" class="price-card linked" target="_blank">
-        <div class="price-badge">Individual</div>
-        <div class="price-title">Volume I · GOMC Science<br>Hardback</div>
-        <div class="price-amount">$47</div>
-        <div class="price-note">139 pages<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $50.11</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-2-5</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/50.11" class="price-card linked" target="_blank">
-        <div class="price-badge">Individual</div>
-        <div class="price-title">Volume II · TOGT<br>Hardback</div>
-        <div class="price-amount">$47</div>
-        <div class="price-note">122 pages<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $50.11</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-4-9</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://www.paypal.com/paypalme/pgrossi/21.31" class="price-card linked" target="_blank">
-        <div class="price-badge">Entry Point</div>
-        <div class="price-title">Volume III · Mini-Beast<br>eBook only</div>
-        <div class="price-amount">$19.99</div>
-        <div class="price-note">107 pages · C1→C2 English<br><span style="font-size:0.75rem; color:#999;">NJ tax incl.: $21.31 · Tax-exempt? Use custom →</span></div>
-        <div class="price-isbn">ISBN 979-8-9954416-6-3</div>
-        <div class="price-cta">Buy via PayPal →</div>
-      </a>
-      <a href="https://totogt.github.io/AXLE/impa-portal.html" class="price-card linked">
-        <div class="price-badge">IMPA Edition</div>
-        <div class="price-title">Complete Series<br>Hardback · IMPA</div>
-        <div class="price-amount">$247</div>
-        <div class="price-note">Distributed via IMPA portal</div>
-        <div class="price-isbn">ISBN 979-8-9954416-8-7</div>
-        <div class="price-cta">Purchase via Portal →</div>
-      </a>
     </div>
   </div>
-</section>
 
-<!-- Made in America -->
-<div class="mia-strip">MADE IN AMERICA · G6 LLC · NEWARK, NEW JERSEY · ORCID 0009-0000-6496-2186</div>
+  <!-- LEAN FILES -->
+  <div class="section" data-tab-group="lean all">
+    <div class="section-head" onclick="toggleSection(this)">
+      <div class="section-title">◎ Root Lean Proof Files — AXLE Formal Library</div>
+      <div style="display:flex;align-items:center;gap:.8rem;"><div class="section-meta">Lean 4 · formal proofs · doi:10.5281/zenodo.19117400</div><div class="section-caret">▾</div></div>
+    </div>
+    <div class="section-body">
+      <div class="lean-grid">
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/AXLE.lean" target="_blank" data-search="AXLE lean main root canonical"><span class="file-ext ext-lean">lean</span><span class="lean-name">AXLE.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/AXLE_v5_1.lean" target="_blank" data-search="AXLE v5 lean version"><span class="file-ext ext-lean">lean</span><span class="lean-name">AXLE_v5_1.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/AXLE_v6.lean" target="_blank" data-search="AXLE v6 lean version"><span class="file-ext ext-lean">lean</span><span class="lean-name">AXLE_v6.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/AutophagyDm3.lean" target="_blank" data-search="autophagy dm3 lean root"><span class="file-ext ext-lean">lean</span><span class="lean-name">AutophagyDm3.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/AutophagyDm3_v2.lean" target="_blank" data-search="autophagy dm3 v2 lean root"><span class="file-ext ext-lean">lean</span><span class="lean-name">AutophagyDm3_v2.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Dm3Comp.lean" target="_blank" data-search="dm3 comp lean composition operator"><span class="file-ext ext-lean">lean</span><span class="lean-name">Dm3Comp.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Dm3GoldbachToy.lean" target="_blank" data-search="dm3 goldbach lean toy conjecture"><span class="file-ext ext-lean">lean</span><span class="lean-name">Dm3GoldbachToy.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Dm3NSToy.lean" target="_blank" data-search="dm3 navier stokes lean toy NS"><span class="file-ext ext-lean">lean</span><span class="lean-name">Dm3NSToy.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Dm3RHToy.lean" target="_blank" data-search="dm3 riemann hypothesis lean toy RH"><span class="file-ext ext-lean">lean</span><span class="lean-name">Dm3RHToy.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Examples.lean" target="_blank" data-search="examples lean proof examples"><span class="file-ext ext-lean">lean</span><span class="lean-name">Examples.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Main_v6.lean" target="_blank" data-search="main v6 lean root"><span class="file-ext ext-lean">lean</span><span class="lean-name">Main_v6.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Monotonicity.lean" target="_blank" data-search="monotonicity lean proof contraction"><span class="file-ext ext-lean">lean</span><span class="lean-name">Monotonicity.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/MultiChamber.lean" target="_blank" data-search="multi chamber lean dm3 cavity"><span class="file-ext ext-lean">lean</span><span class="lean-name">MultiChamber.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/TribonacciMeasure.lean" target="_blank" data-search="tribonacci measure lean eta weighting"><span class="file-ext ext-lean">lean</span><span class="lean-name">TribonacciMeasure.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/discretedm3.lean" target="_blank" data-search="discrete dm3 lean root"><span class="file-ext ext-lean">lean</span><span class="lean-name">discretedm3.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/finite.lean" target="_blank" data-search="finite lean proof root"><span class="file-ext ext-lean">lean</span><span class="lean-name">finite.lean</span></a>
+        <a class="lean-entry" href="https://github.com/TOTOGT/AXLE/blob/main/gronwall_proof.lean" target="_blank" data-search="gronwall proof lean contraction stability radius"><span class="file-ext ext-lean">lean</span><span class="lean-name">gronwall_proof.lean</span></a>
+      </div>
+    </div>
+  </div>
 
-<!-- Footer -->
+  <!-- PAPERS -->
+  <div class="section" data-tab-group="papers all">
+    <div class="section-head" onclick="toggleSection(this)">
+      <div class="section-title">◐ Papers · Publications · Zenodo Archive</div>
+      <div style="display:flex;align-items:center;gap:.8rem;"><div class="section-meta">doi:10.5281/zenodo.19117400 · ORCID 0009-0000-6496-2186</div><div class="section-caret">▾</div></div>
+    </div>
+    <div class="section-body">
+      <div class="file-grid">
+        <a class="file-entry" href="https://doi.org/10.5281/zenodo.19117400" target="_blank" data-search="zenodo principia orthogona vol 1 doi archive record"><span class="file-ext ext-other">doi</span><span class="file-entry-name">Zenodo Vol I — 10.5281/zenodo.19117400</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Topographical%20Orthogonal%20Generative%20Theory%20-%20Collatz%20as%20DM3%20System%20GROSSI2026.pdf" target="_blank" data-search="topographical orthogonal generative theory collatz TOGT dm3 grossi 2026"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">TOGT — Collatz as DM3 System GROSSI2026.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Collatz_Paper_Grossi2026%20(1).pdf" target="_blank" data-search="collatz paper dm3 grossi 2026"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">Collatz_Paper_Grossi2026.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/G6_TOGT_NASA_MoonBase_Research_Contribution.pdf" target="_blank" data-search="G6 TOGT NASA moon base research contribution Enceladus"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">G6_TOGT_NASA_MoonBase_Research.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/GCM-Manifesto.docx.pdf" target="_blank" data-search="GCM manifesto dm3 grossi"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">GCM-Manifesto.docx.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Grossi2026_Number33_Intelligencer.pdf" target="_blank" data-search="number 33 intelligencer grossi 2026 mathematical"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">Grossi2026_Number33_Intelligencer.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/NuclearPhysicsB_latex.pdf" target="_blank" data-search="nuclear physics B latex paper submission"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">NuclearPhysicsB_latex.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Paper1_Positional_Dominance_Network_Games.pdf" target="_blank" data-search="positional dominance network games paper 1 JOMO grossi"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">Paper1_PositionalDominance_NetworkGames.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/Paper2_Companion_OneThird_Invariant.pdf" target="_blank" data-search="paper 2 companion one third invariant epsilon stability"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">Paper2_Companion_OneThird_Invariant.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/PositionalDominance_NetworkGames_Grossi2026.pdf" target="_blank" data-search="positional dominance network games grossi 2026"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">PositionalDominance_NetworkGames_Grossi2026.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/autophagy_dm3.pdf" target="_blank" data-search="autophagy dm3 pdf knacci spine biology"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">autophagy_dm3.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/dm3_programme_structure.pdf" target="_blank" data-search="dm3 programme structure pdf curriculum"><span class="file-ext ext-pdf">pdf</span><span class="file-entry-name">dm3_programme_structure.pdf</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/AXLE-REPO-PROFILE.md" target="_blank" data-search="AXLE repo profile readme md summary"><span class="file-ext ext-md">md</span><span class="file-entry-name">AXLE-REPO-PROFILE.md</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/ZENODO_DESCRIPTION.md" target="_blank" data-search="zenodo description md archive metadata"><span class="file-ext ext-md">md</span><span class="file-entry-name">ZENODO_DESCRIPTION.md</span></a>
+        <a class="file-entry" href="https://github.com/TOTOGT/AXLE/blob/main/axle_sorry_roadmap.svg" target="_blank" data-search="axle sorry roadmap SVG lean proof status"><span class="file-ext ext-other">svg</span><span class="file-entry-name">axle_sorry_roadmap.svg</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results hidden" id="noResults">
+    <div style="font-size:2rem;margin-bottom:1rem;opacity:.3;">⊘</div>
+    No files match "<span id="noResultsQuery"></span>"
+  </div>
+
+</div>
+
 <footer>
-  <div class="footer-logo">PRINCIPIA ORTHOGONA</div>
-  <div class="footer-links">
-    <a href="#series">The Series</a>
-    <a href="#journey">D1 → D2</a>
-    <a href="#axle">AXLE</a>
-    <a href="#book3" style="color:#0abfbc;">Book 3</a>
-    <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a>
-    <a href="https://zenodo.org/search?q=grossi+pablo+principia+orthogona&sort=newest" target="_blank">Zenodo</a>
-    <a href="https://x-colony.com/PoCo/index.php/spatial-intelligence/" target="_blank">XColony</a>
-    <a href="portal.html">Student Portal</a>
-    <a href="https://totogt.github.io/AXLE/impa-portal.html">IMPA Portal</a>
+  <div style="margin-bottom:.5rem;">
+    <strong style="color:var(--gold);letter-spacing:.2em;">AXLE</strong> &nbsp;·&nbsp;
+    Principia Orthogona &nbsp;·&nbsp; dm³ framework &nbsp;·&nbsp; G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; τ = 2 &nbsp;·&nbsp; ε₀ = ⅓
   </div>
-  <div class="footer-small">
-    © 2026 Pablo Nogueira Grossi / G6 LLC · Newark, New Jersey, USA<br>
-    ORCID: 0009-0000-6496-2186 · Zenodo: <a href="https://zenodo.org/search?q=grossi+pablo+principia+orthogona&sort=newest" target="_blank" style="color:#888;">zenodo.org/grossi-pablo</a><br>
-    Complete Series Print ISBN: 979-8-9954416-0-1 · eBook ISBN: 979-8-9954416-1-8
+  <div>
+    Pablo Nogueira Grossi · G6 LLC · Newark NJ · 2026 &nbsp;·&nbsp;
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">github.com/TOTOGT/AXLE</a> &nbsp;·&nbsp;
+    <a href="https://doi.org/10.5281/zenodo.19117400" target="_blank">doi:10.5281/zenodo.19117400</a> &nbsp;·&nbsp;
+    ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &nbsp;·&nbsp;
+    ISBN 979-8-9954416-6-3
   </div>
 </footer>
 
+<script>
+// ── TAB SYSTEM ──
+const tabBtns = document.querySelectorAll('.tab-btn');
+const sections = document.querySelectorAll('.section');
+
+function activateTab(tab) {
+  tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  sections.forEach(s => {
+    const groups = (s.dataset.tabGroup || '').split(' ');
+    s.style.display = groups.includes(tab) ? '' : 'none';
+  });
+}
+tabBtns.forEach(btn => btn.addEventListener('click', () => {
+  clearSearch();
+  activateTab(btn.dataset.tab);
+}));
+
+// ── ACCORDION ──
+function toggleSection(head) {
+  head.closest('.section').classList.toggle('collapsed');
+}
+
+// ── SEARCH ──
+const searchInput = document.getElementById('searchInput');
+const searchCount = document.getElementById('searchCount');
+const noResults   = document.getElementById('noResults');
+const noResultsQ  = document.getElementById('noResultsQuery');
+
+function clearSearch() {
+  searchInput.value = '';
+  runSearch('');
+}
+
+function runSearch(q) {
+  q = q.toLowerCase().trim();
+  if (!q) {
+    document.querySelectorAll('.file-entry,.lean-entry,.op-card,.folder-card,.folder-files a,.section')
+      .forEach(el => el.classList.remove('hidden'));
+    sections.forEach(s => s.style.display = '');
+    noResults.classList.add('hidden');
+    searchCount.textContent = '';
+    activateTab('all');
+    return;
+  }
+
+  // During search: show all sections
+  tabBtns.forEach(b => b.classList.toggle('active', b.dataset.tab === 'all'));
+  sections.forEach(s => { s.style.display = ''; s.classList.remove('collapsed'); });
+
+  let visible = 0;
+
+  // op-cards
+  document.querySelectorAll('.op-card').forEach(el => {
+    const m = (el.dataset.search||'').toLowerCase().includes(q)||(el.textContent||'').toLowerCase().includes(q);
+    el.classList.toggle('hidden', !m);
+    if(m) visible++;
+  });
+
+  // file-entry & lean-entry
+  document.querySelectorAll('.file-entry,.lean-entry').forEach(el => {
+    const m = (el.dataset.search||'').toLowerCase().includes(q)||(el.textContent||'').toLowerCase().includes(q);
+    el.classList.toggle('hidden', !m);
+    if(m) visible++;
+  });
+
+  // folder-cards: show card if card-level search matches OR any child link matches
+  document.querySelectorAll('.folder-card').forEach(card => {
+    const cardQ = (card.dataset.search||'').toLowerCase();
+    let cardMatch = cardQ.includes(q);
+    card.querySelectorAll('.folder-files a').forEach(a => {
+      const am = (a.dataset.search||'').toLowerCase().includes(q)||(a.textContent||'').toLowerCase().includes(q);
+      a.classList.toggle('hidden', !am);
+      if(am){ cardMatch = true; visible++; }
+    });
+    if(cardMatch && !(card.dataset.search||'').toLowerCase().includes(q)){
+      // card shown because a child matched — don't double count
+    } else if(cardMatch) visible++;
+    card.classList.toggle('hidden', !cardMatch);
+  });
+
+  searchCount.textContent = visible + ' match' + (visible!==1?'es':'');
+  noResults.classList.toggle('hidden', visible > 0);
+  noResultsQ.textContent = q;
+}
+
+searchInput.addEventListener('input', e => runSearch(e.target.value));
+searchInput.addEventListener('keydown', e => { if(e.key==='Escape') { clearSearch(); searchInput.blur(); } });
+
+document.addEventListener('keydown', e => {
+  if(e.key==='/' && document.activeElement!==searchInput && e.target.tagName!=='INPUT') {
+    e.preventDefault();
+    searchInput.focus();
+  }
+});
+
+activateTab('all');
+</script>
 </body>
 </html>
