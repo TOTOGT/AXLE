@@ -132,16 +132,18 @@ footer a{color:rgba(10,191,188,.5);text-decoration:none}
 </head>
 <body>
 
-<!-- ── NAVIGATION (axle index template) ── -->
+<!-- ── NAVIGATION ── -->
 <nav class="site-nav">
-  <a class="nav-brand" href="index.html">Principia Orthogona</a>
+  <a class="nav-brand" href="../">Principia Orthogona</a>
   <div class="nav-links">
-    <a href="index.html">Index</a>
-    <a href="book3-chapter-a.html">Ch. A · Autophagy</a>
-    <a href="book3-chapter-b.html" class="active">Ch. B · Polylaminin</a>
-    <a href="book3-chapter-c.html">Ch. C · Next</a>
-    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a>
-    <a href="https://zenodo.org/search?q=nogueira+grossi" target="_blank">Zenodo</a>
+    <a href="../">AXLE Home</a>
+    <a href="../Autophagy/sample-chapter-autophagy.html">Ch. A · Autophagy</a>
+    <a href="Polylaminin.html" class="active">Ch. B · Polylaminin</a>
+    <a href="https://totogt.github.io/geometry/">Book 3</a>
+    <a href="../Curie/Ch-Curie.html">Cap. C · Curie</a>
+    <a href="../Dirac/ch-dirac.html">Cap. D · Dirac</a>
+    <a href="../Hawking/ch-hawking.html">Cap. H · Hawking</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE ↗</a>
   </div>
   <a class="nav-zenodo" href="https://doi.org/10.5281/zenodo.20168812" target="_blank">↗ Deposit</a>
 </nav>
@@ -344,4 +346,156 @@ function drawFold(kappa) {
   foldCtx.fillRect(0, 0, w, h);
 
   const k = kappa / 100;
-  const cx = 60, cy = h
+  const cx = 60, cy = h / 2 + 20;
+  const sx = 120, sy = 55;
+
+  // Axes
+  foldCtx.strokeStyle = 'rgba(201,168,76,0.3)';
+  foldCtx.lineWidth = 1;
+  foldCtx.beginPath();
+  foldCtx.moveTo(cx, 20); foldCtx.lineTo(cx, h - 20);
+  foldCtx.moveTo(cx, cy); foldCtx.lineTo(w - 20, cy);
+  foldCtx.stroke();
+
+  // V(q) = q³ - 3q - k*3q (tilt)
+  function V(q) { return q*q*q - 3*q - k * 2.5 * q; }
+
+  foldCtx.strokeStyle = '#c9a84c';
+  foldCtx.lineWidth = 2;
+  foldCtx.beginPath();
+  for (let i = 0; i <= 200; i++) {
+    const q = -1.8 + (i / 200) * 4.2;
+    const x = cx + q * sx;
+    const y = cy - V(q) * sy;
+    i === 0 ? foldCtx.moveTo(x, y) : foldCtx.lineTo(x, y);
+  }
+  foldCtx.stroke();
+
+  // Fold point marker
+  const qstar = 1;
+  const xstar = cx + qstar * sx;
+  const ystar = cy - V(qstar) * sy;
+  foldCtx.fillStyle = k > 0.5 ? '#0ABAB5' : '#e05a3a';
+  foldCtx.beginPath();
+  foldCtx.arc(xstar, ystar, 5, 0, Math.PI * 2);
+  foldCtx.fill();
+
+  // Labels
+  foldCtx.font = '11px "JetBrains Mono", monospace';
+  foldCtx.fillStyle = 'rgba(201,168,76,0.6)';
+  foldCtx.fillText('V(q) = q³ − 3q', cx + 8, 35);
+  foldCtx.fillStyle = k > 0.5 ? 'rgba(10,186,181,0.8)' : 'rgba(224,90,58,0.8)';
+  foldCtx.fillText(k > 0.5 ? '✓ Fold crossed — axon regrows' : '✗ Subcritical — glial scar', cx + 8, h - 30);
+  foldCtx.fillStyle = 'rgba(201,168,76,0.5)';
+  foldCtx.fillText('q* = 1', xstar + 8, ystar - 8);
+}
+
+document.getElementById('kappa-sl').oninput = function() {
+  document.getElementById('kappa-val').textContent = this.value + '%';
+  drawFold(parseInt(this.value));
+};
+drawFold(0);
+
+let foldAnim = null;
+function animateFold() {
+  if (foldAnim) { clearInterval(foldAnim); foldAnim = null; document.getElementById('fold-btn').textContent = '▶ Animate fold'; return; }
+  document.getElementById('fold-btn').textContent = '⏸ Pause';
+  let k = 0;
+  const sl = document.getElementById('kappa-sl');
+  foldAnim = setInterval(() => {
+    k = (k + 1) % 101;
+    sl.value = k;
+    document.getElementById('kappa-val').textContent = k + '%';
+    drawFold(k);
+    if (k === 100) { clearInterval(foldAnim); foldAnim = null; document.getElementById('fold-btn').textContent = '▶ Animate fold'; }
+  }, 30);
+}
+
+// ── Figure B.2: Phase portrait ──
+let currentPhase = 'before';
+function showPhase(mode) {
+  currentPhase = mode;
+  document.getElementById('btn-before').className = mode === 'before' ? 'btn active' : 'btn';
+  document.getElementById('btn-after').className = mode === 'after' ? 'btn active' : 'btn';
+  document.getElementById('phase-caption').textContent = mode === 'before'
+    ? 'Before polylaminin: all trajectories converge to the subcritical fixed point (glial scar). The fold point q*=1 is inaccessible — the barrier is too high. ρ = mTOR activity; θ = axon orientation. Red: trajectories that stall. Gold: the barrier.'
+    : 'After polylaminin: the barrier falls. Trajectories cross q*=1 (the fold, shown in teal) and converge to the post-fold fixed point — the regenerated axon configuration. The Gronwall basin (ε₀=1/3) is shown in green.';
+  drawPhase(mode);
+}
+
+function drawPhase(mode) {
+  const w = 640, h = 280;
+  phaseCtx.clearRect(0, 0, w, h);
+  phaseCtx.fillStyle = '#0a1525';
+  phaseCtx.fillRect(0, 0, w, h);
+
+  const cx = w / 2, cy = h / 2;
+  const after = mode === 'after';
+
+  // Grid
+  phaseCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+  phaseCtx.lineWidth = 1;
+  for (let i = 1; i < 4; i++) {
+    phaseCtx.beginPath(); phaseCtx.moveTo(i*w/4, 0); phaseCtx.lineTo(i*w/4, h); phaseCtx.stroke();
+    phaseCtx.beginPath(); phaseCtx.moveTo(0, i*h/4); phaseCtx.lineTo(w, i*h/4); phaseCtx.stroke();
+  }
+
+  // Barrier / fold line
+  const barrierX = after ? w * 0.55 : w * 0.48;
+  phaseCtx.strokeStyle = after ? 'rgba(10,186,181,0.7)' : 'rgba(201,168,76,0.5)';
+  phaseCtx.lineWidth = after ? 2 : 1.5;
+  phaseCtx.setLineDash(after ? [] : [5, 3]);
+  phaseCtx.beginPath(); phaseCtx.moveTo(barrierX, 20); phaseCtx.lineTo(barrierX, h - 20); phaseCtx.stroke();
+  phaseCtx.setLineDash([]);
+
+  // Trajectories
+  const numTraj = 7;
+  for (let t = 0; t < numTraj; t++) {
+    const startY = 30 + t * (h - 60) / (numTraj - 1);
+    phaseCtx.strokeStyle = after ? 'rgba(80,200,120,0.55)' : 'rgba(224,90,58,0.55)';
+    phaseCtx.lineWidth = 1.5;
+    phaseCtx.beginPath();
+    let x = 30, y = startY;
+    phaseCtx.moveTo(x, y);
+    for (let s = 0; s < 120; s++) {
+      const targetX = after ? w * 0.72 : w * 0.35;
+      const targetY = cy;
+      x += (targetX - x) * 0.05;
+      y += (targetY - y) * 0.04;
+      phaseCtx.lineTo(x, y);
+    }
+    phaseCtx.stroke();
+  }
+
+  // Fixed point
+  const fpX = after ? w * 0.72 : w * 0.35;
+  phaseCtx.fillStyle = after ? '#0ABAB5' : '#e05a3a';
+  phaseCtx.beginPath(); phaseCtx.arc(fpX, cy, 7, 0, Math.PI * 2); phaseCtx.fill();
+
+  // Gronwall basin (after only)
+  if (after) {
+    phaseCtx.strokeStyle = 'rgba(80,200,120,0.4)';
+    phaseCtx.lineWidth = 1.5;
+    phaseCtx.setLineDash([4, 3]);
+    phaseCtx.beginPath(); phaseCtx.arc(fpX, cy, 45, 0, Math.PI * 2); phaseCtx.stroke();
+    phaseCtx.setLineDash([]);
+    phaseCtx.fillStyle = 'rgba(80,200,120,0.5)';
+    phaseCtx.font = '10px "JetBrains Mono", monospace';
+    phaseCtx.fillText('ε₀ = 1/3', fpX + 50, cy - 10);
+  }
+
+  // Labels
+  phaseCtx.font = '11px "JetBrains Mono", monospace';
+  phaseCtx.fillStyle = 'rgba(201,168,76,0.6)';
+  phaseCtx.fillText('ρ (mTOR activity)', w - 120, h - 10);
+  phaseCtx.save(); phaseCtx.translate(14, h/2); phaseCtx.rotate(-Math.PI/2);
+  phaseCtx.fillText('θ (orientation)', 0, 0); phaseCtx.restore();
+  phaseCtx.fillStyle = after ? 'rgba(10,186,181,0.7)' : 'rgba(201,168,76,0.5)';
+  phaseCtx.fillText(after ? 'q* = 1 (fold crossed)' : 'q* = 1 (barrier)', barrierX + 6, 35);
+}
+
+drawPhase('before');
+</script>
+
+</body>
+</html>
