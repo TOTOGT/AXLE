@@ -7,6 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- FIX: technicalindicators' browser build needs regenerator-runtime loaded first,
+       otherwise it throws "regeneratorRuntime is not defined" and never defines its globals -->
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.11/runtime.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/technicalindicators@3.1.0/dist/browser.js"></script>
   <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
   <style>
@@ -432,6 +435,11 @@
 </footer>
 
 <script>
+// FIX: the technicalindicators browser build exports SMA, RSI, etc. directly onto
+// window — there is no "technicalindicators" namespace object. This shim restores it.
+window.technicalindicators = window.technicalindicators ||
+  { SMA: window.SMA, RSI: window.RSI };
+
 // ─── WORLD CLOCK (pure client-side, always works) ────────────────────────────
 const CITIES = [
   { id:'tokyo',  tz:'Asia/Tokyo',              session:'asia'   },
@@ -663,25 +671,26 @@ const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
 async function loadAndRun() {
   let raw = null;
 
-  // 1. CoinGecko OHLC — works from file://
+  // 1. Kraken OHLC — CORS-enabled, daily candles with real volume, works worldwide
   try {
     const res = await fetch(
-      'https://api.coingecko.com/api/v3/coins/bitcoin/ohlc?vs_currency=usd&days=50',
+      'https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440',
       { cache: 'no-store' }
     );
     if (!res.ok) throw new Error('status ' + res.status);
     const data = await res.json();
-    const byDay = {};
-    data.forEach(([ts, o, h, l, c]) => {
-      const d = toYMD(ts);
-      if (!byDay[d]) byDay[d] = { t:d, o, h, l, c, v:1 };
-      else { byDay[d].h = Math.max(byDay[d].h, h); byDay[d].l = Math.min(byDay[d].l, l); byDay[d].c = c; }
-    });
-    raw = Object.values(byDay).sort((a,b) => a.t < b.t ? -1 : 1);
+    if (data.error && data.error.length) throw new Error(data.error[0]);
+    const key = Object.keys(data.result).find(k => k !== 'last');
+    raw = data.result[key].slice(-60).map(k => ({
+      t: toYMD(k[0] * 1000),
+      o: parseFloat(k[1]), h: parseFloat(k[2]),
+      l: parseFloat(k[3]), c: parseFloat(k[4]),
+      v: parseFloat(k[6]),
+    }));
     if (raw.length < 10) throw new Error('too few candles');
-    setSource('● Live — CoinGecko BTC/USD 1D', 'var(--accent)');
+    setSource('● Live — Kraken BTC/USD 1D', 'var(--accent)');
   } catch(e1) {
-    // 2. Binance — works from http://
+    // 2. Binance — blocked in some regions, kept as backup
     try {
       const res = await fetch(
         'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=50',
@@ -698,7 +707,7 @@ async function loadAndRun() {
       setSource('● Live — Binance BTCUSDT 1D', 'var(--accent)');
     } catch(e2) {
       raw = FALLBACK;
-      setSource('● Static snapshot (open from server for live data)', 'var(--amber)');
+      setSource('● Static snapshot (live feeds unreachable)', 'var(--amber)');
     }
   }
 
