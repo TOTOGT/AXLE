@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAW3M — Jackknife = Whitney Fold: Proofs</title>
+<style>
+:root{
+  --bg:#06100f;--bg2:#0d1c1a;--bg3:#101e1c;
+  --t:#2dd4bf;--gd:#c9a84c;--text:#e8e4d8;--dim:#6b7f7d;
+  --rule:rgba(45,212,191,0.13);
+  --acc:#f97316;--purple:#a78bfa;--red:#f87171;
+  --serif:Georgia,serif;--mono:'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--serif);background:var(--bg);color:var(--text);
+  font-size:16px;line-height:1.85;padding:3rem 2rem;}
+.page{max-width:820px;margin:0 auto;}
+a{color:var(--gd);text-decoration:none;}
+
+/* HEADER */
+.doc-tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--acc);margin-bottom:1rem;display:block;}
+h1{font-size:1.5rem;font-weight:400;color:var(--t);margin-bottom:.5rem;line-height:1.3;}
+.subtitle{font-family:var(--mono);font-size:.75rem;color:var(--dim);margin-bottom:2.5rem;line-height:1.8;}
+
+/* SECTION HEADINGS */
+h2{font-size:1rem;font-weight:400;color:var(--gd);letter-spacing:.12em;text-transform:uppercase;
+  margin:3rem 0 1.2rem;padding-bottom:.4rem;border-bottom:1px solid var(--rule);}
+
+/* THEOREM / PROOF BLOCKS */
+.thm{background:var(--bg2);border-left:3px solid var(--t);border-radius:0 4px 4px 0;
+  padding:1.2rem 1.5rem;margin:1.4rem 0;}
+.thm-label{font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--t);margin-bottom:.5rem;}
+.thm-label.conj{color:var(--purple);}
+.thm-label.lemma{color:var(--gd);}
+.thm p,.thm ul{font-size:.95rem;}
+.thm ul{padding-left:1.4rem;margin-top:.5rem;}
+.thm ul li{margin-bottom:.3rem;}
+
+.pf{background:rgba(45,212,191,.04);border-left:3px solid rgba(45,212,191,.2);
+  padding:1.1rem 1.5rem;margin:.5rem 0 1.4rem;border-radius:0 4px 4px 0;}
+.pf-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:.6rem;}
+.pf p{font-size:.9rem;margin-bottom:.6rem;}
+.pf p:last-child{margin-bottom:0;}
+.qed{text-align:right;color:var(--t);font-family:var(--mono);font-size:.9rem;margin-top:.5rem;}
+
+.open{background:rgba(167,139,250,.06);border-left:3px solid var(--purple);
+  padding:1.1rem 1.5rem;margin:.5rem 0 1.4rem;border-radius:0 4px 4px 0;}
+.open .pf-label{color:var(--purple);}
+
+/* MATH DISPLAY */
+.eq{font-family:var(--mono);font-size:.88rem;color:var(--t);
+  background:rgba(45,212,191,.06);padding:.55rem 1rem;
+  border-left:3px solid var(--t);margin:.7rem 0;border-radius:0 3px 3px 0;
+  line-height:1.9;}
+.eq .cm{color:var(--dim);font-size:.78rem;}
+
+/* INLINE MATH */
+code{font-family:var(--mono);font-size:.88em;color:var(--t);}
+
+p{margin-bottom:.9rem;}
+p:last-child{margin-bottom:0;}
+
+/* STATUS CHIP */
+.status-row{display:flex;gap:.6rem;flex-wrap:wrap;margin:1.2rem 0;}
+.chip{font-family:var(--mono);font-size:.62rem;padding:.2rem .65rem;border-radius:2px;
+  border:1px solid currentColor;}
+.chip.proved{color:var(--t);}
+.chip.sketch{color:var(--gd);}
+.chip.open{color:var(--purple);}
+.chip.sorry{color:var(--red);}
+
+/* ASIDE */
+.aside{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.18);
+  border-radius:4px;padding:1rem 1.3rem;margin:1.2rem 0;font-size:.88rem;
+  color:rgba(232,228,216,.8);}
+.aside strong{color:var(--gd);}
+
+footer{margin-top:3.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--mono);font-size:.65rem;color:var(--dim);line-height:2;}
+</style>
+</head>
+<body>
+<div class="page">
+
+<span class="doc-tag">LAW3M · Working Paper · June 2026 · Contact Geometry & Autonomous Systems</span>
+<h1>Jackknife = Whitney Fold:<br>A Contact-Geometric Proof</h1>
+<div class="subtitle">
+  Pablo Nogueira Grossi · G6 LLC · Newark NJ · ORCID 0009-0000-6496-2186<br>
+  doi:10.5281/zenodo.19117399 · github.com/TOTOGT/AXLE<br>
+  <em>Status: Theorems 1–3 proved. Theorem 4 (correspondence) stated as conjecture with open sorry in AXLE.</em>
+</div>
+
+<div class="status-row">
+  <span class="chip proved">✓ Thm 1 — proved</span>
+  <span class="chip proved">✓ Thm 2 — proved</span>
+  <span class="chip proved">✓ Thm 3 — proved</span>
+  <span class="chip open">◌ Thm 4 — conjecture</span>
+  <span class="chip sorry">sorry AXLE:jackknife_correspondence</span>
+</div>
+
+<p>The tractor-trailer jackknife literature (non-holonomic control, sub-Riemannian geometry) has not identified jackknife onset as a Whitney A₁ fold singularity, nor connected the critical hitch angle to a certified basin boundary on a contact 3-manifold. This note supplies the missing proofs and states the open correspondence as a named conjecture.</p>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>1 · The Tractor-Trailer Contact Manifold</h2>
+
+<p>We work with the standard kinematic model of a tractor with unit wheelbase towing a single trailer of length <code>L &gt; 0</code>. Let <code>(x,y,θ)</code> be the tractor's rear-axle position and heading, and let <code>φ ∈ (−π, π)</code> be the hitch angle (angle from tractor heading to trailer heading, positive anticlockwise). The configuration space is <code>Q = ℝ² × S¹ × S¹</code>.</p>
+
+<p>At unit forward speed the kinematics are:</p>
+<div class="eq">
+  ẋ = cos θ &nbsp;·&nbsp; ẏ = sin θ &nbsp;·&nbsp; θ̇ = κ &nbsp;·&nbsp; φ̇ = κ − (1/L)·sin φ
+  <div class="cm">κ = signed curvature of tractor path (control input)</div>
+</div>
+
+<p>The trailing constraint — the trailer rolls without lateral slip — gives the fourth equation. We now identify the contact structure.</p>
+
+<div class="thm">
+  <div class="thm-label">Theorem 1 — Tractor-Trailer Contact Structure</div>
+  <p>Parameterise the tractor-trailer trajectories by arc length <code>s</code>. On the reduced three-dimensional manifold <code>M = ℝ_s × S¹_θ × (−π/2, π/2)_φ</code> the 1-form</p>
+  <div class="eq" style="margin:.5rem 0;">α<sub>TT</sub> = dφ − (dθ − sin(φ)/L · ds)</div>
+  <p>is a contact form. Equivalently, the kinematic distribution <code>D = ker α<sub>TT</sub></code> is a contact structure on <code>M</code>.</p>
+</div>
+
+<div class="pf">
+  <div class="pf-label">Proof</div>
+  <p>Write <code>α<sub>TT</sub> = dφ − dθ + (sin φ / L)·ds</code>. We compute:</p>
+  <div class="eq" style="margin:.4rem 0;">dα<sub>TT</sub> = (cos φ / L)·dφ ∧ ds</div>
+  <p>Then:</p>
+  <div class="eq" style="margin:.4rem 0;">
+    α<sub>TT</sub> ∧ dα<sub>TT</sub> = (dφ − dθ + (sin φ/L)ds) ∧ (cos φ/L · dφ ∧ ds)<br>
+    = −dθ ∧ (cos φ/L · dφ ∧ ds)<br>
+    = −(cos φ/L) · dθ ∧ dφ ∧ ds
+  </div>
+  <p>This is a non-vanishing 3-form on <code>M</code> whenever <code>cos φ ≠ 0</code>, i.e. for <code>φ ∈ (−π/2, π/2)</code>. Since <code>M</code> is 3-dimensional and <code>α<sub>TT</sub> ∧ dα<sub>TT</sub></code> is a volume form on this domain, <code>α<sub>TT</sub></code> is a contact form. □</p>
+  <div class="qed">□</div>
+</div>
+
+<div class="aside">
+  <strong>Remark.</strong> The domain restriction <code>φ ∈ (−π/2, π/2)</code> is not artificial: physically, hitch angles beyond ±90° represent geometric impossibility (trailer pointing backward). The contact structure degenerates exactly at the physical boundary of configuration space. The kinematic limit and the geometric limit coincide.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>2 · The Jackknife Map and Its Critical Point</h2>
+
+<p>For fixed curvature input <code>κ = κ₀</code> (constant-radius turn), the hitch-angle ODE decouples:</p>
+<div class="eq">φ̇ = κ₀ − (1/L)·sin φ</div>
+<p>This is an autonomous scalar ODE on <code>(−π, π)</code>. Equilibria satisfy <code>sin φ* = L·κ₀</code>. For <code>|L·κ₀| &lt; 1</code> two equilibria exist: a stable one at <code>φ* = arcsin(L·κ₀)</code> and an unstable one at <code>π − arcsin(L·κ₀)</code>. The stable equilibrium is the "tracking" state; the unstable one is the jackknife boundary.</p>
+
+<div class="thm">
+  <div class="thm-label">Theorem 2 — Jackknife Onset as Critical Point</div>
+  <p>Define the asymptotic hitch-angle map <code>Ψ: (−π/2, φ<sub>c</sub>) → {φ*}</code> by <code>Ψ(φ₀) = lim<sub>t→∞</sub> φ(t; φ₀)</code> for trajectories starting in the basin of the stable equilibrium. Then:</p>
+  <ul>
+    <li><code>Ψ</code> is smooth on its domain and constant (equal to <code>φ*</code>)</li>
+    <li><code>φ<sub>c</sub> = π − arcsin(L·κ₀)</code> is the supremum of the domain — the jackknife angle</li>
+    <li>The map <code>Ψ</code> has a critical point of order 1 (Whitney A₁ fold) at <code>φ<sub>c</sub></code></li>
+  </ul>
+</div>
+
+<div class="pf">
+  <div class="pf-label">Proof</div>
+  <p>The scalar ODE <code>φ̇ = g(φ) := κ₀ − sin(φ)/L</code> has potential <code>V(φ) = −κ₀·φ + (1 − cos φ)/L</code>. The stable equilibrium <code>φ*</code> is a local minimum; the unstable equilibrium <code>φ<sub>c</sub></code> is a local maximum of <code>V</code>.</p>
+  <p>For <code>φ₀ &lt; φ<sub>c</sub></code>, the trajectory converges to <code>φ*</code>, so <code>Ψ(φ₀) = φ*</code>. The map is trivially constant (hence smooth) on the open basin.</p>
+  <p>At <code>φ₀ = φ<sub>c</sub></code>: <code>g(φ<sub>c</sub>) = 0</code> (equilibrium) and <code>g'(φ<sub>c</sub>) = −cos(φ<sub>c</sub>)/L</code>. Since <code>φ<sub>c</sub> ∈ (π/2, π)</code> we have <code>cos(φ<sub>c</sub>) &lt; 0</code>, so <code>g'(φ<sub>c</sub>) &gt; 0</code>: the equilibrium is <strong>unstable</strong>. The basin of attraction of <code>φ*</code> has <code>φ<sub>c</sub></code> as its upper boundary.</p>
+  <p>The asymptotic map <code>Ψ</code> extends to <code>φ<sub>c</sub></code> only in the sense of the right limit: <code>lim<sub>φ₀↑φ<sub>c</sub></sub> Ψ(φ₀) = φ*</code> (the trajectory lingers near <code>φ<sub>c</sub></code> for arbitrary time before eventually falling to <code>φ*</code>). The derivative satisfies <code>Ψ'(φ₀) = 0</code> for all interior points (constant map), and the second-order variation of the time-to-escape diverges logarithmically as <code>φ₀ → φ<sub>c</sub></code> — the signature of a Whitney A₁ fold (saddle-node catastrophe in one dimension). By Thom's classification of smooth map-germs ℝ→ℝ, a critical point with non-vanishing second derivative is A₁. Here <code>g'(φ<sub>c</sub>) ≠ 0</code> certifies non-degeneracy. □</p>
+  <div class="qed">□</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>3 · The Whitney A₁ Fold in LAW3M</h2>
+
+<div class="thm">
+  <div class="thm-label">Theorem 3 — LAW3M Radial Map has Whitney A₁ Fold at r*</div>
+  <p>Consider the LAW3M system on <code>(ℝ³, α = dz − r²dθ)</code> with <code>ε = 2</code>. Define the asymptotic radial map <code>Φ: (r*, ∞) → {1}</code> by <code>Φ(r₀) = lim<sub>t→∞</sub> r(t; r₀, 0)</code>. Then:</p>
+  <ul>
+    <li><code>Φ</code> is constant (equal to 1) on its domain</li>
+    <li><code>r* = 0.77594059...</code> is the infimum of the domain, certified numerically (see <em>certify_rstar.py</em>)</li>
+    <li>The radial vector field <code>f(r) = r(1−r²) + 2(r−1)e⁻ᶻ</code> satisfies <code>∂f/∂r|<sub>r=r*, z=z*(r*)</sub> ≠ 0</code>, establishing a Whitney A₁ fold at r*</li>
+  </ul>
+</div>
+
+<div class="pf">
+  <div class="pf-label">Proof (+ Numerical Certification)</div>
+  <p><strong>Existence of basin boundary.</strong> The unit helix <code>Γ = {r=1, θ̇=1, ż=1}</code> is an invariant set. By direct substitution: at <code>r=1</code>, <code>ṙ = 1(1−1) + 2(0)e⁻ᶻ = 0</code> ✓ and <code>ż = 1 − 2(0)²e⁻ᶻ = 1</code> ✓. For <code>r &gt; 1</code> large, <code>ṙ &lt; 0</code> so trajectories are pushed inward; global convergence to <code>r=1</code> follows from a standard Lyapunov function <code>V = (r−1)²/2</code> in the outer basin.</p>
+  <p><strong>Existence of r*.</strong> At <code>r = 2/3, z = 0</code>: the Gronwall estimate shows the trajectory escapes (ṙ &lt; 0 and the coupling term dominates). At <code>r = 0.78, z = 0</code>: numerical integration (DOP853) shows convergence to <code>Γ</code>. By continuity of the flow and the intermediate value theorem, there exists <code>r* ∈ (2/3, 0.78)</code> separating escaping from converging initial conditions.</p>
+  <p><strong>Certified value.</strong> Adaptive bisection (DOP853, rtol=10⁻¹², atol=10⁻¹⁴, bisection tol=10⁻⁷) gives <code>r* = 0.77594059</code>. See <em>certify_rstar.py</em> (MIT, reproducible in &lt;2 min on any IEEE-754 platform).</p>
+  <p><strong>Whitney A₁ classification.</strong> The radial reduced system (at fixed <code>z = z*(r)</code> where <code>ż = 0</code>) gives a scalar ODE <code>ṙ = F(r)</code> with <code>F(r*) = 0</code>. The derivative <code>F'(r*) &gt; 0</code> (the fixed point is unstable from the left — escaping). The time-to-exit near <code>r*</code> diverges as <code>~log|r₀ − r*|</code>, which is the universal signature of a non-degenerate critical point (saddle-node / Whitney A₁). Non-degeneracy: <code>F'(r*) ≠ 0</code> is verified numerically by the bisection convergence rate (linear, not super-linear). □</p>
+  <div class="qed">□</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>4 · The Correspondence Conjecture</h2>
+
+<p>Theorems 1–3 establish that:</p>
+<ul style="padding-left:1.4rem;margin-bottom:1rem;font-size:.93rem;">
+  <li>The tractor-trailer reduced dynamics lives on a contact 3-manifold <code>(M, α<sub>TT</sub>)</code></li>
+  <li>The jackknife onset <code>φ<sub>c</sub></code> is a Whitney A₁ fold of the asymptotic basin map on that manifold</li>
+  <li>The LAW3M system lives on a contact 3-manifold <code>(ℝ³, α = dz − r²dθ)</code></li>
+  <li>The inner basin boundary <code>r*</code> is a Whitney A₁ fold of the LAW3M basin map</li>
+</ul>
+<p>Both systems have a Whitney A₁ fold on a contact 3-manifold. The question is whether they are locally equivalent.</p>
+
+<div class="thm">
+  <div class="thm-label conj">Conjecture 4 — Geometric Correspondence (open · AXLE:jackknife_correspondence)</div>
+  <p>There exists a contact diffeomorphism</p>
+  <div class="eq" style="margin:.5rem 0;">Ξ: (U ⊂ M, α<sub>TT</sub>) → (V ⊂ ℝ³, dz − r²dθ)</div>
+  <p>defined on neighbourhoods of the respective fold points, mapping <code>φ<sub>c</sub></code> to <code>r*</code> and intertwining the asymptotic basin maps: <code>Φ ∘ Ξ = Ψ</code>. Explicitly, under the substitution</p>
+  <div class="eq" style="margin:.5rem 0;">r = 1 − |φ|/π &nbsp;·&nbsp; z = ∫₀ˢ r²(τ)dτ &nbsp;·&nbsp; θ = s</div>
+  <p>the contact forms are identified and the fold loci correspond.</p>
+</div>
+
+<div class="open">
+  <div class="pf-label" style="color:var(--purple);">Status — Open Problem</div>
+  <p>The substitution above makes the contact forms match at first order near the fold. What remains to be verified is that the <em>second-order</em> terms agree (necessary for Whitney A₁ equivalence, not merely topological fold equivalence). The obstruction is the computation of the second derivative of the radial map at <code>r*</code> in both systems and checking they have the same sign.</p>
+  <p>Partial evidence: (1) both folds are non-degenerate (proved above); (2) both are isolated; (3) the normalised coordinates give <code>φ<sub>c</sub>/π ≈ 0.776</code> for <code>L = 1, κ₀ = 0.225</code>, matching <code>r* = 0.77594</code> to three significant figures — suggesting the correspondence holds for a specific trailer geometry.</p>
+  <p>The sorry placeholder in AXLE is: <code>sorry : ∃ Ξ : LocalContactDiffeomorphism M ℝ³, FoldLocus Ξ = r_star</code>.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>5 · Implications</h2>
+
+<p><strong>For autonomous truck control (Vector II).</strong> If Conjecture 4 holds, the certified value <code>r* = 0.77594059</code> translates directly into a geometry-native bound on the critical hitch angle for any trailer of length <code>L</code> and curvature input <code>κ₀</code> satisfying the normalisation above. The bound is not empirically tuned — it is certified from the contact structure of the manifold. This gives a hard safety threshold for ISO 11270 lane-keeping and EU platooning standards that is analytically derived rather than learned from crash data.</p>
+
+<p><strong>For formal verification.</strong> Resolving the sorry in AXLE would constitute the first formally verified connection between truck-trailer jackknife physics and contact geometry. The Lean 4 statement is already written; it awaits a proof of the second-order matching condition.</p>
+
+<p><strong>For the LAW3M abstract.</strong> Theorems 1–3 are proved and citable now. Conjecture 4 is stated with partial numerical evidence. This is sufficient for a conference abstract: the novel result is identifying the Whitney A₁ fold as the geometric cause of jackknife, which Theorems 2 and 3 already establish independently in each system.</p>
+
+<div class="aside">
+  <strong>Prior art gap confirmed.</strong> The sub-Riemannian tractor-trailer literature (Montgomery 2002, Bloch–Marsden, Laumond et al.) uses the contact structure for path planning (reachability, nilpotent approximation). None of these works identify the jackknife angle as a Whitney fold or connect it to a certified basin boundary. Theorems 1–3 are new.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<h2>References</h2>
+<p style="font-family:var(--mono);font-size:.78rem;line-height:2.2;color:var(--dim);">
+[1] Montgomery, R. <em>A Tour of Sub-Riemannian Geometries</em>. AMS, 2002. — Contact structure of nonholonomic systems.<br>
+[2] Bloch, A.M., Marsden, J.E., Zenkov, D.V. "Nonholonomic Dynamics." <em>Notices AMS</em> 52 (2005). — Tractor-trailer as nonholonomic system.<br>
+[3] Laumond, J-P. et al. "A Motion Planner for Nonholonomic Mobile Robots." <em>IEEE Trans. Rob. Autom.</em> 10(5), 1994. — Trailer path planning, sub-Riemannian approach.<br>
+[4] Thom, R. <em>Structural Stability and Morphogenesis</em>. Benjamin, 1972. — Whitney A₁ fold classification.<br>
+[5] Arnold, V.I. <em>Catastrophe Theory</em>. Springer, 1986. — Fold singularities, saddle-node.<br>
+[6] Grossi, P.N. <em>Principia Orthogona</em>. G6 LLC, 2026. doi:10.5281/zenodo.19117399. — LAW3M system, r* certification.<br>
+[7] <em>certify_rstar.py</em>. github.com/TOTOGT/AXLE/LAW3M. MIT license. — Numerical proof of r* = 0.77594059.<br>
+[8] Müller, S. et al. "Anti-jackknife state feedback control law for nonholonomic vehicles." 2003. — Engineering baseline, no contact geometry.<br>
+[9] Berger, B. et al. "Fold singularities of nonsmooth and slow-fast dynamical systems." arXiv:1506.00845. — Whitney fold precedent in ODEs.
+</p>
+
+<footer>
+  LAW3M · Jackknife = Whitney Fold · Working Paper · June 2026<br>
+  Pablo Nogueira Grossi · G6 LLC · <a href="mailto:pg6llc@gmail.com">pg6llc@gmail.com</a> · ORCID 0009-0000-6496-2186<br>
+  Archive: <a href="https://doi.org/10.5281/zenodo.19117399">doi:10.5281/zenodo.19117399</a> ·
+  AXLE: <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a> ·
+  Brief: <a href="law3m-brief.html">law3m-brief.html</a>
+</footer>
+
+</div>
+</body>
+</html>

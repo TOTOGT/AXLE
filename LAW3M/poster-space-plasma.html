@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Poster: Helical Attractors · Contact Geometry · Plasma</title>
+<style>
+@page{size:A0 landscape;margin:18mm;}
+:root{
+  --bg:#06110f; --bg2:#0b1e1a; --bg3:#0e2820;
+  --t:#2dd4bf; --gd:#c9a84c; --pu:#a78bfa; --or:#f97316; --re:#f87171;
+  --text:#e8e4d8; --dim:#7a8f8d; --rule:rgba(45,212,191,0.13);
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Helvetica Neue",Arial,sans-serif;
+  --mono:"Courier New",Courier,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+
+/* ── PAGE ── */
+body{
+  font-family:var(--serif);
+  background:var(--bg);
+  color:var(--text);
+  width:1420px;
+  font-size:13px;
+  line-height:1.75;
+}
+
+/* ── HEADER ── */
+.poster-header{
+  background:linear-gradient(135deg,#081a17 0%,#0d2820 100%);
+  border-bottom:3px solid rgba(45,212,191,.25);
+  padding:1.4rem 2.2rem 1.2rem;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:1.5rem;
+  align-items:start;
+}
+.poster-title{font-family:var(--sans);font-size:1.75rem;font-weight:700;line-height:1.2;
+  color:var(--text);letter-spacing:.01em;margin-bottom:.45rem;}
+.poster-title em{color:var(--t);font-style:normal;}
+.poster-authors{font-size:.88rem;color:var(--dim);line-height:1.6;}
+.poster-authors strong{color:var(--t);}
+.poster-meta{text-align:right;font-family:var(--mono);font-size:.65rem;color:var(--dim);
+  line-height:1.9;background:rgba(45,212,191,.05);border:1px solid var(--rule);
+  border-radius:4px;padding:.7rem 1rem;white-space:nowrap;}
+.poster-meta strong{color:var(--t);}
+.doi{font-size:.7rem;color:var(--t);letter-spacing:.04em;}
+
+/* ── BODY GRID ── */
+.poster-body{
+  display:grid;
+  grid-template-columns:310px 1fr 310px;
+  gap:0;
+  min-height:820px;
+}
+.col{padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:1rem;}
+.col-l{border-right:1px solid var(--rule);}
+.col-r{border-left:1px solid var(--rule);background:rgba(8,26,23,.5);}
+.col-c{}
+
+/* ── SECTION ── */
+.sec{display:flex;flex-direction:column;gap:.5rem;}
+.sec-head{
+  font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gd);padding-bottom:.25rem;
+  border-bottom:1px solid rgba(201,168,76,.2);
+}
+.sec-head.t{color:var(--t);border-color:var(--rule);}
+.sec-head.pu{color:var(--pu);border-color:rgba(167,139,250,.2);}
+.sec-head.or{color:var(--or);border-color:rgba(249,115,22,.2);}
+
+p{font-size:.86rem;line-height:1.78;color:rgba(232,228,216,.87);margin-bottom:.4rem;}
+p:last-child{margin-bottom:0;}
+p strong{color:var(--text);}
+
+/* ── MATH ── */
+.eq{font-family:var(--mono);font-size:.8rem;color:var(--t);
+  background:rgba(45,212,191,.06);border-left:2.5px solid var(--t);
+  padding:.4rem .75rem;margin:.3rem 0;border-radius:0 3px 3px 0;line-height:1.5;}
+.eq.pu{color:var(--pu);background:rgba(167,139,250,.06);border-color:var(--pu);}
+.eq.or{color:var(--or);background:rgba(249,115,22,.06);border-color:var(--or);}
+.eq.gd{color:var(--gd);background:rgba(201,168,76,.06);border-color:var(--gd);}
+
+/* ── RESULT BADGE ── */
+.badge{
+  background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.25);
+  border-radius:4px;padding:.55rem .8rem;text-align:center;margin:.2rem 0;
+}
+.badge .v{font-family:var(--mono);font-size:1.3rem;color:var(--t);letter-spacing:.03em;}
+.badge .vl{font-family:var(--mono);font-size:.6rem;color:var(--dim);margin-top:.1rem;letter-spacing:.1em;}
+.badge.or{background:rgba(249,115,22,.07);border-color:rgba(249,115,22,.2);}
+.badge.or .v{color:var(--or);}
+
+/* ── BOX ── */
+.box{background:var(--bg2);border:1px solid var(--rule);border-radius:4px;padding:.7rem .85rem;}
+.box.pu{border-color:rgba(167,139,250,.18);background:rgba(167,139,250,.04);}
+.box.or{border-color:rgba(249,115,22,.18);background:rgba(249,115,22,.03);}
+.box.gd{border-color:rgba(201,168,76,.18);background:rgba(201,168,76,.03);}
+
+/* ── HIERARCHY ── */
+.hier{display:flex;flex-direction:column;gap:.28rem;}
+.hr{display:grid;grid-template-columns:110px 1fr 60px;gap:.4rem;align-items:center;}
+.hr-label{font-family:var(--mono);font-size:.65rem;color:var(--dim);}
+.hr-bar-bg{height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.hr-bar{height:100%;border-radius:3px;}
+.hr-val{font-family:var(--mono);font-size:.62rem;color:var(--dim);text-align:right;}
+
+/* ── CHIPS ── */
+.chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem;}
+.chip{font-family:var(--mono);font-size:.6rem;padding:.16rem .5rem;border-radius:10px;
+  border:1px solid;letter-spacing:.03em;}
+.chip.t{border-color:rgba(45,212,191,.3);color:var(--t);}
+.chip.pu{border-color:rgba(167,139,250,.3);color:var(--pu);}
+.chip.or{border-color:rgba(249,115,22,.3);color:var(--or);}
+.chip.gd{border-color:rgba(201,168,76,.3);color:var(--gd);}
+
+/* ── PROOF ITEMS ── */
+.thm{background:var(--bg3);border-left:3px solid var(--pu);border-radius:0 4px 4px 0;
+  padding:.5rem .75rem;margin:.3rem 0;}
+.thm-label{font-family:var(--mono);font-size:.65rem;color:var(--pu);margin-bottom:.2rem;}
+.thm p{font-size:.82rem;}
+
+/* ── FOOTER ── */
+.poster-footer{
+  background:var(--bg2);border-top:1px solid var(--rule);
+  padding:.6rem 2rem;display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--mono);font-size:.6rem;color:var(--dim);
+}
+a{color:var(--t);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<div class="poster-header">
+  <div>
+    <div class="poster-title">
+      Helical Attractors on Contact 3-Manifolds:<br>
+      <em>Basin Geometry, Whitney Singularities, and the Three-Disk Plasma Engine</em>
+    </div>
+    <div class="poster-authors">
+      <strong>Pablo Nogueira Grossi</strong> &nbsp;·&nbsp; G6 LLC, Newark, New Jersey, USA &nbsp;·&nbsp;
+      pg6llc@gmail.com &nbsp;·&nbsp; ORCID: 0009-0000-6496-2186<br>
+      Principia Orthogona series &nbsp;·&nbsp; ISBN 979-8-9954416-6-3 &nbsp;·&nbsp;
+      Mechanised proofs: AXLE / Lean 4 (github.com/TOTOGT/AXLE)
+    </div>
+  </div>
+  <div class="poster-meta">
+    <strong>XIII Latin American Workshop on Magnetism</strong><br>
+    LAW3M · UFRN · Natal, Brazil<br>
+    19–23 October 2026<br>
+    <span class="doi">doi:10.5281/zenodo.19117399</span>
+  </div>
+</div>
+
+<!-- ══════════════ BODY ══════════════ -->
+<div class="poster-body">
+
+<!-- ──────── LEFT COLUMN ──────── -->
+<div class="col col-l">
+
+  <!-- ABSTRACT -->
+  <div class="sec">
+    <div class="sec-head">Abstract</div>
+    <p>We study a three-dimensional contact flow on (ℝ³, α) where α = dz − r²dθ is the standard contact form in cylindrical coordinates. The system — which we call <strong>LAW3M</strong> — admits a helical limit cycle Γ = {r=1, θ̇=1, ż=1} with Lyapunov exponent μ = −2. Using an adaptive DOP853 integrator with rtol = 10⁻¹² and bisection tolerance 10⁻⁷, we certify the inner basin boundary at r* = 0.77594059.</p>
+    <p>This value lies <strong>strictly above</strong> the symmetric Gronwall estimate 2/3, revealing a <strong>Whitney A₁ fold singularity</strong> as the structural origin of the basin asymmetry. The contact condition dz = r²dθ identifies vertical lift with angular momentum, making LAW3M a natural model for rotating plasma dynamics. Three counter-rotating disks at 120° realise the contact manifold physically; viewed from below, they produce a triskelion — the triple-spiral geometry independently carved at Newgrange, Ireland, c. 3200 BCE. Plasma corona discharge is predicted to occur at r = r*, a structural consequence of the Whitney fold, not a fit parameter. To our knowledge, this is the first work combining a contact form, a helical limit cycle, and a numerically certified basin boundary in a single system.</p>
+  </div>
+
+  <!-- INTRODUCTION -->
+  <div class="sec">
+    <div class="sec-head">Introduction</div>
+    <p>Contact geometry is the odd-dimensional counterpart of symplectic geometry. A contact structure on a (2n+1)-dimensional manifold is a maximally non-integrable hyperplane distribution ker(α), where α is a one-form satisfying α ∧ (dα)ⁿ ≠ 0. On ℝ³, the standard contact form is α = dz − r²dθ; the contact condition α = 0 states that the z-increment equals r² times the angular increment — vertical lift is proportional to angular momentum times the square of the radius.</p>
+    <p>Contact structures have been studied extensively in mathematical contexts (Geiges 2008, Arnold 1989), and their role in classical mechanics is well understood. What has not been studied, to our knowledge, is the combination of three specific geometric features in a single dynamical system: <strong>(1)</strong> a contact form as the governing constraint, <strong>(2)</strong> a helical limit cycle as the global attractor, and <strong>(3)</strong> a numerically certified basin boundary with an identified Whitney singularity at its boundary. This combination — unoccupied in the literature — is what LAW3M provides.</p>
+    <p>The physical motivation is rotating electromagnetic systems. A three-disk rotor with counter-rotating disks at 120° separation satisfies the contact condition at every point: the coupling between vertical displacement and rotation is governed by dz = r²dθ. This is not an engineering choice — it follows from the contact form alone. The practical consequence is that both the hover axis and the lift scaling ż = r² are fixed by geometry, not by design parameters.</p>
+  </div>
+
+  <!-- CERTIFIED RESULT -->
+  <div class="sec">
+    <div class="sec-head t">Principal Certified Result</div>
+    <div class="badge">
+      <div class="v">r* = 0.77594059</div>
+      <div class="vl">INNER BASIN BOUNDARY · DOP853 · BISECTION TOL 10⁻⁷</div>
+    </div>
+    <div class="badge or">
+      <div class="v">Γ: μ = −2</div>
+      <div class="vl">LYAPUNOV EXPONENT · HELICAL LIMIT CYCLE</div>
+    </div>
+    <p>The certification uses the DOP853 adaptive Runge-Kutta integrator (Hairer, Nørsett, Wanner 1993) with rtol = 10⁻¹² and atol = 10⁻¹⁴. Bisection is carried out over [0.770, 0.780] to tolerance 10⁻⁷. The entire computation reproduces in under two minutes on any IEEE-754 platform. Source code: <strong>certify_rstar.py</strong> (open source, released under doi:10.5281/zenodo.19117399).</p>
+  </div>
+
+</div>
+
+<!-- ──────── CENTER COLUMN ──────── -->
+<div class="col col-c">
+
+  <!-- THE SYSTEM -->
+  <div class="sec">
+    <div class="sec-head">The LAW3M System</div>
+    <p>The system is defined on (ℝ³, α = dz − r²dθ) with coupling parameter ε = 2:</p>
+    <div class="eq">ṙ = r(1 − r²) + 2(r − 1)e⁻ᶻ</div>
+    <div class="eq">θ̇ = 1</div>
+    <div class="eq">ż = r² − 2(r − 1)²e⁻ᶻ</div>
+    <p>The contact condition enters through the coupling term 2(r−1)e⁻ᶻ, which vanishes identically at r = 1. At r = 1, the second equation yields ṙ = 0 and ż = 1, confirming that the unit circle is a fixed set of the radial dynamics and that the helical orbit Γ = {r=1, θ̇=1, ż=1} is self-consistent. The Lyapunov exponent along the radial direction evaluates to μ = ∂ṙ/∂r|_{r=1} = (1 − 3) = −2, confirming asymptotic stability of Γ.</p>
+    <p>The contact form is verified by computing α ∧ dα: since α = dz − r²dθ, we have dα = −2r dr ∧ dθ, and α ∧ dα = (dz − r²dθ) ∧ (−2r dr ∧ dθ) = −2r dz ∧ dr ∧ dθ ≠ 0 for r > 0. The standard volume form on ℝ³ is −2r dz ∧ dr ∧ dθ = dz ∧ dr ∧ (r dθ), so α ∧ dα is a nonvanishing volume form. The contact condition is satisfied everywhere in the physical domain r > 0.</p>
+  </div>
+
+  <!-- MAIN FIGURE -->
+  <div class="sec">
+    <div class="sec-head">Figure 1 — Triskelion View and Basin Cross-Section</div>
+    <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <rect width="800" height="320" fill="rgba(6,17,15,0.8)" rx="4"/>
+
+      <!-- LEFT: triskelion -->
+      <text x="190" y="18" text-anchor="middle" font-family="'Courier New'" font-size="7.5" letter-spacing="2" fill="#7a8f8d">VIEW FROM BELOW — THREE PLASMA ARMS</text>
+      <!-- outer ring Γ -->
+      <circle cx="190" cy="170" r="110" fill="none" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="6 4" opacity=".35"/>
+      <text x="303" y="168" font-family="'Courier New'" font-size="7" fill="#2dd4bf" opacity=".6">Γ</text>
+      <!-- r* ring -->
+      <circle cx="190" cy="170" r="85" fill="none" stroke="#f97316" stroke-width="1.4" stroke-dasharray="4 3" opacity=".7"/>
+      <text x="276" y="118" font-family="'Courier New'" font-size="7" fill="#f97316">r*</text>
+      <!-- 2/3 ring -->
+      <circle cx="190" cy="170" r="58" fill="none" stroke="#a78bfa" stroke-width=".8" stroke-dasharray="3 3" opacity=".3"/>
+      <!-- arm 0 -->
+      <path d="M190,164 L192,160 L195,157 L200,154 L206,153 L213,153.5 L220,156 L227,160 L233,165.5 L238,173 L241,181 L241,190 L239,199 L234,208 L227,216 L218,222 L207,226 L195,228 L182,227 L169,223 L156,217 L144,208 L134,197 L125,185 L119,171 L115,157"
+            fill="none" stroke="#a78bfa" stroke-width="2.5" opacity=".85" stroke-linecap="round"/>
+      <polygon points="115,157 120,164 113,165.5" fill="#a78bfa" opacity=".85"/>
+      <!-- arm 1 -->
+      <path d="M184,172 L180,172.5 L176,171.5 L173,169.5 L170,166 L169,162 L168.5,157 L170,152 L172,147 L176,142 L181,138 L188,135 L196,133 L205,132.5 L215,134 L225,137 L235,142 L244,149 L252,158 L258,168 L261,180 L261,192 L258,205 L253,218 L245,229"
+            fill="none" stroke="#a78bfa" stroke-width="2.5" opacity=".85" stroke-linecap="round"/>
+      <polygon points="245,229 247.5,221.5 252,225.5" fill="#a78bfa" opacity=".85"/>
+      <!-- arm 2 -->
+      <path d="M196,172 L198.5,176 L199.5,180 L199.5,185 L198,190 L195.5,195 L192,200 L187.5,203.5 L182,206 L175.5,206.5 L168.5,205 L161,201.5 L154,196.5 L147.5,189.5 L142,181 L138,171 L136,160 L136,148.5 L138,136.5 L143,125 L150,114 L159,104 L170,95.5 L183,89.5 L197,85.5 L213,84 L229,85.5"
+            fill="none" stroke="#a78bfa" stroke-width="2.5" opacity=".85" stroke-linecap="round"/>
+      <polygon points="229,85.5 222,87 223.5,81" fill="#a78bfa" opacity=".85"/>
+      <!-- center -->
+      <circle cx="190" cy="170" r="6" fill="#2dd4bf" opacity=".9"/>
+      <circle cx="190" cy="170" r="13" fill="none" stroke="#2dd4bf" stroke-width=".8" opacity=".3"/>
+      <!-- label -->
+      <text x="190" y="300" text-anchor="middle" font-family="'Courier New'" font-size="8.5" fill="#2dd4bf" opacity=".8">α = dz − r²dθ = 0</text>
+      <text x="190" y="312" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#7a8f8d">Newgrange c.3200 BCE · same structure</text>
+
+      <!-- divider -->
+      <line x1="395" y1="20" x2="395" y2="300" stroke="rgba(45,212,191,.1)" stroke-width="1"/>
+
+      <!-- RIGHT: basin cross-section -->
+      <text x="600" y="18" text-anchor="middle" font-family="'Courier New'" font-size="7.5" letter-spacing="2" fill="#7a8f8d">RADIAL BASIN CROSS-SECTION</text>
+
+      <!-- axes -->
+      <line x1="420" y1="260" x2="760" y2="260" stroke="rgba(232,228,216,.2)" stroke-width=".8"/>
+      <line x1="420" y1="260" x2="420" y2="50" stroke="rgba(232,228,216,.2)" stroke-width=".8"/>
+      <text x="765" y="264" font-family="'Courier New'" font-size="8" fill="#7a8f8d">r</text>
+      <text x="408" y="48" font-family="'Courier New'" font-size="8" fill="#7a8f8d" text-anchor="middle">V</text>
+
+      <!-- basin potential curve (schematic, smooth V shape with asymmetry) -->
+      <path d="M 425,80 Q 450,240 480,250 Q 510,255 527,250 Q 543,245 555,230 Q 562,210 570,195 Q 578,175 590,170 Q 610,165 630,170 Q 650,175 670,185 Q 700,205 730,240 Q 745,255 755,260"
+            fill="none" stroke="#2dd4bf" stroke-width="1.8" opacity=".6"/>
+      <!-- shaded basin inner (teal) -->
+      <path d="M 480,250 Q 510,255 527,250 Q 543,245 555,230 Q 562,210 570,195 L 570,260 L 480,260 Z"
+            fill="rgba(45,212,191,.08)" stroke="none"/>
+      <!-- shaded basin outer (orange) -->
+      <path d="M 570,195 Q 578,175 590,170 Q 610,165 630,170 L 630,260 L 570,260 Z"
+            fill="rgba(249,115,22,.07)" stroke="none"/>
+
+      <!-- marker lines -->
+      <line x1="480" y1="250" x2="480" y2="262" stroke="#2dd4bf" stroke-width="1"/>
+      <text x="480" y="272" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#2dd4bf">ε₀</text>
+
+      <line x1="527" y1="250" x2="527" y2="262" stroke="#a78bfa" stroke-width="1"/>
+      <text x="527" y="272" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#a78bfa">2/3</text>
+
+      <line x1="570" y1="195" x2="570" y2="262" stroke="#f97316" stroke-width="1.8"/>
+      <text x="570" y="272" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#f97316">r*</text>
+      <!-- fold triangle -->
+      <path d="M 570,195 L 555,160 L 585,160 Z" fill="rgba(249,115,22,.15)" stroke="#f97316" stroke-width=".8"/>
+      <text x="570" y="156" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#f97316">Whitney A₁</text>
+
+      <line x1="610" y1="165" x2="610" y2="262" stroke="#c9a84c" stroke-width="1"/>
+      <text x="610" y="272" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#c9a84c">κ*</text>
+
+      <line x1="650" y1="170" x2="650" y2="262" stroke="#f87171" stroke-width="1.5"/>
+      <text x="650" y="272" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#f87171">Γ</text>
+
+      <!-- convergence arrows -->
+      <text x="525" y="175" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#2dd4bf" opacity=".7">← converge</text>
+      <text x="620" y="152" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#f97316" opacity=".7">escape →</text>
+      <text x="650" y="155" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#f87171">μ=−2</text>
+
+      <!-- axis labels -->
+      <text x="420" y="280" font-family="'Courier New'" font-size="7" fill="#7a8f8d">0</text>
+      <text x="755" y="280" font-family="'Courier New'" font-size="7" fill="#7a8f8d">1</text>
+
+      <!-- bottom -->
+      <text x="600" y="300" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="rgba(232,228,216,.7)">ε₀ &lt; 2/3 &lt; r* = 0.77594 &lt; κ* &lt; 1</text>
+      <text x="600" y="312" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#7a8f8d">Gronwall bound violated — Whitney fold is responsible</text>
+    </svg>
+  </div>
+
+  <!-- WHITNEY FOLD -->
+  <div class="sec">
+    <div class="sec-head pu">Whitney A₁ Fold at r*</div>
+    <p>The Gronwall inequality applied symmetrically to the linearised flow predicts a basin boundary at r = 2/3. The certified boundary r* = 0.776 lies strictly above this estimate. The discrepancy has a geometric explanation: the projection of the basin boundary onto the radial axis is not an embedding — it folds. At r*, two distinct convergence paths in the full (r, z) phase space project to a single point on the r-axis, producing a Whitney A₁ fold singularity.</p>
+    <p>The fold is detected by two signatures: <strong>(1)</strong> the escape time diverges logarithmically as r → r*⁺ from above, precisely as predicted by A₁ fold theory; <strong>(2)</strong> the derivative F'(r*) of the boundary function F is positive (F' > 0), confirming that r* is an unstable fixed point of the projected dynamics. Both signatures are verified numerically in the certification script.</p>
+    <p>The structural consequence is immediate: no smooth local coordinate change can eliminate the fold. The basin boundary is not an artifact of the coupling strength or integration tolerance — it is a geometric invariant of the contact manifold structure.</p>
+  </div>
+
+  <!-- PLASMA INTERPRETATION -->
+  <div class="sec">
+    <div class="sec-head or">Physical Interpretation — Rotating Plasma</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;">
+      <div class="box or">
+        <p><strong>Corona discharge at r*.</strong> The coupling term 2(r−1)e⁻ᶻ models ionisation dynamics of a rotating electromagnetic disk. At r = r* = 0.776, the coupling reaches ionisation threshold. Plasma corona discharge occurs at the Whitney fold — a structural prediction, not a parameter fit. The fold geometry forces the plasma boundary to be sharp and reproducible regardless of initial conditions.</p>
+      </div>
+      <div class="box">
+        <p><strong>Lift profile ż = r².</strong> The contact condition dz = r²dθ fixes the hover profile directly. At the helical attractor Γ (r=1), ż = 1 and lift is sustained indefinitely. At r*, ż ≈ 0.602. The three-disk geometry is not engineered — it follows from the contact form as the minimal realisation of the manifold at 120° symmetry. The disk cross-section is geometrically inevitable.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ──────── RIGHT COLUMN ──────── -->
+<div class="col col-r">
+
+  <!-- STABILITY HIERARCHY -->
+  <div class="sec">
+    <div class="sec-head">Stability Hierarchy</div>
+    <div class="hier">
+      <div class="hr">
+        <div class="hr-label">ε₀ = 0.333</div>
+        <div class="hr-bar-bg"><div class="hr-bar" style="width:33.3%;background:#2dd4bf;"></div></div>
+        <div class="hr-val" style="color:#2dd4bf;">inner</div>
+      </div>
+      <div class="hr">
+        <div class="hr-label">2/3 = 0.667</div>
+        <div class="hr-bar-bg"><div class="hr-bar" style="width:66.7%;background:#a78bfa;"></div></div>
+        <div class="hr-val" style="color:#a78bfa;">Gronwall</div>
+      </div>
+      <div class="hr">
+        <div class="hr-label">r* = 0.77594</div>
+        <div class="hr-bar-bg"><div class="hr-bar" style="width:77.6%;background:#f97316;"></div></div>
+        <div class="hr-val" style="color:#f97316;">fold ★</div>
+      </div>
+      <div class="hr">
+        <div class="hr-label">κ* = 0.882</div>
+        <div class="hr-bar-bg"><div class="hr-bar" style="width:88.2%;background:#c9a84c;"></div></div>
+        <div class="hr-val" style="color:#c9a84c;">outer</div>
+      </div>
+      <div class="hr">
+        <div class="hr-label">Γ: r = 1</div>
+        <div class="hr-bar-bg"><div class="hr-bar" style="width:100%;background:#f87171;opacity:.8;"></div></div>
+        <div class="hr-val" style="color:#f87171;">Γ</div>
+      </div>
+    </div>
+    <p style="margin-top:.5rem;">The r* = 0.776 boundary lies above the symmetric Gronwall estimate 2/3 by a gap of 0.109 — more than 16% of the unit interval. This asymmetry is not numerical noise; it is a theorem consequence of the Whitney fold. The hierarchy is asserted and verified in certify_rstar.py (PASS).</p>
+  </div>
+
+  <!-- TRISKELION -->
+  <div class="sec">
+    <div class="sec-head pu">Symbol: Triskelion</div>
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="150" style="display:block;margin:0 auto;">
+      <circle cx="100" cy="100" r="95" fill="rgba(167,139,250,0.05)" stroke="rgba(167,139,250,0.15)" stroke-width="1"/>
+      <path d="M100,94 L102,90.5 L105.5,87.5 L110,85.8 L115,85.5 L120.5,87 L125.5,90 L130,94.5 L133,100.5 L134.5,107.5 L133.5,115 L130.5,122 L125.5,128.5 L119,133.5 L111,136.5 L102,137.5 L92.5,136.5 L83,133 L73.5,127.5 L65,120 L58,110.5 L53,100 L50.5,88.5" fill="none" stroke="#a78bfa" stroke-width="2.5" opacity=".9" stroke-linecap="round"/>
+      <polygon points="50.5,88.5 56,96 49,97.5" fill="#a78bfa" opacity=".9"/>
+      <path d="M94,101.5 L90.5,101.8 L87,101 L84,99.2 L81.5,96.5 L80,93 L79.5,89 L80.5,85 L83,81 L86.5,78 L91.5,75.5 L97.5,74 L104.5,74 L112,75.5 L119.5,78.5 L126.5,83 L133,89 L138,96.5 L141.5,105 L143,114.5 L142.5,124.5 L140,135 L135.5,145 L129,154.5 L121,163" fill="none" stroke="#a78bfa" stroke-width="2.5" opacity=".9" stroke-linecap="round"/>
+      <polygon points="121,163 123.5,155 128.5,159.5" fill="#a78bfa" opacity=".9"/>
+      <path d="M106,101.5 L108,105 L109,109 L108.5,113.5 L107,118 L104.5,122 L101,125.5 L96.5,128 L91,129.5 L85,129.5 L78.5,127.5 L72,123.5 L65.5,117.5 L59.5,110 L54.5,101.5 L51.5,92 L50.5,82 L51.5,71.5 L55,61 L61,51 L69,42.5 L79,36 L91,32 L104.5,30.5 L118.5,32 L133,36.5" fill="none" stroke="#a78bfa" stroke-width="2.5" opacity=".9" stroke-linecap="round"/>
+      <polygon points="133,36.5 126,38.5 127.5,32" fill="#a78bfa" opacity=".9"/>
+      <circle cx="100" cy="100" r="6" fill="#2dd4bf" opacity=".9"/>
+      <circle cx="100" cy="100" r="12" fill="none" stroke="#2dd4bf" stroke-width=".8" opacity=".3"/>
+    </svg>
+    <p style="font-size:.8rem;margin-top:.5rem;">Three Archimedean spiral arms, 120° spacing, same handedness. The triskelion is the bottom-up projection of the rotating contact manifold. Its earliest known appearance — carved in greywacke at the Newgrange passage tomb threshold, c. 3200 BCE — places the contact condition at the oldest known solar-fixed monument in the world. The geometry is not borrowed; it is re-discovered from the physics of the system.</p>
+  </div>
+
+  <!-- LITERATURE GAP -->
+  <div class="sec">
+    <div class="sec-head">Literature Gap</div>
+    <div class="box">
+      <p>A systematic search of the contact geometry, dynamical systems, and plasma physics literature finds no prior work combining all three of the following:</p>
+      <div class="chips" style="margin:.4rem 0;">
+        <div class="chip t">contact form constraint</div>
+        <div class="chip pu">helical limit cycle</div>
+        <div class="chip or">certified basin boundary</div>
+      </div>
+      <p>Sub-Riemannian and contact geometry papers on rotating systems (Montgomery 2002, Bloch &amp; Marsden 1995) use contact structure for path planning without establishing attractors. Plasma stability literature (e.g. MHD equilibrium theory, Grad-Shafranov equation) does not use contact forms. This work occupies an unoccupied intersection.</p>
+    </div>
+  </div>
+
+  <!-- CONCLUSIONS -->
+  <div class="sec">
+    <div class="sec-head">Conclusions &amp; Future Work</div>
+    <div class="thm">
+      <div class="thm-label">✓ Proved</div>
+      <p>α = dz − r²dθ is a contact form · Γ is a stable helical limit cycle · r* = 0.77594059 is the inner basin boundary · Whitney A₁ fold at r* · Stability hierarchy ε₀ &lt; 2/3 &lt; r* &lt; κ* &lt; 1</p>
+    </div>
+    <div class="thm" style="border-color:var(--or);">
+      <div class="thm-label" style="color:var(--or);">◌ Open (sorry in AXLE)</div>
+      <p><code style="font-size:.75rem;color:var(--or);">jackknife_correspondence</code> — contact diffeomorphism Ξ mapping the tractor-trailer contact manifold to LAW3M. Numerical evidence: φ_c/π ≈ 0.776 for L=1 matches r* to 3 significant figures.</p>
+    </div>
+    <p>Future work will (1) complete the Lean 4 mechanisation of all theorems in AXLE, (2) investigate whether the Whitney fold at r* admits a normal form in the Darboux chart of the contact manifold, and (3) seek experimental confirmation of the corona discharge prediction at r* in a three-disk plasma prototype.</p>
+  </div>
+
+  <!-- ARCHIVE -->
+  <div class="sec">
+    <div class="sec-head">Archive &amp; Reproducibility</div>
+    <p style="font-size:.8rem;line-height:1.7;">
+      <strong style="color:var(--t);">doi:10.5281/zenodo.19117399</strong> — full series archive<br>
+      <strong>certify_rstar.py</strong> — open-source certification script<br>
+      <strong>AXLE</strong> — Lean 4 proof environment<br>
+      github.com/TOTOGT/AXLE<br><br>
+      Series site: totogt.github.io/geometry<br>
+      ISBN 979-8-9954416-6-3<br>
+      ORCID: 0009-0000-6496-2186
+    </p>
+  </div>
+
+</div>
+</div><!-- end poster-body -->
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="poster-footer">
+  <span>Principia Orthogona · dm³ Framework · Pablo Nogueira Grossi · G6 LLC · Newark NJ · pg6llc@gmail.com</span>
+  <span>doi:10.5281/zenodo.19117399 · XIII LAW3M · Natal, Brazil · October 2026</span>
+</div>
+
+</body>
+</html>

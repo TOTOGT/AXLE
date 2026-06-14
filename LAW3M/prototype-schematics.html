@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prototype Schematics — LAW3M Three-Disk Rotor & Jackknife Rig</title>
+<style>
+:root{
+  --bg:#04080c; --bg2:#080f18; --bg3:#0c1520;
+  --t:#38bdf8; --gd:#c9a84c; --gr:#34d399; --or:#f97316; --re:#f87171; --pu:#a78bfa;
+  --text:#e8e4d8; --dim:#7a8f9d; --rule:rgba(56,189,248,0.12);
+  --serif:Georgia,serif;
+  --sans:"Helvetica Neue",Arial,sans-serif;
+  --mono:"Courier New",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.7;}
+
+/* ─── NAV ─── */
+nav{background:rgba(4,8,12,.96);border-bottom:1px solid var(--rule);
+  padding:.75rem 2rem;display:flex;gap:2rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;font-size:.7rem;font-family:var(--mono);letter-spacing:.08em;}
+nav a{color:var(--dim);text-decoration:none;}
+nav a:hover{color:var(--t);}
+nav .sep{color:rgba(56,189,248,.2);}
+
+/* ─── COVER ─── */
+.cover{
+  background:linear-gradient(135deg,#060d15 0%,#0a1828 100%);
+  border-bottom:2px solid rgba(56,189,248,.15);
+  padding:2.5rem 3rem;
+}
+.cover-tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;color:var(--gd);margin-bottom:1rem;}
+.cover-title{font-size:2rem;font-weight:700;line-height:1.2;margin-bottom:.6rem;}
+.cover-title em{color:var(--t);font-style:normal;}
+.cover-sub{font-size:.9rem;color:var(--dim);margin-bottom:1.5rem;}
+.cover-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;max-width:900px;}
+.cover-card{background:rgba(56,189,248,.05);border:1px solid var(--rule);border-radius:6px;padding:1rem 1.2rem;}
+.cover-card h3{font-size:.78rem;font-family:var(--mono);color:var(--t);letter-spacing:.1em;margin-bottom:.4rem;}
+.cover-card p{font-size:.82rem;color:rgba(232,228,216,.75);}
+
+/* ─── SECTION ─── */
+.section{padding:2.5rem 3rem;border-bottom:1px solid var(--rule);}
+.section-header{margin-bottom:1.8rem;}
+.section-tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;color:var(--gd);text-transform:uppercase;margin-bottom:.5rem;}
+.section-title{font-size:1.5rem;font-weight:700;color:var(--text);}
+.section-title em{color:var(--t);font-style:normal;}
+.section-desc{font-size:.88rem;color:var(--dim);margin-top:.3rem;max-width:800px;line-height:1.7;}
+
+/* ─── DRAWING PANEL ─── */
+.drawing-panel{
+  background:var(--bg2);border:1px solid var(--rule);border-radius:6px;
+  padding:1.2rem;margin-bottom:1.5rem;
+}
+.drawing-label{font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:.8rem;border-bottom:1px solid var(--rule);padding-bottom:.4rem;}
+
+/* ─── TWO-COL LAYOUT ─── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+
+/* ─── TABLES ─── */
+table{width:100%;border-collapse:collapse;font-size:.82rem;margin:.5rem 0;}
+th{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);padding:.5rem .7rem;border-bottom:1px solid var(--rule);text-align:left;
+  background:rgba(56,189,248,.03);}
+td{padding:.5rem .7rem;border-bottom:1px solid rgba(56,189,248,.06);color:rgba(232,228,216,.85);vertical-align:top;}
+td:first-child{font-family:var(--mono);font-size:.78rem;color:var(--t);}
+tr:last-child td{border-bottom:none;}
+
+/* ─── SPEC ITEMS ─── */
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.8rem 0;}
+.spec-item{background:var(--bg3);border:1px solid var(--rule);border-radius:4px;padding:.6rem .8rem;}
+.spec-item .sk{font-family:var(--mono);font-size:.6rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;}
+.spec-item .sv{font-family:var(--mono);font-size:.95rem;color:var(--t);}
+.spec-item.or .sv{color:var(--or);}
+.spec-item.gr .sv{color:var(--gr);}
+.spec-item.gd .sv{color:var(--gd);}
+
+/* ─── STEP BOXES ─── */
+.steps{display:flex;flex-direction:column;gap:.5rem;margin:.8rem 0;}
+.step{display:grid;grid-template-columns:36px 1fr;gap:.7rem;align-items:start;}
+.step-num{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);
+  border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.75rem;color:var(--t);flex-shrink:0;margin-top:.1rem;}
+.step-body strong{display:block;font-size:.85rem;color:var(--text);margin-bottom:.15rem;}
+.step-body p{font-size:.8rem;color:rgba(232,228,216,.75);margin:0;}
+
+/* ─── WARN / NOTE ─── */
+.warn{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.2);border-radius:4px;
+  padding:.7rem 1rem;font-size:.82rem;color:rgba(232,228,216,.8);margin:.8rem 0;}
+.warn strong{color:var(--or);}
+.note{background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.15);border-radius:4px;
+  padding:.7rem 1rem;font-size:.82rem;color:rgba(232,228,216,.8);margin:.8rem 0;}
+.note strong{color:var(--t);}
+
+/* ─── MATH ─── */
+.eq{font-family:var(--mono);font-size:.82rem;color:var(--t);
+  background:rgba(56,189,248,.06);border-left:2.5px solid var(--t);
+  padding:.4rem .8rem;margin:.35rem 0;border-radius:0 3px 3px 0;}
+.eq.or{color:var(--or);background:rgba(249,115,22,.06);border-color:var(--or);}
+.eq.gr{color:var(--gr);background:rgba(52,211,153,.06);border-color:var(--gr);}
+
+/* ─── LEGEND ─── */
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0;}
+.leg-item{display:flex;align-items:center;gap:.35rem;font-family:var(--mono);font-size:.65rem;color:var(--dim);}
+.leg-color{width:14px;height:4px;border-radius:2px;}
+
+/* SVG baseline */
+svg{display:block;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#cover">Cover</a>
+  <span class="sep">|</span>
+  <a href="#rotor">THREE-DISK ROTOR</a>
+  <a href="#rotor-top">Top View</a>
+  <a href="#rotor-side">Cross-Section</a>
+  <a href="#rotor-exploded">Exploded</a>
+  <a href="#rotor-bom">BOM</a>
+  <a href="#rotor-assembly">Assembly</a>
+  <span class="sep">|</span>
+  <a href="#jackknife">JACKKNIFE RIG</a>
+  <a href="#jk-top">Top View</a>
+  <a href="#jk-electronics">Electronics</a>
+  <a href="#jk-bom">BOM</a>
+  <a href="#jk-assembly">Assembly</a>
+  <span class="sep">|</span>
+  <a href="abstract-law3m-2026.html">LAW3M Abstract</a>
+  <a href="poster-space-plasma.html">Space Poster</a>
+  <a href="poster-earth-transport.html">Earth Poster</a>
+</nav>
+
+<!-- ══════════════════════════════════════════ COVER ══════════════════════════════════════════ -->
+<div class="cover" id="cover">
+  <div class="cover-tag">LAW3M Prototype Package · G6 LLC · Rev. A · June 2026</div>
+  <div class="cover-title">Prototype Schematics:<br><em>Three-Disk Rotor & Jackknife Demo Rig</em></div>
+  <div class="cover-sub">Build-ready engineering drawings · BOM · Assembly sequences · doi:10.5281/zenodo.19117399</div>
+  <div class="cover-grid">
+    <div class="cover-card">
+      <h3>Device 1 — Three-Disk Plasma Rotor</h3>
+      <p>Three aluminum disks at 0°/120°/240° azimuthal positions, helically stacked along z-axis. Driven by three independent brushless DC motors. Contact manifold: α = dz − r²dθ. Corona ring at r* = 155mm radius. High-voltage option for plasma demonstration.</p>
+    </div>
+    <div class="cover-card">
+      <h3>Device 2 — Jackknife Demo Rig</h3>
+      <p>1:20 scale tractor-trailer. Servo-controlled steering, rotary encoder at hitch joint measuring φ. Arduino Mega controller with real-time Whitney fold detection. LED and buzzer alarm at φ_c = 0.776π. Suitable for conference and classroom demonstration.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ ROTOR ══════════════════════════════════════════ -->
+<div class="section" id="rotor">
+  <div class="section-header">
+    <div class="section-tag">Device 1 of 2 · Contact Manifold Realisation</div>
+    <div class="section-title"><em>Three-Disk Plasma Rotor</em></div>
+    <div class="section-desc">Physical realisation of the contact manifold (ℝ³, dz − r²dθ). Three disks at 0°, 120°, 240° azimuthal positions, vertically offset by 100mm each, all rotating in the same sense (θ̇ = 1). The triskelion viewed from below is the ground-state solution. Corona discharge demonstrated at r* = 0.776 × 200mm = 155mm radius via corona ring electrodes.</div>
+  </div>
+
+  <!-- KEY SPECS -->
+  <div class="spec-grid">
+    <div class="spec-item"><div class="sk">Disk diameter</div><div class="sv">200 mm</div></div>
+    <div class="spec-item"><div class="sk">Disk thickness</div><div class="sv">6 mm</div></div>
+    <div class="spec-item"><div class="sk">Disk material</div><div class="sv">Al 6061-T6</div></div>
+    <div class="spec-item or"><div class="sk">r* corona radius</div><div class="sv">155.2 mm</div></div>
+    <div class="spec-item or"><div class="sk">r* / R</div><div class="sv">0.77594</div></div>
+    <div class="spec-item"><div class="sk">z-spacing (disk c/c)</div><div class="sv">100 mm</div></div>
+    <div class="spec-item"><div class="sk">Motor (each)</div><div class="sv">BLDC 24V 150W</div></div>
+    <div class="spec-item"><div class="sk">Nominal RPM</div><div class="sv">300–3000 rpm</div></div>
+    <div class="spec-item gr"><div class="sk">Attractor condition</div><div class="sv">r = 200 mm</div></div>
+    <div class="spec-item"><div class="sk">Frame footprint</div><div class="sv">400 × 400 mm</div></div>
+    <div class="spec-item"><div class="sk">Total height</div><div class="sv">380 mm</div></div>
+    <div class="spec-item gd"><div class="sk">HV option</div><div class="sv">10–30 kV DC</div></div>
+  </div>
+
+  <!-- TOP VIEW -->
+  <div class="drawing-panel" id="rotor-top">
+    <div class="drawing-label">Drawing R-01 · Top View / Triskelion · Scale 1:4 (50mm = 12.5mm on drawing)</div>
+    <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <rect width="900" height="520" fill="#06090f" rx="4"/>
+
+      <!-- drawing border -->
+      <rect x="8" y="8" width="884" height="504" fill="none" stroke="rgba(56,189,248,.2)" stroke-width=".8"/>
+
+      <!-- title block bottom right -->
+      <rect x="640" y="440" width="252" height="64" fill="rgba(8,15,24,.8)" stroke="rgba(56,189,248,.2)" stroke-width=".8"/>
+      <text x="648" y="456" font-family="'Courier New'" font-size="7" fill="#7a8f9d">PROJECT: LAW3M THREE-DISK ROTOR</text>
+      <text x="648" y="466" font-family="'Courier New'" font-size="7" fill="#7a8f9d">DRAWING: R-01 TOP VIEW</text>
+      <text x="648" y="476" font-family="'Courier New'" font-size="7" fill="#7a8f9d">SCALE: 1:4 · UNITS: mm</text>
+      <text x="648" y="486" font-family="'Courier New'" font-size="7" fill="#7a8f9d">REV: A · DATE: JUN 2026</text>
+      <text x="648" y="496" font-family="'Courier New'" font-size="7" fill="#7a8f9d">G6 LLC · doi:10.5281/zenodo.19117399</text>
+
+      <!-- CENTER POINT -->
+      <circle cx="330" cy="250" r="3" fill="#38bdf8" opacity=".9"/>
+      <!-- crosshair -->
+      <line x1="300" y1="250" x2="360" y2="250" stroke="rgba(56,189,248,.3)" stroke-width=".6" stroke-dasharray="4 2"/>
+      <line x1="330" y1="220" x2="330" y2="280" stroke="rgba(56,189,248,.3)" stroke-width=".6" stroke-dasharray="4 2"/>
+      <text x="336" y="248" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">Z-AXIS</text>
+
+      <!-- OUTER FRAME circle (400mm radius → 100px at 1:4) -->
+      <circle cx="330" cy="250" r="100" fill="none" stroke="#7a8f9d" stroke-width=".8" stroke-dasharray="5 3" opacity=".5"/>
+      <!-- Frame square 400x400 = 100x100 at 1:4 -->
+      <rect x="230" y="150" width="200" height="200" fill="none" stroke="#7a8f9d" stroke-width=".8" stroke-dasharray="3 4" opacity=".4"/>
+
+      <!-- r* ring: 155mm → 38.75px at 1:4 -->
+      <circle cx="330" cy="250" r="38.75" fill="none" stroke="#f97316" stroke-width="1.4" stroke-dasharray="4 2.5" opacity=".8"/>
+      <text x="372" y="218" font-family="'Courier New'" font-size="7.5" fill="#f97316">r* = 155.2mm</text>
+      <text x="372" y="228" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".7">corona ring</text>
+
+      <!-- Attractor ring: 200mm → 50px -->
+      <circle cx="330" cy="250" r="50" fill="none" stroke="#34d399" stroke-width="1.2" stroke-dasharray="6 3" opacity=".5"/>
+      <text x="382" y="252" font-family="'Courier New'" font-size="7.5" fill="#34d399" opacity=".7">R=200mm (Γ)</text>
+
+      <!-- ─── DISK 1 at azimuth 0° (top) ─── -->
+      <!-- disk center at 0°: (330, 250-65) = (330, 185) — radius from z-axis = 65mm at 1:4 → actually disk is centered on z-axis, just rotated -->
+      <!-- The disks are centered on the z-axis, not offset. They are large disks (200mm diam) centered at z-axis. -->
+      <!-- Disk 1 outline, top view -->
+      <circle cx="330" cy="250" r="50" fill="rgba(56,189,248,.06)" stroke="#38bdf8" stroke-width="1.5" opacity=".8"/>
+      <!-- Disk 1 start angle marker (0°) -->
+      <line x1="330" y1="250" x2="330" y2="200" stroke="#38bdf8" stroke-width="1.2" opacity=".7"/>
+      <text x="322" y="195" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">D1 · 0°</text>
+      <!-- motor shaft stub top -->
+      <rect x="326" y="246" width="8" height="8" rx="1" fill="#38bdf8" opacity=".3" stroke="#38bdf8" stroke-width=".8"/>
+
+      <!-- Disk 1 dimensions -->
+      <!-- diameter: 400mm, at 1:4 = 100px. Arrow across full diameter -->
+      <line x1="230" y1="460" x2="430" y2="460" stroke="rgba(56,189,248,.4)" stroke-width=".8" marker-end="url(#arrd)" marker-start="url(#arrd)"/>
+      <text x="310" y="472" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#38bdf8">Ø 400 mm (frame)</text>
+
+      <!-- Arrow markers -->
+      <defs>
+        <marker id="arrd" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(56,189,248,.6)" stroke-width=".8"/>
+        </marker>
+        <marker id="arror" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(249,115,22,.6)" stroke-width=".8"/>
+        </marker>
+        <marker id="arrgr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(52,211,153,.6)" stroke-width=".8"/>
+        </marker>
+      </defs>
+
+      <!-- Disk diameter dimension -->
+      <line x1="280" y1="438" x2="380" y2="438" stroke="rgba(52,211,153,.4)" stroke-width=".8" marker-end="url(#arrgr)" marker-start="url(#arrgr)"/>
+      <text x="330" y="448" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#34d399">Ø 200 mm (disk)</text>
+
+      <!-- Motor positions at 120° on pitch circle R=140mm → 35px at 1:4 -->
+      <!-- Motor 1 at 90° (top): 330, 250-35 = 330, 215 -->
+      <circle cx="330" cy="215" r="10" fill="rgba(201,168,76,.15)" stroke="#c9a84c" stroke-width="1.2"/>
+      <text x="330" y="218.5" text-anchor="middle" font-family="'Courier New'" font-size="6.5" fill="#c9a84c">M1</text>
+      <!-- Motor 2 at 210° (bottom-left): 330 + 35*cos(210°), 250 + 35*sin(210°) = 330-30.3, 250+17.5 = 300,268 -->
+      <circle cx="300" cy="280" r="10" fill="rgba(201,168,76,.15)" stroke="#c9a84c" stroke-width="1.2"/>
+      <text x="300" y="283.5" text-anchor="middle" font-family="'Courier New'" font-size="6.5" fill="#c9a84c">M2</text>
+      <!-- Motor 3 at 330°: 330+30.3, 250+17.5 = 360,268 -->
+      <circle cx="360" cy="280" r="10" fill="rgba(201,168,76,.15)" stroke="#c9a84c" stroke-width="1.2"/>
+      <text x="360" y="283.5" text-anchor="middle" font-family="'Courier New'" font-size="6.5" fill="#c9a84c">M3</text>
+
+      <!-- Motor pitch circle -->
+      <circle cx="330" cy="250" r="35" fill="none" stroke="rgba(201,168,76,.2)" stroke-width=".7" stroke-dasharray="2 3"/>
+      <text x="370" y="250" font-family="'Courier New'" font-size="6.5" fill="#c9a84c" opacity=".7">motor PCD = 280mm</text>
+
+      <!-- 120° angle arcs -->
+      <path d="M 330,215 A 35,35 0 0,1 360,280" fill="none" stroke="rgba(201,168,76,.3)" stroke-width=".8"/>
+      <text x="358" y="245" font-family="'Courier New'" font-size="7" fill="#c9a84c" opacity=".6">120°</text>
+
+      <!-- Bolt circle for disk mounting: R=85mm → 21.25px -->
+      <circle cx="330" cy="250" r="21.25" fill="none" stroke="rgba(56,189,248,.2)" stroke-width=".6" stroke-dasharray="2 2"/>
+      <!-- 6 bolt holes -->
+      <circle cx="330" cy="228.75" r="2" fill="none" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <circle cx="348.4" cy="241.4" r="2" fill="none" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <circle cx="348.4" cy="258.6" r="2" fill="none" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <circle cx="330" cy="271.25" r="2" fill="none" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <circle cx="311.6" cy="258.6" r="2" fill="none" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <circle cx="311.6" cy="241.4" r="2" fill="none" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <text x="356" y="233" font-family="'Courier New'" font-size="6.5" fill="rgba(56,189,248,.5)">M5×0.8 · 6 bolts</text>
+      <text x="356" y="241" font-family="'Courier New'" font-size="6.5" fill="rgba(56,189,248,.5)">PCD 170mm</text>
+
+      <!-- Rotation arrow (CW when viewed from top, CCW from below = triskelion sense) -->
+      <path d="M 330,202 A 48,48 0 0,1 378,250" fill="none" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrgr)" opacity=".7"/>
+      <text x="383" y="238" font-family="'Courier New'" font-size="7.5" fill="#34d399">θ̇ = 1</text>
+      <text x="383" y="248" font-family="'Courier New'" font-size="7" fill="#34d399" opacity=".7">CCW top</text>
+
+      <!-- LEGEND (right panel) -->
+      <rect x="500" y="50" width="380" height="360" fill="rgba(8,15,24,.6)" stroke="rgba(56,189,248,.12)" rx="4"/>
+      <text x="520" y="70" font-family="'Courier New'" font-size="7.5" letter-spacing="2" fill="#7a8f9d">NOTES — DRAWING R-01</text>
+      <line x1="510" y1="75" x2="870" y2="75" stroke="rgba(56,189,248,.1)" stroke-width=".6"/>
+
+      <!-- Notes text -->
+      <text x="520" y="92" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">1. ALL DIMENSIONS IN MILLIMETRES (mm)</text>
+      <text x="520" y="106" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Tolerances unless noted: ±0.5mm linear, ±0.5° angular</text>
+
+      <text x="520" y="124" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">2. DISK GEOMETRY</text>
+      <text x="520" y="138" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Disk Ø: 200mm ± 0.1mm (turned, not cut)</text>
+      <text x="520" y="150" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Corona ring groove: r* = 155.2 ± 0.5mm from center</text>
+      <text x="520" y="162" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Groove depth: 1.5mm, width: 2mm (fits 2mm copper wire)</text>
+      <text x="520" y="174" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Surface finish: 0.8 Ra on face (high-voltage option: mirror)</text>
+
+      <text x="520" y="192" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">3. MOTORS</text>
+      <text x="520" y="206" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   3× Brushless DC, 24V, 150W minimum, 8mm shaft</text>
+      <text x="520" y="218" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   All motors same make/model for uniform θ̇</text>
+      <text x="520" y="230" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Pitch circle: 280mm PCD, 120° spacing</text>
+      <text x="520" y="242" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Drive: belt (HTD 3M) or direct-couple via flex coupling</text>
+
+      <text x="520" y="260" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">4. CENTRAL BEARING</text>
+      <text x="520" y="274" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Thrust + radial: 6305 deep-groove ball bearing × 3</text>
+      <text x="520" y="286" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Inner bore: 25mm, outer: 62mm, width: 17mm</text>
+      <text x="520" y="298" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Grease-sealed (2RS) — no maintenance during operation</text>
+
+      <text x="520" y="316" font-family="'Courier New'" font-size="7.5" fill="#f97316">5. SAFETY — HIGH VOLTAGE OPTION</text>
+      <text x="520" y="330" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Corona ring: 10–30kV DC from Glassman HV supply</text>
+      <text x="520" y="342" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Isolation: 40mm air gap minimum around HV conductors</text>
+      <text x="520" y="354" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Ground plane: aluminum base plate, hard-wired earth</text>
+      <text x="520" y="366" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Interlock: acrylic safety cage (5mm), must close before HV</text>
+
+      <text x="520" y="384" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">6. CONTACT GEOMETRY</text>
+      <text x="520" y="398" font-family="'Courier New'" font-size="7" fill="rgba(56,189,248,.8)">   α = dz − r²dθ = 0 at unit attractor</text>
+      <text x="520" y="410" font-family="'Courier New'" font-size="7" fill="rgba(56,189,248,.8)">   r* = 0.77594 × 200mm = 155.2mm (corona ring position)</text>
+
+    </svg>
+  </div>
+
+  <!-- SIDE CROSS-SECTION -->
+  <div class="drawing-panel" id="rotor-side">
+    <div class="drawing-label">Drawing R-02 · Side Cross-Section (Section A–A) · Scale 1:4</div>
+    <svg viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <rect width="900" height="480" fill="#06090f" rx="4"/>
+      <rect x="8" y="8" width="884" height="464" fill="none" stroke="rgba(56,189,248,.2)" stroke-width=".8"/>
+
+      <!-- title block -->
+      <rect x="640" y="400" width="252" height="68" fill="rgba(8,15,24,.8)" stroke="rgba(56,189,248,.2)" stroke-width=".8"/>
+      <text x="648" y="416" font-family="'Courier New'" font-size="7" fill="#7a8f9d">DRAWING: R-02 SIDE CROSS-SECTION (A–A)</text>
+      <text x="648" y="426" font-family="'Courier New'" font-size="7" fill="#7a8f9d">SCALE: 1:4 · ALL DIMS IN mm</text>
+      <text x="648" y="436" font-family="'Courier New'" font-size="7" fill="#7a8f9d">MATERIAL: AL 6061-T6 UNLESS NOTED</text>
+      <text x="648" y="446" font-family="'Courier New'" font-size="7" fill="#7a8f9d">REV: A · G6 LLC · JUN 2026</text>
+      <text x="648" y="456" font-family="'Courier New'" font-size="7" fill="#7a8f9d">TOLERANCE: ±0.5mm / ±0.5°</text>
+      <text x="648" y="466" font-family="'Courier New'" font-size="7" fill="#7a8f9d">SURFACE FINISH: 1.6 Ra (0.8 Ra ON FACES)</text>
+
+      <!-- Z-AXIS (vertical centerline) -->
+      <line x1="340" y1="30" x2="340" y2="430" stroke="rgba(56,189,248,.3)" stroke-width=".8" stroke-dasharray="6 3"/>
+      <text x="346" y="38" font-family="'Courier New'" font-size="8" fill="#38bdf8">Z</text>
+      <text x="346" y="48" font-family="'Courier New'" font-size="7" fill="#38bdf8" opacity=".6">axis</text>
+
+      <!-- BASE PLATE: 400mm wide → 100px, 20mm thick → 5px -->
+      <rect x="240" y="400" width="200" height="10" fill="rgba(56,189,248,.15)" stroke="#38bdf8" stroke-width="1.2"/>
+      <text x="460" y="409" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">BASE PLATE: 400×400×20mm Al 6061</text>
+      <!-- base plate dimension -->
+      <line x1="240" y1="415" x2="440" y2="415" stroke="rgba(56,189,248,.4)" stroke-width=".7" marker-end="url(#arrd2)" marker-start="url(#arrd2)"/>
+      <text x="340" y="425" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">400 mm</text>
+
+      <defs>
+        <marker id="arrd2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(56,189,248,.5)" stroke-width=".8"/>
+        </marker>
+        <marker id="arror2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(249,115,22,.6)" stroke-width=".8"/>
+        </marker>
+        <marker id="arrgr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(52,211,153,.5)" stroke-width=".8"/>
+        </marker>
+      </defs>
+
+      <!-- CENTRAL SHAFT: 25mm diam → 6.25px radius, runs from base to top -->
+      <rect x="336.9" y="50" width="6.25" height="350" fill="rgba(201,168,76,.25)" stroke="#c9a84c" stroke-width="1"/>
+      <text x="460" y="60" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">CENTRAL SHAFT: Ø25mm × 380mm stainless 304</text>
+
+      <!-- DISK 1 at z=0 (bottom), height from base = 40mm → 10px from top of base -->
+      <!-- base top at y=400, disk 1 center at y=400-10-3=387 (10px spacer + 6mm/2 disk half) -->
+      <!-- Let's say: base top at y=400. Disks at z=50mm,150mm,250mm from base = y=387.5, 362.5, 337.5 (×0.25) -->
+      <!-- z=50mm → y = 400 - 50*0.25 = 387.5 center of disk, thickness 6mm → 1.5px each side -->
+      <rect x="240" y="385.5" width="200" height="4.5" rx="1" fill="rgba(56,189,248,.2)" stroke="#38bdf8" stroke-width="1.5"/>
+      <!-- rotation dir arrow on disk 1 -->
+      <text x="460" y="390" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">DISK 1 (D1): z = 50mm · Ø200×6mm Al · azimuth 0°</text>
+
+      <!-- z=150mm → y = 400 - 150*0.25 = 362.5 -->
+      <rect x="240" y="360" width="200" height="4.5" rx="1" fill="rgba(167,139,250,.2)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="460" y="364" font-family="'Courier New'" font-size="7.5" fill="#a78bfa">DISK 2 (D2): z = 150mm · Ø200×6mm Al · azimuth 120°</text>
+
+      <!-- z=250mm → y = 400 - 250*0.25 = 337.5 -->
+      <rect x="240" y="334.5" width="200" height="4.5" rx="1" fill="rgba(52,211,153,.2)" stroke="#34d399" stroke-width="1.5"/>
+      <text x="460" y="339" font-family="'Courier New'" font-size="7.5" fill="#34d399">DISK 3 (D3): z = 250mm · Ø200×6mm Al · azimuth 240°</text>
+
+      <!-- z-spacing dimension (between D1 and D2) -->
+      <line x1="226" y1="387.5" x2="226" y2="362.5" stroke="rgba(56,189,248,.4)" stroke-width=".7" marker-end="url(#arrd2)" marker-start="url(#arrd2)"/>
+      <text x="178" y="378" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">100mm</text>
+      <text x="178" y="388" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#38bdf8" opacity=".6">z-pitch</text>
+
+      <!-- D2 to D3 spacing -->
+      <line x1="226" y1="362.5" x2="226" y2="337" stroke="rgba(56,189,248,.4)" stroke-width=".7" marker-end="url(#arrd2)" marker-start="url(#arrd2)"/>
+      <text x="178" y="352" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">100mm</text>
+
+      <!-- BEARINGS on shaft (3x, one per disk) -->
+      <!-- Bearing 1 at D1 position y=387.5 -->
+      <rect x="333" y="382" width="14" height="15" rx="2" fill="rgba(201,168,76,.2)" stroke="#c9a84c" stroke-width="1.2"/>
+      <text x="310" y="393" text-anchor="middle" font-family="'Courier New'" font-size="6.5" fill="#c9a84c">6305</text>
+      <!-- Bearing 2 -->
+      <rect x="333" y="357" width="14" height="15" rx="2" fill="rgba(201,168,76,.2)" stroke="#c9a84c" stroke-width="1.2"/>
+      <!-- Bearing 3 -->
+      <rect x="333" y="331" width="14" height="15" rx="2" fill="rgba(201,168,76,.2)" stroke="#c9a84c" stroke-width="1.2"/>
+
+      <!-- CORONA RINGS on each disk: r* = 155.2mm → 38.8px from center. Mark on disk cross section -->
+      <!-- Disk 1: center at x=340, y=387.75; corona at 340±38.8 = 301.2 and 378.8 -->
+      <circle cx="301.2" cy="387.75" r="2" fill="#f97316" opacity=".8"/>
+      <circle cx="378.8" cy="387.75" r="2" fill="#f97316" opacity=".8"/>
+      <text x="380" y="384" font-family="'Courier New'" font-size="7" fill="#f97316">r*</text>
+      <circle cx="301.2" cy="362.25" r="2" fill="#f97316" opacity=".8"/>
+      <circle cx="378.8" cy="362.25" r="2" fill="#f97316" opacity=".8"/>
+      <circle cx="301.2" cy="336.75" r="2" fill="#f97316" opacity=".8"/>
+      <circle cx="378.8" cy="336.75" r="2" fill="#f97316" opacity=".8"/>
+      <!-- Corona ring callout -->
+      <text x="206" y="340" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".8">corona</text>
+      <text x="206" y="350" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".8">groove</text>
+      <text x="206" y="360" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".6">r*=155.2</text>
+
+      <!-- MOTOR MOUNTS on base plate (shown as downward extensions) -->
+      <!-- Motor stub M1 at y=390, x=340 (collinear) - just show motor block hanging below base -->
+      <rect x="325" y="410" width="30" height="40" rx="2" fill="rgba(201,168,76,.12)" stroke="#c9a84c" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="340" y="435" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#c9a84c">BLDC</text>
+
+      <!-- HV CABLE PATH -->
+      <line x1="440" y1="340" x2="440" y2="400" stroke="rgba(249,115,22,.4)" stroke-width="1.2" stroke-dasharray="4 2"/>
+      <line x1="440" y1="340" x2="378.8" y2="336.75" stroke="rgba(249,115,22,.4)" stroke-width="1.2" stroke-dasharray="4 2"/>
+      <text x="445" y="370" font-family="'Courier New'" font-size="7" fill="#f97316">HV cable</text>
+      <text x="445" y="380" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".7">(10–30kV)</text>
+      <text x="445" y="390" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".7">silicone ins.</text>
+
+      <!-- DISK HEIGHT FROM BASE -->
+      <line x1="215" y1="400" x2="215" y2="337" stroke="rgba(52,211,153,.3)" stroke-width=".7" marker-end="url(#arrgr2)" marker-start="url(#arrgr2)"/>
+      <text x="168" y="370" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#34d399">Δz = 200mm</text>
+      <text x="168" y="382" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#34d399" opacity=".7">D1 to D3</text>
+
+      <!-- TOTAL HEIGHT -->
+      <line x1="455" y1="400" x2="455" y2="50" stroke="rgba(56,189,248,.25)" stroke-width=".7" marker-end="url(#arrd2)" marker-start="url(#arrd2)"/>
+      <text x="462" y="230" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">380mm</text>
+      <text x="462" y="242" font-family="'Courier New'" font-size="7" fill="#38bdf8" opacity=".7">total height</text>
+      <text x="462" y="252" font-family="'Courier New'" font-size="7" fill="#38bdf8" opacity=".7">(incl. shaft cap)</text>
+
+      <!-- SHAFT NUT + CAP at top -->
+      <rect x="333" y="45" width="14" height="8" rx="1" fill="rgba(201,168,76,.3)" stroke="#c9a84c" stroke-width="1"/>
+      <text x="460" y="52" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">SHAFT CAP: M25 locknut + washer</text>
+
+      <!-- Section marker on left -->
+      <text x="25" y="250" font-family="'Courier New'" font-size="9" fill="#7a8f9d" transform="rotate(-90,25,250)">SECTION A–A</text>
+
+    </svg>
+  </div>
+
+  <!-- BOM ROTOR -->
+  <div id="rotor-bom">
+    <div class="section-tag" style="margin-bottom:.6rem;">Bill of Materials — Three-Disk Rotor</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th><th>Description</th><th>Material / Spec</th><th>Qty</th><th>Source / Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>D1–D3</td><td>Rotor disk, Ø200×6mm, turned, corona groove at r=155.2mm</td><td>Al 6061-T6</td><td>3</td><td>Machine shop; 0.8 Ra face finish</td></tr>
+        <tr><td>BP-01</td><td>Base plate, 400×400×20mm, motor mount holes, shaft bore</td><td>Al 6061-T6</td><td>1</td><td>Machine shop; flatness 0.05mm</td></tr>
+        <tr><td>SP-01</td><td>Central shaft, Ø25×380mm, keyway 8×3.3mm at each disk</td><td>SS 304</td><td>1</td><td>Turned, h6 tolerance</td></tr>
+        <tr><td>BRG-01</td><td>Deep-groove ball bearing, 6305 2RS (Ø25×62×17mm)</td><td>Steel / 2RS grease</td><td>3</td><td>SKF or NSK; one per disk</td></tr>
+        <tr><td>MTR-01</td><td>BLDC motor, 24V 150W, 8mm shaft, encoder output</td><td>Brushless DC</td><td>3</td><td>All same model; e.g. T-Motor U5</td></tr>
+        <tr><td>ESC-01</td><td>ESC (electronic speed controller), 24V, 15A min</td><td>–</td><td>3</td><td>One per motor; sync via Arduino</td></tr>
+        <tr><td>BLT-01</td><td>Timing belt, HTD 3M, width 9mm</td><td>Neoprene/fibre</td><td>3</td><td>Length per motor–disk pitch</td></tr>
+        <tr><td>PUL-01</td><td>Timing pulley, HTD 3M, 20T, Ø8mm bore (motor)</td><td>Al</td><td>3</td><td>Motor shaft side</td></tr>
+        <tr><td>PUL-02</td><td>Timing pulley, HTD 3M, 40T, Ø25mm bore (shaft)</td><td>Al</td><td>3</td><td>Disk shaft side; 2:1 reduction</td></tr>
+        <tr><td>CRN-01</td><td>Corona ring, 2mm copper wire, formed to r=155.2mm circle</td><td>Cu bare</td><td>3</td><td>One per disk; seated in groove</td></tr>
+        <tr><td>HV-01</td><td>HV DC supply, 0–30kV, 1mA, adjustable (optional)</td><td>–</td><td>1</td><td>Glassman FC30P1 or equivalent</td></tr>
+        <tr><td>CSG-01</td><td>Safety cage, 400×400×420mm, 5mm cast acrylic panels</td><td>PMMA</td><td>1 set</td><td>4 panels + hinged door; HV interlock</td></tr>
+        <tr><td>RPM-01</td><td>Hall-effect RPM sensor + magnet</td><td>–</td><td>3</td><td>One per disk; to Arduino</td></tr>
+        <tr><td>ARD-01</td><td>Arduino Mega 2560 + motor shield</td><td>–</td><td>1</td><td>Speed sync + data logging</td></tr>
+        <tr><td>HDW-01</td><td>Fasteners: M5×16 cap screws, M6 shaft nuts, Loctite 243</td><td>SS A2</td><td>1 set</td><td>Per assembly drawing</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>Estimated cost (no HV option):</strong> ~$600–900 USD including machining. HV supply adds ~$400. Acrylic cage: ~$80. Total with HV demo: ~$1400.</div>
+  </div>
+
+  <!-- ASSEMBLY SEQUENCE ROTOR -->
+  <div id="rotor-assembly" style="margin-top:1.2rem;">
+    <div class="section-tag" style="margin-bottom:.6rem;">Assembly Sequence — Three-Disk Rotor</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Machine disks D1–D3</strong><p>Turn each disk to Ø200mm × 6mm on lathe. Cut corona groove at r=155.2mm ± 0.1mm (1.5mm deep × 2mm wide). Drill 6× M5 bolt holes on 170mm PCD. Bore center to 25.015mm H7 for bearing outer race. Face to 0.8 Ra.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Press bearings into disks</strong><p>Press-fit 6305 2RS bearing into each disk center bore. Apply Loctite 641 retaining compound. Allow 24 hr cure before proceeding.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Machine base plate BP-01</strong><p>Machine 400×400×20mm plate. Drill 3× motor mount patterns (4× M6 each, on 280mm PCD at 120°). Bore center 25mm through for shaft. Drill 4× M8 feet. Mill flat within 0.05mm.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Install shaft SP-01</strong><p>Insert shaft through base plate center bore. Secure with M25 locknut from below. Apply keyway at each disk position (z=50, 150, 250mm). Shaft must run true within 0.02mm TIR — check with dial gauge on lathe before assembly.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Slide disks onto shaft in azimuth order</strong><p>D1 at z=50mm, 0° key position. D2 at z=150mm, 120° key position. D3 at z=250mm, 240° key position. Secure each with M25 shaft collar and Loctite 243. <em>Verify 120° azimuthal alignment with a protractor before Loctite cures.</em></p></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Mount motors and belt drives</strong><p>Bolt 3× BLDC motors to base plate motor mounts. Install pulleys (20T motor, 40T disk) and tension HTD belts to 1% sag measured at mid-span. Secure tensioner with jam nut.</p></div></div>
+      <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Fit corona rings</strong><p>Wind 2mm bare copper wire to r=155.2mm diameter ring for each disk. Seat in groove; solder ends. Connect HV cable via silicone-insulated wire (rated 40kV) to external HV terminal on base plate. Route cable in channel, avoid sharp bends.</p></div></div>
+      <div class="step"><div class="step-num">8</div><div class="step-body"><strong>Wire electronics and test</strong><p>Connect ESCs to motors. Connect Arduino to ESCs (PWM signal) and RPM sensors (Hall effect). Upload sync_motors.ino sketch (ramp to 300 rpm, verify all three reach synchronised θ̇ = 1 within 2%). Log data to serial.</p></div></div>
+      <div class="step"><div class="step-num">9</div><div class="step-body"><strong>Safety cage and HV commissioning</strong><p>Assemble acrylic cage around rotor. Wire cage door microswitch as HV interlock — HV supply cannot energise unless cage is closed. Connect HV supply output to external terminal. Test interlock before first HV energisation. Start at 1kV, observe corona ring, increment to threshold. Do not exceed 30kV.</p></div></div>
+    </div>
+    <div class="warn"><strong>SAFETY:</strong> High-voltage operation requires a second person present at all times. All operators must wear rubber-soled shoes. Never open cage with HV enabled. Emergency stop button must be within arm's reach. Earth the base plate.</div>
+  </div>
+
+</div><!-- end rotor section -->
+
+<!-- ══════════════════════════════════════════ JACKKNIFE RIG ══════════════════════════════════════════ -->
+<div class="section" id="jackknife">
+  <div class="section-header">
+    <div class="section-tag">Device 2 of 2 · Whitney A₁ Fold Demonstration</div>
+    <div class="section-title"><em>Jackknife Demo Rig</em> — 1:20 Scale Tractor-Trailer</div>
+    <div class="section-desc">Scale model demonstrating jackknife = Whitney A₁ fold. Servo-steered tractor, rotary encoder at hitch measuring φ in real time. Arduino computes φ_c = π − arcsin(Lκ₀) from live steering input and triggers LED + buzzer alarm as φ → φ_c. Suitable for conference poster sessions and classroom use.</div>
+  </div>
+
+  <!-- KEY SPECS -->
+  <div class="spec-grid">
+    <div class="spec-item"><div class="sk">Scale</div><div class="sv">1:20</div></div>
+    <div class="spec-item"><div class="sk">Tractor length</div><div class="sv">270 mm</div></div>
+    <div class="spec-item"><div class="sk">Trailer length</div><div class="sv">540 mm</div></div>
+    <div class="spec-item or"><div class="sk">Critical angle φ_c</div><div class="sv">0.776π ≈ 140°</div></div>
+    <div class="spec-item or"><div class="sk">L (trailer wb, model)</div><div class="sv">270 mm</div></div>
+    <div class="spec-item or"><div class="sk">κ₀ (model)</div><div class="sv">0.225 m⁻¹</div></div>
+    <div class="spec-item"><div class="sk">Steering servo</div><div class="sv">MG996R</div></div>
+    <div class="spec-item"><div class="sk">Hitch encoder</div><div class="sv">AS5600 12-bit</div></div>
+    <div class="spec-item gr"><div class="sk">Controller</div><div class="sv">Arduino Mega</div></div>
+    <div class="spec-item"><div class="sk">Display</div><div class="sv">128×64 OLED</div></div>
+    <div class="spec-item"><div class="sk">Power</div><div class="sv">7.4V LiPo (2S)</div></div>
+    <div class="spec-item gd"><div class="sk">Estimated cost</div><div class="sv">~$180 USD</div></div>
+  </div>
+
+  <!-- JACKKNIFE TOP VIEW -->
+  <div class="drawing-panel" id="jk-top">
+    <div class="drawing-label">Drawing J-01 · Top View (1:4 of model = 1:80 of real truck) · Critical angle shown</div>
+    <svg viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <rect width="900" height="440" fill="#06090f" rx="4"/>
+      <rect x="8" y="8" width="884" height="424" fill="none" stroke="rgba(56,189,248,.2)" stroke-width=".8"/>
+
+      <defs>
+        <marker id="arrd3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(56,189,248,.5)" stroke-width=".8"/>
+        </marker>
+        <marker id="arror3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0.5 L6,3 L0,5.5" fill="none" stroke="rgba(249,115,22,.5)" stroke-width=".8"/>
+        </marker>
+      </defs>
+
+      <!-- Road centerline (horizontal reference) -->
+      <line x1="30" y1="220" x2="560" y2="220" stroke="rgba(232,228,216,.1)" stroke-width=".8" stroke-dasharray="10 6"/>
+      <text x="35" y="215" font-family="'Courier New'" font-size="7" fill="#7a8f9d">road C/L</text>
+
+      <!-- TRACTOR (straight, at right) -->
+      <!-- tractor body: 270mm → 67.5px at 1:4, width 90mm → 22.5px -->
+      <rect x="400" y="208.75" width="67.5" height="22.5" rx="3"
+            fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="433" y="222" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">TRACTOR</text>
+      <!-- cab -->
+      <rect x="450" y="210" width="17.5" height="20" rx="2" fill="rgba(56,189,248,.2)" stroke="#38bdf8" stroke-width="1"/>
+      <text x="458.75" y="222" text-anchor="middle" font-family="'Courier New'" font-size="6" fill="#38bdf8">cab</text>
+      <!-- front wheels -->
+      <rect x="460" y="207" width="7" height="5.5" rx="1" fill="rgba(56,189,248,.3)" stroke="#38bdf8" stroke-width=".8"/>
+      <rect x="460" y="228.5" width="7" height="5.5" rx="1" fill="rgba(56,189,248,.3)" stroke="#38bdf8" stroke-width=".8"/>
+      <!-- steered: show front axle turned slightly -->
+      <!-- rear axle drive wheels -->
+      <rect x="413" y="207" width="7" height="5.5" rx="1" fill="rgba(56,189,248,.3)" stroke="#38bdf8" stroke-width=".8"/>
+      <rect x="413" y="228.5" width="7" height="5.5" rx="1" fill="rgba(56,189,248,.3)" stroke="#38bdf8" stroke-width=".8"/>
+
+      <!-- HITCH POINT -->
+      <circle cx="400" cy="220" r="5" fill="#f97316" opacity=".9"/>
+      <text x="390" y="210" font-family="'Courier New'" font-size="7.5" fill="#f97316">HITCH</text>
+      <text x="390" y="220" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".7">encoder</text>
+      <!-- hitch angle label -->
+      <text x="372" y="235" font-family="'Courier New'" font-size="7.5" fill="#f97316">φ_c = 0.776π</text>
+
+      <!-- TRAILER (angled at jackknife position φ_c ≈ 140°) -->
+      <!-- trailer at 140° from tractor heading → relative angle ~40° from road = rotate -40° at hitch -->
+      <!-- trailer body: 540mm → 135px at 1:4; width 85mm → 21.25px -->
+      <!-- angled trailer: starting from hitch at (400,220), angled -35° (slightly above C/L) -->
+      <!-- trailer endpoints: dx = 135*cos(145°) = -110.6, dy = 135*sin(145°) = 77.4 -->
+      <!-- trailer far end: (400-110.6, 220+77.4) = (289, 297) but going LEFT and DOWN means jackknifing -->
+      <!-- Let me draw it going up-left: (400-110.6, 220-77.4) = (289, 143) -->
+      <g transform="rotate(-35 400 220)">
+        <rect x="265" y="209" width="135" height="22" rx="3"
+              fill="rgba(249,115,22,.1)" stroke="#f97316" stroke-width="1.5"/>
+        <text x="332" y="222" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#f97316">TRAILER (at φ_c)</text>
+        <!-- trailer axles -->
+        <rect x="276" y="207.5" width="7" height="5" rx="1" fill="rgba(249,115,22,.25)" stroke="#f97316" stroke-width=".8"/>
+        <rect x="276" y="219" width="7" height="5" rx="1" fill="rgba(249,115,22,.25)" stroke="#f97316" stroke-width=".8"/>
+        <rect x="290" y="207.5" width="7" height="5" rx="1" fill="rgba(249,115,22,.25)" stroke="#f97316" stroke-width=".8"/>
+        <rect x="290" y="219" width="7" height="5" rx="1" fill="rgba(249,115,22,.25)" stroke="#f97316" stroke-width=".8"/>
+      </g>
+
+      <!-- Angle arc at hitch -->
+      <path d="M 440,220 A 40,40 0 0,0 400,180" fill="none" stroke="#c9a84c" stroke-width="1.2" opacity=".7"/>
+      <text x="432" y="192" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">φ ≈ 140°</text>
+      <text x="432" y="202" font-family="'Courier New'" font-size="7" fill="#c9a84c" opacity=".7">= 0.776π rad</text>
+
+      <!-- SENSOR LABEL -->
+      <line x1="400" y1="220" x2="320" y2="290" stroke="rgba(249,115,22,.4)" stroke-width=".8"/>
+      <rect x="240" y="286" width="80" height="30" rx="3" fill="rgba(249,115,22,.08)" stroke="rgba(249,115,22,.3)" stroke-width=".8"/>
+      <text x="280" y="299" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#f97316">AS5600</text>
+      <text x="280" y="309" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#f97316" opacity=".7">12-bit encoder</text>
+
+      <!-- SERVO LABEL on tractor -->
+      <line x1="467" y1="212" x2="530" y2="165" stroke="rgba(56,189,248,.4)" stroke-width=".8"/>
+      <rect x="510" y="145" width="80" height="22" rx="3" fill="rgba(56,189,248,.08)" stroke="rgba(56,189,248,.3)" stroke-width=".8"/>
+      <text x="550" y="158" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#38bdf8">MG996R servo</text>
+
+      <!-- DIMENSIONS -->
+      <!-- Tractor length -->
+      <line x1="400" y1="240" x2="467.5" y2="240" stroke="rgba(56,189,248,.4)" stroke-width=".7" marker-end="url(#arrd3)" marker-start="url(#arrd3)"/>
+      <text x="433" y="252" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#38bdf8">270mm</text>
+
+      <!-- SCHEMATIC NOTES RIGHT SIDE -->
+      <rect x="590" y="40" width="295" height="380" fill="rgba(8,15,24,.6)" stroke="rgba(56,189,248,.12)" rx="4"/>
+      <text x="608" y="58" font-family="'Courier New'" font-size="7.5" letter-spacing="2" fill="#7a8f9d">NOTES — J-01</text>
+      <line x1="598" y1="63" x2="877" y2="63" stroke="rgba(56,189,248,.1)" stroke-width=".6"/>
+
+      <text x="608" y="80" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">1. SCALE</text>
+      <text x="608" y="93" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   1:20 model of Mercedes eActros 600</text>
+      <text x="608" y="105" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Tractor: 270×90×60mm (L×W×H)</text>
+      <text x="608" y="117" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Trailer: 540×85×85mm (L×W×H)</text>
+
+      <text x="608" y="135" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">2. HITCH JOINT</text>
+      <text x="608" y="148" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Pivot bolt: M6 × 30mm SS, 2× nylon washers</text>
+      <text x="608" y="160" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   AS5600 I2C encoder: diametric magnet on bolt head</text>
+      <text x="608" y="172" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Encoder board mounted on trailer kingpin plate</text>
+      <text x="608" y="184" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Reads φ = angle between tractor and trailer</text>
+      <text x="608" y="196" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Resolution: 0.087° (12-bit over 360°)</text>
+
+      <text x="608" y="214" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">3. STEERING</text>
+      <text x="608" y="227" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   MG996R servo drives front axle via push-rod</text>
+      <text x="608" y="239" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   Max steering angle: ±35° (per wheel)</text>
+      <text x="608" y="251" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   κ₀ computed from servo angle + wheelbase</text>
+      <text x="608" y="263" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.7)">   φ_c updates live as steering angle changes</text>
+
+      <text x="608" y="281" font-family="'Courier New'" font-size="7.5" fill="#f97316">4. CRITICAL ANGLE DETECTION</text>
+      <text x="608" y="294" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Arduino computes: φ_c = π − arcsin(L×κ₀)</text>
+      <text x="608" y="306" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Yellow LED: φ > 0.9 × φ_c (warning zone)</text>
+      <text x="608" y="318" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   Red LED + buzzer: φ > 0.95 × φ_c</text>
+      <text x="608" y="330" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">   OLED shows: φ / φ_c bar graph + numeric</text>
+
+      <text x="608" y="348" font-family="'Courier New'" font-size="7.5" fill="#34d399">5. CONTACT GEOMETRY</text>
+      <text x="608" y="361" font-family="'Courier New'" font-size="7" fill="rgba(52,211,153,.8)">   α_TT = dφ − dθ + (sinφ/L)·ds</text>
+      <text x="608" y="373" font-family="'Courier New'" font-size="7" fill="rgba(52,211,153,.8)">   φ_c/π ≈ 0.776 = r* (three significant figures)</text>
+      <text x="608" y="385" font-family="'Courier New'" font-size="7" fill="rgba(52,211,153,.8)">   Jackknife = Whitney A₁ fold (Theorem 2)</text>
+      <text x="608" y="397" font-family="'Courier New'" font-size="7" fill="rgba(52,211,153,.8)">   Log escape time visible on OLED as φ → φ_c</text>
+
+      <text x="608" y="410" font-family="'Courier New'" font-size="7" fill="#7a8f9d">DRAWING: J-01 TOP VIEW · SCALE 1:4 of model</text>
+
+    </svg>
+  </div>
+
+  <!-- ELECTRONICS SCHEMATIC -->
+  <div class="drawing-panel" id="jk-electronics">
+    <div class="drawing-label">Drawing J-02 · Electronics Block Schematic</div>
+    <svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" width="100%">
+      <rect width="900" height="400" fill="#06090f" rx="4"/>
+      <rect x="8" y="8" width="884" height="384" fill="none" stroke="rgba(56,189,248,.2)" stroke-width=".8"/>
+
+      <!-- ARDUINO MEGA central block -->
+      <rect x="350" y="140" width="160" height="110" rx="5"
+            fill="rgba(52,211,153,.08)" stroke="#34d399" stroke-width="2"/>
+      <text x="430" y="160" text-anchor="middle" font-family="'Courier New'" font-size="8.5" fill="#34d399">ARDUINO MEGA</text>
+      <text x="430" y="172" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(52,211,153,.7)">2560</text>
+      <text x="430" y="188" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">PWM → servo</text>
+      <text x="430" y="200" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">I2C ← encoder</text>
+      <text x="430" y="212" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">I2C → OLED</text>
+      <text x="430" y="224" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">GPIO → LED/buzzer</text>
+      <text x="430" y="236" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">USB → serial log</text>
+
+      <!-- 7.4V LiPo -->
+      <rect x="350" y="40" width="160" height="60" rx="4"
+            fill="rgba(201,168,76,.08)" stroke="#c9a84c" stroke-width="1.5"/>
+      <text x="430" y="62" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#c9a84c">7.4V LiPo (2S)</text>
+      <text x="430" y="76" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(201,168,76,.7)">2000mAh min</text>
+      <text x="430" y="88" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(201,168,76,.7)">XT60 connector</text>
+      <!-- power line to Arduino -->
+      <line x1="430" y1="100" x2="430" y2="140" stroke="#c9a84c" stroke-width="1.5"/>
+      <text x="436" y="124" font-family="'Courier New'" font-size="7" fill="#c9a84c">7.4V→5V BEC</text>
+
+      <!-- 5V BEC / regulator -->
+      <rect x="395" y="100" width="70" height="22" rx="3"
+            fill="rgba(201,168,76,.12)" stroke="#c9a84c" stroke-width="1"/>
+      <text x="430" y="115" text-anchor="middle" font-family="'Courier New'" font-size="7.5" fill="#c9a84c">5V 3A BEC</text>
+
+      <!-- AS5600 ENCODER -->
+      <rect x="80" y="150" width="130" height="90" rx="4"
+            fill="rgba(249,115,22,.08)" stroke="#f97316" stroke-width="1.5"/>
+      <text x="145" y="172" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#f97316">AS5600</text>
+      <text x="145" y="186" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.7)">12-bit I2C</text>
+      <text x="145" y="200" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">VCC: 3.3V or 5V</text>
+      <text x="145" y="214" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">SDA, SCL → UNO</text>
+      <text x="145" y="228" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">Addr: 0x36</text>
+      <!-- I2C line -->
+      <line x1="210" y1="195" x2="350" y2="195" stroke="#f97316" stroke-width="1.2"/>
+      <text x="278" y="190" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#f97316">I2C (SDA/SCL)</text>
+
+      <!-- MG996R SERVO -->
+      <rect x="80" y="280" width="130" height="80" rx="4"
+            fill="rgba(56,189,248,.08)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="145" y="302" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#38bdf8">MG996R SERVO</text>
+      <text x="145" y="316" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(56,189,248,.7)">Torque: 9.4 kg·cm</text>
+      <text x="145" y="330" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">PWM: 50Hz, 1–2ms</text>
+      <text x="145" y="344" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">Power: 5–7V / 1A stall</text>
+      <!-- PWM line -->
+      <line x1="210" y1="320" x2="350" y2="230" stroke="#38bdf8" stroke-width="1.2"/>
+      <text x="282" y="282" font-family="'Courier New'" font-size="7" fill="#38bdf8">PWM (pin 9)</text>
+
+      <!-- OLED DISPLAY -->
+      <rect x="640" y="150" width="130" height="90" rx="4"
+            fill="rgba(56,189,248,.06)" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 2"/>
+      <text x="705" y="172" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#38bdf8">SSD1306 OLED</text>
+      <text x="705" y="186" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(56,189,248,.7)">128×64 px, 0.96"</text>
+      <text x="705" y="200" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">Shows: φ / φ_c bar</text>
+      <text x="705" y="214" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">φ_c numeric</text>
+      <text x="705" y="228" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(232,228,216,.6)">I2C addr: 0x3C</text>
+      <!-- I2C line -->
+      <line x1="510" y1="195" x2="640" y2="195" stroke="rgba(56,189,248,.5)" stroke-width="1.2"/>
+      <text x="573" y="190" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(56,189,248,.6)">I2C</text>
+
+      <!-- LEDs + BUZZER -->
+      <rect x="640" y="280" width="130" height="80" rx="4"
+            fill="rgba(249,115,22,.06)" stroke="#f97316" stroke-width="1.2" stroke-dasharray="4 2"/>
+      <text x="705" y="302" text-anchor="middle" font-family="'Courier New'" font-size="8" fill="#f97316">ALARMS</text>
+      <text x="705" y="316" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">Yellow LED: φ &gt; 0.9φ_c</text>
+      <text x="705" y="330" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">Red LED: φ &gt; 0.95φ_c</text>
+      <text x="705" y="344" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(249,115,22,.8)">Buzzer: φ = φ_c</text>
+      <!-- GPIO line -->
+      <line x1="510" y1="225" x2="580" y2="310" stroke="rgba(249,115,22,.4)" stroke-width="1.2"/>
+      <text x="557" y="280" font-family="'Courier New'" font-size="7" fill="#f97316">GPIO</text>
+
+      <!-- USB / SERIAL LOG -->
+      <rect x="390" y="310" width="80" height="40" rx="3"
+            fill="rgba(52,211,153,.06)" stroke="#34d399" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="430" y="326" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="#34d399">USB SERIAL</text>
+      <text x="430" y="338" text-anchor="middle" font-family="'Courier New'" font-size="7" fill="rgba(52,211,153,.6)">log φ, φ_c, κ₀</text>
+      <line x1="430" y1="310" x2="430" y2="250" stroke="rgba(52,211,153,.4)" stroke-width="1"/>
+
+      <!-- I2C bus labels -->
+      <text x="35" y="375" font-family="'Courier New'" font-size="7" fill="#7a8f9d">I2C bus: 4.7kΩ pullups to 3.3V on SDA and SCL. Both devices share same I2C bus (0x36 encoder + 0x3C OLED).</text>
+      <text x="35" y="388" font-family="'Courier New'" font-size="7" fill="#7a8f9d">Power: 7.4V LiPo → 5V BEC (for Arduino + servo) → 3.3V LDO (for encoder). Capacitor 100µF on each rail.</text>
+
+    </svg>
+  </div>
+
+  <!-- BOM JACKKNIFE -->
+  <div id="jk-bom">
+    <div class="section-tag" style="margin-bottom:.6rem;">Bill of Materials — Jackknife Demo Rig</div>
+    <table>
+      <thead>
+        <tr><th>Item</th><th>Description</th><th>Spec</th><th>Qty</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>T-01</td><td>Tractor body, 270×90×60mm, 3D printed, servo mount, axle bore</td><td>PLA+ / PETG</td><td>1</td><td>Print from provided .STL; 30% infill</td></tr>
+        <tr><td>T-02</td><td>Trailer body, 540×85×85mm, 3D printed, kingpin plate, encoder mount</td><td>PLA+ / PETG</td><td>1</td><td>Print from provided .STL; 30% infill</td></tr>
+        <tr><td>T-03</td><td>Front axle assembly, 3D printed, steering knuckles, tie rod</td><td>PLA+</td><td>1</td><td>Print + M3 rod for tie rod</td></tr>
+        <tr><td>S-01</td><td>Steering servo MG996R, 9.4 kg·cm, metal gear</td><td>5V, PWM</td><td>1</td><td>Generic / Tower Pro</td></tr>
+        <tr><td>E-01</td><td>AS5600 magnetic rotary encoder module, I2C, 12-bit</td><td>3.3–5V</td><td>1</td><td>AliExpress / Adafruit #5493</td></tr>
+        <tr><td>E-02</td><td>Diametric magnet, Ø6×2.5mm, for AS5600</td><td>NdFeB N52</td><td>1</td><td>Matched pair with AS5600</td></tr>
+        <tr><td>C-01</td><td>Arduino Mega 2560 R3</td><td>ATmega2560</td><td>1</td><td>Arduino / clone</td></tr>
+        <tr><td>D-01</td><td>SSD1306 OLED display, 128×64, 0.96", I2C</td><td>3.3–5V</td><td>1</td><td>Generic; Adafruit #938</td></tr>
+        <tr><td>P-01</td><td>7.4V LiPo battery, 2S, 2000mAh min, XT60</td><td>7.4V 2S</td><td>1</td><td>Turnigy, Gens Ace, etc.</td></tr>
+        <tr><td>P-02</td><td>5V 3A BEC / UBEC (linear or switching)</td><td>7.4V→5V</td><td>1</td><td>Castle Creations / generic</td></tr>
+        <tr><td>P-03</td><td>3.3V LDO regulator, TO-92, 250mA</td><td>LM1117-3.3</td><td>1</td><td>Any electronics supplier</td></tr>
+        <tr><td>L-01</td><td>LED, yellow 5mm, 2.2V, 20mA (warning)</td><td>–</td><td>1</td><td>Any; 220Ω series resistor</td></tr>
+        <tr><td>L-02</td><td>LED, red 5mm, 2.0V, 20mA (critical)</td><td>–</td><td>1</td><td>Any; 220Ω series resistor</td></tr>
+        <tr><td>L-03</td><td>Piezo buzzer, 5V active</td><td>–</td><td>1</td><td>Any; ~85dB</td></tr>
+        <tr><td>H-01</td><td>Hitch pivot: M6×30mm SS bolt, 2× nylon washers, nyloc nut</td><td>SS A2</td><td>1 set</td><td>Hardware store</td></tr>
+        <tr><td>H-02</td><td>4× wheel sets (front + trailer), 40mm dia, 3D printed + M4 axle</td><td>PLA</td><td>4</td><td>Print + M4×50mm rod</td></tr>
+        <tr><td>H-03</td><td>Pullup resistors 4.7kΩ × 2 (I2C SDA + SCL)</td><td>0.25W</td><td>2</td><td>Any</td></tr>
+        <tr><td>H-04</td><td>Capacitors: 100µF electrolytic × 2 (5V + 3.3V rail decoupling)</td><td>16V min</td><td>2</td><td>Any</td></tr>
+        <tr><td>H-05</td><td>Stripboard / prototype PCB 100×80mm for electronics</td><td>–</td><td>1</td><td>Any</td></tr>
+        <tr><td>H-06</td><td>USB-A cable, 1m (Arduino programming + serial logging)</td><td>–</td><td>1</td><td>Any</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>Estimated cost:</strong> ~$180 USD total (3D printing filament, electronics, hardware). Arduino clone acceptable. STL files and Arduino sketch: included in AXLE/LAW3M repo at github.com/TOTOGT/AXLE.</div>
+  </div>
+
+  <!-- ASSEMBLY JACKKNIFE -->
+  <div id="jk-assembly" style="margin-top:1.2rem;">
+    <div class="section-tag" style="margin-bottom:.6rem;">Assembly Sequence — Jackknife Demo Rig</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body"><strong>3D print all PLA parts</strong><p>Print T-01 (tractor), T-02 (trailer), T-03 (front axle), and wheel sets at 0.2mm layer height, 30% gyroid infill. Support material on tractor cab and trailer kingpin plate. Estimated print time: 14 hours total.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><strong>Assemble front axle and steering</strong><p>Press M3 threaded inserts (heat-set) into servo mount points on tractor body. Mount MG996R servo in tractor cab. Connect servo horn to front axle tie rod (M3 threaded rod, 2× M3 ball links). Test steering: servo at centre = wheels straight; ±35° servo travel = ±35° wheel turn.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><strong>Install hitch joint and encoder</strong><p>Stack trailer kingpin plate over tractor fifth-wheel plate. Insert M6×30mm bolt as pivot. Add nylon washer above and below. Press diametric magnet into centre of bolt head (epoxy). Mount AS5600 board on trailer kingpin plate face, 1.5–3mm gap to magnet. Centre magnet over encoder IC using a non-ferrous spacer jig. Secure with M3 screws. Verify I2C reads 0x36.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><strong>Wire electronics on stripboard</strong><p>Lay out Arduino Mega, BEC, LDO, encoder header, OLED header, LED resistors, and buzzer on 100×80mm stripboard per Drawing J-02. Solder all connections. Add 100µF caps across 5V and 3.3V rails. Run I2C bus with 4.7kΩ pullups to 3.3V. Mount board in tractor body using M3 standoffs.</p></div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Upload Arduino sketch</strong><p>Connect via USB. Open jackknife_fold.ino in Arduino IDE. Set TRAILER_WHEELBASE_MM = 270.0 and SERVO_MAX_ANGLE = 35.0. Upload. Open serial monitor at 115200 baud. Verify: φ reads in degrees, φ_c displays correctly, bar graph on OLED responds to manual hitch movement.</p></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Calibrate and test alarm thresholds</strong><p>With rig on flat surface, push trailer manually to various angles. Verify yellow LED at φ = 0.9 × φ_c (≈ 126°), red LED + buzzer at 0.95 × φ_c (≈ 133°). Verify OLED shows logarithmic escape time Tₑ ~ −log|φ − φ_c| / g'(φ_c) as φ approaches φ_c. This is the Whitney fold signature.</p></div></div>
+      <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Label and mount to display base</strong><p>Mount finished rig on 300×200mm black acrylic base. Attach printed label: "Jackknife = Whitney A₁ Fold · Contact Manifold (ℝ, dφ − dθ + sinφ/L · ds) · doi:10.5281/zenodo.19117399". Mount OLED on angled bracket for viewing at poster eye level.</p></div></div>
+    </div>
+    <div class="note"><strong>Arduino sketch (jackknife_fold.ino) computes in real time:</strong>
+      κ₀ from servo PWM width → φ_c = π − arcsin(L × κ₀) → Tₑ = −1/g'(φ_c) × log|φ − φ_c| → display all three on OLED. Source committed to AXLE/LAW3M/firmware/.
+    </div>
+  </div>
+
+</div><!-- end jackknife section -->
+
+<!-- ══════ FOOTER ══════ -->
+<div style="background:var(--bg2);border-top:1px solid var(--rule);padding:.8rem 3rem;
+  font-family:var(--mono);font-size:.62rem;color:var(--dim);display:flex;justify-content:space-between;">
+  <span>LAW3M Prototype Package Rev. A · G6 LLC · Newark NJ · pg6llc@gmail.com · ORCID 0009-0000-6496-2186</span>
+  <span>doi:10.5281/zenodo.19117399 · AXLE: github.com/TOTOGT/AXLE · June 2026</span>
+</div>
+
+</body>
+</html>

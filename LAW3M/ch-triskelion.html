@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Triskelion — Origin and Transmission · Principia Orthogona</title>
+<style>
+:root{
+  --bg:#060f0e; --bg2:#0c1a18; --bg3:#0f2320;
+  --t:#2dd4bf; --gd:#c9a84c; --pu:#a78bfa; --or:#f97316;
+  --text:#e8e4d8; --dim:#6b7f7d;
+  --rule:rgba(45,212,191,0.12);
+  --serif:Georgia,serif;
+  --mono:'Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--serif);background:var(--bg);color:var(--text);font-size:18px;line-height:1.85;padding:0;}
+
+nav{background:rgba(6,15,14,.95);border-bottom:1px solid var(--rule);padding:.8rem 2rem;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;display:flex;gap:2rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:100;}
+nav a{color:var(--dim);text-decoration:none;}
+nav a:hover{color:var(--t);}
+
+.hero{padding:5rem 2rem 3rem;max-width:820px;margin:0 auto;text-align:center;}
+.eyebrow{font-family:var(--mono);font-size:.65rem;letter-spacing:.35em;color:var(--gd);
+  text-transform:uppercase;margin-bottom:1.5rem;}
+
+/* Greek letter display */
+.symbol-block{margin:2rem auto;display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+.big-sym{font-size:5.5rem;color:var(--pu);opacity:.85;line-height:1;font-family:var(--serif);}
+.sym-label{font-family:var(--mono);font-size:.72rem;letter-spacing:.25em;color:var(--dim);}
+
+h1{font-size:2.1rem;font-weight:400;letter-spacing:.02em;margin:.5rem 0 1rem;color:var(--text);}
+.value-line{font-family:var(--mono);font-size:.88rem;color:var(--t);margin-bottom:2rem;letter-spacing:.05em;}
+.gold-rule{border:none;border-top:1px solid rgba(201,168,76,.3);margin:2rem auto;width:200px;}
+.hero-desc{font-size:1.05rem;color:rgba(232,228,216,.8);max-width:640px;margin:0 auto;line-height:1.9;}
+
+/* Main body */
+.body{max-width:820px;margin:0 auto;padding:2rem 2rem 5rem;}
+
+h2{font-size:1rem;font-weight:400;color:var(--gd);letter-spacing:.18em;text-transform:uppercase;
+  margin:3rem 0 1rem;padding-bottom:.35rem;border-bottom:1px solid var(--rule);}
+h3{font-size:1rem;font-weight:400;color:var(--t);margin:2rem 0 .6rem;}
+
+p{margin-bottom:1.2rem;color:rgba(232,228,216,.88);}
+p.lead{font-size:1.07rem;color:var(--text);margin-bottom:1.4rem;}
+
+/* Timeline cards */
+.timeline{display:flex;flex-direction:column;gap:0;margin:2rem 0;}
+.t-entry{display:grid;grid-template-columns:140px 1fr;gap:0;position:relative;}
+.t-entry::before{content:'';position:absolute;left:139px;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--rule) 20%,var(--rule) 80%,transparent);}
+.t-date{font-family:var(--mono);font-size:.78rem;color:var(--gd);padding:1.4rem 1.5rem 1.4rem 0;
+  text-align:right;line-height:1.4;}
+.t-dot{position:absolute;left:132px;top:1.5rem;width:14px;height:14px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--gd);z-index:1;}
+.t-body{padding:1.2rem 0 1.2rem 2rem;border-bottom:1px solid rgba(45,212,191,.06);}
+.t-body strong{display:block;font-size:.95rem;color:var(--t);margin-bottom:.3rem;font-weight:400;}
+.t-body p{font-size:.9rem;margin-bottom:0;color:rgba(232,228,216,.78);}
+.t-entry:last-child .t-body{border-bottom:none;}
+
+/* SVG triskelion diagram */
+.svg-wrap{margin:2.5rem 0;display:flex;justify-content:center;}
+svg.trisk{width:220px;height:220px;}
+
+/* Math display */
+.math-line{font-family:var(--mono);font-size:.9rem;color:var(--t);background:rgba(45,212,191,.06);
+  padding:.6rem 1.1rem;border-left:3px solid var(--t);margin:.7rem 0;border-radius:0 4px 4px 0;line-height:1.5;}
+
+/* Quote block */
+blockquote{border-left:3px solid var(--gd);padding:.5rem 1.2rem;margin:1.5rem 0;
+  font-style:italic;color:rgba(232,228,216,.72);font-size:.95rem;}
+blockquote cite{font-style:normal;font-family:var(--mono);font-size:.72rem;color:var(--dim);
+  display:block;margin-top:.4rem;}
+
+/* Correspondence table */
+.corr-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.88rem;}
+.corr-table th{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--dim);padding:.5rem .7rem;border-bottom:1px solid var(--rule);text-align:left;}
+.corr-table td{padding:.55rem .7rem;border-bottom:1px solid rgba(45,212,191,.06);
+  color:rgba(232,228,216,.82);vertical-align:top;}
+.corr-table td:first-child{font-family:var(--mono);font-size:.82rem;color:var(--t);}
+.corr-table tr:last-child td{border-bottom:none;}
+
+/* Chip row */
+.chip-row{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0;}
+.chip{font-family:var(--mono);font-size:.7rem;padding:.3rem .75rem;border-radius:20px;
+  border:1px solid var(--rule);color:var(--dim);letter-spacing:.05em;}
+.chip.pu{border-color:rgba(167,139,250,.3);color:var(--pu);}
+.chip.gd{border-color:rgba(201,168,76,.3);color:var(--gd);}
+.chip.tc{border-color:rgba(45,212,191,.3);color:var(--t);}
+
+a{color:var(--t);text-decoration:none;}
+a:hover{color:var(--gd);}
+footer{margin-top:4rem;border-top:1px solid var(--rule);padding:1.5rem 0;font-family:var(--mono);
+  font-size:.65rem;color:var(--dim);line-height:1.8;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="abstract-law3m-2026.html">LAW3M</a>
+  <a href="law3m-brief.html">Technical Brief</a>
+  <a href="law3m-jackknife-proof.html">Proofs</a>
+  <a href="https://totogt.github.io/geometry/book4/living-book.html">Book IV Hub</a>
+  <a href="https://doi.org/10.5281/zenodo.19117399">Zenodo ↗</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="eyebrow">Principia Orthogona · Symbol Transmission Series</div>
+
+  <div class="symbol-block">
+    <div class="big-sym">☯︎</div>
+    <!-- inline triskelion SVG in hero -->
+    <svg class="trisk" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="110" cy="110" r="105" fill="rgba(167,139,250,0.04)" stroke="rgba(167,139,250,0.12)" stroke-width="1"/>
+      <!-- arm 0 -->
+      <path d="M 110,105 L 111.2,102.6 L 113.2,100.5 L 115.9,98.9 L 119.1,98.0 L 122.8,97.9 L 126.6,98.7 L 130.5,100.5 L 134.2,103.3 L 137.5,107.0 L 140.1,111.6 L 141.9,117.0 L 142.7,123.0 L 142.3,129.4 L 140.7,136.1 L 137.7,142.6 L 133.3,148.8 L 127.7,154.4 L 120.8,159.1 L 112.9,162.8 L 104.0,165.0 L 94.5,165.8 L 84.6,164.8 L 74.7,162.1 L 65.0,157.5 L 55.9,151.1 L 47.8,143.0 L 40.9,133.3 L 35.5,122.2 L 32.0,110.0"
+            fill="none" stroke="#a78bfa" stroke-width="2.4" opacity=".85" stroke-linecap="round"/>
+      <polygon points="32.0,110.0 36.5,115.0 30.8,116.6" fill="#a78bfa" opacity=".85"/>
+      <!-- arm 1 -->
+      <path d="M 105.7,112.5 L 103.0,112.7 L 100.2,112.0 L 97.5,110.5 L 95.1,108.1 L 93.1,105.0 L 91.9,101.2 L 91.5,97.0 L 92.1,92.4 L 93.7,87.7 L 96.4,83.1 L 100.1,78.8 L 104.9,75.2 L 110.7,72.3 L 117.2,70.4 L 124.4,69.7 L 131.9,70.4 L 139.6,72.5 L 147.1,76.1 L 154.3,81.1 L 160.6,87.7 L 166.0,95.5 L 170.1,104.6 L 172.7,114.5 L 173.6,125.2 L 172.6,136.3 L 169.7,147.4 L 164.7,158.2 L 157.8,168.4 L 149.0,177.5"
+            fill="none" stroke="#a78bfa" stroke-width="2.4" opacity=".85" stroke-linecap="round"/>
+      <polygon points="149.0,177.5 151.0,171.1 155.3,175.3" fill="#a78bfa" opacity=".85"/>
+      <!-- arm 2 -->
+      <path d="M 114.3,112.5 L 115.8,114.8 L 116.6,117.5 L 116.7,120.6 L 115.8,123.9 L 114.1,127.1 L 111.5,130.1 L 108.0,132.5 L 103.7,134.3 L 98.8,135.3 L 93.5,135.3 L 88.0,134.1 L 82.4,131.8 L 77.0,128.3 L 72.1,123.5 L 67.9,117.7 L 64.7,110.8 L 62.7,103.1 L 62.0,94.8 L 62.9,86.1 L 65.3,77.3 L 69.5,68.7 L 75.2,60.6 L 82.6,53.4 L 91.4,47.3 L 101.4,42.6 L 112.5,39.6 L 124.4,38.5 L 136.7,39.4 L 149.0,42.5"
+            fill="none" stroke="#a78bfa" stroke-width="2.4" opacity=".85" stroke-linecap="round"/>
+      <polygon points="149.0,42.5 142.4,43.9 143.9,38.1" fill="#a78bfa" opacity=".85"/>
+      <!-- center -->
+      <circle cx="110" cy="110" r="6" fill="#2dd4bf" opacity=".9"/>
+      <circle cx="110" cy="110" r="12" fill="none" stroke="#2dd4bf" stroke-width="1" opacity=".3"/>
+    </svg>
+    <div class="sym-label">TRISKELION · THREE ARMS · ONE SOURCE</div>
+  </div>
+
+  <h1>Origin and Transmission of the Triskelion</h1>
+  <div class="value-line">Newgrange c.3200 BCE → Sicily · Celtic World → Contact Manifold</div>
+  <hr class="gold-rule">
+  <p class="hero-desc">The three-spiral symbol predates writing by a millennium. Its geometry — three Archimedean arms turning from a common center — is not decorative convention. It is the bottom-up view of a rotating contact manifold. The transmission from Neolithic Ireland to Sicilian heraldry to aerospace engineering is a single continuous thread.</p>
+</div>
+
+<!-- ── BODY ── -->
+<div class="body">
+
+<h2>1. First Appearance</h2>
+
+<p class="lead">The earliest known triskelion is not on a coin, not on a temple wall, not in a medieval manuscript. It is carved in stone at <strong>Newgrange</strong>, County Meath, Ireland, in the chamber of a passage tomb dated to approximately <strong>3200 BCE</strong> — three centuries before the construction of Stonehenge, two centuries before the earliest Sumerian writing.</p>
+
+<p>The Newgrange triskelion appears on the entrance stone and on orthostats (standing slabs) inside the chamber. The carving is executed with a precision that implies weeks of sustained effort on hard greywacke: three spirals each sweeping approximately 270°, meeting at a shared center point, rotating in the same handedness. The tomb is oriented to admit sunlight only at the winter solstice sunrise — a 17-minute window, once a year — with the light travelling 19 metres down the passage to illuminate the inner chamber floor. The triskelion is placed at the exact threshold where the light meets stone.</p>
+
+<p>This is not a decorative flourish. The placement is structural and intentional. Whoever carved it understood — in some language, with some geometry — that three arms turning from one point encode rotation, periodicity, and the convergence of cycles. The winter solstice is itself a fixed point: the moment the sun's apparent southward motion reverses. A fixed point of the earth's annual contact with light.</p>
+
+<div class="svg-wrap">
+  <svg viewBox="0 0 500 140" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:600px;">
+    <text x="10" y="20" font-family="'Courier New',monospace" font-size="8" letter-spacing="2" fill="#6b7f7d">LOCATION — NEWGRANGE, COUNTY MEATH, IRELAND</text>
+    <rect x="10" y="30" width="480" height="2" fill="rgba(45,212,191,0.1)"/>
+    <!-- Chamber cross-section sketch -->
+    <path d="M 240,40 L 100,130 L 380,130 Z" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+    <path d="M 240,40 L 240,130" fill="none" stroke="rgba(45,212,191,0.15)" stroke-width=".8" stroke-dasharray="3 2"/>
+    <text x="245" y="85" font-family="'Courier New',monospace" font-size="7" fill="rgba(45,212,191,0.4)">light path</text>
+    <text x="170" y="125" font-family="'Courier New',monospace" font-size="7.5" fill="#6b7f7d">entrance stone</text>
+    <text x="230" y="45" font-family="'Courier New',monospace" font-size="7.5" fill="#6b7f7d">NE: solstice sunrise</text>
+    <!-- mini triskelion at entrance -->
+    <g transform="translate(195,120) scale(0.18)">
+      <path d="M 110,105 L 115,98 L 123,93 L 133,91 L 143,93 L 150,100 L 153,110 L 150,122 L 142,133 L 128,141 L 110,145 L 90,143 L 72,136 L 57,123 L 48,107 L 45,90"
+            fill="none" stroke="#a78bfa" stroke-width="8" opacity=".7" stroke-linecap="round"/>
+      <path d="M 110,115 L 103,115 L 97,112 L 93,107 L 91,100 L 93,92 L 99,86 L 108,82 L 120,81 L 133,84 L 145,91 L 155,102 L 160,116 L 160,131 L 155,146"
+            fill="none" stroke="#a78bfa" stroke-width="8" opacity=".7" stroke-linecap="round"/>
+      <path d="M 115,115 L 118,123 L 117,132 L 112,139 L 103,143 L 93,143 L 82,139 L 72,131 L 64,119 L 60,105 L 60,89 L 65,73 L 75,59 L 90,48 L 109,42"
+            fill="none" stroke="#a78bfa" stroke-width="8" opacity=".7" stroke-linecap="round"/>
+      <circle cx="110" cy="110" r="16" fill="#2dd4bf" opacity=".6"/>
+    </g>
+    <rect x="10" y="136" width="480" height="1" fill="rgba(45,212,191,0.06)"/>
+  </svg>
+</div>
+
+<h2>2. Parallel Emergence</h2>
+
+<p>The triskelion appears independently — or is transmitted via routes we cannot yet reconstruct — at several other Neolithic sites within a century of Newgrange:</p>
+
+<div class="timeline">
+
+  <div class="t-entry">
+    <div class="t-date">c. 3200 BCE</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Newgrange, Ireland</strong>
+      <p>Entrance stone + inner chamber orthostats. Three fully developed spiral arms, 270° sweep, shared center. Placed at winter solstice light threshold. Greywacke, carved with stone tools.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 3000 BCE</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Ħal Saflieni Hypogeum, Malta</strong>
+      <p>Underground burial complex, UNESCO listed. Triple spiral motifs on painted ceilings. Malta and Ireland share no known contact at this date — the design may have arisen independently, or via Atlantic coastal transmission we have not documented.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 2800–2200 BCE</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Brú na Bóinne complex, Ireland</strong>
+      <p>Knowth and Dowth, companion tombs to Newgrange in the Boyne Valley cluster. Both carry spiral and triple-spiral carvings on their kerbstones. Knowth is oriented east-west for equinox, Dowth for winter solstice sunset — the triple defines a single calendrical system.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 1600–1200 BCE</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Mycenaean Greece</strong>
+      <p>Triple spirals appear on Mycenaean pottery and metalwork (shaft graves at Mycenae, c. 1600 BCE). The design arrives in the Aegean world at the height of the Bronze Age trade network connecting Britain, Ireland, Iberia, and the eastern Mediterranean via amber routes and tin trade.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 500–300 BCE</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Lycian Coins, Asia Minor</strong>
+      <p>The triskelion appears on silver coins from Lycia (southwestern Turkey). Three running legs in rotation — the "triskeles" form — stamped as civic symbol. The word <em>triskeles</em> (Greek: τρισκελής) means "three-legged," but the geometric structure is the same: three arms from a common center, same rotational sense. The abstraction from spiral to leg maintains the rotational topology.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 400 BCE – 300 CE</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Celtic La Tène Culture, Central Europe</strong>
+      <p>The triskelion enters its most widely distributed phase as a central motif of La Tène art (c. 450 BCE onward). Found on torcs, shields, helmets, ceramics, stone carvings across a range from Ireland to Anatolia. The spiral triple is standard vocabulary: it appears on the Battersea Shield (Britain, c. 350 BCE), on the Gundestrup Cauldron (Denmark, c. 100 BCE), on Irish illuminated manuscripts centuries later. La Tène artists understood the motif as a node of connection — it marks thresholds, joints, meeting points of worlds.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 300 BCE – present</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Sicily — Trinacria</strong>
+      <p>Sicily's symbol is the <em>Trinacria</em> (from Greek τρίνακρος, "three-pointed"), a triskelion of three running legs emerging from the head of Medusa at the center. First used on coins of Syracuse from c. 317 BCE under Agathocles. The three points correspond to the three capes of the island (Pelorus, Passero, Lilibeo) — but the rotational structure is exactly the same. Sicily's shape from above is a triangle with three outward arms; the Trinacria encodes this as rotation. It appears on the flag of Sicily to this day.</p>
+    </div>
+  </div>
+
+  <div class="t-entry">
+    <div class="t-date">c. 13th century CE – present</div>
+    <div class="t-dot"></div>
+    <div class="t-body">
+      <strong>Isle of Man — Three Legs</strong>
+      <p>The Manx triskelion — three armoured legs in rotation, spurs at the heel — appears in the Manx coat of arms from the 13th century (earliest records c. 1266 CE). Motto: <em>Quocunque Jeceris Stabit</em> — "Whichever way you throw it, it will stand." The phrase articulates the topological invariant: the three-armed rotor has no preferred orientation. It is a fixed point of rotation itself. It remains the primary symbol of the Isle of Man government.</p>
+    </div>
+  </div>
+
+</div>
+
+<h2>3. What the Symbol Encodes</h2>
+
+<p>The transmission is not coincidental, and not purely ornamental. Across five millennia and fifteen hundred kilometres of dispersal, the triskelion always appears in one of three contexts:</p>
+
+<p><strong>Threshold and transformation.</strong> Newgrange: the solstice threshold. La Tène shield bosses: the joint between blade and hand. Lycian coins: civic transaction. Isle of Man: legal sovereignty. The triskelion marks the point where two states meet — the moment before and after, the inside and outside. In contact geometry, this is precisely the role of the contact form α: it marks the hypersurface where the Reeb direction and the horizontal distribution meet.</p>
+
+<p><strong>Rotation without preferred axis.</strong> Three arms at 120°, same handedness, imply a rotational symmetry of order 3. But the symbol is always presented as if viewed from a fixed perspective — from above, or from below. This is the projection of a 3D rotating object onto a plane. The triskelion is not a planar object; it is the shadow of a helix.</p>
+
+<p><strong>Convergence.</strong> Each arm begins at the circumference and converges to the center. Or — depending on the direction of reading — each arm emerges from the center and expands outward. The Isle of Man motto captures this: whatever direction you enter, you arrive. The basin geometry of LAW3M says the same thing: whatever initial condition in 0 &lt; r &lt; r*, the trajectory converges to the helical attractor Γ at r = 1.</p>
+
+<h2>4. The Geometric Correspondence</h2>
+
+<p>The three-disk plasma engine introduced in the LAW3M technical brief is not named after the triskelion. The correspondence was discovered in the other direction: when the contact manifold (ℝ³, α = dz − r²dθ) is rendered from below — looking up the z-axis — the three coupled disks rotating at 120° produce exactly the triskelion.</p>
+
+<div class="math-line">α = dz − r²dθ = 0 &nbsp;⟺&nbsp; dz = r²dθ &nbsp;(lift = angular momentum)</div>
+
+<p>The contact condition says that vertical displacement is proportional to the square of the radial distance times the angular increment. Three disks at 120° separation, each satisfying this condition, sweep three Archimedean spirals when viewed from below. The symbol the Newgrange builders carved at the solstice threshold is the ground-state solution of the contact form in cylindrical coordinates.</p>
+
+<table class="corr-table">
+  <thead>
+    <tr>
+      <th>Triskelion element</th>
+      <th>LAW3M / dm³ correspondence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Three spiral arms</td>
+      <td>Three disks at 0°, 120°, 240° on contact manifold</td>
+    </tr>
+    <tr>
+      <td>Shared center point</td>
+      <td>z-axis (Reeb vector field direction)</td>
+    </tr>
+    <tr>
+      <td>Clockwise rotation (viewed from below)</td>
+      <td>θ̇ = 1, right-hand convention on (ℝ³, α)</td>
+    </tr>
+    <tr>
+      <td>270° arm sweep</td>
+      <td>Three-quarter turn before arms reach attractor radius r = 1</td>
+    </tr>
+    <tr>
+      <td>Corona ring at edge of spiral</td>
+      <td>r* = 0.77594 — Whitney fold / plasma threshold</td>
+    </tr>
+    <tr>
+      <td>Threshold placement (Newgrange entrance)</td>
+      <td>α = 0 — the contact condition as threshold</td>
+    </tr>
+    <tr>
+      <td>"Whichever way you throw it, it will stand"</td>
+      <td>Basin convergence: all r ∈ (0, r*) → Γ</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5. The Question of Transmission</h2>
+
+<p>How did the symbol move from Newgrange (3200 BCE) to Malta (3000 BCE) to Mycenae (1600 BCE) to Lycia (500 BCE) to La Tène Gaul (400 BCE) to Syracuse (317 BCE) to the Isle of Man (1266 CE)?</p>
+
+<p>Three hypotheses are in play in the archaeological literature, and they are not mutually exclusive:</p>
+
+<p><strong>Independent invention.</strong> The triskelion may have been discovered multiple times independently, because the geometry is natural. Any culture that observes three-body rotational symmetry — solar wheel, tidal current, three-season calendar — will tend toward this form. The constraint that the arms emerge from a single center and maintain the same handedness may follow from the underlying physics.</p>
+
+<p><strong>Atlantic Megalithic transmission.</strong> The Neolithic Atlantic coast from Morocco to Scandinavia formed a culture of monument-builders (megalithic cultures, 4500–2000 BCE) connected by seaborne trade. The same construction techniques — corbelled roofing, passage tombs oriented to solar events, spiral carving on greywacke — appear at Newgrange, Gavrinis (Brittany), and Listoghil (Ireland) within centuries of each other. The triskelion may have travelled with the builders.</p>
+
+<p><strong>Bronze Age trade networks.</strong> From c. 2500 BCE, tin from Britain and Cornwall, copper from Ireland and Iberia, amber from the Baltic, and gold from Egypt moved along well-documented trade routes connecting the Atlantic fringe to the eastern Mediterranean. Ideas — including geometric symbols — travelled with goods. The appearance of the triskelion on Mycenaean grave goods coincides with the height of Bronze Age Atlantic-Mediterranean exchange.</p>
+
+<p>What is not in dispute is the continuity from La Tène onward. The Celtic world, from 450 BCE to the Roman period and beyond, maintained the triskelion as active vocabulary. The Isle of Man and Brittany retained it into modernity. Sicily retained it independently from the Greek colonial period. The two streams — Celtic Atlantic and Sicilian-Greek — are the same symbol arriving from different branches of the same Bronze Age distribution.</p>
+
+<h2>6. Toward a Chapter</h2>
+
+<p>The triskelion chapter in the Omega Point book (Volume V or B8) should follow the same structure as the Abraham / Ur transmission in ch-ur.html: begin with the earliest material evidence, trace each documented instance, and arrive at the mathematical convergence. The argument is not mystical — it is geometric. The symbol encodes a structure that the dm³ framework formalises. The people of Newgrange did not know about contact geometry. But they built a monument oriented to a fixed point in the earth's orbit and carved its symbol — three arms converging — on the threshold stone.</p>
+
+<blockquote>
+  The contact condition α = 0 defines a hypersurface. The Newgrange passage defines a hypersurface. Both are oriented toward a fixed point. Both mark the moment when two states — inside and outside, lift and fall, convergence and escape — meet at a threshold.
+  <cite>— Working note, Principia Orthogona Vol. V</cite>
+</blockquote>
+
+<div class="chip-row">
+  <div class="chip pu">Newgrange 3200 BCE</div>
+  <div class="chip pu">Malta 3000 BCE</div>
+  <div class="chip pu">Mycenae 1600 BCE</div>
+  <div class="chip pu">Lycia 500 BCE</div>
+  <div class="chip pu">La Tène 450 BCE</div>
+  <div class="chip gd">Syracuse 317 BCE</div>
+  <div class="chip gd">Isle of Man 1266 CE</div>
+  <div class="chip tc">LAW3M 2026 CE</div>
+</div>
+
+<h2>References</h2>
+
+<p style="font-size:.88rem;">
+O'Kelly, M. J. <em>Newgrange: Archaeology, Art and Legend.</em> Thames & Hudson, 1982.<br><br>
+Scarre, C. (ed.) <em>The Megalithic Monuments of Britain and Ireland.</em> Thames & Hudson, 2007.<br><br>
+Cunliffe, B. <em>Facing the Ocean: The Atlantic and Its Peoples.</em> Oxford University Press, 2001.<br><br>
+Megaw, J.V.S. &amp; Megaw, M.R. <em>Celtic Art: From Its Beginnings to the Book of Kells.</em> Thames & Hudson, 1989 / rev. 2001.<br><br>
+Lafleur, G. "The triskelion in Lycian coinage." <em>Nomismatika Khronika</em> 14, 1995.<br><br>
+LAW3M — Grossi, P.N. Principia Orthogona series. doi:<a href="https://doi.org/10.5281/zenodo.19117399">10.5281/zenodo.19117399</a>, 2026.
+</p>
+
+<footer>
+  ch-triskelion.html · Principia Orthogona · Symbol Transmission Series<br>
+  G6 LLC · Newark, New Jersey · pg6llc@gmail.com · ORCID 0009-0000-6496-2186<br>
+  doi:<a href="https://doi.org/10.5281/zenodo.19117399">10.5281/zenodo.19117399</a> · ISBN 979-8-9954416-6-3<br>
+  <a href="abstract-law3m-2026.html">LAW3M Abstract</a> ·
+  <a href="law3m-brief.html">Technical Brief</a> ·
+  <a href="law3m-jackknife-proof.html">Proofs</a> ·
+  <a href="https://totogt.github.io/geometry/book4/living-book.html">Book IV Hub</a>
+</footer>
+
+</div>
+</body>
+</html>
