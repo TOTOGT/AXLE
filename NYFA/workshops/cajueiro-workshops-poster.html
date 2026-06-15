@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cajueiro Workshops · Uceda School · Elizabeth NJ · 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0ABAB5;--teal-soft:#9cf3ef;--teal-dim:rgba(10,186,181,.11);--teal-line:rgba(10,186,181,.2);
+  --deep:#030a08;--ink:#d8ede6;--muted:#7ab8ac;--gold:#c8a24a;--gold-soft:#ffe7a0;
+  --magenta:#e91e8c;--mag-dim:rgba(233,30,140,.1);
+  --c:#4a9eff;--k:#e05a3a;--f:#50c878;--u:#c084fc;--g-op:#c8a24a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--deep);color:var(--ink);font-family:'EB Garamond',Georgia,serif;font-size:17px;line-height:1.75;overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:linear-gradient(to bottom,rgba(3,10,8,.96),transparent);flex-wrap:wrap;gap:.5rem}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);opacity:.85;text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;list-style:none;flex-wrap:wrap}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;opacity:.6;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--teal)}
+
+/* HERO */
+.hero{position:relative;z-index:2;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 5vw;gap:3rem}
+@media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:7rem;text-align:center}}
+.cajueiro-col{display:flex;flex-direction:column;align-items:center;padding-top:4rem;position:relative}
+.cajueiro-wrap{position:relative;width:min(440px,88vw);animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.root-pulse{position:absolute;border-radius:50%;background:var(--teal);animation:pr 3.5s ease-out infinite;pointer-events:none}
+@keyframes pr{0%{transform:scale(1);opacity:.7}100%{transform:scale(4.5);opacity:0}}
+.pirangi-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--teal);opacity:.4;text-align:center;margin-top:.6rem;text-transform:uppercase}
+
+/* HERO TEXT */
+.hero-text{padding-top:4rem;max-width:500px}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--teal);opacity:.72;margin-bottom:1.2rem;display:block}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,5vw,4rem);font-weight:300;font-style:italic;line-height:1.08;color:#e8f5f0;margin-bottom:.8rem}
+.hero-title em{font-style:normal;color:var(--teal)}
+.hero-sub{font-size:1rem;color:var(--muted);line-height:1.85;margin-bottom:1.4rem}
+.hero-venue{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--gold);opacity:.82;margin-bottom:1.6rem;line-height:1.8}
+
+/* SOUND ENGINE */
+.sound-engine{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.2rem}
+.layer-toggle{display:flex;align-items:center;gap:.8rem;background:none;border:none;color:inherit;font-family:inherit;cursor:pointer;padding:.3rem 0;width:100%}
+.layer-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--teal);flex-shrink:0;transition:background .2s}
+.layer-toggle.active .layer-dot{background:var(--teal);box-shadow:0 0 8px var(--teal)}
+.layer-name{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.layer-toggle.active .layer-name{color:var(--teal-soft)}
+.layer-desc{font-size:13px;color:var(--muted);opacity:.5;margin-left:auto;font-style:italic}
+.waveform{display:flex;align-items:flex-end;gap:2px;height:28px;margin:.3rem 0 1rem;opacity:0;transition:opacity .5s}
+.waveform.playing{opacity:1}
+.wv-bar{flex:1;background:var(--teal);border-radius:1px;min-height:2px;opacity:.28}
+.btn-play{display:inline-flex;align-items:center;gap:.7rem;padding:.75rem 1.6rem;border:1px solid var(--teal-line);background:transparent;color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s,border-color .2s}
+.btn-play:hover,.btn-play.playing{background:var(--teal-dim);border-color:var(--teal)}
+
+/* DIVIDER */
+.rule{width:100%;height:1px;position:relative;z-index:2;background:linear-gradient(to right,transparent,var(--teal-line),transparent)}
+
+/* WORKSHOPS SECTION */
+#workshops{position:relative;z-index:2;padding:5rem 5vw 6rem;background:linear-gradient(180deg,#040c08,#030a08)}
+.section-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--teal);opacity:.52;display:block;margin-bottom:.8rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:400;font-style:italic;color:#e8f5f0;line-height:1.2;margin-bottom:.5rem}
+.section-sub{font-size:.95rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.75}
+.exhibition-note{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--gold);opacity:.65;margin-bottom:2.5rem;padding:.6rem 1rem;border-left:2px solid var(--gold);background:rgba(200,162,74,.04);display:inline-block;line-height:1.8}
+
+.workshops{display:flex;flex-direction:column;gap:.75rem;max-width:860px;margin:0 auto}
+.card{display:grid;grid-template-columns:4rem 1fr;background:rgba(255,255,255,.025);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.05);transition:border-color .25s,background .25s}
+.card:hover{border-color:rgba(10,186,181,.25);background:rgba(10,186,181,.04)}
+a.card-link{text-decoration:none;color:inherit;display:block}
+a.card-link .card{cursor:pointer}
+a.card-link:hover .card{border-color:rgba(10,186,181,.4);background:rgba(10,186,181,.06)}
+a.card-link .card-title::after{content:' →';font-size:.75em;opacity:0;transition:opacity .2s;font-family:'JetBrains Mono',monospace;color:var(--teal)}
+a.card-link:hover .card-title::after{opacity:.6}
+.card-accent{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.8rem .4rem;gap:.25rem}
+.card-op{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:bold}
+.card-num{font-size:.65rem;color:rgba(255,255,255,.3);font-family:'JetBrains Mono',monospace}
+.card-body{padding:.85rem 1rem .85rem 0}
+.card-date{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--muted);margin-bottom:.2rem;letter-spacing:.04em;opacity:.75}
+.card-title{font-size:1.1rem;color:#fff;margin-bottom:.18rem;line-height:1.2;font-family:'Playfair Display',serif;font-style:italic}
+.card-pt{font-size:.82rem;color:var(--muted);font-style:italic;margin-bottom:.3rem;opacity:.7}
+.card-desc{font-size:.86rem;color:#8fbcb6;line-height:1.5}
+
+.op-c .card-accent{background:rgba(74,158,255,.1)}.op-c .card-op{color:var(--c)}
+.op-k .card-accent{background:rgba(224,90,58,.1)}.op-k .card-op{color:var(--k)}
+.op-f .card-accent{background:rgba(80,200,120,.1)}.op-f .card-op{color:var(--f)}
+.op-u .card-accent{background:rgba(192,132,252,.1)}.op-u .card-op{color:var(--u)}
+.op-g .card-accent{background:rgba(200,162,74,.12)}.op-g .card-op{color:var(--g-op)}
+
+/* FOOTER SECTION */
+#footer-section{position:relative;z-index:2;padding:3.5rem 5vw 4rem;background:#000;border-top:1px solid rgba(10,186,181,.08)}
+.footer-inner{max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
+@media(max-width:640px){.footer-inner{grid-template-columns:1fr}}
+.footer-left{font-size:.88rem;color:var(--muted);line-height:1.9}
+.footer-left strong{color:var(--teal);font-weight:normal}
+.footer-left a{color:var(--teal);text-decoration:none;opacity:.75}
+.footer-left a:hover{opacity:1}
+.free-badge{display:inline-block;background:rgba(10,186,181,.1);border:1px solid var(--teal-line);color:var(--teal);font-size:.7rem;letter-spacing:.14em;padding:.22rem .8rem;border-radius:2px;font-family:'JetBrains Mono',monospace;margin-top:.8rem}
+.qr-row{display:flex;gap:1.2rem;align-items:flex-start;flex-wrap:wrap}
+.qr-item{display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.qr-item img{width:76px;height:76px;border-radius:3px;background:#fff;padding:4px}
+.qr-label{font-size:.62rem;color:var(--muted);font-family:'JetBrains Mono',monospace;text-align:center;line-height:1.35;max-width:76px;opacity:.7}
+.footer-axiom{grid-column:1/-1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.18em;color:var(--teal);opacity:.22;margin-top:1.5rem;line-height:2}
+
+/* FADE-IN */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<nav>
+  <a class="nav-brand" href="#">⚜ Cajueiro · G6 LLC · Newark NJ</a>
+  <ul class="nav-links">
+    <li><a href="#sound">Sound</a></li>
+    <li><a href="#workshops">Workshops</a></li>
+    <li><a href="https://totogt.github.io/geometry" target="_blank">Books</a></li>
+    <li><a href="https://g6llc.gumroad.com/l/soundworks" target="_blank">Join</a></li>
+    <li><a href="https://www.gofundme.com/f/cajueiro-healing-walks-soundworks-newark" target="_blank">Donate</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="sound">
+  <div class="cajueiro-col">
+    <div class="cajueiro-wrap">
+      <!-- Root pulse rings — scattered across the forest floor -->
+      <div class="root-pulse" style="width:8px;height:8px;left:12%;top:85%;animation-delay:0s"></div>
+      <div class="root-pulse" style="width:8px;height:8px;left:28%;top:88%;animation-delay:0.8s"></div>
+      <div class="root-pulse" style="width:8px;height:8px;left:46%;top:86%;animation-delay:1.8s"></div>
+      <div class="root-pulse" style="width:8px;height:8px;left:63%;top:87%;animation-delay:0.4s"></div>
+      <div class="root-pulse" style="width:8px;height:8px;left:80%;top:85%;animation-delay:2.6s"></div>
+      <div class="root-pulse" style="width:8px;height:8px;left:91%;top:88%;animation-delay:1.3s"></div>
+
+      <!-- Cajueiro de Pirangi — ONE ORGANISM · FULL FOREST · 8,500 m² -->
+      <svg viewBox="0 0 560 340" xmlns="http://www.w3.org/2000/svg" width="100%" style="display:block">
+        <defs>
+          <radialGradient id="gl" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#0ABAB5" stop-opacity=".13"/>
+            <stop offset="100%" stop-color="#030a08" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="gl2" cx="20%" cy="50%" r="35%">
+            <stop offset="0%" stop-color="#1e7535" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#030a08" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="gl3" cx="80%" cy="50%" r="35%">
+            <stop offset="0%" stop-color="#1e7535" stop-opacity=".10"/>
+            <stop offset="100%" stop-color="#030a08" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="bs">
+            <feGaussianBlur stdDeviation="7"/>
+          </filter>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="softglow">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- ambient light -->
+        <ellipse cx="280" cy="160" rx="260" ry="120" fill="url(#gl)"/>
+        <ellipse cx="100" cy="170" rx="150" ry="100" fill="url(#gl2)"/>
+        <ellipse cx="450" cy="165" rx="140" ry="95" fill="url(#gl3)"/>
+
+        <!-- ground shadow — long and wide like a whole forest -->
+        <ellipse cx="280" cy="316" rx="255" ry="18" fill="rgba(0,0,0,.55)" filter="url(#bs)"/>
+        <ellipse cx="280" cy="318" rx="200" ry="10" fill="rgba(10,186,181,.05)" filter="url(#bs)"/>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- AERIAL ROOTS — thin teal dashed droops  -->
+        <!-- drawn first so trunks sit on top        -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- far left droops from low branch -->
+        <path d="M 42 158 Q 38 210 36 268 Q 35 292 38 308" stroke="#0ABAB5" stroke-width="1.8" fill="none" stroke-dasharray="3 4" opacity=".6" stroke-linecap="round"/>
+        <path d="M 72 130 Q 68 185 65 245 Q 63 278 66 305" stroke="#0ABAB5" stroke-width="1.8" fill="none" stroke-dasharray="3 4" opacity=".55" stroke-linecap="round"/>
+
+        <!-- left-centre droops -->
+        <path d="M 148 108 Q 144 175 142 238 Q 141 270 144 300" stroke="#0ABAB5" stroke-width="2" fill="none" stroke-dasharray="4 3" opacity=".65" stroke-linecap="round"/>
+        <path d="M 178 98 Q 175 160 173 225 Q 172 265 175 298" stroke="#0ABAB5" stroke-width="1.8" fill="none" stroke-dasharray="3 4" opacity=".5" stroke-linecap="round"/>
+
+        <!-- centre droops -->
+        <path d="M 238 90 Q 235 155 233 222 Q 232 262 236 295" stroke="#0ABAB5" stroke-width="2" fill="none" stroke-dasharray="4 3" opacity=".6" stroke-linecap="round"/>
+        <path d="M 318 92 Q 316 158 315 220 Q 314 260 318 294" stroke="#0ABAB5" stroke-width="2" fill="none" stroke-dasharray="4 3" opacity=".6" stroke-linecap="round"/>
+
+        <!-- right-centre droops -->
+        <path d="M 385 102 Q 382 168 380 228 Q 379 262 382 298" stroke="#0ABAB5" stroke-width="1.8" fill="none" stroke-dasharray="3 4" opacity=".5" stroke-linecap="round"/>
+        <path d="M 420 112 Q 418 178 416 242 Q 415 272 418 302" stroke="#0ABAB5" stroke-width="2" fill="none" stroke-dasharray="4 3" opacity=".58" stroke-linecap="round"/>
+
+        <!-- far right droops -->
+        <path d="M 480 135 Q 478 192 476 255 Q 475 282 478 308" stroke="#0ABAB5" stroke-width="1.8" fill="none" stroke-dasharray="3 4" opacity=".55" stroke-linecap="round"/>
+        <path d="M 515 155 Q 513 210 512 268 Q 511 290 514 308" stroke="#0ABAB5" stroke-width="1.8" fill="none" stroke-dasharray="3 4" opacity=".5" stroke-linecap="round"/>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TRUNKS — multiple, one organism         -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- trunk 1 — far left, secondary, thin -->
+        <path d="M 38 308 Q 40 280 42 252 Q 44 225 46 205 Q 50 185 58 165" stroke="#1a4a2e" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M 66 305 Q 67 275 68 245 Q 69 215 70 195 Q 72 175 76 158" stroke="#163820" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+        <!-- trunk 2 — left, medium -->
+        <path d="M 144 300 Q 145 268 146 238 Q 147 208 148 185 Q 150 162 152 142" stroke="#1e5a35" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M 175 298 Q 176 265 177 234 Q 178 205 178 182 Q 178 160 177 140" stroke="#1a4a2e" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+        <!-- trunk 3 — MAIN TRUNK, thickest, centre-left -->
+        <path d="M 235 295 Q 234 262 234 232 Q 234 202 235 178 Q 236 155 238 135 Q 240 115 242 98" stroke="#1e5a35" stroke-width="16" fill="none" stroke-linecap="round"/>
+        <path d="M 248 296 Q 248 263 248 233 Q 248 203 248 179 Q 248 156 246 135 Q 244 115 242 98" stroke="#1a4a2e" stroke-width="12" fill="none" stroke-linecap="round"/>
+
+        <!-- trunk 4 — right of main, medium-thick -->
+        <path d="M 316 294 Q 316 262 316 232 Q 316 202 317 178 Q 318 155 320 136" stroke="#1e5a35" stroke-width="11" fill="none" stroke-linecap="round"/>
+        <path d="M 326 295 Q 325 263 325 233 Q 324 203 323 178 Q 322 155 321 136" stroke="#163820" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+        <!-- trunk 5 — right, thinner -->
+        <path d="M 382 298 Q 382 268 382 238 Q 382 210 383 188 Q 384 168 386 150" stroke="#1a4a2e" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path d="M 418 302 Q 418 272 418 244 Q 418 218 419 196 Q 420 176 422 158" stroke="#1e5a35" stroke-width="8" fill="none" stroke-linecap="round"/>
+
+        <!-- trunk 6 — far right, secondary, thin -->
+        <path d="M 478 308 Q 478 280 478 252 Q 478 226 479 205 Q 480 185 482 168" stroke="#163820" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path d="M 514 308 Q 513 282 513 256 Q 513 230 514 210 Q 515 190 518 172" stroke="#1a4a2e" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- BRANCHES — horizontal spread            -->
+        <!-- interconnecting the trunks             -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- main horizontal branch layer — runs almost full width -->
+        <path d="M 42 168 Q 80 148 120 138 Q 158 128 200 118 Q 242 108 280 105 Q 318 102 358 108 Q 398 115 438 125 Q 475 135 510 148" stroke="#1a4a2e" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <path d="M 50 162 Q 90 144 132 133 Q 172 123 212 114 Q 252 105 286 103 Q 322 101 360 106 Q 400 112 440 122 Q 478 132 516 145" stroke="#163820" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+        <!-- second branch layer, slightly lower on left side -->
+        <path d="M 38 200 Q 68 185 105 175 Q 140 165 175 158 Q 210 152 242 148" stroke="#1e5a35" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+        <!-- secondary cross-branches -->
+        <path d="M 76 158 Q 110 145 148 138" stroke="#1a4a2e" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 178 140 Q 210 128 242 118" stroke="#163820" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 320 136 Q 352 120 384 112" stroke="#1a4a2e" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M 384 150 Q 418 138 452 130" stroke="#163820" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 480 168 Q 498 158 516 150" stroke="#1a4a2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- upper branches reaching into canopy -->
+        <path d="M 242 100 Q 238 82 235 68 Q 232 55 230 44" stroke="#163820" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M 280 103 Q 278 86 278 70 Q 278 56 280 44" stroke="#1e5a35" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 322 108 Q 325 90 326 74 Q 327 60 326 48" stroke="#163820" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M 200 118 Q 195 98 192 80 Q 190 65 192 52" stroke="#1a4a2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M 358 108 Q 362 88 365 72 Q 367 58 365 46" stroke="#1a4a2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CANOPY — wide, continuous, one mass     -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- deep dark base — full width -->
+        <ellipse cx="280" cy="130" rx="265" ry="92" fill="#030a06" opacity=".95"/>
+        <!-- layered depth -->
+        <ellipse cx="280" cy="122" rx="255" ry="82" fill="#050e08" opacity=".92"/>
+        <ellipse cx="260" cy="118" rx="240" ry="76" fill="#061008" opacity=".9"/>
+        <!-- mid-canopy mass -->
+        <ellipse cx="145" cy="125" rx="145" ry="62" fill="#081408" opacity=".88"/>
+        <ellipse cx="415" cy="128" rx="145" ry="60" fill="#081408" opacity=".88"/>
+        <ellipse cx="280" cy="110" rx="230" ry="68" fill="#0a1a0a" opacity=".85"/>
+        <!-- richer greens -->
+        <ellipse cx="280" cy="100" rx="220" ry="62" fill="#0c1e0c" opacity=".82"/>
+        <ellipse cx="190" cy="105" rx="165" ry="55" fill="#0e2210" opacity=".78"/>
+        <ellipse cx="370" cy="108" rx="160" ry="52" fill="#0e2210" opacity=".78"/>
+        <ellipse cx="280" cy="90" rx="200" ry="56" fill="#112814" opacity=".72"/>
+        <ellipse cx="160" cy="92" rx="140" ry="48" fill="#132c16" opacity=".68"/>
+        <ellipse cx="400" cy="94" rx="140" ry="46" fill="#132c16" opacity=".68"/>
+        <!-- mid bright -->
+        <ellipse cx="280" cy="78" rx="185" ry="50" fill="#163218" opacity=".62"/>
+        <ellipse cx="200" cy="80" rx="130" ry="44" fill="#1a3a1c" opacity=".58"/>
+        <ellipse cx="360" cy="82" rx="125" ry="42" fill="#1a3a1c" opacity=".58"/>
+        <ellipse cx="280" cy="65" rx="165" ry="44" fill="#1e4220" opacity=".52"/>
+        <!-- bright upper canopy -->
+        <ellipse cx="240" cy="60" rx="120" ry="38" fill="#224824" opacity=".45"/>
+        <ellipse cx="320" cy="62" rx="115" ry="36" fill="#224824" opacity=".45"/>
+        <ellipse cx="280" cy="52" rx="140" ry="38" fill="#285230" opacity=".38"/>
+        <ellipse cx="220" cy="50" rx="90" ry="32" fill="#2e5e38" opacity=".32"/>
+        <ellipse cx="340" cy="52" rx="88" ry="30" fill="#2e5e38" opacity=".32"/>
+        <!-- top highlight -->
+        <ellipse cx="260" cy="42" rx="70" ry="26" fill="#346840" opacity=".25"/>
+        <ellipse cx="300" cy="40" rx="65" ry="24" fill="#3a7248" opacity=".20"/>
+        <ellipse cx="280" cy="34" rx="55" ry="20" fill="#408050" opacity=".15"/>
+
+        <!-- canopy edge texture — soft bumps -->
+        <ellipse cx="38" cy="155" rx="28" ry="22" fill="#1e5a35" opacity=".28"/>
+        <ellipse cx="90" cy="135" rx="32" ry="24" fill="#226040" opacity=".25"/>
+        <ellipse cx="510" cy="148" rx="28" ry="20" fill="#1e5a35" opacity=".28"/>
+        <ellipse cx="465" cy="132" rx="30" ry="22" fill="#226040" opacity=".25"/>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- ROOT-TOUCH GLOWS — scattered across    -->
+        <!-- ground where aerial roots landed        -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <circle cx="38" cy="308" r="6" fill="#0ABAB5" opacity=".65" filter="url(#glow)"/>
+        <circle cx="66" cy="305" r="5" fill="#0ABAB5" opacity=".55" filter="url(#glow)"/>
+        <circle cx="144" cy="300" r="7" fill="#0ABAB5" opacity=".70" filter="url(#glow)"/>
+        <circle cx="175" cy="298" r="5" fill="#0ABAB5" opacity=".55" filter="url(#glow)"/>
+        <circle cx="236" cy="295" r="8" fill="#0ABAB5" opacity=".72" filter="url(#glow)"/>
+        <circle cx="318" cy="294" r="7" fill="#0ABAB5" opacity=".70" filter="url(#glow)"/>
+        <circle cx="382" cy="298" r="6" fill="#0ABAB5" opacity=".60" filter="url(#glow)"/>
+        <circle cx="418" cy="302" r="5.5" fill="#0ABAB5" opacity=".58" filter="url(#glow)"/>
+        <circle cx="478" cy="308" r="6" fill="#0ABAB5" opacity=".60" filter="url(#glow)"/>
+        <circle cx="514" cy="308" r="5" fill="#0ABAB5" opacity=".52" filter="url(#glow)"/>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- FRUITS — scattered through the canopy   -->
+        <!-- ═══════════════════════════════════════ -->
+
+        <!-- orange -->
+        <ellipse cx="130" cy="130" rx="8" ry="6" fill="#c8742a" opacity=".85"/>
+        <rect x="128.5" y="123" width="2.5" height="5" rx="1" fill="#163820" opacity=".8"/>
+        <ellipse cx="130" cy="136" rx="4" ry="2.5" fill="#c8a24a" opacity=".55"/>
+        <!-- red -->
+        <ellipse cx="360" cy="118" rx="8" ry="6" fill="#b8301a" opacity=".82"/>
+        <rect x="358.5" y="111" width="2.5" height="5" rx="1" fill="#163820" opacity=".8"/>
+        <ellipse cx="360" cy="124" rx="4" ry="2.5" fill="#c8742a" opacity=".52"/>
+        <!-- yellow -->
+        <ellipse cx="430" cy="128" rx="7" ry="5.5" fill="#c8a21a" opacity=".78"/>
+        <rect x="428.5" y="121" width="2.5" height="5" rx="1" fill="#163820" opacity=".8"/>
+        <ellipse cx="430" cy="134" rx="3.5" ry="2" fill="#e0c050" opacity=".48"/>
+        <!-- smaller fruits -->
+        <ellipse cx="220" cy="110" rx="6" ry="4.5" fill="#c8742a" opacity=".6"/>
+        <rect x="218.5" y="104" width="2" height="4" rx="1" fill="#163820" opacity=".7"/>
+        <ellipse cx="295" cy="98" rx="5.5" ry="4" fill="#b8301a" opacity=".55"/>
+
+        <!-- g6 label -->
+        <text x="244" y="270" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10" fill="#0ABAB5" opacity=".38" letter-spacing="2">g6</text>
+
+        <!-- operator chain -->
+        <text x="280" y="332" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#0ABAB5" opacity=".25" letter-spacing="4">C · K · F · U</text>
+      </svg>
+    </div>
+    <div class="pirangi-label">Anacardium occidentale · Pirangi-RN · 8.500 m² · um organismo · one root</div>
+  </div>
+
+  <div class="hero-text">
+    <span class="hero-eyebrow">⚜ Free Public Workshops · Elizabeth NJ · 2026</span>
+    <h1 class="hero-title">O Princípio<br>do <em>Cajueiro</em></h1>
+    <p class="hero-sub">
+      Healing community · bilingual mathematics · immigrant voices.<br>
+      <em>Uma raiz toca o chão. Ela sustenta.</em><br>
+      One root touches the ground. It holds.
+    </p>
+    <div class="hero-venue">
+      📍 Uceda School of Elizabeth · Elizabeth, NJ<br>
+      Every Thursday 5:00 – 6:00 PM · Oct 29 → Dec 3, 2026<br>
+      Cymatics Exhibition open Mon – Thu · drop in free
+    </div>
+
+    <!-- SOUND ENGINE -->
+    <div class="sound-engine">
+      <button class="layer-toggle" id="tog-ocean" onclick="toggleLayer('ocean')">
+        <span class="layer-dot"></span>
+        <span class="layer-name">Ocean</span>
+        <span class="layer-desc">Atlantic tide · 0.05 Hz</span>
+      </button>
+      <button class="layer-toggle" id="tog-mangue" onclick="toggleLayer('mangue')">
+        <span class="layer-dot"></span>
+        <span class="layer-name">Mangue</span>
+        <span class="layer-desc">mangrove channel · 40–80 Hz</span>
+      </button>
+      <button class="layer-toggle" id="tog-hz" onclick="toggleLayer('hz')">
+        <span class="layer-dot"></span>
+        <span class="layer-name">111 Hz</span>
+        <span class="layer-desc">Hypogeum · theta 6 Hz</span>
+      </button>
+      <button class="layer-toggle" id="tog-reeb" onclick="toggleLayer('reeb')">
+        <span class="layer-dot"></span>
+        <span class="layer-name">Reeb helix</span>
+        <span class="layer-desc">z(t) · η 1.8393</span>
+      </button>
+    </div>
+    <div class="waveform" id="waveform">
+      <div class="wv-bar" style="height:40%"></div><div class="wv-bar" style="height:60%"></div>
+      <div class="wv-bar" style="height:80%"></div><div class="wv-bar" style="height:50%"></div>
+      <div class="wv-bar" style="height:90%"></div><div class="wv-bar" style="height:40%"></div>
+      <div class="wv-bar" style="height:70%"></div><div class="wv-bar" style="height:55%"></div>
+      <div class="wv-bar" style="height:85%"></div><div class="wv-bar" style="height:45%"></div>
+      <div class="wv-bar" style="height:65%"></div><div class="wv-bar" style="height:75%"></div>
+      <div class="wv-bar" style="height:50%"></div><div class="wv-bar" style="height:88%"></div>
+      <div class="wv-bar" style="height:42%"></div><div class="wv-bar" style="height:62%"></div>
+    </div>
+    <button class="btn-play" id="btn-play" onclick="toggleMaster()">
+      <span id="play-icon">▶</span>
+      <span id="play-label">Play the mangue</span>
+    </button>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- WORKSHOPS -->
+<section id="workshops">
+  <div style="max-width:860px;margin:0 auto">
+    <span class="section-tag fade-in">Five free workshops · Outubro — Dezembro 2026</span>
+    <h2 class="section-title fade-in">The Cajueiro Workshops</h2>
+    <p class="section-sub fade-in">
+      Bilingual · English &amp; Portuguese · No prior math required · All materials online<br>
+      Podcasts, reading, and QR codes — anyone can follow along and go deeper.
+    </p>
+    <div class="exhibition-note fade-in">
+      ✦ CURIOSITY CYMATICS EXHIBITION · open to the public Monday – Thursday · free entry · Uceda School of Elizabeth
+    </div>
+  </div>
+
+  <div class="workshops">
+
+    <a href="workshop-1-cajueiro-principle.html" class="card-link">
+    <div class="card op-c fade-in">
+      <div class="card-accent"><span class="card-op">C</span><span class="card-num">01</span></div>
+      <div class="card-body">
+        <div class="card-date">Thu Oct 29 · 5:00 – 6:00 PM</div>
+        <div class="card-title">The Cajueiro Principle</div>
+        <div class="card-pt">O Princípio do Cajueiro</div>
+        <div class="card-desc">The cashew tree of Pirangi — one organism, 8,500 m², one root. A walking meditation and framework for belonging. Compress · be here now · the first root.</div>
+      </div>
+    </div>
+    </a>
+
+    <a href="workshop-2-books.html" class="card-link">
+    <div class="card op-k fade-in">
+      <div class="card-accent"><span class="card-op">K</span><span class="card-num">02</span></div>
+      <div class="card-body">
+        <div class="card-date">Thu Nov 5 · 5:00 – 6:00 PM</div>
+        <div class="card-title">The Books · Principia Orthogona</div>
+        <div class="card-pt">Os Livros · Vols I – VI</div>
+        <div class="card-desc">A bilingual mathematics series — four ways to enter the same knowledge: <em>Ler, Simular, Provar, Ensinar</em>. Read, Simulate, Prove, Teach. The branches reach.</div>
+      </div>
+    </div>
+    </a>
+
+    <a href="workshop-3-math.html" class="card-link">
+    <div class="card op-f fade-in">
+      <div class="card-accent"><span class="card-op">F</span><span class="card-num">03</span></div>
+      <div class="card-body">
+        <div class="card-date">Thu Nov 12 · 5:00 – 6:00 PM</div>
+        <div class="card-title">Math Made Accessible</div>
+        <div class="card-pt">Matemática para Todos</div>
+        <div class="card-desc">The g-series from seed to canopy. Helical attractors, live browser simulations, Cymatics with Machines. The root touches ground. Re-root. Threshold.</div>
+      </div>
+    </div>
+    </a>
+
+    <a href="workshop-4-esl.html" class="card-link">
+    <div class="card op-u fade-in">
+      <div class="card-accent"><span class="card-op">U</span><span class="card-num">04</span></div>
+      <div class="card-body">
+        <div class="card-date">Thu Nov 19 · 5:00 – 6:00 PM</div>
+        <div class="card-title">ESL &amp; Academic English</div>
+        <div class="card-pt">Inglês como Segunda Língua</div>
+        <div class="card-desc">The Cajueiro Principle as a language-learning tool. Mathematical texts in English and Portuguese side by side. For immigrant adults navigating a new language. Unfold · the canopy.</div>
+      </div>
+    </div>
+    </a>
+
+    <a href="workshop-5-wellness.html" class="card-link">
+    <div class="card op-g fade-in">
+      <div class="card-accent"><span class="card-op">G</span><span class="card-num">05</span></div>
+      <div class="card-body">
+        <div class="card-date">Wed Nov 25 · 5:00 – 6:00 PM</div>
+        <div class="card-title">Community Wellness &amp; Immigration</div>
+        <div class="card-pt">Bem-Estar Comunitário · Imigração</div>
+        <div class="card-desc">Coping with isolation, transition, and belonging. The soundworks — ocean, mangue, 111 Hz — as a wellness practice. Open circle: your story, your root, your canopy. G = U ∘ F ∘ K ∘ C.</div>
+      </div>
+    </div>
+    </a>
+
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- FOOTER -->
+<section id="footer-section">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <strong>Free and open to the public · Gratuito e aberto ao público</strong><br>
+      All workshops bilingual English &amp; Portuguese<br>
+      Podcasts and reading materials at <a href="https://totogt.github.io/geometry" target="_blank">totogt.github.io/geometry</a><br>
+      Books: <a href="https://g6llc.gumroad.com/l/soundworks" target="_blank">g6llc.gumroad.com</a> ($25–$250 · living book access Vols I–VI)<br>
+      Support the project: <a href="https://www.gofundme.com/f/cajueiro-healing-walks-soundworks-newark" target="_blank">GoFundMe</a><br><br>
+      G6 LLC · EIN 33-2880433<br>
+      Fiscal sponsor: New York Foundation for the Arts (NYFA)<br>
+      <a href="mailto:grossiatwork@gmail.com">grossiatwork@gmail.com</a>
+      <br>
+      <span class="free-badge">FREE · GRATUITO · 5 WORKSHOPS</span>
+    </div>
+    <div class="qr-row">
+      <div class="qr-item">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=030a08&bgcolor=ffffff&data=https://totogt.github.io/geometry" alt="Books">
+        <span class="qr-label">Books &amp;<br>Exhibition</span>
+      </div>
+      <div class="qr-item">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=030a08&bgcolor=ffffff&data=https://g6llc.gumroad.com/l/soundworks" alt="Soundworks">
+        <span class="qr-label">Soundworks<br>&amp; Volumes</span>
+      </div>
+      <div class="qr-item">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=030a08&bgcolor=ffffff&data=https://www.gofundme.com/f/cajueiro-healing-walks-soundworks-newark" alt="Donate">
+        <span class="qr-label">Support<br>the project</span>
+      </div>
+    </div>
+    <div class="footer-axiom">
+      C · K · F · U · G = U ∘ F ∘ K ∘ C · seed tends to forest · a semente tende à floresta<br>
+      © 2026 Pablo Nogueira Grossi — G6 LLC · MIT (code) · CC BY 4.0 (educational materials)
+    </div>
+  </div>
+</section>
+
+<script>
+/* ── CANVAS BACKGROUND (ocean waves + Reeb helix) ── */
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');
+let W,H;
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+function drawBg(){
+  cx.clearRect(0,0,W,H);
+  const t=Date.now()/1000;
+  const g=cx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#030a08');g.addColorStop(.6,'#041410');g.addColorStop(1,'#030a08');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  /* ocean waves */
+  for(let w=0;w<5;w++){
+    const spd=.12+w*.04,amp=20-w*3,yBase=H*.72+w*28,alpha=.04-w*.006;
+    cx.beginPath();cx.moveTo(0,yBase);
+    for(let x=0;x<=W;x+=6){
+      const y=yBase+amp*Math.sin(x*.008+t*spd)+amp*.4*Math.sin(x*.016+t*(spd*.65)+w);
+      cx.lineTo(x,y);
+    }
+    cx.lineTo(W,H);cx.lineTo(0,H);cx.closePath();
+    cx.fillStyle='rgba(10,186,181,'+alpha+')';cx.fill();
+  }
+  /* Reeb helix spiral */
+  const hx=W*.84,hcy=H*.28,hry=H*.2;
+  cx.beginPath();cx.strokeStyle='rgba(10,186,181,.032)';cx.lineWidth=1;
+  for(let i=0;i<200;i++){
+    const a=(i/200)*Math.PI*8+t*.06,x=hx+Math.sin(a)*36,y=hcy-hry+(i/200)*hry*2;
+    i===0?cx.moveTo(x,y):cx.lineTo(x,y);
+  }
+  cx.stroke();
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+/* ── WAVEFORM ANIMATION ── */
+let wvAnim=null;
+function animWave(){
+  const bars=document.querySelectorAll('.wv-bar');
+  bars.forEach(b=>{b.style.height=Math.max(8,Math.random()*100)+'%'});
+  wvAnim=requestAnimationFrame(()=>setTimeout(animWave,80));
+}
+
+/* ── WEB AUDIO ENGINE ── */
+let ac=null,mg=null,layers={},playing=false;
+function getAC(){
+  if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.gain.value=.72;mg.connect(ac.destination)}
+  if(ac.state==='suspended')ac.resume();return ac;
+}
+function pink(){
+  const a=getAC(),buf=a.createBuffer(1,a.sampleRate*4,a.sampleRate),d=buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for(let i=0;i<d.length;i++){const w=Math.random()*2-1;b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.96900*b2+w*.1538520;b3=.86650*b3+w*.3104856;b4=.55000*b4+w*.5329522;b5=-.7616*b5-.0168980*w;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926;}
+  const s=a.createBufferSource();s.buffer=buf;s.loop=true;return s;
+}
+function buildOcean(){
+  const a=getAC(),s=pink(),lpf=a.createBiquadFilter(),hpf=a.createBiquadFilter(),g=a.createGain(),lfo=a.createOscillator(),lg=a.createGain();
+  lpf.type='lowpass';lpf.frequency.value=400;hpf.type='highpass';hpf.frequency.value=60;
+  g.gain.value=.3;lfo.frequency.value=.05;lg.gain.value=.2;
+  lfo.connect(lg);lg.connect(g.gain);s.connect(lpf);lpf.connect(hpf);hpf.connect(g);g.connect(mg);
+  s.start();lfo.start();return{stop(){try{s.stop();lfo.stop()}catch(e){}}}
+}
+function buildMangue(){
+  const a=getAC(),s=pink(),lpf=a.createBiquadFilter(),g=a.createGain(),lfo=a.createOscillator(),lg=a.createGain();
+  lpf.type='lowpass';lpf.frequency.value=85;lpf.Q.value=5;
+  g.gain.value=.2;lfo.frequency.value=.12;lg.gain.value=.15;
+  lfo.connect(lg);lg.connect(g.gain);s.connect(lpf);lpf.connect(g);g.connect(mg);
+  s.start();lfo.start();return{stop(){try{s.stop();lfo.stop()}catch(e){}}}
+}
+function buildHz111(){
+  const a=getAC(),o1=a.createOscillator(),o2=a.createOscillator(),g1=a.createGain(),g2=a.createGain();
+  o1.frequency.value=111;o2.frequency.value=117;g1.gain.value=.1;g2.gain.value=.09;
+  o1.connect(g1);g1.connect(mg);o2.connect(g2);g2.connect(mg);
+  o1.start();o2.start();return{stop(){try{o1.stop();o2.stop()}catch(e){}}}
+}
+function buildReeb(){
+  const a=getAC(),osc=a.createOscillator(),g=a.createGain();
+  g.gain.value=.08;osc.connect(g);g.connect(mg);osc.start();
+  const t0=a.currentTime;
+  const iv=setInterval(()=>{
+    const z=(a.currentTime-t0)*1.8393;
+    osc.frequency.setTargetAtTime(111+Math.sin(z)*6,a.currentTime,.1);
+  },100);
+  return{stop(){try{osc.stop();clearInterval(iv)}catch(e){}}}
+}
+const builders={ocean:buildOcean,mangue:buildMangue,hz:buildHz111,reeb:buildReeb};
+function toggleLayer(id){
+  const tog=document.getElementById('tog-'+id);
+  if(layers[id]){layers[id].stop();delete layers[id];tog.classList.remove('active')}
+  else{layers[id]=builders[id]();tog.classList.add('active')}
+  updatePlayState();
+}
+function updatePlayState(){
+  const any=Object.keys(layers).length>0;
+  const btn=document.getElementById('btn-play');
+  const wv=document.getElementById('waveform');
+  playing=any;
+  btn.classList.toggle('playing',any);
+  document.getElementById('play-icon').textContent=any?'■':'▶';
+  document.getElementById('play-label').textContent=any?'Stop':'Play the mangue';
+  wv.classList.toggle('playing',any);
+  if(any&&!wvAnim)animWave();
+  else if(!any){cancelAnimationFrame(wvAnim);wvAnim=null;document.querySelectorAll('.wv-bar').forEach(b=>b.style.height='10%')}
+}
+function toggleMaster(){
+  if(playing){
+    Object.values(layers).forEach(l=>l.stop());layers={};
+    document.querySelectorAll('.layer-toggle').forEach(t=>t.classList.remove('active'));
+  } else {
+    layers.mangue=buildMangue();document.getElementById('tog-mangue').classList.add('active');
+  }
+  updatePlayState();
+}
+
+/* ── FADE-IN ON SCROLL ── */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:.12});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>

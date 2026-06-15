@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop 3 · Math Made Accessible · Nov 12 · Uceda School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0ABAB5;--teal-soft:#9cf3ef;--teal-dim:rgba(10,186,181,.11);--teal-line:rgba(10,186,181,.2);--deep:#030a08;--ink:#d8ede6;--muted:#7ab8ac;--gold:#c8a24a;--op-color:#50c878}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--deep);color:var(--ink);font-family:'EB Garamond',Georgia,serif;font-size:17px;line-height:1.75;overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:linear-gradient(to bottom,rgba(3,10,8,.96),transparent);flex-wrap:wrap;gap:.5rem}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);opacity:.85;text-decoration:none}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;opacity:.6;transition:opacity .2s}
+.nav-back:hover{opacity:1;color:var(--teal)}
+.w-hero{position:relative;z-index:2;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9rem 5vw 5rem}
+.op-badge{font-family:'JetBrains Mono',monospace;font-size:5rem;font-weight:bold;color:var(--op-color);opacity:.18;line-height:1;margin-bottom:-.5rem}
+.w-num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--op-color);opacity:.7;margin-bottom:.8rem;display:block}
+.w-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,3.6rem);font-weight:300;font-style:italic;color:#e8f5f0;line-height:1.1;margin-bottom:.5rem}
+.w-title em{font-style:normal;color:var(--teal)}
+.w-pt{font-size:1.1rem;color:var(--muted);font-style:italic;margin-bottom:.8rem}
+.w-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;color:var(--gold);opacity:.75;line-height:2}
+.section{position:relative;z-index:2;padding:4rem 5vw;max-width:800px;margin:0 auto}
+.section+.section{padding-top:0}
+.rule{width:100%;max-width:800px;margin:0 auto;height:1px;background:linear-gradient(to right,transparent,var(--teal-line),transparent);position:relative;z-index:2}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--teal);opacity:.52;display:block;margin-bottom:.6rem}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:400;font-style:italic;color:#e8f5f0;margin-bottom:1.2rem}
+.prose{font-size:1.02rem;color:var(--muted);line-height:1.9}
+.prose p{margin-bottom:1rem}
+.prose em{color:var(--teal-soft);font-style:italic}
+.prose strong{color:var(--ink);font-weight:500}
+.read-card{background:rgba(10,186,181,.05);border:1px solid var(--teal-line);border-radius:4px;padding:1.5rem 1.8rem;margin:1.5rem 0}
+.read-card blockquote{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;color:#c8e8e0;line-height:1.65;border-left:3px solid var(--teal);padding-left:1.2rem;margin-bottom:.8rem}
+.read-card .attr{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--teal);opacity:.55}
+.read-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;padding:.65rem 1.4rem;border:1px solid var(--teal-line);color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s}
+.read-link:hover{background:var(--teal-dim)}
+
+/* g-series ladder */
+.g-ladder{display:flex;flex-direction:column;gap:.5rem;margin:1.5rem 0}
+.g-step{display:grid;grid-template-columns:3.5rem 1fr;gap:.8rem;align-items:start;padding:.8rem 1rem;background:rgba(255,255,255,.02);border-radius:3px;border:1px solid rgba(255,255,255,.04)}
+.g-label{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:bold;color:var(--op-color);line-height:1;padding-top:.1rem}
+.g-name{font-size:.95rem;color:var(--ink);font-weight:500;margin-bottom:.15rem}
+.g-desc{font-size:.84rem;color:var(--muted);line-height:1.5}
+
+.sim-link{display:block;margin:1.2rem 0;padding:1rem 1.4rem;background:rgba(80,200,120,.06);border:1px solid rgba(80,200,120,.2);border-radius:4px;text-decoration:none;color:var(--op-color);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;transition:background .2s}
+.sim-link:hover{background:rgba(80,200,120,.1)}
+
+.ted-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:4px;margin:1rem 0;border:1px solid rgba(10,186,181,.12)}
+.ted-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.debate-prompts{display:flex;flex-direction:column;gap:.8rem;margin:1.2rem 0}
+.prompt{padding:1rem 1.2rem 1rem 1.4rem;border-left:3px solid;background:rgba(255,255,255,.025);border-radius:0 3px 3px 0}
+.prompt:nth-child(1){border-left-color:#4a9eff}.prompt:nth-child(2){border-left-color:#e05a3a}.prompt:nth-child(3){border-left-color:#c084fc}
+.prompt p{font-size:1rem;color:var(--ink);line-height:1.6}
+.prompt .prompt-pt{font-size:.85rem;color:var(--muted);font-style:italic;margin-top:.2rem}
+.ideas-box{background:rgba(200,162,74,.04);border:1px solid rgba(200,162,74,.2);border-radius:4px;padding:1.2rem 1.5rem;margin-top:1.2rem}
+.ideas-box .ideas-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.65;margin-bottom:.6rem;display:block}
+.ideas-box ul{list-style:none;padding:0}
+.ideas-box ul li{font-size:.92rem;color:var(--muted);line-height:1.65;padding:.2rem 0 .2rem 1rem;position:relative}
+.ideas-box ul li::before{content:"→";position:absolute;left:0;color:var(--gold);opacity:.5;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.signup-box{background:linear-gradient(135deg,rgba(10,186,181,.06),rgba(10,186,181,.02));border:1px solid var(--teal-line);border-radius:6px;padding:2rem 2.2rem;margin-top:1.5rem}
+.signup-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);opacity:.65;margin-bottom:.6rem;display:block}
+.signup-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:#e8f5f0;margin-bottom:.5rem}
+.signup-sub{font-size:.9rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.7}
+.signup-form{display:flex;flex-direction:column;gap:.7rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+@media(max-width:560px){.form-row{grid-template-columns:1fr}}
+.form-input{padding:.65rem .9rem;background:rgba(255,255,255,.04);border:1px solid rgba(10,186,181,.2);border-radius:3px;color:var(--ink);font-family:'EB Garamond',serif;font-size:.95rem;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus{border-color:var(--teal)}
+.form-input::placeholder{color:var(--muted);opacity:.5}
+.friend-row{display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:var(--muted)}
+.friend-row input[type=checkbox]{accent-color:var(--teal);width:14px;height:14px;cursor:pointer}
+.btn-signup{padding:.8rem 2rem;background:var(--teal);color:#030a08;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;font-weight:500;transition:opacity .2s;align-self:flex-start}
+.btn-signup:hover{opacity:.85}
+.signup-success{display:none;text-align:center;padding:1.5rem}
+.signup-success .check{font-size:2rem;margin-bottom:.5rem}
+.signup-success p{color:var(--teal-soft);font-size:1rem;line-height:1.7}
+.w-footer{position:relative;z-index:2;padding:2rem 5vw;border-top:1px solid rgba(10,186,181,.08);text-align:center}
+.w-footer-inner{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.15em;color:var(--teal);opacity:.22;line-height:2.2}
+.w-footer a{color:var(--teal);text-decoration:none;opacity:.5}
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<nav>
+  <a class="nav-brand" href="cajueiro-workshops-poster.html">⚜ Cajueiro · G6 LLC</a>
+  <a class="nav-back" href="cajueiro-workshops-poster.html">← All Workshops</a>
+</nav>
+
+<div class="w-hero">
+  <div class="op-badge">F</div>
+  <span class="w-num">Workshop 03 · Thu Nov 12 · 5:00 – 6:00 PM</span>
+  <h1 class="w-title">Math Made <em>Accessible</em></h1>
+  <p class="w-pt">Matemática para Todos · a raiz toca o chão</p>
+  <div class="w-meta">Uceda School of Elizabeth · Elizabeth, NJ<br>Fold · root touches ground · re-root · threshold</div>
+</div>
+
+<div class="rule"></div>
+
+<div class="section fade-in">
+  <span class="sec-tag">Reading · Leitura</span>
+  <h2 class="sec-title">From seed to canopy: the g-series</h2>
+  <div class="prose">
+    <p>The <em>g-series</em> is a learning ladder — five stages that describe how any skill, any knowledge, grows from nothing to mastery. It is formally proved in mathematics (Lean 4, Mathlib4), but it also describes <strong>what it feels like</strong> to learn a new language, navigate a new city, or become part of a new community.</p>
+    <p>No prior math required. If you can describe the difference between a tourist and someone who belongs — you already understand the g-series.</p>
+  </div>
+  <div class="g-ladder">
+    <div class="g-step"><div class="g-label">g⁰</div><div><div class="g-name">Quiescent — the seed at rest</div><div class="g-desc">You've arrived but not yet started. First day in a new country. Full attention, no prior compression.</div></div></div>
+    <div class="g-step"><div class="g-label">g²</div><div><div class="g-name">Nascent oscillation — first branches</div><div class="g-desc">Two passes through. Something real has changed but the structure is fragile. You ordered coffee in the new language.</div></div></div>
+    <div class="g-step"><div class="g-label">g⁶</div><div><div class="g-name">Stable micro-cycle — root touches ground</div><div class="g-desc">Six passes. A small, stable competence. You can navigate one domain reliably. The g6 moment.</div></div></div>
+    <div class="g-step"><div class="g-label">g³³</div><div><div class="g-name">Stability threshold — the practitioner</div><div class="g-desc">Thirty-three consolidated crossings. You think in the domain, not about it. The new city is home.</div></div></div>
+    <div class="g-step"><div class="g-label">g⁶⁴</div><div><div class="g-name">Circuit saturation — the full canopy</div><div class="g-desc">Sixty-four passes. The Cajueiro de Pirangi. One seed, 8,500 m², 70 years. The seed tends to forest.</div></div></div>
+  </div>
+  <div class="read-card">
+    <blockquote>"The g₃₃ moment: cortical activation has reduced, dorsal striatum dominates — the practitioner thinks in the domain, not about it."</blockquote>
+    <div class="attr">Principia Orthogona · Vol II · TOGT · G6 LLC · 2026</div>
+  </div>
+  <a class="read-link" href="https://totogt.github.io/geometry/ch1.html" target="_blank">↗ Chapter 1 — The g-series explained</a>
+  <a class="sim-link" href="https://grossi-ops.github.io/Atratores/sims/helical-attractor.html" target="_blank">▶ Run the 3D Helical Attractor Simulator in browser →</a>
+</div>
+
+<div class="rule"></div>
+
+<div class="section fade-in">
+  <span class="sec-tag">Listening · Escuta</span>
+  <h2 class="sec-title">Can you feel a theorem?</h2>
+  <div class="prose"><p>Uri Alon's talk on how science actually works — and why being "stuck" is not failure but the place where real learning begins. The F operator (Fold) is exactly what he describes: the threshold where the old form cannot continue.</p></div>
+  <div class="ted-wrap">
+    <iframe src="https://embed.ted.com/talks/uri_alon_why_truly_innovative_science_demands_a_leap_into_the_unknown" allowfullscreen></iframe>
+  </div>
+  <div class="prose" style="margin-top:.8rem">
+    <p>Also: open the <a href="https://grossi-ops.github.io/Atratores/sims/helical-attractor.html" target="_blank" style="color:var(--teal)">helical attractor simulator</a> and drop 5 different starting points. Watch which ones fall into the stable orbit and which ones escape. You don't need to understand the math — just watch and notice.</p>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="section fade-in">
+  <span class="sec-tag">Debate · Discussão</span>
+  <h2 class="sec-title">Bring these questions Thursday</h2>
+  <div class="debate-prompts">
+    <div class="prompt">
+      <p><strong>Where are you in the g-series with English?</strong> g², g⁶, g³³? Where with your first language? Does the answer change depending on the situation?</p>
+      <p class="prompt-pt">Onde você está na g-série com o inglês? E com o português?</p>
+    </div>
+    <div class="prompt">
+      <p>The F operator is the fold — the root touches the ground, the old form ends, the new form is not yet visible. <strong>Name one fold in your life that you didn't choose but had to cross.</strong></p>
+      <p class="prompt-pt">Nomeie uma dobra na sua vida que você não escolheu mas teve que atravessar.</p>
+    </div>
+    <div class="prompt">
+      <p><strong>Cymatics makes sound visible — patterns that form in sand when a plate vibrates.</strong> If your immigration story were a cymatic pattern, what would it look like?</p>
+      <p class="prompt-pt">Se a sua história de imigração fosse um padrão de cimática, como seria?</p>
+    </div>
+  </div>
+  <div class="ideas-box">
+    <span class="ideas-label">Ideas for the workshop</span>
+    <ul>
+      <li>Come 10 minutes early — the helical attractor simulator will be projected, play with it before we start</li>
+      <li>Think of one skill you have at g³³ or above — something you do without thinking about doing it</li>
+      <li>Bring a photo or drawing of a pattern you find beautiful — a tile, a fabric, a natural formation</li>
+      <li>Optional: open Chapter 10 of Vol IV at totogt.github.io (helical attractors) and read for 10 minutes — no pressure to understand, just read</li>
+    </ul>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="section fade-in">
+  <div class="signup-box">
+    <span class="signup-eyebrow">Join us · Participe</span>
+    <h2 class="signup-title">Come Thursday, Nov 12 · 5–6 PM</h2>
+    <p class="signup-sub">Free and open to all. Bilingual. No math background needed — only curiosity. Bring someone at a different stage of the g-series than you. That contrast is the whole point.</p>
+    <form class="signup-form" id="signup-form" onsubmit="submitForm(event)">
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Your name · Seu nome" required id="f-name">
+        <input class="form-input" type="email" placeholder="Email address" required>
+      </div>
+      <input class="form-input" type="text" placeholder="Friend's name (optional)">
+      <label class="friend-row"><input type="checkbox"> I'd like to be matched with a study partner</label>
+      <button class="btn-signup" type="submit">Reserve my spot →</button>
+    </form>
+    <div class="signup-success" id="signup-success">
+      <div class="check">🌿</div>
+      <p>You're in, <span id="success-name"></span>!<br>We'll send the simulator link and a short pre-read before Nov 12.<br><br><em>A raiz toca o chão. The root touches ground.</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="w-footer">
+  <div class="w-footer-inner">
+    <a href="workshop-2-books.html">← Workshop 2</a> &nbsp;·&nbsp; <a href="cajueiro-workshops-poster.html">All Workshops</a> &nbsp;·&nbsp; <a href="workshop-4-esl.html">Workshop 4 →</a><br>
+    G6 LLC · Fiscal sponsor: New York Foundation for the Arts (NYFA) · <a href="mailto:grossiatwork@gmail.com">grossiatwork@gmail.com</a><br>
+    © 2026 Pablo Nogueira Grossi · CC BY 4.0
+  </div>
+</div>
+<script>
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');let W,H;
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}resize();window.addEventListener('resize',resize);
+function drawBg(){cx.clearRect(0,0,W,H);const t=Date.now()/1000;const g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#030a08');g.addColorStop(.6,'#041410');g.addColorStop(1,'#030a08');cx.fillStyle=g;cx.fillRect(0,0,W,H);for(let w=0;w<5;w++){const spd=.12+w*.04,amp=20-w*3,yBase=H*.78+w*28,alpha=.04-w*.006;cx.beginPath();cx.moveTo(0,yBase);for(let x=0;x<=W;x+=6){const y=yBase+amp*Math.sin(x*.008+t*spd)+amp*.4*Math.sin(x*.016+t*(spd*.65)+w);cx.lineTo(x,y)}cx.lineTo(W,H);cx.lineTo(0,H);cx.closePath();cx.fillStyle='rgba(10,186,181,'+alpha+')';cx.fill()}requestAnimationFrame(drawBg)}
+drawBg();
+function submitForm(e){e.preventDefault();const name=document.getElementById('f-name').value.split(' ')[0];document.getElementById('success-name').textContent=name;document.getElementById('signup-form').style.display='none';document.getElementById('signup-success').style.display='block'}
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

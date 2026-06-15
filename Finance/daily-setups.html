@@ -4,772 +4,942 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Daily Setups • Lunch Money</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- FIX: technicalindicators' browser build needs regenerator-runtime loaded first,
+       otherwise it throws "regeneratorRuntime is not defined" and never defines its globals -->
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.13.11/runtime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/technicalindicators@3.1.0/dist/browser.js"></script>
+  <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
   <style>
-    body { font-family: 'Inter', system-ui, sans-serif; }
-    .lunch-gradient { background: linear-gradient(135deg, #064e3b 0%, #065f46 60%, #047857 100%); }
-    .ai-response-text { white-space: pre-wrap; }
-    .ai-typing::after { content: '▋'; animation: blink 1s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    :root {
+      --void: #07080d;
+      --surface: #0e0f14;
+      --surface2: #13141a;
+      --accent: #10b981;
+      --accent2: #059669;
+      --gold: #f7c948;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --blue: #6366f1;
+      --text: #e8eaf0;
+      --muted: #5a5e6e;
+      --border: rgba(16,185,129,0.12);
+      --border2: rgba(16,185,129,0.25);
+      --discord: #5865F2;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--void); color: var(--text); min-height: 100vh; }
+
+    /* NAV */
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 2rem; border-bottom: 1px solid var(--border); background: var(--void); position: sticky; top: 0; z-index: 50; }
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-logo span { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-logo small { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; }
+    nav a { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; text-transform: uppercase; }
+    nav a:hover, nav a.active { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; }
+
+    /* DISCORD BANNER */
+    .discord-bar { background: var(--discord); padding: 0.7rem 2rem; text-align: center; font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; color: #fff; }
+    .discord-bar a { color: #c5c9ff; text-decoration: underline; }
+
+    /* LUNAR STRIP */
+    .lunar-strip { border-bottom: 1px solid var(--border); background: var(--surface2); padding: 1rem 2rem; display: flex; align-items: stretch; gap: 0; overflow-x: auto; }
+    .lunar-cell { flex: 1; min-width: 110px; padding: 0 1.5rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+    .lunar-cell:first-child { padding-left: 0; }
+    .lunar-cell:last-child  { border-right: none; }
+    .lc-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .lc-val   { font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text); line-height: 1.1; }
+    .lc-sub   { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.2rem; }
+    .moon-emoji { font-size: 2rem; line-height: 1; }
+    .period-green { color: var(--accent); }
+    .period-red   { color: var(--red); }
+    .period-trans { color: var(--amber); }
+
+    /* WORLD CLOCK STRIP */
+    .clock-strip { border-bottom: 1px solid var(--border); background: var(--surface); padding: 1rem 2rem; display: flex; align-items: center; gap: 0; overflow-x: auto; }
+    .clock-city { flex: 1; min-width: 120px; padding: 0 1.5rem; border-right: 1px solid var(--border); }
+    .clock-city:first-child { padding-left: 0; }
+    .clock-city:last-child { border-right: none; }
+    .city-name { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.25rem; }
+    .city-time { font-family: 'Space Mono', monospace; font-size: 1.25rem; font-weight: 700; color: var(--text); letter-spacing: 0.05em; line-height: 1; }
+    .city-date { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--muted); margin-top: 0.2rem; }
+    .city-session { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.15rem 0.4rem; margin-top: 0.3rem; border-radius: 2px; }
+    .session-open  { background: rgba(16,185,129,0.15); color: var(--accent); }
+    .session-closed { background: rgba(90,94,110,0.2); color: var(--muted); }
+    .session-pre   { background: rgba(247,201,72,0.15); color: var(--gold); }
+
+    /* HERO */
+    .hero { padding: 3rem 2rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .hero-label { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.3em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .hero-row { display: flex; align-items: flex-end; gap: 3rem; flex-wrap: wrap; }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.03em; }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .price-block { display: flex; flex-direction: column; }
+    .price-block .pl { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .price-block .pv { font-size: 2.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .price-block .ps { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* SESSION TIMELINE */
+    .timeline-wrap { max-width: 1100px; margin: 1.5rem auto 0; padding: 0 2rem; }
+    .tl-label { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; display: flex; justify-content: space-between; }
+    .tl-bar { position: relative; height: 32px; background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .tl-session { position: absolute; top: 0; height: 100%; opacity: 0.7; display: flex; align-items: center; justify-content: center; }
+    .tl-session span { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.8); white-space: nowrap; }
+    .tl-now { position: absolute; top: 0; width: 2px; height: 100%; background: #fff; opacity: 0.9; z-index: 10; }
+    .tl-now::after { content: '▼'; position: absolute; top: -1px; left: 50%; transform: translateX(-50%); font-size: 8px; color: #fff; }
+    .tl-hours { display: flex; justify-content: space-between; margin-top: 0.3rem; }
+    .tl-hours span { font-family: 'Space Mono', monospace; font-size: 0.5rem; color: var(--muted); }
+
+    /* MAIN GRID */
+    .main-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 1px; background: var(--border); border: 1px solid var(--border); max-width: 1100px; margin: 2rem auto; }
+    @media (max-width: 860px) { .main-grid { grid-template-columns: 1fr; } }
+    .panel { background: var(--surface); padding: 2rem; }
+    .panel-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+
+    /* CHART */
+    #chart-container { width: 100%; height: 320px; }
+
+    /* ORBIT CARDS */
+    .orbit-stack { display: flex; flex-direction: column; gap: 0.75rem; }
+    .orbit-card { background: var(--surface2); border: 1px solid var(--border); padding: 1rem 1.25rem; }
+    .orbit-card.bull { border-left: 3px solid var(--accent); }
+    .orbit-card.bear { border-left: 3px solid var(--red); }
+    .orbit-card.neut { border-left: 3px solid var(--amber); }
+    .oc-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; }
+    .oc-name { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .oc-badge { font-family: 'Space Mono', monospace; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; }
+    .oc-badge.bull { color: var(--accent); }
+    .oc-badge.bear { color: var(--red); }
+    .oc-badge.neut { color: var(--amber); }
+    .oc-sub { font-size: 0.75rem; color: var(--muted); }
+
+    /* LAMBDA */
+    .lambda-wrap { margin-top: 1.25rem; }
+    .lambda-header { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
+    .lambda-header span { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+    .lambda-header strong { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--text); }
+    .lambda-track { background: var(--surface2); height: 5px; border-radius: 2px; overflow: hidden; border: 1px solid var(--border2); }
+    .lambda-fill { height: 100%; border-radius: 2px; transition: width 0.4s, background 0.4s; }
+
+    /* ENTRY ZONE */
+    .entry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 1rem; }
+    .entry-item .ei-label { font-family: 'Space Mono', monospace; font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.2rem; }
+    .entry-item .ei-val { font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; }
+    .ei-green { color: var(--accent); }
+    .ei-red   { color: var(--red); }
+    .ei-gold  { color: var(--gold); }
+
+    /* JOMO PANEL */
+    .jomo-wrap { max-width: 1100px; margin: 0 auto 2rem; border: 1px solid var(--border); background: var(--surface); }
+    .jomo-header { border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .jomo-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; }
+    .jomo-title em { color: var(--accent); font-style: normal; }
+    .jomo-badge { font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.3rem 0.8rem; border-radius: 2px; font-weight: 700; }
+    .jomo-badge.positional { background: rgba(16,185,129,0.15); color: var(--accent); border: 1px solid rgba(16,185,129,0.3); }
+    .jomo-badge.velocity   { background: rgba(247,201,72,0.15);  color: var(--gold);   border: 1px solid rgba(247,201,72,0.3); }
+    .jomo-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); }
+    @media (max-width: 700px) { .jomo-body { grid-template-columns: 1fr; } }
+    .jomo-cell { background: var(--surface); padding: 1.5rem 2rem; }
+    .jc-label { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .jc-val   { font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 0.4rem; }
+    .jc-sub   { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+    .jc-sub a { color: var(--accent); text-decoration: none; }
+    .sigma-track { background: var(--surface2); height: 6px; border-radius: 3px; overflow: visible; border: 1px solid var(--border2); position: relative; margin-top: 0.75rem; }
+    .sigma-fill  { height: 100%; border-radius: 3px; }
+    .sigma-line  { position: absolute; top: -4px; bottom: -4px; width: 2px; background: rgba(255,255,255,0.5); }
+    .sigma-line::after { content: 'σ*=1/3'; position: absolute; top: -16px; left: 3px; font-family: 'Space Mono', monospace; font-size: 0.5rem; color: var(--muted); white-space: nowrap; }
+    .jomo-quote { background: var(--surface2); border-left: 3px solid var(--accent); padding: 1rem 1.5rem; margin: 0; }
+    .jomo-quote p { font-size: 0.82rem; color: var(--muted); line-height: 1.7; font-style: italic; }
+    .jomo-quote cite { font-family: 'Space Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); display: block; margin-top: 0.5rem; font-style: normal; }
+
+    /* ETORO */
+    .etoro-block { max-width: 1100px; margin: 0 auto 4rem; border: 1px solid var(--border); background: var(--surface); padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .etoro-block p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; max-width: 500px; }
+    .etoro-block p strong { color: var(--text); }
+    .btn-etoro { font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; background: #1E90FF; color: #fff; padding: 0.85rem 1.6rem; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; }
+    footer p { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer .disclaimer { margin-top: 1rem; font-size: 0.55rem; color: var(--muted); opacity: 0.55; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body>
 
-<!-- NAV -->
-<nav class="bg-white shadow-sm sticky top-0 z-50">
-  <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <span class="text-2xl">🥪</span>
-      <div>
-        <span class="font-black text-2xl tracking-tight text-emerald-700">Lunch Money</span>
-        <span class="ml-2 text-xs text-gray-400 font-medium">by CapitalGuard</span>
-      </div>
-    </div>
-    <div class="flex gap-8 text-sm font-medium">
-      <a href="index.html"        class="hover:text-emerald-600">Home</a>
-      <a href="strategy.html"     class="hover:text-emerald-600">Strategy</a>
-      <a href="daily-setups.html" class="text-emerald-600">Daily Setups</a>
-      <a href="simulator.html"    class="hover:text-emerald-600">Growth Simulator</a>
-    </div>
+<nav>
+  <div class="nav-logo">
+    <span>🥪 Lunch Money</span>
+    <small>by CapitalGuard</small>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="strategy.html">Strategy</a>
+    <a href="daily-setups.html" class="active">Daily Setups</a>
+    <a href="simulator.html">Simulator</a>
   </div>
 </nav>
 
-<!-- DISCORD MASTERCLASS BANNER -->
-<div class="bg-[#5865F2] text-white py-3 text-center text-sm font-medium flex items-center justify-center gap-3">
-  <i class="fab fa-discord text-lg"></i>
-  <span><strong>Trading Masterclass coming to Discord</strong> — Learn the full Lunch Money strategy live · <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank" class="underline hover:text-indigo-200">Join the server →</a></span>
+<div class="discord-bar">
+  <i class="fab fa-discord"></i>
+  &nbsp;<strong>Trading Masterclass coming to Discord</strong> — Learn the full Lunch Money strategy live ·
+  <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank">Join the server →</a>
 </div>
 
-<!-- SCANNER BANNER -->
-<div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 text-center font-medium">
-  <span><strong>Live Market Scanner</strong> — Single-Name Stocks · Finding the Best Long Buy Right Now</span>
+<!-- LUNAR STRIP -->
+<div class="lunar-strip">
+  <div class="lunar-cell">
+    <div class="lc-label">Moon Phase</div>
+    <div class="moon-emoji" id="moon-emoji">🌑</div>
+    <div class="lc-sub" id="moon-phase-name">—</div>
+  </div>
+  <div class="lunar-cell">
+    <div class="lc-label">Lunar Age</div>
+    <div class="lc-val" id="lunar-age">—</div>
+    <div class="lc-sub">of 29.53 days</div>
+  </div>
+  <div class="lunar-cell">
+    <div class="lc-label">Lunar Period</div>
+    <div class="lc-val" id="lunar-period">—</div>
+    <div class="lc-sub" id="lunar-period-sub">—</div>
+  </div>
+  <div class="lunar-cell">
+    <div class="lc-label">Next New Moon</div>
+    <div class="lc-val" id="next-new">—</div>
+    <div class="lc-sub" id="next-new-date">—</div>
+  </div>
+  <div class="lunar-cell">
+    <div class="lc-label">Next Full Moon</div>
+    <div class="lc-val" id="next-full">—</div>
+    <div class="lc-sub" id="next-full-date">—</div>
+  </div>
+  <div class="lunar-cell">
+    <div class="lc-label">Moon Distance</div>
+    <div class="lc-val" id="moon-dist">—</div>
+    <div class="lc-sub" id="moon-dist-sub">apogee / perigee</div>
+  </div>
 </div>
 
-<div class="max-w-6xl mx-auto px-6 py-12">
+<!-- WORLD CLOCK STRIP -->
+<div class="clock-strip">
+  <div class="clock-city" id="city-tokyo">
+    <div class="city-name">Tokyo</div>
+    <div class="city-time" id="t-tokyo">--:--</div>
+    <div class="city-date" id="d-tokyo">---</div>
+    <span class="city-session" id="s-tokyo">---</span>
+  </div>
+  <div class="clock-city" id="city-dubai">
+    <div class="city-name">Dubai</div>
+    <div class="city-time" id="t-dubai">--:--</div>
+    <div class="city-date" id="d-dubai">---</div>
+    <span class="city-session" id="s-dubai">---</span>
+  </div>
+  <div class="clock-city" id="city-london">
+    <div class="city-name">London</div>
+    <div class="city-time" id="t-london">--:--</div>
+    <div class="city-date" id="d-london">---</div>
+    <span class="city-session" id="s-london">---</span>
+  </div>
+  <div class="clock-city" id="city-nyc">
+    <div class="city-name">New York</div>
+    <div class="city-time" id="t-nyc">--:--</div>
+    <div class="city-date" id="d-nyc">---</div>
+    <span class="city-session" id="s-nyc">---</span>
+  </div>
+  <div class="clock-city" id="city-sao">
+    <div class="city-name">São Paulo</div>
+    <div class="city-time" id="t-sao">--:--</div>
+    <div class="city-date" id="d-sao">---</div>
+    <span class="city-session" id="s-sao">---</span>
+  </div>
+  <div class="clock-city" id="city-la">
+    <div class="city-name">Los Angeles</div>
+    <div class="city-time" id="t-la">--:--</div>
+    <div class="city-date" id="d-la">---</div>
+    <span class="city-session" id="s-la">---</span>
+  </div>
+</div>
 
-  <!-- ══════════════════════════════════════
-       LESSON ZERO
-  ══════════════════════════════════════ -->
-  <div class="bg-white rounded-3xl shadow-lg p-10 mb-16 border-t-4 border-amber-400">
-    <div class="mb-2">
-      <span class="bg-amber-100 text-amber-700 font-bold px-4 py-1 rounded-xl text-sm tracking-wide">LESSON ZERO</span>
+<!-- SESSION TIMELINE -->
+<div class="timeline-wrap">
+  <div class="tl-label">
+    <span>24H Session Map (UTC)</span>
+    <span id="utc-now">UTC --:--:--</span>
+  </div>
+  <div class="tl-bar" id="tl-bar">
+    <!-- sessions injected by JS -->
+    <div class="tl-now" id="tl-now"></div>
+  </div>
+  <div class="tl-hours">
+    <span>00</span><span>03</span><span>06</span><span>09</span>
+    <span>12</span><span>15</span><span>18</span><span>21</span><span>24</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Daily Setups · BTCUSDT · Multi-Orbit Scanner</div>
+  <div class="hero-row">
+    <h1>Read the<br><em>orbit.</em><br>Pick your entry.</h1>
+    <div class="price-block">
+      <span class="pl">BTC / USDT</span>
+      <span class="pv" id="btc-price">—</span>
+      <span class="ps" id="data-source">● Fetching live data…</span>
     </div>
-    <h2 class="text-3xl font-bold mt-3 mb-1">Before You Place a Single Trade</h2>
-    <p class="text-gray-500 mb-10">The rules that separate people who survive the market from people who don't.</p>
+  </div>
+</div>
 
-    <!-- WHAT TO TRADE -->
-    <div class="mb-10">
-      <h3 class="text-xl font-bold mb-5 flex items-center gap-2">
-        <i class="fas fa-coins text-amber-500"></i> What Assets to Trade
-      </h3>
-      <div class="grid md:grid-cols-3 gap-5">
-        <div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
-          <p class="font-bold text-emerald-700 mb-2">✅ High-Volume Single Stocks</p>
-          <p class="text-sm text-gray-600">NVDA, TSLA, AAPL — highly liquid names with tight spreads and strong intraday momentum. One ticker at a time, fully focused. The strategy is depth over breadth: know one name's behaviour better than anyone.</p>
+<!-- MAIN GRID -->
+<div class="main-grid">
+  <div class="panel">
+    <div class="panel-label">BTCUSDT · 1D · VWMA5 · SMA9 · SMA21</div>
+    <div id="chart-container" style="display:flex;align-items:center;justify-content:center;">
+      <span style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted)">Loading chart…</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-label">Orbit Alignment · A / B / C</div>
+
+    <div class="orbit-stack">
+      <div class="orbit-card neut" id="card-a">
+        <div class="oc-header">
+          <span class="oc-name">Orbit A · 24H Circadian</span>
+          <span class="oc-badge neut" id="badge-a">—</span>
         </div>
-        <div class="bg-emerald-50 rounded-2xl p-6 border border-emerald-100">
-          <p class="font-bold text-emerald-700 mb-2">✅ Major Index ETFs</p>
-          <p class="text-sm text-gray-600">SPY, QQQ. Diversified by nature — one bad earnings report from a single company cannot collapse them. Good for learning market structure before focusing on single names.</p>
+        <div class="oc-sub" id="sub-a">SMA9 / SMA21 · RSI 45–75</div>
+      </div>
+      <div class="orbit-card neut" id="card-b">
+        <div class="oc-header">
+          <span class="oc-name">Orbit B · Lunar Green/Red</span>
+          <span class="oc-badge neut" id="badge-b">—</span>
         </div>
-        <div class="bg-red-50 rounded-2xl p-6 border border-red-100">
-          <p class="font-bold text-red-600 mb-2">⚠️ Know the Risk First</p>
-          <p class="text-sm text-gray-600">Single stocks can gap 10–15% overnight on earnings, analyst downgrades, or geopolitical headlines. On a $100 account that is significant. Always set your stop loss before the session ends. Never hold over the weekend without a plan.</p>
+        <div class="oc-sub" id="sub-b">Price vs SMA30 · Volume ratio</div>
+      </div>
+      <div class="orbit-card neut" id="card-c">
+        <div class="oc-header">
+          <span class="oc-name">Orbit C · 365D Annual</span>
+          <span class="oc-badge neut" id="badge-c">—</span>
         </div>
+        <div class="oc-sub" id="sub-c">Price vs SMA50 (+1%)</div>
       </div>
     </div>
 
-    <!-- HOW MUCH TO TRADE -->
-    <div class="mb-10">
-      <h3 class="text-xl font-bold mb-5 flex items-center gap-2">
-        <i class="fas fa-calculator text-emerald-600"></i> How Much to Risk Per Trade
-      </h3>
-      <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-5">
-        <p class="font-bold text-lg mb-3">The 1% Rule — your most important number</p>
-        <p class="text-gray-600 text-sm mb-4">Never risk more than 1% of your total account on a single trade. On a $100 account, that is <strong>$1.00 maximum loss per trade</strong>. This feels tiny. That is the point. It keeps you alive long enough to learn.</p>
-        <div class="grid grid-cols-3 gap-4 text-center">
-          <div class="bg-white rounded-xl p-4 shadow-sm">
-            <p class="text-2xl font-bold text-emerald-600">$100</p>
-            <p class="text-xs text-gray-500">Account size</p>
-          </div>
-          <div class="bg-white rounded-xl p-4 shadow-sm">
-            <p class="text-2xl font-bold text-amber-500">$1.00</p>
-            <p class="text-xs text-gray-500">Max risk per trade (1%)</p>
-          </div>
-          <div class="bg-white rounded-xl p-4 shadow-sm">
-            <p class="text-2xl font-bold text-slate-700">100</p>
-            <p class="text-xs text-gray-500">Trades before total wipeout</p>
-          </div>
-        </div>
+    <div class="lambda-wrap">
+      <div class="lambda-header">
+        <span>Λ Legendrian Alignment</span>
+        <strong id="lambda-val">—</strong>
       </div>
-      <p class="text-sm text-gray-500 italic">Position size = Max risk ÷ Distance to stop loss. If NVDA is at $220 and your stop is $217.80 (1% below), your max risk is $2.20/share. With $1 max loss you can trade 0.45 shares. On eToro fractional shares make this possible from day one. Use leverage carefully — it multiplies losses just as fast as gains.</p>
+      <div class="lambda-track">
+        <div class="lambda-fill" id="lambda-fill" style="width:0%;background:var(--amber)"></div>
+      </div>
     </div>
 
-    <!-- DO AND DON'T -->
+    <div class="panel-label" style="margin-top:1.5rem">Entry Zone</div>
+    <div class="entry-grid">
+      <div class="entry-item">
+        <div class="ei-label">Entry Low</div>
+        <div class="ei-val ei-green" id="entry-low">—</div>
+      </div>
+      <div class="entry-item">
+        <div class="ei-label">Entry High</div>
+        <div class="ei-val ei-green" id="entry-high">—</div>
+      </div>
+      <div class="entry-item">
+        <div class="ei-label">Stop</div>
+        <div class="ei-val ei-red" id="stop-val">—</div>
+      </div>
+      <div class="entry-item">
+        <div class="ei-label">T1 / T2 / T3</div>
+        <div class="ei-val ei-gold" id="targets">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JOMO PANEL -->
+<div class="jomo-wrap">
+  <div class="jomo-header">
     <div>
-      <h3 class="text-xl font-bold mb-5 flex items-center gap-2">
-        <i class="fas fa-list-check text-blue-600"></i> The Rules — Do and Don't
-      </h3>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="space-y-3">
-          <p class="font-bold text-emerald-600 text-sm uppercase tracking-wide mb-2">✅ Do</p>
-          <div class="bg-white border-l-4 border-emerald-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Set your stop loss before entering</p>
-            <p class="text-xs text-gray-500 mt-1">Decide your exit point when you are calm — not when the position is moving against you and emotions take over.</p>
-          </div>
-          <div class="bg-white border-l-4 border-emerald-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Take profits at 1–3% and exit fully</p>
-            <p class="text-xs text-gray-500 mt-1">Small consistent wins compound. The goal is not one big trade — it is 1,000 disciplined ones.</p>
-          </div>
-          <div class="bg-white border-l-4 border-emerald-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Trade the same day you enter</p>
-            <p class="text-xs text-gray-500 mt-1">This strategy is intraday. Open and close the same session. Holding overnight introduces gap risk you cannot control.</p>
-          </div>
-          <div class="bg-white border-l-4 border-emerald-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Record every trade — win or lose</p>
-            <p class="text-xs text-gray-500 mt-1">A trader without a log is guessing. A log shows you your actual edge, your worst habits, and your real win rate over time.</p>
-          </div>
-          <div class="bg-white border-l-4 border-emerald-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Use a demo account first</p>
-            <p class="text-xs text-gray-500 mt-1">Practise execution, platform mechanics, and emotional responses before real money is involved.</p>
-          </div>
-        </div>
-        <div class="space-y-3">
-          <p class="font-bold text-red-500 text-sm uppercase tracking-wide mb-2">❌ Don't</p>
-          <div class="bg-white border-l-4 border-red-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Hold a losing trade hoping it recovers</p>
-            <p class="text-xs text-gray-500 mt-1">Hope is not a strategy. Every large loss started as a small loss that someone refused to take. The market does not know or care what price you paid.</p>
-          </div>
-          <div class="bg-white border-l-4 border-red-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Trade without a stop loss in place</p>
-            <p class="text-xs text-gray-500 mt-1">This is the single most common way beginners blow up accounts. No stop = unlimited downside. Always.</p>
-          </div>
-          <div class="bg-white border-l-4 border-red-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Hold positions over the weekend</p>
-            <p class="text-xs text-gray-500 mt-1">Markets are closed but the world keeps moving. Geopolitical events, central bank announcements, and company news can cause large gaps at Monday's open that your stop cannot protect against.</p>
-          </div>
-          <div class="bg-white border-l-4 border-red-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Risk more after a losing trade</p>
-            <p class="text-xs text-gray-500 mt-1">Revenge trading — doubling down to recover losses quickly — is the fastest path to losing everything. Losing streaks are normal. Increasing size during them is fatal.</p>
-          </div>
-          <div class="bg-white border-l-4 border-red-400 rounded-r-xl p-4 shadow-sm">
-            <p class="font-semibold text-sm">Confuse a lucky win with skill</p>
-            <p class="text-xs text-gray-500 mt-1">One profitable trade proves nothing. Even a random strategy wins sometimes. Judge yourself over at least 50 trades, not 5.</p>
-          </div>
-        </div>
+      <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem">Network Games · Grossi (2026)</div>
+      <div class="jomo-title"><em>JOMO</em> — The Joy of Missing Out</div>
+    </div>
+    <span class="jomo-badge positional" id="jomo-badge">POSITIONAL REGIME</span>
+  </div>
+
+  <div class="jomo-body">
+    <!-- σ gauge -->
+    <div class="jomo-cell">
+      <div class="jc-label">Realized Volatility (20D)</div>
+      <div class="jc-val" id="jomo-sigma" style="color:var(--gold)">—</div>
+      <div class="jc-sub">
+        σ* = 1/3 ≈ 0.33 is the threshold above which<br>
+        <strong style="color:var(--text)">positional control strictly dominates velocity.</strong>
+      </div>
+      <div class="sigma-track">
+        <div class="sigma-fill" id="sigma-fill" style="width:0%;background:var(--amber)"></div>
+        <div class="sigma-line" style="left:33%"></div>
       </div>
     </div>
 
-    <!-- LIVE EXAMPLE BOX -->
-    <div class="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6">
-      <p class="font-bold text-amber-700 mb-2">📍 Live Example — Trade #1 (in progress)</p>
-      <p class="text-sm text-gray-700">A $100 account bought <strong>NVDA</strong> at <strong>$235</strong> to demonstrate how easy it is to start. The position is currently down ~6% to $220 and being held over the weekend — a real lesson in overnight gap risk. No stop loss was set at entry, which breaks the core rule. Watch the outcome: the stop will be set Tuesday at 9:30am open. This is Lesson Zero in real time.</p>
-    </div>
-  </div>
-  <!-- END LESSON ZERO -->
-
-  <!-- ══════════════════════════════════════
-       AI MARKET RESEARCH ASSISTANT
-  ══════════════════════════════════════ -->
-  <div class="bg-white rounded-3xl shadow-lg p-10 mb-16 border-t-4 border-blue-500">
-    <div class="mb-2">
-      <span class="bg-blue-100 text-blue-700 font-bold px-4 py-1 rounded-xl text-sm tracking-wide">AI RESEARCH</span>
-    </div>
-    <h2 class="text-3xl font-bold mt-3 mb-1">Market Research Assistant</h2>
-    <p class="text-gray-500 mb-8">Live data via web search — ask anything about today's market. Not financial advice.</p>
-
-    <!-- Capabilities grid -->
-    <div class="bg-gray-50 rounded-2xl p-6 mb-8 grid grid-cols-2 md:grid-cols-3 gap-3">
-      <div class="flex items-center gap-2 text-sm text-gray-600"><i class="fas fa-chart-line text-emerald-500 w-4"></i> Live prices &amp; quotes</div>
-      <div class="flex items-center gap-2 text-sm text-gray-600"><i class="fas fa-newspaper text-emerald-500 w-4"></i> Breaking market news</div>
-      <div class="flex items-center gap-2 text-sm text-gray-600"><i class="fas fa-chart-bar text-emerald-500 w-4"></i> Earnings &amp; fundamentals</div>
-      <div class="flex items-center gap-2 text-sm text-gray-600"><i class="fas fa-arrow-trend-up text-emerald-500 w-4"></i> Sector &amp; index movers</div>
-      <div class="flex items-center gap-2 text-sm text-gray-600"><i class="fas fa-calendar-check text-emerald-500 w-4"></i> Upcoming catalysts</div>
-      <div class="flex items-center gap-2 text-sm text-gray-600"><i class="fas fa-scale-balanced text-emerald-500 w-4"></i> Trade thesis analysis</div>
-    </div>
-
-    <!-- Quick action buttons -->
-    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Quick actions</p>
-    <div class="grid md:grid-cols-3 gap-3 mb-8">
-      <button onclick="aiAsk('Give me a full market overview right now — major indices, top sector movers, and anything macro worth watching today.')"
-        class="bg-white border border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 rounded-2xl p-4 text-left text-sm font-medium text-gray-700 hover:text-emerald-700 transition group">
-        <i class="fas fa-globe text-gray-300 group-hover:text-emerald-500 mb-2 block text-xl transition"></i>
-        Today's market overview
-      </button>
-      <button onclick="aiAsk('Scan for the top buy opportunities in the market today — momentum, value, or catalyst-driven. Give me 3 to 5 names with clear reasoning for each.')"
-        class="bg-white border border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 rounded-2xl p-4 text-left text-sm font-medium text-gray-700 hover:text-emerald-700 transition group">
-        <i class="fas fa-magnifying-glass-dollar text-gray-300 group-hover:text-emerald-500 mb-2 block text-xl transition"></i>
-        Scan for buy opportunities
-      </button>
-      <button onclick="aiAsk('What are the biggest losers or sell candidates today? Show me names with red flags — earnings misses, technical breakdowns, or sector weakness.')"
-        class="bg-white border border-gray-200 hover:border-red-300 hover:bg-red-50 rounded-2xl p-4 text-left text-sm font-medium text-gray-700 hover:text-red-600 transition group">
-        <i class="fas fa-arrow-trend-down text-gray-300 group-hover:text-red-400 mb-2 block text-xl transition"></i>
-        Scan for sell candidates
-      </button>
-      <button onclick="aiAsk('What earnings reports are coming up in the next 2 weeks that could be major market movers? Give me the key names and what to watch for.')"
-        class="bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50 rounded-2xl p-4 text-left text-sm font-medium text-gray-700 hover:text-blue-600 transition group">
-        <i class="fas fa-calendar-days text-gray-300 group-hover:text-blue-400 mb-2 block text-xl transition"></i>
-        Upcoming earnings catalysts
-      </button>
-      <button onclick="aiAsk('Give me a macro briefing: Fed, rates, inflation, and anything in the news today that could move markets this week.')"
-        class="bg-white border border-gray-200 hover:border-purple-300 hover:bg-purple-50 rounded-2xl p-4 text-left text-sm font-medium text-gray-700 hover:text-purple-600 transition group">
-        <i class="fas fa-building-columns text-gray-300 group-hover:text-purple-400 mb-2 block text-xl transition"></i>
-        Macro &amp; Fed watch
-      </button>
-      <button onclick="aiAsk('What are the hottest sectors and themes driving the market right now? Where is money rotating and why?')"
-        class="bg-white border border-gray-200 hover:border-amber-300 hover:bg-amber-50 rounded-2xl p-4 text-left text-sm font-medium text-gray-700 hover:text-amber-600 transition group">
-        <i class="fas fa-chart-pie text-gray-300 group-hover:text-amber-400 mb-2 block text-xl transition"></i>
-        Sector rotation &amp; themes
-      </button>
-    </div>
-
-    <!-- Ticker lookup -->
-    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Look up a specific ticker</p>
-    <div class="flex gap-3 mb-6">
-      <input id="ai-ticker" type="text" placeholder="e.g. NVDA, AAPL, SPY, BTC-USD…" maxlength="20"
-        onkeydown="if(event.key==='Enter') aiLookup()"
-        class="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition" />
-      <button onclick="aiLookup()"
-        class="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-semibold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2">
-        <i class="fas fa-search"></i> Analyze
-      </button>
-    </div>
-
-    <!-- Response area -->
-    <div id="ai-response" class="hidden">
-      <div class="flex items-center justify-between mb-3">
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">AI Response</p>
-        <button onclick="document.getElementById('ai-response').classList.add('hidden')"
-          class="text-xs text-gray-400 hover:text-gray-600 transition">
-          <i class="fas fa-times"></i> Close
-        </button>
+    <!-- Player J vs V -->
+    <div class="jomo-cell">
+      <div class="jc-label">Regime · Player J vs Player V</div>
+      <div class="jc-val" id="jomo-regime" style="color:var(--accent)">—</div>
+      <div class="jc-sub" id="jomo-regime-sub">
+        <strong style="color:var(--text)">Player J (Positional)</strong> — controls network nodes, storage, flow optionality. Earns from position, not speed.<br><br>
+        <strong style="color:var(--text)">Player V (Velocity)</strong> — invests in execution speed, reacts to public signals. Loses structural edge above σ*.
       </div>
-      <div id="ai-response-inner" class="bg-gray-50 border border-gray-200 rounded-2xl p-6 text-sm text-gray-700 leading-relaxed min-h-16"></div>
     </div>
 
-    <p class="text-xs text-gray-400 mt-5 flex items-center gap-1.5">
-      <i class="fas fa-shield-halved"></i>
-      Research only — not financial advice. Always verify data independently before placing any trade.
-    </p>
-  </div>
-  <!-- END AI ASSISTANT -->
-
-  <!-- ══════════════════════════════════════
-       SCANNER HEADER
-  ══════════════════════════════════════ -->
-  <div class="flex justify-between items-center mb-4">
-    <div>
-      <h1 class="text-5xl font-bold">Russell 3000 Scanner</h1>
-      <p class="text-xl text-gray-600">~200 Liquid Names · Momentum + Volume + MA Cross · Refreshes Every 3 Min</p>
-    </div>
-    <div class="text-right">
-      <p class="text-sm text-gray-500">Today is</p>
-      <p class="text-2xl font-semibold text-emerald-600" id="current-date"></p>
+    <!-- Theory note -->
+    <div class="jomo-cell">
+      <div class="jc-label">Theory · ε₀ = 1/3 Invariant</div>
+      <div class="jc-val" style="color:var(--muted);font-size:1rem;padding-top:0.3rem">σ* ∈ [0.30, 0.36]</div>
+      <div class="jc-sub">
+        The threshold σ* ≈ 1/3 recurs as a structural invariant across:<br>
+        GTCT g₃₃ = 33 lock · ε₀ = 1/3 Banach attractor ·
+        dm³ contact fold · circadian fixed point.<br><br>
+        <a href="https://totogt.github.io/AXLE/NetworkGamesJOMO/PositionalDominance_NetworkGames_Grossi2026.pdf" target="_blank">Paper I — Positional Dominance ↗</a><br>
+        <a href="https://totogt.github.io/AXLE/NetworkGamesJOMO/Paper2_Companion_OneThird_Invariant.pdf" target="_blank">Paper II — 1/3 Invariant ↗</a><br>
+        <a href="https://totogt.github.io/AXLE/NetworkGamesJOMO/GameTheory_Full_Pack.html" target="_blank">Game Theory Full Pack ↗</a><br>
+        <a href="https://totogt.github.io/AXLE/NetworkGamesJOMO/GameTheory_Full_Pack%20(1).html" target="_blank">Game Theory Full Pack (alt) ↗</a>
+      </div>
     </div>
   </div>
 
-  <!-- SCORING LEGEND -->
-  <div class="bg-white rounded-2xl border border-gray-200 px-6 py-4 mb-8 flex flex-wrap gap-6 text-sm text-gray-600">
-    <span><strong class="text-gray-800">Momentum (40)</strong> — % change vs prev close, rewarding steady up moves</span>
-    <span><strong class="text-gray-800">Volume Surge (30)</strong> — today's volume vs 5-day avg, above 1.5× scores high</span>
-    <span><strong class="text-gray-800">MA Cross (30)</strong> — price vs VWMA5 (volume-weighted trailing avg of last week) — best signal for real momentum</span>
-    <span class="ml-auto text-xs text-gray-400" id="scan-status">Initialising…</span>
-  </div>
+  <blockquote class="jomo-quote">
+    <p>"There is a classical image in Hindu cosmology of Vishnu reclining on the cosmic serpent Ananta Shesha, the universe unfolding from his navel while he remains in perfect stillness. This paper derives the mathematical conditions under which such stillness is structural dominance — when a player controlling key network nodes earns strictly higher equilibrium payoffs than a player investing in velocity. Stillness is not passivity. It is the fixed point of a correctly positioned system."</p>
+    <cite>— Grossi (2026a) · Positional Dominance in Network Games · G6 LLC · Zenodo 10.5281/zenodo.19117399</cite>
+  </blockquote>
+</div>
 
-  <!-- PROGRESS BAR -->
-  <div class="mb-8">
-    <div class="flex justify-between text-xs text-gray-400 mb-1">
-      <span id="scan-progress-label">Waiting to scan…</span>
-      <span id="next-scan-label"></span>
-    </div>
-    <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-      <div id="scan-progress-bar" class="h-1.5 bg-emerald-500 rounded-full transition-all duration-300" style="width:0%"></div>
-    </div>
-  </div>
+<div class="etoro-block">
+  <p><strong>Trade with me on eToro.</strong> I'm using eToro for the Lunch Money challenge — fractional shares, tight spreads, and a clean mobile interface.</p>
+  <a href="https://etoro.tw/42BDbbL" target="_blank" class="btn-etoro">Join eToro ↗</a>
+</div>
 
-  <!-- BUY NOW BANNER -->
-  <div id="buy-now-banner"></div>
-
-  <!-- TOP PICK HIGHLIGHT -->
-  <div id="top-pick" class="bg-white rounded-3xl shadow-lg p-10 border-2 border-emerald-500 mb-12">
-    <p class="text-gray-400 text-center py-8 animate-pulse">Scanning ~200 Russell 3000 names…</p>
-  </div>
-
-  <!-- TOP 10 GRID -->
-  <h3 class="font-bold text-2xl mb-6">Top 10 Recommendations</h3>
-  <div id="top10-grid" class="grid md:grid-cols-2 gap-4 mb-16"></div>
-
-  <!-- 1010-DAY TRACKER -->
-  <div class="mt-4 bg-slate-900 text-white rounded-3xl p-10">
-    <div class="flex items-center justify-between flex-wrap gap-4 mb-6">
-      <h3 class="text-xl font-bold flex items-center gap-3">
-        <span class="text-2xl">🥪</span>
-        Lunch Money — The Challenge
-      </h3>
-      <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank"
-         class="flex items-center gap-2 bg-[#5865F2] hover:bg-[#4752c4] text-white text-sm font-semibold px-5 py-2 rounded-xl transition">
-        <i class="fab fa-discord"></i>
-        Join the Masterclass on Discord
-      </a>
-    </div>
-    <div id="countdown-container"></div>
-  </div>
-
-  <!-- RULE FOOTER -->
-  <div class="mt-12 bg-white rounded-3xl p-8 text-center text-sm text-gray-600">
-    <strong>Rule:</strong> Enter the #1 pick → Set stop loss immediately → Sell full position for 1–3% profit same day.
-  </div>
-
-</div><!-- end max-w -->
+<footer>
+  <p>
+    <a href="https://x.com/unitedWeStreamU" target="_blank">@unitedWeStreamU</a> ·
+    <a href="https://discord.com/channels/1502318515154325656/1502318516089520320" target="_blank">Discord Masterclass</a> ·
+    Lunch Money © 2026
+  </p>
+  <p class="disclaimer">
+    For educational purposes only. Not financial advice. Real trading involves losing days, slippage, spreads, and emotional execution errors. Never risk money you cannot afford to lose.
+  </p>
+</footer>
 
 <script>
-// ============================================================
-//  AI MARKET RESEARCH ASSISTANT
-// ============================================================
-async function aiAsk(prompt) {
-  const box = document.getElementById('ai-response');
-  const inner = document.getElementById('ai-response-inner');
-  box.classList.remove('hidden');
-  inner.innerHTML = '<span class="text-gray-400 ai-typing">Researching live market data</span>';
-  inner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+// FIX: the technicalindicators browser build exports SMA, RSI, etc. directly onto
+// window — there is no "technicalindicators" namespace object. This shim restores it.
+window.technicalindicators = window.technicalindicators ||
+  { SMA: window.SMA, RSI: window.RSI };
 
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
-    }
-
-    const data = await res.json();
-    const text = (data.content || [])
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('\n')
-      .trim();
-
-    if (!text) {
-      inner.innerHTML = '<span class="text-gray-400">No response returned. The market may be providing no signal today.</span>';
-      return;
-    }
-
-    // Render with basic markdown-lite formatting
-    inner.innerHTML = text
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/^#{1,3}\s+(.+)$/gm, '<p class="font-bold text-gray-800 mt-4 mb-1">$1</p>')
-      .replace(/\n\n/g, '</p><p class="mt-3">')
-      .replace(/\n/g, '<br>');
-
-  } catch (e) {
-    inner.innerHTML = `
-      <div class="text-red-600">
-        <i class="fas fa-triangle-exclamation mr-1"></i>
-        <strong>Error:</strong> ${e.message || 'Could not reach the AI. Check your API key or network connection.'}
-      </div>
-      <p class="text-xs text-gray-400 mt-2">
-        Note: This feature requires an Anthropic API key passed via a backend proxy. Running this file directly from disk without a proxy will trigger a CORS or auth error.
-      </p>`;
-  }
-}
-
-function aiLookup() {
-  const val = document.getElementById('ai-ticker').value.trim().toUpperCase();
-  if (!val) return;
-  aiAsk(`Give me a full analysis of ${val}: current price, recent performance, key news, fundamentals snapshot, and your read on whether it looks like a buy, hold, or sell right now. Be specific and concise.`);
-}
-
-// ============================================================
-//  ~200 LIQUID RUSSELL 3000 NAMES
-// ============================================================
-const UNIVERSE = [
-  'AAPL','MSFT','NVDA','AMZN','META','GOOGL','TSLA','BRK-B','JPM','LLY',
-  'V','UNH','XOM','MA','AVGO','JNJ','PG','HD','COST','MRK',
-  'ABBV','CVX','KO','BAC','WMT','PEP','ADBE','AMD','NFLX','CRM',
-  'TMO','ACN','LIN','MCD','ABT','DIS','WFC','TXN','CSCO','DHR',
-  'VZ','AMGN','NEE','INTC','ORCL','CAT','IBM','GS','RTX','INTU',
-  'QCOM','BA','HON','SPGI','AXP','LOW','UNP','AMAT','SYK','MDT',
-  'BKNG','GE','ISRG','PLD','SCHW','ADI','GILD','MMC','TJX','DE',
-  'LMT','ELV','REGN','BSX','MU','VRTX','ETN','CB','LRCX','ZTS',
-  'PANW','KLAC','ADP','SBUX','C','MDLZ','BLK','SO','PGR','ICE',
-  'DUK','CME','SNPS','CL','FI','NOC','EOG','GD','ITW','HCA',
-  'MCO','CDNS','USB','CEG','CI','APD','TGT','EMR','FCX','MPC',
-  'ECL','ORLY','PSA','COF','WM','CARR','NSC','F','GM','UBER',
-  'DASH','ABNB','COIN','RBLX','HOOD','SQ','PYPL','SPOT','SHOP','SNAP',
-  'LYFT','TWLO','ZM','DDOG','CRWD','NET','S','GTLB','ESTC','MDB',
-  'SNOW','PLTR','PATH','AI','RXRX','IONQ','ARRY','ACHR','JOBY','RKLB',
-  'SOFI','AFRM','UPST','LC','OPEN','CLOV','WKHS','GOEV','NKLA','RIDE',
-  'SPY','QQQ','IWM','XLK','XLF','XLE','XLV','XLI','XLC','ARKK',
-  'GLD','SLV','USO','UNG','TLT','HYG','LQD','EEM','EFA','VXX',
-  'ROKU','TTD','TRADE','ZI','BILL','HUBS','VEEV','WDAY','NOW','OKTA',
-  'DOCU','BOX','DBX','RNG','FIVE','MNDY','BRZE','PCVX','EXAS','NTRA'
+// ─── WORLD CLOCK (pure client-side, always works) ────────────────────────────
+const CITIES = [
+  { id:'tokyo',  tz:'Asia/Tokyo',              session:'asia'   },
+  { id:'dubai',  tz:'Asia/Dubai',              session:'asia'   },
+  { id:'london', tz:'Europe/London',           session:'london' },
+  { id:'nyc',    tz:'America/New_York',        session:'ny'     },
+  { id:'sao',    tz:'America/Sao_Paulo',       session:'ny'     },
+  { id:'la',     tz:'America/Los_Angeles',     session:'ny'     },
 ];
 
-// ============================================================
-//  SCORING WEIGHTS
-// ============================================================
-const W = { momentum: 40, volume: 30, maCross: 30 };
+// Sessions defined in UTC hours [open, close]
+const SESSIONS = [
+  { name:'Sydney',  start:21, end:6,  color:'rgba(99,102,241,0.35)',  left:21/24*100, width:9/24*100,  wrap:true  },
+  { name:'Tokyo',   start:0,  end:9,  color:'rgba(99,102,241,0.45)',  left:0,         width:9/24*100,  wrap:false },
+  { name:'London',  start:7,  end:16, color:'rgba(16,185,129,0.35)', left:7/24*100,  width:9/24*100,  wrap:false },
+  { name:'New York',start:13, end:22, color:'rgba(247,201,72,0.35)', left:13/24*100, width:9/24*100,  wrap:false },
+];
 
-// ============================================================
-//  FETCH QUOTE
-// ============================================================
-async function fetchQuote(ticker) {
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=12d`;
-  const res  = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(res.status);
-  const json = await res.json();
-  const r    = json.chart.result[0];
-  const meta = r.meta;
-  const bars = r.indicators.quote[0];
-  const closes  = (r.timestamp || []).map((_, i) => bars.close[i]).filter(v => v != null);
-  const volumes = (r.timestamp || []).map((_, i) => bars.volume[i]).filter(v => v != null);
-  return {
-    price:      meta.regularMarketPrice,
-    prevClose:  meta.chartPreviousClose,
-    dayHigh:    meta.regularMarketDayHigh,
-    dayLow:     meta.regularMarketDayLow,
-    volume:     meta.regularMarketVolume || 0,
-    avgVolume:  meta.averageDailyVolume3Month || meta.averageDailyVolume10Day || 1,
-    closes, volumes,
+// Session open/closed for each city's session
+function isSessionOpen(session, utcHour) {
+  const ranges = {
+    asia:   { open: 0,  close: 9  },
+    london: { open: 7,  close: 16 },
+    ny:     { open: 13, close: 22 },
   };
+  const r = ranges[session];
+  if (!r) return false;
+  return utcHour >= r.open && utcHour < r.close;
+}
+function isSessionPre(session, utcHour) {
+  const pre = { asia: [21,24], london: [6,7], ny: [12,13] };
+  const r = pre[session];
+  if (!r) return false;
+  return utcHour >= r[0] || utcHour < r[1];
 }
 
-// ============================================================
-//  TRAILING MA CALCULATIONS
-// ============================================================
-function computeTrailingMAs(closes, volumes) {
-  const n   = Math.min(closes.length, 7);
-  const cls = closes.slice(-n);
-  const vol = volumes.slice(-n);
-  const sma5 = cls.reduce((s, v) => s + v, 0) / cls.length;
-  const alpha = 2 / 6;
-  let ema = cls[0];
-  for (let i = 1; i < cls.length; i++) ema = alpha * cls[i] + (1 - alpha) * ema;
-  const totalVol = vol.reduce((s, v) => s + (v || 1), 0);
-  const vwma = cls.reduce((s, v, i) => s + v * (vol[i] || 1), 0) / (totalVol || 1);
-  return { sma5: +sma5.toFixed(2), ema5: +ema.toFixed(2), vwma5: +vwma.toFixed(2) };
+function tickClocks() {
+  const now = new Date();
+  const utcH = now.getUTCHours();
+  const utcM = now.getUTCMinutes();
+  const utcS = now.getUTCSeconds();
+
+  // UTC label
+  document.getElementById('utc-now').textContent =
+    'UTC ' + String(utcH).padStart(2,'0') + ':' +
+    String(utcM).padStart(2,'0') + ':' +
+    String(utcS).padStart(2,'0');
+
+  CITIES.forEach(c => {
+    const opts = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false, timeZone: c.tz };
+    const dOpts = { weekday:'short', month:'short', day:'numeric', timeZone: c.tz };
+    document.getElementById('t-' + c.id).textContent = now.toLocaleTimeString('en-GB', opts);
+    document.getElementById('d-' + c.id).textContent = now.toLocaleDateString('en-GB', dOpts);
+
+    const el = document.getElementById('s-' + c.id);
+    if (isSessionOpen(c.session, utcH)) {
+      el.textContent = '● Open'; el.className = 'city-session session-open';
+    } else if (isSessionPre(c.session, utcH)) {
+      el.textContent = '◐ Pre'; el.className = 'city-session session-pre';
+    } else {
+      el.textContent = '○ Closed'; el.className = 'city-session session-closed';
+    }
+  });
+
+  // Timeline now-line
+  const fracOfDay = (utcH * 3600 + utcM * 60 + utcS) / 86400;
+  document.getElementById('tl-now').style.left = (fracOfDay * 100) + '%';
 }
 
-// ============================================================
-//  SCORE ONE STOCK
-// ============================================================
-function scoreStock(data) {
-  const { price, prevClose, volume, avgVolume, closes, volumes } = data;
-  const mas = computeTrailingMAs(closes, volumes);
-  const primaryMA = mas.vwma5;
-  const pct = prevClose > 0 ? ((price - prevClose) / prevClose) * 100 : 0;
-  let mom = 0;
-  if      (pct >= 3.0)  mom = Math.max(20, 100 - (pct - 3) * 15);
-  else if (pct >= 0.5)  mom = 60 + ((pct - 0.5) / 2.5) * 40;
-  else if (pct >= 0)    mom = 40 + (pct / 0.5) * 20;
-  else if (pct >= -1.0) mom = Math.max(0, 40 + pct * 20);
-  else                  mom = 0;
-  const volRatio = avgVolume > 0 ? volume / avgVolume : 1;
-  let vol = 0;
-  if      (volRatio >= 3.0) vol = 100;
-  else if (volRatio >= 1.5) vol = 60 + ((volRatio - 1.5) / 1.5) * 40;
-  else if (volRatio >= 1.0) vol = 30 + ((volRatio - 1.0) / 0.5) * 30;
-  else                      vol = Math.max(0, volRatio * 30);
-  const maGap = primaryMA > 0 ? ((price - primaryMA) / primaryMA) * 100 : 0;
-  let mac = 0;
-  if      (maGap >= 2.0)  mac = Math.max(50, 100 - (maGap - 2) * 10);
-  else if (maGap >= 0.1)  mac = 65 + (maGap / 2.0) * 35;
-  else if (maGap >= 0)    mac = 55 + maGap * 100;
-  else if (maGap >= -1.0) mac = Math.max(0, 55 + maGap * 30);
-  else                    mac = 0;
-  const score = (mom * W.momentum + vol * W.volume + mac * W.maCross) / 100;
-  const buyNow = score >= 68 && price > primaryMA && volRatio >= 1.3 && pct >= 0.3;
-  const suggestStop = +(price * 0.985).toFixed(2);
-  const suggestT1   = +(price * 1.012).toFixed(2);
-  const suggestT2   = +(price * 1.025).toFixed(2);
-  let grade;
-  if      (score >= 85) grade = 'A+';
-  else if (score >= 75) grade = 'A';
-  else if (score >= 65) grade = 'B+';
-  else if (score >= 55) grade = 'B';
-  else if (score >= 45) grade = 'C+';
-  else if (score >= 35) grade = 'C';
-  else                  grade = 'D';
-  return {
-    score: +score.toFixed(1), grade, buyNow,
-    pct: +pct.toFixed(2), volRatio: +volRatio.toFixed(2), maGap: +maGap.toFixed(2),
-    mom: +mom.toFixed(0), vol: +vol.toFixed(0), mac: +mac.toFixed(0),
-    primaryMA, ...mas,
-    suggestStop, suggestT1, suggestT2,
-  };
+// Build static session bars once
+function buildTimeline() {
+  const bar = document.getElementById('tl-bar');
+  SESSIONS.forEach(s => {
+    const div = document.createElement('div');
+    div.className = 'tl-session';
+    div.style.left    = s.left + '%';
+    div.style.width   = s.width + '%';
+    div.style.background = s.color;
+    div.innerHTML = '<span>' + s.name + '</span>';
+    bar.insertBefore(div, bar.firstChild);
+  });
 }
 
-// ============================================================
-//  BATCH FETCH
-// ============================================================
-async function batchFetch(tickers, concurrency = 8, onProgress) {
-  const results = [];
-  let idx = 0;
-  async function worker() {
-    while (idx < tickers.length) {
-      const i = idx++;
-      const ticker = tickers[i];
-      try {
-        const data = await fetchQuote(ticker);
-        const sc   = scoreStock(data);
-        results.push({ ticker, ...data, ...sc });
-      } catch { /* skip failed */ }
-      if (onProgress) onProgress(Math.min(idx, tickers.length), tickers.length);
+buildTimeline();
+tickClocks();
+setInterval(tickClocks, 1000);
+
+// ─── LUNAR ENGINE (pure math, no API needed) ─────────────────────────────────
+// Reference new moon: 2000-01-06 18:14 UTC (J2000 epoch)
+// Synodic period: 29.530589 days
+// Anomalistic period (apogee→perigee): 27.554551 days
+// Reference perigee: ~2000-01-10 (apogee/perigee phase offset ≈ 4 days after J2000 NM)
+
+const SYNODIC   = 29.530589;  // days
+const ANOMAL    = 27.554551;  // days — perigee cycle
+const REF_NM_MS = new Date('2000-01-06T18:14:00Z').getTime();
+const REF_PG_MS = new Date('2000-01-10T00:00:00Z').getTime(); // approximate perigee ref
+
+function lunarAge(now = Date.now()) {
+  const ms = now - REF_NM_MS;
+  const days = ms / 86400000;
+  let age = days % SYNODIC;
+  if (age < 0) age += SYNODIC;
+  return age; // 0 = New Moon, ~14.77 = Full Moon
+}
+
+function anomalisticAge(now = Date.now()) {
+  const ms = now - REF_PG_MS;
+  const days = ms / 86400000;
+  let age = days % ANOMAL;
+  if (age < 0) age += ANOMAL;
+  return age; // 0 = Perigee, ~13.78 = Apogee
+}
+
+function moonPhaseInfo(age) {
+  const FULL = SYNODIC / 2; // ~14.765
+  let emoji, name;
+  if      (age <  1.5)              { emoji = '🌑'; name = 'New Moon'; }
+  else if (age <  6.38)             { emoji = '🌒'; name = 'Waxing Crescent'; }
+  else if (age <  8.38)             { emoji = '🌓'; name = 'First Quarter'; }
+  else if (age < 13.27)             { emoji = '🌔'; name = 'Waxing Gibbous'; }
+  else if (age < 16.27)             { emoji = '🌕'; name = 'Full Moon'; }
+  else if (age < 21.17)             { emoji = '🌖'; name = 'Waning Gibbous'; }
+  else if (age < 23.17)             { emoji = '🌗'; name = 'Last Quarter'; }
+  else if (age < 28.03)             { emoji = '🌘'; name = 'Waning Crescent'; }
+  else                              { emoji = '🌑'; name = 'New Moon'; }
+  return { emoji, name };
+}
+
+// LunaticTrader green/red periods:
+// RED  period: starts 3d after New Moon  → ends 3d after Full Moon   (age 3 → 17.77)
+// GREEN period: starts 3d after Full Moon → ends 3d after New Moon    (age 17.77 → 29.53 + 0 → 3)
+function lunarPeriod(age) {
+  const FULL = SYNODIC / 2;   // ~14.765
+  const redStart   = 3;
+  const redEnd     = FULL + 3;    // ~17.77
+  if (age >= redStart && age < redEnd) {
+    const daysLeft = redEnd - age;
+    return { period: 'RED', cls: 'period-red', sub: `${daysLeft.toFixed(1)}d until green`, score: 0 };
+  } else {
+    const greenEndAge = SYNODIC + 3; // wraps
+    let daysLeft;
+    if (age >= redEnd) daysLeft = (SYNODIC - age) + redStart;
+    else               daysLeft = redStart - age;
+    return { period: 'GREEN', cls: 'period-green', sub: `${Math.max(0, daysLeft).toFixed(1)}d until red`, score: 2 };
+  }
+}
+
+function moonDistanceInfo(anom) {
+  const perigeeRange = 2.5;   // ±2.5 days of perigee = strong pull
+  const apogeeRange  = 2.5;
+  const APOGEE_AGE   = ANOMAL / 2; // ~13.78 days
+
+  const distFromPerigee = Math.min(anom, ANOMAL - anom);
+  const distFromApogee  = Math.abs(anom - APOGEE_AGE);
+
+  if (distFromPerigee <= perigeeRange) {
+    const d = distFromPerigee.toFixed(1);
+    return { label: `Perigee ±${d}d`, sub: '⚡ Reversal watch', cls: 'period-red' };
+  } else if (distFromApogee <= apogeeRange) {
+    const d = distFromApogee.toFixed(1);
+    return { label: `Apogee ±${d}d`, sub: '⚡ Reversal watch', cls: 'period-red' };
+  } else {
+    const dToPerigee = Math.min(anom, ANOMAL - anom);
+    const dToApogee  = Math.abs(anom - APOGEE_AGE);
+    const next       = dToPerigee < dToApogee ? `Perigee in ${dToPerigee.toFixed(1)}d` : `Apogee in ${dToApogee.toFixed(1)}d`;
+    return { label: 'Mid-cycle', sub: next, cls: '' };
+  }
+}
+
+function daysUntilPhase(age, targetAge, synodic) {
+  let diff = targetAge - age;
+  if (diff <= 0) diff += synodic;
+  return diff;
+}
+
+function addDaysToNow(days) {
+  const d = new Date(Date.now() + days * 86400000);
+  return d.toLocaleDateString('en-GB', { month:'short', day:'numeric' });
+}
+
+function updateLunar() {
+  const now   = Date.now();
+  const age   = lunarAge(now);
+  const anom  = anomalisticAge(now);
+  const phase = moonPhaseInfo(age);
+  const per   = lunarPeriod(age);
+  const dist  = moonDistanceInfo(anom);
+
+  document.getElementById('moon-emoji').textContent      = phase.emoji;
+  document.getElementById('moon-phase-name').textContent = phase.name;
+  document.getElementById('lunar-age').textContent       = age.toFixed(2) + 'd';
+
+  const perEl  = document.getElementById('lunar-period');
+  const perSub = document.getElementById('lunar-period-sub');
+  perEl.textContent  = per.period;
+  perEl.className    = 'lc-val ' + per.cls;
+  perSub.textContent = per.sub;
+
+  const dNew  = daysUntilPhase(age, 0, SYNODIC);
+  const dFull = daysUntilPhase(age, SYNODIC / 2, SYNODIC);
+  document.getElementById('next-new').textContent       = dNew.toFixed(1) + 'd';
+  document.getElementById('next-new-date').textContent  = addDaysToNow(dNew);
+  document.getElementById('next-full').textContent      = dFull.toFixed(1) + 'd';
+  document.getElementById('next-full-date').textContent = addDaysToNow(dFull);
+
+  const distEl  = document.getElementById('moon-dist');
+  const distSub = document.getElementById('moon-dist-sub');
+  distEl.textContent  = dist.label;
+  distEl.className    = 'lc-val ' + dist.cls;
+  distSub.textContent = dist.sub;
+
+  return per.score; // 0 = RED, 2 = GREEN
+}
+
+// Run once immediately, then every minute (phase changes slowly)
+let lunarScore = updateLunar();
+setInterval(() => { lunarScore = updateLunar(); }, 60000);
+
+// ─── PRICE DATA ──────────────────────────────────────────────────────────────
+function toYMD(ms) {
+  const d = new Date(ms);
+  return d.getUTCFullYear() + '-' +
+    String(d.getUTCMonth()+1).padStart(2,'0') + '-' +
+    String(d.getUTCDate()).padStart(2,'0');
+}
+const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+
+async function loadAndRun() {
+  let raw = null;
+
+  // 1. Kraken OHLC — CORS-enabled, daily candles with real volume, works worldwide
+  try {
+    const res = await fetch(
+      'https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440',
+      { cache: 'no-store' }
+    );
+    if (!res.ok) throw new Error('status ' + res.status);
+    const data = await res.json();
+    if (data.error && data.error.length) throw new Error(data.error[0]);
+    const key = Object.keys(data.result).find(k => k !== 'last');
+    raw = data.result[key].slice(-60).map(k => ({
+      t: toYMD(k[0] * 1000),
+      o: parseFloat(k[1]), h: parseFloat(k[2]),
+      l: parseFloat(k[3]), c: parseFloat(k[4]),
+      v: parseFloat(k[6]),
+    }));
+    if (raw.length < 10) throw new Error('too few candles');
+    setSource('● Live — Kraken BTC/USD 1D', 'var(--accent)');
+  } catch(e1) {
+    // 2. Binance — blocked in some regions, kept as backup
+    try {
+      const res = await fetch(
+        'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=50',
+        { cache: 'no-store' }
+      );
+      if (!res.ok) throw new Error('status ' + res.status);
+      const data = await res.json();
+      raw = data.map(k => ({
+        t: toYMD(k[0]),
+        o: parseFloat(k[1]), h: parseFloat(k[2]),
+        l: parseFloat(k[3]), c: parseFloat(k[4]),
+        v: parseFloat(k[5]),
+      }));
+      setSource('● Live — Binance BTCUSDT 1D', 'var(--accent)');
+    } catch(e2) {
+      raw = FALLBACK;
+      setSource('● Static snapshot (live feeds unreachable)', 'var(--amber)');
     }
   }
-  await Promise.all(Array.from({ length: concurrency }, worker));
-  return results;
+
+  runScanner(raw);
 }
 
-// ============================================================
-//  RENDER
-// ============================================================
-function gradeColor(grade) {
-  if (grade.startsWith('A')) return 'text-emerald-700 bg-emerald-50';
-  if (grade.startsWith('B')) return 'text-blue-700 bg-blue-50';
-  if (grade.startsWith('C')) return 'text-amber-700 bg-amber-50';
-  return 'text-red-700 bg-red-50';
+function setSource(txt, col) {
+  const el = document.getElementById('data-source');
+  el.textContent = txt;
+  el.style.color = col;
 }
 
-function renderResults(sorted) {
-  const fmt    = n => n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const pctCls = p => p >= 0 ? 'text-emerald-600' : 'text-red-500';
-  const top    = sorted[0];
-  const top10  = sorted.slice(0, 10);
-  const buyNowList = sorted.filter(s => s.buyNow).slice(0, 5);
+// 50-candle static fallback — enough for SMA50
+const FALLBACK = [
+  {t:'2026-01-06',o:95200,h:97100,l:94500,c:96400,v:32100},
+  {t:'2026-01-07',o:96400,h:98200,l:95900,c:97700,v:29800},
+  {t:'2026-01-08',o:97700,h:99000,l:96800,c:98100,v:28400},
+  {t:'2026-01-09',o:98100,h:99800,l:97200,c:97600,v:33100},
+  {t:'2026-01-10',o:97600,h:98400,l:95200,c:95800,v:38500},
+  {t:'2026-01-13',o:95800,h:96500,l:93000,c:93500,v:41200},
+  {t:'2026-01-14',o:93500,h:94800,l:92200,c:94200,v:36700},
+  {t:'2026-01-15',o:94200,h:95900,l:93800,c:95400,v:30100},
+  {t:'2026-01-16',o:95400,h:96700,l:94900,c:96100,v:27600},
+  {t:'2026-01-17',o:96100,h:97500,l:95600,c:97200,v:29300},
+  {t:'2026-01-20',o:97200,h:98100,l:96400,c:97800,v:25800},
+  {t:'2026-01-21',o:97800,h:98600,l:96900,c:97100,v:24100},
+  {t:'2026-01-22',o:97100,h:97800,l:95400,c:95900,v:28900},
+  {t:'2026-01-23',o:95900,h:96700,l:94600,c:95200,v:31400},
+  {t:'2026-01-24',o:95200,h:96100,l:93800,c:94500,v:34200},
+  {t:'2026-01-27',o:94500,h:95400,l:92900,c:93300,v:39800},
+  {t:'2026-01-28',o:93300,h:94200,l:91400,c:92100,v:44600},
+  {t:'2026-01-29',o:92100,h:93500,l:90800,c:91200,v:48200},
+  {t:'2026-01-30',o:91200,h:92400,l:89900,c:90600,v:42100},
+  {t:'2026-01-31',o:90600,h:91800,l:89200,c:91100,v:38700},
+  {t:'2026-02-03',o:91100,h:92600,l:90400,c:92000,v:34500},
+  {t:'2026-02-04',o:92000,h:93200,l:91300,c:92800,v:30200},
+  {t:'2026-02-05',o:92800,h:94100,l:92100,c:93600,v:28900},
+  {t:'2026-02-06',o:93600,h:94800,l:93000,c:94300,v:26400},
+  {t:'2026-02-07',o:94300,h:95500,l:93700,c:95000,v:24800},
+  {t:'2026-02-10',o:95000,h:96200,l:94400,c:95700,v:23200},
+  {t:'2026-02-11',o:95700,h:96900,l:95000,c:96400,v:25100},
+  {t:'2026-02-12',o:96400,h:97600,l:95600,c:96900,v:27600},
+  {t:'2026-02-13',o:96900,h:98100,l:96200,c:97600,v:29400},
+  {t:'2026-02-14',o:97600,h:98800,l:96800,c:98200,v:31200},
+  {t:'2026-02-17',o:98200,h:99100,l:97300,c:98600,v:28700},
+  {t:'2026-02-18',o:98600,h:99400,l:97800,c:98100,v:26500},
+  {t:'2026-02-19',o:98100,h:98800,l:96600,c:97200,v:29800},
+  {t:'2026-02-20',o:97200,h:98000,l:95800,c:96500,v:32100},
+  {t:'2026-02-21',o:96500,h:97400,l:95200,c:95800,v:34600},
+  {t:'2026-02-24',o:95800,h:96700,l:94400,c:94900,v:37800},
+  {t:'2026-02-25',o:94900,h:95800,l:93600,c:94200,v:39200},
+  {t:'2026-02-26',o:94200,h:95100,l:92900,c:93500,v:41500},
+  {t:'2026-02-27',o:93500,h:94400,l:92200,c:93000,v:38700},
+  {t:'2026-02-28',o:93000,h:94200,l:92400,c:93800,v:34100},
+  {t:'2026-03-03',o:88800,h:89900,l:87600,c:88400,v:36200},
+  {t:'2026-03-10',o:85200,h:86400,l:84500,c:85800,v:42100},
+  {t:'2026-03-17',o:82400,h:83600,l:81800,c:83100,v:38600},
+  {t:'2026-03-24',o:79900,h:81200,l:79100,c:80500,v:40200},
+  {t:'2026-03-31',o:80200,h:81500,l:79600,c:81000,v:36800},
+  {t:'2026-04-07',o:78500,h:79800,l:77900,c:79300,v:34100},
+  {t:'2026-04-14',o:82900,h:84200,l:82200,c:83600,v:29400},
+  {t:'2026-04-21',o:81800,h:83100,l:81000,c:82400,v:31200},
+  {t:'2026-04-28',o:79000,h:80400,l:78400,c:79800,v:28700},
+  {t:'2026-05-05',o:77200,h:78500,l:76500,c:77800,v:26500},
+];
 
-  const buyBanner = buyNowList.length > 0
-    ? `<div class="mb-8 bg-emerald-600 text-white rounded-2xl px-6 py-5">
-        <p class="font-bold text-lg mb-2">🟢 BUY NOW — ${buyNowList.length} signal${buyNowList.length > 1 ? 's' : ''} active</p>
-        <div class="flex flex-wrap gap-3">
-          ${buyNowList.map(s => `
-            <div class="bg-white bg-opacity-20 rounded-xl px-4 py-2 text-sm">
-              <strong>${s.ticker}</strong>
-              <span class="ml-2">$${fmt(s.price)}</span>
-              <span class="ml-2 opacity-80">Stop $${fmt(s.suggestStop)}</span>
-              <span class="ml-2 opacity-80">T1 $${fmt(s.suggestT1)}</span>
-              <span class="ml-2 opacity-80">T2 $${fmt(s.suggestT2)}</span>
-              <span class="ml-2">Score ${s.score}</span>
-            </div>`).join('')}
-        </div>
-        <p class="text-xs mt-3 opacity-70">Criteria: score ≥ 68 · price above VWMA · volume ≥ 1.3× avg · up ≥ 0.3% today</p>
-      </div>`
-    : `<div class="mb-8 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 text-amber-800 text-sm">
-        <strong>No BUY NOW signals</strong> — no stocks currently meet all criteria (score ≥ 68, above VWMA, volume surge, positive momentum). Top pick shown below is the strongest candidate to watch.
-      </div>`;
+function runScanner(raw) {
+  const closes  = raw.map(d => d.c);
+  const volumes = raw.map(d => d.v);
+  const last    = closes[closes.length - 1];
 
-  document.getElementById('buy-now-banner').innerHTML = buyBanner;
+  document.getElementById('btc-price').textContent =
+    '$' + last.toLocaleString('en-US', { maximumFractionDigits: 0 });
 
-  document.getElementById('top-pick').innerHTML = `
-    <div class="flex flex-col md:flex-row items-start justify-between gap-8">
-      <div class="flex-1">
-        <div class="flex items-center gap-3 flex-wrap">
-          <span class="px-4 py-2 ${top.buyNow ? 'bg-emerald-600 text-white' : 'bg-emerald-100 text-emerald-700'} font-bold rounded-xl text-sm">
-            ${top.buyNow ? '🟢 BUY NOW — #1 PICK' : '#1 BEST CANDIDATE'}
-          </span>
-          <span class="px-3 py-1 rounded-lg font-bold text-lg ${gradeColor(top.grade)}">${top.grade}</span>
-        </div>
-        <h2 class="text-5xl font-bold mt-4">${top.ticker}</h2>
-        <p class="text-6xl font-bold text-emerald-600 mt-2">$${fmt(top.price)}</p>
-        <div class="mt-3 flex flex-wrap gap-5 text-sm text-gray-500">
-          <span>H $${top.dayHigh?.toFixed(2)}</span>
-          <span>L $${top.dayLow?.toFixed(2)}</span>
-          <span class="${pctCls(top.pct)} font-semibold">${top.pct >= 0 ? '+' : ''}${top.pct}% today</span>
-          <span>Vol ${top.volRatio}× avg</span>
-        </div>
-        <div class="mt-4 grid grid-cols-3 gap-3 text-sm">
-          <div class="bg-slate-50 rounded-xl p-3">
-            <p class="text-xs text-gray-400 mb-1">VWMA (best trailing avg)</p>
-            <p class="font-bold text-gray-800">$${fmt(top.vwma5)}</p>
-            <p class="text-xs ${pctCls(top.maGap)} mt-0.5">Price ${top.maGap >= 0 ? '+' : ''}${top.maGap}% vs MA</p>
-          </div>
-          <div class="bg-slate-50 rounded-xl p-3">
-            <p class="text-xs text-gray-400 mb-1">EMA5</p>
-            <p class="font-bold text-gray-800">$${fmt(top.ema5)}</p>
-          </div>
-          <div class="bg-slate-50 rounded-xl p-3">
-            <p class="text-xs text-gray-400 mb-1">SMA5</p>
-            <p class="font-bold text-gray-800">$${fmt(top.sma5)}</p>
-          </div>
-        </div>
-        ${top.buyNow ? `
-        <div class="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm">
-          <p class="font-bold text-emerald-700 mb-2">Suggested trade levels</p>
-          <div class="flex gap-6 flex-wrap">
-            <span class="text-red-600">Stop loss: <strong>$${fmt(top.suggestStop)}</strong></span>
-            <span class="text-blue-600">T1 target: <strong>$${fmt(top.suggestT1)}</strong> (+1.2%)</span>
-            <span class="text-emerald-700">T2 target: <strong>$${fmt(top.suggestT2)}</strong> (+2.5%)</span>
-          </div>
-          <p class="text-xs text-gray-400 mt-2">Always set your stop immediately after entry. These are guidance levels, not guarantees.</p>
-        </div>` : ''}
-        <div class="mt-4 flex gap-3 flex-wrap text-xs">
-          <span class="bg-gray-100 px-3 py-1 rounded-lg">Momentum <strong>${top.mom}</strong>/100</span>
-          <span class="bg-gray-100 px-3 py-1 rounded-lg">Volume <strong>${top.vol}</strong>/100</span>
-          <span class="bg-gray-100 px-3 py-1 rounded-lg">VWMA Cross <strong>${top.mac}</strong>/100</span>
-        </div>
-      </div>
-      <div class="text-right flex-shrink-0">
-        <p class="text-4xl font-bold text-emerald-500">${top.score}</p>
-        <p class="text-xs text-gray-400 mt-1">out of 100</p>
-        <a href="https://www.etoro.com/markets/${top.ticker.toLowerCase()}"
-           target="_blank"
-           class="mt-6 inline-block bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-2xl font-bold">
-          Trade on eToro →
-        </a>
-      </div>
-    </div>
-  `;
+  // Indicators
+  const sma9  = technicalindicators.SMA.calculate({ period: 9,  values: closes });
+  const sma21 = technicalindicators.SMA.calculate({ period: 21, values: closes });
+  const sma30 = technicalindicators.SMA.calculate({ period: Math.min(30, closes.length - 1), values: closes });
+  const sma50 = technicalindicators.SMA.calculate({ period: Math.min(50, closes.length - 1), values: closes });
+  const rsi   = technicalindicators.RSI.calculate({ period: 14, values: closes });
 
-  document.getElementById('top10-grid').innerHTML = top10.map((s, i) => `
-    <div class="bg-white rounded-2xl border ${s.buyNow ? 'border-emerald-500 border-2' : i === 0 ? 'border-emerald-300 border-2' : 'border-gray-200'} p-5 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <span class="text-2xl font-bold text-gray-300 w-8">${i + 1}</span>
-        <div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="font-bold text-lg">${s.ticker}</span>
-            <span class="px-2 py-0.5 rounded-md text-xs font-bold ${gradeColor(s.grade)}">${s.grade}</span>
-            ${s.buyNow ? '<span class="px-2 py-0.5 rounded-md text-xs font-bold bg-emerald-600 text-white">BUY NOW</span>' : ''}
-          </div>
-          <div class="flex gap-3 mt-1 text-xs text-gray-500 flex-wrap">
-            <span class="${pctCls(s.pct)} font-semibold">${s.pct >= 0 ? '+' : ''}${s.pct}%</span>
-            <span>Vol ${s.volRatio}×</span>
-            <span>VWMA <span class="${pctCls(s.maGap)}">${s.maGap >= 0 ? '+' : ''}${s.maGap}%</span></span>
-          </div>
-          ${s.buyNow ? `<div class="mt-1 text-xs text-gray-400">Stop <strong class="text-red-500">$${fmt(s.suggestStop)}</strong> · T1 <strong class="text-blue-500">$${fmt(s.suggestT1)}</strong> · T2 <strong class="text-emerald-600">$${fmt(s.suggestT2)}</strong></div>` : ''}
-          <div class="mt-1 flex gap-1.5 text-xs text-gray-400">
-            <span>Mom <strong class="text-gray-600">${s.mom}</strong></span>
-            <span>·</span>
-            <span>Vol <strong class="text-gray-600">${s.vol}</strong></span>
-            <span>·</span>
-            <span>MA <strong class="text-gray-600">${s.mac}</strong></span>
-          </div>
-        </div>
-      </div>
-      <div class="text-right flex-shrink-0">
-        <p class="text-2xl font-bold text-emerald-600">$${fmt(s.price)}</p>
-        <p class="text-sm font-semibold text-gray-700 mt-0.5">Score: ${s.score}</p>
-        <a href="https://www.etoro.com/markets/${s.ticker.toLowerCase()}" target="_blank"
-           class="text-xs text-emerald-600 hover:underline mt-1 block">Trade →</a>
-      </div>
-    </div>
-  `).join('');
-}
+  // VWMA5
+  const vwmaLen = 5;
+  const vwma5 = [];
+  for (let i = vwmaLen - 1; i < raw.length; i++) {
+    let sumPV = 0, sumV = 0;
+    for (let j = i - vwmaLen + 1; j <= i; j++) {
+      const tp = (raw[j].h + raw[j].l + raw[j].c) / 3;
+      sumPV += tp * raw[j].v; sumV += raw[j].v;
+    }
+    vwma5.push(sumV > 0 ? sumPV / sumV : raw[i].c);
+  }
 
-// ============================================================
-//  SCAN LOOP
-// ============================================================
-const SCAN_INTERVAL_MS = 3 * 60 * 1000;
-let lastScanTime = 0;
-let nextScanTimer = null;
-let progressInterval = null;
+  const a9   = sma9[sma9.length - 1]   || last;
+  const a21  = sma21[sma21.length - 1] || last;
+  const b30  = sma30[sma30.length - 1] || last;
+  const c50  = sma50[sma50.length - 1] || last;
+  const rsiV = rsi[rsi.length - 1]     || 50;
 
-function updateNextScanCountdown() {
-  const elapsed = Date.now() - lastScanTime;
-  const remaining = Math.max(0, SCAN_INTERVAL_MS - elapsed);
-  const secs = Math.ceil(remaining / 1000);
-  const mins = Math.floor(secs / 60);
-  const s    = secs % 60;
-  document.getElementById('next-scan-label').textContent =
-    `Next scan in ${mins}:${String(s).padStart(2,'0')}`;
-  const pct = Math.min(100, (elapsed / SCAN_INTERVAL_MS) * 100);
-  document.getElementById('scan-progress-bar').style.width = pct.toFixed(1) + '%';
-}
+  const avgVol  = volumes.reduce((a,b)=>a+b,0) / volumes.length;
+  const volRatio = (volumes[volumes.length-1] || avgVol) / avgVol;
 
-async function runScan() {
-  lastScanTime = Date.now();
-  document.getElementById('scan-status').textContent = 'Scanning…';
-  document.getElementById('scan-progress-label').textContent = 'Fetching data…';
-  document.getElementById('scan-progress-bar').style.width = '0%';
-  const shuffled = [...UNIVERSE].sort(() => Math.random() - 0.5);
-  const results = await batchFetch(shuffled, 8, (done, total) => {
-    const pct = (done / total * 100).toFixed(0);
-    document.getElementById('scan-progress-label').textContent = `Scanned ${done} / ${total} stocks…`;
-    document.getElementById('scan-progress-bar').style.width = pct + '%';
+  // Orbit scoring
+  let scoreA, scoreB, scoreC;
+  if      (a9 > a21 && rsiV > 45 && rsiV < 75) scoreA = 2;
+  else if (a9 < a21 || rsiV < 35)              scoreA = 0;
+  else                                          scoreA = 1;
+
+  // Orbit B: LunaticTrader lunar period is primary signal; SMA30 + volume secondary
+  const lAge   = lunarAge();
+  const lPer   = lunarPeriod(lAge);
+  const sma30bull = last > b30 && volRatio > 0.9;
+  const sma30bear = last < b30 * 0.98;
+  if (lunarScore === 2 && sma30bull)       scoreB = 2;      // green period + price above SMA30
+  else if (lunarScore === 0 && sma30bear)  scoreB = 0;      // red period + price below SMA30
+  else if (lunarScore === 2)               scoreB = 1;      // green period but price hesitant
+  else                                     scoreB = 0;      // red period
+
+  if      (last > c50 * 1.01)                   scoreC = 2;
+  else if (last < c50 * 0.99)                   scoreC = 0;
+  else                                          scoreC = 1;
+
+  function setOrbit(cardId, badgeId, subId, score, sub) {
+    const cls = score === 2 ? 'bull' : score === 0 ? 'bear' : 'neut';
+    const lbl = score === 2 ? 'BULL' : score === 0 ? 'BEAR' : 'NEUT';
+    document.getElementById(cardId).className  = 'orbit-card ' + cls;
+    const b = document.getElementById(badgeId);
+    b.className = 'oc-badge ' + cls; b.textContent = lbl;
+    document.getElementById(subId).textContent = sub;
+  }
+  setOrbit('card-a','badge-a','sub-a', scoreA, `SMA9 ${fmt(a9)} · SMA21 ${fmt(a21)} · RSI ${rsiV.toFixed(1)}`);
+  setOrbit('card-b','badge-b','sub-b', scoreB, `${lPer.period} period · SMA30 ${fmt(b30)} · Vol ${volRatio.toFixed(2)}x`);
+  setOrbit('card-c','badge-c','sub-c', scoreC, `Price vs SMA50 ${fmt(c50)}`);
+
+  // Λ
+  const composite  = scoreA + scoreB + scoreC;
+  const lambdaPct  = Math.round(Math.abs(composite - 3) / 3 * 100);
+  const fillColor  = composite >= 5 ? 'var(--accent)' : composite <= 1 ? 'var(--red)' : 'var(--amber)';
+  document.getElementById('lambda-val').textContent = lambdaPct + '%';
+  const fill = document.getElementById('lambda-fill');
+  fill.style.width = lambdaPct + '%'; fill.style.background = fillColor;
+
+  // Entry zone
+  const entryLow  = Math.min(a9, a21) * 0.997;
+  const entryHigh = Math.max(a9, a21) * 1.002;
+  const stop      = entryLow * 0.992;
+  document.getElementById('entry-low').textContent  = fmt(entryLow);
+  document.getElementById('entry-high').textContent = fmt(entryHigh);
+  document.getElementById('stop-val').textContent   = fmt(stop);
+  document.getElementById('targets').textContent    =
+    fmt(entryHigh*1.01) + ' / ' + fmt(entryHigh*1.02) + ' / ' + fmt(entryHigh*1.035);
+
+  // Chart
+  const container = document.getElementById('chart-container');
+  container.innerHTML = '';
+  container.style.display = 'block';
+  container.style.height = '320px';
+
+  const chart = LightweightCharts.createChart(container, {
+    width: container.clientWidth, height: 320,
+    layout: { background: { color: 'transparent' }, textColor: '#5a5e6e' },
+    grid: { vertLines: { color: 'rgba(16,185,129,0.06)' }, horzLines: { color: 'rgba(16,185,129,0.06)' } },
+    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+    rightPriceScale: { borderColor: 'rgba(16,185,129,0.12)' },
+    timeScale: { borderColor: 'rgba(16,185,129,0.12)', timeVisible: true },
   });
-  if (results.length === 0) {
-    document.getElementById('scan-status').textContent = 'No data — market may be closed.';
-    return;
+
+  const cs = chart.addCandlestickSeries({
+    upColor:'#10b981', downColor:'#ef4444',
+    borderUpColor:'#10b981', borderDownColor:'#ef4444',
+    wickUpColor:'#10b981', wickDownColor:'#ef4444',
+  });
+  cs.setData(raw.map(d => ({ time:d.t, open:d.o, high:d.h, low:d.l, close:d.c })));
+
+  const vs = chart.addLineSeries({ color:'#f7c948', lineWidth:2, title:'VWMA5' });
+  const vS = raw.length - vwma5.length;
+  vs.setData(vwma5.map((v,i) => ({ time: raw[vS+i].t, value: v })));
+
+  const s9s = chart.addLineSeries({ color:'#10b981', lineWidth:1, lineStyle:2, title:'SMA9' });
+  const s9S = raw.length - sma9.length;
+  s9s.setData(sma9.map((v,i) => ({ time: raw[s9S+i].t, value: v })));
+
+  const s2s = chart.addLineSeries({ color:'#6366f1', lineWidth:1, lineStyle:2, title:'SMA21' });
+  const s2S = raw.length - sma21.length;
+  s2s.setData(sma21.map((v,i) => ({ time: raw[s2S+i].t, value: v })));
+
+  chart.timeScale().fitContent();
+  window.addEventListener('resize', () => {
+    chart.applyOptions({ width: container.clientWidth });
+  });
+
+  // ─── JOMO: realized vol vs σ* = 1/3 ────────────────────────────────────────
+  const returns20 = [];
+  const n = Math.min(20, closes.length - 1);
+  for (let i = closes.length - n; i < closes.length; i++) {
+    returns20.push(Math.log(closes[i] / closes[i - 1]));
   }
-  results.sort((a, b) => b.score - a.score);
-  renderResults(results);
-  const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  document.getElementById('scan-status').textContent = `Last scan: ${now} · ${results.length} stocks graded`;
-  document.getElementById('scan-progress-label').textContent = `Scan complete — ${results.length} stocks graded`;
-  document.getElementById('scan-progress-bar').style.width = '100%';
-}
+  const meanR = returns20.reduce((a, b) => a + b, 0) / returns20.length;
+  const variance = returns20.reduce((a, b) => a + Math.pow(b - meanR, 2), 0) / returns20.length;
+  const sigmaDaily = Math.sqrt(variance);
+  const sigmaAnn   = sigmaDaily * Math.sqrt(252); // annualized
 
-function scheduleNextScan() {
-  clearTimeout(nextScanTimer);
-  clearInterval(progressInterval);
-  progressInterval = setInterval(updateNextScanCountdown, 1000);
-  nextScanTimer = setTimeout(async () => {
-    clearInterval(progressInterval);
-    await runScan();
-    scheduleNextScan();
-  }, SCAN_INTERVAL_MS);
-}
+  const SIGMA_STAR = 1 / 3;
+  const isPositional = sigmaAnn > SIGMA_STAR;
+  const sigPct = Math.min(sigmaAnn / 0.8, 1) * 100; // gauge caps at 80% ann vol
 
-// ============================================================
-//  COUNTDOWN
-// ============================================================
-function loadCountdown() {
-  document.getElementById('countdown-container').innerHTML = `
-    <div class="text-amber-400 font-semibold mb-4" id="cd-target-label">Loading…</div>
-    <div class="grid grid-cols-4 gap-4">
-      <div class="bg-slate-800 p-4 rounded-xl text-center"><span class="block text-4xl font-bold" id="cd-days">000</span><span class="text-xs text-slate-400">DAYS</span></div>
-      <div class="bg-slate-800 p-4 rounded-xl text-center"><span class="block text-4xl font-bold" id="cd-hours">00</span><span class="text-xs text-slate-400">HOURS</span></div>
-      <div class="bg-slate-800 p-4 rounded-xl text-center"><span class="block text-4xl font-bold" id="cd-min">00</span><span class="text-xs text-slate-400">MIN</span></div>
-      <div class="bg-slate-800 p-4 rounded-xl text-center"><span class="block text-4xl font-bold" id="cd-sec">00</span><span class="text-xs text-slate-400">SEC</span></div>
-    </div>
-    <div class="mt-6 bg-slate-800 h-3 rounded-full overflow-hidden">
-      <div class="bg-amber-400 h-3 rounded-full transition-all" id="cd-bar" style="width:0%"></div>
-    </div>
-    <div class="flex justify-between text-xs text-slate-400 mt-2">
-      <span id="cd-pct">0.0% Complete</span><span id="cd-end-date"></span>
-    </div>
-  `;
-  const start  = new Date('May 24, 2026 00:00:00').getTime();
-  const target = new Date('March 1, 2029 00:00:00').getTime();
-  const totalDays = Math.round((target - start) / 86400000);
-  document.getElementById('cd-target-label').textContent = `${totalDays}-Day Journey · Started May 24, 2026`;
-  const endDate = new Date(target).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  document.getElementById('cd-end-date').textContent = `Target: ${endDate}`;
-  function tick() {
-    const now  = Date.now();
-    const dist = target - now;
-    if (dist < 0) { document.getElementById('cd-pct').textContent = '100% Complete'; return; }
-    document.getElementById('cd-days').textContent  = String(Math.floor(dist / 86400000)).padStart(3,'0');
-    document.getElementById('cd-hours').textContent = String(Math.floor((dist % 86400000) / 3600000)).padStart(2,'0');
-    document.getElementById('cd-min').textContent   = String(Math.floor((dist % 3600000) / 60000)).padStart(2,'0');
-    document.getElementById('cd-sec').textContent   = String(Math.floor((dist % 60000) / 1000)).padStart(2,'0');
-    const pct = Math.min(100, Math.max(0, (now - start) / (target - start) * 100));
-    document.getElementById('cd-bar').style.width = pct.toFixed(2) + '%';
-    document.getElementById('cd-pct').textContent = pct.toFixed(1) + '% Complete';
+  document.getElementById('jomo-sigma').textContent   = (sigmaAnn * 100).toFixed(1) + '%';
+  document.getElementById('jomo-sigma').style.color   = isPositional ? 'var(--accent)' : 'var(--amber)';
+
+  const fill2 = document.getElementById('sigma-fill');
+  fill2.style.width      = sigPct + '%';
+  fill2.style.background = isPositional ? 'var(--accent)' : 'var(--amber)';
+
+  const regEl  = document.getElementById('jomo-regime');
+  const regSub = document.getElementById('jomo-regime-sub');
+  const badge  = document.getElementById('jomo-badge');
+  if (isPositional) {
+    regEl.textContent   = 'JOMO ZONE';
+    regEl.style.color   = 'var(--accent)';
+    regSub.innerHTML    = '<strong style="color:var(--text)">σ > σ*</strong> — Positional player (J) has structural dominance.<br><br>Missing out on noisy velocity trades is the winning strategy. Hold key nodes. Let the position earn. <em style="color:var(--muted)">Joy of Missing Out.</em>';
+    badge.textContent   = 'POSITIONAL REGIME';
+    badge.className     = 'jomo-badge positional';
+  } else {
+    regEl.textContent   = 'VELOCITY ZONE';
+    regEl.style.color   = 'var(--gold)';
+    regSub.innerHTML    = '<strong style="color:var(--text)">σ < σ*</strong> — Volatility below threshold.<br><br>Speed and execution matter more in low-vol regimes. Player V (velocity) competes effectively. Monitor for regime change above σ* = 1/3.';
+    badge.textContent   = 'VELOCITY REGIME';
+    badge.className     = 'jomo-badge velocity';
   }
-  tick();
-  setInterval(tick, 1000);
 }
 
-// ============================================================
-//  INIT
-// ============================================================
-window.onload = async () => {
-  document.getElementById('current-date').textContent =
-    new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-  loadCountdown();
-  await runScan();
-  scheduleNextScan();
-};
+loadAndRun();
 </script>
 </body>
 </html>

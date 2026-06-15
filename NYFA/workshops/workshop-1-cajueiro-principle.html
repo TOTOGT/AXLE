@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workshop 1 · The Cajueiro Principle · Oct 29 · Uceda School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0ABAB5;--teal-soft:#9cf3ef;--teal-dim:rgba(10,186,181,.11);--teal-line:rgba(10,186,181,.2);--deep:#030a08;--ink:#d8ede6;--muted:#7ab8ac;--gold:#c8a24a;--c:#4a9eff;--op-color:var(--c)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--deep);color:var(--ink);font-family:'EB Garamond',Georgia,serif;font-size:17px;line-height:1.75;overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2.5rem;background:linear-gradient(to bottom,rgba(3,10,8,.96),transparent);flex-wrap:wrap;gap:.5rem}
+.nav-brand{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);opacity:.85;text-decoration:none}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;opacity:.6;transition:opacity .2s}
+.nav-back:hover{opacity:1;color:var(--teal)}
+
+/* HERO */
+.w-hero{position:relative;z-index:2;min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9rem 5vw 5rem}
+.op-badge{font-family:'JetBrains Mono',monospace;font-size:5rem;font-weight:bold;color:var(--op-color);opacity:.18;line-height:1;margin-bottom:-.5rem;letter-spacing:-.05em}
+.w-num{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--op-color);opacity:.7;margin-bottom:.8rem;display:block}
+.w-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.4rem,5vw,3.6rem);font-weight:300;font-style:italic;color:#e8f5f0;line-height:1.1;margin-bottom:.5rem}
+.w-title em{font-style:normal;color:var(--teal)}
+.w-pt{font-size:1.1rem;color:var(--muted);font-style:italic;margin-bottom:.8rem}
+.w-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;color:var(--gold);opacity:.75;line-height:2}
+
+/* SECTIONS */
+.section{position:relative;z-index:2;padding:4rem 5vw;max-width:800px;margin:0 auto}
+.section+.section{padding-top:0}
+.rule{width:100%;max-width:800px;margin:0 auto;height:1px;background:linear-gradient(to right,transparent,var(--teal-line),transparent);position:relative;z-index:2}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--teal);opacity:.52;display:block;margin-bottom:.6rem}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:400;font-style:italic;color:#e8f5f0;margin-bottom:1.2rem}
+.prose{font-size:1.02rem;color:var(--muted);line-height:1.9}
+.prose p{margin-bottom:1rem}
+.prose em{color:var(--teal-soft);font-style:italic}
+.prose strong{color:var(--ink);font-weight:500}
+
+/* READING CARD */
+.read-card{background:rgba(10,186,181,.05);border:1px solid var(--teal-line);border-radius:4px;padding:1.5rem 1.8rem;margin:1.5rem 0}
+.read-card blockquote{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;color:#c8e8e0;line-height:1.65;border-left:3px solid var(--teal);padding-left:1.2rem;margin-bottom:.8rem}
+.read-card .attr{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--teal);opacity:.55}
+.read-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;padding:.65rem 1.4rem;border:1px solid var(--teal-line);color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s}
+.read-link:hover{background:var(--teal-dim)}
+
+/* LISTENING */
+.listen-wrap{margin:1.5rem 0}
+.listen-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);opacity:.55;margin-bottom:.8rem;display:block}
+
+/* SOUND ENGINE */
+.sound-engine{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem;background:rgba(255,255,255,.02);border:1px solid rgba(10,186,181,.12);border-radius:4px;padding:1.2rem 1.4rem}
+.layer-toggle{display:flex;align-items:center;gap:.8rem;background:none;border:none;color:inherit;font-family:inherit;cursor:pointer;padding:.3rem 0;width:100%}
+.layer-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--teal);flex-shrink:0;transition:background .2s}
+.layer-toggle.active .layer-dot{background:var(--teal);box-shadow:0 0 8px var(--teal)}
+.layer-name{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.layer-toggle.active .layer-name{color:var(--teal-soft)}
+.layer-desc{font-size:13px;color:var(--muted);opacity:.45;margin-left:auto;font-style:italic}
+.waveform{display:flex;align-items:flex-end;gap:2px;height:24px;margin:.3rem 0 .8rem;opacity:0;transition:opacity .5s}
+.waveform.playing{opacity:1}
+.wv-bar{flex:1;background:var(--teal);border-radius:1px;min-height:2px;opacity:.28}
+.btn-play{display:inline-flex;align-items:center;gap:.7rem;padding:.65rem 1.4rem;border:1px solid var(--teal-line);background:transparent;color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .2s}
+.btn-play:hover,.btn-play.playing{background:var(--teal-dim)}
+
+/* DEBATE */
+.debate-prompts{display:flex;flex-direction:column;gap:.8rem;margin:1.2rem 0}
+.prompt{padding:1rem 1.2rem 1rem 1.4rem;border-left:3px solid;background:rgba(255,255,255,.025);border-radius:0 3px 3px 0}
+.prompt:nth-child(1){border-left-color:var(--c)}
+.prompt:nth-child(2){border-left-color:#50c878}
+.prompt:nth-child(3){border-left-color:#c084fc}
+.prompt p{font-size:1rem;color:var(--ink);line-height:1.6}
+.prompt .prompt-pt{font-size:.85rem;color:var(--muted);font-style:italic;margin-top:.2rem}
+.ideas-box{background:rgba(200,162,74,.04);border:1px solid rgba(200,162,74,.2);border-radius:4px;padding:1.2rem 1.5rem;margin-top:1.2rem}
+.ideas-box .ideas-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:.65;margin-bottom:.6rem;display:block}
+.ideas-box ul{list-style:none;padding:0}
+.ideas-box ul li{font-size:.92rem;color:var(--muted);line-height:1.65;padding:.2rem 0;padding-left:1rem;position:relative}
+.ideas-box ul li::before{content:"→";position:absolute;left:0;color:var(--gold);opacity:.5;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+
+/* SIGNUP */
+.signup-box{background:linear-gradient(135deg,rgba(10,186,181,.06),rgba(10,186,181,.02));border:1px solid var(--teal-line);border-radius:6px;padding:2rem 2.2rem;margin-top:1.5rem}
+.signup-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);opacity:.65;margin-bottom:.6rem;display:block}
+.signup-title{font-family:'Playfair Display',serif;font-size:1.4rem;font-style:italic;color:#e8f5f0;margin-bottom:.5rem}
+.signup-sub{font-size:.9rem;color:var(--muted);margin-bottom:1.4rem;line-height:1.7}
+.signup-form{display:flex;flex-direction:column;gap:.7rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+@media(max-width:560px){.form-row{grid-template-columns:1fr}}
+.form-input{padding:.65rem .9rem;background:rgba(255,255,255,.04);border:1px solid rgba(10,186,181,.2);border-radius:3px;color:var(--ink);font-family:'EB Garamond',serif;font-size:.95rem;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus{border-color:var(--teal)}
+.form-input::placeholder{color:var(--muted);opacity:.5}
+.friend-row{display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:var(--muted)}
+.friend-row input[type=checkbox]{accent-color:var(--teal);width:14px;height:14px;cursor:pointer}
+.btn-signup{padding:.8rem 2rem;background:var(--teal);color:#030a08;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;font-weight:500;transition:opacity .2s;align-self:flex-start}
+.btn-signup:hover{opacity:.85}
+.signup-success{display:none;text-align:center;padding:1.5rem}
+.signup-success .check{font-size:2rem;margin-bottom:.5rem}
+.signup-success p{color:var(--teal-soft);font-size:1rem;line-height:1.7}
+
+/* FOOTER */
+.w-footer{position:relative;z-index:2;padding:2rem 5vw;border-top:1px solid rgba(10,186,181,.08);text-align:center}
+.w-footer-inner{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.15em;color:var(--teal);opacity:.22;line-height:2.2}
+.w-footer a{color:var(--teal);text-decoration:none;opacity:.5}
+
+.fade-in{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<nav>
+  <a class="nav-brand" href="cajueiro-workshops-poster.html">⚜ Cajueiro · G6 LLC</a>
+  <a class="nav-back" href="cajueiro-workshops-poster.html">← All Workshops</a>
+</nav>
+
+<!-- HERO -->
+<div class="w-hero">
+  <div class="op-badge">C</div>
+  <span class="w-num">Workshop 01 · Thu Oct 29 · 5:00 – 6:00 PM</span>
+  <h1 class="w-title">The <em>Cajueiro</em> Principle</h1>
+  <p class="w-pt">O Princípio do Cajueiro</p>
+  <div class="w-meta">
+    Uceda School of Elizabeth · Elizabeth, NJ<br>
+    Compress · be here now · the first root
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- READING -->
+<div class="section fade-in">
+  <span class="sec-tag">Reading · Leitura</span>
+  <h2 class="sec-title">One root. One organism.</h2>
+  <div class="prose">
+    <p>The cashew tree of Pirangi, Rio Grande do Norte, is the largest cashew tree in the world. One seed. One root. 8,500 square meters. What looks like a forest is one single organism — <em>a semente tende à floresta</em>. The seed tends to forest.</p>
+    <p>The Cajueiro Principle takes this as its central image: <strong>what if belonging worked the same way?</strong> A branch reaches, touches the ground, re-roots, becomes a new trunk. It doesn't stop being part of the first tree. It becomes more of it.</p>
+    <p>This is the C operator — <em>Comprimir</em>, to compress. Arrive. Be here now. Find the irreducible kernel. You don't have to forget where you came from in order to take root here. That is not how the cajueiro works.</p>
+  </div>
+  <div class="read-card">
+    <blockquote>"The cajueiro establishes itself in difficult soil — branches, touches the ground, re-roots, becomes new trunks. One organism. 8,500 m²."</blockquote>
+    <div class="attr">Principia Orthogona · Vol III · The Mini-Beast · G6 LLC · 2026</div>
+  </div>
+  <a class="read-link" href="https://totogt.github.io/geometry/ch1.html" target="_blank">↗ Read Chapter 1 Free Online</a>
+  <a class="read-link" href="https://g6llc.gumroad.com/l/soundworks" target="_blank" style="margin-left:.6rem">↗ Full Series · Volumes I–VI</a>
+</div>
+
+<div class="rule"></div>
+
+<!-- LISTENING -->
+<div class="section fade-in">
+  <span class="sec-tag">Listening · Escuta</span>
+  <h2 class="sec-title">Play the soundworks</h2>
+  <div class="prose">
+    <p>The Cajueiro Soundworks is an acoustic score for this walking meditation. Start with the <em>ocean layer</em> — the Atlantic tide that connects Pirangi to Newark. Add the <em>mangue</em> when you feel ready to move. Let the sounds overlap and notice where you are.</p>
+  </div>
+  <div class="listen-wrap">
+    <span class="listen-label">dm³ Soundworks · browser engine · no install needed</span>
+    <div class="sound-engine">
+      <button class="layer-toggle" id="tog-ocean" onclick="toggleLayer('ocean')">
+        <span class="layer-dot"></span><span class="layer-name">Ocean</span>
+        <span class="layer-desc">Atlantic tide · 0.05 Hz</span>
+      </button>
+      <button class="layer-toggle" id="tog-mangue" onclick="toggleLayer('mangue')">
+        <span class="layer-dot"></span><span class="layer-name">Mangue</span>
+        <span class="layer-desc">mangrove channel · 40–80 Hz</span>
+      </button>
+      <button class="layer-toggle" id="tog-hz" onclick="toggleLayer('hz')">
+        <span class="layer-dot"></span><span class="layer-name">111 Hz</span>
+        <span class="layer-desc">Hypogeum · theta 6 Hz</span>
+      </button>
+      <button class="layer-toggle" id="tog-reeb" onclick="toggleLayer('reeb')">
+        <span class="layer-dot"></span><span class="layer-name">Reeb helix</span>
+        <span class="layer-desc">z(t) · η 1.8393</span>
+      </button>
+      <div class="waveform" id="waveform">
+        <div class="wv-bar" style="height:40%"></div><div class="wv-bar" style="height:65%"></div><div class="wv-bar" style="height:80%"></div><div class="wv-bar" style="height:50%"></div><div class="wv-bar" style="height:90%"></div><div class="wv-bar" style="height:40%"></div><div class="wv-bar" style="height:70%"></div><div class="wv-bar" style="height:55%"></div><div class="wv-bar" style="height:85%"></div><div class="wv-bar" style="height:45%"></div><div class="wv-bar" style="height:65%"></div><div class="wv-bar" style="height:75%"></div>
+      </div>
+      <button class="btn-play" id="btn-play" onclick="toggleMaster()">
+        <span id="play-icon">▶</span><span id="play-label">Play the mangue</span>
+      </button>
+    </div>
+  </div>
+  <div class="prose" style="margin-top:.8rem">
+    <p>Also recommended: <a href="https://www.ted.com/talks/taiye_selasi_don_t_ask_where_i_m_from_ask_where_i_m_a_local" target="_blank" style="color:var(--teal)">Taiye Selasi — "Don't ask where I'm from, ask where I'm a local"</a> · TED · 2014. A 14-minute talk about belonging, roots, and the question we ask wrong.</p>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- DEBATE -->
+<div class="section fade-in">
+  <span class="sec-tag">Debate · Discussão</span>
+  <h2 class="sec-title">Bring these questions Thursday</h2>
+  <div class="debate-prompts">
+    <div class="prompt">
+      <p>The cajueiro re-roots without leaving the original tree. <strong>When you moved to a new place, what was the first thing you re-rooted?</strong></p>
+      <p class="prompt-pt">Quando você se mudou para um novo lugar, o que foi a primeira coisa que você re-enraizou?</p>
+    </div>
+    <div class="prompt">
+      <p>The C operator means: compress to the seed. <strong>What is the irreducible thing about you — the part that doesn't change no matter where you plant?</strong></p>
+      <p class="prompt-pt">O que é a coisa irredutível em você — a parte que não muda independente de onde você planta?</p>
+    </div>
+    <div class="prompt">
+      <p><strong>Is isolation a broken root, or a root that hasn't found its ground yet?</strong> What would help it touch down?</p>
+      <p class="prompt-pt">O isolamento é uma raiz quebrada, ou uma raiz que ainda não encontrou o chão?</p>
+    </div>
+  </div>
+  <div class="ideas-box">
+    <span class="ideas-label">Ideas for the workshop · O que fazer na sessão</span>
+    <ul>
+      <li>Walk the route from your home to Uceda School — notice one thing you've never noticed before</li>
+      <li>Bring an object from your place of origin — something that traveled with you</li>
+      <li>Write one sentence about where your "first root" is, in any language</li>
+      <li>If you have the books: read the C face of any Level before coming</li>
+    </ul>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<!-- SIGN UP -->
+<div class="section fade-in">
+  <div class="signup-box">
+    <span class="signup-eyebrow">Join us · Participe</span>
+    <h2 class="signup-title">Come Thursday, Oct 29 · 5–6 PM</h2>
+    <p class="signup-sub">Free and open to all. Bilingual. Bring someone with you — this workshop works better with two. You'll meet others from the community and we'll connect you before the session.</p>
+    <form class="signup-form" id="signup-form" onsubmit="submitForm(event)">
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Your name · Seu nome" required id="f-name">
+        <input class="form-input" type="email" placeholder="Email address" required id="f-email">
+      </div>
+      <input class="form-input" type="text" placeholder="Friend's name (optional · opcional)" id="f-friend">
+      <label class="friend-row">
+        <input type="checkbox" id="f-bilingual">
+        I'd like a bilingual partner for this session · Quero um parceiro bilíngue
+      </label>
+      <button class="btn-signup" type="submit">Reserve my spot →</button>
+    </form>
+    <div class="signup-success" id="signup-success">
+      <div class="check">🌿</div>
+      <p>You're in, <span id="success-name"></span>!<br>
+      We'll write to you before Oct 29 with details and a reading to get started.<br><br>
+      <em>A raiz tocou o chão. The root touched the ground.</em></p>
+    </div>
+  </div>
+</div>
+
+<div class="w-footer">
+  <div class="w-footer-inner">
+    <a href="cajueiro-workshops-poster.html">← All 5 Workshops</a> &nbsp;·&nbsp;
+    <a href="workshop-2-books.html">Next: Workshop 2 →</a><br>
+    G6 LLC · Fiscal sponsor: New York Foundation for the Arts (NYFA) · <a href="mailto:grossiatwork@gmail.com">grossiatwork@gmail.com</a><br>
+    © 2026 Pablo Nogueira Grossi · CC BY 4.0
+  </div>
+</div>
+
+<script>
+/* canvas background */
+const cv=document.getElementById('bg'),cx=cv.getContext('2d');let W,H;
+function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+function drawBg(){cx.clearRect(0,0,W,H);const t=Date.now()/1000;const g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#030a08');g.addColorStop(.6,'#041410');g.addColorStop(1,'#030a08');cx.fillStyle=g;cx.fillRect(0,0,W,H);for(let w=0;w<5;w++){const spd=.12+w*.04,amp=20-w*3,yBase=H*.78+w*28,alpha=.04-w*.006;cx.beginPath();cx.moveTo(0,yBase);for(let x=0;x<=W;x+=6){const y=yBase+amp*Math.sin(x*.008+t*spd)+amp*.4*Math.sin(x*.016+t*(spd*.65)+w);cx.lineTo(x,y)}cx.lineTo(W,H);cx.lineTo(0,H);cx.closePath();cx.fillStyle='rgba(10,186,181,'+alpha+')';cx.fill()}requestAnimationFrame(drawBg)}
+drawBg();
+
+/* sound engine */
+let ac=null,mg=null,layers={},playing=false,wvAnim=null;
+function getAC(){if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.gain.value=.72;mg.connect(ac.destination)}if(ac.state==='suspended')ac.resume();return ac}
+function pink(){const a=getAC(),buf=a.createBuffer(1,a.sampleRate*4,a.sampleRate),d=buf.getChannelData(0);let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;for(let i=0;i<d.length;i++){const w=Math.random()*2-1;b0=.99886*b0+w*.0555179;b1=.99332*b1+w*.0750759;b2=.96900*b2+w*.1538520;b3=.86650*b3+w*.3104856;b4=.55000*b4+w*.5329522;b5=-.7616*b5-.0168980*w;d[i]=(b0+b1+b2+b3+b4+b5+b6+w*.5362)*.11;b6=w*.115926}const s=a.createBufferSource();s.buffer=buf;s.loop=true;return s}
+function buildOcean(){const a=getAC(),s=pink(),lpf=a.createBiquadFilter(),hpf=a.createBiquadFilter(),g=a.createGain(),lfo=a.createOscillator(),lg=a.createGain();lpf.type='lowpass';lpf.frequency.value=400;hpf.type='highpass';hpf.frequency.value=60;g.gain.value=.3;lfo.frequency.value=.05;lg.gain.value=.2;lfo.connect(lg);lg.connect(g.gain);s.connect(lpf);lpf.connect(hpf);hpf.connect(g);g.connect(mg);s.start();lfo.start();return{stop(){try{s.stop();lfo.stop()}catch(e){}}}}
+function buildMangue(){const a=getAC(),s=pink(),lpf=a.createBiquadFilter(),g=a.createGain(),lfo=a.createOscillator(),lg=a.createGain();lpf.type='lowpass';lpf.frequency.value=85;lpf.Q.value=5;g.gain.value=.2;lfo.frequency.value=.12;lg.gain.value=.15;lfo.connect(lg);lg.connect(g.gain);s.connect(lpf);lpf.connect(g);g.connect(mg);s.start();lfo.start();return{stop(){try{s.stop();lfo.stop()}catch(e){}}}}
+function buildHz111(){const a=getAC(),o1=a.createOscillator(),o2=a.createOscillator(),g1=a.createGain(),g2=a.createGain();o1.frequency.value=111;o2.frequency.value=117;g1.gain.value=.1;g2.gain.value=.09;o1.connect(g1);g1.connect(mg);o2.connect(g2);g2.connect(mg);o1.start();o2.start();return{stop(){try{o1.stop();o2.stop()}catch(e){}}}}
+function buildReeb(){const a=getAC(),osc=a.createOscillator(),g=a.createGain();g.gain.value=.08;osc.connect(g);g.connect(mg);osc.start();const t0=a.currentTime;const iv=setInterval(()=>{const z=(a.currentTime-t0)*1.8393;osc.frequency.setTargetAtTime(111+Math.sin(z)*6,a.currentTime,.1)},100);return{stop(){try{osc.stop();clearInterval(iv)}catch(e){}}}}
+const builders={ocean:buildOcean,mangue:buildMangue,hz:buildHz111,reeb:buildReeb};
+function animWave(){const bars=document.querySelectorAll('.wv-bar');bars.forEach(b=>{b.style.height=Math.max(8,Math.random()*100)+'%'});wvAnim=requestAnimationFrame(()=>setTimeout(animWave,80))}
+function toggleLayer(id){const tog=document.getElementById('tog-'+id);if(layers[id]){layers[id].stop();delete layers[id];tog.classList.remove('active')}else{layers[id]=builders[id]();tog.classList.add('active')}updatePlayState()}
+function updatePlayState(){const any=Object.keys(layers).length>0;const btn=document.getElementById('btn-play');const wv=document.getElementById('waveform');playing=any;btn.classList.toggle('playing',any);document.getElementById('play-icon').textContent=any?'■':'▶';document.getElementById('play-label').textContent=any?'Stop':'Play the mangue';wv.classList.toggle('playing',any);if(any&&!wvAnim)animWave();else if(!any){cancelAnimationFrame(wvAnim);wvAnim=null;document.querySelectorAll('.wv-bar').forEach(b=>b.style.height='10%')}}
+function toggleMaster(){if(playing){Object.values(layers).forEach(l=>l.stop());layers={};document.querySelectorAll('.layer-toggle').forEach(t=>t.classList.remove('active'))}else{layers.mangue=buildMangue();document.getElementById('tog-mangue').classList.add('active')}updatePlayState()}
+
+/* form */
+function submitForm(e){e.preventDefault();const name=document.getElementById('f-name').value.split(' ')[0];document.getElementById('success-name').textContent=name;document.getElementById('signup-form').style.display='none';document.getElementById('signup-success').style.display='block'}
+
+/* fade-in */
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
