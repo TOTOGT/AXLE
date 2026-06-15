@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belousov-Zhabotinsky — Chemical Oscillation and the Birth of dm&#xB3; Order</title>
+<meta name="description" content="The BZ reaction: oscillating chemistry, spiral waves, period-doubling, and how dm3 makes sense of it all from quantum to cosmic scale.">
+<style>
+:root{--navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;--mid:#3a4f7a;
+  --rule:#8a7340;--text:#1c1c1c;--light:#e8e2d4;--teal:#1a5c5c;--muted:#888;
+  --surface:rgba(26,39,68,.95);--gold-dim:rgba(201,168,76,.4);
+  --mono:'JetBrains Mono','Fira Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);}
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.95rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1.2rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;}
+.nav-links a:hover{color:var(--gold);}
+.hero{background:var(--navy);color:white;padding:5rem 2rem 3.5rem;text-align:center;}
+.eyebrow{font-family:sans-serif;font-size:.82rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.hero h1{font-size:clamp(1.9rem,4.5vw,3.2rem);line-height:1.2;color:white;margin-bottom:.6rem;}
+.hero-sub{color:var(--gold);font-size:1.25rem;font-style:italic;margin-bottom:1.2rem;}
+.gold-rule{width:70px;height:2px;background:var(--gold);margin:1.2rem auto;}
+.hero-desc{max-width:700px;margin:0 auto 2rem;color:#c0c0c0;font-size:.97rem;line-height:1.85;}
+.op-chain{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0;}
+.op-chip{font-family:sans-serif;font-size:.85rem;padding:.3rem .8rem;
+  border:1px solid rgba(201,168,76,.3);color:#aaa;letter-spacing:.06em;}
+.op-chip.active{background:var(--gold);color:var(--navy);font-weight:bold;border-color:var(--gold);}
+.meta-strip{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;}
+.meta-chip{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);padding:.4rem 1rem;font-family:sans-serif;font-size:.78rem;letter-spacing:.08em;}
+section{padding:4rem 2rem;}.section-inner{max-width:880px;margin:0 auto;}
+.section-label{font-family:sans-serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);margin-bottom:.4rem;}
+h2{font-size:clamp(1.3rem,2.8vw,1.9rem);color:var(--navy);margin-bottom:1.2rem;}
+p{line-height:1.85;margin-bottom:1.2rem;font-size:.97rem;}
+.stub{background:rgba(201,168,76,.06);border:1px dashed rgba(201,168,76,.35);
+  padding:1.4rem;margin:1.2rem 0;border-radius:4px;color:#666;font-style:italic;font-size:.9rem;line-height:1.7;}
+.stub strong{color:var(--rule);font-style:normal;font-family:sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:.5rem;}
+.eq-block{background:var(--navy);color:white;padding:1.8rem 2rem;margin:2rem 0;
+  border-left:4px solid var(--gold);font-family:var(--mono);font-size:.88rem;line-height:2.2;border-radius:0 6px 6px 0;}
+.eq-label{font-family:sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block;}
+.theorem{background:var(--surface);border:1px solid var(--gold-dim);border-left:4px solid var(--gold);
+  padding:2rem;margin:2.5rem 0;border-radius:0 6px 6px 0;}
+.thm-label{font-family:sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+.thm-body{color:white;font-size:.95rem;line-height:1.85;}
+.thm-body em{color:var(--gold);font-style:normal;}
+.pull{background:var(--smoke);border-left:4px solid var(--gold);padding:1.5rem 2rem;
+  margin:2.5rem 0;font-style:italic;font-size:1.05rem;line-height:1.7;color:#333;}
+.pull cite{display:block;margin-top:.8rem;font-style:normal;font-family:sans-serif;font-size:.75rem;letter-spacing:.1em;color:var(--rule);}
+.lean-block{background:rgba(0,0,0,.55);border:1px solid rgba(201,168,76,.15);
+  border-left:4px solid var(--gold-dim);padding:1.4rem 1.6rem;margin:2rem 0;border-radius:0 4px 4px 0;overflow-x:auto;}
+.lean-label{font-family:sans-serif;font-size:.63rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;display:block;}
+.lean-code{font-family:var(--mono);font-size:.73rem;color:#d4d0c8;white-space:pre;line-height:1.75;}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin:2rem 0;}
+.cc{background:var(--navy);color:white;padding:1.5rem;border-top:3px solid var(--gold);border-radius:0 0 6px 6px;}
+.cs{font-size:1.6rem;font-weight:bold;color:var(--gold);font-family:sans-serif;margin-bottom:.4rem;}
+.cn{font-family:sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,168,76,.7);margin-bottom:.8rem;}
+.cb{font-size:.85rem;line-height:1.65;color:#c0c0c0;}
+.chapter-nav{background:var(--navy);padding:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.btn{display:inline-block;padding:.65rem 1.4rem;font-family:sans-serif;font-size:.82rem;letter-spacing:.08em;text-decoration:none;text-transform:uppercase;}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:bold;}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+footer{background:var(--navy);color:#888;text-align:center;padding:2rem;font-family:sans-serif;font-size:.78rem;line-height:2;}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="hub.html">dm&#xB3; &#xB7; Principia Orthogona</a>
+  <ul class="nav-links">
+    <li><a href="ch-turing-morphogenesis.html">Turing</a></li>
+    <li><a href="ch-mandelbrot-fractals.html">Mandelbrot</a></li>
+    <li><a href="chPI-recurrence.html">&pi; Recurrence</a></li>
+    <li><a href="chMu-lyapunov.html">&mu; Lyapunov</a></li>
+    <li><a href="chT-tubulin.html">&tau;=2</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Scientists Series &middot; Chemical Oscillation &middot; Complex Systems &middot; dm&#xB3; Framework</div>
+  <h1>Belousov&#x2013;Zhabotinsky</h1>
+  <div class="hero-sub">The reaction that could not exist &#x2014; and then did</div>
+  <div class="gold-rule"></div>
+  <div class="hero-desc">
+    In 1951 Boris Belousov observed a chemical mixture that oscillated in colour: blue, clear, blue, clear, without stopping. Every journal he submitted to rejected it as impossible. The laws of thermodynamics, they said, forbid perpetual oscillation in a closed system. He was correct. They were wrong about what the laws say. Anatol Zhabotinsky revived the experiment in 1961, proved the oscillation was real and transient, and opened the door to what is now called complex systems science. dm&#xB3; reads the BZ reaction as the clearest laboratory demonstration of the &pi; operator in action: periodic orbit stabilised by the Lyapunov exponent &mu;=&#x2212;2, with spiral waves as Legendrian curves on the concentration manifold. The same physics, dm&#xB3; argues, runs from quantum coherence to galactic filaments. The device that makes this legible is the computer.
+  </div>
+  <div class="op-chain">
+    <span class="op-chain" style="display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;">
+      <span class="op-chip active">&pi;</span>
+      <span class="op-chip">&phi;</span>
+      <span class="op-chip active">&mu;</span>
+      <span class="op-chip">&eta;</span>
+      <span class="op-chip">&Delta;</span>
+      <span class="op-chip">&Sigma;</span>
+      <span class="op-chip">&Omega;</span>
+      <span class="op-chip">&tau;=2</span>
+    </span>
+  </div>
+  <div class="meta-strip">
+    <span class="meta-chip">Boris Belousov &middot; 1893&#x2013;1970</span>
+    <span class="meta-chip">Anatol Zhabotinsky &middot; 1938&#x2013;2008</span>
+    <span class="meta-chip">Bromate &middot; Malonic Acid &middot; Cerium Catalyst</span>
+    <span class="meta-chip">Scientists Series &middot; Complex Systems Arc</span>
+  </div>
+</div>
+
+<!-- Section 1 -->
+<section style="background:var(--cream);">
+<div class="section-inner">
+  <div class="section-label">&sect; 1</div>
+  <h2>The Impossible Reaction &#x2014; Belousov, 1951</h2>
+
+  <div class="pull">
+    &#8220;I am absolutely convinced that the reaction I describe is the first example of an oscillating chemical reaction in a homogeneous solution that is thermodynamically closed.&#8221;
+    <cite>&#x2014; Boris Belousov, in a letter to colleagues, circa 1955; the paper was rejected by every journal he submitted it to. He eventually gave up and never published.</cite>
+  </div>
+
+  <div class="stub"><strong>To Write</strong>
+    Boris Belousov: pharmacologist, not chemist. Studying the Krebs cycle by analogy. Mixed bromate, cerium, malonic acid, and citric acid in dilute sulfuric acid solution. The solution turned yellow (Ce&#x2074;&#x207A;, cerium(IV)), then cleared (Ce&#x00B3;&#x207A;), then yellow again. Not once: repeatedly, for minutes, then hours, at regular intervals of about 25 seconds. He knew immediately this was a non-equilibrium oscillation sustained by coupled autocatalytic reactions. Reviewers said oscillating reactions were thermodynamically impossible. They confused a closed-system equilibrium argument with an open-system trajectory argument: BZ is not at equilibrium, it is on a limit cycle far from equilibrium, dissipating free energy. The system is not a perpetual motion machine; it is a clock that winds down gradually. Belousov's insight was correct. He never got credit in his lifetime. Died in 1970. Prigogine&#x2013;Defay award (posthumous recognition) came later; Prigogine's Nobel (1977) for dissipative structures depends on the same physics. The BZ reaction is one of the intellectual crimes of 20th-century science.
+  </div>
+</div>
+</section>
+
+<!-- Section 2 -->
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label">&sect; 2</div>
+  <h2>Spiral Waves &#x2014; Zhabotinsky and Winfree</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    Anatol Zhabotinsky (Moscow State University, 1961): reproduced and extended Belousov's work. Key addition: Ferroin (iron-phenanthroline complex) as indicator, giving vivid red/blue colour change visible across a room. Thin-layer BZ: poured into petri dish, the solution forms concentric target waves (circular expanding rings) and spiral waves (Archimedean spirals). Art Winfree (1972, Science): the topological theory. Each spiral has a phase singularity at its tip: a point where the phase of the oscillation is undefined. This is a topological defect. The spiral cannot be removed by smooth deformation. In dm&#xB3;: a phase singularity is a Legendrian singularity on the contact manifold (M, &#x03B1;). The spiral wave is a Legendrian knot. The tip is where the contact form &#x03B1; = 0. Count the spirals: they come in pairs of opposite chirality (left-hand and right-hand), consistent with the topological charge &#xB1;1. Winfree called this &#8220;the geometry of biological time&#8221;; dm&#xB3; adds: the geometry is contact geometry.
+  </div>
+
+  <div class="eq-block">
+    <span class="eq-label">Oregonator &#x2014; the canonical BZ model (Field, K&#x0151;r&#x00F6;s, Noyes 1972)</span>
+    d[X]/dt = k&#x2081;[A][Y] - k&#x2082;[X][Y] + k&#x2083;[A][X] - 2k&#x2084;[X]&sup2;   (activator HBrO&#x2082;)<br>
+    d[Y]/dt = -k&#x2081;[A][Y] - k&#x2082;[X][Y] + f k&#x2085;[B][Z]               (inhibitor Br&#x207B;)<br>
+    d[Z]/dt = 2k&#x2083;[A][X] - k&#x2085;[B][Z]                                (catalyst Ce&#x2074;&#x207A;)<br><br>
+    [A] = [BrO&#x2083;&#x207B;], [B] = [CH&#x2082;(COOH)&#x2082;], f = stoichiometric factor<br>
+    Limit cycle period: T &#x2248; T* = 2&#x03C0;/&#x03C9;&#x2080; (dm&#xB3; &pi;-operator period)
+  </div>
+
+  <div class="stub"><strong>To Write</strong>
+    The Oregonator reduces to a 3-variable system near the limit cycle. In the slow manifold approximation it becomes 2D: the FitzHugh-Nagumo form, which is also the neuron model. The BZ reaction and the action potential are the same mathematical object at different scales. dm&#xB3; observation: the &pi; operator sets the period T* = 2&#x03C0;; the Oregonator limit cycle has period T &#x2248; 25 seconds in vitro. The correspondence is not numerical (units differ) but structural: same topology, same contact-geometric Reeb flow, same Lyapunov exponent &#x03BC; = &#x2212;2 for perturbation decay.
+  </div>
+</div>
+</section>
+
+<!-- Section 3 -->
+<section style="background:var(--cream);">
+<div class="section-inner">
+  <div class="section-label">&sect; 3</div>
+  <h2>Period-Doubling and the Route to Chaos &#x2014; Roux 1983</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    Jean-Claude Roux (Bordeaux, 1983): experimental confirmation of Feigenbaum period-doubling cascade in the BZ reaction. As a control parameter (flow rate in CSTR) is increased, the BZ oscillation goes through a sequence of period doublings: T &#x2192; 2T &#x2192; 4T &#x2192; 8T &#x2192; chaos. The ratio of successive bifurcation intervals converges to &#x03B4; = 4.6692... (Feigenbaum constant). This was the first experimental measurement of Feigenbaum universality in a real chemical system. The significance: the Feigenbaum constant &#x03B4; is universal &#x2014; it appears in every unimodal period-doubling cascade regardless of the specific equations. Just as &#x03C0; and &#x03C6; are universal constants that appear independently of the particular problem, &#x03B4; is a universal constant of the transition to chaos. The dm&#xB3; recurrence ladder reads this sequence in reverse: Omega &#x2192; Sigma &#x2192; Delta &#x2192; eta &#x2192; phi &#x2192; pi is the anti-period-doubling direction, converging to order rather than chaos. Cross-reference: ch-lorenz-chaos.html (&sect;4 on Feigenbaum and the n-bonacci antidote).
+  </div>
+
+  <div class="theorem">
+    <div class="thm-label">dm&#xB3; Anti-Period-Doubling Principle (Informal Statement)</div>
+    <div class="thm-body">
+      The Feigenbaum period-doubling cascade (T &#x2192; 2T &#x2192; 4T &#x2192; ... &#x2192; chaos) is indexed by a decreasing sequence of control parameter values converging to the onset of chaos.<br><br>
+      The dm&#xB3; n-bonacci ladder (&phi; &#x2192; &#x03BC; &#x2192; &#x03B7; &#x2192; &Delta; &#x2192; &Sigma; &#x2192; &Omega; &#x2192; &#x03C4;=2) is indexed by an increasing sequence of dominant roots converging to &#x03C4;=2 (embodiment threshold).<br><br>
+      <em>Claim (stub &#x2014; not yet in AXLE):</em> The two sequences are dual: the Feigenbaum cascade is the n-bonacci ladder read backwards and projected onto the real line. Each period-doubling corresponds to one rung of the ladder traversed in reverse. Chaos is the limit as n&#x2192;2; order is the limit as n&#x2192;&#x221E; (or more precisely, as the dominant root approaches &#x03C4;=2 from below).<br><br>
+      <span style="color:var(--muted);font-family:sans-serif;font-size:.75rem;">[STUB &#x2014; this duality is the central conjecture of the Complex Systems Arc. If proved, it unifies BZ, Lorenz, dm&#xB3;.]</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- Section 4 -->
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label">&sect; 4</div>
+  <h2>From Quantum to Cosmic &#x2014; Complex Systems at Every Scale</h2>
+
+  <div class="pull">
+    &#8220;How do complex systems evolve? They exhibit order. And it operates from quantum to cosmic scale. There is a device that can help us understand: the computer.&#8221;
+    <cite>&#x2014; Research programme notes, Principia Orthogona G1&#x2013;G9</cite>
+  </div>
+
+  <div class="stub"><strong>To Write</strong>
+    The BZ reaction is the laboratory proof of concept. The same physics &#x2014; autocatalytic feedback, inhibition, spatial diffusion, emergent periodicity &#x2014; appears at every scale of physical reality:
+  </div>
+
+  <div class="cg">
+    <div class="cc">
+      <div class="cs">&#x210F;</div>
+      <div class="cn">Quantum Scale</div>
+      <div class="cb">Coherence oscillations in photosynthetic complexes (Fleming, 2007): quantum beats at 77K in FMO complex. The exciton hops between chromophores with wavelike coherence. Period: T &#x223C; 100 fs. Same Oregonator topology, femtosecond timescale.</div>
+    </div>
+    <div class="cc">
+      <div class="cs">&#x1F9EC;</div>
+      <div class="cn">Molecular / Cell Scale</div>
+      <div class="cb">BZ reaction. Calcium waves in cells (Berridge, 1988). cAMP oscillations in Dictyostelium (aggregation waves). Glycolytic oscillations in yeast. All: limit cycles on the same contact manifold, different parameter regimes.</div>
+    </div>
+    <div class="cc">
+      <div class="cs">&#x1F9E0;</div>
+      <div class="cn">Neural Scale</div>
+      <div class="cb">Action potential = FitzHugh-Nagumo = BZ slow manifold. Alpha rhythms (8&#x2013;12 Hz), gamma rhythms (30&#x2013;80 Hz), theta rhythms (4&#x2013;8 Hz): nested oscillations, the n-bonacci ladder at the neural frequency scale. Cross-ref: ch4-neural.html.</div>
+    </div>
+    <div class="cc">
+      <div class="cs">&#x1FA90;</div>
+      <div class="cn">Cosmic Scale</div>
+      <div class="cb">Galactic filaments (cosmic web): reaction-diffusion on dark matter density field. Galaxy formation as Turing instability on the Hubble scale. The CMB power spectrum: period &#x03C0;/k* at the sound horizon. T* = 2&#x03C0; appears at every scale because it is the topology, not the units, that determines the period.</div>
+    </div>
+  </div>
+
+  <div class="stub"><strong>To Write</strong>
+    The claim: the operator chain G = U &#x2218; F &#x2218; K &#x2218; C is not a description of one system. It is the universal structure that any dissipative system with feedback and diffusion satisfies. BZ is the laboratory prototype. Neural circuits are the biological implementation. Galaxy formation is the cosmological instance. The constants &#x03C0;, &#x03C6;, &#x03BC;, &#x03B7;, &#x0394;, &#x03A3;, &#x03A9; appear in each domain not because we put them there but because they are the eigenvalues of the contact-geometric constraint. This is the claim of the dm&#xB3; programme. It requires proof at each scale. The book is the proof.
+  </div>
+</div>
+</section>
+
+<!-- Section 5 -->
+<section style="background:var(--navy);">
+<div class="section-inner">
+  <div class="section-label" style="color:rgba(201,168,76,.7);">&sect; 5</div>
+  <h2 style="color:white;">The Computer as Legibility Device</h2>
+
+  <div class="stub" style="border-color:rgba(201,168,76,.2);color:#aaa;"><strong style="color:var(--gold);">To Write</strong>
+    The BZ reaction was misunderstood for 20 years partly because no one could simulate it. Once the Oregonator was in a computer (1972), the limit cycle was immediately visible: the trajectory spirals toward the attractor and stays there. The computer did not prove the chemistry; it made the geometry legible. This is the role of computation in complex systems science: not to replace mathematical proof but to make the attractor visible before the proof exists. AXLE plays this role for dm&#xB3;: it mechanises the geometry, makes the operator chain executable, lets the theorem-finder see what the limit cycle looks like before the Lean proof closes. The two Lean theorems already proved (critDim_monotone, no_return_to_critical) were found this way: simulation first, proof second. The remaining sorry-stubs (turing_instability, G_stabilises_turing_pattern, nBonacci_is_Hausdorff_dim, the Feigenbaum duality) are the next targets. The computer shows us where to look. The mathematics confirms what we see.
+  </div>
+
+  <div class="lean-block" style="margin-top:2rem;">
+    <span class="lean-label">AXLE &#x2014; BZ / Complex Systems skeleton</span>
+    <code class="lean-code">-- Belousov-Zhabotinsky in contact geometry
+-- &pi; operator: limit cycle period T* = 2&pi;
+-- &mu; operator: Lyapunov exponent -2 controls amplitude decay
+
+structure OscillatingSystem (M : ContactManifold) where
+  state      : M &#x2192; &#x211D;&#xB3;          -- (X, Y, Z) concentrations
+  limitCycle : Set M           -- the periodic orbit
+  period     : &#x211D;               -- T ~ 25 seconds (BZ) or T* = 2&pi; (normalised)
+  isLimitCycle : ... := by sorry
+
+-- Spiral wave as Legendrian knot (Winfree 1972 + dm&#xB3;)
+axiom spiral_is_legendrian (M : ContactManifold) (spiral : SpiralWave M) :
+    IsLegendrian spiral.curve M.contactStructure
+
+-- Phase singularity at spiral tip = Legendrian singularity
+axiom phase_singularity_is_legendrian_singularity (M : ContactManifold) (tip : M) :
+    IsPhaseSingularity tip &#x2192; IsLegendriansingSingularity tip M.contactStructure
+
+-- Anti-period-doubling duality (OPEN CONJECTURE)
+axiom feigenbaum_nBonacci_duality :
+    &#x2200; n : &#x2115;, n &#x2265; 2 &#x2192;
+    feigenbaumLevel n &#x2248; 2 * (nBonacciRoot n - 1) := by
+  sorry -- central conjecture of Complex Systems Arc; search literature first</code>
+  </div>
+</div>
+</section>
+
+<!-- Section 6 -->
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label">&sect; 6</div>
+  <h2>Curriculum Placement &#x2014; Complex Systems Arc</h2>
+
+  <p>This chapter anchors the <strong>Complex Systems Arc</strong> that runs across dm&#xB3; 101 and 102:</p>
+  <ul style="margin-left:1.5rem;line-height:2;color:#444;font-size:.95rem;">
+    <li><a href="ch-lorenz-chaos.html" style="color:var(--gold);">ch-lorenz-chaos</a> &#x2014; chaos bounded by contact geometry; Etnyre&#x2013;Ghrist; Anti-Chaos Principle</li>
+    <li><a href="ch-turing-morphogenesis.html" style="color:var(--gold);">ch-turing-morphogenesis</a> &#x2014; spatial patterns from reaction-diffusion; G stabilises Turing patterns</li>
+    <li><strong>ch-belousov-zhabotinsky</strong> (this chapter) &#x2014; temporal + spatial oscillation; period-doubling cascade; quantum-to-cosmic claim</li>
+    <li><a href="ch-mandelbrot-fractals.html" style="color:var(--gold);">ch-mandelbrot-fractals</a> &#x2014; Hausdorff dimension ladder; n-bonacci open conjecture</li>
+    <li><a href="ch-poincare-einstein.html" style="color:var(--gold);">ch-poincare-einstein</a> &#x2014; different starting points, same fixed point; motivation as basin topology</li>
+  </ul>
+  <p style="margin-top:1.5rem;">Together these five chapters form the <strong>Anti-Chaos Unit</strong> of dm&#xB3; 101 Weeks 13&#x2013;16. The argument: nature is not chaotic. Chaos is a special case. Order is the generic case. The operator chain G makes order quantitative and computable. The computer makes it visible. The n-bonacci ladder tells us how fast we get there.</p>
+</div>
+</section>
+
+<div class="chapter-nav">
+  <a href="ch-turing-morphogenesis.html" class="btn btn-outline">&#x2190; Turing &middot; Morphogenesis</a>
+  <span style="font-family:sans-serif;font-size:.75rem;color:#888;letter-spacing:.08em;">Scientists Series &middot; dm&#xB3; &middot; G6 LLC 2026</span>
+  <a href="ch-mandelbrot-fractals.html" class="btn btn-gold">Mandelbrot &middot; Fractals &#x2192;</a>
+</div>
+
+<footer>
+  G = U &#x2218; F &#x2218; K &#x2218; C &nbsp;&#xB7;&nbsp; Principia Orthogona G1&#x2013;G9 &nbsp;&#xB7;&nbsp;
+  Pablo Nogueira Grossi &nbsp;&#xB7;&nbsp; G6 LLC &middot; Newark NJ &nbsp;&#xB7;&nbsp; 2026<br>
+  ORCID: 0009-0000-6496-2186 &nbsp;&#xB7;&nbsp;
+  <a href="https://zenodo.org/records/19117400">Zenodo DOI</a> &nbsp;&#xB7;&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE</a>
+</footer>
+
+</body>
+</html>

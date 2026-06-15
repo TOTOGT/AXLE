@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benoît Mandelbrot — Rules Where Others See Anarchy - Principia Orthogona</title>
+<meta name="description" content="Benoît Mandelbrot spent decades arguing that the roughness of nature is not noise but structure. The Lorenz attractor has fractal dimension approx 2.0">
+<style>
+:root{--navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;--mid:#3a4f7a;
+  --rule:#8a7340;--text:#1c1c1c;--light:#e8e2d4;--teal:#1a5c5c;--muted:#888;
+  --surface:rgba(26,39,68,.95);--gold-dim:rgba(201,168,76,.4);
+  --mono:'JetBrains Mono','Fira Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);}
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.95rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1.2rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;}
+.nav-links a:hover{color:var(--gold);}
+.hero{background:var(--navy);color:white;padding:5rem 2rem 3.5rem;text-align:center;}
+.eyebrow{font-family:sans-serif;font-size:.82rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.hero h1{font-size:clamp(1.9rem,4.5vw,3.2rem);line-height:1.2;color:white;margin-bottom:.6rem;}
+.hero-sub{color:var(--gold);font-size:1.25rem;font-style:italic;margin-bottom:1.2rem;}
+.gold-rule{width:70px;height:2px;background:var(--gold);margin:1.2rem auto;}
+.hero-desc{max-width:700px;margin:0 auto 2rem;color:#c0c0c0;font-size:.97rem;line-height:1.85;}
+.op-chain{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0;}
+.op-chip{font-family:sans-serif;font-size:.85rem;padding:.3rem .8rem;
+  border:1px solid rgba(201,168,76,.3);color:#aaa;letter-spacing:.06em;}
+.op-chip.active{background:var(--gold);color:var(--navy);font-weight:bold;border-color:var(--gold);}
+.meta-strip{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;}
+.meta-chip{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);padding:.4rem 1rem;font-family:sans-serif;font-size:.78rem;letter-spacing:.08em;}
+section{padding:4rem 2rem;}.section-inner{max-width:880px;margin:0 auto;}
+.section-label{font-family:sans-serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);margin-bottom:.4rem;}
+h2{font-size:clamp(1.3rem,2.8vw,1.9rem);color:var(--navy);margin-bottom:1.2rem;}
+p{line-height:1.85;margin-bottom:1.2rem;font-size:.97rem;}
+.stub{background:rgba(201,168,76,.06);border:1px dashed rgba(201,168,76,.35);
+  padding:1.4rem;margin:1.2rem 0;border-radius:4px;color:#666;font-style:italic;font-size:.9rem;line-height:1.7;}
+.stub strong{color:var(--rule);font-style:normal;font-family:sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:.5rem;}
+.eq-block{background:var(--navy);color:white;padding:1.8rem 2rem;margin:2rem 0;
+  border-left:4px solid var(--gold);font-family:var(--mono);font-size:.88rem;line-height:2.2;border-radius:0 6px 6px 0;}
+.eq-label{font-family:sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block;}
+.theorem{background:var(--surface);border:1px solid var(--gold-dim);border-left:4px solid var(--gold);
+  padding:2rem;margin:2.5rem 0;border-radius:0 6px 6px 0;}
+.thm-label{font-family:sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+.thm-body{color:white;font-size:.95rem;line-height:1.85;}
+.thm-body em{color:var(--gold);font-style:normal;}
+.pull{background:var(--smoke);border-left:4px solid var(--gold);padding:1.5rem 2rem;
+  margin:2.5rem 0;font-style:italic;font-size:1.05rem;line-height:1.7;color:#333;}
+.pull cite{display:block;margin-top:.8rem;font-style:normal;font-family:sans-serif;font-size:.75rem;letter-spacing:.1em;color:var(--rule);}
+.lean-block{background:rgba(0,0,0,.55);border:1px solid rgba(201,168,76,.15);
+  border-left:4px solid var(--gold-dim);padding:1.4rem 1.6rem;margin:2rem 0;border-radius:0 4px 4px 0;overflow-x:auto;}
+.lean-label{font-family:sans-serif;font-size:.63rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;display:block;}
+.lean-code{font-family:var(--mono);font-size:.73rem;color:#d4d0c8;white-space:pre;line-height:1.75;}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin:2rem 0;}
+.cc{background:var(--navy);color:white;padding:1.5rem;border-top:3px solid var(--gold);border-radius:0 0 6px 6px;}
+.cs{font-size:1.6rem;font-weight:bold;color:var(--gold);font-family:sans-serif;margin-bottom:.4rem;}
+.cn{font-family:sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,168,76,.7);margin-bottom:.8rem;}
+.cb{font-size:.85rem;line-height:1.65;color:#c0c0c0;}
+.chapter-nav{background:var(--navy);padding:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.btn{display:inline-block;padding:.65rem 1.4rem;font-family:sans-serif;font-size:.82rem;letter-spacing:.08em;text-decoration:none;text-transform:uppercase;}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:bold;}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+footer{background:var(--navy);color:#888;text-align:center;padding:2rem;font-family:sans-serif;font-size:.78rem;line-height:2;}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="hub.html">dm3 - Principia Orthogona</a>
+  <ul class="nav-links">
+    <li><a href="hub.html">Hub</a></li>
+    <li><a href="ch-lorenz-chaos.html">Lorenz</a></li>
+    <li><a href="ch-turing-morphogenesis.html">Turing</a></li>
+    <li><a href="ch-mandelbrot-fractals.html">Mandelbrot</a></li>
+    <li><a href="ch-poincare-einstein.html">Poincare-Einstein</a></li>
+    <li><a href="chT-tubulin.html">tau=2</a></li>
+  </ul>
+</nav>
+<div class="hero">
+  <div class="eyebrow">Scientists Series · Fractal Geometry · dm³ Framework</div>
+  <h1>Benoît Mandelbrot — Rules Where Others See Anarchy</h1>
+  <div class="hero-sub">Fractal geometry, Hausdorff dimension, and the n-bonacci ladder approaching tau=2</div>
+  <div class="gold-rule"></div>
+  <div class="hero-desc">Benoît Mandelbrot spent decades arguing that the roughness of nature is not noise but structure. The Lorenz attractor has fractal dimension approx 2.06. The boundary of the Mandelbrot set has Hausdorff dimension exactly 2 (Shishikura, 1998). The n-bonacci dominant roots form a monotone sequence converging to tau=2. dm3 and Mandelbrot are reading the same geometry from different angles. Note: the Mandelbrot set and its K-applied-to-K structure is treated at length in ch8-nested-infinities.html; this chapter focuses on biography, the fractal-dimension ladder, and the open conjecture.</div>
+  <div class="op-chain"><span class="op-chip">π</span><span class="op-chip">φ</span><span class="op-chip">μ</span><span class="op-chip">η</span><span class="op-chip">Δ</span><span class="op-chip active">Σ</span><span class="op-chip active">Ω</span><span class="op-chip active">τ</span></div>
+  <div class="meta-strip"><span class="meta-chip">Benoît Mandelbrot · 1924–2010</span><span class="meta-chip">The Fractal Geometry of Nature · 1982</span><span class="meta-chip">Hausdorff Dimension · Self-Similarity</span><span class="meta-chip">Scientists Series</span></div>
+</div>
+<section style="background:var(--cream);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 1</div>
+  <h2 >How Long Is the Coast of Britain? — 1967</h2>
+
+  <div class="pull">
+    "Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."
+    <cite>— Benoît Mandelbrot, <em>The Fractal Geometry of Nature</em>, 1982</cite>
+  </div>
+  <div class="stub"><strong>To Write</strong>
+    Mandelbrot's 1967 Science paper: coastline length depends on the measurement scale and grows without bound as the ruler shrinks. This is not measurement error; it is geometry. The coast has Hausdorff dimension D approx 1.25 (between a line and a plane). Biography: Warsaw to Paris to IBM Research. Mandelbrot's outsider status -- neither pure mathematician nor applied scientist -- as the source of his insight. He saw what specialists missed because he was not trained to see what they saw. The IBM connection: practical freedom to pursue unconventional problems.
+  </div>
+</div>
+</section>
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 2</div>
+  <h2 >The Mandelbrot Set — Finite Rule, Infinite Complexity</h2>
+
+  <p style="color:#555;">See <a href="ch8-nested-infinities.html" style="color:var(--gold)">ch8-nested-infinities.html</a> for the full mathematical treatment of the Mandelbrot set including a live interactive simulation, the K-applied-to-K argument, and the Zone of Proximal Development reading. This section provides biographical and geometric context not covered there.</p>
+  <div class="stub"><strong>To Write</strong>
+    z to z^2 + c, starting from z_0=0. The boundary of the Mandelbrot set M: Shishikura (1998) proved dim_H(boundary M) = 2 exactly. Compare: dim_H(Lorenz attractor) approx 2.06 (ch-lorenz-chaos.html). The coincidence that both landmark fractals of 20th-century mathematics have Hausdorff dimension near 2 and that tau=2 is the dm3 fixed point: noted, not yet explained.
+  </div>
+  <div class="eq-block">
+    <span class="eq-label">Key fractal dimensions in context</span>
+    dim_H(boundary of Mandelbrot set) = 2 (Shishikura, 1998)<br>
+    dim_H(Lorenz attractor) approx 2.06 (Lyapunov dimension formula)<br>
+    dm3 fixed point: tau = 2<br>
+    n-bonacci sequence: phi approx 1.618, eta approx 1.839, Delta approx 1.927,<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sigma approx 1.966, Omega approx 1.984  ---&gt;  tau = 2
+  </div>
+</div>
+</section>
+<section style="background:var(--cream);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 3</div>
+  <h2 >Hausdorff Dimension and the n-Bonacci Ladder — An Open Conjecture</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    Definition of Hausdorff dimension. Standard examples: Cantor set D = log2/log3 approx 0.63; Koch snowflake D = log4/log3 approx 1.26; Sierpinski triangle D approx 1.58. The open conjecture: are the n-bonacci dominant roots phi, eta, Delta, Sigma, Omega the Hausdorff dimensions of a natural sequence of fractal sets? If so, the dm3 recurrence ladder IS a fractal dimension ladder. This would be a publishable result -- flag for Track 3 novelty triage (tasks 7-9).
+  </div>
+  <div class="theorem">
+    <div class="thm-label">Open Conjecture (n-Bonacci as Fractal Dimension Ladder)</div>
+    <div class="thm-body">
+      Let r_n denote the dominant root of the n-bonacci characteristic polynomial. Then:<br><br>
+      <em>(i)</em> r_n is strictly increasing in n. [Proved: follows from critDim_monotone, 2026-06-14]<br><br>
+      <em>(ii)</em> The sequence (r_n) converges to 2 = tau. [Proved: follows from no_return_to_critical, 2026-06-14]<br><br>
+      <em>(iii)</em> (Open) Each r_n is the Hausdorff dimension of a natural iterated function system attractor A_n. If true, the operator chain is also a fractal dimension chain, and tau=2 = dim_H(boundary M) closes the loop.
+    </div>
+  </div>
+</div>
+</section>
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 4</div>
+  <h2 >Self-Similarity — The Book Tends to Infinity</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    Mandelbrot's central claim: self-similar scaling is the geometry of the real world. The n-bonacci recurrence is itself a scaling law. As n increases, the scaling factor approaches 2 = doubling = tau. The Scientists Series has no natural stopping point: every scientist who wrestled with order, convergence, or fixed points is a candidate. The series is self-similar: each chapter is a scaled copy of the thesis (G converges to tau=2 from any direction), and the book itself tends toward infinite self-similarity. This is not a bug; it is the structure. The book IS the Mandelbrot set of the theorem.
+  </div>
+  <div class="theorem">
+    <div class="thm-label">The Scientists Series Thesis</div>
+    <div class="thm-body">
+      Lorenz: chaos is real but bounded. Turing: order emerges from instability. Mandelbrot: roughness has a number and that number approaches 2. The three chapters are three angles on a single convergence. Each new Scientists Series chapter is a further zoom into the same structure. The series is self-similar. It does not end.
+    </div>
+  </div>
+</div>
+</section>
+<section style="background:var(--surface);">
+<div class="section-inner">
+  <div class="section-label" style="color:rgba(201,168,76,.7);">&sect; 5</div>
+  <h2 style="color:white;">AXLE — Stub</h2>
+
+  <div class="lean-block">
+    <span class="lean-label">AXLE - Mandelbrot x dm3 skeleton</span>
+    <code class="lean-code">-- Already proved (2026-06-14):
+-- critDim_monotone: r_n strictly increasing
+-- no_return_to_critical: r_n approaches 2 = tau
+
+-- The Mandelbrot connection (open conjecture):
+axiom nBonacci_is_Hausdorff_dim (n : Nat) (hn : n >= 2) :
+    Exists (A : FractalSet), hausdorffDim A = nBonacciRoot n
+
+-- If confirmed, dim_H(boundary M) = 2 = tau = lim r_n closes the loop.
+-- Flag: Track 3 novelty triage -- search literature before claiming.</code>
+  </div>
+</div>
+</section>
+
+<div class="chapter-nav">
+  <a href="ch-turing-morphogenesis.html" class="btn btn-outline">← Turing · Morphogenesis</a>
+  <span style="font-family:sans-serif;font-size:.75rem;color:#888;letter-spacing:.08em;">Scientists Series - dm3 - G6 LLC 2026</span>
+  <a href="ch-poincare-einstein.html" class="btn btn-gold">Poincaré · Einstein →</a>
+</div>
+<footer>
+  G = U o F o K o C &nbsp;.&nbsp; Principia Orthogona G1-G9 &nbsp;.&nbsp;
+  Pablo Nogueira Grossi &nbsp;.&nbsp; G6 LLC - Newark NJ &nbsp;.&nbsp; 2026<br>
+  ORCID: 0009-0000-6496-2186 &nbsp;.&nbsp;
+  <a href="https://zenodo.org/records/19117400">Zenodo DOI</a> &nbsp;.&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE</a>
+</footer>
+</body>
+</html>

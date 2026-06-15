@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alan Turing — Reaction, Diffusion, and the Origin of Pattern - Principia Orthogona</title>
+<meta name="description" content="In 1952, one year before his death, Alan Turing published 'The Chemical Basis of Morphogenesis' — showing that two chemicals reacting and diffusing at">
+<style>
+:root{--navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;--mid:#3a4f7a;
+  --rule:#8a7340;--text:#1c1c1c;--light:#e8e2d4;--teal:#1a5c5c;--muted:#888;
+  --surface:rgba(26,39,68,.95);--gold-dim:rgba(201,168,76,.4);
+  --mono:'JetBrains Mono','Fira Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);}
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.95rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1.2rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;}
+.nav-links a:hover{color:var(--gold);}
+.hero{background:var(--navy);color:white;padding:5rem 2rem 3.5rem;text-align:center;}
+.eyebrow{font-family:sans-serif;font-size:.82rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.hero h1{font-size:clamp(1.9rem,4.5vw,3.2rem);line-height:1.2;color:white;margin-bottom:.6rem;}
+.hero-sub{color:var(--gold);font-size:1.25rem;font-style:italic;margin-bottom:1.2rem;}
+.gold-rule{width:70px;height:2px;background:var(--gold);margin:1.2rem auto;}
+.hero-desc{max-width:700px;margin:0 auto 2rem;color:#c0c0c0;font-size:.97rem;line-height:1.85;}
+.op-chain{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0;}
+.op-chip{font-family:sans-serif;font-size:.85rem;padding:.3rem .8rem;
+  border:1px solid rgba(201,168,76,.3);color:#aaa;letter-spacing:.06em;}
+.op-chip.active{background:var(--gold);color:var(--navy);font-weight:bold;border-color:var(--gold);}
+.meta-strip{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-top:1.5rem;}
+.meta-chip{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);padding:.4rem 1rem;font-family:sans-serif;font-size:.78rem;letter-spacing:.08em;}
+section{padding:4rem 2rem;}.section-inner{max-width:880px;margin:0 auto;}
+.section-label{font-family:sans-serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);margin-bottom:.4rem;}
+h2{font-size:clamp(1.3rem,2.8vw,1.9rem);color:var(--navy);margin-bottom:1.2rem;}
+p{line-height:1.85;margin-bottom:1.2rem;font-size:.97rem;}
+.stub{background:rgba(201,168,76,.06);border:1px dashed rgba(201,168,76,.35);
+  padding:1.4rem;margin:1.2rem 0;border-radius:4px;color:#666;font-style:italic;font-size:.9rem;line-height:1.7;}
+.stub strong{color:var(--rule);font-style:normal;font-family:sans-serif;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:.5rem;}
+.eq-block{background:var(--navy);color:white;padding:1.8rem 2rem;margin:2rem 0;
+  border-left:4px solid var(--gold);font-family:var(--mono);font-size:.88rem;line-height:2.2;border-radius:0 6px 6px 0;}
+.eq-label{font-family:sans-serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:block;}
+.theorem{background:var(--surface);border:1px solid var(--gold-dim);border-left:4px solid var(--gold);
+  padding:2rem;margin:2.5rem 0;border-radius:0 6px 6px 0;}
+.thm-label{font-family:sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+.thm-body{color:white;font-size:.95rem;line-height:1.85;}
+.thm-body em{color:var(--gold);font-style:normal;}
+.pull{background:var(--smoke);border-left:4px solid var(--gold);padding:1.5rem 2rem;
+  margin:2.5rem 0;font-style:italic;font-size:1.05rem;line-height:1.7;color:#333;}
+.pull cite{display:block;margin-top:.8rem;font-style:normal;font-family:sans-serif;font-size:.75rem;letter-spacing:.1em;color:var(--rule);}
+.lean-block{background:rgba(0,0,0,.55);border:1px solid rgba(201,168,76,.15);
+  border-left:4px solid var(--gold-dim);padding:1.4rem 1.6rem;margin:2rem 0;border-radius:0 4px 4px 0;overflow-x:auto;}
+.lean-label{font-family:sans-serif;font-size:.63rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;display:block;}
+.lean-code{font-family:var(--mono);font-size:.73rem;color:#d4d0c8;white-space:pre;line-height:1.75;}
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;margin:2rem 0;}
+.cc{background:var(--navy);color:white;padding:1.5rem;border-top:3px solid var(--gold);border-radius:0 0 6px 6px;}
+.cs{font-size:1.6rem;font-weight:bold;color:var(--gold);font-family:sans-serif;margin-bottom:.4rem;}
+.cn{font-family:sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(201,168,76,.7);margin-bottom:.8rem;}
+.cb{font-size:.85rem;line-height:1.65;color:#c0c0c0;}
+.chapter-nav{background:var(--navy);padding:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.btn{display:inline-block;padding:.65rem 1.4rem;font-family:sans-serif;font-size:.82rem;letter-spacing:.08em;text-decoration:none;text-transform:uppercase;}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:bold;}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+footer{background:var(--navy);color:#888;text-align:center;padding:2rem;font-family:sans-serif;font-size:.78rem;line-height:2;}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="hub.html">dm3 - Principia Orthogona</a>
+  <ul class="nav-links">
+    <li><a href="hub.html">Hub</a></li>
+    <li><a href="ch-lorenz-chaos.html">Lorenz</a></li>
+    <li><a href="ch-turing-morphogenesis.html">Turing</a></li>
+    <li><a href="ch-mandelbrot-fractals.html">Mandelbrot</a></li>
+    <li><a href="ch-poincare-einstein.html">Poincare-Einstein</a></li>
+    <li><a href="chT-tubulin.html">tau=2</a></li>
+  </ul>
+</nav>
+<div class="hero">
+  <div class="eyebrow">Scientists Series · Morphogenesis · dm³ Framework</div>
+  <h1>Alan Turing — Reaction, Diffusion, and the Origin of Pattern</h1>
+  <div class="hero-sub">How chemical rules produce biological form — and what contact geometry adds</div>
+  <div class="gold-rule"></div>
+  <div class="hero-desc">In 1952, one year before his death, Alan Turing published 'The Chemical Basis of Morphogenesis' — showing that two chemicals reacting and diffusing at different rates will spontaneously break spatial symmetry and produce stable patterns: stripes, spots, spirals. No blueprint. No planner. dm³ reads this as a contact-geometric fixed-point theorem: the patterns are attractors, and G = U ∘ F ∘ K ∘ C is the morphogenetic field made precise.</div>
+  <div class="op-chain"><span class="op-chip">π</span><span class="op-chip">φ</span><span class="op-chip active">μ</span><span class="op-chip active">η</span><span class="op-chip active">Δ</span><span class="op-chip">Σ</span><span class="op-chip">Ω</span><span class="op-chip">τ</span></div>
+  <div class="meta-strip"><span class="meta-chip">Alan Turing · 1912–1954</span><span class="meta-chip">The Chemical Basis of Morphogenesis · 1952</span><span class="meta-chip">Reaction-Diffusion · Turing Instability</span><span class="meta-chip">Scientists Series</span></div>
+</div>
+<section style="background:var(--cream);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 1</div>
+  <h2 >The 1952 Paper — Pattern Without a Blueprint</h2>
+
+  <div class="pull">
+    "It is suggested that a system of chemical substances, called morphogens, reacting together and diffusing through a tissue, is adequate to account for the main phenomena of morphogenesis."
+    <cite>— Alan Turing, <em>The Chemical Basis of Morphogenesis</em>, Phil. Trans. R. Soc. Lond. B 237, 1952</cite>
+  </div>
+  <div class="stub"><strong>To Write</strong>
+    Context: Turing in 1952 — post-Bletchley, post-conviction, last years. The morphogenesis paper as a turn from discrete computation to continuous mathematics. The central mystery: how does a uniform fertilised egg produce a patterned organism? Turing's answer: instability. A uniform chemical distribution is unstable; small perturbations grow into stable patterns. Historical reception: ignored for decades, then experimentally confirmed (CIMA reaction, 1990). Biological examples: leopard spots, zebrafish stripes, fingerprint ridges, digit spacing (Sheth et al. 2012, Science).
+  </div>
+</div>
+</section>
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 2</div>
+  <h2 >The Mathematics — Reaction-Diffusion Equations</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    Two-component reaction-diffusion system. Activator u (slow diffuser), inhibitor v (fast diffuser). Diffusion constants D_u, D_v with D_v much greater than D_u. Local activation, lateral inhibition. Linear stability analysis: the uniform steady state is stable to homogeneous perturbations but unstable to spatially heterogeneous ones. The dispersion relation selects a band of unstable wavenumbers k near k*.
+  </div>
+  <div class="eq-block">
+    <span class="eq-label">Turing Reaction-Diffusion System</span>
+    du/dt = D_u * nabla^2(u) + f(u,v)   (activator: slow diffuser)<br>
+    dv/dt = D_v * nabla^2(v) + g(u,v)   (inhibitor: fast diffuser)<br><br>
+    Turing instability condition:  d = D_v / D_u  much greater than  1<br>
+    Critical wavenumber:  k*^2 = sqrt( f_u * g_v / D_u / D_v )
+  </div>
+  <div class="stub"><strong>To Write</strong>
+    The Gierer-Meinhardt model (1972) as canonical implementation. Schnakenberg, Gray-Scott models. Rate constants as dm3 analogue: reaction rates set timescale relative to diffusion timescale, exactly as the n-bonacci ratio sets convergence rate of G. The Hox gene result (Sheth 2012): reducing Hox gene count increases digit number, exactly as reducing d decreases pattern wavelength and produces more stripes. The parameter d is the experimental analogue of the dm3 index n.
+  </div>
+</div>
+</section>
+<section style="background:var(--cream);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 3</div>
+  <h2 >Contact Geometry as Morphogenetic Field</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    The classical morphogenetic field concept (Driesch, Wolpert positional information). Turing replaced the field with chemistry. dm3 goes further: the contact structure xi = ker(alpha) on tissue manifold M IS the morphogenetic field. Not a chemical gradient but a geometric constraint on the tangent bundle. Cells know their position because the contact form alpha evaluates differently at each point. Cross-reference chDev-waddington.html: Waddington's epigenetic landscape as Lyapunov potential, whose valleys are the Turing-stable patterns.
+  </div>
+  <div class="theorem">
+    <div class="thm-label">Theorem (Turing Instability in Contact Geometry) — Stub</div>
+    <div class="thm-body">
+      Let (M, alpha) be a contact 3-manifold (embryonic tissue). Let (u,v) be a morphogen pair satisfying a Turing system on M with D_v/D_u &gt; d_c. Then:<br><br>
+      <em>(i)</em> The uniform steady state is contact-geometrically unstable: there exists a Legendrian submanifold L in M on which a Turing pattern develops.<br><br>
+      <em>(ii)</em> The pattern wavelength 2*pi/k* equals the contact width of L.<br><br>
+      <em>(iii)</em> The dm3 operator G stabilises the pattern: G^n(u,v) converges to (u_pattern, v_pattern) with rate mu = -2.<br><br>
+      <span style="color:var(--muted);font-family:sans-serif;font-size:.75rem;">[STUB — all three parts require mu-operator mechanisation in AXLE]</span>
+    </div>
+  </div>
+</div>
+</section>
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 4</div>
+  <h2 >dm³ Reading — Pattern Formation as G-Orbit Convergence</h2>
+
+  <div class="stub"><strong>To Write</strong>
+    The central dm3 claim: Turing instability selects a spatial mode k*; dm3 selects a fixed point tau=2. Both are symmetry-breaking convergences. The difference is scale: Turing operates on the spatial manifold (tissue), G operates on the operator chain. They are the same phenomenon at different levels of description. Analogical map: n (n-bonacci index) corresponds to k* (Turing wavenumber); critDim(n) corresponds to pattern wavelength; tau=2 corresponds to the uniform steady state in the infinite-wavelength limit. As n grows without bound, critDim(n) grows without bound, analogous to k* approaching 0 (infinitely long wavelength = uniform state). The ladder descends from fine-grained structure toward the fixed point, just as Turing descends from high-k* patterns toward the uniform state.
+  </div>
+</div>
+</section>
+<section style="background:var(--surface);">
+<div class="section-inner">
+  <div class="section-label" style="color:rgba(201,168,76,.7);">&sect; 5</div>
+  <h2 style="color:white;">AXLE — Stub</h2>
+
+  <div class="lean-block">
+    <span class="lean-label">AXLE - Turing x dm3 skeleton</span>
+    <code class="lean-code">-- Turing morphogenesis in contact geometry
+-- Primary connection: mu operator (Lyapunov -2) stabilises Turing patterns
+
+structure MorphogenPair (M : Type*) where
+  activator : M -> Real  -- u
+  inhibitor : M -> Real  -- v
+  ratio     : Real       -- D_v / D_u
+  ratio_pos : ratio > 1
+
+-- Turing instability (stub)
+axiom turing_instability (M : ContactManifold) (p : MorphogenPair M)
+    (h : p.ratio > criticalRatio) :
+    Exists (L : LegendriansOf M), hasTuringPattern L p
+
+-- G stabilises the Turing pattern (sorry - tier C)
+theorem G_stabilises_turing_pattern (M : ContactManifold) (p : MorphogenPair M) :
+    Exists p_stable, Filter.Tendsto
+      (fun n => G_morphogen n p) Filter.atTop (nhds p_stable) := by
+  sorry -- tier C: follows from turing_instability + Banach on morphogen space</code>
+  </div>
+</div>
+</section>
+<section style="background:var(--smoke);">
+<div class="section-inner">
+  <div class="section-label" >&sect; 6</div>
+  <h2 >Curriculum Placement</h2>
+
+  <p>This chapter belongs to the <strong>mu-eta-Delta arc</strong> of dm3 102, Weeks 13-14 (Applications section). Cross-references:
+  <a href="chDev-waddington.html" style="color:var(--gold)">chDev-waddington.html</a> (epigenetic landscape as Lyapunov potential) &nbsp;|&nbsp;
+  <a href="chMu-lyapunov.html" style="color:var(--gold)">chMu-lyapunov.html</a> (mu operator) &nbsp;|&nbsp;
+  <a href="ch-lorenz-chaos.html" style="color:var(--gold)">ch-lorenz-chaos.html</a> (chaos vs pattern: the explicit contrast) &nbsp;|&nbsp;
+  <a href="dm3-102-w13.html" style="color:var(--gold)">dm3-102 Week 13</a>.</p>
+</div>
+</section>
+
+<div class="chapter-nav">
+  <a href="ch-lorenz-chaos.html" class="btn btn-outline">← Lorenz · Chaos</a>
+  <span style="font-family:sans-serif;font-size:.75rem;color:#888;letter-spacing:.08em;">Scientists Series - dm3 - G6 LLC 2026</span>
+  <a href="ch-mandelbrot-fractals.html" class="btn btn-gold">Mandelbrot · Fractals →</a>
+</div>
+<footer>
+  G = U o F o K o C &nbsp;.&nbsp; Principia Orthogona G1-G9 &nbsp;.&nbsp;
+  Pablo Nogueira Grossi &nbsp;.&nbsp; G6 LLC - Newark NJ &nbsp;.&nbsp; 2026<br>
+  ORCID: 0009-0000-6496-2186 &nbsp;.&nbsp;
+  <a href="https://zenodo.org/records/19117400">Zenodo DOI</a> &nbsp;.&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE</a>
+</footer>
+</body>
+</html>
