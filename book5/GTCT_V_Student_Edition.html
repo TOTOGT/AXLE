@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Principia Orthogona V — Student Edition | Edição do Estudante</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+/* =========================================================
+   PRINCIPIA ORTHOGONA · VOLUME V — STUDENT EDITION
+   Bilingual IMPA-style textbook with integrated
+   Berimbau Machine (cymatics, D major triad, binaural).
+   Left column: ESL C1–C2 · Tiffany dark
+   Right column: Estudante de Pós-Graduação · Ouro/Verde/Azul
+   ========================================================= */
+
+:root{
+  --tiffany:#0ABAB5;
+  --tiffany-soft:#9cf3ef;
+  --tiffany-deep:#022b2a;
+  --br-green:#009c3b;
+  --br-blue:#002776;
+  --br-gold:#c8a24a;
+  --br-gold-soft:#ffe7a0;
+  --br-white:#f2efe4;
+  --paper:#fbfaf5;
+  --ink:#0b0b0b;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  background:#05080a;color:#eaeaea;line-height:1.55;
+  font-family:"EB Garamond","Georgia","Cambria",serif;
+  font-size:16px;
+}
+a{color:inherit}
+
+/* cover */
+.cover{
+  text-align:center;padding:60px 30px 40px;
+  background:
+    radial-gradient(ellipse at 50% 30%, #0ABAB520 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 80%, #c8a24a15 0%, transparent 60%),
+    linear-gradient(180deg,#030709,#05080a);
+  border-bottom:1px solid #222;
+}
+.cover .banner{
+  font-family:"Playfair Display",serif;
+  letter-spacing:.35em;text-transform:uppercase;font-size:11px;opacity:.6
+}
+.cover h1{
+  font-family:"Playfair Display","Didot",serif;
+  font-size:44px;margin:10px 0 6px;
+  background:linear-gradient(90deg,var(--tiffany) 0%, var(--br-gold) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.cover h2{font-weight:400;font-size:18px;letter-spacing:.08em;opacity:.85;margin-bottom:4px}
+.cover .pt{opacity:.7;font-style:italic;font-size:14px}
+.cover .meta{margin-top:22px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.55}
+
+/* machine strip */
+.machine{
+  padding:28px 20px;
+  background:linear-gradient(180deg,#061116,#030507);
+  border-bottom:1px solid #1a1a1a;
+}
+.machine .strip{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:1280px;margin:0 auto;
+}
+@media (max-width:980px){.machine .strip{grid-template-columns:1fr}}
+.mach-panel{
+  border-radius:10px;padding:14px 16px;
+  border:1px solid;
+}
+.mach-panel.en{border-color:#0ABAB566;background:linear-gradient(180deg,#021514,#010a0a)}
+.mach-panel.br{border-color:var(--br-gold);background:linear-gradient(180deg,#051408,#010515)}
+.mach-panel h3{
+  font-family:"Playfair Display",serif;font-size:15px;letter-spacing:.14em;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.mach-panel.en h3{color:var(--tiffany)}
+.mach-panel.br h3{color:var(--br-gold)}
+canvas.cym{
+  width:100%;height:220px;display:block;border-radius:6px;
+  background:#02100f;
+}
+.mach-panel.br canvas.cym{background:#030a04}
+.controls{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.btn{
+  background:transparent;padding:6px 10px;border-radius:18px;cursor:pointer;
+  font-family:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  transition:all .15s;
+}
+.mach-panel.en .btn{border:1px solid var(--tiffany);color:var(--tiffany)}
+.mach-panel.en .btn:hover,.mach-panel.en .btn.active{background:var(--tiffany);color:#021212}
+.mach-panel.br .btn{border:1px solid var(--br-gold);color:var(--br-gold)}
+.mach-panel.br .btn:hover,.mach-panel.br .btn.active{background:var(--br-gold);color:#0a0605}
+.sliders{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;margin-top:10px;font-size:11px;font-family:monospace;align-items:center}
+.sliders input[type=range]{accent-color:currentColor;width:100%}
+
+/* onboarding block */
+.onboard{
+  max-width:1280px;margin:28px auto;padding:22px 28px;
+  background:linear-gradient(180deg,#0a0e12,#07090c);
+  border:1px solid #2a2a2a;border-radius:10px;
+}
+.onboard .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media (max-width:980px){.onboard .cols{grid-template-columns:1fr}}
+.onboard h2{font-family:"Playfair Display",serif;font-size:22px;margin-bottom:10px}
+.onboard .en h2{color:var(--tiffany)}
+.onboard .br h2{color:var(--br-gold)}
+.onboard p{margin:8px 0;font-size:14.5px;opacity:.92}
+.onboard ol{margin:6px 0 6px 22px;font-size:14.5px;opacity:.92}
+.onboard li{margin:4px 0}
+.onboard code{
+  background:#111;padding:2px 6px;border-radius:4px;
+  font-family:"JetBrains Mono","Fira Code",monospace;font-size:13px;color:#cde
+}
+.claudeBtn{
+  display:inline-block;margin:10px 6px 4px 0;padding:10px 16px;
+  border-radius:30px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:12px;
+  text-decoration:none;border:1.5px solid;transition:all .18s;
+}
+.claudeBtn.en{color:var(--tiffany);border-color:var(--tiffany)}
+.claudeBtn.en:hover{background:var(--tiffany);color:#021212}
+.claudeBtn.br{color:var(--br-gold);border-color:var(--br-gold)}
+.claudeBtn.br:hover{background:var(--br-gold);color:#0a0605}
+
+/* content column layout */
+.book{max-width:1280px;margin:0 auto;padding:20px}
+.level{
+  margin:36px 0;border-radius:14px;overflow:hidden;
+  border:1px solid #1c1c1c;
+  background:linear-gradient(180deg,#07090b,#04060a);
+}
+.level-head{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#1c1c1c;
+}
+.level-head .side{padding:22px 28px}
+.level-head .en{background:linear-gradient(135deg,#021a1a 0%, #020808 100%)}
+.level-head .br{background:linear-gradient(135deg,#0a1a0c 0%, #020618 100%)}
+.level-head .tag{font-family:"Playfair Display",serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:.55}
+.level-head .en .tag{color:var(--tiffany)}
+.level-head .br .tag{color:var(--br-gold)}
+.level-head h2{
+  font-family:"Playfair Display",serif;font-size:26px;margin:6px 0 4px;
+}
+.level-head .en h2{color:var(--tiffany-soft)}
+.level-head .br h2{color:var(--br-gold-soft)}
+.level-head .sub{opacity:.7;font-size:13.5px;font-style:italic}
+
+.level-body{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#161616;
+}
+@media (max-width:980px){
+  .level-head, .level-body{grid-template-columns:1fr}
+}
+.side{padding:24px 28px}
+.side.en{background:#04100f;color:#d8fffd}
+.side.br{background:#06100a;color:#efeadd}
+
+.side h3{
+  font-family:"Playfair Display",serif;
+  font-size:17px;margin:18px 0 6px;letter-spacing:.02em;
+}
+.side.en h3{color:var(--tiffany)}
+.side.br h3{color:var(--br-gold)}
+.side h4{
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  margin:16px 0 6px;opacity:.7;
+}
+.side.en h4{color:var(--tiffany-soft)}
+.side.br h4{color:var(--br-gold-soft)}
+.side p{font-size:14.5px;margin:6px 0;opacity:.94}
+.side ul, .side ol{margin:4px 0 6px 22px;font-size:14.5px}
+.side li{margin:3px 0}
+
+.thm{
+  border-left:3px solid;
+  padding:10px 14px;margin:10px 0;
+  border-radius:0 8px 8px 0;
+  background:rgba(255,255,255,0.02);
+  font-size:14px;
+}
+.side.en .thm{border-color:var(--tiffany)}
+.side.br .thm{border-color:var(--br-gold)}
+.thm .lbl{
+  font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;
+  font-weight:700;opacity:.85;margin-bottom:4px
+}
+.side.en .thm .lbl{color:var(--tiffany)}
+.side.br .thm .lbl{color:var(--br-gold)}
+
+.eq{
+  display:block;font-family:"JetBrains Mono","Fira Code",monospace;
+  font-size:13.5px;padding:8px 10px;margin:6px 0;
+  background:#000a09;border-radius:5px;overflow-x:auto;
+}
+.side.br .eq{background:#030805}
+.side.en .eq{color:var(--tiffany-soft)}
+.side.br .eq{color:var(--br-gold-soft)}
+
+pre.lean{
+  background:#0a0a0d;
+  border:1px solid #2a2a2a;border-left:3px solid #9cf3ef;
+  padding:10px 12px;margin:8px 0;border-radius:6px;overflow-x:auto;
+  font-family:"JetBrains Mono","Fira Code",monospace;font-size:12.5px;
+  color:#cfeee9;line-height:1.4;
+}
+.side.br pre.lean{border-left-color:var(--br-gold)}
+pre.lean .kw{color:#ffb86c}
+pre.lean .tp{color:#8be9fd}
+pre.lean .cm{color:#6272a4;font-style:italic}
+
+.ex{margin:8px 0;font-size:14px}
+.ex .n{
+  display:inline-block;width:26px;font-weight:700;
+  font-family:"JetBrains Mono",monospace;opacity:.85
+}
+.stars{font-family:monospace;font-size:12px;opacity:.75;margin-right:6px}
+.side.en .stars{color:var(--tiffany)}
+.side.br .stars{color:var(--br-gold)}
+
+.prompt{
+  background:rgba(255,255,255,0.03);
+  border:1px dashed;border-radius:6px;padding:10px 12px;margin:6px 0;
+  font-size:13px;font-family:"JetBrains Mono",monospace;line-height:1.45;
+}
+.side.en .prompt{border-color:#0ABAB577;color:#d8fffd}
+.side.br .prompt{border-color:#c8a24a88;color:#efeadd}
+.prompt .tag{
+  display:inline-block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+  padding:2px 6px;border-radius:10px;margin-right:6px;
+}
+.side.en .prompt .tag{background:var(--tiffany);color:#021212}
+.side.br .prompt .tag{background:var(--br-gold);color:#0a0605}
+
+.hint{font-size:12px;opacity:.7;font-style:italic;margin-top:4px}
+
+/* ====== READING LAYER ======
+   A tutor's voice sitting next to the formal line.
+   .readthm  → unpacks a theorem / definition / equation
+   .readfig  → unpacks a figure (what you are seeing, why it moves)
+   .readax   → unpacks an axiom (what it rules out, what it enables)
+   .bridge   → connects the current idea to later levels / the machine
+*/
+.readthm, .readfig, .readax, .bridge{
+  margin:10px 0 14px 0;padding:10px 14px 10px 16px;
+  border-left:2px dotted;
+  font-size:13.5px;line-height:1.55;
+  background:linear-gradient(90deg, rgba(10,186,181,0.03), transparent 70%);
+}
+.side.br .readthm, .side.br .readfig, .side.br .readax, .side.br .bridge{
+  background:linear-gradient(90deg, rgba(200,162,74,0.04), transparent 70%);
+}
+.side.en .readthm, .side.en .readfig, .side.en .readax, .side.en .bridge{border-color:#0ABAB566}
+.side.br .readthm, .side.br .readfig, .side.br .readax, .side.br .bridge{border-color:#c8a24a66}
+.readthm .lbl, .readfig .lbl, .readax .lbl, .bridge .lbl{
+  display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  opacity:.85;margin-bottom:6px;font-weight:600;
+}
+.side.en .readthm .lbl, .side.en .readfig .lbl, .side.en .readax .lbl, .side.en .bridge .lbl{color:var(--tiffany)}
+.side.br .readthm .lbl, .side.br .readfig .lbl, .side.br .readax .lbl, .side.br .bridge .lbl{color:var(--br-gold)}
+.readthm p, .readfig p, .readax p, .bridge p{margin:6px 0}
+.readthm em, .readfig em, .readax em, .bridge em{color:#fff;font-style:italic}
+.readfig{font-style:normal}
+.readfig.wide{
+  max-width:1280px;margin:0 auto 14px auto;padding:14px 22px 16px 26px;
+  display:grid;grid-template-columns:1fr 1fr;gap:28px;
+  background:rgba(255,255,255,0.015);
+}
+.readfig.wide > div{min-width:0}
+.readfig.wide h5{
+  margin:0 0 6px 0;font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  font-weight:600;
+}
+.readfig.wide .en h5{color:var(--tiffany)}
+.readfig.wide .br h5{color:var(--br-gold)}
+@media (max-width:900px){
+  .readfig.wide{grid-template-columns:1fr}
+}
+
+/* ====== APPENDICES ====== */
+.appendix{
+  max-width:1280px;margin:40px auto;padding:30px 28px;
+  border:1px solid #1a2a2a;border-radius:14px;
+  background:linear-gradient(135deg, rgba(10,186,181,0.04), rgba(200,162,74,0.03));
+}
+.appendix .app-head{
+  border-bottom:1px dashed #2a3d3c;padding-bottom:18px;margin-bottom:22px;
+}
+.appendix .app-head h2{
+  margin:0;font-family:"Playfair Display",serif;font-weight:500;
+  font-size:28px;letter-spacing:-.01em;
+}
+.appendix .app-head h2.en{color:var(--tiffany)}
+.appendix .app-head h2.br{color:var(--br-gold);margin-top:4px;font-size:22px;opacity:.9}
+.appendix .app-head p{font-size:14.5px;margin:10px 0 0 0;line-height:1.6}
+.appendix .app-head p.en{color:#d8fffd}
+.appendix .app-head p.br{color:#efeadd;opacity:.92}
+.appendix .app-section{margin:28px 0 20px 0}
+.appendix .app-section h3{
+  font-size:15px;letter-spacing:.12em;text-transform:uppercase;
+  color:#fff;margin:20px 0 10px 0;padding-left:10px;
+  border-left:3px solid var(--tiffany);
+}
+.appendix .app-section h3.br-h{border-left-color:var(--br-gold)}
+.appendix .app-section .howto{
+  font-size:14px;line-height:1.65;color:#cfe;margin:8px 0 14px 0;padding:10px 14px;
+  background:rgba(0,0,0,0.25);border-radius:8px;border-left:2px dotted #0ABAB566;
+}
+.appendix .app-section .howto.br-h{border-left-color:#c8a24a66;color:#efeadd}
+table.speak{
+  width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;
+}
+table.speak th, table.speak td{
+  text-align:left;padding:8px 10px;vertical-align:top;
+  border-bottom:1px solid #1a2525;
+}
+table.speak th{
+  font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:#9cf3ef;font-weight:600;background:rgba(10,186,181,0.06);
+}
+table.speak td:first-child{
+  font-family:"JetBrains Mono","Fira Code",monospace;font-size:14px;
+  color:#fff;width:22%;white-space:nowrap;
+}
+table.speak td.en-say{color:#d8fffd;font-style:italic;width:28%}
+table.speak td.br-say{color:#ffe5a7;font-style:italic;width:28%}
+table.speak td.note{color:#9aa;font-size:12.5px;width:22%;line-height:1.5}
+table.speak tr:hover td{background:rgba(255,255,255,0.02)}
+.appendix .pair-cols{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:16px 0}
+.appendix .pair-cols > div{min-width:0}
+.appendix .pair-cols .en-col{border-left:2px solid var(--tiffany);padding-left:14px}
+.appendix .pair-cols .br-col{border-left:2px solid var(--br-gold);padding-left:14px}
+.appendix .pair-cols h4{font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin:0 0 8px 0}
+.appendix .pair-cols .en-col h4{color:var(--tiffany)}
+.appendix .pair-cols .br-col h4{color:var(--br-gold)}
+.appendix .pair-cols p{font-size:13.5px;line-height:1.6;margin:6px 0}
+@media (max-width:900px){.appendix .pair-cols{grid-template-columns:1fr}}
+
+/* appendix / close */
+.closing{
+  max-width:1280px;margin:40px auto;padding:30px;
+  text-align:center;
+  border-top:1px solid #222;
+}
+.closing .sig{font-family:"Playfair Display",serif;font-size:18px;opacity:.8}
+.closing .copy{font-size:11px;letter-spacing:.22em;text-transform:uppercase;opacity:.5;margin-top:8px}
+
+/* rich diagram band (spans both columns inside a level) */
+.diag-band{
+  grid-column:1/-1;
+  background:
+    radial-gradient(ellipse at 10% 0%, #0ABAB522 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 100%, #c8a24a22 0%, transparent 55%),
+    linear-gradient(180deg,#050b0d,#03070a);
+  padding:18px 22px;
+  border-top:1px solid #1a1a1a;
+  border-bottom:1px solid #1a1a1a;
+}
+.diag-band .caption{
+  display:flex;justify-content:space-between;gap:18px;margin-top:10px;
+  font-size:12px;opacity:.8;font-style:italic;
+}
+.diag-band .caption .en-c{color:var(--tiffany-soft);flex:1}
+.diag-band .caption .br-c{color:var(--br-gold-soft);flex:1;text-align:right}
+.diag-band svg{display:block;width:100%;height:auto}
+.diag-band.wide svg{aspect-ratio:900/380}
+.diag-band .tick{font-family:"JetBrains Mono",monospace;font-size:9.5px;fill:#aaa}
+.diag-band .lab{font-family:"Playfair Display",serif;font-size:11px;fill:#cde}
+.diag-band .lab-gold{fill:#ffe7a0}
+.diag-band .lab-teal{fill:#9cf3ef}
+
+.spin{animation:rot 14s linear infinite;transform-origin:center}
+@keyframes rot{to{transform:rotate(360deg)}}
+.pulse{animation:p 2.6s ease-in-out infinite}
+@keyframes p{0%,100%{opacity:.35}50%{opacity:1}}
+.dash{stroke-dasharray:3 4;animation:dash 24s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-200}}
+.flow{stroke-dasharray:2 3;animation:flow 5s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-40}}
+.breath{animation:br 4s ease-in-out infinite}
+@keyframes br{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+
+/* print */
+@media print{
+  html,body{background:#fff;color:#000}
+  .machine, .onboard{background:#fff;color:#000;border-color:#bbb}
+  .level-head .en, .level-head .br,
+  .side.en, .side.br{background:#fff;color:#000}
+  .thm{background:#f4f4f4}
+  pre.lean{background:#f2f2f2;color:#000}
+  .prompt{background:#fafafa;color:#000}
+  .btn{display:none}
+  canvas.cym, .controls, .sliders{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     COVER
+     ========================================================= -->
+<header class="cover">
+  <div class="banner">Principia Orthogona</div>
+  <h1>Volume V · Dimensional Theory</h1>
+  <h2>Student Edition — ESL C1–C2 &nbsp;/&nbsp; Edição do Estudante — Pós-Graduação</h2>
+  <div class="pt">Generative Temporal Contact Theory · Teoria de Contato Temporal Generativa</div>
+  <div class="meta">
+    Pablo Nogueira Grossi · G6 LLC · Newark, NJ ·
+    ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank" rel="noopener" style="color:#9cf3ef;text-decoration:none;border-bottom:1px dotted #9cf3ef55">0009-0000-6496-2186</a>
+  </div>
+  <div class="meta" style="margin-top:8px">ISBN 979-8-9954416-6-3 · Revised 2026-03-28 · Copyright © 2026 G6 LLC — All rights reserved</div>
+  <div class="meta" style="margin-top:14px;letter-spacing:.12em">
+    <a href="https://totogt.github.io/AXLE/impa-portal.html" target="_blank" rel="noopener" style="color:#0ABAB5;text-decoration:none;border:1px solid #0ABAB5;padding:6px 12px;border-radius:20px;margin:0 6px;display:inline-block">AXLE · IMPA Portal ↗</a>
+    <a href="https://brodanova6.gumroad.com/l/soundworks" target="_blank" rel="noopener" style="color:#c8a24a;text-decoration:none;border:1px solid #c8a24a;padding:6px 12px;border-radius:20px;margin:0 6px;display:inline-block">Soundworks Membership ↗</a>
+  </div>
+</header>
+
+<!-- =========================================================
+     PRELUDE I — THE MACHINE (SONIC GATE)
+     What the cymatic machine is, and why it opens the book.
+     ========================================================= -->
+<section class="appendix" id="prelude-i" style="margin-top:20px;margin-bottom:6px">
+  <div class="app-head">
+    <h2 class="en">Prelude I — The Machine</h2>
+    <h2 class="br">Prelúdio I — A Máquina</h2>
+    <p class="en">Below this block is a working <em>cymatic instrument</em>. Before you read a single theorem of this book, listen to it. The book's central claim — that time has a direction, that information contracts, that twelve phase functions rotate in step — is a claim about a <em>sound you can hear</em>. Prelude I is the book <em>heard</em>. Prelude II, just after, is the book <em>spoken</em>. Level I, after that, is the book <em>read</em>. Three gates in a row; the machine is the first.</p>
+    <p class="br">Abaixo deste bloco está um <em>instrumento cimático</em> funcional. Antes de ler um único teorema deste livro, ouça-o. A afirmação central do livro — que o tempo tem direção, que a informação contrai, que doze funções de fase giram em sincronia — é uma afirmação sobre um <em>som que se pode ouvir</em>. O Prelúdio I é o livro <em>ouvido</em>. O Prelúdio II, logo em seguida, é o livro <em>falado</em>. O Nível I, depois, é o livro <em>lido</em>. Três portões em sequência; a máquina é o primeiro.</p>
+  </div>
+
+  <div class="app-section">
+    <h3>§I.1 — What you are looking at · O que você está vendo</h3>
+    <div class="pair-cols">
+      <div class="en-col">
+        <h4>In plain English</h4>
+        <p><strong>Berimbau</strong> is an Afro-Brazilian single-string instrument brought to Brazil through the transatlantic slave trade, central to <em>capoeira</em>. One string. One gourd. A stone or coin to change the pitch by one semitone. Mathematically humble, sonically immense — a berimbau string carries a near-pure harmonic series, which is why it can serve as a living demonstration of a <em>twelve-tone equal-tempered octave</em>.</p>
+        <p><strong>Cymatics</strong> (from Greek <em>kyma</em>, wave) is the science of <em>visible sound</em>: when a metal plate is bathed in a steady frequency, sand on the plate gathers along the plate's resonant node-lines and draws a pattern. Ernst Chladni published the first patterns in 1787; Hans Jenny filmed them in the 1960s. Each musical pitch draws a different figure. On this page, the rectangular canvas next to the controls <em>is</em> the Chladni plate — driven by a live Web Audio FFT, not by sand, but the mathematics is the same.</p>
+        <p><strong>What the machine does</strong>. Press <em>Bass D2</em> and the canvas blooms a simple horizontal pattern; press <em>D·F♯·A</em> (the D-major triad) and the pattern splits into three interleaving modes; press <em>Binaural</em> and the pattern begins to breathe at the chosen beat frequency; press <em>Atabaque</em> and a twelve-step drum cycle punches rhythmic nodes through the field. Every button is a voice from Volume V made audible.</p>
+      </div>
+      <div class="br-col">
+        <h4>Em português claro</h4>
+        <p><strong>Berimbau</strong> é um instrumento afro-brasileiro de uma única corda, trazido ao Brasil pela travessia atlântica, central na <em>capoeira</em>. Uma corda. Uma cabaça. Uma pedra ou moeda que altera a afinação em um semitom. Humilde do ponto de vista matemático, imenso do ponto de vista sonoro — a corda do berimbau carrega uma série harmônica quase pura, razão pela qual pode servir de demonstração viva de uma <em>oitava temperada em doze tons</em>.</p>
+        <p><strong>Cimática</strong> (do grego <em>kyma</em>, onda) é a ciência do <em>som visível</em>: quando uma placa metálica é banhada por uma frequência estável, a areia sobre a placa se acumula ao longo das linhas nodais de ressonância e desenha um padrão. Ernst Chladni publicou os primeiros padrões em 1787; Hans Jenny os filmou nos anos 1960. Cada altura musical desenha uma figura diferente. Nesta página, o canvas retangular ao lado dos controles <em>é</em> a placa de Chladni — acionado por uma FFT de Web Audio ao vivo, não por areia, mas a matemática é a mesma.</p>
+        <p><strong>O que a máquina faz</strong>. Aperte <em>Grave Ré2</em> e o canvas floresce num padrão horizontal simples; aperte <em>Ré·Fá♯·Lá</em> (a tríade de Ré maior) e o padrão se divide em três modos entrelaçados; aperte <em>Binaural</em> e o padrão começa a respirar na frequência de batimento escolhida; aperte <em>Atabaque</em> e um ciclo de doze passos perfura nódulos rítmicos pelo campo. Cada botão é uma voz do Volume V tornada audível.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-section">
+    <h3>§I.2 — What this has to do with GTCT · O que isso tem a ver com a GTCT</h3>
+    <div class="pair-cols">
+      <div class="en-col">
+        <h4>Why it opens the book</h4>
+        <p>Volume V is a theory of <em>time as geometric rotation plus contraction</em>. Both of those things exist in a berimbau note. A single pluck on the berimbau produces a sound of the form e^{iωt} · e^{−λt}: a pure rotation in pitch space (the ω part) and an amplitude decay (the λ part). That is <em>exactly</em> the spiral time we derive in Level II ½, with ω = T\* = 2π and λ = ln√(9/7)/2π. The book's central object — the dimensional field Δ rotating on S¹¹ while contracting toward the fixed point x\* — is audibly instantiated every time you pluck the string.</p>
+        <p>Each machine control maps onto a named object in the formal theory:</p>
+        <p><strong>Bass D2</strong> (73.42 Hz) ↔ the base carrier frequency of the Reeb flow φ_t — one full rotation per period T\* = 2π.</p>
+        <p><strong>D-Major Triad</strong> (D, F♯, A at 293.66 / 369.99 / 440 Hz) ↔ three of the twelve phase functions δᵢ of the dimensional field Δ (Level II). The triad is a reduced version of the full twelve-tone harmonic.</p>
+        <p><strong>Binaural beat</strong> (220 Hz + Δ) ↔ the pair of conjugate modes in the complexified representation ℝ¹² ≅ ℂ⁶; the beat frequency is the difference of eigenvalues, made audible as a pulse.</p>
+        <p><strong>Atabaque</strong> (12-step pattern) ↔ the twelve dimensional operators Aᵢ firing in sequence per cycle (Level III). Each drum hit is one Aᵢ acting on the state.</p>
+        <p><strong>The Chladni canvas</strong> ↔ the Chladni figure of the instantaneous Δ-field, drawn from the live FFT spectrum — a direct visual read of the operator currently dominant, i\*(x) = argmaxᵢ δᵢ(x).</p>
+      </div>
+      <div class="br-col">
+        <h4>Por que ele abre o livro</h4>
+        <p>O Volume V é uma teoria do <em>tempo como rotação geométrica mais contração</em>. Ambas as coisas existem numa nota de berimbau. Um único toque na corda produz um som da forma e^{iωt} · e^{−λt}: uma rotação pura no espaço de alturas (a parte ω) e um decaimento de amplitude (a parte λ). É <em>exatamente</em> o tempo em espiral que deduzimos no Nível II ½, com ω = T\* = 2π e λ = ln√(9/7)/2π. O objeto central do livro — o campo dimensional Δ girando em S¹¹ enquanto contrai rumo ao ponto fixo x\* — é instanciado audivelmente a cada toque na corda.</p>
+        <p>Cada controle da máquina mapeia-se a um objeto nomeado na teoria formal:</p>
+        <p><strong>Grave Ré2</strong> (73,42 Hz) ↔ a frequência-portadora de base do fluxo de Reeb φ_t — uma rotação por período T\* = 2π.</p>
+        <p><strong>Tríade de Ré Maior</strong> (Ré, Fá♯, Lá a 293,66 / 369,99 / 440 Hz) ↔ três das doze funções de fase δᵢ do campo dimensional Δ (Nível II). A tríade é uma versão reduzida do harmônico completo de doze tons.</p>
+        <p><strong>Batimento binaural</strong> (220 Hz + Δ) ↔ o par de modos conjugados na representação complexificada ℝ¹² ≅ ℂ⁶; a frequência de batimento é a diferença de autovalores, tornada audível como pulso.</p>
+        <p><strong>Atabaque</strong> (padrão de 12 passos) ↔ os doze operadores dimensionais Aᵢ disparando em sequência por ciclo (Nível III). Cada golpe é um Aᵢ agindo sobre o estado.</p>
+        <p><strong>O canvas cimático</strong> ↔ a figura de Chladni do campo Δ instantâneo, desenhada a partir do espectro FFT ao vivo — uma leitura visual direta do operador atualmente dominante, i\*(x) = argmaxᵢ δᵢ(x).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-section">
+    <h3>§I.3 — How to use the machine · Como usar a máquina</h3>
+    <div class="howto">Run Prelude I for at least three minutes <em>before</em> reading Prelude II. Play all four voices once; watch the canvas respond. You are training your ear and eye to recognise the mathematical objects the book will formalise. When Level II says "Δ rotates uniformly by e^{iT*t}," your ear will already know what that sounds like — because you just heard it.</div>
+    <div class="howto br-h">Execute o Prelúdio I por pelo menos três minutos <em>antes</em> de ler o Prelúdio II. Toque as quatro vozes ao menos uma vez; observe a resposta do canvas. Você está treinando o ouvido e o olho para reconhecer os objetos matemáticos que o livro vai formalizar. Quando o Nível II disser "Δ gira uniformemente por e^{iT*t}," seu ouvido já saberá como aquilo soa — porque você acabou de ouvir.</div>
+  </div>
+</section>
+
+<!-- =========================================================
+     INTEGRATED BERIMBAU MACHINE
+     ========================================================= -->
+<section class="machine">
+  <div class="strip">
+    <div class="mach-panel en">
+      <h3>Berimbau Machine · Live Cymatic Plate</h3>
+      <canvas class="cym" id="cymEn"></canvas>
+      <div class="controls">
+        <button class="btn" data-engine="en" data-action="start">▶ Start</button>
+        <button class="btn" data-engine="en" data-action="stop">■ Stop</button>
+        <button class="btn" data-engine="en" data-voice="bass">Bass D2</button>
+        <button class="btn" data-engine="en" data-voice="triad">D · F♯ · A</button>
+        <button class="btn" data-engine="en" data-voice="binaural">Binaural</button>
+        <button class="btn" data-engine="en" data-voice="drum">Atabaque</button>
+      </div>
+      <div class="sliders">
+        <span>Arame</span><input type="range" id="enArame" min="0" max="1" step="0.01" value="0.8"><span id="enArameV">0.80</span>
+        <span>Caxixi</span><input type="range" id="enCax" min="0" max="1" step="0.01" value="0.35"><span id="enCaxV">0.35</span>
+        <span>Binaural Δ</span><input type="range" id="enBin" min="1" max="14" step="0.1" value="7"><span id="enBinV">7.0 Hz</span>
+        <span>BPM</span><input type="range" id="enBpm" min="60" max="180" step="1" value="104"><span id="enBpmV">104</span>
+      </div>
+    </div>
+    <div class="mach-panel br">
+      <h3>Máquina de Berimbau · Placa Cimática</h3>
+      <canvas class="cym" id="cymBr"></canvas>
+      <div class="controls">
+        <button class="btn" data-engine="br" data-action="start">▶ Tocar</button>
+        <button class="btn" data-engine="br" data-action="stop">■ Parar</button>
+        <button class="btn" data-engine="br" data-voice="bass">Grave Ré2</button>
+        <button class="btn" data-engine="br" data-voice="triad">Ré · Fá♯ · Lá</button>
+        <button class="btn" data-engine="br" data-voice="binaural">Binaural</button>
+        <button class="btn" data-engine="br" data-voice="drum">Atabaque</button>
+      </div>
+      <div class="sliders">
+        <span>Arame</span><input type="range" id="brArame" min="0" max="1" step="0.01" value="0.8"><span id="brArameV">0.80</span>
+        <span>Caxixi</span><input type="range" id="brCax" min="0" max="1" step="0.01" value="0.35"><span id="brCaxV">0.35</span>
+        <span>Binaural Δ</span><input type="range" id="brBin" min="1" max="14" step="0.1" value="7"><span id="brBinV">7.0 Hz</span>
+        <span>BPM</span><input type="range" id="brBpm" min="60" max="180" step="1" value="104"><span id="brBpmV">104</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     HOW TO USE THIS BOOK WITH AN LLM
+     ========================================================= -->
+<section class="onboard">
+  <div class="cols">
+    <div class="en">
+      <h2>How to study with this book</h2>
+      <p>This is a companion textbook. Each of the eight Levels pairs a block of formal mathematics with a physics reading, a <em>Lean 4</em> snippet, graded exercises, and LLM prompts. To use the prompts, you must give the AI the full text of this book first, so it knows what theorems, constants, and hypotheses the prompts are referring to.</p>
+      <ol>
+        <li>Open <a href="https://claude.ai" target="_blank" rel="noopener"><strong>claude.ai</strong></a>.</li>
+        <li>Upload this HTML file (or its PDF printout) into a new conversation as an attachment.</li>
+        <li>Start with: <code>Read Volume V carefully. Confirm you understand Axioms 1–9, the Structural Hypothesis SH, and the contraction constant κ.</code></li>
+        <li>Then paste any <strong>Prompt for the LLM</strong> from a Level. The AI will now have context.</li>
+      </ol>
+      <a class="claudeBtn en" href="https://claude.ai" target="_blank" rel="noopener">Open claude.ai ↗</a>
+      <a class="claudeBtn en" href="https://totogt.github.io/AXLE/impa-portal.html" target="_blank" rel="noopener">AXLE · IMPA Portal ↗</a>
+      <a class="claudeBtn br" href="https://brodanova6.gumroad.com/l/soundworks" target="_blank" rel="noopener">Become a Soundworks Member ↗</a>
+      <p style="font-size:13px;color:#9cf3ef;margin-top:10px;opacity:.9">Membership unlocks the full Soundworks program — quarterly IMPA-style lectures, Lean 4 solution keys, and the private Berimbau-Cymatics cohort.</p>
+    </div>
+    <div class="br">
+      <h2>Como estudar com este livro</h2>
+      <p>Este é um livro-companheiro. Cada um dos oito Níveis combina um bloco de matemática formal com uma leitura em física, um trecho em <em>Lean 4</em>, exercícios graduados e prompts para o LLM. Para usar os prompts, é necessário fornecer o texto completo deste livro à IA antes, para que ela saiba a quais teoremas, constantes e hipóteses os prompts se referem.</p>
+      <ol>
+        <li>Abra <a href="https://claude.ai" target="_blank" rel="noopener"><strong>claude.ai</strong></a>.</li>
+        <li>Anexe este HTML (ou o PDF impresso) em uma nova conversa.</li>
+        <li>Comece com: <code>Leia o Volume V com atenção. Confirme que entendeu os Axiomas 1–9, a Hipótese Estrutural SH e a constante de contração κ.</code></li>
+        <li>Em seguida, cole qualquer <strong>Prompt para o LLM</strong> de um Nível. A IA terá todo o contexto.</li>
+      </ol>
+      <a class="claudeBtn br" href="https://claude.ai" target="_blank" rel="noopener">Abrir claude.ai ↗</a>
+      <a class="claudeBtn br" href="https://totogt.github.io/AXLE/impa-portal.html" target="_blank" rel="noopener">Portal AXLE · IMPA ↗</a>
+      <a class="claudeBtn en" href="https://brodanova6.gumroad.com/l/soundworks" target="_blank" rel="noopener">Tornar-se Membro Soundworks ↗</a>
+      <p style="font-size:13px;color:#ffd777;margin-top:10px;opacity:.9">A adesão dá acesso ao programa Soundworks completo — aulas trimestrais em estilo IMPA, gabarito Lean 4 e a turma privada Berimbau-Cimática.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     PRELUDE II — MATH OUT LOUD · PRELÚDIO II — FALANDO MATEMÁTICA
+     The spoken-math gate. Read before Level I.
+     Starts at "2 + 2 = 4" and climbs to "α ∧ (dα)ⁿ ≠ 0".
+     ========================================================= -->
+<section class="appendix" id="prelude-ii">
+  <div class="app-head">
+    <h2 class="en">Prelude II — Math Out Loud</h2>
+    <h2 class="br">Prelúdio II — Falando Matemática</h2>
+    <p class="en">You just heard the berimbau-driven cymatic machine above — that was Prelude I, the book <em>heard</em>. This is Prelude II, the book <em>spoken</em>. Before any formal symbol, a C1 student needs to know how to <em>say</em> mathematics. Notation has no pronunciation until a convention is taught. This Prelude teaches the convention — starting at "two plus two equals four" and working up to "alpha wedge d-alpha to the n is not zero." Read each row out loud. Pause between the English and the Portuguese. When you are in a classroom and a professor says a formula aloud, your ear needs to recognise the <em>rhythm</em>, not translate word by word.</p>
+    <p class="br">Você acabou de ouvir a máquina cimática do berimbau acima — aquele foi o Prelúdio I, o livro <em>ouvido</em>. Este é o Prelúdio II, o livro <em>falado</em>. Antes de qualquer símbolo formal, um estudante C1 precisa saber como <em>falar</em> matemática. A notação não se pronuncia sozinha: é preciso aprender a convenção. Este Prelúdio ensina essa convenção — do "dois mais dois é igual a quatro" até "alfa cunha d-alfa à n é diferente de zero." Leia cada linha em voz alta. Faça pausa entre o inglês e o português. Numa sala de aula, quando o professor fala uma fórmula, o ouvido precisa reconhecer o <em>ritmo</em>, não traduzir palavra a palavra.</p>
+  </div>
+
+  <!-- §0.1 Numbers -->
+  <div class="app-section">
+    <h3>§0.1 — Reading numbers · Lendo números</h3>
+    <div class="howto">Cardinals count (one, two, three). Ordinals rank (first, second, third). Mathematicians use cardinals for values and ordinals for positions (*"the third term"*, *"o terceiro termo"*).</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td class="en-say">zero · "oh" · nought (UK)</td><td class="br-say">zero</td><td class="note">"Oh" is only used in phone-number style reading, never in arithmetic.</td></tr>
+        <tr><td>1, 2, 3</td><td class="en-say">one, two, three</td><td class="br-say">um, dois, três</td><td class="note"></td></tr>
+        <tr><td>11, 12, 13</td><td class="en-say">eleven, twelve, thirteen</td><td class="br-say">onze, doze, treze</td><td class="note">Teen numbers stress the second syllable: thir-TEEN.</td></tr>
+        <tr><td>20, 30, 40</td><td class="en-say">twenty, thirty, forty</td><td class="br-say">vinte, trinta, quarenta</td><td class="note">Tens numbers stress the first syllable: TWEN-ty.</td></tr>
+        <tr><td>100</td><td class="en-say">one hundred · a hundred</td><td class="br-say">cem · cento</td><td class="note">"A hundred" is more natural in speech; "one hundred" is formal.</td></tr>
+        <tr><td>1,000</td><td class="en-say">one thousand · a thousand</td><td class="br-say">mil</td><td class="note">Commas separate thousands in EN; in PT a dot or space is common (1.000 or 1 000).</td></tr>
+        <tr><td>1,234</td><td class="en-say">one thousand, two hundred and thirty-four</td><td class="br-say">mil duzentos e trinta e quatro</td><td class="note">UK speech keeps the "and"; US often drops it.</td></tr>
+        <tr><td>10⁶</td><td class="en-say">one million · ten to the six</td><td class="br-say">um milhão · dez à sexta</td><td class="note">In science, we usually read the exponent form.</td></tr>
+        <tr><td>1ˢᵗ, 2ⁿᵈ, 3ʳᵈ</td><td class="en-say">first, second, third</td><td class="br-say">primeiro, segundo, terceiro</td><td class="note">Ordinals mark position in a sequence.</td></tr>
+        <tr><td>nᵗʰ</td><td class="en-say">"n-th" (say the letter, then "th")</td><td class="br-say">"n-ésimo"</td><td class="note">General ordinal. Also spoken as "the n-th term."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.2 The four operations -->
+  <div class="app-section">
+    <h3>§0.2 — The four operations · As quatro operações</h3>
+    <div class="howto">"=" is pronounced several ways in English (*equals*, *is*, *gives*, *is equal to*). Each has a slightly different rhetorical feel. Professors tend to use *"is"* in fast speech: "two plus two <em>is</em> four."</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>2 + 2 = 4</td><td class="en-say">"two plus two equals four" · "two plus two is four" · "two and two makes four" (colloquial)</td><td class="br-say">"dois mais dois é igual a quatro" · "dois mais dois dá quatro" · "dois e dois são quatro"</td><td class="note">All three EN forms are used in class. First is most formal.</td></tr>
+        <tr><td>5 − 3 = 2</td><td class="en-say">"five minus three equals two" · "five take away three is two" (primary school)</td><td class="br-say">"cinco menos três é igual a dois"</td><td class="note">"Take away" is British and childhood-register.</td></tr>
+        <tr><td>4 × 3 = 12</td><td class="en-say">"four times three equals twelve" · "four multiplied by three is twelve"</td><td class="br-say">"quatro vezes três é igual a doze" · "quatro multiplicado por três"</td><td class="note">"Times" is the default in spoken math.</td></tr>
+        <tr><td>12 ÷ 4 = 3</td><td class="en-say">"twelve divided by four equals three" · "twelve over four is three"</td><td class="br-say">"doze dividido por quatro é igual a três"</td><td class="note">"Over" is used when the expression is written as a fraction.</td></tr>
+        <tr><td>a · b</td><td class="en-say">"a times b" · "a dot b" · "a b" (juxtaposition)</td><td class="br-say">"a vezes b" · "a ponto b" · "a b"</td><td class="note">In higher math, the dot often means inner product.</td></tr>
+        <tr><td>a/b</td><td class="en-say">"a over b" · "a divided by b"</td><td class="br-say">"a sobre b" · "a dividido por b"</td><td class="note">"Over" is overwhelmingly preferred in math speech.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.3 Fractions, decimals, percentages -->
+  <div class="app-section">
+    <h3>§0.3 — Fractions, decimals, percentages · Frações, decimais, percentagens</h3>
+    <div class="howto">Fractions are read <em>top-then-bottom</em> in both languages. Decimals use "point" in EN and "vírgula" in PT. Never say "three comma fourteen" in English — always "three point one four" (digit by digit after the point).</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>½</td><td class="en-say">"one half" · "a half"</td><td class="br-say">"um meio" · "meio"</td><td class="note">Never "one two-th."</td></tr>
+        <tr><td>⅓</td><td class="en-say">"one third" · "a third"</td><td class="br-say">"um terço"</td><td class="note"></td></tr>
+        <tr><td>2/3</td><td class="en-say">"two thirds" · "two over three"</td><td class="br-say">"dois terços" · "dois sobre três"</td><td class="note">"Thirds" is plural — this trips ELLs.</td></tr>
+        <tr><td>7/12</td><td class="en-say">"seven twelfths" · "seven over twelve"</td><td class="br-say">"sete doze avos" · "sete sobre doze"</td><td class="note">The suffix "-ths" is always there for nᵗʰ with n > 3.</td></tr>
+        <tr><td>3½</td><td class="en-say">"three and a half"</td><td class="br-say">"três e meio"</td><td class="note">Mixed number.</td></tr>
+        <tr><td>3.14</td><td class="en-say">"three point one four"</td><td class="br-say">"três vírgula um quatro" · "três vírgula catorze"</td><td class="note">EN always digit by digit; PT can say each or the full number.</td></tr>
+        <tr><td>0.001</td><td class="en-say">"zero point zero zero one" · "point oh oh one"</td><td class="br-say">"zero vírgula zero zero um"</td><td class="note">"Oh" (for zero) appears in informal speech.</td></tr>
+        <tr><td>50%</td><td class="en-say">"fifty percent"</td><td class="br-say">"cinquenta por cento"</td><td class="note"></td></tr>
+        <tr><td>a/b (general)</td><td class="en-say">"a over b" · "the ratio of a to b"</td><td class="br-say">"a sobre b" · "a razão de a para b"</td><td class="note">"Ratio" is used when emphasising proportion.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.4 Powers and roots -->
+  <div class="app-section">
+    <h3>§0.4 — Powers, roots, subscripts · Potências, raízes, índices</h3>
+    <div class="howto">Powers have special names for 2 and 3 ("squared", "cubed") but revert to general form after. Roots are said "root," "square root," or "n-th root." Subscripts and superscripts each have their own spoken form — crucial for reading formulas aloud.</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>x²</td><td class="en-say">"x squared" · "x to the two" · "x to the power of two"</td><td class="br-say">"x ao quadrado" · "x à segunda"</td><td class="note">Default: "x squared."</td></tr>
+        <tr><td>x³</td><td class="en-say">"x cubed" · "x to the three"</td><td class="br-say">"x ao cubo" · "x à terceira"</td><td class="note">Default: "x cubed."</td></tr>
+        <tr><td>xⁿ</td><td class="en-say">"x to the n" · "x to the n-th power"</td><td class="br-say">"x à n" · "x à n-ésima"</td><td class="note">Most common phrasing in lectures: "x to the n."</td></tr>
+        <tr><td>x⁻¹</td><td class="en-say">"x to the minus one" · "x inverse" · "one over x"</td><td class="br-say">"x à menos um" · "inverso de x"</td><td class="note">All three are interchangeable. "x inverse" stresses the operation.</td></tr>
+        <tr><td>e^x</td><td class="en-say">"e to the x" · "exp of x"</td><td class="br-say">"e à x" · "exponencial de x"</td><td class="note">Written as "exp(x)" when legibility matters.</td></tr>
+        <tr><td>√2</td><td class="en-say">"square root of two" · "root two"</td><td class="br-say">"raiz quadrada de dois" · "raiz de dois"</td><td class="note">"Root two" is the fast lecture form.</td></tr>
+        <tr><td>³√x</td><td class="en-say">"cube root of x"</td><td class="br-say">"raiz cúbica de x"</td><td class="note"></td></tr>
+        <tr><td>ⁿ√x</td><td class="en-say">"n-th root of x"</td><td class="br-say">"raiz n-ésima de x"</td><td class="note"></td></tr>
+        <tr><td>xᵢ</td><td class="en-say">"x sub i" · "x-i" · "x subscript i"</td><td class="br-say">"x índice i" · "x sub i"</td><td class="note">Most common: "x sub i."</td></tr>
+        <tr><td>aₙ₊₁</td><td class="en-say">"a sub n plus one"</td><td class="br-say">"a índice n mais um"</td><td class="note">The whole subscript is read first, then you rejoin the main line.</td></tr>
+        <tr><td>Aᵢⱼ</td><td class="en-say">"A sub i j" · "A i j"</td><td class="br-say">"A índices i j" · "A i j"</td><td class="note">Matrix entries. Do not say "i times j."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.5 Parentheses and grouping -->
+  <div class="app-section">
+    <h3>§0.5 — Parentheses, brackets, grouping · Parênteses e agrupamentos</h3>
+    <div class="howto">Grouping symbols are often spoken aloud ("open paren … close paren") when reading dictation, but usually <em>omitted</em> in fluent math speech — the reader lets the melody of the sentence carry the grouping. For beginners, speaking the brackets is a good habit.</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>(a + b)</td><td class="en-say">"open paren a plus b close paren" · "a plus b, in parentheses" · "the quantity a plus b"</td><td class="br-say">"abre parênteses a mais b fecha parênteses" · "a mais b, entre parênteses"</td><td class="note">"The quantity" is a useful ELL phrase — it marks grouping without saying "paren."</td></tr>
+        <tr><td>[a, b]</td><td class="en-say">"closed interval from a to b" · "the interval a b"</td><td class="br-say">"intervalo fechado de a a b"</td><td class="note">Square brackets in analysis mean closed interval.</td></tr>
+        <tr><td>(a, b)</td><td class="en-say">"open interval from a to b" · "the pair a b" (in geometry)</td><td class="br-say">"intervalo aberto de a a b" · "par (a, b)"</td><td class="note">Context tells you which.</td></tr>
+        <tr><td>{x : P(x)}</td><td class="en-say">"the set of x such that P of x" · "the set of x for which P holds"</td><td class="br-say">"o conjunto dos x tais que P de x"</td><td class="note">"Such that" is pronounced as one unit: /sʌtʃ ˈðæt/.</td></tr>
+        <tr><td>⟨x, y⟩</td><td class="en-say">"inner product of x and y" · "x y" (brief)</td><td class="br-say">"produto interno de x e y"</td><td class="note">Angle brackets.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.6 Greek letters -->
+  <div class="app-section">
+    <h3>§0.6 — Greek letters · Letras gregas</h3>
+    <div class="howto">Most Greek letters have fixed English names. Portuguese often keeps the same name. The one ELL students most often mispronounce is <em>χ (chi)</em>, said "kai" /kaɪ/ in EN — not "chee" or "chai."</div>
+    <table class="speak">
+      <thead><tr><th>Letter</th><th>English name</th><th>Nome em português</th><th>Typical usage</th></tr></thead>
+      <tbody>
+        <tr><td>α, Α</td><td class="en-say">alpha /ˈælfə/</td><td class="br-say">alfa</td><td class="note">Angles, contact forms, first index.</td></tr>
+        <tr><td>β, Β</td><td class="en-say">beta /ˈbeɪtə/ (US), /ˈbiːtə/ (UK)</td><td class="br-say">beta</td><td class="note">Angles, parameters.</td></tr>
+        <tr><td>γ, Γ</td><td class="en-say">gamma /ˈɡæmə/</td><td class="br-say">gama</td><td class="note">Curves, gamma function, Christoffel symbols.</td></tr>
+        <tr><td>δ, Δ</td><td class="en-say">delta /ˈdɛltə/</td><td class="br-say">delta</td><td class="note">Small change (lowercase), large change or field (uppercase).</td></tr>
+        <tr><td>ε, Ε</td><td class="en-say">epsilon /ˈɛp.sɪ.lɒn/</td><td class="br-say">épsilon</td><td class="note">"Let epsilon be greater than zero."</td></tr>
+        <tr><td>ζ, Ζ</td><td class="en-say">zeta /ˈzeɪtə/ (US), /ˈziːtə/ (UK)</td><td class="br-say">zeta</td><td class="note">Riemann zeta function.</td></tr>
+        <tr><td>η, Η</td><td class="en-say">eta /ˈeɪtə/</td><td class="br-say">eta</td><td class="note">Small parameter, test function.</td></tr>
+        <tr><td>θ, Θ</td><td class="en-say">theta /ˈθeɪtə/</td><td class="br-say">teta</td><td class="note">Angles. EN starts with unvoiced "th."</td></tr>
+        <tr><td>κ, Κ</td><td class="en-say">kappa /ˈkæpə/</td><td class="br-say">capa</td><td class="note">Contraction constant (Level VI!). Curvature.</td></tr>
+        <tr><td>λ, Λ</td><td class="en-say">lambda /ˈlæmdə/</td><td class="br-say">lambda</td><td class="note">Eigenvalues, rates.</td></tr>
+        <tr><td>μ, Μ</td><td class="en-say">mu /mjuː/</td><td class="br-say">mi</td><td class="note">Measures, means.</td></tr>
+        <tr><td>ν, Ν</td><td class="en-say">nu /nuː/ (US), /njuː/ (UK)</td><td class="br-say">ni</td><td class="note">Frequencies, indices. Visually close to Latin v.</td></tr>
+        <tr><td>ξ, Ξ</td><td class="en-say">xi /zaɪ/ (US), /ksaɪ/</td><td class="br-say">csi (ou "xi")</td><td class="note">Contact distribution in this book.</td></tr>
+        <tr><td>π, Π</td><td class="en-say">pi /paɪ/</td><td class="br-say">pi</td><td class="note">Constant 3.14159…; also uppercase Π = product.</td></tr>
+        <tr><td>ρ, Ρ</td><td class="en-say">rho /roʊ/</td><td class="br-say">rô</td><td class="note">Density, correlation.</td></tr>
+        <tr><td>σ, Σ</td><td class="en-say">sigma /ˈsɪɡmə/</td><td class="br-say">sigma</td><td class="note">Standard deviation (lowercase), sum (uppercase).</td></tr>
+        <tr><td>τ, Τ</td><td class="en-say">tau /taʊ/ (US), /tɔː/</td><td class="br-say">tau</td><td class="note">Torsion, time.</td></tr>
+        <tr><td>φ, Φ</td><td class="en-say">phi /faɪ/ or /fiː/</td><td class="br-say">fi</td><td class="note">Phase; Reeb flow φ_t.</td></tr>
+        <tr><td>χ, Χ</td><td class="en-say">chi /kaɪ/</td><td class="br-say">qui /ki/</td><td class="note">Never say "chee." Euler characteristic χ(M).</td></tr>
+        <tr><td>ψ, Ψ</td><td class="en-say">psi /saɪ/ or /psaɪ/</td><td class="br-say">psi</td><td class="note">Wave function, test function.</td></tr>
+        <tr><td>ω, Ω</td><td class="en-say">omega /oʊˈmeɪɡə/</td><td class="br-say">ômega</td><td class="note">Forms, frequencies; Ω = sample space.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.7 Equality and inequality -->
+  <div class="app-section">
+    <h3>§0.7 — Equality, inequality, approximation · Igualdade, desigualdade, aproximação</h3>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>a = b</td><td class="en-say">"a equals b" · "a is b"</td><td class="br-say">"a é igual a b" · "a igual b"</td><td class="note"></td></tr>
+        <tr><td>a ≠ b</td><td class="en-say">"a is not equal to b" · "a is different from b"</td><td class="br-say">"a é diferente de b"</td><td class="note"></td></tr>
+        <tr><td>a &lt; b</td><td class="en-say">"a is less than b" · "a is smaller than b"</td><td class="br-say">"a é menor que b"</td><td class="note"></td></tr>
+        <tr><td>a ≤ b</td><td class="en-say">"a is less than or equal to b" · "a is at most b"</td><td class="br-say">"a é menor ou igual a b" · "a é no máximo b"</td><td class="note">"At most" is common in bounds.</td></tr>
+        <tr><td>a &gt; b</td><td class="en-say">"a is greater than b"</td><td class="br-say">"a é maior que b"</td><td class="note"></td></tr>
+        <tr><td>a ≥ b</td><td class="en-say">"a is greater than or equal to b" · "a is at least b"</td><td class="br-say">"a é maior ou igual a b" · "a é pelo menos b"</td><td class="note"></td></tr>
+        <tr><td>a ≈ b</td><td class="en-say">"a is approximately equal to b" · "a is about b"</td><td class="br-say">"a é aproximadamente igual a b" · "a é cerca de b"</td><td class="note"></td></tr>
+        <tr><td>a ≡ b (mod n)</td><td class="en-say">"a is congruent to b modulo n" · "a equiv b mod n"</td><td class="br-say">"a é congruente a b módulo n"</td><td class="note"></td></tr>
+        <tr><td>a ≅ b</td><td class="en-say">"a is isomorphic to b" · "a is congruent to b"</td><td class="br-say">"a é isomorfo a b" · "a é congruente a b"</td><td class="note">Context selects the meaning.</td></tr>
+        <tr><td>a ∝ b</td><td class="en-say">"a is proportional to b"</td><td class="br-say">"a é proporcional a b"</td><td class="note"></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.8 Sets and logic -->
+  <div class="app-section">
+    <h3>§0.8 — Sets, logic, quantifiers · Conjuntos, lógica, quantificadores</h3>
+    <div class="howto">These are the bones of every definition in the book. Practice saying them until they feel like prepositions.</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>x ∈ A</td><td class="en-say">"x belongs to A" · "x is in A" · "x is an element of A"</td><td class="br-say">"x pertence a A" · "x está em A"</td><td class="note">"Is in" is the fast form.</td></tr>
+        <tr><td>x ∉ A</td><td class="en-say">"x does not belong to A" · "x is not in A"</td><td class="br-say">"x não pertence a A"</td><td class="note"></td></tr>
+        <tr><td>A ⊆ B</td><td class="en-say">"A is a subset of B" · "A is contained in B"</td><td class="br-say">"A é subconjunto de B" · "A está contido em B"</td><td class="note"></td></tr>
+        <tr><td>A ⊂ B</td><td class="en-say">"A is a proper subset of B"</td><td class="br-say">"A é subconjunto próprio de B"</td><td class="note">Strict containment. Some authors use ⊆ for this.</td></tr>
+        <tr><td>A ∪ B</td><td class="en-say">"A union B"</td><td class="br-say">"A união B"</td><td class="note"></td></tr>
+        <tr><td>A ∩ B</td><td class="en-say">"A intersect B" · "A cap B"</td><td class="br-say">"A interseção B"</td><td class="note">"Cap" refers to the ∩ symbol.</td></tr>
+        <tr><td>A × B</td><td class="en-say">"A cross B" · "A times B" · "the Cartesian product of A and B"</td><td class="br-say">"A vezes B" · "produto cartesiano"</td><td class="note"></td></tr>
+        <tr><td>∅</td><td class="en-say">"the empty set" · "the null set"</td><td class="br-say">"o conjunto vazio"</td><td class="note">Say "the empty set," not "oh" or "zero."</td></tr>
+        <tr><td>∀ x</td><td class="en-say">"for all x" · "for every x"</td><td class="br-say">"para todo x" · "para qualquer x"</td><td class="note">Universal quantifier.</td></tr>
+        <tr><td>∃ x</td><td class="en-say">"there exists x" · "for some x"</td><td class="br-say">"existe x" · "para algum x"</td><td class="note">Existential quantifier.</td></tr>
+        <tr><td>∃! x</td><td class="en-say">"there exists a unique x"</td><td class="br-say">"existe um único x"</td><td class="note"></td></tr>
+        <tr><td>⇒</td><td class="en-say">"implies"</td><td class="br-say">"implica"</td><td class="note"></td></tr>
+        <tr><td>⇔</td><td class="en-say">"if and only if" · "iff" /ɪf/ (written, not spoken) · "is equivalent to"</td><td class="br-say">"se e somente se" · "é equivalente a"</td><td class="note">"Iff" is never spoken — always "if and only if."</td></tr>
+        <tr><td>¬P</td><td class="en-say">"not P"</td><td class="br-say">"não P"</td><td class="note"></td></tr>
+        <tr><td>P ∧ Q</td><td class="en-say">"P and Q"</td><td class="br-say">"P e Q"</td><td class="note">In logic. In forms, ∧ is "wedge."</td></tr>
+        <tr><td>P ∨ Q</td><td class="en-say">"P or Q"</td><td class="br-say">"P ou Q"</td><td class="note"></td></tr>
+        <tr><td>:=</td><td class="en-say">"is defined as" · "is defined to be"</td><td class="br-say">"é definido como" · "define-se como"</td><td class="note">Distinguishes definition from proved equality.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.9 Functions, sequences, limits -->
+  <div class="app-section">
+    <h3>§0.9 — Functions, sequences, limits · Funções, sequências, limites</h3>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>f(x)</td><td class="en-say">"f of x" · "f at x" · "f applied to x"</td><td class="br-say">"f de x" · "f aplicada em x"</td><td class="note">"f of x" is the default.</td></tr>
+        <tr><td>f : A → B</td><td class="en-say">"f from A to B" · "f a map from A to B"</td><td class="br-say">"f de A em B" · "f uma aplicação de A em B"</td><td class="note">The arrow is "from … to."</td></tr>
+        <tr><td>f ∘ g</td><td class="en-say">"f composed with g" · "f of g" · "f after g"</td><td class="br-say">"f composta com g" · "f após g"</td><td class="note">Note the order: (f∘g)(x) = f(g(x)).</td></tr>
+        <tr><td>f⁻¹</td><td class="en-say">"f inverse" · "the inverse of f"</td><td class="br-say">"f inversa" · "inversa de f"</td><td class="note"></td></tr>
+        <tr><td>{aₙ}</td><td class="en-say">"the sequence a sub n" · "the sequence a-n"</td><td class="br-say">"a sequência a índice n"</td><td class="note"></td></tr>
+        <tr><td>lim_{n→∞} aₙ = L</td><td class="en-say">"the limit as n tends to infinity of a sub n equals L" · "a sub n tends to L"</td><td class="br-say">"o limite, quando n tende a infinito, de a índice n é igual a L"</td><td class="note">"Tends to" is the key verb.</td></tr>
+        <tr><td>∞</td><td class="en-say">"infinity"</td><td class="br-say">"infinito"</td><td class="note">Always a noun, not an adjective.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.10 Calculus -->
+  <div class="app-section">
+    <h3>§0.10 — Calculus · Cálculo</h3>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Notes · Observações</th></tr></thead>
+      <tbody>
+        <tr><td>dy/dx</td><td class="en-say">"d y d x" · "dee-y-dee-x" · "the derivative of y with respect to x"</td><td class="br-say">"d y d x" · "derivada de y em relação a x"</td><td class="note">The fast form is just "d-y-d-x" as one breath.</td></tr>
+        <tr><td>f'(x)</td><td class="en-say">"f prime of x"</td><td class="br-say">"f linha de x"</td><td class="note">"Prime" is the spoken form of the ' mark.</td></tr>
+        <tr><td>f''(x)</td><td class="en-say">"f double prime of x"</td><td class="br-say">"f duas linhas de x"</td><td class="note"></td></tr>
+        <tr><td>∂f/∂x</td><td class="en-say">"partial f partial x" · "the partial derivative of f with respect to x" · "del f del x"</td><td class="br-say">"derivada parcial de f em relação a x"</td><td class="note">"Del" is informal; common in physics.</td></tr>
+        <tr><td>∫ f(x) dx</td><td class="en-say">"the integral of f of x d x"</td><td class="br-say">"a integral de f de x d x"</td><td class="note">"d x" is said aloud at the end.</td></tr>
+        <tr><td>∫_a^b f(x) dx</td><td class="en-say">"the integral from a to b of f of x d x"</td><td class="br-say">"a integral de a a b de f de x d x"</td><td class="note">Read limits first.</td></tr>
+        <tr><td>∑_{i=1}^n aᵢ</td><td class="en-say">"the sum from i equals one to n of a sub i"</td><td class="br-say">"a soma de i igual a um até n de a índice i"</td><td class="note">The rhythm is: operator — lower limit — upper limit — summand.</td></tr>
+        <tr><td>∏_{i=1}^n aᵢ</td><td class="en-say">"the product from i equals one to n of a sub i"</td><td class="br-say">"o produto de i igual a um até n de a índice i"</td><td class="note"></td></tr>
+        <tr><td>∇f</td><td class="en-say">"grad f" · "the gradient of f" · "del f"</td><td class="br-say">"grad f" · "gradiente de f" · "nabla f"</td><td class="note"></td></tr>
+        <tr><td>∇·F</td><td class="en-say">"div F" · "the divergence of F"</td><td class="br-say">"div F" · "divergência de F"</td><td class="note"></td></tr>
+        <tr><td>∇×F</td><td class="en-say">"curl F" · "the curl of F"</td><td class="br-say">"rot F" · "rotacional de F"</td><td class="note">PT uses "rot" from "rotacional."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.11 Advanced operators used in this book -->
+  <div class="app-section">
+    <h3>§0.11 — Operators used in this book · Operadores usados neste livro</h3>
+    <div class="howto">Every symbol that appears in any Level of Volume V, with how to say it aloud. Practice the <em>phrases</em>, not just the letters — professors chant formulas as units.</div>
+    <table class="speak">
+      <thead><tr><th>Written</th><th>English (spoken)</th><th>Português (falado)</th><th>Where in the book</th></tr></thead>
+      <tbody>
+        <tr><td>α</td><td class="en-say">"alpha"</td><td class="br-say">"alfa"</td><td class="note">Contact form (Level I).</td></tr>
+        <tr><td>dα</td><td class="en-say">"d alpha"</td><td class="br-say">"d alfa"</td><td class="note">Exterior derivative of α. Say as one unit.</td></tr>
+        <tr><td>α ∧ β</td><td class="en-say">"alpha wedge beta"</td><td class="br-say">"alfa cunha beta"</td><td class="note">Wedge product of forms.</td></tr>
+        <tr><td>α ∧ (dα)ⁿ</td><td class="en-say">"alpha wedge d-alpha to the n"</td><td class="br-say">"alfa cunha d-alfa à n"</td><td class="note">Non-degeneracy condition (Level I).</td></tr>
+        <tr><td>α ∧ (dα)ⁿ ≠ 0</td><td class="en-say">"alpha wedge d-alpha to the n is not zero" · "…is non-zero"</td><td class="br-say">"alfa cunha d-alfa à n é diferente de zero"</td><td class="note">Spoken as one sentence.</td></tr>
+        <tr><td>ξ = ker α</td><td class="en-say">"xi equals kernel alpha" · "xi is the kernel of alpha"</td><td class="br-say">"csi é igual ao núcleo de alfa"</td><td class="note">Contact distribution.</td></tr>
+        <tr><td>Δ : M → ℝ¹²</td><td class="en-say">"delta, a map from M to R twelve" · "delta from M to R-twelve"</td><td class="br-say">"delta, de M em R doze"</td><td class="note">Dimensional field (Level II).</td></tr>
+        <tr><td>Δ(φ_t(x)) = e^{iT*t} Δ(x)</td><td class="en-say">"delta of phi sub t of x equals e to the i T star t times delta of x"</td><td class="br-say">"delta de fi índice t de x é igual a e à i T estrela t vezes delta de x"</td><td class="note">Axiom 9. "T star" is conventional for T*.</td></tr>
+        <tr><td>T* = 2π</td><td class="en-say">"T star equals two pi"</td><td class="br-say">"T estrela é igual a dois pi"</td><td class="note">Period.</td></tr>
+        <tr><td>Aᵢ = Pⁱ + uᵢwᵢᵀ</td><td class="en-say">"A sub i equals P to the i plus u sub i w sub i transpose"</td><td class="br-say">"A índice i é igual a P à i mais u índice i w índice i transposto"</td><td class="note">Operators (Level III).</td></tr>
+        <tr><td>‖A‖</td><td class="en-say">"the norm of A" · "norm A"</td><td class="br-say">"a norma de A"</td><td class="note">Operator norm.</td></tr>
+        <tr><td>κ ≤ √(7/9)</td><td class="en-say">"kappa is at most root seven over nine" · "…less than or equal to the square root of seven-ninths"</td><td class="br-say">"capa é no máximo raiz de sete nonos"</td><td class="note">Contraction bound (Level VI).</td></tr>
+        <tr><td>x* ∈ M</td><td class="en-say">"x star, an element of M"</td><td class="br-say">"x estrela, pertencente a M"</td><td class="note">Banach fixed point.</td></tr>
+        <tr><td>G = U∘F∘K∘C</td><td class="en-say">"G equals U composed with F composed with K composed with C" · "G is U after F after K after C"</td><td class="br-say">"G é igual a U composto com F composto com K composto com C"</td><td class="note">The composite operator.</td></tr>
+        <tr><td>∎ (QED)</td><td class="en-say">(silent — marks end of proof)</td><td class="br-say">(silencioso — fim de prova)</td><td class="note">Also: "Q.E.D." (spoken if asked); Latin "quod erat demonstrandum."</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- §0.12 Rhythm and idiom -->
+  <div class="app-section">
+    <h3>§0.12 — Rhythm, idiom, and when not to speak symbols · Ritmo, idiomatismo, e quando não falar os símbolos</h3>
+    <div class="pair-cols">
+      <div class="en-col">
+        <h4>Idioms of Spoken Math</h4>
+        <p>Experienced mathematicians rarely read an equation symbol-by-symbol. They chunk it. Listen for these habits:</p>
+        <p><em>"So we have…"</em> — signalling a restatement. The speaker is about to read the formula on the board.</p>
+        <p><em>"This equals…"</em> — referring to an entire expression without naming it. The speaker points or gestures.</p>
+        <p><em>"The LHS"</em> / <em>"the left-hand side"</em> — shorthand for everything before "=". RHS is the other side.</p>
+        <p><em>"This guy"</em> / <em>"this thing"</em> — informal shorthand for an expression. You will hear this even in IMPA seminars in English.</p>
+        <p><em>"Mod out by"</em> — quotient by, e.g. "mod out by the diagonal." A verb.</p>
+        <p><em>"Up to"</em> — followed by an equivalence: "up to isomorphism," "up to homotopy," "up to a constant."</p>
+        <p><em>"Modulo"</em> — Latin form of "up to."</p>
+        <p><em>"Without loss of generality"</em> / <em>"WLOG"</em> — invokes a symmetry.</p>
+        <p><em>"It suffices to show"</em> — narrows the proof obligation.</p>
+        <p><em>"By abuse of notation"</em> — the symbol being used is imprecise; play along.</p>
+        <p><em>"Let ε > 0 be given"</em> — opens a proof with a quantifier.</p>
+        <p><em>"Suppose for contradiction"</em> — signals proof by contradiction is starting.</p>
+      </div>
+      <div class="br-col">
+        <h4>Idiomas da Matemática Falada</h4>
+        <p>Matemáticos experientes raramente leem uma equação símbolo a símbolo. Eles agrupam. Escute estes hábitos:</p>
+        <p><em>"Então temos…"</em> — sinal de reformulação. O falante vai ler a fórmula.</p>
+        <p><em>"Isto é igual a…"</em> — refere-se a uma expressão inteira sem nomeá-la. O falante aponta ou gesticula.</p>
+        <p><em>"O LD"</em> / <em>"o lado esquerdo"</em> — abreviação para tudo antes do "=". LD = lado direito.</p>
+        <p><em>"Esse cara"</em> / <em>"essa coisa"</em> — abreviação informal. Ouve-se até nos seminários do IMPA em inglês.</p>
+        <p><em>"Quocientar por"</em> — dividir pelo quociente, p.ex. "quocientar pela diagonal."</p>
+        <p><em>"A menos de"</em> — seguido de uma equivalência: "a menos de isomorfismo", "a menos de homotopia", "a menos de constante."</p>
+        <p><em>"Módulo"</em> — forma latina de "a menos de."</p>
+        <p><em>"Sem perda de generalidade"</em> / <em>"SPG"</em> — invoca uma simetria.</p>
+        <p><em>"Basta mostrar"</em> — reduz o ônus da prova.</p>
+        <p><em>"Por abuso de notação"</em> — o símbolo é impreciso; aceite.</p>
+        <p><em>"Seja ε > 0 dado"</em> — abertura de prova com quantificador.</p>
+        <p><em>"Suponhamos por absurdo"</em> — inicia prova por contradição.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- §0.13 The Test -->
+  <div class="app-section">
+    <h3>§0.13 — The Test: read this out loud · O Teste: leia em voz alta</h3>
+    <div class="pair-cols">
+      <div class="en-col">
+        <h4>Your Five-Minute Exam</h4>
+        <p>Read each line out loud. Record yourself on your phone. Compare with what is written in italics below each line. If your reading matches the italics, you have passed.</p>
+        <p><strong>1.</strong> 2 + 2 = 4<br/><em>"two plus two equals four"</em></p>
+        <p><strong>2.</strong> ½ + ⅓ = ⅚<br/><em>"one half plus one third equals five sixths"</em></p>
+        <p><strong>3.</strong> x² + y² = r²<br/><em>"x squared plus y squared equals r squared"</em></p>
+        <p><strong>4.</strong> √(a² + b²) = c<br/><em>"the square root of a squared plus b squared equals c"</em></p>
+        <p><strong>5.</strong> f : ℝ → ℝ, f(x) = e^{-x²}<br/><em>"f from R to R, f of x equals e to the minus x squared"</em></p>
+        <p><strong>6.</strong> lim_{n→∞} (1 + 1/n)ⁿ = e<br/><em>"the limit as n tends to infinity of, open paren, one plus one over n, close paren, to the n, equals e"</em></p>
+        <p><strong>7.</strong> ∀ ε > 0, ∃ δ > 0 : |x − a| &lt; δ ⇒ |f(x) − f(a)| &lt; ε<br/><em>"for all epsilon greater than zero, there exists delta greater than zero, such that the absolute value of x minus a less than delta implies the absolute value of f of x minus f of a less than epsilon"</em></p>
+        <p><strong>8.</strong> α ∧ (dα)ⁿ ≠ 0<br/><em>"alpha wedge d-alpha to the n is not zero"</em></p>
+        <p><strong>9.</strong> Δ(φ_t(x)) = e^{iT*t} Δ(x)<br/><em>"delta of phi sub t of x equals e to the i T star t, delta of x"</em></p>
+        <p><strong>10.</strong> κ ≤ √(7/9) ≈ 0.882<br/><em>"kappa is at most the square root of seven ninths, approximately zero point eight eight two"</em></p>
+      </div>
+      <div class="br-col">
+        <h4>Seu Exame de Cinco Minutos</h4>
+        <p>Leia cada linha em voz alta. Grave-se no celular. Compare com o texto em itálico abaixo de cada linha. Se a sua leitura coincide com o itálico, você passou.</p>
+        <p><strong>1.</strong> 2 + 2 = 4<br/><em>"dois mais dois é igual a quatro"</em></p>
+        <p><strong>2.</strong> ½ + ⅓ = ⅚<br/><em>"um meio mais um terço é igual a cinco sextos"</em></p>
+        <p><strong>3.</strong> x² + y² = r²<br/><em>"x ao quadrado mais y ao quadrado é igual a r ao quadrado"</em></p>
+        <p><strong>4.</strong> √(a² + b²) = c<br/><em>"raiz quadrada de a ao quadrado mais b ao quadrado é igual a c"</em></p>
+        <p><strong>5.</strong> f : ℝ → ℝ, f(x) = e^{-x²}<br/><em>"f de R em R, f de x é igual a e à menos x ao quadrado"</em></p>
+        <p><strong>6.</strong> lim_{n→∞} (1 + 1/n)ⁿ = e<br/><em>"o limite, quando n tende a infinito, de, abre parênteses, um mais um sobre n, fecha parênteses, à n, é igual a e"</em></p>
+        <p><strong>7.</strong> ∀ ε > 0, ∃ δ > 0 : |x − a| &lt; δ ⇒ |f(x) − f(a)| &lt; ε<br/><em>"para todo épsilon maior que zero, existe delta maior que zero, tal que o módulo de x menos a menor que delta implica o módulo de f de x menos f de a menor que épsilon"</em></p>
+        <p><strong>8.</strong> α ∧ (dα)ⁿ ≠ 0<br/><em>"alfa cunha d-alfa à n é diferente de zero"</em></p>
+        <p><strong>9.</strong> Δ(φ_t(x)) = e^{iT*t} Δ(x)<br/><em>"delta de fi índice t de x é igual a e à i T estrela t, delta de x"</em></p>
+        <p><strong>10.</strong> κ ≤ √(7/9) ≈ 0.882<br/><em>"capa é no máximo raiz de sete nonos, aproximadamente zero vírgula oito oito dois"</em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-head" style="border-bottom:none;border-top:1px dashed #2a3d3c;margin-top:30px;padding-top:18px">
+    <p class="en" style="font-size:13.5px;opacity:.85">If you reached row 10 and could read it out loud without flinching, you are ready for Level I. If any row felt strange, return to the table for that topic and practice aloud. The ear learns math by being <em>spoken to</em>, not by being stared at.</p>
+    <p class="br" style="font-size:13.5px;opacity:.85">Se você chegou à linha 10 e conseguiu lê-la em voz alta sem hesitar, está pronto para o Nível I. Se alguma linha pareceu estranha, volte à tabela do tópico e pratique em voz alta. O ouvido aprende matemática sendo <em>falado</em>, não sendo fitado.</p>
+  </div>
+</section>
+
+
+<!-- =========================================================
+     LEVELS 1–8
+     Each Level uses the same template:
+       .level-head   (title, en + br)
+       .level-body:
+         left  side  (ESL C1–C2, Tiffany)
+           Objectives · Mathematics · Physics · Lean 4 · Exercises · Prompt · Challenge
+         right side  (Graduate PT, IMPA style)
+           Objetivos · Matemática · Física · Lean 4 · Exercícios · Prompt · Desafio
+     ========================================================= -->
+<div class="book">
+
+<!-- ============ LEVEL I ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level I · Foundation</div><h2>Contact Structure and the Seven Axioms</h2><div class="sub">The minimal stage on which GTCT is played.</div></div>
+  <div class="side br"><div class="tag">Nível I · Fundamento</div><h2>Estrutura de Contato e os Sete Axiomas</h2><div class="sub">O palco mínimo onde a GTCT se desenrola.</div></div>
+ </div>
+
+ <!-- DIAGRAM I : Contact 3-manifold with tilting hyperplanes and Reeb field T -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" aria-label="Contact manifold with Reeb field">
+    <defs>
+      <linearGradient id="gTeal" x1="0" x2="1">
+        <stop offset="0" stop-color="#0ABAB5" stop-opacity=".8"/>
+        <stop offset="1" stop-color="#c8a24a" stop-opacity=".8"/>
+      </linearGradient>
+      <radialGradient id="gCore" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".6"/>
+        <stop offset="1" stop-color="#0ABAB5" stop-opacity="0"/>
+      </radialGradient>
+      <marker id="arTeal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#0ABAB5"/>
+      </marker>
+      <marker id="arGold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#c8a24a"/>
+      </marker>
+    </defs>
+    <!-- isometric 'manifold' grid -->
+    <g transform="translate(450,140)" opacity=".85">
+      <g stroke="#2a4b4a" stroke-width=".7" fill="none">
+        <!-- base lattice -->
+        <g>
+          <path d="M-360,0 L360,0"/>
+          <path d="M-360,-30 L360,-30"/>
+          <path d="M-360,30 L360,30"/>
+          <path d="M-360,60 L360,60"/>
+          <path d="M-360,-60 L360,-60"/>
+        </g>
+        <g stroke="#24403f">
+          <path d="M-300,-90 L-240,90"/>
+          <path d="M-180,-90 L-120,90"/>
+          <path d="M-60,-90 L0,90"/>
+          <path d="M60,-90 L120,90"/>
+          <path d="M180,-90 L240,90"/>
+          <path d="M300,-90 L360,90"/>
+        </g>
+      </g>
+      <!-- tilting hyperplanes ξ = ker α (twelve tilts) -->
+      <g>
+        <g>
+          <path d="M-340,-40 L-260,20 L-220,10 L-300,-50 Z" fill="#0ABAB5" fill-opacity=".18" stroke="#0ABAB5" stroke-width="1"/>
+          <path d="M-220,-30 L-140,30 L-100,20 L-180,-40 Z" fill="#0ABAB5" fill-opacity=".22" stroke="#0ABAB5" stroke-width="1"/>
+          <path d="M-100,-20 L-20,40 L20,30 L-60,-30 Z" fill="#0ABAB5" fill-opacity=".26" stroke="#0ABAB5" stroke-width="1"/>
+          <path d="M20,-10 L100,50 L140,40 L60,-20 Z" fill="#c8a24a" fill-opacity=".18" stroke="#c8a24a" stroke-width="1"/>
+          <path d="M140,0 L220,60 L260,50 L180,-10 Z" fill="#c8a24a" fill-opacity=".22" stroke="#c8a24a" stroke-width="1"/>
+          <path d="M260,10 L340,70 L380,60 L300,0 Z" fill="#c8a24a" fill-opacity=".26" stroke="#c8a24a" stroke-width="1"/>
+        </g>
+      </g>
+      <!-- Reeb / temporal vector field T -->
+      <g stroke="url(#gTeal)" stroke-width="2" fill="none" marker-end="url(#arTeal)">
+        <path d="M-300,60 C-160,-40 40,-40 180,60" class="dash"/>
+      </g>
+      <g fill="#0ABAB5" class="pulse">
+        <circle r="3.5" cx="-300" cy="60"/>
+        <circle r="3.5" cx="-160" cy="-10"/>
+        <circle r="3.5" cx="0" cy="-25"/>
+        <circle r="3.5" cx="180" cy="60"/>
+      </g>
+      <!-- labels -->
+      <text class="lab lab-teal" x="-350" y="-70">ξ = ker α</text>
+      <text class="lab lab-gold" x="210" y="-20">α ∧ (dα)ⁿ ≠ 0</text>
+      <text class="lab" x="-310" y="95">T · φ_t · Reeb flow</text>
+      <text class="lab" x="140" y="95">period T* = 2π</text>
+      <!-- axis tick -->
+      <g stroke="#555" stroke-width=".6" fill="none" marker-end="url(#arGold)">
+        <path d="M-360,110 L360,110"/>
+      </g>
+      <text class="tick" x="355" y="125">t</text>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig I — Contact manifold (M, α): tilting hyperplanes ξ = ker α carry the Reeb flow. Teal = east-to-west phase, gold = west-to-east phase; the two agree only at the closed orbit of period T*.</div><div class="br-c">Fig I — Variedade de contato (M, α): os hiperplanos inclinados ξ = ker α carregam o fluxo de Reeb. Azul-teal = fase leste-oeste, ouro = fase oeste-leste; concordam apenas na órbita fechada de período T*.</div></div>
+
+  <!-- READING of Figure I -->
+  <div class="readfig wide">
+    <div class="en">
+      <h5>Reading the Figure</h5>
+      <p>You are looking at a <em>slice</em> of the manifold M. The faint grey lattice is the manifold itself — it would normally be a smooth (2n+1)-dimensional object, but any honest drawing has to flatten it. The six tilted parallelograms are the <em>contact hyperplanes</em> ξ = ker α at six sample points. Each plane is what a Reeb-traveller sees as its "sideways" directions: the 2n dimensions perpendicular to the direction time actually flows in.</p>
+      <p>Watch the tilts. They do <em>not</em> line up from one point to the next — that is the whole point of a contact structure. If the planes did align, they would stack into a foliation, and you could slide sideways forever without the time direction ever changing. The condition α ∧ (dα)ⁿ ≠ 0 is the algebraic guarantee that the planes <em>refuse</em> to stack. That refusal is what makes the geometry non-commutative, and it is the reason the four Level III operators C, K, F, U do not commute either. Axiom 1 is therefore not decoration — it is the first and deepest source of non-commutativity in the whole theory.</p>
+      <p>The dashed teal curve with arrowheads is the Reeb flow φ_t: the unique integral curve of the temporal field T that satisfies α(T) = 1 and dα(T, ·) = 0. The pulsing dots are four sample positions — t = 0, T*/3, 2T*/3, T* — showing that after one period the orbit closes: Axiom 5 in action. Teal and gold mark two <em>senses</em> of traversal (phase-forward and phase-back); they disagree everywhere <em>except</em> on the closed orbit. That coincidence-only-at-the-period is the seed of Axiom 9 (uniform rotation by e^{iT*t}) and, eventually, the spiral time of Level II.</p>
+      <p>What the figure deliberately <em>does not</em> show: the 11 extra dimensions inside each hyperplane (you would see only the first of the 2n local coordinates), the metric (contact geometry here is metric-free), and the conformal factor e^{f(t)} by which T differs from a strict Reeb field. The first is impossible on paper; the second is pedagogical (we want the reader to feel that the geometry is rigid without a metric being named); the third belongs to Axiom 3 and shows up properly in Level VI.</p>
+    </div>
+    <div class="br">
+      <h5>Leitura da Figura</h5>
+      <p>O que se vê é uma <em>fatia</em> de M. A malha cinza ao fundo representa a variedade — seria um objeto suave de dimensão 2n+1, mas qualquer desenho honesto precisa achatá-la. Os seis paralelogramos inclinados são os <em>hiperplanos de contato</em> ξ = ker α em seis pontos-amostra. Cada plano é o que um viajante do fluxo de Reeb percebe como suas direções "laterais": as 2n dimensões perpendiculares àquela em que o tempo de fato corre.</p>
+      <p>Note que as inclinações <em>não</em> coincidem de um ponto ao próximo — essa é a essência da estrutura de contato. Se coincidissem, os planos se empilhariam numa folheação e seria possível deslizar lateralmente indefinidamente sem que a direção temporal mudasse. A condição α ∧ (dα)ⁿ ≠ 0 é a garantia algébrica de que os planos <em>se recusam</em> a empilhar. Essa recusa é o que torna a geometria não-comutativa, e é a razão pela qual os quatro operadores C, K, F, U do Nível III também não comutam. O Axioma 1 não é, portanto, decorativo — é a primeira e mais profunda fonte de não-comutatividade da teoria inteira.</p>
+      <p>A curva tracejada azul-teal com setas é o fluxo de Reeb φ_t: a única curva integral do campo temporal T que satisfaz α(T) = 1 e dα(T, ·) = 0. Os pontos pulsantes são quatro posições-amostra — t = 0, T*/3, 2T*/3, T* — mostrando que após um período a órbita fecha: o Axioma 5 em ação. As cores marcam dois <em>sentidos</em> de percurso (fase direta e fase reversa); discordam em toda parte <em>exceto</em> na órbita fechada. Essa coincidência-só-no-período é a semente do Axioma 9 (rotação uniforme por e^{iT*t}) e, mais tarde, do tempo em espiral do Nível II.</p>
+      <p>O que a figura deliberadamente <em>não</em> mostra: as 11 dimensões restantes dentro de cada hiperplano (ver-se-ia apenas a primeira das 2n coordenadas locais), a métrica (a geometria de contato aqui é livre de métrica) e o fator conforme e^{f(t)} pelo qual T difere de um campo de Reeb estrito. O primeiro é impossível no papel; o segundo é pedagógico (queremos que o leitor sinta a rigidez geométrica sem invocar métrica); o terceiro pertence ao Axioma 3 e aparece corretamente no Nível VI.</p>
+    </div>
+  </div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Understand what a contact manifold is, why the form α ∧ (dα)ⁿ ≠ 0 matters, and how the seven GTCT axioms of Chapter 1 lock the geometry in place.</p>
+
+   <h3>Mathematics</h3>
+   <p>Let M be a smooth (2n+1)-dimensional manifold. A contact structure is a maximally non-integrable hyperplane field ξ = ker α.</p>
+   <div class="thm"><div class="lbl">Theorem (Darboux, local form)</div>
+     Every contact form is locally equivalent to α = dz − Σᵢ yᵢ dxᵢ. Proof uses Moser's trick; see Geiges (2008).
+   </div>
+   <div class="readthm">
+     <span class="lbl">Reading of Darboux</span>
+     <p>The Darboux theorem is the statement that <em>locally, all contact manifolds look the same</em>. There is no such thing as a "curved" contact form the way there is a curved metric: any two contact forms can be brought, in a neighbourhood of a point, to the same normal form α = dz − Σ yᵢ dxᵢ by a smooth change of coordinates. What this really means for GTCT is that Axiom 1 does <em>not</em> pin down local structure — it only pins down <em>global</em> structure. All the interesting physics (the twelve operators, the spiral, the dominant phase) is global, not local.</p>
+     <p>The Moser trick underlying the proof is itself worth internalising: you cook up a time-dependent vector field whose flow interpolates the two contact forms, and you solve a linear equation at each t. The same Moser move reappears in Level VI when we prove the contraction constant κ does not depend on the chart. So the Darboux theorem is a warm-up for a method, not just a fact.</p>
+     <p>What it rules out: you cannot distinguish points of M by looking at α alone in a neighbourhood. What it enables: you can always <em>compute</em> in normal coordinates, which is exactly what we do in Exercise 1.2.</p>
+   </div>
+   <div class="eq">α ∧ (dα)ⁿ ≠ 0   ⇔   (M,α) is a contact manifold.</div>
+   <div class="readthm">
+     <span class="lbl">Reading of the non-degeneracy condition</span>
+     <p>Read the left side out loud: "α wedge the n-th power of dα is nowhere zero." Each wedge factor contributes two independent directions; raising to the n-th power picks up 2n directions; wedging once more with α picks up the remaining one. The condition is therefore saying "the 2n+1 directions in α and dα together span the tangent space at every point." That is the precise technical meaning of <em>maximally non-integrable</em>: the hyperplane field ξ is as far as possible from being the tangent space of any submanifold.</p>
+     <p>The "⇔" is not cosmetic — it upgrades a scalar inequality into a geometric statement. Many authors write only one direction of the implication; in GTCT we need both, because later axioms (Axiom 4 in particular) reference "contact manifold" as a label, and that label must mean exactly the condition on the left.</p>
+     <p>Intuition: if α ∧ (dα)ⁿ vanished somewhere, the plane field would locally collapse to a foliation at that point, and time would become ambiguous there. The condition is the geometric statement that <em>time has a direction everywhere in M</em>.</p>
+   </div>
+   <p>The temporal field T of Axiom 3 plays the role of the Reeb field up to the conformal factor e^{f(t)} in Axiom 3.</p>
+   <div class="readax">
+     <span class="lbl">Reading of the seven axioms</span>
+     <p>The seven axioms of Chapter 1 are not independent — they form a <em>stack</em>. Axioms 1–2 build the geometric stage (contact manifold, temporal foliation). Axiom 3 puts a clock on it (the temporal field T and its conformal drift). Axioms 4–5 close that clock into a period (T* = 2π). Axiom 6 introduces the four generative operators C, K, F, U and asserts the composite G = U∘F∘K∘C is <em>not</em> a bijection. Axiom 7 says G's failure to be a bijection is quantitative — it loses a fixed fraction of information per cycle.</p>
+     <p>The one axiom most students misplace is Axiom 6's non-invertibility clause. Read it carefully: G is not "sometimes non-invertible" or "non-invertible in the limit"; it is never invertible. That is a strong claim, and it is what forces the Banach contraction of Level VI. Remove the clause and the spiral becomes a circle — the theory loses its arrow of time.</p>
+     <p>Exercise 1.1 asks you to identify which axiom forbids G from being a diffeomorphism. The answer (no peeking) is <em>Axiom 6</em>; Exercise 1.4 then asks you to prove this using Axioms 2 and 3 together — a rehearsal of the argument we formalise in Level III.</p>
+   </div>
+
+   <h3>Physics</h3>
+   <p>Contact manifolds are the odd-dimensional cousins of symplectic manifolds. In classical mechanics they host thermodynamic phase spaces and time-dependent Hamiltonians. Here, the contact form is the geometric enforcement of sequence — the reason GTCT operators do not commute.</p>
+   <div class="readthm">
+     <span class="lbl">Reading of the physical picture</span>
+     <p>Why contact and not symplectic? Symplectic manifolds live in even dimensions and correspond to energy-conserving, time-<em>independent</em> systems. Contact manifolds live in odd dimensions and correspond to time-<em>dependent</em> systems — the extra dimension is time itself. GTCT is about how a system evolves <em>through</em> time, so the odd-dimensional setting is forced on us.</p>
+     <p>A concrete example: the phase space of a single classical particle with a time-dependent Hamiltonian H(q, p, t) is a 3-manifold with the contact form α = p dq − H dt. The Reeb flow of this α is Hamilton's equations. In GTCT the same structure supports not one Hamiltonian but twelve (the dimensional operators of Level III), all living on the same stage.</p>
+     <p>The berimbau analogy on the machine at the top of the book maps cleanly here: plucking the string sets an initial point on M, the atabaque pattern sets the Reeb period (T* = 2π in beats), and the twelve operators C, K, F, U and their compositions are the twelve "voices" you hear cycling through the harmonic.</p>
+   </div>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="cm">-- Axiom 1 encoded as a Lean 4 structure skeleton</span>
+<span class="kw">structure</span> <span class="tp">ContactManifold</span> (n : <span class="tp">ℕ</span>) <span class="kw">where</span>
+  M     : <span class="tp">Type*</span>
+  smooth : <span class="tp">SmoothManifold</span> M (2*n+1)
+  α     : <span class="tp">OneForm</span> M
+  non_degenerate : α ∧ (dα)^n ≠ 0
+
+<span class="kw">axiom</span> gtct₁ : ∃ n, <span class="tp">ContactManifold</span> n</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">1.1</span><span class="stars">★</span> State Axioms 1–7 from memory. Identify which axiom forbids G from being invertible.</div>
+   <div class="ex"><span class="n">1.2</span><span class="stars">★★</span> Verify that α = dz − y dx on ℝ³ is a contact form. Compute the Reeb field.</div>
+   <div class="ex"><span class="n">1.3</span><span class="stars">★★</span> Prove: on a contact manifold, there is no global vector field X with X ∈ ker α that preserves α.</div>
+   <div class="ex"><span class="n">1.4</span><span class="stars">★★★</span> Show that Axioms 2 and 3 together imply G cannot be a diffeomorphism.</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L1</span>
+Using Volume V, explain in plain English why Axiom 1 (contact structure) is <em>necessary</em> for the non-commutativity of G = U∘F∘K∘C. Then show how removing α would collapse Axioms 2, 3 and 9 simultaneously.</div>
+
+   <div class="hint">Challenge ★★★. Construct a 5-dimensional contact manifold in which you can explicitly write down a Reeb orbit that closes in period T* = 2π. Compare to Axiom 5.</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Compreender o que é uma variedade de contato, por que a forma α ∧ (dα)ⁿ ≠ 0 é essencial, e como os sete axiomas da GTCT (Capítulo 1) fixam toda a geometria.</p>
+
+   <h3>Matemática</h3>
+   <p>Seja M uma variedade suave de dimensão 2n+1. Uma estrutura de contato é um campo de hiperplanos maximalmente não-integrável ξ = ker α.</p>
+   <div class="thm"><div class="lbl">Teorema (Darboux, forma local)</div>
+     Toda forma de contato é localmente equivalente a α = dz − Σᵢ yᵢ dxᵢ. A prova usa o truque de Moser; cf. Geiges (2008).
+   </div>
+   <div class="readthm">
+     <span class="lbl">Leitura do Teorema de Darboux</span>
+     <p>O Teorema de Darboux afirma que <em>localmente, todas as variedades de contato têm o mesmo aspecto</em>. Não existe forma de contato "curva" no sentido em que existe métrica curva: duas formas de contato quaisquer podem ser levadas, numa vizinhança de um ponto, à mesma forma normal α = dz − Σ yᵢ dxᵢ por uma mudança suave de coordenadas. Em termos da GTCT, isto significa que o Axioma 1 <em>não</em> determina a estrutura local — determina apenas a <em>global</em>. Toda a física interessante (os doze operadores, a espiral, a fase dominante) é global, não local.</p>
+     <p>O truque de Moser usado na demonstração merece ser interiorizado: constrói-se um campo vetorial dependente do tempo cujo fluxo interpola as duas formas, resolvendo uma equação linear em cada instante. O mesmo truque reaparece no Nível VI ao provarmos que a constante de contração κ não depende da carta. O Teorema de Darboux é, portanto, o aquecimento de um método, não apenas um fato.</p>
+     <p>O que ele proíbe: distinguir pontos de M olhando apenas para α numa vizinhança. O que ele permite: <em>calcular</em> sempre em coordenadas normais — exatamente o que fazemos no Exercício 1.2.</p>
+   </div>
+   <div class="eq">α ∧ (dα)ⁿ ≠ 0   ⇔   (M,α) é variedade de contato.</div>
+   <div class="readthm">
+     <span class="lbl">Leitura da condição de não-degeneração</span>
+     <p>Leia em voz alta: "α cunha a n-ésima potência de dα é diferente de zero em todo ponto." Cada fator de cunha contribui duas direções independentes; elevar à n-ésima potência recolhe 2n direções; cunhar mais uma vez com α adiciona a última. A condição diz, portanto, que "as 2n+1 direções em α e dα juntas geram o espaço tangente em cada ponto." Esta é a definição técnica precisa de <em>maximamente não-integrável</em>: o campo de hiperplanos ξ está o mais longe possível de ser tangente a uma subvariedade.</p>
+     <p>O "⇔" não é cosmético — ele promove uma desigualdade escalar a uma afirmação geométrica. Muitos autores escrevem apenas uma das direções; na GTCT precisamos de ambas, pois axiomas posteriores (o Axioma 4 em particular) referem-se a "variedade de contato" como rótulo, e esse rótulo tem que denotar exatamente a condição à esquerda.</p>
+     <p>Intuição: se α ∧ (dα)ⁿ se anulasse em algum ponto, o campo de planos colapsaria localmente numa folheação, e o tempo tornar-se-ia ambíguo ali. A condição é a afirmação geométrica de que <em>o tempo tem direção em todo ponto de M</em>.</p>
+   </div>
+   <p>O campo temporal T do Axioma 3 desempenha o papel do campo de Reeb a menos do fator conforme e^{f(t)}.</p>
+   <div class="readax">
+     <span class="lbl">Leitura dos sete axiomas</span>
+     <p>Os sete axiomas do Capítulo 1 não são independentes — formam uma <em>pilha</em>. Os Axiomas 1–2 montam o palco geométrico (variedade de contato, folheação temporal). O Axioma 3 coloca um relógio no palco (campo temporal T e seu desvio conforme). Os Axiomas 4–5 fecham esse relógio num período (T* = 2π). O Axioma 6 introduz os quatro operadores geradores C, K, F, U e afirma que o composto G = U∘F∘K∘C <em>não</em> é bijeção. O Axioma 7 quantifica essa falha: G perde uma fração fixa de informação por ciclo.</p>
+     <p>O axioma que mais alunos colocam no lugar errado é a cláusula de não-inversibilidade do Axioma 6. Leia com cuidado: G não é "às vezes não-inversível" nem "não-inversível no limite"; é <em>nunca</em> inversível. Afirmação forte, e é o que força a contração de Banach do Nível VI. Retire a cláusula e a espiral vira círculo — a teoria perde sua flecha do tempo.</p>
+     <p>O Exercício 1.1 pede que se identifique qual axioma impede G de ser difeomorfismo. Resposta (sem olhar): <em>Axioma 6</em>; o Exercício 1.4 pede então a prova usando os Axiomas 2 e 3 juntos — ensaio do argumento que formalizamos no Nível III.</p>
+   </div>
+
+   <h3>Física</h3>
+   <p>Variedades de contato são as primas ímpares das variedades simpléticas. Abrigam espaços de fase termodinâmicos e hamiltonianos dependentes do tempo. Aqui, a forma de contato é a imposição geométrica de sequência — a razão pela qual os operadores da GTCT não comutam.</p>
+   <div class="readthm">
+     <span class="lbl">Leitura do quadro físico</span>
+     <p>Por que contato e não simplético? Variedades simpléticas vivem em dimensão par e correspondem a sistemas conservativos, <em>independentes</em> do tempo. Variedades de contato vivem em dimensão ímpar e correspondem a sistemas <em>dependentes</em> do tempo — a dimensão extra é o próprio tempo. A GTCT trata de como um sistema evolui <em>através</em> do tempo, então o cenário de dimensão ímpar nos é imposto.</p>
+     <p>Um exemplo concreto: o espaço de fases de uma partícula clássica com hamiltoniano dependente do tempo H(q, p, t) é uma 3-variedade com a forma de contato α = p dq − H dt. O fluxo de Reeb de α são as equações de Hamilton. Na GTCT a mesma estrutura comporta não um, mas doze hamiltonianos (os operadores dimensionais do Nível III), todos no mesmo palco.</p>
+     <p>A analogia do berimbau (na máquina no topo do livro) mapeia-se aqui com precisão: tocar a corda fixa um ponto inicial em M, a batida do atabaque fixa o período de Reeb (T* = 2π em compassos), e os doze operadores C, K, F, U e suas composições são as doze "vozes" que se ouvem percorrer o harmônico.</p>
+   </div>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="cm">-- Axioma 1 codificado como esqueleto de estrutura em Lean 4</span>
+<span class="kw">structure</span> <span class="tp">VariedadeContato</span> (n : <span class="tp">ℕ</span>) <span class="kw">where</span>
+  M            : <span class="tp">Type*</span>
+  suave        : <span class="tp">VariedadeSuave</span> M (2*n+1)
+  α            : <span class="tp">UmaForma</span> M
+  nao_degen    : α ∧ (dα)^n ≠ 0
+
+<span class="kw">axiom</span> gtct₁ : ∃ n, <span class="tp">VariedadeContato</span> n</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">1.1</span><span class="stars">★</span> Enuncie de memória os Axiomas 1–7. Identifique qual axioma impede G de ser inversível.</div>
+   <div class="ex"><span class="n">1.2</span><span class="stars">★★</span> Verifique que α = dz − y dx em ℝ³ é forma de contato. Calcule o campo de Reeb.</div>
+   <div class="ex"><span class="n">1.3</span><span class="stars">★★</span> Prove: em variedade de contato não existe campo global X ∈ ker α que preserve α.</div>
+   <div class="ex"><span class="n">1.4</span><span class="stars">★★★</span> Mostre que os Axiomas 2 e 3 juntos implicam que G não é difeomorfismo.</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N1</span>
+Usando o Volume V, explique em português claro por que o Axioma 1 (estrutura de contato) é <em>necessário</em> para a não-comutatividade de G = U∘F∘K∘C. Em seguida, mostre como a remoção de α colapsa os Axiomas 2, 3 e 9 simultaneamente.</div>
+
+   <div class="hint">Desafio ★★★. Construa uma variedade de contato 5-dimensional em que se possa escrever explicitamente uma órbita de Reeb fechando com período T* = 2π. Compare com o Axioma 5.</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL II ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level II · The Field</div><h2>The Dimensional Field Δ : M → ℝ¹²</h2><div class="sub">Twelve phase functions on one manifold.</div></div>
+  <div class="side br"><div class="tag">Nível II · O Campo</div><h2>O Campo Dimensional Δ : M → ℝ¹²</h2><div class="sub">Doze funções de fase sobre uma variedade.</div></div>
+ </div>
+
+ <!-- DIAGRAM II : S^11 projected to unit circle, 12 spokes = phase functions -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 280" xmlns="http://www.w3.org/2000/svg" aria-label="Twelve phase functions on S^11">
+    <defs>
+      <radialGradient id="g11" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#0ABAB5" stop-opacity=".35"/>
+        <stop offset=".6" stop-color="#0ABAB5" stop-opacity=".12"/>
+        <stop offset="1" stop-color="#c8a24a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g transform="translate(250,140)">
+      <circle r="115" fill="url(#g11)" stroke="#0ABAB566" stroke-width="1.5"/>
+      <circle r="115" fill="none" stroke="#c8a24a44" stroke-width=".8" class="breath"/>
+      <!-- 12 phase spokes -->
+      <g>
+        <!-- generated spokes -->
+        <g stroke="#0ABAB5" stroke-width="1.2" opacity=".9">
+          <line x1="0" y1="0" x2="115" y2="0"/>
+          <line x1="0" y1="0" x2="99.6" y2="-57.5"/>
+          <line x1="0" y1="0" x2="57.5" y2="-99.6"/>
+          <line x1="0" y1="0" x2="0" y2="-115"/>
+          <line x1="0" y1="0" x2="-57.5" y2="-99.6"/>
+          <line x1="0" y1="0" x2="-99.6" y2="-57.5"/>
+          <line x1="0" y1="0" x2="-115" y2="0"/>
+          <line x1="0" y1="0" x2="-99.6" y2="57.5"/>
+          <line x1="0" y1="0" x2="-57.5" y2="99.6"/>
+          <line x1="0" y1="0" x2="0" y2="115"/>
+          <line x1="0" y1="0" x2="57.5" y2="99.6"/>
+          <line x1="0" y1="0" x2="99.6" y2="57.5"/>
+        </g>
+      </g>
+      <!-- dots on unit sphere slice -->
+      <g fill="#c8a24a">
+        <circle cx="115" cy="0" r="3.2"/>
+        <circle cx="99.6" cy="-57.5" r="3.2"/>
+        <circle cx="57.5" cy="-99.6" r="3.2"/>
+        <circle cx="0" cy="-115" r="3.2"/>
+        <circle cx="-57.5" cy="-99.6" r="3.2"/>
+        <circle cx="-99.6" cy="-57.5" r="3.2"/>
+        <circle cx="-115" cy="0" r="3.2"/>
+        <circle cx="-99.6" cy="57.5" r="3.2"/>
+        <circle cx="-57.5" cy="99.6" r="3.2"/>
+        <circle cx="0" cy="115" r="3.2"/>
+        <circle cx="57.5" cy="99.6" r="3.2"/>
+        <circle cx="99.6" cy="57.5" r="3.2"/>
+      </g>
+      <!-- rotating Δ vector e^{iT*t} -->
+      <g class="spin">
+        <line x1="0" y1="0" x2="80" y2="-30" stroke="#fff" stroke-width="2"/>
+        <circle cx="80" cy="-30" r="4" fill="#fff"/>
+      </g>
+      <text class="lab lab-teal" x="-30" y="-135">Δ : M → ℝ¹² ≅ ℂ⁶</text>
+      <text class="lab lab-gold" x="-38" y="150">|Δ(x)| = 1, rotates by e^{iT*t}</text>
+      <!-- labels 1..12 -->
+      <g class="tick">
+        <text x="120" y="4">δ₁</text>
+        <text x="104" y="-62">δ₂</text>
+        <text x="60" y="-106">δ₃</text>
+        <text x="-7" y="-122">δ₄</text>
+        <text x="-76" y="-106">δ₅</text>
+        <text x="-120" y="-62">δ₆</text>
+        <text x="-135" y="4">δ₇</text>
+        <text x="-120" y="66">δ₈</text>
+        <text x="-76" y="112">δ₉</text>
+        <text x="-10" y="128">δ₁₀</text>
+        <text x="60" y="112">δ₁₁</text>
+        <text x="104" y="66">δ₁₂</text>
+      </g>
+    </g>
+    <!-- Right: time evolution view -->
+    <g transform="translate(620,140)">
+      <text class="lab lab-teal" x="-90" y="-110">temporal evolution · φ_t</text>
+      <g stroke="#c8a24a" fill="none" stroke-width="1.2">
+        <path d="M-150,0 Q-100,-70 -50,0 T50,0 T150,0" class="flow"/>
+        <path d="M-150,20 Q-100,-50 -50,20 T50,20 T150,20" class="flow" opacity=".7"/>
+        <path d="M-150,40 Q-100,-30 -50,40 T50,40 T150,40" class="flow" opacity=".5"/>
+      </g>
+      <g stroke="#0ABAB5" fill="none" stroke-width="1.2">
+        <path d="M-150,-20 Q-100,-90 -50,-20 T50,-20 T150,-20" class="flow"/>
+      </g>
+      <text class="tick" x="-160" y="65">t = 0</text>
+      <text class="tick" x="140" y="65">t = T* = 2π</text>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig II — Δ sends M to a point on S¹¹; the Reeb flow rotates that point uniformly by e^{iT*t}. Each of the twelve gold dots is one phase function δᵢ.</div><div class="br-c">Fig II — Δ envia M a um ponto de S¹¹; o fluxo de Reeb gira esse ponto uniformemente por e^{iT*t}. Cada dos doze pontos dourados é uma função de fase δᵢ.</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Read Axioms 8–9. Internalize what the twelve phase functions δᵢ are, why ‖Δ‖=1 matters, and how the temporal flow acts as multiplication by e^{iT*t}.</p>
+
+   <h3>Mathematics</h3>
+   <div class="thm"><div class="lbl">Definition (Dimensional Field)</div>
+     Δ : M → ℝ¹², smooth, with linearly independent components and |Δ(x)|=1. The dominant phase is i*(x) = argmaxᵢ δᵢ(x).
+   </div>
+   <div class="eq">Δ(φ_t(x)) = e^{iT*t} Δ(x),   T* = 2π   (Axiom 9)</div>
+   <p>Identify ℝ¹² ≅ ℂ⁶ for the complexified representation. The Reeb flow rotates Δ; after one period the field returns to itself.</p>
+
+   <h3>Physics</h3>
+   <p>Think of Δ as twelve coupled oscillators on a common unit sphere S¹¹. Each δᵢ is one normal mode. This mirrors quantum phase encoding (qudit, d=12) and 12-tone equal temperament — the octave of the mathematical ear.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">structure</span> <span class="tp">DimField</span> (M : <span class="tp">Type*</span>) <span class="kw">where</span>
+  δ            : <span class="tp">Fin</span> 12 → M → <span class="tp">ℝ</span>
+  smooth       : ∀ i, <span class="tp">Smooth</span> (δ i)
+  lin_indep    : <span class="tp">LinearIndependent</span> ℝ δ
+  unit_norm    : ∀ x, (∑ i, (δ i x)^2) = 1
+
+<span class="kw">def</span> dominant (Δ : <span class="tp">DimField</span> M) (x : M) : <span class="tp">Fin</span> 12 :=
+  <span class="tp">Finset</span>.argmax (fun i => Δ.δ i x) <span class="tp">Finset</span>.univ</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">2.1</span><span class="stars">★</span> Show that the unit-norm constraint forces the image of Δ to lie on S¹¹.</div>
+   <div class="ex"><span class="n">2.2</span><span class="stars">★★</span> For Δ(t) = (cos t, sin t, cos 2t, sin 2t, …, cos 6t, sin 6t)/√6, verify Axiom 9 with T* = 2π.</div>
+   <div class="ex"><span class="n">2.3</span><span class="stars">★★</span> Prove: if two phase functions coincide everywhere (δᵢ = δⱼ), then the linear independence axiom fails.</div>
+   <div class="ex"><span class="n">2.4</span><span class="stars">★★★</span> Construct a smooth Δ on the torus T² that realizes Axioms 8–9 exactly.</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L2</span>
+Given Axioms 8–9 from Volume V, produce a worked example of Δ on the 3-sphere S³. Show the action of φ_t explicitly and verify that one full period returns Δ to itself.</div>
+
+   <div class="hint">Challenge ★★★. Prove that no Δ satisfying Axioms 8–9 can exist on S². (Hint: Euler characteristic.)</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Ler os Axiomas 8–9. Assimilar o que são as doze funções de fase δᵢ, por que ‖Δ‖=1 importa, e como o fluxo temporal age como multiplicação por e^{iT*t}.</p>
+
+   <h3>Matemática</h3>
+   <div class="thm"><div class="lbl">Definição (Campo Dimensional)</div>
+     Δ : M → ℝ¹², suave, com componentes linearmente independentes e |Δ(x)|=1. Fase dominante: i*(x) = argmaxᵢ δᵢ(x).
+   </div>
+   <div class="eq">Δ(φ_t(x)) = e^{iT*t} Δ(x),   T* = 2π   (Axioma 9)</div>
+   <p>Identifique ℝ¹² ≅ ℂ⁶ na representação complexificada. O fluxo de Reeb gira Δ; após um período o campo retorna a si mesmo.</p>
+
+   <h3>Física</h3>
+   <p>Pense em Δ como doze osciladores acoplados numa esfera unitária S¹¹. Cada δᵢ é um modo normal. É a mesma ideia da codificação quântica de fase (qudit, d=12) e do temperamento igual de 12 notas — a oitava do ouvido matemático.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">structure</span> <span class="tp">CampoDim</span> (M : <span class="tp">Type*</span>) <span class="kw">where</span>
+  δ           : <span class="tp">Fin</span> 12 → M → <span class="tp">ℝ</span>
+  suave       : ∀ i, <span class="tp">Smooth</span> (δ i)
+  lin_indep   : <span class="tp">LinearIndependent</span> ℝ δ
+  norma_unit  : ∀ x, (∑ i, (δ i x)^2) = 1
+
+<span class="kw">def</span> dominante (Δ : <span class="tp">CampoDim</span> M) (x : M) : <span class="tp">Fin</span> 12 :=
+  <span class="tp">Finset</span>.argmax (fun i => Δ.δ i x) <span class="tp">Finset</span>.univ</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">2.1</span><span class="stars">★</span> Mostre que a restrição de norma força a imagem de Δ a estar em S¹¹.</div>
+   <div class="ex"><span class="n">2.2</span><span class="stars">★★</span> Para Δ(t) = (cos t, sen t, cos 2t, sen 2t, …, cos 6t, sen 6t)/√6, verifique o Axioma 9 com T* = 2π.</div>
+   <div class="ex"><span class="n">2.3</span><span class="stars">★★</span> Prove: se duas funções de fase coincidem em todo M, a hipótese de independência linear falha.</div>
+   <div class="ex"><span class="n">2.4</span><span class="stars">★★★</span> Construa Δ suave no toro T² que realize os Axiomas 8–9 exatamente.</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N2</span>
+Com os Axiomas 8–9 do Volume V, produza um exemplo resolvido de Δ na 3-esfera S³. Mostre a ação de φ_t explicitamente e verifique que um período completo retorna Δ a si mesmo.</div>
+
+   <div class="hint">Desafio ★★★. Prove que nenhum Δ satisfazendo os Axiomas 8–9 pode existir em S². (Dica: característica de Euler.)</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL III ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level III · Operators</div><h2>The Twelve Dimensional Operators</h2><div class="sub">Aᵢ = Pⁱ + uᵢwᵢᵀ · permutation + rank-1 correction.</div></div>
+  <div class="side br"><div class="tag">Nível III · Operadores</div><h2>Os Doze Operadores Dimensionais</h2><div class="sub">Aᵢ = Pⁱ + uᵢwᵢᵀ · permutação + correção de posto 1.</div></div>
+ </div>
+
+ <!-- DIAGRAM III : 12 mini heatmaps of A_i = P^i + u_i w_i^T -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" aria-label="Twelve operator matrices">
+    <defs>
+      <linearGradient id="cellG" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0" stop-color="#0ABAB5"/>
+        <stop offset="1" stop-color="#c8a24a"/>
+      </linearGradient>
+    </defs>
+    <g font-family="JetBrains Mono,monospace" font-size="9" fill="#aaa">
+      <!-- 4 columns × 3 rows of 6x6 mini-heatmaps (represent shift + rank-1 spot) -->
+      <g id="matgrid"></g>
+    </g>
+    <script/>
+    <!-- static labeled heatmaps drawn inline -->
+    <g transform="translate(30,30)">
+     <!-- We draw 12 mini-matrices programmatically via embedded lines -->
+     <!-- Row 1 -->
+     <g transform="translate(0,0)">
+       <!-- A1 -->
+       <g>
+         <rect width="160" height="60" fill="#031615" stroke="#0ABAB544"/>
+         <!-- shift diagonal -->
+         <g fill="#0ABAB5">
+           <rect x="10" y="10" width="10" height="10"/>
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+           <rect x="110" y="10" width="10" height="10"/>
+         </g>
+         <!-- rank-1 spot -->
+         <g fill="#c8a24a" opacity=".7">
+           <rect x="130" y="30" width="14" height="14"/>
+         </g>
+         <text class="lab" x="6" y="56">A₁ = P¹ + u₁w₁ᵀ   (C·I₁)</text>
+       </g>
+     </g>
+     <g transform="translate(220,0)">
+       <g>
+         <rect width="160" height="60" fill="#031615" stroke="#0ABAB544"/>
+         <g fill="#0ABAB5">
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+           <rect x="110" y="10" width="10" height="10"/>
+           <rect x="130" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#c8a24a" opacity=".7"><rect x="16" y="26" width="14" height="14"/></g>
+         <text class="lab" x="6" y="56">A₂ = P² + u₂w₂ᵀ   (C·I₂)</text>
+       </g>
+     </g>
+     <g transform="translate(440,0)">
+       <g>
+         <rect width="160" height="60" fill="#031615" stroke="#0ABAB544"/>
+         <g fill="#0ABAB5">
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+           <rect x="110" y="10" width="10" height="10"/>
+           <rect x="130" y="10" width="10" height="10"/>
+           <rect x="10" y="10" width="10" height="10" opacity=".3"/>
+         </g>
+         <g fill="#c8a24a" opacity=".7"><rect x="100" y="30" width="14" height="14"/></g>
+         <text class="lab" x="6" y="56">A₃ = P³ + u₃w₃ᵀ   (C·I₃)</text>
+       </g>
+     </g>
+     <g transform="translate(660,0)">
+       <g>
+         <rect width="200" height="60" fill="#031615" stroke="#c8a24a55"/>
+         <text class="lab lab-gold" x="10" y="22">‖uᵢwᵢᵀ‖ ≤ ε* = 1/3</text>
+         <text class="lab" x="10" y="38" fill="#cde">wᵢ · 𝟙 = 0  (row-sum pres.)</text>
+         <text class="lab" x="10" y="54" fill="#cde">σ_min(Aᵢ^⊥) ≥ 2/3</text>
+       </g>
+     </g>
+
+     <!-- Row 2 -->
+     <g transform="translate(0,80)">
+       <g>
+         <rect width="160" height="60" fill="#031808" stroke="#c8a24a55"/>
+         <g fill="#c8a24a">
+           <rect x="80" y="10" width="10" height="10"/>
+           <rect x="100" y="10" width="10" height="10"/>
+           <rect x="120" y="10" width="10" height="10"/>
+           <rect x="140" y="10" width="10" height="10"/>
+           <rect x="10" y="10" width="10" height="10"/>
+           <rect x="30" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#009c3b" opacity=".7"><rect x="60" y="28" width="14" height="14"/></g>
+         <text class="lab lab-gold" x="6" y="56">A₄ = P⁴ + u₄w₄ᵀ   (K·I₁)</text>
+       </g>
+     </g>
+     <g transform="translate(220,80)">
+       <g>
+         <rect width="160" height="60" fill="#031808" stroke="#c8a24a55"/>
+         <g fill="#c8a24a">
+           <rect x="100" y="10" width="10" height="10"/>
+           <rect x="120" y="10" width="10" height="10"/>
+           <rect x="140" y="10" width="10" height="10"/>
+           <rect x="10" y="10" width="10" height="10"/>
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#009c3b" opacity=".7"><rect x="40" y="30" width="14" height="14"/></g>
+         <text class="lab lab-gold" x="6" y="56">A₅ = P⁵ + u₅w₅ᵀ   (K·I₂)</text>
+       </g>
+     </g>
+     <g transform="translate(440,80)">
+       <g>
+         <rect width="160" height="60" fill="#031808" stroke="#c8a24a55"/>
+         <g fill="#c8a24a">
+           <rect x="120" y="10" width="10" height="10"/>
+           <rect x="140" y="10" width="10" height="10"/>
+           <rect x="10" y="10" width="10" height="10"/>
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#009c3b" opacity=".7"><rect x="120" y="30" width="14" height="14"/></g>
+         <text class="lab lab-gold" x="6" y="56">A₆ = P⁶ + u₆w₆ᵀ   (K·I₃)</text>
+       </g>
+     </g>
+     <g transform="translate(660,80)">
+       <g>
+         <rect width="200" height="60" fill="#031412" stroke="#009c3b88"/>
+         <text class="lab" x="10" y="22" fill="#efeadd">Base palette key</text>
+         <g>
+           <rect x="10" y="30" width="10" height="10" fill="#0ABAB5"/><text class="lab" x="28" y="40">C</text>
+           <rect x="50" y="30" width="10" height="10" fill="#c8a24a"/><text class="lab lab-gold" x="68" y="40">K</text>
+           <rect x="90" y="30" width="10" height="10" fill="#009c3b"/><text class="lab" x="108" y="40" fill="#7de38e">F</text>
+           <rect x="130" y="30" width="10" height="10" fill="#fff"/><text class="lab" x="148" y="40">U</text>
+         </g>
+       </g>
+     </g>
+
+     <!-- Row 3 -->
+     <g transform="translate(0,160)">
+       <g>
+         <rect width="160" height="60" fill="#0b140a" stroke="#009c3b66"/>
+         <g fill="#009c3b">
+           <rect x="10" y="10" width="10" height="10"/>
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+           <rect x="110" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#fff" opacity=".7"><rect x="130" y="26" width="14" height="14"/></g>
+         <text class="lab" x="6" y="56" fill="#8ae1a2">A₇ = P⁷ + u₇w₇ᵀ   (F·I₁)</text>
+       </g>
+     </g>
+     <g transform="translate(220,160)">
+       <g>
+         <rect width="160" height="60" fill="#0b140a" stroke="#009c3b66"/>
+         <g fill="#009c3b">
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+           <rect x="110" y="10" width="10" height="10"/>
+           <rect x="130" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#fff" opacity=".7"><rect x="20" y="30" width="14" height="14"/></g>
+         <text class="lab" x="6" y="56" fill="#8ae1a2">A₈ = P⁸ + u₈w₈ᵀ   (F·I₂)</text>
+       </g>
+     </g>
+     <g transform="translate(440,160)">
+       <g>
+         <rect width="160" height="60" fill="#0b140a" stroke="#009c3b66"/>
+         <g fill="#009c3b">
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+           <rect x="110" y="10" width="10" height="10"/>
+           <rect x="130" y="10" width="10" height="10"/>
+           <rect x="10" y="10" width="10" height="10" opacity=".3"/>
+         </g>
+         <g fill="#fff" opacity=".7"><rect x="90" y="32" width="14" height="14"/></g>
+         <text class="lab" x="6" y="56" fill="#8ae1a2">A₉ = P⁹ + u₉w₉ᵀ   (F·I₃)</text>
+       </g>
+     </g>
+     <!-- Last trio U·I* -->
+     <g transform="translate(660,160)">
+       <g>
+         <rect width="200" height="60" fill="#081018" stroke="#ffffff55"/>
+         <g fill="#ffffff">
+           <rect x="10" y="10" width="10" height="10"/>
+           <rect x="30" y="10" width="10" height="10"/>
+           <rect x="50" y="10" width="10" height="10"/>
+           <rect x="70" y="10" width="10" height="10"/>
+           <rect x="90" y="10" width="10" height="10"/>
+         </g>
+         <g fill="#c8a24a"><rect x="170" y="30" width="14" height="14"/></g>
+         <text class="lab" x="6" y="56">A₁₀, A₁₁, A₁₂ (U · I₁,₂,₃)  →  Emergence</text>
+       </g>
+     </g>
+
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig III — Each Aᵢ has one shift band (P^i) plus a single rank-1 correction cell uᵢwᵢᵀ, bounded in norm by ε* = 1/3. Colours encode base operator (C, K, F, U).</div><div class="br-c">Fig III — Cada Aᵢ tem uma faixa de deslocamento (P^i) mais uma única célula de correção de posto 1 uᵢwᵢᵀ, com norma ≤ ε* = 1/3. As cores codificam o operador base (C, K, F, U).</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Master the constructive form Aᵢ = Pⁱ + uᵢwᵢᵀ. Know why row-sums are preserved (wᵢ ⊥ 𝟙) and why ‖uᵢwᵢᵀ‖ ≤ ε* = 1/3.</p>
+
+   <h3>Mathematics</h3>
+   <div class="thm"><div class="lbl">Definition 3.1 (Dimensional Operator)</div>
+     Oᵢ : M → M is smooth, maps Dᵢ into D_{i+1 mod 12}, Δ(Oᵢ(x)) = Aᵢ Δ(x), and preserves the unit norm.
+   </div>
+   <div class="eq">Aᵢ = Pⁱ + uᵢ wᵢᵀ,   wᵢ · 𝟙 = 0,   ‖uᵢ wᵢᵀ‖ ≤ ε* = 1/3.</div>
+   <p>Composition gives the cumulative matrix A = A₁₂ · A₁₁ · ⋯ · A₁. The Cycle Map is R = O₁₂ ∘ ⋯ ∘ O₁.</p>
+
+   <h3>Physics</h3>
+   <p>P is the clock-shift operator on the 12-level qudit. The rank-1 correction uᵢwᵢᵀ plays the role of an entangling interaction Hamiltonian that breaks the pure permutation symmetry without destroying unitarity on the tangent orthogonal complement.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">def</span> P : <span class="tp">Matrix</span> (<span class="tp">Fin</span> 12) (<span class="tp">Fin</span> 12) <span class="tp">ℝ</span> :=
+  <span class="kw">fun</span> i j => if (j : <span class="tp">ℕ</span>) = (i : <span class="tp">ℕ</span>) + 1 % 12 <span class="kw">then</span> 1 <span class="kw">else</span> 0
+
+<span class="kw">def</span> A (i : <span class="tp">Fin</span> 12) (u w : <span class="tp">Fin</span> 12 → <span class="tp">ℝ</span>)
+    (hw : ∑ k, w k = 0) (hn : ‖<span class="tp">outer</span> u w‖ ≤ 1/3) : <span class="tp">Matrix</span> _ _ <span class="tp">ℝ</span> :=
+  P^i + <span class="tp">outer</span> u w</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">3.1</span><span class="stars">★</span> Compute P², P³, P¹². Identify the order of P.</div>
+   <div class="ex"><span class="n">3.2</span><span class="stars">★★</span> Given u = (1,−1,0,…,0) and w = (1/2, 0, …, 0, −1/2), verify w·𝟙 = 0 and compute ‖uwᵀ‖.</div>
+   <div class="ex"><span class="n">3.3</span><span class="stars">★★</span> Show that Aᵢ preserves the row-sum structure of P^i when wᵢ ⊥ 𝟙.</div>
+   <div class="ex"><span class="n">3.4</span><span class="stars">★★★</span> Prove that for any v with ‖v‖=1, ‖Aᵢv − Pⁱv‖ ≤ 1/3.</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L3</span>
+Using Volume V §5.2, derive the bound σ_min(Aᵢ^⊥) ≥ 2/3 from ‖uᵢwᵢᵀ‖ ≤ 1/3. Explain where the restriction to the orthogonal complement enters the argument.</div>
+
+   <div class="hint">Challenge ★★★. Construct explicit u₁, …, u₁₂ and w₁, …, w₁₂ in ℝ¹² such that SH1 holds for the twelve basis vectors e₁,…,e₁₂ simultaneously.</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Dominar a forma construtiva Aᵢ = Pⁱ + uᵢwᵢᵀ. Saber por que as somas de linha são preservadas (wᵢ ⊥ 𝟙) e por que ‖uᵢwᵢᵀ‖ ≤ ε* = 1/3.</p>
+
+   <h3>Matemática</h3>
+   <div class="thm"><div class="lbl">Definição 3.1 (Operador Dimensional)</div>
+     Oᵢ : M → M é suave, leva Dᵢ em D_{i+1 mod 12}, satisfaz Δ(Oᵢ(x)) = Aᵢ Δ(x), e preserva a norma.
+   </div>
+   <div class="eq">Aᵢ = Pⁱ + uᵢ wᵢᵀ,   wᵢ · 𝟙 = 0,   ‖uᵢ wᵢᵀ‖ ≤ ε* = 1/3.</div>
+   <p>A composição dá A = A₁₂ · A₁₁ · ⋯ · A₁. O Mapa do Ciclo é R = O₁₂ ∘ ⋯ ∘ O₁.</p>
+
+   <h3>Física</h3>
+   <p>P é o operador de deslocamento do relógio no qudit de 12 níveis. A correção de posto 1 uᵢwᵢᵀ é um Hamiltoniano de interação que quebra a simetria de permutação pura sem destruir a unitariedade no complemento ortogonal tangente.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">def</span> P : <span class="tp">Matrix</span> (<span class="tp">Fin</span> 12) (<span class="tp">Fin</span> 12) <span class="tp">ℝ</span> :=
+  <span class="kw">fun</span> i j => if (j : <span class="tp">ℕ</span>) = (i : <span class="tp">ℕ</span>) + 1 % 12 <span class="kw">then</span> 1 <span class="kw">else</span> 0
+
+<span class="kw">def</span> A (i : <span class="tp">Fin</span> 12) (u w : <span class="tp">Fin</span> 12 → <span class="tp">ℝ</span>)
+    (hw : ∑ k, w k = 0) (hn : ‖<span class="tp">outer</span> u w‖ ≤ 1/3) : <span class="tp">Matrix</span> _ _ <span class="tp">ℝ</span> :=
+  P^i + <span class="tp">outer</span> u w</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">3.1</span><span class="stars">★</span> Calcule P², P³, P¹². Identifique a ordem de P.</div>
+   <div class="ex"><span class="n">3.2</span><span class="stars">★★</span> Dados u = (1,−1,0,…,0) e w = (1/2, 0, …, 0, −1/2), verifique w·𝟙 = 0 e calcule ‖uwᵀ‖.</div>
+   <div class="ex"><span class="n">3.3</span><span class="stars">★★</span> Mostre que Aᵢ preserva a estrutura de somas-de-linha de P^i quando wᵢ ⊥ 𝟙.</div>
+   <div class="ex"><span class="n">3.4</span><span class="stars">★★★</span> Prove que para todo v com ‖v‖=1, ‖Aᵢv − Pⁱv‖ ≤ 1/3.</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N3</span>
+Usando o §5.2 do Volume V, deduza o limitante σ_min(Aᵢ^⊥) ≥ 2/3 a partir de ‖uᵢwᵢᵀ‖ ≤ 1/3. Explique onde a restrição ao complemento ortogonal entra no argumento.</div>
+
+   <div class="hint">Desafio ★★★. Construa u₁, …, u₁₂ e w₁, …, w₁₂ explícitos em ℝ¹² tais que SH1 vale para e₁,…,e₁₂ simultaneamente.</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL IV ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level IV · Correspondence</div><h2>Phase ↔ Operator Bijection</h2><div class="sub">The cycle is rigid: every phase has exactly one operator.</div></div>
+  <div class="side br"><div class="tag">Nível IV · Correspondência</div><h2>Bijeção Fase ↔ Operador</h2><div class="sub">O ciclo é rígido: cada fase tem um único operador.</div></div>
+ </div>
+
+ <!-- DIAGRAM IV : Two-column bijection D_i ↔ O_i -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" aria-label="Phase-operator bijection">
+    <defs>
+      <marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#0ABAB5"/>
+      </marker>
+    </defs>
+    <!-- Left column: phases D_i -->
+    <g transform="translate(140,40)">
+      <text class="lab lab-teal" x="-30" y="-20">Phases · Fases</text>
+      <g id="phases"></g>
+    </g>
+    <!-- Right column: operators O_i -->
+    <g transform="translate(660,40)">
+      <text class="lab lab-gold" x="-20" y="-20">Operators · Operadores</text>
+      <g id="operators"></g>
+    </g>
+    <!-- manual rows -->
+    <g font-family="JetBrains Mono,monospace" font-size="10" fill="#cfeee9">
+      <!-- 12 rows -->
+      <g transform="translate(0,60)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₁</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₁  C·I₁</text>
+       <line x1="147" y1="0"  x2="653" y2="0"  stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,80)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₂</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₂  C·I₂</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,100)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₃</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₃  C·I₃</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,120)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₄</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₄  K·I₁</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,140)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₅</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₅  K·I₂</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,160)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₆</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₆  K·I₃</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,180)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₇</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₇  F·I₁</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,200)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₈</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₈  F·I₂</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,220)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="110" y="4">D₉</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₉  F·I₃</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,240)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="105" y="4">D₁₀</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₁₀ U·I₁</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,260)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="105" y="4">D₁₁</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₁₁ U·I₂</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#0ABAB5" stroke-width="1" marker-end="url(#ar4)" opacity=".6"/>
+      </g>
+      <g transform="translate(0,280)">
+       <circle cx="140" cy="0"  r="7" fill="#0ABAB5"/><text x="105" y="4">D₁₂</text>
+       <circle cx="660" cy="0"  r="7" fill="#c8a24a"/><text x="680" y="4">O₁₂ U·I₃ ⇝ x*</text>
+       <line x1="147" y1="0" x2="653" y2="0" stroke="#c8a24a" stroke-width="1.6" marker-end="url(#ar4)" opacity=".95" class="pulse"/>
+      </g>
+    </g>
+    <!-- center label -->
+    <g transform="translate(400,180)">
+      <text class="lab lab-teal" x="0" y="0">Φ : Dᵢ ↦ Oᵢ</text>
+      <text class="tick" x="0" y="18">(unique bijection · bijeção única)</text>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig IV — Theorem 4.1 made visible. Twelve phases on the left, twelve operators on the right, one arrow each. The last arrow (O₁₂) closes the cycle and carries the emergence map.</div><div class="br-c">Fig IV — O Teorema 4.1 visualizado. Doze fases à esquerda, doze operadores à direita, uma seta para cada. A última (O₁₂) fecha o ciclo e carrega o mapa de emergência.</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Prove Theorem 4.1 (Phase–Operator Correspondence) and understand why injectivity + cardinality force Φ to be unique.</p>
+
+   <h3>Mathematics</h3>
+   <div class="thm"><div class="lbl">Theorem 4.1</div>
+     There is a unique bijection Φ : {D₁,…,D₁₂} → {O₁,…,O₁₂} with Φ(Dᵢ) = Oᵢ and Oᵢ(Dᵢ) ⊆ D_{i+1 mod 12}.
+   </div>
+   <p>Proof: Axiom 6 gives existence. Phase advance (Def 3.2) gives injectivity. Finite equal-cardinality sets → surjectivity. Cyclic ordering forces Φ(D₁) = O₁ → induction. □</p>
+
+   <h3>Physics</h3>
+   <p>The correspondence is a <em>superselection rule</em>: each sector Dᵢ is acted upon by exactly one operator. It is the discrete shadow of the continuous temporal flow.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">theorem</span> phase_op_bijection :
+    ∃! Φ : <span class="tp">Fin</span> 12 ≃ <span class="tp">Fin</span> 12, ∀ i, Φ i = i ∧ advance (Φ i) i := <span class="kw">by</span>
+  <span class="cm">-- Axiom 6 + injectivity + pigeonhole</span>
+  <span class="kw">exact</span> ⟨<span class="tp">Equiv</span>.refl _, <span class="kw">by</span> intro i; exact ⟨rfl, gtct₆ i⟩, <span class="kw">by</span> intro Ψ _; rfl⟩</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">4.1</span><span class="stars">★</span> Write out the four steps of the proof of Theorem 4.1 in your own words.</div>
+   <div class="ex"><span class="n">4.2</span><span class="stars">★★</span> Suppose instead that two operators shared a target: Oᵢ(Dᵢ), Oⱼ(Dⱼ) ⊆ Dₖ. Show this contradicts Axiom 5.</div>
+   <div class="ex"><span class="n">4.3</span><span class="stars">★★</span> List the 12 (Oᵢ, base, invariant) triples. Verify they tile {C,K,F,U} × {I₁,I₂,I₃}.</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L4</span>
+From Volume V Theorem 4.1, explain whether Φ could be <em>non-cyclic</em> — that is, whether any bijection Φ : {Dᵢ}→{Oᵢ} other than identity is admissible. Produce a counterexample or a proof.</div>
+
+   <div class="hint">Challenge ★★★. Generalize Theorem 4.1 to N phases and discuss when the bijection is forced to be cyclic.</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Provar o Teorema 4.1 (Correspondência Fase–Operador) e entender por que injetividade + cardinalidade forçam Φ a ser única.</p>
+
+   <h3>Matemática</h3>
+   <div class="thm"><div class="lbl">Teorema 4.1</div>
+     Existe única bijeção Φ : {D₁,…,D₁₂} → {O₁,…,O₁₂} com Φ(Dᵢ) = Oᵢ e Oᵢ(Dᵢ) ⊆ D_{i+1 mod 12}.
+   </div>
+   <p>Prova: Axioma 6 dá existência. Avanço de fase (Def 3.2) dá injetividade. Conjuntos finitos de mesma cardinalidade → sobrejetividade. Ordem cíclica força Φ(D₁) = O₁ → indução. □</p>
+
+   <h3>Física</h3>
+   <p>A correspondência é uma <em>regra de superseleção</em>: cada setor Dᵢ é atuado por exatamente um operador. É a sombra discreta do fluxo temporal contínuo.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">theorem</span> bijecao_fase_op :
+    ∃! Φ : <span class="tp">Fin</span> 12 ≃ <span class="tp">Fin</span> 12, ∀ i, Φ i = i ∧ avanca (Φ i) i := <span class="kw">by</span>
+  <span class="cm">-- Axioma 6 + injetividade + princípio da casa dos pombos</span>
+  <span class="kw">exact</span> ⟨<span class="tp">Equiv</span>.refl _, <span class="kw">by</span> intro i; exact ⟨rfl, gtct₆ i⟩, <span class="kw">by</span> intro Ψ _; rfl⟩</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">4.1</span><span class="stars">★</span> Reescreva os quatro passos da prova do Teorema 4.1 com suas próprias palavras.</div>
+   <div class="ex"><span class="n">4.2</span><span class="stars">★★</span> Suponha que dois operadores compartilhassem alvo: Oᵢ(Dᵢ), Oⱼ(Dⱼ) ⊆ Dₖ. Mostre que isso contradiz o Axioma 5.</div>
+   <div class="ex"><span class="n">4.3</span><span class="stars">★★</span> Liste as 12 triplas (Oᵢ, base, invariante). Verifique que pavimentam {C,K,F,U} × {I₁,I₂,I₃}.</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N4</span>
+A partir do Teorema 4.1 do Volume V, explique se Φ poderia ser <em>não-cíclica</em> — isto é, se alguma bijeção Φ : {Dᵢ}→{Oᵢ} diferente da identidade é admissível. Produza um contraexemplo ou uma prova.</div>
+
+   <div class="hint">Desafio ★★★. Generalize o Teorema 4.1 para N fases e discuta quando a bijeção é forçada a ser cíclica.</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL V ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level V · Orthogonality</div><h2>Structural Hypothesis and the Orthogonality Theorem</h2><div class="sub">Where the invariant I₁ becomes a proof-engine.</div></div>
+  <div class="side br"><div class="tag">Nível V · Ortogonalidade</div><h2>Hipótese Estrutural e o Teorema da Ortogonalidade</h2><div class="sub">Onde o invariante I₁ vira máquina de provas.</div></div>
+ </div>
+
+ <!-- DIAGRAM V : projection decomposition showing two perpendicular residuals -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" aria-label="Orthogonal decomposition">
+    <defs>
+      <marker id="arT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0ABAB5"/></marker>
+      <marker id="arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c8a24a"/></marker>
+      <marker id="arW" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fff"/></marker>
+    </defs>
+    <g transform="translate(450,170)">
+      <!-- span{v} line -->
+      <line x1="-400" y1="0" x2="400" y2="0" stroke="#6aa" stroke-width="1" stroke-dasharray="4 6"/>
+      <text class="tick" x="380" y="-6">span{v}</text>
+      <!-- v = Δ(x) -->
+      <line x1="0" y1="0" x2="220" y2="0" stroke="#fff" stroke-width="2.5" marker-end="url(#arW)"/>
+      <text class="lab" x="110" y="-8">v = Δ(x)</text>
+
+      <!-- A_i v -->
+      <line x1="0" y1="0" x2="180" y2="-110" stroke="#0ABAB5" stroke-width="2.2" marker-end="url(#arT)"/>
+      <text class="lab lab-teal" x="130" y="-115">Aᵢv</text>
+      <!-- projection Π(A_i v) -->
+      <line x1="0" y1="0" x2="180" y2="0" stroke="#0ABAB5" stroke-width="1" stroke-dasharray="3 3"/>
+      <!-- perpendicular residual -->
+      <line x1="180" y1="0" x2="180" y2="-110" stroke="#0ABAB5" stroke-width="2" marker-end="url(#arT)" class="pulse"/>
+      <text class="lab lab-teal" x="188" y="-55">Δ_⊥(Oᵢ(x))</text>
+
+      <!-- A_j v -->
+      <line x1="0" y1="0" x2="140" y2="120" stroke="#c8a24a" stroke-width="2.2" marker-end="url(#arG)"/>
+      <text class="lab lab-gold" x="90" y="135">Aⱼv</text>
+      <!-- projection -->
+      <line x1="0" y1="0" x2="140" y2="0" stroke="#c8a24a" stroke-width="1" stroke-dasharray="3 3"/>
+      <!-- perpendicular residual -->
+      <line x1="140" y1="0" x2="140" y2="120" stroke="#c8a24a" stroke-width="2" marker-end="url(#arG)" class="pulse"/>
+      <text class="lab lab-gold" x="148" y="70">Δ_⊥(Oⱼ(x))</text>
+
+      <!-- right angle tick at (180,0) -->
+      <path d="M165,0 L165,15 L180,15" fill="none" stroke="#0ABAB5" stroke-width="1"/>
+      <path d="M125,0 L125,-15 L140,-15" fill="none" stroke="#c8a24a" stroke-width="1"/>
+
+      <!-- cross angle between the two perpendicular components -->
+      <path d="M180,-25 Q165,50 140,90" fill="none" stroke="#9cf3ef" stroke-width="1" stroke-dasharray="2 3"/>
+      <text class="lab" x="165" y="35" fill="#9cf3ef">90° · SH1</text>
+
+      <!-- origin -->
+      <circle r="4" fill="#fff"/>
+      <text class="tick" x="-18" y="14">x</text>
+
+      <!-- Equation box right -->
+      <g transform="translate(260,-90)">
+        <rect x="0" y="0" width="180" height="130" fill="#020b0b" stroke="#0ABAB566" rx="8"/>
+        <text class="lab lab-teal" x="10" y="22">Structural Hypothesis</text>
+        <text class="tick" x="10" y="42">SH1: ⟨Δ_⊥(Oᵢ), Δ_⊥(Oⱼ)⟩ = 0</text>
+        <text class="tick" x="10" y="58">for i ≠ j, a.e. x</text>
+        <text class="tick" x="10" y="80">SH2: Aᵢv ∉ span{v}</text>
+        <text class="tick" x="10" y="96">a.e. x</text>
+        <text class="lab lab-gold" x="10" y="120">⇒ Lemma 5.1</text>
+      </g>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig V — The perpendicular residuals Δ_⊥(Oᵢ) and Δ_⊥(Oⱼ) are the only parts of Aᵢv, Aⱼv that escape span{v}. The Structural Hypothesis SH1 says they are orthogonal to each other.</div><div class="br-c">Fig V — Os resíduos perpendiculares Δ_⊥(Oᵢ) e Δ_⊥(Oⱼ) são as únicas partes de Aᵢv, Aⱼv que escapam de span{v}. A Hipótese Estrutural SH1 diz que são ortogonais entre si.</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>State SH1, SH2 precisely. Expand ⟨Δ_⊥(Oᵢ), Δ_⊥(Oⱼ)⟩ and identify the cancellation pattern.</p>
+
+   <h3>Mathematics</h3>
+   <div class="thm"><div class="lbl">Structural Hypothesis (SH)</div>
+     SH1: ⟨Δ_⊥(Oᵢ(x)), Δ_⊥(Oⱼ(x))⟩ = 0 for i≠j, a.e. x.<br>
+     SH2: Aᵢ Δ(x) ∉ span{Δ(x)} for a.e. x.
+   </div>
+   <div class="eq">Δ_⊥(Oᵢ(x)) = Aᵢv − [⟨Aᵢv,v⟩/‖v‖²] v,   v = Δ(x).</div>
+   <div class="thm"><div class="lbl">Lemma 5.1 (Orthogonality) [v3]</div>
+     Under SH, ⟨Δ_⊥(Oᵢ), Δ_⊥(Oⱼ)⟩ = 0 for i≠j.
+   </div>
+   <p>Proof: expand using Π² = Π, Π* = Π, collect like terms, and invoke SH1.</p>
+
+   <h3>Physics</h3>
+   <p>Orthogonality = irreducible novelty. Each operator adds a direction that the previous ones could not reach — the quantum analogue is the emergence of a new independent measurement outcome.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">axiom</span> SH1 : ∀ i j : <span class="tp">Fin</span> 12, i ≠ j →
+  ∀ᵐ x, ⟨Δ⊥ (O i x), Δ⊥ (O j x)⟩ = 0
+<span class="kw">axiom</span> SH2 : ∀ i, ∀ᵐ x, A i ⬝ Δ x ∉ <span class="tp">Submodule</span>.span ℝ {Δ x}
+
+<span class="kw">theorem</span> lemma5_1 (i j : <span class="tp">Fin</span> 12) (h : i ≠ j) :
+    ∀ᵐ x, ⟨Δ⊥ (O i x), Δ⊥ (O j x)⟩ = 0 := SH1 i j h</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">5.1</span><span class="stars">★</span> Expand ⟨a−Πa, b−Πb⟩ where Π is the orthogonal projection onto span{v}. Show the three cross-terms collapse.</div>
+   <div class="ex"><span class="n">5.2</span><span class="stars">★★</span> Under SH, prove that ‖Δ_⊥(Oᵢ(x))‖² = ‖Aᵢv‖² − ⟨Aᵢv,v⟩²/‖v‖².</div>
+   <div class="ex"><span class="n">5.3</span><span class="stars">★★★</span> Formulate SH1 as a quadratic constraint on the pair (Aᵢ, Aⱼ). Count the independent constraints — verify the g₃₃ = 33 count.</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L5</span>
+Using Volume V §5.1, produce a 12×12 toy example where SH1 holds only for a subset of direction vectors v. Identify which v break SH2 and discuss the measure-zero clause.</div>
+
+   <div class="hint">Challenge ★★★. Prove or disprove: SH1 implies there exist 66 independent bilinear identities on the Aᵢ (before modding out sign-symmetric duplicates).</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Enunciar SH1, SH2 precisamente. Expandir ⟨Δ_⊥(Oᵢ), Δ_⊥(Oⱼ)⟩ e identificar o padrão de cancelamento.</p>
+
+   <h3>Matemática</h3>
+   <div class="thm"><div class="lbl">Hipótese Estrutural (SH)</div>
+     SH1: ⟨Δ_⊥(Oᵢ(x)), Δ_⊥(Oⱼ(x))⟩ = 0 para i≠j, q.t.p. x.<br>
+     SH2: Aᵢ Δ(x) ∉ span{Δ(x)} q.t.p. x.
+   </div>
+   <div class="eq">Δ_⊥(Oᵢ(x)) = Aᵢv − [⟨Aᵢv,v⟩/‖v‖²] v,   v = Δ(x).</div>
+   <div class="thm"><div class="lbl">Lema 5.1 (Ortogonalidade) [v3]</div>
+     Sob SH, ⟨Δ_⊥(Oᵢ), Δ_⊥(Oⱼ)⟩ = 0 para i≠j.
+   </div>
+   <p>Prova: expanda usando Π² = Π, Π* = Π, agrupe termos e invoque SH1.</p>
+
+   <h3>Física</h3>
+   <p>Ortogonalidade = novidade irredutível. Cada operador adiciona uma direção que os anteriores não alcançavam — o análogo quântico é a emergência de um novo resultado de medição independente.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">axiom</span> SH1 : ∀ i j : <span class="tp">Fin</span> 12, i ≠ j →
+  ∀ᵐ x, ⟨Δ⊥ (O i x), Δ⊥ (O j x)⟩ = 0
+<span class="kw">axiom</span> SH2 : ∀ i, ∀ᵐ x, A i ⬝ Δ x ∉ <span class="tp">Submodule</span>.span ℝ {Δ x}
+
+<span class="kw">theorem</span> lema5_1 (i j : <span class="tp">Fin</span> 12) (h : i ≠ j) :
+    ∀ᵐ x, ⟨Δ⊥ (O i x), Δ⊥ (O j x)⟩ = 0 := SH1 i j h</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">5.1</span><span class="stars">★</span> Expanda ⟨a−Πa, b−Πb⟩ onde Π é a projeção ortogonal sobre span{v}. Mostre que os três termos cruzados colapsam.</div>
+   <div class="ex"><span class="n">5.2</span><span class="stars">★★</span> Sob SH, prove que ‖Δ_⊥(Oᵢ(x))‖² = ‖Aᵢv‖² − ⟨Aᵢv,v⟩²/‖v‖².</div>
+   <div class="ex"><span class="n">5.3</span><span class="stars">★★★</span> Formule SH1 como restrição quadrática sobre o par (Aᵢ, Aⱼ). Conte as restrições independentes — verifique g₃₃ = 33.</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N5</span>
+Usando §5.1 do Volume V, produza um exemplo 12×12 de brinquedo onde SH1 vale apenas para um subconjunto de vetores v. Identifique quais v quebram SH2 e discuta a cláusula de medida zero.</div>
+
+   <div class="hint">Desafio ★★★. Prove ou refute: SH1 implica que existem 66 identidades bilineares independentes sobre os Aᵢ (antes de quocientar duplicatas sign-simétricas).</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL VI ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level VI · Contraction</div><h2>The Pythagorean Contraction Inequality</h2><div class="sub">From orthogonality to κ &lt; 1.</div></div>
+  <div class="side br"><div class="tag">Nível VI · Contração</div><h2>A Desigualdade de Contração de Pitágoras</h2><div class="sub">Da ortogonalidade a κ &lt; 1.</div></div>
+ </div>
+
+ <!-- DIAGRAM VI : Contraction funnel + Pythagorean accounting -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" aria-label="Contraction funnel">
+    <defs>
+      <radialGradient id="gF" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#0ABAB5" stop-opacity=".9"/>
+        <stop offset=".5" stop-color="#c8a24a" stop-opacity=".5"/>
+        <stop offset="1" stop-color="#01060a" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <!-- Left: contraction funnel (spiral) -->
+    <g transform="translate(260,170)">
+      <circle r="140" fill="url(#gF)" stroke="#0ABAB544" stroke-width="1"/>
+      <g fill="none" stroke="#c8a24a" stroke-width="1.4">
+        <!-- spiral inward with 12 arms -->
+        <path id="spi" d="
+          M 140,0
+          Q  95,-95  0,-120
+          Q -80,-80 -95,-5
+          Q -75, 75  5, 85
+          Q  60, 55  65, 8
+          Q  45,-30 10,-30
+          Q -20, 0   0, 20
+          Q  8,  6   0, 0"/>
+      </g>
+      <!-- orbit dots -->
+      <g fill="#0ABAB5">
+        <circle cx="140" cy="0" r="4"/>
+        <circle cx="0" cy="-120" r="4"/>
+        <circle cx="-95" cy="-5" r="3.6"/>
+        <circle cx="5" cy="85" r="3.2"/>
+        <circle cx="65" cy="8" r="2.8"/>
+        <circle cx="10" cy="-30" r="2.4"/>
+        <circle cx="0" cy="20" r="2"/>
+      </g>
+      <!-- x* fixed point -->
+      <circle r="6" fill="#fff" class="pulse"/>
+      <circle r="10" fill="none" stroke="#fff" stroke-width="1"/>
+      <text class="lab" x="12" y="4">x*</text>
+      <text class="lab lab-teal" x="-140" y="-150">orbit · x₀, x₁₂, x₂₄, …</text>
+      <text class="lab lab-gold" x="-60" y="170">κ ≤ √(7/9) ≈ 0.882</text>
+    </g>
+    <!-- Right: Pythagorean bar chart -->
+    <g transform="translate(560,50)">
+      <text class="lab lab-teal" x="0" y="0">per-cycle squared distance</text>
+      <!-- before bar -->
+      <rect x="0" y="20" width="220" height="26" fill="#0ABAB5" opacity=".8"/>
+      <text class="tick" x="4" y="38" fill="#021212">‖Δ(u) − Δ(v)‖²</text>
+      <!-- after bar (reduced) -->
+      <rect x="0" y="60" width="150" height="26" fill="#c8a24a"/>
+      <text class="tick" x="4" y="78" fill="#2a1a06">‖Δ(E(u)) − Δ(E(v))‖²</text>
+      <!-- subtracted piece -->
+      <rect x="150" y="60" width="70" height="26" fill="#009c3b" opacity=".9"/>
+      <text class="tick" x="155" y="78" fill="#052">Σᵢ cᵢ‖Δ⊥…‖²</text>
+      <!-- γ arrow -->
+      <g transform="translate(0,110)">
+        <text class="lab lab-gold" x="0" y="0">γ ≥ min σ_min(Aᵢ⊥) · ε* ≥ 2/9</text>
+        <rect x="0" y="10" width="220" height="10" fill="#0ABAB533"/>
+        <rect x="0" y="10" width="54" height="10" fill="#c8a24a"/>
+        <text class="tick" x="60" y="19">γ = 2/9</text>
+      </g>
+      <g transform="translate(0,160)">
+        <text class="lab lab-teal" x="0" y="0">κ = √(1 − γ)</text>
+        <rect x="0" y="10" width="220" height="14" fill="#02100f" stroke="#0ABAB5"/>
+        <rect x="0" y="10" width="196" height="14" fill="#0ABAB5" opacity=".6"/>
+        <text class="tick" x="8" y="21" fill="#021212">κ ≈ 0.882</text>
+      </g>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig VI — Left: the cycle map E contracts all orbits toward x*; each full cycle shrinks the radius by κ. Right: the Pythagorean accounting — the orthogonal residuals are exactly the missing piece of squared distance.</div><div class="br-c">Fig VI — À esquerda: o mapa do ciclo E contrai todas as órbitas rumo a x*; cada ciclo completo encolhe o raio por κ. À direita: a contabilidade de Pitágoras — os resíduos ortogonais são justamente o pedaço ausente da distância ao quadrado.</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Derive the quantitative bound κ ≤ √(7/9) ≈ 0.882. Understand why compactness of the orbit closure K gives γ > 0 uniformly.</p>
+
+   <h3>Mathematics</h3>
+   <div class="thm"><div class="lbl">Proposition 6.1 (Pythagorean Contraction)</div>
+     ‖Δ(E(u)) − Δ(E(v))‖² ≤ ‖Δ(u) − Δ(v)‖² − Σᵢ cᵢ ‖Δ_⊥(Oᵢ(u)) − Δ_⊥(Oᵢ(v))‖².
+   </div>
+   <div class="eq">γ ≥ min_i σ_min(Aᵢ^⊥) · ε* ≥ (2/3)·(1/3) = 2/9   ⇒   κ ≤ √(7/9) ≈ 0.882.</div>
+   <p>The compact set of normalised directions Δ(K) keeps σ_min(Aᵢ^⊥) bounded away from zero by continuity of the singular-value function.</p>
+
+   <h3>Physics</h3>
+   <p>κ < 1 is a purely <em>geometric</em> second law: distance between trajectories strictly decreases per cycle. No thermodynamic assumption is needed — the arrow of time emerges from the Pythagorean geometry of orthogonal increments.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">theorem</span> contraction_bound :
+    ∀ u v : M, dist (E u) (E v) ≤ (<span class="tp">Real</span>.sqrt (7/9)) * dist u v := <span class="kw">by</span>
+  intro u v
+  <span class="cm">-- follows from Lemma 5.1 + Pythagorean identity</span>
+  <span class="kw">have</span> h := lemma5_1 _
+  <span class="tp">Real</span>.sqrt_le_sqrt (by linarith [h, sigma_min_bound])</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">6.1</span><span class="stars">★</span> Verify numerically: if γ = 2/9 then κ² = 7/9 and κ ≈ 0.8819.</div>
+   <div class="ex"><span class="n">6.2</span><span class="stars">★★</span> Prove: compactness of K follows from Cauchy-ness of any forward orbit (use the geometric series Σ κ^k).</div>
+   <div class="ex"><span class="n">6.3</span><span class="stars">★★</span> Show that the bound σ_min(A_i^⊥) ≥ 1 − ε* is tight when uᵢwᵢᵀ is aligned with Aᵢ restricted to v^⊥.</div>
+   <div class="ex"><span class="n">6.4</span><span class="stars">★★★</span> Improve the κ bound: show that under SH with an additional isotropy condition, κ ≤ √(5/9).</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L6</span>
+Using Volume V Proposition 6.1, explain step by step how the Pythagorean decomposition converts Lemma 5.1 into a per-cycle contraction factor. Identify every place ε* = 1/3 is used.</div>
+
+   <div class="hint">Challenge ★★★. Provide an example of a perturbation of the uᵢ, wᵢ that violates SH1 and show that κ becomes ≥ 1.</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Deduzir o limitante quantitativo κ ≤ √(7/9) ≈ 0,882. Entender por que a compacidade do fecho K dá γ > 0 uniforme.</p>
+
+   <h3>Matemática</h3>
+   <div class="thm"><div class="lbl">Proposição 6.1 (Contração de Pitágoras)</div>
+     ‖Δ(E(u)) − Δ(E(v))‖² ≤ ‖Δ(u) − Δ(v)‖² − Σᵢ cᵢ ‖Δ_⊥(Oᵢ(u)) − Δ_⊥(Oᵢ(v))‖².
+   </div>
+   <div class="eq">γ ≥ min_i σ_min(Aᵢ^⊥) · ε* ≥ (2/3)·(1/3) = 2/9   ⇒   κ ≤ √(7/9) ≈ 0,882.</div>
+   <p>O compacto das direções normalizadas Δ(K) mantém σ_min(Aᵢ^⊥) afastado do zero pela continuidade da função valor singular.</p>
+
+   <h3>Física</h3>
+   <p>κ < 1 é uma segunda lei puramente <em>geométrica</em>: a distância entre trajetórias decresce estritamente por ciclo. Nenhuma hipótese termodinâmica é necessária — a flecha do tempo emerge da geometria pitagórica dos incrementos ortogonais.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">theorem</span> limitante_contracao :
+    ∀ u v : M, dist (E u) (E v) ≤ (<span class="tp">Real</span>.sqrt (7/9)) * dist u v := <span class="kw">by</span>
+  intro u v
+  <span class="cm">-- segue do Lema 5.1 + identidade de Pitágoras</span>
+  <span class="kw">have</span> h := lema5_1 _
+  <span class="tp">Real</span>.sqrt_le_sqrt (by linarith [h, limitante_sigma_min])</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">6.1</span><span class="stars">★</span> Verifique numericamente: se γ = 2/9 então κ² = 7/9 e κ ≈ 0,8819.</div>
+   <div class="ex"><span class="n">6.2</span><span class="stars">★★</span> Prove: a compacidade de K segue do caráter de Cauchy de qualquer órbita (use a série geométrica Σ κ^k).</div>
+   <div class="ex"><span class="n">6.3</span><span class="stars">★★</span> Mostre que σ_min(A_i^⊥) ≥ 1 − ε* é justo quando uᵢwᵢᵀ está alinhado com Aᵢ restrito a v^⊥.</div>
+   <div class="ex"><span class="n">6.4</span><span class="stars">★★★</span> Aprimore o limitante de κ: mostre que sob SH com condição adicional de isotropia, κ ≤ √(5/9).</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N6</span>
+Com a Proposição 6.1 do Volume V, explique passo a passo como a decomposição de Pitágoras converte o Lema 5.1 em fator de contração por ciclo. Identifique cada lugar em que ε* = 1/3 é usado.</div>
+
+   <div class="hint">Desafio ★★★. Dê um exemplo de perturbação de uᵢ, wᵢ que viole SH1 e mostre que κ passa a ser ≥ 1.</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL VII ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level VII · Emergence</div><h2>The Unique Emergent Fixed Point x*</h2><div class="sub">Banach closes the book.</div></div>
+  <div class="side br"><div class="tag">Nível VII · Emergência</div><h2>O Único Ponto Fixo Emergente x*</h2><div class="sub">Banach fecha o livro.</div></div>
+ </div>
+
+ <!-- DIAGRAM VII : basin of attraction — vector flow -->
+ <div class="diag-band">
+  <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" aria-label="Basin of attraction">
+    <defs>
+      <marker id="arR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0ABAB5"/></marker>
+      <marker id="arRG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c8a24a"/></marker>
+      <radialGradient id="gBas" cx="50%" cy="50%" r="50%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".9"/>
+        <stop offset=".2" stop-color="#0ABAB5" stop-opacity=".55"/>
+        <stop offset="1" stop-color="#020b0b" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g transform="translate(450,170)">
+      <circle r="150" fill="url(#gBas)" stroke="#0ABAB566" stroke-width="1" class="breath"/>
+      <!-- K (compact invariant orbit closure) -->
+      <circle r="150" fill="none" stroke="#c8a24a55" stroke-width="1.2" stroke-dasharray="6 4"/>
+      <text class="lab lab-gold" x="120" y="-140">K (compact)</text>
+
+      <!-- incoming flow arrows from 12 angles -->
+      <g stroke="#0ABAB5" stroke-width="1.5" fill="none">
+        <line x1="-210" y1="-130" x2="-40" y2="-28" marker-end="url(#arR)"/>
+        <line x1="-240" y1="0"    x2="-40" y2="0"   marker-end="url(#arR)"/>
+        <line x1="-210" y1="130"  x2="-40" y2="28"  marker-end="url(#arR)"/>
+        <line x1="-130" y1="200"  x2="-25" y2="40"  marker-end="url(#arR)"/>
+        <line x1="0"    y1="240"  x2="0"   y2="40"  marker-end="url(#arR)"/>
+        <line x1="130"  y1="200"  x2="25"  y2="40"  marker-end="url(#arR)"/>
+        <line x1="210"  y1="130"  x2="40"  y2="28"  marker-end="url(#arR)"/>
+        <line x1="240"  y1="0"    x2="40"  y2="0"   marker-end="url(#arR)"/>
+        <line x1="210"  y1="-130" x2="40"  y2="-28" marker-end="url(#arR)"/>
+        <line x1="130"  y1="-200" x2="25"  y2="-40" marker-end="url(#arR)"/>
+        <line x1="0"    y1="-240" x2="0"   y2="-40" marker-end="url(#arR)"/>
+        <line x1="-130" y1="-200" x2="-25" y2="-40" marker-end="url(#arR)"/>
+      </g>
+      <!-- sample orbits (3 starting points) -->
+      <g stroke="#c8a24a" stroke-width="1.5" fill="none">
+        <path d="M -180,-90 C -100,-30 -50, 20 -5, 3" marker-end="url(#arRG)"/>
+        <path d="M  200, 90 C 110, 40  50,-10  5,-3" marker-end="url(#arRG)"/>
+        <path d="M  -40,180 C -15, 90  -5, 30  0, 5" marker-end="url(#arRG)"/>
+      </g>
+      <!-- x* -->
+      <circle r="10" fill="none" stroke="#fff" stroke-width="1.5"/>
+      <circle r="5" fill="#fff" class="pulse"/>
+      <text class="lab" x="14" y="4">x*</text>
+      <!-- rate label -->
+      <g transform="translate(-220,100)">
+        <rect x="0" y="0" width="180" height="50" fill="#020b0b" stroke="#0ABAB555" rx="6"/>
+        <text class="tick" x="10" y="20">d(Eⁿ(x₀), x*) ≤ κⁿ d(x₀, x*)</text>
+        <text class="tick" x="10" y="38">Banach · compact K · κ &lt; 1</text>
+      </g>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig VII — Every point in M eventually enters the compact invariant orbit closure K and is drawn to the single fixed point x*. Rate: κⁿ.</div><div class="br-c">Fig VII — Todo ponto de M acaba entrando no fecho de órbita compacto K e é atraído ao único ponto fixo x*. Taxa: κⁿ.</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Apply the Banach Fixed Point Theorem to (K, E). Understand the rate d(Eⁿ(x₀), x*) ≤ κⁿ d(x₀,x*) and the structural meaning of x*.</p>
+
+   <h3>Mathematics</h3>
+   <div class="thm"><div class="lbl">Theorem 6.1 = Theorem 7.1 (Recursion / Emergence)</div>
+     Under SH, E = O₁₂ ∘ ⋯ ∘ O₁ has a unique fixed point x* ∈ K, and Eⁿ(x₀) → x* exponentially with rate κⁿ.
+   </div>
+   <div class="eq">d(Eⁿ(x₀), x*) ≤ κⁿ d(x₀, x*),   κ ≤ √(7/9) ≈ 0.882.</div>
+   <p>K is compact (hence complete); E : K → K is a strict contraction; Banach gives existence + uniqueness + convergence in one stroke — no convexity, no Brouwer.</p>
+
+   <h3>Physics</h3>
+   <p>x* is the infrared fixed point of the renormalisation-group flow defined by E. It is the universality class of the trajectory: every starting state x₀ ∈ M is drawn to the <em>same</em> resolved form.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">theorem</span> emergence : ∃! x_star : M, E x_star = x_star := <span class="kw">by</span>
+  <span class="kw">have</span> hK : <span class="tp">IsCompact</span> K := orbit_closure_compact
+  <span class="kw">have</span> hE : <span class="tp">Contraction</span> κ E := contraction_bound
+  <span class="kw">exact</span> <span class="tp">Banach</span>.fixed_point hK hE</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">7.1</span><span class="stars">★</span> State the Banach theorem and verify each hypothesis for (K, E).</div>
+   <div class="ex"><span class="n">7.2</span><span class="stars">★★</span> Compute the number of cycles n needed to guarantee d(Eⁿ(x₀), x*) ≤ 10⁻⁶ d(x₀,x*). (Answer: n ≈ 110.)</div>
+   <div class="ex"><span class="n">7.3</span><span class="stars">★★</span> Prove: x* lies in D_{i*(x*)}, i.e. the dominant phase is invariant under E (Theorem 7.2).</div>
+   <div class="ex"><span class="n">7.4</span><span class="stars">★★★</span> Compare Banach's route with a Brouwer-based alternative. List the hypotheses you would need and explain why the Banach route is cleaner.</div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L7</span>
+Using Volume V §6.2, rewrite the proof of Theorem 6.1 as a single paragraph suitable for a graduate oral exam. Keep every hypothesis explicit and highlight where SH enters.</div>
+
+   <div class="hint">Challenge ★★★. Identify a perturbation of E that turns the unique fixed point into a 2-cycle. Characterise when this occurs.</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Aplicar o Teorema do Ponto Fixo de Banach a (K, E). Entender a taxa d(Eⁿ(x₀), x*) ≤ κⁿ d(x₀,x*) e o significado estrutural de x*.</p>
+
+   <h3>Matemática</h3>
+   <div class="thm"><div class="lbl">Teorema 6.1 = Teorema 7.1 (Recursão / Emergência)</div>
+     Sob SH, E = O₁₂ ∘ ⋯ ∘ O₁ tem único ponto fixo x* ∈ K, e Eⁿ(x₀) → x* com taxa exponencial κⁿ.
+   </div>
+   <div class="eq">d(Eⁿ(x₀), x*) ≤ κⁿ d(x₀, x*),   κ ≤ √(7/9) ≈ 0,882.</div>
+   <p>K é compacto (logo completo); E : K → K é contração estrita; Banach dá existência + unicidade + convergência de uma só vez — sem convexidade, sem Brouwer.</p>
+
+   <h3>Física</h3>
+   <p>x* é o ponto fixo infravermelho do fluxo do grupo de renormalização definido por E. É a classe de universalidade da trajetória: todo estado inicial x₀ ∈ M é atraído à <em>mesma</em> forma resolvida.</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">theorem</span> emergencia : ∃! x_star : M, E x_star = x_star := <span class="kw">by</span>
+  <span class="kw">have</span> hK : <span class="tp">IsCompact</span> K := fecho_orbita_compacto
+  <span class="kw">have</span> hE : <span class="tp">Contracao</span> κ E := limitante_contracao
+  <span class="kw">exact</span> <span class="tp">Banach</span>.ponto_fixo hK hE</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">7.1</span><span class="stars">★</span> Enuncie o Teorema de Banach e verifique cada hipótese para (K, E).</div>
+   <div class="ex"><span class="n">7.2</span><span class="stars">★★</span> Calcule quantos ciclos n garantem d(Eⁿ(x₀), x*) ≤ 10⁻⁶ d(x₀,x*). (Resposta: n ≈ 110.)</div>
+   <div class="ex"><span class="n">7.3</span><span class="stars">★★</span> Prove: x* ∈ D_{i*(x*)}, i.e., a fase dominante é invariante sob E (Teorema 7.2).</div>
+   <div class="ex"><span class="n">7.4</span><span class="stars">★★★</span> Compare a rota via Banach com uma alternativa via Brouwer. Liste as hipóteses necessárias e explique por que a rota de Banach é mais limpa.</div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N7</span>
+Com o §6.2 do Volume V, reescreva a prova do Teorema 6.1 como um único parágrafo adequado para exame oral de pós-graduação. Mantenha cada hipótese explícita e destaque onde SH entra.</div>
+
+   <div class="hint">Desafio ★★★. Identifique uma perturbação de E que transforme o ponto fixo único em um 2-ciclo. Caracterize quando isso ocorre.</div>
+  </div>
+ </div>
+</article>
+
+<!-- ============ LEVEL VIII ============ -->
+<article class="level">
+ <div class="level-head">
+  <div class="side en"><div class="tag">Level VIII · Time</div><h2>Time, Identity, Emergence — Phenomenology as Structure</h2><div class="sub">From Chapter 8 and Appendices G–K.</div></div>
+  <div class="side br"><div class="tag">Nível VIII · Tempo</div><h2>Tempo, Identidade, Emergência — Fenomenologia como Estrutura</h2><div class="sub">Do Capítulo 8 e dos Apêndices G–K.</div></div>
+ </div>
+
+ <!-- DIAGRAM VIII : time spiral + 9 faces of time + full cycle -->
+ <div class="diag-band wide">
+  <svg viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-label="Time as integrated cycle">
+    <defs>
+      <linearGradient id="gT" x1="0" x2="1">
+        <stop offset="0" stop-color="#0ABAB5"/>
+        <stop offset="1" stop-color="#c8a24a"/>
+      </linearGradient>
+    </defs>
+    <!-- Left: 12-phase cycle colored by base op -->
+    <g transform="translate(200,200)">
+      <circle r="130" fill="none" stroke="#2a4b4a" stroke-width="1"/>
+      <!-- 12 nodes -->
+      <g>
+        <!-- Pre-computed 12 node positions (R=130) -->
+        <g>
+          <circle cx="0"   cy="-130" r="7" fill="#0ABAB5"/>
+          <circle cx="65"  cy="-112.6" r="7" fill="#0ABAB5"/>
+          <circle cx="112.6" cy="-65" r="7" fill="#0ABAB5"/>
+          <circle cx="130" cy="0" r="7" fill="#c8a24a"/>
+          <circle cx="112.6" cy="65" r="7" fill="#c8a24a"/>
+          <circle cx="65" cy="112.6" r="7" fill="#c8a24a"/>
+          <circle cx="0" cy="130" r="7" fill="#009c3b"/>
+          <circle cx="-65" cy="112.6" r="7" fill="#009c3b"/>
+          <circle cx="-112.6" cy="65" r="7" fill="#009c3b"/>
+          <circle cx="-130" cy="0" r="7" fill="#fff"/>
+          <circle cx="-112.6" cy="-65" r="7" fill="#fff"/>
+          <circle cx="-65" cy="-112.6" r="7" fill="#fff"/>
+        </g>
+      </g>
+      <!-- inward spiral -->
+      <g fill="none" stroke="url(#gT)" stroke-width="1.8">
+        <path d="M 130,0 Q 70,60 20,50 Q -20,40 -30,10 Q -18,-12 2,-8 Q 14,-2 4,4" />
+      </g>
+      <!-- x* -->
+      <circle r="6" fill="#fff" class="pulse"/>
+      <circle r="11" fill="none" stroke="#fff"/>
+      <text class="lab" x="10" y="4">x*</text>
+      <text class="lab lab-teal" x="-60" y="-150">12-phase cycle · spiral to x*</text>
+    </g>
+    <!-- Right: nine faces of time -->
+    <g transform="translate(450,30)">
+      <text class="lab" x="0" y="0" fill="#fff">Nine faces of time  ·  Nove faces do tempo</text>
+      <g font-family="JetBrains Mono,monospace" font-size="11" fill="#eaeaea">
+        <g transform="translate(0,22)">
+          <rect x="0" y="0" width="230" height="26" fill="#031615" stroke="#0ABAB555"/>
+          <text x="10" y="18">① constraint · restrição</text>
+          <text x="250" y="18" fill="#9cf3ef">non-comm. of G</text>
+        </g>
+        <g transform="translate(0,52)">
+          <rect x="0" y="0" width="230" height="26" fill="#031615" stroke="#0ABAB555"/>
+          <text x="10" y="18">② tension / release · tensão / liberação</text>
+          <text x="250" y="18" fill="#9cf3ef">C, K  vs  F, U</text>
+        </g>
+        <g transform="translate(0,82)">
+          <rect x="0" y="0" width="230" height="26" fill="#031615" stroke="#0ABAB555"/>
+          <text x="10" y="18">③ novelty · novidade</text>
+          <text x="250" y="18" fill="#9cf3ef">orthogonal increments (Ch 5)</text>
+        </g>
+        <g transform="translate(0,112)">
+          <rect x="0" y="0" width="230" height="26" fill="#031808" stroke="#c8a24a55"/>
+          <text x="10" y="18">④ accumulation · acúmulo</text>
+          <text x="250" y="18" fill="#ffe7a0">contraction integrates diff.</text>
+        </g>
+        <g transform="translate(0,142)">
+          <rect x="0" y="0" width="230" height="26" fill="#031808" stroke="#c8a24a55"/>
+          <text x="10" y="18">⑤ resolution · resolução</text>
+          <text x="250" y="18" fill="#ffe7a0">κ &lt; 1 · Ch 6</text>
+        </g>
+        <g transform="translate(0,172)">
+          <rect x="0" y="0" width="230" height="26" fill="#031808" stroke="#c8a24a55"/>
+          <text x="10" y="18">⑥ identity · identidade</text>
+          <text x="250" y="18" fill="#ffe7a0">E(x*) = x* · Ch 7</text>
+        </g>
+        <g transform="translate(0,202)">
+          <rect x="0" y="0" width="230" height="26" fill="#0b140a" stroke="#009c3b66"/>
+          <text x="10" y="18">⑦ irreversibility · irreversibilidade</text>
+          <text x="250" y="18" fill="#8ae1a2">E not injective</text>
+        </g>
+        <g transform="translate(0,232)">
+          <rect x="0" y="0" width="230" height="26" fill="#0b140a" stroke="#009c3b66"/>
+          <text x="10" y="18">⑧ present · presente</text>
+          <text x="250" y="18" fill="#8ae1a2">contraction step itself</text>
+        </g>
+        <g transform="translate(0,262)">
+          <rect x="0" y="0" width="230" height="26" fill="#081018" stroke="#ffffff55"/>
+          <text x="10" y="18">⑨ emergence · emergência</text>
+          <text x="250" y="18" fill="#fff">Banach attractor · Ch 7</text>
+        </g>
+      </g>
+    </g>
+  </svg>
+  <div class="caption"><div class="en-c">Fig VIII — The complete picture: the 12-phase cycle contracts inward to x*, while the nine phenomenological faces of time line up with the formal structures that produce them.</div><div class="br-c">Fig VIII — O quadro completo: o ciclo de 12 fases contrai-se para dentro rumo a x*, enquanto as nove faces fenomenológicas do tempo se alinham às estruturas formais que as produzem.</div></div>
+ </div>
+
+ <div class="level-body">
+
+  <div class="side en">
+   <h4>Objectives</h4>
+   <p>Integrate the mathematical results into the conceptual account of time in Chapter 8 and Appendix G. Read time as constraint, tension, novelty, accumulation, resolution, identity, irreversibility, interface, emergence.</p>
+
+   <h3>Mathematics → Phenomenology</h3>
+   <p>Time = constraint  ⇔  non-commutativity of G.<br>
+      Time = compression/release  ⇔  C, K vs F, U.<br>
+      Time = novelty  ⇔  orthogonal increments (Ch. 5).<br>
+      Time = resolution  ⇔  contraction (Ch. 6).<br>
+      Time = identity  ⇔  E(x*) = x* (Ch. 7).<br>
+      Time = irreversibility  ⇔  E not invertible.</p>
+
+   <h3>Physics</h3>
+   <p>The GTCT arrow of time is geometric, not thermodynamic. Entropy-based arguments are downstream: they <em>agree</em> with GTCT but are not needed to derive it. Connections: RG flow (Level VII), decoherence (Level II qudit), Lindbladian contractions (Chapter 6).</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">def</span> <span class="tp">Time</span> := <span class="tp">Iteration</span> E  <span class="cm">-- time is E applied repeatedly</span>
+<span class="kw">theorem</span> irreversibility : ¬ <span class="tp">Function</span>.<span class="tp">Injective</span> E := <span class="kw">by</span>
+  intro h
+  <span class="kw">have</span> := contraction_bound
+  <span class="cm">-- strict contraction ⇒ not injective on K of more than one point</span>
+  linarith</pre>
+
+   <h4>Exercises</h4>
+   <div class="ex"><span class="n">8.1</span><span class="stars">★</span> Pair each of the nine phenomenological faces of time (Ch. 8) with its mathematical counterpart.</div>
+   <div class="ex"><span class="n">8.2</span><span class="stars">★★</span> Argue: if κ = 1 (no contraction), identity cannot form. Connect to Appendix H.</div>
+   <div class="ex"><span class="n">8.3</span><span class="stars">★★</span> Reinterpret the berimbau machine (this book's cover player) in GTCT terms: name the operators audible in the bass, triad, binaural and drum voices.</div>
+   <div class="ex"><span class="n">8.4</span><span class="stars">★★★</span> Write a 500-word essay: <em>Why is the fixed point not the end of time, but the completion of becoming?</em></div>
+
+   <h4>Prompt for the LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·L8</span>
+Using Chapter 8 and Appendices G–K of Volume V, write a graduate-level essay connecting the Banach contraction on K to the phenomenology of the present moment in cognitive neuroscience. Cite the GTCT invariants I₁, I₂, I₃ explicitly.</div>
+
+   <div class="hint">Final Project. Build your own cymatic instrument (like the berimbau machine in this book). Declare which operators you are sounding out. Show the 12-step cycle audibly.</div>
+  </div>
+
+  <div class="side br">
+   <h4>Objetivos</h4>
+   <p>Integrar os resultados matemáticos à teoria conceitual do tempo (Cap. 8 e Apêndice G). Ler o tempo como restrição, tensão, novidade, acúmulo, resolução, identidade, irreversibilidade, interface, emergência.</p>
+
+   <h3>Matemática → Fenomenologia</h3>
+   <p>Tempo = restrição  ⇔  não-comutatividade de G.<br>
+      Tempo = compressão/liberação  ⇔  C, K vs F, U.<br>
+      Tempo = novidade  ⇔  incrementos ortogonais (Cap. 5).<br>
+      Tempo = resolução  ⇔  contração (Cap. 6).<br>
+      Tempo = identidade  ⇔  E(x*) = x* (Cap. 7).<br>
+      Tempo = irreversibilidade  ⇔  E não-invertível.</p>
+
+   <h3>Física</h3>
+   <p>A flecha do tempo da GTCT é geométrica, não termodinâmica. Argumentos entrópicos são consequência, não causa: eles <em>concordam</em> com a GTCT mas não são necessários para derivá-la. Conexões: fluxo RG (Nível VII), decoerência (Nível II, qudit), contrações Lindbladianas (Cap. 6).</p>
+
+   <h3>Lean 4</h3>
+<pre class="lean"><span class="kw">def</span> <span class="tp">Tempo</span> := <span class="tp">Iteracao</span> E  <span class="cm">-- tempo é E aplicado iteradamente</span>
+<span class="kw">theorem</span> irreversibilidade : ¬ <span class="tp">Function</span>.<span class="tp">Injective</span> E := <span class="kw">by</span>
+  intro h
+  <span class="kw">have</span> := limitante_contracao
+  <span class="cm">-- contração estrita ⇒ não-injetora em K com mais de um ponto</span>
+  linarith</pre>
+
+   <h4>Exercícios</h4>
+   <div class="ex"><span class="n">8.1</span><span class="stars">★</span> Pareie cada uma das nove faces fenomenológicas do tempo (Cap. 8) com seu correspondente matemático.</div>
+   <div class="ex"><span class="n">8.2</span><span class="stars">★★</span> Argumente: se κ = 1 (sem contração), a identidade não se forma. Conecte ao Apêndice H.</div>
+   <div class="ex"><span class="n">8.3</span><span class="stars">★★</span> Reinterprete a máquina de berimbau (a tocadora na capa deste livro) em termos da GTCT: nomeie os operadores audíveis nas vozes do grave, da tríade, do binaural e do atabaque.</div>
+   <div class="ex"><span class="n">8.4</span><span class="stars">★★★</span> Escreva um ensaio de 500 palavras: <em>Por que o ponto fixo não é o fim do tempo, mas a completude do devir?</em></div>
+
+   <h4>Prompt para o LLM</h4>
+   <div class="prompt"><span class="tag">GTCT·N8</span>
+Usando o Cap. 8 e os Apêndices G–K do Volume V, escreva um ensaio de pós-graduação ligando a contração de Banach em K à fenomenologia do momento presente na neurociência cognitiva. Cite os invariantes I₁, I₂, I₃ da GTCT explicitamente.</div>
+
+   <div class="hint">Projeto Final. Construa seu próprio instrumento cimático (como a máquina de berimbau neste livro). Declare quais operadores você está sonorizando. Mostre audivelmente o ciclo de 12 passos.</div>
+  </div>
+ </div>
+</article>
+
+</div><!-- /.book -->
+
+
+<!-- =========================================================
+     CLOSING
+     ========================================================= -->
+<footer class="closing">
+  <div class="sig">Pablo Nogueira Grossi · G6 LLC · Newark, NJ · 2026</div>
+  <div class="copy">Principia Orthogona · Volume V · Student Edition · Licensed for educational use at IMPA and partner programs</div>
+  <div class="copy" style="margin-top:6px">
+    ORCID
+    <a href="https://orcid.org/0009-0000-6496-2186" target="_blank" rel="noopener" style="color:#9cf3ef;text-decoration:none;border-bottom:1px dotted #9cf3ef">0009-0000-6496-2186</a>
+    · ISBN 979-8-9954416-6-3 · Copyright &copy; 2026 G6 LLC — All rights reserved
+  </div>
+  <div style="margin-top:14px">
+    <a href="https://totogt.github.io/AXLE/impa-portal.html" target="_blank" rel="noopener" style="display:inline-block;margin:6px;padding:8px 14px;border:1.5px solid #0ABAB5;color:#0ABAB5;border-radius:24px;text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase">AXLE · IMPA Portal ↗</a>
+    <a href="https://brodanova6.gumroad.com/l/soundworks" target="_blank" rel="noopener" style="display:inline-block;margin:6px;padding:8px 14px;border:1.5px solid #c8a24a;color:#c8a24a;border-radius:24px;text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase">Soundworks Membership ↗</a>
+  </div>
+</footer>
+
+<!-- =========================================================
+     SCRIPT — shared Berimbau Machine engine
+     ========================================================= -->
+<script>
+const engines={};
+function makeEngine(id,cymId,pal){
+  return {id,palette:pal,ctx:null,master:null,analyser:null,voices:{bass:null,triad:null,binaural:null,drum:null},
+          params:{arame:0.8,caxixi:0.35,binDelta:7,bpm:104},cym:document.getElementById(cymId),
+          drumTimer:null,running:false,t:0};
+}
+function ensureAudio(E){
+  if(E.ctx) return;
+  E.ctx=new (window.AudioContext||window.webkitAudioContext)();
+  E.master=E.ctx.createGain(); E.master.gain.value=0.65;
+  E.analyser=E.ctx.createAnalyser(); E.analyser.fftSize=2048;
+  E.master.connect(E.analyser); E.analyser.connect(E.ctx.destination);
+}
+function stopVoice(E,n){ if(E.voices[n]&&E.voices[n].stop){E.voices[n].stop(); E.voices[n]=null;} }
+function stopAll(E){ Object.keys(E.voices).forEach(k=>stopVoice(E,k)); E.running=false; }
+
+function startBass(E){
+  stopVoice(E,'bass'); const c=E.ctx;
+  const o=c.createOscillator(); o.type='triangle'; o.frequency.value=73.42;
+  const g=c.createGain(); g.gain.value=0;
+  const lfo=c.createOscillator(); lfo.frequency.value=0.3;
+  const lg=c.createGain(); lg.gain.value=4;
+  lfo.connect(lg).connect(o.frequency);
+  o.connect(g).connect(E.master); o.start(); lfo.start();
+  g.gain.linearRampToValueAtTime(0.25*E.params.arame,c.currentTime+0.8);
+  E.voices.bass={stop:()=>{g.gain.cancelScheduledValues(c.currentTime);g.gain.linearRampToValueAtTime(0,c.currentTime+0.4);
+    setTimeout(()=>{try{o.stop();lfo.stop();}catch(e){}},500);}};
+}
+function startTriad(E){
+  stopVoice(E,'triad'); const c=E.ctx;
+  const fs=[293.66,369.99,440.00]; const os=[], gs=[];
+  fs.forEach((f,i)=>{const o=c.createOscillator();o.type='sine';o.frequency.value=f;
+    const g=c.createGain();g.gain.value=0; o.connect(g).connect(E.master); o.start();
+    g.gain.linearRampToValueAtTime(0.13,c.currentTime+1+i*0.25); os.push(o); gs.push(g);});
+  E.voices.triad={stop:()=>{gs.forEach(g=>{g.gain.cancelScheduledValues(c.currentTime);g.gain.linearRampToValueAtTime(0,c.currentTime+0.4)});
+    setTimeout(()=>os.forEach(o=>{try{o.stop()}catch(e){}}),500);},setDelta:()=>{}};
+}
+function startBinaural(E){
+  stopVoice(E,'binaural'); const c=E.ctx;
+  const m=c.createChannelMerger(2);
+  const oL=c.createOscillator(); oL.type='sine'; oL.frequency.value=220;
+  const oR=c.createOscillator(); oR.type='sine'; oR.frequency.value=220+E.params.binDelta;
+  const gL=c.createGain(), gR=c.createGain(); gL.gain.value=0; gR.gain.value=0;
+  oL.connect(gL).connect(m,0,0); oR.connect(gR).connect(m,0,1); m.connect(E.master);
+  oL.start(); oR.start();
+  gL.gain.linearRampToValueAtTime(0.17,c.currentTime+0.6);
+  gR.gain.linearRampToValueAtTime(0.17,c.currentTime+0.6);
+  E.voices.binaural={stop:()=>{gL.gain.linearRampToValueAtTime(0,c.currentTime+0.3);gR.gain.linearRampToValueAtTime(0,c.currentTime+0.3);
+    setTimeout(()=>{try{oL.stop();oR.stop();}catch(e){}},400);},
+    setDelta:(d)=>{oR.frequency.linearRampToValueAtTime(220+d,c.currentTime+0.1);}};
+}
+function drumHit(E,amp){
+  const c=E.ctx, now=c.currentTime;
+  const bl=c.sampleRate*0.25; const n=c.createBuffer(1,bl,c.sampleRate);
+  const d=n.getChannelData(0); for(let i=0;i<bl;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/bl,2.2);
+  const s=c.createBufferSource(); s.buffer=n;
+  const bp=c.createBiquadFilter(); bp.type='lowpass'; bp.frequency.value=110+amp*140;
+  const g=c.createGain(); g.gain.value=0.0001;
+  s.connect(bp).connect(g).connect(E.master);
+  g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.6*amp,now+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,now+0.35);
+  s.start(now); s.stop(now+0.4);
+  const cx=E.params.caxixi;
+  if(cx>0.02){
+    const b2=c.createBuffer(1,c.sampleRate*0.12,c.sampleRate); const d2=b2.getChannelData(0);
+    for(let i=0;i<d2.length;i++) d2[i]=(Math.random()*2-1)*Math.pow(1-i/d2.length,1.5);
+    const s2=c.createBufferSource(); s2.buffer=b2;
+    const hp=c.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3800;
+    const g2=c.createGain(); g2.gain.value=0.0001;
+    s2.connect(hp).connect(g2).connect(E.master);
+    g2.gain.exponentialRampToValueAtTime(0.25*cx*amp,now+0.005);
+    g2.gain.exponentialRampToValueAtTime(0.0001,now+0.12);
+    s2.start(now); s2.stop(now+0.15);
+  }
+}
+function startDrum(E){
+  stopVoice(E,'drum');
+  const pat=[1,0,0.3,0,0.6,0,1,0,0.3,0.5,0.6,0]; let step=0;
+  const tick=()=>{
+    if(!E.voices.drum) return;
+    const v=pat[step%12]; if(v>0) drumHit(E,v); step++;
+    const bpm=E.params.bpm; const itv=60000/(bpm*2);
+    E.drumTimer=setTimeout(tick,itv);
+  };
+  E.voices.drum={stop:()=>{clearTimeout(E.drumTimer);E.drumTimer=null;}};
+  tick();
+}
+function drawCym(E){
+  const cvs=E.cym; const dpr=window.devicePixelRatio||1;
+  const W=cvs.clientWidth, H=cvs.clientHeight;
+  if(cvs.width!==W*dpr){cvs.width=W*dpr; cvs.height=H*dpr;}
+  const g=cvs.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle='rgba(0,0,0,0.22)'; g.fillRect(0,0,W,H);
+  let spec=null;
+  if(E.analyser){const b=new Uint8Array(E.analyser.frequencyBinCount); E.analyser.getByteFrequencyData(b); spec=b;}
+  const cx=W/2, cy=H/2; const N=220; E.t+=0.012;
+  const modes=[]; const bands=[3,6,9,13,18,26,36];
+  if(spec) bands.forEach((b,i)=>modes.push({k:2+i,amp:(spec[b]||0)/255,phase:E.t*(0.5+i*0.15)}));
+  else for(let i=0;i<6;i++) modes.push({k:2+i,amp:0.15,phase:E.t*(0.3+i*0.1)});
+  const rMax=Math.min(W,H)*0.46;
+  g.lineWidth=1;
+  const [c1,c2,c3]=E.palette;
+  g.beginPath();
+  for(let i=0;i<N;i++){
+    const a=i/N*Math.PI*2; let r=0;
+    modes.forEach(m=>{ r += m.amp*Math.cos(m.k*a+m.phase)*(1-m.k*0.04); });
+    const rr=rMax*(0.55+0.45*(0.5+0.5*Math.sin(E.t+a*2))+r*0.35);
+    const x=cx+Math.cos(a)*rr, y=cy+Math.sin(a)*rr;
+    if(i===0) g.moveTo(x,y); else g.lineTo(x,y);
+  }
+  g.closePath();
+  const grd=g.createRadialGradient(cx,cy,10,cx,cy,rMax);
+  grd.addColorStop(0,c1+"cc"); grd.addColorStop(0.6,c2+"66"); grd.addColorStop(1,c3+"00");
+  g.fillStyle=grd; g.fill(); g.strokeStyle=c1+"aa"; g.stroke();
+  if(spec){
+    for(let ring=0;ring<4;ring++){
+      g.beginPath();
+      const rr0=rMax*(0.15+ring*0.09); const idx0=4+ring*6;
+      for(let i=0;i<180;i++){
+        const a=i/180*Math.PI*2; const bin=(spec[(idx0+(i%24))]||0)/255;
+        const r=rr0+bin*18; const x=cx+Math.cos(a)*r, y=cy+Math.sin(a)*r;
+        if(i===0) g.moveTo(x,y); else g.lineTo(x,y);
+      }
+      g.closePath(); g.strokeStyle=[c1,c2,c3,c2][ring]+"77"; g.stroke();
+    }
+  }
+  g.fillStyle=c1; g.beginPath(); g.arc(cx,cy,3.5,0,Math.PI*2); g.fill();
+  requestAnimationFrame(()=>drawCym(E));
+}
+
+function bind(E,pfx){
+  document.querySelectorAll(`[data-engine="${E.id}"]`).forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      ensureAudio(E); if(E.ctx.state==='suspended') E.ctx.resume();
+      const a=btn.dataset.action, v=btn.dataset.voice;
+      if(a==='start'){startBass(E);startTriad(E);startBinaural(E);startDrum(E);
+        document.querySelectorAll(`[data-engine="${E.id}"][data-voice]`).forEach(b=>b.classList.add('active'));
+        E.running=true;}
+      else if(a==='stop'){stopAll(E);
+        document.querySelectorAll(`[data-engine="${E.id}"][data-voice]`).forEach(b=>b.classList.remove('active'));}
+      else if(v){
+        if(E.voices[v]){stopVoice(E,v); btn.classList.remove('active');}
+        else {if(v==='bass') startBass(E); if(v==='triad') startTriad(E);
+              if(v==='binaural') startBinaural(E); if(v==='drum') startDrum(E);
+              btn.classList.add('active');}
+      }
+    });
+  });
+  const $=id=>document.getElementById(id);
+  const a=$(`${pfx}Arame`), aV=$(`${pfx}ArameV`);
+  const x=$(`${pfx}Cax`),   xV=$(`${pfx}CaxV`);
+  const b=$(`${pfx}Bin`),   bV=$(`${pfx}BinV`);
+  const m=$(`${pfx}Bpm`),   mV=$(`${pfx}BpmV`);
+  a.addEventListener('input',()=>{E.params.arame=+a.value;aV.textContent=(+a.value).toFixed(2);
+    if(E.voices.bass && E.ctx){stopVoice(E,'bass');startBass(E);}});
+  x.addEventListener('input',()=>{E.params.caxixi=+x.value;xV.textContent=(+x.value).toFixed(2);});
+  b.addEventListener('input',()=>{E.params.binDelta=+b.value;bV.textContent=(+b.value).toFixed(1)+' Hz';
+    if(E.voices.binaural && E.voices.binaural.setDelta) E.voices.binaural.setDelta(+b.value);});
+  m.addEventListener('input',()=>{E.params.bpm=+m.value;mV.textContent=m.value;});
+}
+
+const enE=makeEngine('en','cymEn',['#0ABAB5','#9cf3ef','#022b2a']);
+const brE=makeEngine('br','cymBr',['#c8a24a','#009c3b','#002776']);
+engines.en=enE; engines.br=brE;
+bind(enE,'en'); bind(brE,'br');
+drawCym(enE); drawCym(brE);
+</script>
+</body>
+</html>

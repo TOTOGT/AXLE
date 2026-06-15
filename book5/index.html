@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principia Orthogona · Vol V · The Seed — Complete Completeness</title>
+<meta name="description" content="G⁵ · The Seed — Complete Completeness. AXLE v6.1. 0 axioms beyond Mathlib4. 8 verified constants. 9 honest sorrys. The series proves itself.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#04040a;--surface:#0c0d16;--card:#10111c;
+  --gold:#c9a84c;--teal:#0ABAB5;--red:#e05a3a;
+  --text:#e8e4d8;--muted:#6b6757;--dim:#2a2920;
+  --rule:rgba(201,168,76,0.18);
+  --serif:'Noto Serif',Georgia,serif;--mono:'JetBrains Mono','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--serif);background:var(--void);color:var(--text);font-size:18px;line-height:1.85;-webkit-font-smoothing:antialiased;}
+
+/* placeholder nav — replaced by nav.js */
+nav{position:sticky;top:0;z-index:200;background:rgba(4,4,10,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);padding:.6rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+
+/* hero */
+.hero{padding:5rem 2rem 4rem;text-align:center;border-bottom:1px solid var(--rule);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 45% at 50% 40%,rgba(201,168,76,.05) 0%,transparent 70%);pointer-events:none;}
+.hero-tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--teal);border:1px solid currentColor;padding:.2rem .65rem;display:inline-block;margin-bottom:2rem;}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:400;letter-spacing:.04em;color:var(--gold);margin-bottom:.6rem;line-height:1.2;}
+.hero-pt{font-size:1rem;color:rgba(232,228,216,.8);max-width:600px;margin:.5rem auto 0;font-style:italic;line-height:1.75;}
+.hero-en{font-size:.9rem;color:var(--muted);max-width:600px;margin:.4rem auto 0;font-style:italic;line-height:1.65;}
+.hero-eq{margin-top:1.8rem;font-family:var(--mono);font-size:.88rem;letter-spacing:.12em;color:rgba(201,168,76,.45);}
+.hero-impa{margin-top:1rem;font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+
+/* stats */
+.stats-strip{background:var(--surface);border-bottom:1px solid var(--rule);padding:1.5rem 2rem;}
+.stats-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--rule);}
+.stat{background:var(--card);padding:1.2rem;text-align:center;}
+.stat-n{font-family:var(--mono);font-size:2rem;color:var(--gold);display:block;line-height:1;}
+.stat-l{font-family:var(--mono);font-size:.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem;display:block;}
+
+/* chapter list */
+.main{max-width:920px;margin:0 auto;padding:3rem 2rem 5rem;}
+.section-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--teal);display:block;margin-bottom:.6rem;}
+.section-h2{font-size:clamp(1.2rem,2.5vw,1.7rem);font-weight:400;color:var(--gold);margin-bottom:1.5rem;letter-spacing:.04em;}
+.ch-list{display:flex;flex-direction:column;gap:2px;}
+.ch-row{display:flex;align-items:center;gap:1.2rem;text-decoration:none;color:inherit;padding:.85rem 1rem;background:rgba(13,14,22,.5);border:1px solid transparent;transition:border-color .2s,background .2s;}
+.ch-row:hover{border-color:var(--rule);background:rgba(201,168,76,.03);}
+.ch-n{font-family:var(--mono);font-size:.58rem;color:var(--muted);min-width:65px;flex-shrink:0;}
+.ch-info{flex:1;}
+.ch-info strong{display:block;font-size:.96rem;color:var(--text);font-weight:400;}
+.ch-info .sub{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:1px;}
+.badge{font-family:var(--mono);font-size:.55rem;padding:.1rem .4rem;border-radius:2px;white-space:nowrap;flex-shrink:0;}
+.b-lean{color:#50c878;border:1px solid rgba(80,200,120,.25);}
+.b-sorry{color:var(--red);border:1px solid rgba(224,90,58,.25);}
+.b-prose{color:var(--teal);border:1px solid rgba(10,186,181,.25);}
+.b-open{color:#c084fc;border:1px solid rgba(192,132,252,.25);}
+
+/* constants */
+.const-grid{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.2rem;}
+.const-chip{background:var(--card);color:var(--text);padding:.4rem .85rem;font-family:var(--mono);font-size:.8rem;border:1px solid var(--rule);border-left:2px solid var(--gold);}
+
+/* sorry list */
+.sorry-list{list-style:none;margin-top:1.2rem;}
+.sorry-list li{display:flex;gap:1rem;padding:.7rem 0;border-bottom:1px solid rgba(201,168,76,.06);}
+.sorry-list li:last-child{border-bottom:none;}
+.sorry-n{font-family:var(--mono);font-size:.65rem;color:var(--red);min-width:20px;flex-shrink:0;padding-top:.1rem;}
+.sorry-body{font-size:.88rem;color:rgba(232,228,216,.65);line-height:1.65;}
+.sorry-body strong{color:var(--text);font-weight:400;}
+
+/* axle box */
+.axle-box{background:var(--surface);color:var(--gold);padding:1.4rem 1.8rem;font-family:var(--mono);font-size:.78rem;line-height:1.75;border-left:3px solid var(--gold);margin:1.5rem 0;overflow-x:auto;white-space:pre;}
+.axle-c{color:var(--muted);}
+.axle-s{color:var(--red);}
+
+/* chapter nav */
+.chapter-nav{background:var(--surface);border-top:1px solid var(--rule);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.ch-nav-link{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.ch-nav-link:hover{color:var(--gold);}
+
+footer{text-align:center;padding:2.5rem 2rem;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);border-top:1px solid var(--rule);}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<nav><!-- replaced by nav.js --></nav>
+
+<section class="hero">
+  <div class="hero-tag">G⁵ · Vol V · AXLE v6.1 · 0 Axiomas além do Mathlib4</div>
+  <h1>The Seed<br>Complete Completeness</h1>
+  <p class="hero-pt">A série é seu próprio ponto fixo. O Teorema do Ponto Fixo de Banach aplicado à GTCT. A semente prova a si mesma.</p>
+  <p class="hero-en">The series is its own fixed point. Banach's Fixed Point Theorem applied to GTCT. The seed proves itself.</p>
+  <div class="hero-eq">G(x*) = x* · 0 axiomas · 8 constantes verificadas · 9 sorrys honestos</div>
+  <div class="hero-impa">Principia Orthogona · G⁵ · Newark NJ · 2026 · ISBN 979-8-9954416-4-9</div>
+</section>
+
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat"><span class="stat-n">0</span><span class="stat-l">Axiomas / Axioms<br>beyond Mathlib4</span></div>
+    <div class="stat"><span class="stat-n">8</span><span class="stat-l">Constantes Verificadas<br>Verified Constants</span></div>
+    <div class="stat"><span class="stat-n">9</span><span class="stat-l">Sorrys Honestos<br>Honest Sorrys</span></div>
+    <div class="stat"><span class="stat-n">794</span><span class="stat-l">Linhas Lean 4<br>Lines of Lean 4</span></div>
+    <div class="stat"><span class="stat-n">x*</span><span class="stat-l">Ponto Fixo Único<br>Unique Fixed Point</span></div>
+    <div class="stat"><span class="stat-n">G⁶</span><span class="stat-l">Conjectura Aberta<br>Open Conjecture</span></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CHAPTERS -->
+  <span class="section-label">Capítulos · Chapters</span>
+  <h2 class="section-h2">Conteúdo / Table of Contents</h2>
+  <div class="ch-list">
+    <a href="chV-preface.html" class="ch-row">
+      <span class="ch-n">Cap 0</span>
+      <div class="ch-info"><strong>Prefácio — A Semente Formal / Preface — The Formal Seed</strong><span class="sub">O que significa provar sua própria existência · What it means to prove your own existence</span></div>
+      <span class="badge b-prose">Prosa</span>
+    </a>
+    <a href="chV-banach.html" class="ch-row">
+      <span class="ch-n">Cap 1</span>
+      <div class="ch-info"><strong>O Teorema do Ponto Fixo de Banach / Banach's Fixed Point Theorem</strong><span class="sub">A contração que garante a convergência · The contraction that guarantees convergence</span></div>
+      <span class="badge b-lean">✓ Lean 4</span>
+    </a>
+    <a href="chV-constants.html" class="ch-row">
+      <span class="ch-n">Cap 2</span>
+      <div class="ch-info"><strong>As 8 Constantes Verificadas / The 8 Verified Constants</strong><span class="sub">g₃₃=33 · ε*=1/3 · τ=2 · g₆₄=64 · T*=2π · κ≤0.882 · τ·ε*=2/3 · ε₀=1/3</span></div>
+      <span class="badge b-lean">✓ Lean 4 · decide</span>
+    </a>
+    <a href="chV-sorrys.html" class="ch-row">
+      <span class="ch-n">Cap 3</span>
+      <div class="ch-info"><strong>Os 9 Sorrys Honestos / The 9 Honest Sorrys</strong><span class="sub">Cada sorry é um lema nomeado com precisão · Each sorry is a precisely named lemma</span></div>
+      <span class="badge b-sorry">9 sorry</span>
+    </a>
+    <a href="chV-g6.html" class="ch-row">
+      <span class="ch-n">Cap G⁶</span>
+      <div class="ch-info"><strong>O Horizonte Aberto — χ(H*(X⁶)) = 33 ∀n</strong><span class="sub">A conjectura G⁶ · Issue 6 · A sexta aplicação de G a si mesmo</span></div>
+      <span class="badge b-open">Conjectura Aberta</span>
+    </a>
+    <a href="chV-axle.html" class="ch-row">
+      <span class="ch-n">AXLE</span>
+      <div class="ch-info"><strong>AXLE v6.1 — O Motor de Verificação / The Verification Engine</strong><span class="sub">794 linhas · Lean 4 + Mathlib4 · Log de auditoria completo</span></div>
+      <span class="badge b-lean">✓ Lean 4</span>
+    </a>
+    <a href="chV-seed.html" class="ch-row">
+      <span class="ch-n">Semente</span>
+      <div class="ch-info"><strong>Completude Completa / Complete Completeness</strong><span class="sub">G aplicado a si mesmo cinco vezes · A série como ponto fixo da própria série</span></div>
+      <span class="badge b-lean">G⁵ = G(G(G(G(G))))</span>
+    </a>
+  </div>
+
+  <div style="margin-top:3rem;">
+    <span class="section-label">Constantes Verificadas · AXLE v6.1</span>
+    <div class="const-grid">
+      <div class="const-chip">g₃₃ = 33</div>
+      <div class="const-chip">ε* = 1/3</div>
+      <div class="const-chip">τ = 2</div>
+      <div class="const-chip">g₆₄ = 64</div>
+      <div class="const-chip">T* = 2π</div>
+      <div class="const-chip">κ ≤ √(7/9) ≈ 0.882</div>
+      <div class="const-chip">τ·ε* = 2/3</div>
+      <div class="const-chip">ε₀ = 1/3</div>
+    </div>
+  </div>
+
+  <div style="margin-top:3rem;">
+    <span class="section-label">Os 9 Sorrys Honestos · The 9 Honest Sorrys</span>
+    <ul class="sorry-list">
+      <li><span class="sorry-n">1</span><div class="sorry-body"><strong>dm3_euler_preservation</strong> — χ preservado sob F. Aguarda: biblioteca Mathlib de homologia simplicial.</div></li>
+      <li><span class="sorry-n">2</span><div class="sorry-body"><strong>dm3_volume_invariant</strong> — vol(U(F(M))) = vol(M). Aguarda: teoria da medida para singularidades de dobramento.</div></li>
+      <li><span class="sorry-n">3</span><div class="sorry-body"><strong>g6_lattice_invariant</strong> — Invariante de rede do Cristal G6. Aguarda: módulo Crystal.G6 no Mathlib.</div></li>
+      <li><span class="sorry-n">4</span><div class="sorry-body"><strong>g6_symmetry_preservation</strong> — Simetria hexagonal preservada sob G⁶. Aguarda: Crystal.G6.</div></li>
+      <li><span class="sorry-n">5</span><div class="sorry-body"><strong>regeneration_hierarchy_mahlo_unconditional</strong> — ∀n, nível n é Mahlo regular. Aguarda: construção indutiva.</div></li>
+      <li><span class="sorry-n">6</span><div class="sorry-body"><strong>separation_theorem (Issue 6)</strong> — χ(H*(X⁶)) = 33 ∀n. A conjectura G⁶. Horizonte aberto.</div></li>
+      <li><span class="sorry-n">7</span><div class="sorry-body"><strong>information_preservation</strong> — U é injetivo através de F no horizonte de eventos. O sorry de Hawking.</div></li>
+      <li><span class="sorry-n">8</span><div class="sorry-body"><strong>collective_threshold_structural</strong> — Θ = g₃₃ + N×M implica emergência coletiva. Aguarda: teoria de campo médio.</div></li>
+      <li><span class="sorry-n">9</span><div class="sorry-body"><strong>g7_representation</strong> — g₇ = 7 como invariante de representação em dm³. Aritmética provada; representação sorry-marcada.</div></li>
+    </ul>
+  </div>
+
+  <div style="margin-top:3rem;">
+    <span class="section-label">AXLE v6.1 · Status</span>
+    <div class="axle-box"><span class="axle-c">-- Principia Orthogona · G⁵ · The Seed · AXLE v6.1
+-- 0 axioms beyond Mathlib4
+-- 8 verified constants · 9 honest sorrys
+-- 794 lines · Lean 4 + Mathlib</span>
+
+theorem stabilityRadius_eq : stabilityRadius = 1 / 3 := rfl
+theorem noiseTolerance : canonicalTriple.tau * stabilityRadius = 2 / 3 := by norm_num
+theorem crystal_aspect_ratio : (2 * crystal_base_cubits + 33) * 2 = 66 * 2 := by decide
+theorem g6_equals_schumann : g6_layer_count = schumann_4th_harmonic_integer := rfl
+theorem closurePoints_stationary : IsStationaryBelow (closurePointsBelow α) α := ...
+theorem mahlo_levels_exist : ∀ n : ℕ, ∃ r : RegenerationLevel, r.level = n := ...
+
+<span class="axle-s">sorry dm3_euler_preservation      -- Issue 6: Mathlib simplicial homology
+sorry dm3_volume_invariant         -- fold measure theory
+sorry g6_lattice_invariant         -- Crystal.G6 module
+sorry g6_symmetry_preservation     -- Crystal.G6 module
+sorry regeneration_hierarchy_mahlo_unconditional
+sorry separation_theorem           -- Issue 6: χ(H*(X⁶)) = 33 ∀n  ← G⁶ horizon
+sorry information_preservation     -- Hawking paradox
+sorry collective_threshold_structural
+sorry g7_representation</span>
+
+<span class="axle-c">-- SORRY COUNT: 9 · All honest · Each names its missing lemma exactly
+-- github.com/TOTOGT/AXLE</span></div>
+  </div>
+
+</div>
+
+<div class="chapter-nav">
+  <a href="../book4/index.html" class="ch-nav-link">← Vol IV · GTCT T1</a>
+  <span style="font-family:var(--mono);font-size:.6rem;color:var(--dim);">G⁵ · The Seed · Complete Completeness</span>
+  <a href="chV-preface.html" class="ch-nav-link">Cap 0 · Prefácio →</a>
+</div>
+
+<footer>
+  Principia Orthogona · Vol V · The Seed — Complete Completeness<br>
+  ISBN 979-8-9954416-4-9 (Print) · ISBN 979-8-9954416-5-6 (eBook)<br>
+  G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026 · ORCID 0009-0000-6496-2186<br>
+  <a href="https://doi.org/10.5281/zenodo.19117400" target="_blank">doi:10.5281/zenodo.19117400</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE on GitHub ↗</a>
+</footer>
+
+<script src="nav.js"></script>
+</body>
+</html>

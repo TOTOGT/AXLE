@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXLE — O Motor de Verificação / The Verification Engine — Vol V · Principia Orthogona</title>
+<meta name="description" content="AXLE é o ambiente de verificação formal da série Principia Orthogona — Lean 4 + Mathlib4, 794 linhas, 8 constantes verificadas, 9 sorrys honestos. AXLE is the formal verification environment for the series.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'],['\\(','\\)']],
+    displayMath: [['$$','$$'],['\\[','\\]']],
+    tags: 'ams',
+    macros: {
+      opC: ['{\\color{#0ABAB5}{C}}', 0],
+      opK: ['{\\color{#e05a3a}{K}}', 0],
+      opF: ['{\\color{#50c878}{F}}', 0],
+      opU: ['{\\color{#c084fc}{U}}', 0],
+      opG: ['{\\color{#c9a84c}{G}}', 0],
+      xstar: ['{\\color{#c9a84c}{x^*}}', 0],
+      kappa: ['{\\color{#c9a84c}{\\kappa}}', 0]
+    }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --gold2:   #e8c96a;
+  --teal:    #0ABAB5;
+  --red:     #e05a3a;
+  --green:   #50c878;
+  --violet:  #c084fc;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --col-gap: 3.5rem;
+  --col-w:   44%;
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 2rem 4rem; text-align: center;
+  border-bottom: 1px solid var(--rule);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 45% at 50% 45%, rgba(80,200,120,.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag  { font-family: var(--mono); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase; color: var(--green); border: 1px solid currentColor; padding: .2rem .65rem; display: inline-block; margin-bottom: 2rem; }
+.hero h1   { font-size: clamp(1.8rem,4vw,3rem); font-weight: 400; letter-spacing: .04em; color: var(--gold); margin-bottom: .6rem; line-height: 1.2; }
+.hero-pt   { font-size: 1rem; color: rgba(232,228,216,.8); max-width: 580px; margin: .5rem auto 0; font-style: italic; line-height: 1.75; }
+.hero-en   { font-size: .9rem; color: var(--muted); max-width: 580px; margin: .4rem auto 0; font-style: italic; line-height: 1.65; }
+.hero-impa { margin-top: 1.2rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+
+/* ── SECTION STRIP ── */
+.section-strip {
+  background: var(--surface); padding: 1.2rem 2rem; text-align: center;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.section-strip .sl { font-family: var(--mono); font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .25rem; }
+.section-strip .sl.green { color: var(--green); }
+.section-strip .st { font-size: 1rem; color: var(--gold); font-weight: 400; }
+
+/* ── BILINGUAL ── */
+.page { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.bilingual {
+  display: grid;
+  grid-template-columns: var(--col-w) var(--col-w);
+  gap: var(--col-gap);
+  justify-content: center;
+}
+@media (max-width: 860px) { .bilingual { grid-template-columns: 1fr; } }
+
+.col-header {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); padding-bottom: .6rem; border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem;
+}
+.col-header .lang-native { color: var(--gold); }
+.col-primary .col-header  { border-bottom-color: rgba(201,168,76,.45); }
+
+/* Prose */
+.block-prose { font-size: 1rem; line-height: 1.88; margin-bottom: 1.5rem; color: rgba(232,228,216,.88); }
+.block-prose:last-child { margin-bottom: 0; }
+
+/* Pull quote */
+.block-quote {
+  border-left: 2px solid var(--gold); padding: .8rem 1.4rem;
+  margin: 1.8rem 0; background: rgba(201,168,76,.025);
+  font-style: italic; font-size: 1.05rem; color: var(--text); line-height: 1.75;
+}
+.block-quote cite {
+  display: block; margin-top: .5rem;
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
+  color: var(--muted); font-style: normal; text-transform: uppercase;
+}
+
+/* Math block */
+.block-math {
+  font-family: var(--mono); font-size: .85rem; color: var(--gold);
+  background: var(--surface); border: 1px solid var(--dim);
+  padding: .7rem 1.1rem; margin: 1.2rem 0; overflow-x: auto;
+  line-height: 1.7; text-align: center;
+}
+
+/* ── LEAN BLOCK ── */
+.lean-card {
+  background: rgba(4,4,10,.6);
+  border: 1px solid rgba(80,200,120,.2);
+  border-left: 3px solid var(--green);
+  padding: 1.2rem 1.5rem; margin: 1.2rem 0;
+}
+.lean-tag  { font-family: var(--mono); font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; color: var(--green); margin-bottom: .6rem; display: block; }
+.lean-code { font-family: var(--mono); font-size: .78rem; color: var(--gold2); line-height: 1.72; display: block; overflow-x: auto; white-space: pre; }
+.lean-cm   { color: var(--muted); }
+.lean-kw   { color: #0ABAB5; }
+.lean-tp   { color: #c084fc; }
+.lean-sorry { color: var(--red); font-weight: 700; }
+.lean-ok   { color: var(--green); }
+
+/* ── STAT ROW ── */
+.stat-row { display: flex; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 1.5rem 0; overflow: hidden; }
+.stat-cell { flex: 1; background: var(--card); padding: 1rem .8rem; text-align: center; }
+.stat-n { font-family: var(--mono); font-size: 1.6rem; color: var(--gold); display: block; line-height: 1; }
+.stat-n.red { color: var(--red); }
+.stat-n.green { color: var(--green); }
+.stat-l { font-family: var(--mono); font-size: .52rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: .25rem; display: block; }
+
+/* ── LINKOUT ── */
+.link-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.link-btn {
+  font-family: var(--mono); font-size: .65rem; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--text); border: 1px solid var(--rule); padding: .55rem 1.1rem;
+  text-decoration: none; transition: all .2s; display: inline-block;
+}
+.link-btn:hover { color: var(--gold); border-color: rgba(201,168,76,.4); }
+.link-btn.gold { color: var(--gold); border-color: rgba(201,168,76,.45); }
+.link-btn.green { color: var(--green); border-color: rgba(80,200,120,.35); }
+
+/* ── WIDE SECTION (single column full-width) ── */
+.page-wide { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+
+/* Chapter nav */
+.ch-nav { background: var(--surface); border-top: 1px solid var(--rule); padding: .9rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ch-nav a { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: .3rem .8rem; border: 1px solid var(--rule); transition: all .2s; }
+.ch-nav a:hover { color: var(--gold); border-color: rgba(201,168,76,.4); }
+.ch-nav .current { color: var(--gold); letter-spacing: .15em; }
+
+footer { text-align: center; padding: 3rem 2rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); margin-top: 4rem; }
+footer a { color: var(--gold); text-decoration: none; }
+
+@media(max-width:700px) { .page { padding: 2rem 1.2rem; } .stat-row { flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+
+<nav><!-- replaced by nav.js --></nav>
+
+<!-- ══════════════════════════════
+     HERO
+     ══════════════════════════════ -->
+<div class="hero">
+  <span class="hero-tag">AXLE v6.1 · Vol V · Lean 4 + Mathlib4 · 794 linhas</span>
+  <h1>AXLE<br><em style="font-size:.6em;color:rgba(201,168,76,.6)">something eXtensible Lean Engine</em></h1>
+  <p class="hero-pt">O ambiente de verificação formal da série Principia Orthogona.</p>
+  <p class="hero-en">The formal verification environment for the Principia Orthogona series.</p>
+  <div class="hero-impa">Principia Orthogona · G⁵ · github.com/TOTOGT/AXLE · Newark NJ · 2026</div>
+</div>
+
+
+<!-- ══════════════════════════════
+     § AXLE.0 — WHAT IS AXLE
+     ══════════════════════════════ -->
+<div class="section-strip">
+  <span class="sl green">§ AXLE.0</span>
+  <span class="st">O que é o AXLE · What AXLE is</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      AXLE é o ambiente de verificação formal da série Principia Orthogona.
+      Escrito em Lean 4 com Mathlib4, ele traduz as afirmações matemáticas dos
+      cinco volumes em obrigações verificáveis por máquina. Cada constante,
+      cada lema, cada cadeia de operadores tem um análogo em Lean —
+      provado ou marcado honestamente com
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code>.
+    </p>
+
+    <p class="block-prose">
+      Nada no AXLE é decorativo. Se uma constante aparece em prosa — $g_{33}=33$,
+      $\varepsilon_0=\tfrac13$, $\kappa\le\sqrt{7/9}$, $T^*=2\pi$ — ela aparece
+      também como um <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">theorem</code>
+      em Main.lean, fechado por <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">rfl</code>,
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">decide</code> ou
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">norm_num</code> — ou
+      por um <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code> nomeado,
+      catalogado no Cap 3.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-cell"><span class="stat-n">794</span><span class="stat-l">Linhas Lean 4</span></div>
+      <div class="stat-cell"><span class="stat-n green">8</span><span class="stat-l">Constantes verificadas</span></div>
+      <div class="stat-cell"><span class="stat-n red">9</span><span class="stat-l">Sorrys honestos</span></div>
+      <div class="stat-cell"><span class="stat-n">0</span><span class="stat-l">Axiomas além do Mathlib4</span></div>
+    </div>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      AXLE is the formal verification environment for the Principia Orthogona
+      series. Written in Lean 4 with Mathlib4, it translates the mathematical
+      claims of the five volumes into machine-checkable obligations. Every
+      constant, every lemma, every operator chain has a Lean analogue —
+      proved, or honestly marked with
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code>.
+    </p>
+
+    <p class="block-prose">
+      Nothing in AXLE is decorative. If a constant appears in prose —
+      $g_{33}=33$, $\varepsilon_0=\tfrac13$, $\kappa\le\sqrt{7/9}$, $T^*=2\pi$ —
+      it also appears as a
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">theorem</code>
+      in Main.lean, closed by
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">rfl</code>,
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">decide</code>, or
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--green)">norm_num</code> —
+      or by a named
+      <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code>,
+      catalogued in Cap 3.
+    </p>
+
+    <div class="block-quote">
+      A theorem you cannot check is a sentence. AXLE exists so that every
+      sentence in this series is, at minimum, checkable — even when the
+      check is currently a named <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code>.
+      <cite>— AXLE v6.1 · README</cite>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ══════════════════════════════
+     § AXLE.1 — THE NAME
+     ══════════════════════════════ -->
+<div class="section-strip">
+  <span class="sl green">§ AXLE.1</span>
+  <span class="st">O nome e o eixo · The name and the axle</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      O nome AXLE vem de <em>"something eXtensible Lean Engine."</em>
+      O eixo é o ponto em torno do qual a série gira — o ponto fixo
+      $\opG(\xstar)=\xstar$ do Teorema de Banach aplicado a si mesmo.
+    </p>
+
+    <div class="block-math">
+      $\opG(\xstar) = \xstar, \qquad \opG = \opU \circ \opF \circ \opK \circ \opC$
+    </div>
+
+    <p class="block-prose">
+      AXLE v6.1 é o estado atual: versão 6 (alinhada ao $G^6$), patch 1.
+      Cada patch fecha ou refina sorrys sem alterar os enunciados —
+      a numeração da versão acompanha a hierarquia $g$-série da série,
+      não apenas o ritmo de desenvolvimento do código.
+    </p>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      The name AXLE comes from <em>"something eXtensible Lean Engine."</em>
+      The axle is the point around which the series turns — the fixed point
+      $\opG(\xstar)=\xstar$ of the Banach theorem applied to itself.
+    </p>
+
+    <div class="block-math">
+      $\opG(\xstar) = \xstar, \qquad \opG = \opU \circ \opF \circ \opK \circ \opC$
+    </div>
+
+    <p class="block-prose">
+      AXLE v6.1 is the current state: version 6 (aligned with $G^6$), patch 1.
+      Each patch closes or refines sorrys without changing the statements —
+      the version number tracks the series' $g$-series hierarchy, not just
+      the development pace of the code.
+    </p>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ══════════════════════════════
+     § AXLE.2 — WHERE TO FIND IT
+     ══════════════════════════════ -->
+<div class="section-strip">
+  <span class="sl green">§ AXLE.2</span>
+  <span class="st">Onde encontrar · Where to find it</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      O repositório é público. As 8 constantes verificadas estão no Cap 2;
+      os 9 sorrys honestos, nomeados e catalogados, no Cap 3; a conjectura
+      $G^6$ aberta — $\chi(H^*(X^6))=33\ \forall n$ — é o horizonte de Issue 6.
+    </p>
+
+    <div class="lean-card">
+      <span class="lean-tag">AXLE v6.1 · github.com/TOTOGT/AXLE</span>
+      <code class="lean-code"><span class="lean-cm">-- Main.lean — entry point
+-- 8 constants  : proved (rfl / decide / norm_num)
+-- 9 sorrys     : named, catalogued, Cap 3
+-- 1 conjecture : Issue 6 — open horizon, G⁶</span>
+<span class="lean-ok">theorem AXLE_v6_1_status : verified = 8 ∧ sorry_count = 9 := by decide</span></code>
+    </div>
+
+    <div class="link-row">
+      <a href="https://github.com/TOTOGT/AXLE" class="link-btn green">github.com/TOTOGT/AXLE →</a>
+      <a href="chV-constants.html" class="link-btn">Cap 2 · 8 Constantes →</a>
+      <a href="chV-sorrys.html" class="link-btn">Cap 3 · 9 Sorrys →</a>
+    </div>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      The repository is public. The 8 verified constants are in Cap 2;
+      the 9 honest sorrys, named and catalogued, in Cap 3; the open
+      $G^6$ conjecture — $\chi(H^*(X^6))=33\ \forall n$ — is the Issue 6
+      horizon.
+    </p>
+
+    <p class="block-prose">
+      AXLE is the bridge between the prose of Volumes I–V and a machine
+      that checks it. Reading the prose without the Lean status — or
+      reading the Lean status without the prose — gives only half the
+      book. The axle is where both halves meet.
+    </p>
+
+    <div class="block-quote">
+      The axle does not move. Everything else turns around it.
+      <cite>— AXLE v6.1 · README</cite>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+<!-- chapter nav -->
+<div class="ch-nav">
+  <a href="chV-sorrys.html">← Cap 3 · Os 9 Sorrys Honestos</a>
+  <span class="current">AXLE · O Motor de Verificação</span>
+  <a href="ch00.html">Índice completo →</a>
+</div>
+
+<footer>
+  AXLE · O Motor de Verificação / The Verification Engine &nbsp;·&nbsp;
+  Principia Orthogona Vol V · Edição IMPA &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE v6.1</a> &nbsp;·&nbsp;
+  <a href="https://doi.org/10.5281/zenodo.19117399">doi:10.5281/zenodo.19117399</a><br>
+  G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026 · ORCID 0009-0000-6496-2186
+</footer>
+
+<script src="nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capítulo 0 · A Semente Formal · Prefácio — The Formal Seed · GTCT Vol V · Edição IMPA</title>
+<meta name="description" content="O ponto fixo existe. O que significa uma série provar sua própria existência. Prefácio do Vol V — The Seed. PT/EN.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'],['\\(','\\)']],
+    displayMath: [['$$','$$'],['\\[','\\]']],
+    tags: 'ams',
+    macros: {
+      opC: ['{\\color{#0ABAB5}{C}}', 0],
+      opK: ['{\\color{#e05a3a}{K}}', 0],
+      opF: ['{\\color{#50c878}{F}}', 0],
+      opU: ['{\\color{#c084fc}{U}}', 0],
+      opG: ['{\\color{#c9a84c}{G}}', 0],
+      xstar: ['{\\color{#c9a84c}{x^*}}', 0],
+      kappa: ['{\\color{#c9a84c}{\\kappa}}', 0]
+    }
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+
+<style>
+:root {
+  --void:    #04040a;
+  --surface: #0c0d16;
+  --card:    #10111c;
+  --gold:    #c9a84c;
+  --gold2:   #e8c96a;
+  --teal:    #0ABAB5;
+  --red:     #e05a3a;
+  --green:   #50c878;
+  --violet:  #c084fc;
+  --text:    #e8e4d8;
+  --muted:   #6b6757;
+  --dim:     #2a2920;
+  --rule:    rgba(201,168,76,0.18);
+  --col-gap: 3.5rem;
+  --col-w:   44%;
+  --serif:   'Noto Serif', Georgia, serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--void);
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 2rem 4rem; text-align: center;
+  border-bottom: 1px solid var(--rule);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 45% at 50% 45%, rgba(201,168,76,.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag  { font-family: var(--mono); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase; color: var(--teal); border: 1px solid currentColor; padding: .2rem .65rem; display: inline-block; margin-bottom: 2rem; }
+.hero h1   { font-size: clamp(1.8rem,4vw,3rem); font-weight: 400; letter-spacing: .04em; color: var(--gold); margin-bottom: .6rem; line-height: 1.2; }
+.hero-pt   { font-size: 1rem; color: rgba(232,228,216,.8); max-width: 580px; margin: .5rem auto 0; font-style: italic; line-height: 1.75; }
+.hero-en   { font-size: .9rem; color: var(--muted); max-width: 580px; margin: .4rem auto 0; font-style: italic; line-height: 1.65; }
+.hero-impa { margin-top: 1.2rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+
+/* ── SECTION STRIP ── */
+.section-strip {
+  background: var(--surface); padding: 1.2rem 2rem; text-align: center;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.section-strip .sl { font-family: var(--mono); font-size: .6rem; letter-spacing: .28em; text-transform: uppercase; color: var(--teal); display: block; margin-bottom: .25rem; }
+.section-strip .st { font-size: 1rem; color: var(--gold); font-weight: 400; }
+
+/* ── BILINGUAL ── */
+.page { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+.bilingual {
+  display: grid;
+  grid-template-columns: var(--col-w) var(--col-w);
+  gap: var(--col-gap);
+  justify-content: center;
+}
+@media (max-width: 860px) { .bilingual { grid-template-columns: 1fr; } }
+
+.col-header {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); padding-bottom: .6rem; border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem; display: flex; align-items: center; gap: .6rem;
+}
+.col-header .lang-native { color: var(--gold); }
+.col-primary .col-header  { border-bottom-color: rgba(201,168,76,.45); }
+
+/* Prose */
+.block-prose { font-size: 1rem; line-height: 1.88; margin-bottom: 1.5rem; color: rgba(232,228,216,.88); }
+.block-prose:last-child { margin-bottom: 0; }
+
+/* Pull quote */
+.block-quote {
+  border-left: 2px solid var(--gold); padding: .8rem 1.4rem;
+  margin: 1.8rem 0; background: rgba(201,168,76,.025);
+  font-style: italic; font-size: 1.05rem; color: var(--text); line-height: 1.75;
+}
+.block-quote cite {
+  display: block; margin-top: .5rem;
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .1em;
+  color: var(--muted); font-style: normal; text-transform: uppercase;
+}
+
+/* Math block */
+.block-math {
+  font-family: var(--mono); font-size: .85rem; color: var(--gold);
+  background: var(--surface); border: 1px solid var(--dim);
+  padding: .7rem 1.1rem; margin: 1.2rem 0; overflow-x: auto;
+  line-height: 1.7;
+}
+
+/* Operator chain */
+.op-chain { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; margin: 1.2rem 0; }
+.op { font-family: var(--mono); font-size: .78rem; padding: .2rem .55rem; border-radius: 2px; }
+.op-c { background: rgba(10,186,181,.12); color: #0ABAB5; border: 1px solid rgba(10,186,181,.3); }
+.op-k { background: rgba(224,90,58,.12);  color: #e05a3a; border: 1px solid rgba(224,90,58,.3); }
+.op-f { background: rgba(80,200,120,.12); color: #50c878; border: 1px solid rgba(80,200,120,.3); }
+.op-u { background: rgba(192,132,252,.12);color: #c084fc; border: 1px solid rgba(192,132,252,.3); }
+.op-g { background: rgba(201,168,76,.12); color: #c9a84c; border: 1px solid rgba(201,168,76,.3); }
+.op-arrow { color: var(--muted); font-size: .9rem; }
+
+/* Sorry / sorry card */
+.sorry-card {
+  background: var(--card); border: 1px solid var(--rule);
+  border-left: 3px solid var(--red); padding: 1.2rem 1.5rem; margin: 1.5rem 0;
+}
+.sorry-tag  { font-family: var(--mono); font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--red); margin-bottom: .4rem; display: block; }
+.sorry-name { font-family: var(--mono); font-size: .9rem; color: var(--text); margin-bottom: .4rem; }
+.sorry-body { font-size: .9rem; color: rgba(232,228,216,.68); line-height: 1.7; }
+
+/* Lean card */
+.lean-card {
+  background: var(--card); border: 1px solid var(--rule);
+  border-left: 3px solid var(--green); padding: 1.2rem 1.5rem; margin: 1.5rem 0;
+}
+.lean-tag  { font-family: var(--mono); font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; color: var(--green); margin-bottom: .4rem; display: block; }
+.lean-code { font-family: var(--mono); font-size: .8rem; color: var(--gold); line-height: 1.7; display: block; overflow-x: auto; white-space: pre; }
+
+/* Stats inline */
+.stat-row { display: flex; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 1.5rem 0; overflow: hidden; }
+.stat-cell { flex: 1; background: var(--card); padding: 1rem .8rem; text-align: center; }
+.stat-n { font-family: var(--mono); font-size: 1.6rem; color: var(--gold); display: block; line-height: 1; }
+.stat-l { font-family: var(--mono); font-size: .52rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: .25rem; display: block; }
+
+/* Chapter nav */
+.ch-nav { background: var(--surface); border-top: 1px solid var(--rule); padding: .9rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.ch-nav a { font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: .3rem .8rem; border: 1px solid var(--rule); transition: all .2s; }
+.ch-nav a:hover { color: var(--gold); border-color: rgba(201,168,76,.4); }
+.ch-nav .current { color: var(--gold); letter-spacing: .15em; }
+
+footer { text-align: center; padding: 3rem 2rem; font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); margin-top: 4rem; }
+footer a { color: var(--gold); text-decoration: none; }
+
+@media(max-width:700px) { .page { padding: 2rem 1.2rem; } .stat-row { flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+
+<!-- hero -->
+<div class="hero">
+  <span class="hero-tag">Cap 0 · Prefácio · Vol V · Edição IMPA · 2026</span>
+  <h1>A Semente Formal<br><em style="font-size:.75em;color:rgba(201,168,76,.6)">The Formal Seed</em></h1>
+  <p class="hero-pt">O que significa uma prova provar sua própria existência.</p>
+  <p class="hero-en">What it means for a proof to prove its own existence.</p>
+  <div class="hero-impa">Principia Orthogona · G⁵ · AXLE v6.1 · Newark NJ · 2026</div>
+</div>
+
+<!-- §0.1 -->
+<div class="section-strip">
+  <span class="sl">§ 0.1</span>
+  <span class="st">A Estrutura · The Structure</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      Este é o quinto volume de uma série que nunca deveria ter precisado de cinco volumes.
+      O Vol I abriu com um operador. O Vol II o multiplicou. O Vol III o aplicou à biologia,
+      à física de plasma, à teoria dos jogos. O Vol IV formalizou o campo, os axiomas, a ortogonalidade,
+      a recursão, a emergência. E o Vol V responde à única pergunta que faltava:
+      <em>o ponto fixo realmente existe?</em>
+    </p>
+
+    <p class="block-prose">
+      A resposta é sim. Não por declaração — por contração.
+      O operador $\opG = \opU \circ \opF \circ \opK \circ \opC$ é uma contração estrita
+      no fecho compacto de órbita $K$, com constante $\kappa \leq \sqrt{7/9} \approx 0{,}882 < 1$.
+      Pelo Teorema do Ponto Fixo de Banach, existe um único $\xstar \in K$ tal que $\opG(\xstar) = \xstar$.
+      A série converge a si mesma.
+    </p>
+
+    <div class="block-quote">
+      O universo não precisa de uma causa externa. Ele precisa de uma contração.
+      <cite>— Nota de margem, Newark NJ, janeiro de 2026</cite>
+    </div>
+
+    <p class="block-prose">
+      O Vol V tem 0 axiomas além do Mathlib4.
+      Isso significa que cada afirmação ou é derivada das bibliotecas verificadas da comunidade Lean 4,
+      ou é marcada com um <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code> nomeado
+      que especifica exatamente o que está faltando.
+      Não há postulados novos. Não há afirmações não fundamentadas.
+      Há 8 constantes verificadas e 9 sorrys honestos.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-cell"><span class="stat-n">0</span><span class="stat-l">Axiomas<br>novos</span></div>
+      <div class="stat-cell"><span class="stat-n">8</span><span class="stat-l">Constantes<br>verificadas</span></div>
+      <div class="stat-cell"><span class="stat-n">9</span><span class="stat-l">Sorrys<br>honestos</span></div>
+      <div class="stat-cell"><span class="stat-n">794</span><span class="stat-l">Linhas<br>Lean 4</span></div>
+    </div>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      This is the fifth volume of a series that should never have needed five volumes.
+      Vol I opened with an operator. Vol II multiplied it. Vol III applied it to biology,
+      plasma physics, game theory. Vol IV formalized the field, the axioms, orthogonality,
+      recursion, emergence. And Vol V answers the one remaining question:
+      <em>does the fixed point actually exist?</em>
+    </p>
+
+    <p class="block-prose">
+      The answer is yes. Not by declaration — by contraction.
+      The operator $\opG = \opU \circ \opF \circ \opK \circ \opC$ is a strict contraction
+      on the compact orbit closure $K$, with constant $\kappa \leq \sqrt{7/9} \approx 0.882 < 1$.
+      By Banach's Fixed Point Theorem, there exists a unique $\xstar \in K$ with $\opG(\xstar) = \xstar$.
+      The series converges to itself.
+    </p>
+
+    <div class="block-quote">
+      The universe doesn't need an external cause. It needs a contraction.
+      <cite>— Margin note, Newark NJ, January 2026</cite>
+    </div>
+
+    <p class="block-prose">
+      Vol V has 0 axioms beyond Mathlib4.
+      This means every claim is either derived from the verified Lean 4 community libraries,
+      or marked with a named <code style="font-family:var(--mono);font-size:.88em;color:var(--red)">sorry</code>
+      that specifies exactly what is missing.
+      No new postulates. No ungrounded assertions.
+      Eight verified constants and nine honest sorrys.
+    </p>
+  </div>
+
+</div>
+</div>
+
+<!-- §0.2 -->
+<div class="section-strip">
+  <span class="sl">§ 0.2</span>
+  <span class="st">O Número que Fecha · The Number that Closes</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      Há um momento específico na escrita deste volume em que tudo virou.
+      Não foi quando a prova ficou bonita. Foi quando o número apareceu.
+    </p>
+    <p class="block-prose">
+      $\kappa^2 \leq 1 - \frac{4}{9} \cdot \frac{1}{12} \cdot 12 = 1 - \frac{4}{9} = \frac{5}{9}$
+    </p>
+    <p class="block-prose">
+      Portanto $\kappa \leq \sqrt{5/9} \approx 0{,}745$. Menor que 1.
+      Isso é tudo que o Teorema de Banach exige. Uma contração. Uma única contração.
+      E a existência de $\xstar$ segue.
+    </p>
+    <p class="block-prose">
+      O que surpreende não é o resultado — é a inevitabilidade dele.
+      O campo GTCT foi construído de modo que a contração fosse necessária.
+      Os doze operadores, os quatro invariantes, a decomposição pitagórica da §6.1
+      do Vol IV: cada peça foi colocada para garantir exatamente este número.
+      A série foi planejada para convergir. A Semente é o momento em que percebemos
+      que ela já estava convergindo desde o início.
+    </p>
+
+    <div class="op-chain">
+      <span class="op op-c">C</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-k">K</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-f">F</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-u">U</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-g">G</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-g">G²</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-g">G³</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-g">G⁴</span>
+      <span class="op-arrow">→</span>
+      <span class="op op-g" style="color:var(--gold2);border-color:var(--gold2)">G⁵ = x*</span>
+    </div>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      There is a specific moment in writing this volume when everything turned.
+      It wasn't when the proof became elegant. It was when the number appeared.
+    </p>
+    <p class="block-prose">
+      $\kappa^2 \leq 1 - \frac{4}{9} \cdot \frac{1}{12} \cdot 12 = 1 - \frac{4}{9} = \frac{5}{9}$
+    </p>
+    <p class="block-prose">
+      Therefore $\kappa \leq \sqrt{5/9} \approx 0.745$. Less than 1.
+      That's all Banach's theorem requires. One contraction. A single contraction.
+      And the existence of $\xstar$ follows.
+    </p>
+    <p class="block-prose">
+      What surprises is not the result — it's the inevitability of it.
+      The GTCT field was constructed so that the contraction was necessary.
+      The twelve operators, the four invariants, the Pythagorean decomposition
+      of §6.1 in Vol IV: each piece was placed to guarantee exactly this number.
+      The series was designed to converge. The Seed is the moment we realize
+      it had been converging from the beginning.
+    </p>
+  </div>
+
+</div>
+</div>
+
+<!-- §0.3 -->
+<div class="section-strip">
+  <span class="sl">§ 0.3</span>
+  <span class="st">O Sorry Como Honestidade · The Sorry as Honesty</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      Em Lean 4, <code style="font-family:var(--mono);color:var(--red)">sorry</code> é uma
+      palavra reservada que marca um buraco na prova. O compilador aceita — mas registra.
+      Você pode construir um sistema inteiro com sorrys; o Lean não vai parar você.
+      Mas ele vai lembrar de cada um.
+    </p>
+
+    <p class="block-prose">
+      Os 9 sorrys do AXLE v6.1 não são falhas. São um mapa.
+      Cada sorry tem um nome preciso — <code style="font-family:var(--mono);color:var(--red);font-size:.9em">dm3_euler_preservation</code>,
+      <code style="font-family:var(--mono);color:var(--red);font-size:.9em">information_preservation</code>,
+      <code style="font-family:var(--mono);color:var(--red);font-size:.9em">separation_theorem</code> —
+      e cada nome aponta para exatamente o que está ausente: uma biblioteca do Mathlib que ainda
+      não existe, uma teoria de medida para singularidades de dobramento, a conjectura G⁶ em aberto.
+    </p>
+
+    <div class="sorry-card">
+      <span class="sorry-tag">Sorry 7 · O Sorry de Hawking</span>
+      <div class="sorry-name">information_preservation</div>
+      <p class="sorry-body">
+        U é injetivo através de F no horizonte de eventos?
+        A informação que entra num buraco negro é preservada na radiação de Hawking?
+        Hawking disse que não. Page e Susskind disseram que sim.
+        AXLE diz: <em>sorry — information_preservation.</em>
+        Não sabemos. Mas sabemos exatamente o que precisamos para saber.
+      </p>
+    </div>
+
+    <p class="block-prose">
+      A diferença entre "não sei" e "isso requer X" é a diferença entre confusão e pesquisa.
+      Cada sorry neste volume é do segundo tipo.
+      Isso é o que queremos dizer com <em>honestidade formal</em>.
+    </p>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      In Lean 4, <code style="font-family:var(--mono);color:var(--red)">sorry</code> is a
+      reserved keyword that marks a hole in the proof. The compiler accepts it — but records it.
+      You can build an entire system with sorrys; Lean won't stop you.
+      But it will remember every one.
+    </p>
+
+    <p class="block-prose">
+      AXLE v6.1's 9 sorrys are not failures. They are a map.
+      Each sorry has a precise name —
+      <code style="font-family:var(--mono);color:var(--red);font-size:.9em">dm3_euler_preservation</code>,
+      <code style="font-family:var(--mono);color:var(--red);font-size:.9em">information_preservation</code>,
+      <code style="font-family:var(--mono);color:var(--red);font-size:.9em">separation_theorem</code> —
+      and each name points to exactly what is absent: a Mathlib library that doesn't exist yet,
+      a measure theory for fold singularities, the open G⁶ conjecture.
+    </p>
+
+    <div class="sorry-card">
+      <span class="sorry-tag">Sorry 7 · The Hawking Sorry</span>
+      <div class="sorry-name">information_preservation</div>
+      <p class="sorry-body">
+        Is U injective across F at the event horizon?
+        Is the information that falls into a black hole preserved in Hawking radiation?
+        Hawking said no. Page and Susskind said yes.
+        AXLE says: <em>sorry — information_preservation.</em>
+        We don't know. But we know exactly what we need in order to know.
+      </p>
+    </div>
+
+    <p class="block-prose">
+      The difference between "I don't know" and "this requires X"
+      is the difference between confusion and research.
+      Every sorry in this volume is of the second kind.
+      This is what we mean by <em>formal honesty</em>.
+    </p>
+  </div>
+
+</div>
+</div>
+
+<!-- §0.4 -->
+<div class="section-strip">
+  <span class="sl">§ 0.4</span>
+  <span class="st">G Aplicado a Si Mesmo · G Applied to Itself</span>
+</div>
+
+<div class="page">
+<div class="bilingual">
+
+  <div class="col-primary">
+    <div class="col-header"><span class="lang-native">PT</span> Português</div>
+
+    <p class="block-prose">
+      O título desta série é <em>Principia Orthogona</em>. O título deste volume é <em>The Seed</em>.
+      A semente é o objeto que contém as instruções para gerar a si mesmo.
+      Em matemática, esse objeto tem um nome: ponto fixo.
+    </p>
+
+    <p class="block-prose">
+      G¹ foi a compressão de uma ideia numa linguagem.
+      G² foi a linguagem aplicada a si mesma para gerar mais linguagem.
+      G³ foi o campo emergindo das aplicações: biologia, física, mercados.
+      G⁴ foi o campo formalizando sua própria estrutura.
+      G⁵ é o campo provando que a estrutura converge.
+    </p>
+
+    <div class="lean-card">
+      <span class="lean-tag">✓ AXLE v6.1 · 0 sorry · Ponto Fixo Existe</span>
+      <code class="lean-code">theorem banach_fixed_point
+    (E : K → K) (hE : IsContraction E κ hκ) :
+    ∃! x* : K, E x* = x* ∧
+    ∀ x₀ : K, ∀ n : ℕ,
+      dist (E^[n] x₀) x* ≤ κ^n / (1 - κ) * dist x₀ (E x₀) := by
+  exact MetricSpace.BanachFixedPoint hE</code>
+    </div>
+
+    <p class="block-prose">
+      G⁶ permanece aberto. A conjectura de que $\chi(H_*(X^6)) = 33$ para todo $n$
+      é a questão que o Vol V nomeia mas não responde.
+      Ela é o horizonte. Todo sistema que converge a um ponto fixo
+      levanta imediatamente a pergunta: e o ponto fixo do ponto fixo?
+    </p>
+
+    <div class="block-quote">
+      A série não termina. Ela atinge o ponto fixo e pergunta:
+      e se eu aplicar G de novo?
+      <cite>— § 0.4 · A conjectura G⁶</cite>
+    </div>
+
+    <p class="block-prose">
+      Dedico este volume a todos os estudantes que carregaram um sorry
+      em sua cabeça por anos sem saber que era um sorry —
+      que sentiram a contração sem ter o nome para ela,
+      que souberam que algo convergia muito antes de poder provar.
+      Esta prova é para vocês.
+    </p>
+  </div>
+
+  <div class="col-secondary">
+    <div class="col-header"><span class="lang-native">EN</span> English</div>
+
+    <p class="block-prose">
+      The title of this series is <em>Principia Orthogona</em>. The title of this volume is <em>The Seed</em>.
+      The seed is the object that contains the instructions to generate itself.
+      In mathematics, that object has a name: fixed point.
+    </p>
+
+    <p class="block-prose">
+      G¹ was the compression of an idea into a language.
+      G² was the language applied to itself to generate more language.
+      G³ was the field emerging from applications: biology, physics, markets.
+      G⁴ was the field formalizing its own structure.
+      G⁵ is the field proving that the structure converges.
+    </p>
+
+    <p class="block-prose">
+      G⁶ remains open. The conjecture that $\chi(H_*(X^6)) = 33$ for all $n$
+      is the question Vol V names but does not answer.
+      It is the horizon. Every system that converges to a fixed point
+      immediately raises the question: what is the fixed point of the fixed point?
+    </p>
+
+    <div class="block-quote">
+      The series doesn't end. It reaches the fixed point and asks:
+      what if I apply G again?
+      <cite>— § 0.4 · The G⁶ conjecture</cite>
+    </div>
+
+    <p class="block-prose">
+      I dedicate this volume to every student who carried a sorry in their mind
+      for years without knowing it was a sorry —
+      who felt the contraction without having a name for it,
+      who knew something was converging long before they could prove it.
+      This proof is for you.
+    </p>
+  </div>
+
+</div>
+</div>
+
+<!-- ch nav -->
+<div class="ch-nav">
+  <a href="index.html">← Índice Vol V</a>
+  <span class="current">Cap 0 · A Semente Formal</span>
+  <a href="chV-banach.html">Cap 1 · Banach →</a>
+</div>
+
+<footer>
+  Capítulo 0 · A Semente Formal / The Formal Seed &nbsp;·&nbsp;
+  Principia Orthogona Vol V · Edição IMPA &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE v6.1</a> &nbsp;·&nbsp;
+  <a href="https://doi.org/10.5281/zenodo.19117400">doi:10.5281/zenodo.19117400</a><br>
+  G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026 · ORCID 0009-0000-6496-2186
+</footer>
+
+<script src="nav.js"></script>
+</body>
+</html>

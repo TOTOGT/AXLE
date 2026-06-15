@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch14 · AXLE — The Sorry-Free Paper · Book 3</title>
+<style>
+  /* ── AXLE palette — proof-green / terminal ─────────────────── */
+  :root {
+    --a-color:  #4ade80;
+    --a-dim:    #16a34a;
+    --a-glow:   rgba(74, 222, 128, 0.14);
+    --a-sorry:  #f87171;
+    --a-warn:   #fbbf24;
+    --bg:       #030d06;
+    --bg2:      #061408;
+    --bg3:      #0a1f0d;
+    --text:     #dcfce7;
+    --muted:    #4d7a58;
+    --gold:     #c9a84c;
+    --border:   rgba(74, 222, 128, 0.20);
+    --c-color:  #4a9eff;
+    --k-color:  #e05a3a;
+    --f-color:  #50c878;
+    --u-color:  #c084fc;
+    --g-color:  #f59e0b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    color: var(--text);
+    font-family: Georgia, 'Times New Roman', serif;
+    min-height: 100vh;
+    line-height: 1.75;
+  }
+
+  nav.top {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    padding: .75rem 1.5rem;
+    background: rgba(3,13,6,.90);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Courier New', monospace; font-size: .78rem;
+  }
+  nav.top a {
+    color: var(--a-color); text-decoration: none;
+    padding: .2rem .6rem;
+    border: 1px solid var(--border); border-radius: 4px;
+    transition: background .2s;
+  }
+  nav.top a:hover { background: var(--a-glow); }
+
+  /* ── Hero ────────────────────────────────── */
+  .hero {
+    text-align: center; padding: 4rem 2rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 40%,
+      rgba(74,222,128,.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .operator-badge {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: .8rem; font-weight: 700; letter-spacing: .12em;
+    color: var(--bg); background: var(--a-color);
+    padding: .25rem .9rem; border-radius: 3px; margin-bottom: 1.5rem;
+  }
+  .hero-letter {
+    font-size: clamp(5rem, 16vw, 10rem);
+    font-style: normal;
+    color: var(--a-color); line-height: 1;
+    text-shadow: 0 0 60px rgba(74,222,128,.40);
+    margin-bottom: .5rem;
+    font-family: 'Courier New', monospace;
+  }
+  .hero h1 {
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+    font-weight: 400; color: var(--text); margin-bottom: .5rem;
+  }
+  .hero .subtitle {
+    font-size: 1rem; color: var(--muted);
+    font-style: italic; margin-bottom: 1rem;
+  }
+  .meta-row {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    font-family: 'Courier New', monospace; font-size: .8rem; color: var(--muted);
+  }
+  .meta-row span { color: var(--a-color); }
+
+  /* ── Section containers ─────────────────── */
+  .section {
+    max-width: 860px; margin: 0 auto 2.5rem; padding: 0 1.5rem;
+  }
+  .section h2 {
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--a-color);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .4rem; margin-bottom: 1.2rem;
+  }
+  .section p { margin-bottom: 1rem; color: var(--text); }
+  .section em { color: var(--a-color); font-style: normal; }
+
+  /* ── Code/Lean blocks ────────────────────── */
+  .lean-block {
+    background: #010a03;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--a-color);
+    border-radius: 6px;
+    padding: 1.2rem 1.6rem;
+    margin: 1.4rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: .88rem; line-height: 1.9;
+    overflow-x: auto;
+  }
+  .lean-block .label {
+    font-size: .70rem; letter-spacing: .1em;
+    color: var(--a-color); text-transform: uppercase;
+    margin-bottom: .5rem; font-family: 'Courier New', monospace;
+  }
+  .lean-block .kw   { color: var(--u-color); }   /* keywords: theorem, def, structure */
+  .lean-block .ty   { color: #67e8f9; }            /* types */
+  .lean-block .sorry-kw { color: var(--a-sorry); font-weight: bold; } /* sorry */
+  .lean-block .ok   { color: var(--a-color); }    /* verified */
+  .lean-block .cm   { color: var(--muted); }       /* comments */
+
+  /* ── Type-error cards ────────────────────── */
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem; margin: 1.4rem 0;
+  }
+  .te-card {
+    background: var(--bg2);
+    border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem;
+  }
+  .te-card .tc-err {
+    font-family: 'Courier New', monospace;
+    font-size: .78rem; font-weight: 700;
+    margin-bottom: .4rem;
+  }
+  .te-card .tc-desc { font-size: .87rem; color: var(--text); margin-bottom: .5rem; }
+  .te-card .tc-eg   { font-size: .80rem; color: var(--muted); font-style: italic; }
+  .te-card.mismatch { border-color: var(--a-sorry); }
+  .te-card.mismatch .tc-err { color: var(--a-sorry); }
+  .te-card.metavar  { border-color: var(--a-warn); }
+  .te-card.metavar  .tc-err { color: var(--a-warn); }
+  .te-card.synth    { border-color: var(--u-color); }
+  .te-card.synth    .tc-err { color: var(--u-color); }
+  .te-card.solved   { border-color: var(--a-color); }
+  .te-card.solved   .tc-err { color: var(--a-color); }
+
+  /* ── Theorem box ─────────────────────────── */
+  .theorem {
+    background: rgba(74,222,128,.07);
+    border: 1px solid rgba(74,222,128,.30);
+    border-radius: 8px; padding: 1.4rem 1.6rem; margin: 1.6rem 0;
+  }
+  .theorem .thm-label {
+    font-family: 'Courier New', monospace;
+    font-size: .75rem; letter-spacing: .1em;
+    color: var(--a-color); text-transform: uppercase; margin-bottom: .6rem;
+  }
+  .theorem .thm-body { color: var(--text); line-height: 1.9; }
+  .theorem code   { font-family: 'Courier New', monospace; color: var(--a-color); }
+  .theorem strong { color: var(--a-color); }
+
+  /* ── Insight box ─────────────────────────── */
+  .insight {
+    background: rgba(201,168,76,.06);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px; padding: 1rem 1.4rem; margin: 1.4rem 0;
+    font-style: italic; color: #f0dda8; font-size: .95rem;
+  }
+
+  /* ── DNA error rate table ─────────────────── */
+  .err-table {
+    width: 100%; border-collapse: collapse;
+    font-size: .88rem; margin: 1.4rem 0;
+  }
+  .err-table th {
+    text-align: left; color: var(--a-color);
+    border-bottom: 1px solid var(--border);
+    padding: .5rem .8rem;
+    font-family: 'Courier New', monospace;
+    font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .err-table td {
+    padding: .55rem .8rem;
+    border-bottom: 1px solid rgba(74,222,128,.08);
+    vertical-align: top;
+  }
+  .err-table .stage { font-family: 'Courier New', monospace; color: var(--a-color); }
+  .err-table .rate  { font-family: 'Courier New', monospace; color: var(--a-warn); }
+  .err-table .good  { color: var(--a-color); }
+
+  /* ── Canvas / Proof simulator ─────────────── */
+  .canvas-panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.6rem;
+    margin: 1.6rem auto 2rem; max-width: 860px;
+  }
+  .canvas-panel h3 {
+    font-size: 1rem; font-weight: 400;
+    color: var(--a-color); margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Proof lines */
+  .proof-block {
+    background: #010a03;
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 1rem 1.2rem; margin-bottom: .8rem;
+    font-family: 'Courier New', monospace; font-size: .85rem;
+    line-height: 1.8;
+  }
+  .proof-line {
+    display: flex; align-items: flex-start; gap: .8rem;
+    padding: .25rem 0;
+    border-bottom: 1px solid rgba(74,222,128,.06);
+    transition: background .3s;
+  }
+  .proof-line:last-child { border-bottom: none; }
+  .proof-line .pl-status {
+    width: 20px; text-align: center;
+    font-size: .9rem; flex-shrink: 0; margin-top: .05em;
+  }
+  .proof-line .pl-code { flex: 1; color: var(--text); }
+  .proof-line .pl-btn {
+    flex-shrink: 0;
+    font-family: 'Courier New', monospace; font-size: .7rem;
+    padding: .15rem .55rem;
+    border-radius: 3px; cursor: pointer;
+    border: 1px solid;
+    background: transparent; transition: background .2s;
+  }
+  .sorry-line { background: rgba(248,113,113,.04); }
+  .sorry-line .pl-code .sorry-kw { color: var(--a-sorry); font-weight: bold; }
+  .sorry-line .pl-btn { color: var(--a-sorry); border-color: var(--a-sorry); }
+  .sorry-line .pl-btn:hover { background: rgba(248,113,113,.15); }
+  .ok-line .pl-code { color: var(--a-color); }
+  .ok-line .pl-btn  { display: none; }
+
+  .progress-bar-wrap {
+    background: rgba(74,222,128,.08);
+    border: 1px solid var(--border);
+    border-radius: 20px; height: 14px; overflow: hidden;
+    margin: .8rem 0 .4rem;
+  }
+  .progress-bar-fill {
+    height: 100%; border-radius: 20px;
+    background: var(--a-color);
+    transition: width .5s ease;
+  }
+  .progress-label {
+    text-align: center;
+    font-family: 'Courier New', monospace; font-size: .78rem;
+    color: var(--muted); margin-bottom: .6rem;
+  }
+  .verdict {
+    text-align: center;
+    font-family: 'Courier New', monospace; font-size: 1rem;
+    min-height: 1.5em;
+    font-weight: 700;
+    transition: color .4s;
+    margin-top: .4rem;
+  }
+
+  /* ── Prompt portal ───────────────────────── */
+  .prompt-portal {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.6rem;
+    margin: 2rem auto; max-width: 860px;
+  }
+  .prompt-portal h3 {
+    font-size: 1.1rem; font-weight: 400;
+    color: var(--a-color); margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+  }
+  .prompt-card {
+    background: var(--bg3);
+    border: 1px solid rgba(74,222,128,.2);
+    border-radius: 7px; padding: 1rem 1.2rem; margin-bottom: 1rem;
+  }
+  .prompt-card .p-id {
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; color: var(--a-color);
+    letter-spacing: .1em; margin-bottom: .4rem;
+  }
+  .prompt-card .p-title {
+    font-size: .95rem; font-weight: 600;
+    color: var(--text); margin-bottom: .5rem;
+  }
+  .prompt-card .p-text {
+    font-size: .85rem; color: var(--muted);
+    line-height: 1.6; margin-bottom: .8rem;
+  }
+  .copy-btn {
+    font-family: 'Courier New', monospace; font-size: .72rem;
+    padding: .3rem .8rem;
+    border: 1px solid rgba(74,222,128,.3); border-radius: 4px;
+    background: transparent; color: var(--a-color); cursor: pointer;
+  }
+  .copy-btn:hover { background: var(--a-glow); }
+
+  /* ── Chapter nav ─────────────────────────── */
+  .chapter-nav {
+    display: flex; justify-content: space-between;
+    max-width: 860px; margin: 2rem auto;
+    padding: 0 1.5rem 3rem;
+  }
+  .chapter-nav a {
+    color: var(--a-color); text-decoration: none;
+    font-family: 'Courier New', monospace; font-size: .82rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--border); border-radius: 5px;
+    transition: background .2s;
+  }
+  .chapter-nav a:hover { background: var(--a-glow); }
+
+  footer {
+    text-align: center; padding: 1.5rem;
+    color: var(--muted); font-size: .78rem;
+    font-family: 'Courier New', monospace;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── n-bonacci ladder ──────────────────────── */
+  .nbonacci-ladder {
+    display: flex; gap: 0; margin: 1.6rem 0;
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+  }
+  .nb-step {
+    flex: 1; padding: .8rem .4rem; text-align: center;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    transition: background .2s;
+  }
+  .nb-step:last-child { border-right: none; }
+  .nb-step:hover { background: var(--a-glow); }
+  .nb-step .nb-sym {
+    font-family: Georgia, serif; font-size: 1.2rem;
+    color: var(--a-color); display: block; margin-bottom: .2rem;
+  }
+  .nb-step .nb-val {
+    font-family: 'Courier New', monospace; font-size: .68rem;
+    color: var(--a-warn); display: block; margin-bottom: .2rem;
+  }
+  .nb-step .nb-err {
+    font-family: 'Courier New', monospace; font-size: .62rem;
+    color: var(--muted); display: block; line-height: 1.3;
+  }
+  .nb-step.nb-tau { background: rgba(74,222,128,.10); }
+  .nb-step.nb-tau .nb-sym { color: #fff; font-weight: bold; }
+
+  /* ── Central dogma flow ─────────────────────── */
+  .dogma-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .7rem; margin: 1.4rem 0;
+  }
+  .df-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: .9rem;
+    text-align: center;
+  }
+  .df-op {
+    font-family: 'Courier New', monospace;
+    font-size: .70rem; color: var(--a-color);
+    letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: .3rem;
+  }
+  .df-molecule { font-size: 1.4rem; margin-bottom: .25rem; }
+  .df-name {
+    font-size: .85rem; font-weight: 600;
+    color: var(--text); margin-bottom: .25rem;
+  }
+  .df-rate {
+    font-family: 'Courier New', monospace;
+    font-size: .68rem; color: var(--a-warn);
+    margin-bottom: .25rem;
+  }
+  .df-mech { font-size: .75rem; color: var(--muted); font-style: italic; line-height: 1.4; }
+
+  /* ── CRISPR table ───────────────────────────── */
+  .crispr-table {
+    width: 100%; border-collapse: collapse;
+    font-size: .86rem; margin: 1.4rem 0;
+  }
+  .crispr-table th {
+    text-align: left; color: var(--a-color);
+    border-bottom: 1px solid var(--border);
+    padding: .5rem .8rem;
+    font-family: 'Courier New', monospace;
+    font-size: .74rem; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .crispr-table td {
+    padding: .55rem .8rem;
+    border-bottom: 1px solid rgba(74,222,128,.08);
+    vertical-align: top;
+  }
+  .crispr-table .c-sys { font-family: 'Courier New', monospace; color: var(--a-color); font-weight: bold; }
+  .crispr-table .c-rate { font-family: 'Courier New', monospace; color: var(--a-warn); }
+  .crispr-table .c-axle { color: var(--text); font-style: italic; }
+  .crispr-table tr.c-best td { background: rgba(74,222,128,.06); }
+
+  @media (max-width: 600px) {
+    .hero-letter { font-size: 4rem; }
+    .type-grid { grid-template-columns: 1fr; }
+    .dogma-flow { grid-template-columns: 1fr 1fr; }
+    .nbonacci-ladder { flex-wrap: wrap; }
+    .nb-step { flex: 0 0 30%; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <a href="impa-portal.html">⬡ AXLE Portal</a>
+  <a href="chapters-diagram.html">Map</a>
+  <a href="course-16weeks.html">16 Weeks</a>
+  <a href="Sportal.html">S-Portal</a>
+  <a href="trilogy-sale.html">Trilogy</a>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────── -->
+<div class="hero">
+  <div class="operator-badge">AXLE VERIFICATION · CHAPTER 14</div>
+  <div class="hero-letter">⊢</div>
+  <h1>AXLE — The Sorry-Free Paper</h1>
+  <p class="subtitle">A proof with <em>sorry</em> compiles but is not verified. So does a paper.</p>
+  <div class="meta-row">
+    <div>Week <span>16+</span></div>
+    <div>Level <span>D2</span></div>
+    <div>System <span>Lean 4 · Curry-Howard</span></div>
+    <div>Focus <span>Formal Verification · Claim Types · Sorry Elimination</span></div>
+  </div>
+</div>
+
+<!-- ── Section 1: Curry-Howard ────────────────── -->
+<div class="section">
+  <h2>§1 · The Curry-Howard Correspondence</h2>
+  <p>
+    In 1969, William Howard observed that the rules of natural deduction
+    in logic mirror the typing rules of the lambda calculus exactly —
+    one is a notational variant of the other.
+    The implication is profound: <em>propositions are types, and proofs are programs.</em>
+    To prove a proposition P is to construct a term of type P.
+  </p>
+
+  <div class="lean-block">
+    <div class="label">Curry-Howard in Lean 4</div>
+<span class="cm">-- A proposition is a type</span>
+<span class="kw">def</span> <span class="ty">MyProposition</span> : <span class="kw">Prop</span> := ∀ n : ℕ, n + 0 = n
+
+<span class="cm">-- A proof is a term of that type</span>
+<span class="kw">theorem</span> <span class="ty">myProof</span> : MyProposition := <span class="kw">fun</span> n => Nat.add_zero n
+
+<span class="cm">-- sorry = placeholder proof (compiles, but is NOT verified)</span>
+<span class="kw">theorem</span> <span class="ty">unfinishedProof</span> : MyProposition := <span class="sorry-kw">sorry</span>
+<span class="cm">-- ⚠ warning: declaration uses 'sorry'</span>
+
+<span class="cm">-- The AXLE goal: eliminate every sorry from the paper's argument</span>
+<span class="cm">-- #check myProof   → MyProposition  ✓</span>
+<span class="cm">-- #check unfinished → MyProposition  ✗ (sorry)</span>
+  </div>
+
+  <p>
+    In Lean 4, <code style="color:var(--a-sorry)">sorry</code> is a magic term
+    that inhabits any type — it makes the file compile regardless of whether
+    the proof is actually valid.
+    A paper can do the same: a well-written argument <em>reads</em> as if every claim
+    is proven, even when some critical connections are asserted without evidence.
+    Those invisible <em>sorry</em>s are what peer review hunts for.
+  </p>
+
+  <p>
+    <em>AXLE</em> (Algebraic eXpression Language for Evaluation) applies this framework
+    to academic writing: every claim in a paper has a type
+    (what kind of evidence could inhabit it), and the paper is verified
+    only when every claim has an explicit evidence term — no sorry remaining.
+  </p>
+</div>
+
+<!-- ── Section 2: Operator chain in Lean 4 ──────── -->
+<div class="section">
+  <h2>§2 · The Operator Chain as a Lean 4 Structure</h2>
+  <p>
+    The operator chain G = U ∘ F ∘ K ∘ C can be formalised as a dependent type:
+    each operator takes the output type of the previous as its input type.
+    A well-typed paper is one where the composition is valid —
+    no type mismatches between operators.
+  </p>
+
+  <div class="lean-block">
+    <div class="label">G = U ∘ F ∘ K ∘ C as Lean 4 Types</div>
+<span class="kw">structure</span> <span class="ty">RawData</span> <span class="kw">where</span>
+  measurements : List Float
+  n : ℕ
+
+<span class="kw">structure</span> <span class="ty">CompressedData</span> <span class="kw">where</span>  <span class="cm">-- output of C</span>
+  features   : List Float
+  compression_ratio : Float
+  h_valid    : compression_ratio > 1  <span class="cm">-- proof of non-trivial compression</span>
+
+<span class="kw">structure</span> <span class="ty">ThresholdEvent</span> <span class="kw">where</span>  <span class="cm">-- output of K</span>
+  crossed    : Bool
+  k_star     : Float
+  h_evidence : crossed → ∃ e, e ∈ evidence_set ∧ e > k_star
+
+<span class="kw">structure</span> <span class="ty">FoldedNarrative</span> <span class="kw">where</span>  <span class="cm">-- output of F</span>
+  results_section : String
+  h_subcritical   : ¬overclaims results_section  <span class="cm">-- Ch9 condition</span>
+
+<span class="kw">structure</span> <span class="ty">UnfoldedDiscussion</span> <span class="kw">where</span>  <span class="cm">-- output of U</span>
+  claims   : List Claim
+  h_stable : ∀ c ∈ claims, spectralReach c ≤ 1  <span class="cm">-- Ch11 condition</span>
+
+<span class="cm">-- The composition G is well-typed iff every h_ proof is inhabited</span>
+<span class="kw">def</span> <span class="ty">G</span> (d : RawData) : UnfoldedDiscussion :=
+  U (F (K (C d)))  <span class="cm">-- verified iff no sorry in h_ fields</span>
+  </div>
+
+  <p>
+    The proof fields <code style="color:var(--a-color)">h_valid</code>,
+    <code style="color:var(--a-color)">h_evidence</code>,
+    <code style="color:var(--a-color)">h_subcritical</code>,
+    <code style="color:var(--a-color)">h_stable</code>
+    correspond precisely to the theorems in Chapters 5, 9, 11, and 12.
+    A paper that passes all four chapter-tests has implicitly constructed
+    all four proof terms — it is Lean-verifiable in spirit,
+    even without running <code style="color:var(--a-color)">#check</code>.
+  </p>
+</div>
+
+<!-- ── Section 3: Type errors ─────────────────── -->
+<div class="section">
+  <h2>§3 · Type Errors in Academic Arguments</h2>
+  <p>
+    Lean 4 rejects programs with type errors. An argument can also have type errors —
+    using the wrong <em>kind</em> of evidence for a claim,
+    regardless of whether the evidence is real.
+    A randomised controlled trial and a case study both constitute evidence,
+    but they are different types — and using the wrong type for a causal claim
+    is a type mismatch.
+  </p>
+
+  <div class="type-grid">
+    <div class="te-card mismatch">
+      <div class="tc-err">type mismatch</div>
+      <div class="tc-desc">Evidence type does not match claim type. Correlation evidence for a causal claim.</div>
+      <div class="tc-eg">"X causes Y" supported only by r = 0.6 observational data.</div>
+    </div>
+    <div class="te-card metavar">
+      <div class="tc-err">unsolved ?metavariable</div>
+      <div class="tc-desc">A claim that requires an unstated assumption to type-check. The missing piece is not cited.</div>
+      <div class="tc-eg">"Under standard assumptions, X follows from Y." — which assumptions?</div>
+    </div>
+    <div class="te-card synth">
+      <div class="tc-err">failed to synthesize</div>
+      <div class="tc-desc">No evidence exists in the literature that could inhabit this claim's type.</div>
+      <div class="tc-eg">"This is the first demonstration of…" with no novelty check performed.</div>
+    </div>
+    <div class="te-card solved">
+      <div class="tc-err">⊢ type-checks ✓</div>
+      <div class="tc-desc">Claim type matches evidence type. The connection is explicit and warranted.</div>
+      <div class="tc-eg">"RCT (n=200) shows X increases Y by 15% (95% CI 9–21%), p &lt; 0.001."</div>
+    </div>
+  </div>
+
+  <div class="theorem">
+    <div class="thm-label">Theorem 14.1 — The AXLE Verification Criterion</div>
+    <div class="thm-body">
+      A paper P is <strong>AXLE-verified</strong> if and only if:
+      <br><br>
+      For every claim C in P, there exists an explicit evidence term
+      <code>h : C</code> constructible from P's data and cited literature,
+      such that <code>type(h) = required_evidence_type(C)</code>.
+      <br><br>
+      Equivalently: P is sorry-free — no claim relies on an implicit assumption
+      that has not been stated as a premise, cited as prior work,
+      or demonstrated within P.
+      <br><br>
+      P passes AXLE iff it also passes the four nirvana tests of Ch13:
+      <code>T(Conclusion) = Conclusion</code> (Ch12),
+      <code>ρ(claims) ≤ 1</code> (Ch11),
+      <code>λ &lt; 0</code> (Ch10), and <code>β → ∞</code> (Ch13).
+      The AXLE criterion subsumes all four.
+    </div>
+  </div>
+</div>
+
+<!-- ── Section 4: DNA proofreading ───────────────── -->
+<div class="section">
+  <h2>§4 · DNA Proofreading — Biological Formal Verification</h2>
+  <p>
+    DNA polymerase III replicates the genome at ~1,000 bases per second
+    while maintaining extraordinary accuracy.
+    It achieves this through a three-stage verification cascade —
+    biological formal verification with error rates that improve by five orders of magnitude.
+  </p>
+
+  <table class="err-table">
+    <thead>
+      <tr>
+        <th>Verification Stage</th>
+        <th>Mechanism</th>
+        <th>Error Rate</th>
+        <th>Sorry Count (per 10⁹ bases)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="stage">Base selection</td>
+        <td>Geometry / H-bonding specificity</td>
+        <td class="rate">~10⁻⁵</td>
+        <td>~10,000 sorries</td>
+      </tr>
+      <tr>
+        <td class="stage">3′→5′ proofreading</td>
+        <td>Exonuclease removes mismatched 3′ end</td>
+        <td class="rate">~10⁻⁷</td>
+        <td>~100 sorries</td>
+      </tr>
+      <tr>
+        <td class="stage">Mismatch repair (MMR)</td>
+        <td>MutS/MutL/MutH scan for distortions post-replication</td>
+        <td class="rate">~10⁻⁹ to 10⁻¹⁰</td>
+        <td class="good">~1 sorry per genome</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Each stage is an application of the AXLE criterion at the molecular level:
+    a mismatched base is a type mismatch — the wrong nucleotide type
+    in a position whose type is defined by the template strand.
+    The proofreading exonuclease is the reviewer; mismatch repair is AXLE itself.
+  </p>
+
+  <p>
+    The <em>Drosophila melanogaster</em> connectome — all ~130,000 neurons
+    and ~50 million synapses, published in 2023 — represents the same achievement
+    at the cellular scale: a formal verification of the fly brain's wiring,
+    every connection typed and checked.
+    A sorry-free paper aspires to the same completeness in its own domain.
+  </p>
+
+  <div class="insight">
+    When MMR fails — in Lynch syndrome — the mismatch error rate rises to ~10⁻⁷,
+    and colorectal cancer risk increases dramatically.
+    A paper without AXLE verification has the same vulnerability:
+    every unresolved sorry is a potential site of argument collapse under review pressure.
+  </div>
+</div>
+
+<!-- ── Section 5: Kinetic Proofreading Math ──────────── -->
+<div class="section">
+  <h2>§5 · Kinetic Proofreading — The Mathematics of Error Discrimination</h2>
+  <p>
+    Thermodynamics imposes a hard floor on discrimination accuracy. Given a binding
+    energy difference Δε between correct and incorrect substrates,
+    the equilibrium error rate cannot fall below
+    <em>f₀ = e<sup>−Δε / k<sub>B</sub>T</sup></em>.
+    For nucleotide selectivity Δε ≈ 2–3 k<sub>B</sub>T,
+    giving f₀ ≈ 0.01–0.14 — far too high for a genome that must
+    copy 3 × 10⁹ bases with fewer than one error per cell division.
+  </p>
+  <p>
+    In 1974, John Hopfield showed this limit can be broken by coupling discrimination
+    to an irreversible, energy-consuming step — GTP hydrolysis.
+    The system discriminates <em>twice</em>: once before hydrolysis,
+    once after. Because hydrolysis is irreversible, each pass is statistically independent.
+    The error rates multiply:
+  </p>
+
+  <div class="theorem">
+    <div class="thm-label">Theorem 5.1 — Hopfield 1974 · Kinetic Proofreading</div>
+    <div class="thm-body">
+      Let <code>f₀ = e<sup>−Δε/k<sub>B</sub>T</sup></code> be the thermodynamic discrimination factor.<br>
+      With <strong>n</strong> irreversible proofreading steps (each costing ≥ k<sub>B</sub>T · ln(1/f₀)
+      in free energy), the achieved error rate is:<br><br>
+      <strong>f<sub>n</sub> = f₀<sup>n + 1</sup></strong><br><br>
+      This is the <strong>K operator</strong> in the dm³ chain.
+      Each GTP hydrolysis event is a threshold crossing — the irreversible step that resets
+      the discrimination clock and permits a second independent rejection opportunity.
+      <code>K</code> does not merely filter; it <em>multiplies</em> the fidelity of C.
+    </div>
+  </div>
+
+  <p>
+    In ribosomal translation — Hopfield's original example —
+    EF-Tu carries aminoacyl-tRNA to the ribosome A-site.
+    For a near-cognate (mismatched) codon-anticodon pair,
+    GTPase activation slows by a factor of ~100
+    (k<sub>cat</sub> = 120–500 s⁻¹ cognate vs. 0.06–1.3 s⁻¹ near-cognate).
+    After GTP hydrolysis and EF-Tu release, the aa-tRNA must accommodate
+    into the peptidyl transferase centre — a second independent rejection opportunity.
+    The product: f₁ = f₀² ≈ 10⁻⁴ per codon, matching observation.
+  </p>
+
+  <p>
+    The <strong>n-bonacci recurrence ladder</strong> is the abstract form of this principle.
+    Each additional proofreading layer advances the verification ratio toward the limit —
+    the embodiment threshold τ = 2:
+  </p>
+
+  <div class="nbonacci-ladder">
+    <div class="nb-step">
+      <span class="nb-sym">φ</span>
+      <span class="nb-val">≈ 1.618</span>
+      <span class="nb-err">Base selection ~10⁻⁵</span>
+    </div>
+    <div class="nb-step">
+      <span class="nb-sym">η</span>
+      <span class="nb-val">≈ 1.839</span>
+      <span class="nb-err">+ Exonuclease ~10⁻⁷</span>
+    </div>
+    <div class="nb-step">
+      <span class="nb-sym">Δ</span>
+      <span class="nb-val">≈ 1.927</span>
+      <span class="nb-err">+ MMR ~10⁻⁹</span>
+    </div>
+    <div class="nb-step">
+      <span class="nb-sym">Σ</span>
+      <span class="nb-val">≈ 1.966</span>
+      <span class="nb-err">+ HF-CRISPR ~10⁻¹¹</span>
+    </div>
+    <div class="nb-step">
+      <span class="nb-sym">Ω</span>
+      <span class="nb-val">≈ 1.984</span>
+      <span class="nb-err">Prime editing ~10⁻¹³</span>
+    </div>
+    <div class="nb-step nb-tau">
+      <span class="nb-sym">τ</span>
+      <span class="nb-val">= 2</span>
+      <span class="nb-err">Perfect fidelity · limit</span>
+    </div>
+  </div>
+
+  <div class="insight">
+    The n-bonacci constant φₙ is the unique root in (1, 2) of
+    x<sup>n</sup> − x<sup>n−1</sup> − … − x − 1 = 0. As n → ∞, φₙ → 2.
+    This is the mathematical statement that infinite kinetic proofreading achieves
+    perfect discrimination. The embodiment threshold τ = 2 is the biological asymptote —
+    the limit no finite molecular machine can reach, but that every proofreading cascade approaches.
+    Each rung of the dm³ recurrence ladder is one more GTP hydrolysis step.
+  </div>
+</div>
+
+<!-- ── Section 6: Central Dogma as G = U∘F∘K∘C ─────────── -->
+<div class="section">
+  <h2>§6 · The Central Dogma as G = U ∘ F ∘ K ∘ C</h2>
+  <p>
+    DNA stores information; RNA reads it; ribosomes translate it into protein; protein acts.
+    This four-layer cascade is not merely an analogy to the dm³ operator chain —
+    it is a physical instantiation of G = U ∘ F ∘ K ∘ C.
+    Each operator has a corresponding molecular machine, error rate, and proofreading mechanism:
+  </p>
+
+  <div class="dogma-flow">
+    <div class="df-card">
+      <div class="df-op">C — Contact</div>
+      <div class="df-molecule">🧬</div>
+      <div class="df-name">DNA Replication</div>
+      <div class="df-rate">10⁻⁵ → 10⁻⁹ / bp</div>
+      <div class="df-mech">Pol III base selection driven by Watson-Crick contact geometry. The template strand is the contact form; complementarity is the contact condition.</div>
+    </div>
+    <div class="df-card">
+      <div class="df-op">K — Threshold</div>
+      <div class="df-molecule">🔬</div>
+      <div class="df-name">RNA Transcription</div>
+      <div class="df-rate">10⁻⁵ → 10⁻⁶ / nt</div>
+      <div class="df-mech">RNA Pol II backtracking on mismatch triggers TFIIS-stimulated cleavage. Misincorporation is the threshold K* — it activates the proofreading response.</div>
+    </div>
+    <div class="df-card">
+      <div class="df-op">F — Fold</div>
+      <div class="df-molecule">⚗️</div>
+      <div class="df-name">Translation</div>
+      <div class="df-rate">~10⁻⁴ / amino acid</div>
+      <div class="df-mech">EF-Tu GTPase kinetic proofreading (Hopfield's original example). The nascent polypeptide folds co-translationally — the narrative assembles as it is written.</div>
+    </div>
+    <div class="df-card">
+      <div class="df-op">U — Unfold</div>
+      <div class="df-molecule">⚡</div>
+      <div class="df-name">Active Protein</div>
+      <div class="df-rate">Post-translational QC</div>
+      <div class="df-mech">Chaperone-assisted folding; ER quality control; proteasomal degradation of misfolds. Only sorry-free proteins enter the functional proteome.</div>
+    </div>
+  </div>
+
+  <p>
+    The cascade is not monotonically improving: translation is <em>less</em> accurate
+    than replication (10⁻⁴ vs. 10⁻⁹ per residue).
+    This is not a flaw — it reflects different cost structures.
+    DNA errors are permanent; protein errors are transient.
+    A misfolded protein is degraded and re-synthesised by U, which loops back to C.
+    The operator chain is not linear — it is a <em>recurrence</em>,
+    cycling until the expressed output is sorry-free.
+  </p>
+
+  <div class="lean-block">
+    <div class="label">Central Dogma as dm³ type composition</div>
+<span class="cm">-- C: genome as a contact structure (Watson-Crick geometry)</span>
+<span class="kw">structure</span> <span class="ty">Genome</span> <span class="kw">where</span>
+  sequence  : List Nucleotide
+  h_contact : ∀ b ∈ sequence, WatsonCrick b.complement = true
+
+<span class="cm">-- K: RNA Pol II threshold — backtracking activates on mismatch</span>
+<span class="kw">def</span> <span class="ty">K_transcribe</span> (g : Genome) : Transcript :=
+  polII g |>.filter (fun nt => nt.misincorporated → TFIIS.cleave nt)
+
+<span class="cm">-- F: ribosome + EF-Tu kinetic proofreading (Hopfield 1974: f₀² discrimination)</span>
+<span class="kw">def</span> <span class="ty">F_translate</span> (t : Transcript) : NascentPolypeptide :=
+  ribosome t |>.proofread EF_Tu_GTPase
+
+<span class="cm">-- U: chaperones, ER-QC, proteasome — sorry-free proteins proceed</span>
+<span class="kw">def</span> <span class="ty">U_express</span> (p : NascentPolypeptide) : ActiveProtein :=
+  match chaperone.fold p with
+  | .correct x => x.activate
+  | .misfolded => proteasome.degrade p; <span class="sorry-kw">sorry</span>  <span class="cm">-- retry loop</span>
+
+<span class="cm">-- G = U ∘ F ∘ K ∘ C  ←→  the central dogma</span>
+<span class="kw">def</span> <span class="ty">G</span> (genome : Genome) : ActiveProtein :=
+  U_express (F_translate (K_transcribe genome))
+  </div>
+
+  <p>
+    The Drosophila melanogaster connectome — 130,000 neurons, 50 million synapses,
+    published 2023 — is the output of this cascade applied ~10¹¹ times across development.
+    Each synapse is a sorry-free expressed claim:
+    "neuron A contacts neuron B at strength w."
+    The connectome as a whole is a formally verified proof of the fly's neural architecture —
+    AXLE at the organismal scale.
+  </p>
+</div>
+
+<!-- ── Section 7: CRISPR as Sorry Corrector ──────────────── -->
+<div class="section">
+  <h2>§7 · CRISPR — Post-Hoc Genome Editing as Sorry Correction</h2>
+  <p>
+    DNA proofreading, RNA fidelity, and ribosomal kinetic proofreading all operate
+    <em>during</em> the biological writing process.
+    CRISPR-Cas9 is something different: it is a post-hoc editor —
+    capable of finding a specific 20-nucleotide address anywhere in a 3 × 10⁹ bp genome
+    and correcting it after the fact.
+    In Lean terms, DNA proofreading is the type-checker running on compilation;
+    CRISPR is the proof repair tool applied to a compiled but sorry-containing file.
+  </p>
+
+  <table class="crispr-table">
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Mechanism</th>
+        <th>Off-target Rate</th>
+        <th>AXLE Analogy</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="c-sys">Wild-type Cas9</td>
+        <td>DSB → NHEJ or HDR</td>
+        <td class="c-rate">~10⁻² to 10⁻³</td>
+        <td class="c-axle">Early draft — one sorry removed, another introduced by error-prone repair</td>
+      </tr>
+      <tr>
+        <td class="c-sys">SpCas9-HF1</td>
+        <td>Reduced PAM-distal contacts; tolerates only perfect-match guides</td>
+        <td class="c-rate">~10⁻⁵</td>
+        <td class="c-axle">Exonuclease pass — sorry rate drops 100×; some sorries remain</td>
+      </tr>
+      <tr>
+        <td class="c-sys">eSpCas9 / HypaCas9</td>
+        <td>Modulated protein–DNA non-specific contacts</td>
+        <td class="c-rate">~10⁻⁵ to 10⁻⁶</td>
+        <td class="c-axle">MMR pass — approaching 1 sorry per genome</td>
+      </tr>
+      <tr class="c-best">
+        <td class="c-sys">Prime Editing (2019–)</td>
+        <td>Cas9n + reverse transcriptase + pegRNA encodes both target and edit</td>
+        <td class="c-rate">~10⁻⁷ or below</td>
+        <td class="c-axle">AXLE-verified — the pegRNA is the proof term, encoding location and correction simultaneously</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    Prime editing is architecturally closest to AXLE verification.
+    The <em>pegRNA</em> (prime editing guide RNA) encodes two things simultaneously:
+    the genomic address (where) and the desired sequence (what the correct text should be).
+    This is precisely the structure of a Lean 4 evidence term —
+    <code style="color:var(--a-color)">h : Claim</code> encodes both the proposition and its proof.
+    The reverse transcriptase copies the correct sequence directly from the pegRNA template:
+    no double-strand break, no error-prone NHEJ, no newly introduced sorries.
+  </p>
+
+  <div class="theorem">
+    <div class="thm-label">Theorem 7.1 — CRISPR as dm³ Operator Composition</div>
+    <div class="thm-body">
+      Let genome G be a Lean file with n sorry-containing theorems at positions p₁ … pₙ.
+      A prime-editing correction targeting position p with sequence c applies:<br><br>
+      <code>edit : G → G' where G'[p] = c</code><br><br>
+      The edit is <strong>AXLE-verified</strong> iff:<br>
+      (C) the guide RNA uniquely identifies p — no off-target contacts (C is injective);<br>
+      (K) c is the cognate sequence at p — the K threshold is satisfied;<br>
+      (F) the reverse transcriptase copies c without error — the corrected strand folds correctly;<br>
+      (U) G' expresses a functional protein — the sorry-free output is inhabited.<br><br>
+      Prime editing satisfies all four. Wild-type Cas9 with NHEJ satisfies (C) and (K) probabilistically
+      but routinely fails (F) and (U) by introducing indels at the repair site.
+    </div>
+  </div>
+
+  <div class="insight">
+    Lynch syndrome (§4) arises when MMR fails — the biological sorry-eliminator is broken,
+    and colorectal cancer risk climbs. CRISPR prime editing can in principle correct
+    the causative MSH2 or MLH1 mutations in somatic cells, restoring the MMR apparatus itself.
+    This closes the loop: the same sorry that biological verification failed to catch
+    is addressable by an externally applied AXLE pass. Every unresolved sorry — in a genome or in a paper —
+    has a repair pathway. The question is only the cost of the proofreading step.
+  </div>
+</div>
+
+<!-- ── Sorry Eliminator Simulation ─────────────────── -->
+<div class="canvas-panel">
+  <h3>▶ AXLE Sorry Eliminator — Interactive Proof Assistant</h3>
+  <p style="font-size:.83rem; color:var(--muted); margin-bottom:1rem; font-family:'Courier New',monospace;">
+    Each <span style="color:var(--a-sorry); font-weight:bold">sorry</span> is a claim without evidence.
+    Click "Add Evidence" to replace it with a real proof term. Reach 0 sorries to verify the paper.
+  </p>
+
+  <div class="proof-block" id="proofBlock">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">0 / 5 sorries eliminated</div>
+  <div class="verdict" id="verdict" style="color:var(--a-sorry)">
+    ⚠ Paper uses 'sorry' — 5 unverified claims
+  </div>
+</div>
+
+<!-- ── Prompt Portal ───────────────────────────── -->
+<div class="prompt-portal">
+  <h3>⬡ LLM Prompt Portal · Chapter 14</h3>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 7.4 · SORRY INVENTORY</div>
+    <div class="p-title">Map Every Implicit Assumption in Your Paper</div>
+    <div class="p-text">
+      Read your paper as if you were writing it in Lean 4. For every claim C, ask:
+      "If I had to write <code style="color:var(--a-color)">h : C</code>, what is h?"<br>
+      List every claim where h is implicit — where you asserted C without constructing
+      the evidence term. These are your sorries.<br>
+      For each sorry: (a) Can it be replaced by a citation? (b) By your own data?
+      (c) Does it need to be stated explicitly as a premise/assumption?
+      (d) Should the claim be removed entirely?<br>
+      Output: a sorry inventory table with columns: Claim / Type of h needed / Replacement strategy / Status.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p74', this)">Copy Prompt 7.4</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 8.1 · TYPE-CHECK YOUR ARGUMENT</div>
+    <div class="p-title">Evidence Type Matching</div>
+    <div class="p-text">
+      For each major claim in your paper, identify its required evidence type:<br>
+      · Causal claim → requires RCT or natural experiment<br>
+      · Mechanistic claim → requires in vitro / molecular / pathway data<br>
+      · Associative claim → observational / correlation evidence is sufficient<br>
+      · Universal claim (∀ x) → requires proof or very large n<br>
+      · Existential claim (∃ x) → a single example suffices<br>
+      For each claim, state: (a) claim type, (b) evidence type you used,
+      (c) type-check result: MATCH ✓ / MISMATCH ✗ / METAVARIABLE ?.
+      For every MISMATCH: either downgrade the claim to match the evidence,
+      or upgrade the evidence to match the claim.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p81', this)">Copy Prompt 8.1</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 9.1 · CENTRAL DOGMA AUDIT</div>
+    <div class="p-title">Map Your Paper's Operator Chain</div>
+    <div class="p-text">
+      Treat your paper as a Central Dogma cascade. Identify which layer each claim lives in:<br>
+      · C (Contact / Data): raw measurements, observations, sequences — what did you actually touch?<br>
+      · K (Threshold / Significance): which results crossed a pre-defined threshold K*? Was K* set before data collection?<br>
+      · F (Fold / Narrative): how did you structure results into a story? Which framings are interpretations vs. facts?<br>
+      · U (Unfold / Conclusion): which claims in your conclusion are actually in your data, vs. extrapolated?<br>
+      For each misplaced claim (a U-level conclusion supported only by C-level data),
+      either add the missing K and F operators, or downgrade the claim to its actual layer.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p91', this)">Copy Prompt 9.1</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 9.2 · KINETIC PROOFREADING SELF-AUDIT</div>
+    <div class="p-title">Count Your Proofreading Steps</div>
+    <div class="p-text">
+      For each major claim in your paper, count how many independent verification steps it has passed:<br>
+      Step 1 (φ, f₀): you ran the analysis and got a result;<br>
+      Step 2 (η, f₀²): a co-author checked the analysis independently;<br>
+      Step 3 (Δ, f₀³): a blinded reviewer attempted to replicate the result;<br>
+      Step 4 (Σ): the result survived peer review with methods scrutiny;<br>
+      Step 5 (Ω): the result has been independently replicated by another lab.<br>
+      Claims at Step 1 only have thermodynamic-limit error rates (~10⁻²).
+      Claims at Step 3+ approach the DNA replication standard (~10⁻⁹).
+      Which of your claims are still at Step 1? Those are your highest-risk sorries.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p92', this)">Copy Prompt 9.2</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">EXTENSION · PROOFREADING CASCADE</div>
+    <div class="p-title">Three-Stage Verification Protocol</div>
+    <div class="p-text">
+      Apply the DNA proofreading cascade to your paper:<br>
+      Stage 1 — Base selection (error rate 10⁻⁵): Read each sentence in isolation.
+      Does it make a claim? Is the claim typed correctly?
+      Flag mismatches.<br>
+      Stage 2 — Exonuclease proofreading (10⁻⁷): Apply Prompts 5.3 (Lyapunov),
+      5.2 (spectral), and 6.3 (conclusion audit).
+      How many sorries remain?<br>
+      Stage 3 — Mismatch repair (10⁻¹⁰): Apply Prompt 7.3 (nirvana check).
+      Run the sorry inventory (Prompt 7.4). Eliminate all remaining sorries.<br>
+      Report error rates at each stage: how many sorry-level claims per 1,000 words
+      survived Stage 1? Stage 2? Stage 3?
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('ext', this)">Copy Extension</button>
+  </div>
+</div>
+
+<!-- ── Chapter nav ─────────────────────────────── -->
+<div class="chapter-nav">
+  <a href="ch13-revision.html">← Ch13 · Nirvana Machine</a>
+  <a href="ch15-entropy.html">Ch15 · Entropy →</a>
+</div>
+
+<footer>
+  Chapter 14 of 17 &nbsp;·&nbsp; Book 3: The Mini-Beast &nbsp;·&nbsp;
+  G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; §1–7 · Hopfield 1974 · Central Dogma · CRISPR &nbsp;·&nbsp; © G6 LLC
+</footer>
+
+<script>
+/* ── Sorry Eliminator ────────────────────────────────────────── */
+const CLAIMS = [
+  {
+    id: 0,
+    sorry_text:  'h_compress : CompressedData.compression_ratio > 1 := <span class="sorry-kw">sorry</span>',
+    ok_text:     'h_compress : compression_ratio = n / k = 4.7 > 1  <span class="ok">-- ✓ Table 2</span>',
+    label:       'Add Evidence',
+    desc:        'Claim: compression ratio > 1',
+    evidence:    'Table 2: n=847 features compressed to k=180 (ratio 4.7)'
+  },
+  {
+    id: 1,
+    sorry_text:  'h_threshold : ∃ e ∈ data, e > K_star := <span class="sorry-kw">sorry</span>',
+    ok_text:     'h_threshold : max(affinity_scores) = 0.83 > K_star(0.65)  <span class="ok">-- ✓ Fig 3B</span>',
+    label:       'Add Evidence',
+    desc:        'Claim: K* threshold was crossed',
+    evidence:    'Fig 3B: peak affinity 0.83 exceeds K* = 0.65'
+  },
+  {
+    id: 2,
+    sorry_text:  'h_subcritical : ¬overclaims results_section := <span class="sorry-kw">sorry</span>',
+    ok_text:     'h_subcritical : all_claims_hedged ∧ no_causal_lang  <span class="ok">-- ✓ Prompt 4.3 audit</span>',
+    label:       'Add Evidence',
+    desc:        'Claim: Results section is subcritical (Ch9)',
+    evidence:    'Prompt 4.3 audit: 0 overclaims detected after revision'
+  },
+  {
+    id: 3,
+    sorry_text:  'h_stable : ∀ c ∈ claims, spectralReach c ≤ 1 := <span class="sorry-kw">sorry</span>',
+    ok_text:     'h_stable : max_reach = 0.94 ≤ 1 (all 7 claims audited)  <span class="ok">-- ✓ Prompt 5.2</span>',
+    label:       'Add Evidence',
+    desc:        'Claim: All Discussion claims ρ ≤ 1 (Ch11)',
+    evidence:    'Prompt 5.2: highest ρ = 0.94 on "mechanism universality" claim'
+  },
+  {
+    id: 4,
+    sorry_text:  'h_fixed_pt : T(conclusion) = conclusion := <span class="sorry-kw">sorry</span>',
+    ok_text:     'h_fixed_pt : re_derive_conclusion = conclusion  <span class="ok">-- ✓ Prompt 6.3</span>',
+    label:       'Add Evidence',
+    desc:        'Claim: Conclusion is the fixed point (Ch12)',
+    evidence:    'Prompt 6.3: conclusion unchanged after full re-read'
+  }
+];
+
+let solved = new Set();
+
+function renderProof() {
+  const block = document.getElementById('proofBlock');
+  const header = `<span style="color:var(--u-color)">theorem</span> <span style="color:#67e8f9">PaperIsValid</span> : ArgumentIsVerified := <span style="color:var(--a-color)">by</span>\n`;
+  let html = `<div style="color:var(--muted); margin-bottom:.6rem; font-size:.78rem;">${header}</div>`;
+
+  CLAIMS.forEach(c => {
+    const done = solved.has(c.id);
+    const lineClass = done ? 'ok-line' : 'sorry-line';
+    const icon = done ? '<span style="color:var(--a-color)">✓</span>' : '<span style="color:var(--a-sorry)">✗</span>';
+    const code = done ? c.ok_text : c.sorry_text;
+    const btn  = done ? '' : `<button class="pl-btn" onclick="eliminateSorry(${c.id})">Add Evidence</button>`;
+    html += `<div class="proof-line ${lineClass}">
+      <span class="pl-status">${icon}</span>
+      <span class="pl-code">&nbsp;&nbsp;${code}</span>
+      ${btn}
+    </div>`;
+  });
+
+  // Final line
+  const allDone = solved.size === CLAIMS.length;
+  const finalLine = allDone
+    ? `<div class="proof-line ok-line"><span class="pl-status"><span style="color:var(--a-color)">⊢</span></span><span class="pl-code">&nbsp;&nbsp;<span style="color:var(--a-color); font-weight:bold">Paper verified — no sorry remaining ✓</span></span></div>`
+    : `<div class="proof-line sorry-line"><span class="pl-status"><span style="color:var(--a-sorry)">⊢</span></span><span class="pl-code">&nbsp;&nbsp;<span style="color:var(--a-sorry)">Proof incomplete — ${CLAIMS.length - solved.size} sorry remaining</span></span></div>`;
+  html += finalLine;
+
+  block.innerHTML = html;
+  updateProgress();
+}
+
+function eliminateSorry(id) {
+  solved.add(id);
+  renderProof();
+}
+
+function updateProgress() {
+  const n = solved.size;
+  const total = CLAIMS.length;
+  const pct = (n / total) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${n} / ${total} sorries eliminated`;
+
+  const verdict = document.getElementById('verdict');
+  if (n === 0) {
+    verdict.style.color = 'var(--a-sorry)';
+    verdict.textContent = `⚠ Paper uses 'sorry' — ${total} unverified claims`;
+  } else if (n < total) {
+    verdict.style.color = 'var(--a-warn)';
+    verdict.textContent = `⚠ Partial verification — ${total - n} sorry remaining`;
+  } else {
+    verdict.style.color = 'var(--a-color)';
+    verdict.textContent = '⊢ PaperIsValid  ✓  AXLE verified — all claims inhabited';
+  }
+}
+
+/* ── Copy prompts ─────────────────────────────────────────────── */
+const PROMPT_TEXT = {
+  p74: `SORRY INVENTORY — Prompt 7.4
+
+Read your paper as if you were writing it in Lean 4. For every claim C, ask: "If I had to write 'h : C', what is h?"
+
+List every claim where h is implicit — where you asserted C without constructing the evidence term. These are your sorries.
+
+For each sorry, determine:
+(a) Can it be replaced by a citation to prior work?
+(b) Can it be replaced by your own data (which table, figure, or test)?
+(c) Does it need to be stated explicitly as a premise or assumption?
+(d) Should the claim be removed entirely?
+
+Output: a sorry inventory table with columns:
+Claim | Type of evidence (h) needed | Replacement strategy | Status (RESOLVED / PREMISE / REMOVE)`,
+
+  p81: `TYPE-CHECK YOUR ARGUMENT — Prompt 8.1
+
+For each major claim in your paper, identify its required evidence type:
+  · Causal claim (X causes Y) → requires RCT or natural experiment
+  · Mechanistic claim (X works via pathway Z) → in vitro / molecular / pathway data
+  · Associative claim (X correlates with Y) → observational / correlation sufficient
+  · Universal claim (∀ x, property P) → proof or very large n
+  · Existential claim (∃ x with property P) → single example suffices
+
+For each claim, state:
+(a) Claim type
+(b) Evidence type you used
+(c) Type-check result: MATCH ✓ / MISMATCH ✗ / METAVARIABLE ?
+
+For every MISMATCH: either downgrade the claim to match the evidence (e.g., "X causes Y" → "X is associated with Y"), or upgrade the evidence to match the claim (run the study needed).`,
+
+  p91: `CENTRAL DOGMA AUDIT — Prompt 9.1
+
+Treat your paper as a Central Dogma cascade and map each claim to its operator layer:
+
+C (Contact / Data): raw measurements, observations, sequences — what did you actually touch and measure?
+K (Threshold / Significance): which results crossed a pre-defined threshold K*? Was K* set before data collection, or after seeing the data?
+F (Fold / Narrative): how did you structure results into a story? Which framings are interpretations vs. empirical facts?
+U (Unfold / Conclusion): which claims in your Conclusion are actually present in your data, vs. extrapolated beyond it?
+
+For each claim, annotate: C / K / F / U
+
+For each misplaced claim (a U-level conclusion supported only by C-level data, with no K or F operators in between):
+Either add the missing operators (run the significance test, make the narrative framing explicit), or downgrade the claim to its actual operator layer.
+
+Output: a two-column table with Claim | Actual Layer | Required Operators to Justify at U`,
+
+  p92: `KINETIC PROOFREADING SELF-AUDIT — Prompt 9.2
+
+For each major claim in your paper, count how many independent verification steps it has passed.
+Map to the n-bonacci ladder:
+
+Step 1 (φ ≈ 1.618, error rate ~10⁻²): You ran the analysis and got a result. One observer, one pass.
+Step 2 (η ≈ 1.839, error rate ~10⁻⁴): A co-author independently checked the analysis or re-ran the code.
+Step 3 (Δ ≈ 1.927, error rate ~10⁻⁶): A blinded reviewer or replication attempt tested the result.
+Step 4 (Σ ≈ 1.966, error rate ~10⁻⁸): The result survived peer review with detailed methods scrutiny.
+Step 5 (Ω ≈ 1.984, error rate ~10⁻¹⁰): Independent replication by another lab confirmed the result.
+
+For each claim, report its current step number on the ladder.
+Claims at Step 1 have thermodynamic-limit error rates (~10⁻²) — they are your highest-risk sorries.
+Claims at Step 3+ approach the DNA replication standard.
+
+Which claims are still at Step 1? Those are the paper's kinetic proofreading gaps.`,
+
+  ext: `PROOFREADING CASCADE — Extension
+
+Apply the three-stage DNA proofreading cascade to your paper:
+
+Stage 1 — Base selection (target error rate 10⁻⁵):
+Read each sentence in isolation. Does it make a claim? What type is the claim? What type is the evidence? Flag every mismatch (type error) and every sentence asserting a claim with no evidence cited.
+Count: how many sorry-level claims per 1,000 words?
+
+Stage 2 — Exonuclease proofreading (target 10⁻⁷):
+Apply Prompts 5.3 (Lyapunov: single point of failure test), 5.2 (spectral: ρ ≤ 1 for all Discussion claims), and 6.3 (conclusion audit: T(Conclusion) = Conclusion).
+How many sorries remain after Stage 2?
+
+Stage 3 — Mismatch repair (target 10⁻¹⁰):
+Apply Prompt 7.3 (all four nirvana tests). Run the full sorry inventory (Prompt 7.4). Eliminate all remaining sorries.
+
+Report the error rate at each stage: sorries per 1,000 words after Stage 1, 2, and 3. A publication-ready paper should reach Stage 3 error rate ≤ 0.1 sorry per 1,000 words.`
+};
+
+function copyPrompt(id, btn) {
+  navigator.clipboard.writeText(PROMPT_TEXT[id]).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  });
+}
+
+// ── Init ──
+renderProof();
+</script>
+
+<!-- G6 Crystal Navigator -->
+<div id="g6-cryst-btn" onclick="document.getElementById('g6-cryst-panel').classList.toggle('g6-open')" title="Crystal Map — Book 3" style="position:fixed;bottom:24px;right:24px;z-index:99998;width:50px;height:50px;border-radius:50%;background:#07050f;border:1.5px solid #c9a84c;color:#c9a84c;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 16px rgba(0,0,0,0.4);user-select:none;transition:transform .18s" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'">🜁</div>
+<div id="g6-cryst-panel" style="position:fixed;bottom:86px;right:24px;z-index:99997;width:370px;max-height:500px;background:#07050f;border:1px solid rgba(201,168,76,.35);border-radius:10px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.55);display:none;flex-direction:column">
+  <div style="padding:9px 14px 7px;border-bottom:.5px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:space-between">
+    <span style="font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:rgba(201,168,76,.6);text-transform:uppercase">Crystal Map · Book 3</span>
+    <button onclick="document.getElementById('g6-cryst-panel').classList.remove('g6-open')" style="background:none;border:none;color:rgba(201,168,76,.4);font-size:16px;cursor:pointer;line-height:1">×</button>
+  </div>
+  <canvas id="g6-cryst-cv" style="display:block;width:100%;height:290px;cursor:crosshair;background:#07050f"></canvas>
+  <div style="font-family:'Courier New',monospace;font-size:9px;color:rgba(201,168,76,.25);text-align:center;padding:3px 0;letter-spacing:.1em">drag · hover · click to open chapter</div>
+  <div id="g6-cryst-info" style="border-top:.5px solid rgba(201,168,76,.15);padding:8px 14px 10px;min-height:58px">
+    <div id="g6-ci-title" style="font-size:12px;font-weight:bold;color:#c9a84c;margin-bottom:2px;font-family:'Courier New',monospace"></div>
+    <div id="g6-ci-desc" style="font-size:11px;color:rgba(232,224,208,.6);line-height:1.4"></div>
+  </div>
+</div>
+<style>#g6-cryst-panel.g6-open{display:flex!important}</style>
+<script src="/geometry/g6-crystal.js"></script>
+
+</body>
+</html>
