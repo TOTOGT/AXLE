@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principia Orthogona — The Spiral · G1–G9</title>
+<link href="https://fonts.googleapis.com/css2?family=family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#04040a; --deep:#08090f; --surface:#0d0e18; --card:#10111c;
+  --gold:#c9a84c; --gold2:#e8c96a; --teal:#2dd4bf;
+  --text:#e8e4d8; --muted:#6b6757; --dim:#3a3828; --border:rgba(201,168,76,0.14);
+  --g1:#6b7280; --g2:#8b5cf6; --g3:#0ABAB5; --g4:#f59e0b; --g5:#f8fafc;
+  --g6:#fb923c; --g7:#4ade80; --g8:#60a5fa; --g9:#e2e8f0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Georgia',serif;background:var(--void);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+nav{
+  position:fixed;top:0;width:100%;z-index:500;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.9rem 2.5rem;border-bottom:1px solid var(--border);
+  background:rgba(4,4,10,0.92);backdrop-filter:blur(14px);
+}
+.nav-mark{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;}
+.nav-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+
+.hero{padding:9rem 2rem 5rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 40%,rgba(201,168,76,0.06) 0%,transparent 70%);pointer-events:none;}
+.tag{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--teal);border:1px solid currentColor;padding:.25rem .75rem;display:inline-block;margin-bottom:2.5rem;}
+.hero h1{font-family:'Georgia',serif;font-size:clamp(2.2rem,6vw,4.5rem);font-weight:300;letter-spacing:.06em;color:var(--gold);margin-bottom:1rem;}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:560px;margin:0 auto;font-style:italic;line-height:1.75;}
+.hero-eq{margin-top:2rem;font-family:'JetBrains Mono',monospace;font-size:1rem;letter-spacing:.12em;color:rgba(201,168,76,.55);}
+
+/* SPIRAL SVG */
+.spiral-wrap{max-width:700px;margin:3rem auto;padding:0 2rem;}
+
+/* G-TURNS GRID */
+.turns{max-width:900px;margin:4rem auto;padding:0 2rem;}
+.turns-title{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;text-align:center;}
+
+.g-turn{margin-bottom:2.5rem;border:1px solid var(--border);background:var(--card);}
+.g-turn-header{
+  display:flex;align-items:center;gap:1.2rem;
+  padding:1.1rem 1.6rem;border-bottom:1px solid var(--border);
+}
+.g-num{
+  font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;
+  min-width:2.5rem;text-align:center;
+}
+.g-meta{flex:1;}
+.g-title{font-size:1.1rem;font-weight:400;color:var(--text);letter-spacing:.04em;}
+.g-subtitle{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.08em;margin-top:.2rem;}
+.g-status{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.12em;padding:.2rem .65rem;border:1px solid currentColor;opacity:.8;}
+
+.g-chapters{padding:1rem 1.6rem;display:flex;flex-direction:column;gap:.3rem;}
+.g-part{margin-top:.8rem;}
+.g-part-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;padding-left:.3rem;border-left:2px solid var(--dim);}
+.ch-row{display:flex;align-items:center;gap:.7rem;padding:.28rem .4rem;border-radius:2px;transition:background .15s;}
+.ch-row:hover{background:rgba(201,168,76,.05);}
+.ch-row a{color:var(--text);text-decoration:none;font-size:.92rem;flex:1;}
+.ch-row a:hover{color:var(--gold);}
+.ch-op{font-family:'JetBrains Mono',monospace;font-size:.62rem;padding:.12rem .4rem;border-radius:2px;min-width:2.6rem;text-align:center;}
+.ch-week{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);}
+.ch-missing{color:var(--muted);font-style:italic;font-size:.88rem;}
+.ch-row.missing a{opacity:.4;pointer-events:none;}
+.ch-row.missing .ch-op{opacity:.4;}
+
+.op-c{background:rgba(10,186,181,.12);color:#0ABAB5;border:1px solid rgba(10,186,181,.3);}
+.op-k{background:rgba(224,90,58,.12);color:#e05a3a;border:1px solid rgba(224,90,58,.3);}
+.op-f{background:rgba(80,200,120,.12);color:#50c878;border:1px solid rgba(80,200,120,.3);}
+.op-u{background:rgba(192,132,252,.12);color:#c084fc;border:1px solid rgba(192,132,252,.3);}
+.op-g{background:rgba(201,168,76,.12);color:#c9a84c;border:1px solid rgba(201,168,76,.3);}
+.op-t{background:rgba(249,199,79,.12);color:#f9c74f;border:1px solid rgba(249,199,79,.3);}
+
+.g-cta{padding:.9rem 1.6rem;border-top:1px solid var(--border);display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
+.btn{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1rem;border:1px solid currentColor;text-decoration:none;transition:background .2s;}
+.btn:hover{background:rgba(201,168,76,.1);}
+.btn-gold{color:var(--gold);}
+.btn-teal{color:var(--teal);}
+
+footer{text-align:center;padding:3rem 2rem;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--muted);border-top:1px solid var(--border);margin-top:4rem;}
+
+/* ── Overflow: wide equations/code scroll inside boxes ── */
+.proof, .block, .axiom-block, .remark, .dep-chain, .time-sec,
+.math-block, .theorem-box, .insight-box, .falsify-box,
+.coherence-row, .table-wrap, pre, code, .code-block,
+.po-ring-strip { overflow-x: auto; }
+mjx-container { overflow-x: auto; max-width: 100%; display: block !important; }
+.MJX-TEX { max-width: 100%; }
+.block-math, .formal, .axiom-formal, .math-block {
+  overflow-x: auto; white-space: pre; word-break: normal;
+}
+table { min-width: max-content; }
+.table-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-mark">Principia Orthogona · G1–G9</span>
+  <div class="nav-links">
+    <a href="../index.html">Book 3 Home</a>
+    <a href="../prelude.html">Prelude</a>
+    <a href="hub.html">G4 Hub</a>
+    <a href="https://github.com/TOTOGT/AXLE">AXLE</a>
+    <a href="https://zenodo.org/records/19117400">Zenodo</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="tag">Principia Orthogona · The Spiral</div>
+  <h1>G1 → G2 → G3 → G4 → G5 → G6 → G7 → G8 → G9</h1>
+  <p class="hero-sub">Nine turns of the same spiral. Each volume is a complete orbit — a full application of G = U ∘ F ∘ K ∘ C to itself. The series does not ladder. It spirals.</p>
+  <div class="hero-eq">G applied nine times = G⁹ = Complete Completeness · 16 repositories · 2026</div>
+</section>
+
+<div class="turns">
+  <div class="turns-title">Nine Turns · One Operator · One Fixed Point · 16 Repositories</div>
+
+  <!-- G1 -->
+  <div class="g-turn" style="border-color:rgba(107,114,128,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g1)">G1</span>
+      <div class="g-meta">
+        <div class="g-title">Vol I — GOMC · The Operator Framework</div>
+        <div class="g-subtitle">First turn · Foundation · Contact geometry established</div>
+      </div>
+      <span class="g-status" style="color:var(--g1)">Published</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row">
+        <span class="ch-op op-c">C</span>
+        <span>The dm³ Framework — Operators, Manifolds, Contact Normal Form</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-op op-k">K</span>
+        <span>The Critical Curvature Threshold κ*</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-op op-f">F</span>
+        <span>The Generative Transition &amp; Contact Normal Form</span>
+      </div>
+      <div class="ch-row">
+        <span class="ch-op op-u">U</span>
+        <span>The Separation Theorem · Law of Monsters</span>
+      </div>
+    </div>
+    <div class="g-cta">
+      <a href="https://zenodo.org/records/19117400" class="btn btn-gold" target="_blank">Zenodo DOI ↗</a>
+      <a href="https://ssrn.com/abstract=6439626" class="btn btn-teal" target="_blank">SSRN Preprint ↗</a>
+    </div>
+  </div>
+
+  <!-- G2 -->
+  <div class="g-turn" style="border-color:rgba(139,92,246,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g2)">G2</span>
+      <div class="g-meta">
+        <div class="g-title">Vol II — TOGT · Contact Realization</div>
+        <div class="g-subtitle">Second turn · Applications across domains · g₃₃ = 33</div>
+      </div>
+      <span class="g-status" style="color:var(--g2)">Published</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row"><span class="ch-op op-c">C</span><span>Plasma-Sheet Reconnection</span></div>
+      <div class="ch-row"><span class="ch-op op-k">K</span><span>Neural Embedding &amp; Coherence Bridge</span></div>
+      <div class="ch-row"><span class="ch-op op-f">F</span><span>Market Volatility Manifolds</span></div>
+      <div class="ch-row"><span class="ch-op op-u">U</span><span>Biological Oscillatory Systems (HPA, Circadian, Immune)</span></div>
+    </div>
+    <div class="g-cta">
+      <a href="https://zenodo.org/records/19117400" class="btn btn-gold" target="_blank">Zenodo DOI ↗</a>
+    </div>
+  </div>
+
+  <!-- G3 -->
+  <div class="g-turn" style="border-color:rgba(10,186,181,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g3)">G3</span>
+      <div class="g-meta">
+        <div class="g-title">Vol III — The Mini-Beast · Pilot</div>
+        <div class="g-subtitle">Third turn · ESL + STEM pilot · 14-Week program · This site</div>
+      </div>
+      <span class="g-status" style="color:var(--g3)">Live</span>
+    </div>
+    <div class="g-chapters">
+
+      <div class="g-part">
+        <div class="g-part-label">Part I — Biological Instantiations · C · Weeks 1–4 · A2–B1</div>
+        <div class="ch-row"><span class="ch-op op-c">C</span><a href="../overture.html">Overture</a><span class="ch-week">pre</span></div>
+        <div class="ch-row"><span class="ch-op op-c">C</span><a href="../prelude.html">Prelude — How to Read This Book</a><span class="ch-week">pre</span></div>
+        <div class="ch-row"><span class="ch-op op-c">C</span><a href="../ch1.html">Ch 1 · The Cajueiro Principle</a><span class="ch-week">W1–2</span></div>
+        <div class="ch-row"><span class="ch-op op-c">C</span><a href="../ch2.html">Ch 2 · Generative Matrix</a><span class="ch-week">W2–3</span></div>
+        <div class="ch-row"><span class="ch-op op-t">T</span><a href="../ch3-circadian.html">Ch 3 · Circadian Regulation</a><span class="ch-week">W3–4</span></div>
+        <div class="ch-row"><span class="ch-op op-k">K</span><a href="../ch4-neural.html">Ch 4 · Neural Oscillations</a><span class="ch-week">W4–5</span></div>
+        <div class="ch-row"><span class="ch-op op-k">K</span><a href="../ch5-immune.html">Ch 5 · Immune Adaptation</a><span class="ch-week">W6</span></div>
+      </div>
+
+      <div class="g-part">
+        <div class="g-part-label">Part II — Physical &amp; Financial · K·T · Weeks 5–10 · B1–C1</div>
+        <div class="ch-row"><span class="ch-op op-u">U</span><a href="../ch6-resonance.html">Ch 6 · Resonance · Cymatics</a><span class="ch-week">W6–7</span></div>
+        <div class="ch-row"><span class="ch-op op-f">F</span><a href="../ch7-crystalline.html">Ch 7 · The Crystalline Return</a><span class="ch-week">W7–8</span></div>
+        <div class="ch-row missing"><span class="ch-op op-t">T</span><a href="#">Ch 4b · Market Volatility Manifolds</a><span class="ch-week ch-missing">→ PDF Ch 4 · not yet HTML</span></div>
+        <div class="ch-row"><span class="ch-op op-t">T</span><a href="../ch3c-econophysics.html">Ch 3c · The Circadian Trader</a><span class="ch-week">D2</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../ch8-axiomatic.html">Ch 8 · The Axiomatic Turn</a><span class="ch-week">W9–10</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../chH-collatz.html">Ch H · Collatz as dm³ Corollary</a><span class="ch-week">bonus</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../ch-ocio.html">Ch. Ocio · The Fixed Point</a><span class="ch-week">bonus</span></div>
+      </div>
+
+      <div class="g-part">
+        <div class="g-part-label">Part III — Research Writing · F→U · Weeks 11–14 · C1–D2</div>
+        <div class="ch-row"><span class="ch-op op-f">F</span><a href="../ch9-phi.html">Ch 9 · φ · The Subcritical Approach</a><span class="ch-week">W11</span></div>
+        <div class="ch-row"><span class="ch-op op-u">U</span><a href="../ch10-lyapunov.html">Ch 10 · Lyapunov · Stability</a><span class="ch-week">W13</span></div>
+        <div class="ch-row"><span class="ch-op op-u">U</span><a href="../ch11-spectral.html">Ch 11 · Spectral Radius</a><span class="ch-week">W14</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../ch12-conclusion.html">Ch 12 · Fixed Point — Conclusion</a><span class="ch-week">W15</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../ch13-revision.html">Ch 13 · Revision as Contraction</a><span class="ch-week">W16</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../ch14-axle.html">Ch 14 · AXLE · Formal Verification</a><span class="ch-week">W16</span></div>
+        <div class="ch-row"><span class="ch-op op-u">U</span><a href="../ch15-entropy.html">Ch 15 · Entropy &amp; Scale</a><span class="ch-week">W17</span></div>
+        <div class="ch-row"><span class="ch-op op-u">U</span><a href="../ch16-scale.html">Ch 16 · Scale Invariance</a><span class="ch-week">W17</span></div>
+        <div class="ch-row"><span class="ch-op op-g">G</span><a href="../ch17-epilogue.html">Ch 17 · Epilogue — The Living Book</a><span class="ch-week">W17</span></div>
+      </div>
+
+      <div class="g-part">
+        <div class="g-part-label">Greek Operator Chain · π → φ → μ → η → Δ → Σ → Ω → τ = 2</div>
+        <div class="ch-row"><span class="ch-op op-c">π</span><a href="../chPI-recurrence.html">π · Recurrence Ladder · T* = 2π</a></div>
+        <div class="ch-row"><span class="ch-op op-k">φ</span><a href="../ch9-phi.html">φ · Fibonacci · Subcritical Approach</a></div>
+        <div class="ch-row"><span class="ch-op op-f">μ</span><a href="../chMu-lyapunov.html">μ · Lyapunov −2 · Stability Eigenvalue</a></div>
+        <div class="ch-row"><span class="ch-op op-u">η</span><a href="../chEta-tribonacci.html">η · Tribonacci ≈ 1.839 · Critical Rank 3</a></div>
+        <div class="ch-row"><span class="ch-op op-g">Δ</span><a href="../chDelta-tetranacci.html">Δ · Tetranacci ≈ 1.927 · Supercritical</a></div>
+        <div class="ch-row"><span class="ch-op op-t">Σ</span><a href="../chSigma-pentanacci.html">Σ · Pentanacci ≈ 1.966 · Approaching τ</a></div>
+        <div class="ch-row"><span class="ch-op op-g">Ω</span><a href="../chOmega-hexabonacci.html">Ω · Hexabonacci ≈ 1.984 → τ = 2</a></div>
+        <div class="ch-row"><span class="ch-op op-g">ρ</span><a href="../spectral-radius-v2.html">ρ · Spectral Radius · Collatz Bridge</a></div>
+        <div class="ch-row"><span class="ch-op op-g">Λ</span><a href="../chLambda-polylaminin.html">Λ · Polylaminin · Structural Biology</a></div>
+      </div>
+
+      <div class="g-part">
+        <div class="g-part-label">Extended · Ch E — GTCT · Galilean Confluence · Bridge to G4</div>
+        <div class="ch-row"><span class="ch-op op-g">E</span><a href="chE-gtct.html">Ch E · GTCT · Galilean Confluence · Theorem 5</a><span class="ch-week">D2+</span></div>
+      </div>
+
+    </div>
+    <div class="g-cta">
+      <a href="../index.html" class="btn btn-teal">G3 Home ↗</a>
+      <a href="../Sportal.html" class="btn btn-gold">Student Portal</a>
+      <a href="../impa-portal.html" class="btn btn-gold">IMPA Portal</a>
+    </div>
+  </div>
+
+  <!-- G4 -->
+  <div class="g-turn" style="border-color:rgba(245,158,11,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g4)">G4</span>
+      <div class="g-meta">
+        <div class="g-title">Vol IV — GTCT · Dimensional Theory</div>
+        <div class="g-subtitle">Fourth turn · 7 chapters · 6 appendices · 12-phase cycle · g₃₃ = 33</div>
+      </div>
+      <span class="g-status" style="color:var(--g4)">Live</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row"><span class="ch-op op-c">0</span><a href="chIV-preface.html">Preface — Lemniscata &amp; Analemma</a></div>
+      <div class="ch-row"><span class="ch-op op-c">1</span><a href="chIV-axioms.html">Ch 1 · The Seven Axioms</a></div>
+      <div class="ch-row"><span class="ch-op op-k">2</span><a href="chIV-field.html">Ch 2 · The Dimensional Field</a></div>
+      <div class="ch-row"><span class="ch-op op-k">3</span><a href="chIV-operators.html">Ch 3 · Dimensional Operators</a></div>
+      <div class="ch-op op-f"><span>4</span></div>
+      <div class="ch-row"><span class="ch-op op-f">4</span><a href="chIV-correspondence.html">Ch 4 · The Correspondence Theorem</a></div>
+      <div class="ch-row"><span class="ch-op op-u">5</span><a href="chIV-orthogonality.html">Ch 5 · The Orthogonality Theorem [v2]</a></div>
+      <div class="ch-row"><span class="ch-op op-u">6</span><a href="chIV-recursion.html">Ch 6 · The Recursion Theorem [v2]</a></div>
+      <div class="ch-row"><span class="ch-op op-g">7</span><a href="chIV-emergence.html">Ch 7 · Emergence as Fixed Point [v2]</a></div>
+      <div class="ch-row"><span class="ch-op op-t">T</span><a href="chIV-time.html">Ch 8 · The Nature of Time</a></div>
+      <div class="ch-row"><span class="ch-op op-g">A</span><a href="chIV-appendices.html">Appendices A–F</a></div>
+    </div>
+    <div class="g-cta">
+      <a href="hub.html" class="btn btn-gold">G4 Full Hub ↗</a>
+      <a href="index.html" class="btn btn-teal">G4 Table of Contents</a>
+    </div>
+  </div>
+
+  <!-- G5 -->
+  <div class="g-turn" style="border-color:rgba(248,250,252,.15)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g5)">G5</span>
+      <div class="g-meta">
+        <div class="g-title">Vol V — The Seed · Complete Completeness · A Semente</div>
+        <div class="g-subtitle">Fifth turn · G⁵ · The fixed point the series was always approaching · 528 pp · Seed of G6–G9</div>
+      </div>
+      <span class="g-status" style="color:var(--g5)">Final</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row"><span class="ch-op op-c">pre</span><a href="ch00-student-edition.html">Student Edition — How to Read This Book</a></div>
+      <div class="ch-row"><span class="ch-op op-c">1</span><span style="opacity:.7">AXLE: Mathematics as Language</span></div>
+      <div class="ch-row"><span class="ch-op op-g">∞</span><span style="opacity:.7;font-style:italic">The G-Series Map: Nine Turns of the Spiral · Seed of G6–G9</span></div>
+      <div class="ch-row missing"><span class="ch-op op-g" style="opacity:.4">…</span><span class="ch-missing">Full Vol V content — see GTCT_Vol5_v8_FinalSubmission.pdf</span></div>
+    </div>
+    <div class="g-cta">
+      <a href="https://zenodo.org/records/19117400" class="btn btn-gold" target="_blank">Zenodo DOI ↗</a>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.08em;">ISBN 979-8-9954416-5-6 · G6 LLC · 2026</span>
+    </div>
+  </div>
+
+
+  <!-- G6 -->
+  <div class="g-turn" style="border-color:rgba(251,146,60,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g6)">G6</span>
+      <div class="g-meta">
+        <div class="g-title">Vol VI — Contact Dynamics Extended · dm³ Applications</div>
+        <div class="g-subtitle">Sixth turn · G⁶ · Contact geometry meets living systems · In progress</div>
+      </div>
+      <span class="g-status" style="color:var(--g6)">In Progress</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row missing"><span class="ch-op op-g" style="opacity:.4">…</span><span class="ch-missing">Chapters in draft — repo: cajueiro · 3M · dnls</span></div>
+    </div>
+    <div class="g-cta">
+      <a href="https://github.com/TOTOGT/AXLE" class="btn btn-teal" target="_blank">AXLE ↗</a>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.08em;">G6 LLC · 2026</span>
+    </div>
+  </div>
+
+  <!-- G7 -->
+  <div class="g-turn" style="border-color:rgba(74,222,128,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g7)">G7</span>
+      <div class="g-meta">
+        <div class="g-title">Vol VII — Spectral Geometry · Wigner–Collatz Bridge</div>
+        <div class="g-subtitle">Seventh turn · G⁷ · ρ operator · Spectral radius meets n-bonacci · In progress</div>
+      </div>
+      <span class="g-status" style="color:var(--g7)">In Progress</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row"><span class="ch-op op-w">ρ</span><span style="opacity:.7">Spectral Radius · Collatz — <a href="../book/spectral-radius.html" style="color:var(--gold)">spectral-radius.html</a></span></div>
+      <div class="ch-row missing"><span class="ch-op op-g" style="opacity:.4">…</span><span class="ch-missing">Further chapters planned — chRho-spectral.html in queue</span></div>
+    </div>
+    <div class="g-cta">
+      <a href="https://github.com/TOTOGT/AXLE" class="btn btn-teal" target="_blank">AXLE ↗</a>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.08em;">G6 LLC · 2026</span>
+    </div>
+  </div>
+
+  <!-- G8 -->
+  <div class="g-turn" style="border-color:rgba(96,165,250,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g8)">G8</span>
+      <div class="g-meta">
+        <div class="g-title">Vol VIII — AXLE Mechanisation · Lean 4 Complete</div>
+        <div class="g-subtitle">Eighth turn · G⁸ · Every theorem machine-verified · Planned</div>
+      </div>
+      <span class="g-status" style="color:var(--g8)">Planned</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row missing"><span class="ch-op op-g" style="opacity:.4">…</span><span class="ch-missing">Full Lean 4 mechanisation — AXLE · 1080 proofs</span></div>
+    </div>
+    <div class="g-cta">
+      <a href="https://github.com/TOTOGT/AXLE" class="btn btn-teal" target="_blank">AXLE ↗</a>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.08em;">G6 LLC · 2026</span>
+    </div>
+  </div>
+
+  <!-- G9 -->
+  <div class="g-turn" style="border-color:rgba(226,232,240,.3)">
+    <div class="g-turn-header">
+      <span class="g-num" style="color:var(--g9)">G9</span>
+      <div class="g-meta">
+        <div class="g-title">Vol IX — Complete Completeness² · The Final Turn</div>
+        <div class="g-subtitle">Ninth turn · G⁹ · τ = 2 · The fixed point reached · Planned</div>
+      </div>
+      <span class="g-status" style="color:var(--g9)">Planned</span>
+    </div>
+    <div class="g-chapters">
+      <div class="ch-row missing"><span class="ch-op op-g" style="opacity:.4">∞</span><span class="ch-missing">Complete Completeness² — convergence of all nine turns</span></div>
+    </div>
+    <div class="g-cta">
+      <a href="https://zenodo.org/records/19117400" class="btn btn-gold" target="_blank">Zenodo DOI ↗</a>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.08em;">G6 LLC · 2026 · 16 repositories</span>
+    </div>
+  </div>
+
+</div><!-- /turns -->
+
+<footer>
+  G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Principia Orthogona G1–G9 &nbsp;·&nbsp;
+  Pablo Nogueira Grossi &nbsp;·&nbsp; G6 LLC · Newark NJ &nbsp;·&nbsp; 2026<br>
+  ORCID: 0009-0000-6496-2186 &nbsp;·&nbsp;
+  <a href="https://zenodo.org/records/19117400" style="color:var(--gold);">Zenodo DOI ↗</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE" style="color:var(--teal);">AXLE ↗</a>
+</footer>
+
+<script src="nav.js"></script>
+</body>
+</html>
