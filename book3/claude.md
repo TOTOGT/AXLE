@@ -9,7 +9,7 @@
 
 Pablo Nogueira Grossi — founder G6 LLC (Newark NJ), Academic Coordinator UCEDA School of English (Elizabeth NJ).
 ORCID: 0009-0000-6496-2186. Physical limitations make typing difficult — prefer clean deliverable blocks, minimal back-and-forth.
-Email: grossiatwork@gmail.com / pg6llc@gmail.com. EIN: 33-2880433.
+Email: g6llc@proton.me / pg6llc@gmail.com. EIN: 33-2880433.
 
 ---
 
@@ -138,7 +138,7 @@ NYFA fiscal sponsorship fundraiser + community project. Newark North Ward.
 - preview_didatica.html
 - confidential_press_package_1.html
 
-Walk: 90 Tiffany Blvd → Branch Brook Park → Forest Hill station → 229 Ballantine Pkwy = G = U∘F∘K∘C.
+Walk: 90 Tiffany Blvd → Branch Brook Park → Forest Hill station → = G = U∘F∘K∘C.
 Funding: Newark Arts ArtStart (applied), NYFA (pending), NJSCA (June 2026), Dodge (July 2026).
 
 ---

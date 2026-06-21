@@ -2,7 +2,7 @@
 
 **Pablo Nogueira Grossi** · G6 LLC, Newark NJ · May 2026  
 **ORCID:** 0009-0000-6496-2186  
-**Contact:** pablogrossi@hotmail.com · g6llc@proton.me  
+**Contact:** g6llc@proton.me · g6llc@proton.me  
 **Series root:** https://doi.org/10.5281/zenodo.19117399  
 **GitHub:** https://github.com/TOTOGT/AXLE  
 **License:** CC BY-NC-ND 4.0

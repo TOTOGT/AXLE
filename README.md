@@ -8,7 +8,7 @@ companion papers, and the HTML living-book chapters for Book 3 (The Mini-Beast).
 **0 axioms beyond Mathlib4 · 9 honest sorrys · AXLE v6.1**
 
 Author: Pablo Nogueira Grossi · ORCID: [0009-0000-6496-2186](https://orcid.org/0009-0000-6496-2186)  
-Contact: pablogrossi@hotmail.com · G6 LLC · Newark, NJ
+Contact: g6llc@proton.me · G6 LLC · Newark, NJ
 
 ---
 

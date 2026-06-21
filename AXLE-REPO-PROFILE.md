@@ -1,6 +1,6 @@
 ── GITHUB PROFILE BIO (160 chars max) ──
 
-Independent researcher · GOMC Science · contact geometry · Lean 4 proofs · free clinic Newark NJ · 229 Ballantine · C → K → F → U → ∞
+Independent researcher · GOMC Science · contact geometry · Lean 4 proofs · free clinic Newark NJ ·  · C → K → F → U → ∞
 
 (147 characters — fits)
 
@@ -39,9 +39,7 @@ All built on Web Audio API. No licenses. No fees.
 
 ---
 
-## 229 Ballantine Pkwy
-
-We are raising money to acquire a 15,000 sq ft historic estate in Forest Hill, Newark — to establish a free community wellness center for Newark residents.
+## We are raising money to acquire a 15,000 sq ft historic estate in Forest Hill, Newark — to establish a free community wellness center for Newark residents.
 
 **Buy the draft manuscript → fund the building:**
 [ebay.com/itm/336530438926](https://www.ebay.com/itm/336530438926)
@@ -53,4 +51,4 @@ We are raising money to acquire a 15,000 sq ft historic estate in Forest Hill, N
 
 *We bow to the independent researchers whose names we have lost but whose structures we are still reading.*
 
-`pablogrossi@hotmail.com`
+`g6llc@proton.me`

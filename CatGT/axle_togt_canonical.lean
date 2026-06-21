@@ -427,7 +427,7 @@ theorem collective_threshold_grows_with_circuits :
   and ultimate L. Stated as open in §22.6.
 
   Repository: github.com/TOTOGT/AXLE
-  Contact: pablogrossi@hotmail.com
+  Contact: g6llc@proton.me
   ORCID: 0009-0000-6496-2186
   DOI: 10.5281/zenodo.19117400
 -/

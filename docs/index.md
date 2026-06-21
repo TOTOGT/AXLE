@@ -142,7 +142,7 @@ Key theorems currently formalized:
 
 Pablo Nogueira Grossi  
 G6 LLC · Newark, NJ · 2026  
-pablogrossi@hotmail.com  
+g6llc@proton.me  
 ORCID: 0009-0000-6496-2186
 
 $$C \to K \to F \to U \to \infty$$

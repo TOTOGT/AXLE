@@ -3,7 +3,7 @@
 **Author:** Pablo Nogueira Grossi  
 **Affiliation:** G6 LLC, Newark, New Jersey, USA  
 **ORCID:** 0009-0000-6496-2186  
-**Contact:** pablogrossi@hotmail.com  
+**Contact:** g6llc@proton.me  
 **Year:** 2026  
 **License:** MIT (code), CC BY 4.0 (text and figures)
 
