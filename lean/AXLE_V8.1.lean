@@ -1,7 +1,8 @@
 -- ============================================================================
 /-
   AXLE — Automated eXtensible Lean Engine
-  Principia Orthogona · G⁵ · Complete Completeness
+  Principia Orthogona · G⁵ · Complete Completeness - definitions typecheck, 
+  proof obligations are explicit and precisely scoped. 
   Version 8.1 — All type errors fixed; 5 honest admits remain
 -/
 -- ============================================================================
