@@ -3,7 +3,7 @@ figures.py
 ==========
 Figure generator for:
   Principia Orthogona, Volume I: The Mathematics of Generative Transitions
-  Second Edition — Pablo Nogueira Grossi — G6 LLC, Newark NJ, 2026
+  Version 4 — Pablo Nogueira Grossi — G6 LLC, Newark NJ, 2026
 
 Zenodo: https://doi.org/10.5281/zenodo.19117399
 AXLE:   https://github.com/TOTOGT/AXLE
@@ -319,7 +319,7 @@ def fig6_operator_sequence():
     ax.text(5.0, 0.1, r"$C' \to \cdots$ (next cycle)", ha="center",
             fontsize=8.5, color=GREY)
 
-    ax.set_title("Operator Sequence $G = U \\circ F \\circ K \\circ C$ (+ $E$, Second Edition)\n"
+    ax.set_title("Operator Sequence $G = U \\circ F \\circ K \\circ C$ (+ $E$, Version 4)\n"
                  "Lean: GenerativeOp (Theorem A (proved)), UnfoldOp.stable_branch (Theorem D (proved))",
                  fontsize=10)
 
