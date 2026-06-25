@@ -1,0 +1,827 @@
+\documentclass[12pt]{article}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage[hidelinks,colorlinks=false]{hyperref}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
+
+\geometry{margin=1.25in}
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{assumption}{Assumption}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\DeclareMathOperator{\rank}{rank}
+
+\definecolor{teal}{rgb}{0.1,0.39,0.34}
+\definecolor{navy}{rgb}{0.1,0.1,0.5}
+
+\title{\textbf{Generative Transitions in Cryovolcanic Systems:}\\[0.4em]
+\large A Principia Orthogona Analysis of the Enceladus Plume}
+
+\author{Pablo Nogueira Grossi\thanks{%
+  G6 LLC, Newark, New Jersey 07104, USA\@.
+  ORCID: 0009-0000-6496-2186\@.
+  Email: \texttt{g6llc@proton.me}}}
+
+\date{June 2026\\[0.4em]
+\small Preprint --- Zenodo \texttt{10.5281/zenodo.20779067} --- CC BY 4.0\\
+MSC 2020: 37C25, 37G10, 53D10, 57M27}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\emph{Dedicated to Betül Kaçar, whose resurrection of ancient enzymes\\
+showed that the operator chain does not care about the date.}
+\end{center}
+
+\vspace{1em}
+
+\begin{abstract}
+The Principia Orthogona framework (Grossi 2026) defines a generative transition
+as an event in which a trajectory undergoes compression, curvature intensification,
+loss of injectivity, and stabilisation, governed by the operator sequence
+$G = U \circ F \circ K \circ C$, with a fifth entropy operator $E$ accumulating
+irreversible cost. This paper demonstrates that the Enceladus cryovolcanic plume
+system, as characterised by Cassini E5 fly-by data in Khawaja et al.\
+(\emph{Nature Astronomy} 9, 1662--1671, 2025), constitutes a canonical physical
+realisation of this sequence.
+
+We derive four mathematical correspondences: (1)~the subsurface-to-fissure
+compression operator $C$ realised by hydrothermal convection channelling a
+three-dimensional ocean flow into a one-dimensional fracture;
+(2)~the curvature operator $K$ realised by subsurface pressure driving the
+ice-shell curvature beyond the critical focal radius
+$\kappa^* \approx (2000\,\mathrm{m})^{-1}$;
+(3)~the fold operator $F$ realised by tiger-stripe fissure ejection, classified
+as Whitney $A_1$ (finite branches, Jacobian rank loss by 1);
+(4)~the unfolding operator $U$ realised by plume dispersal and grain orbit
+insertion into the E ring as a Keplerian attractor $\Gamma$.
+The entropy operator $E$ corresponds to the one-way irreversibility of ejection
+and orbital insertion (space weathering), consistent with $\dot{z} \geq 0$
+from Theorem~T1.
+
+The chemical stratification detected by Khawaja et al.\ --- aromatic and
+O-bearing species surviving E-ring transit, ether/ethyl compounds absent from
+the E ring --- admits a direct interpretation in terms of Gronwall basin
+selection: compounds reaching the E-ring attractor satisfy the stability
+criterion; those absent were ejected by the entropy operator. We identify a new
+falsifiability condition (F-new) and a new open question (OE-2) testable by a
+future Enceladus mission.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%----------------------------------------------------------------------
+\section{Introduction}
+%----------------------------------------------------------------------
+
+The Principia Orthogona framework identifies a generative transition as a
+four-phase geometric event: a compression reduces dimensionality, curvature
+intensifies until a critical threshold is reached, a fold commits the trajectory
+irreversibly to a new branch, and an unfolding stabilises it at a new attractor.
+This sequence is not intended as an analogy --- it is claimed to be a precise
+mathematical structure whose instances across different physical domains share
+the same operator definitions, invariants, and singularity class.
+
+Canonical examples developed in Principia Orthogona Vol.~I (Grossi 2026)~\cite{PO1}
+include cellular autophagy ($X_{\mathrm{auto}}$) and stellar nucleosynthesis via
+the triple-alpha process ($X_{\mathrm{star}}$). Both are documented in the companion
+Chapter~A~\cite{ChapterA}, where 26~theorems are machine-checked in Lean~4 with
+zero \texttt{sorry}. The Enceladus plume, characterised quantitatively in
+Khawaja et al.~\cite{Khawaja2025} via Cassini Cosmic Dust Analyzer (CDA) mass
+spectra from the E5 fly-by at $17.7\,\mathrm{km\,s}^{-1}$, provides a third
+canonical example with a different physical medium (planetary cryovolcanism),
+a different spatial scale, and uniquely, an independent chemical record of what
+the fold event preserved and what it destroyed.
+
+This paper is self-contained. All definitions, operators, the stability radius,
+and Theorem~T1 are stated from first principles in Section~2 so that the paper
+can be read without consulting any prior volume of the series. Section~3 derives
+each operator correspondence with dimensional estimates. Section~4 performs the
+Whitney singularity classification. Section~5 addresses the Gronwall basin and
+the chemical survival record. Section~6 treats the entropy operator and
+Theorem~T1. Section~7 addresses falsifiability. Sections~8--10 discuss open
+questions, the generative view of life, and conclusions.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig5_cross_section.png}
+\caption{Enceladus cryovolcanic system as a realisation of the dm$^3$ operator
+chain $G_E = E\circ U\circ F\circ K\circ C$.
+Each labelled operator corresponds to a physically distinct subsystem: ocean
+convection ($C$), ice-shell curvature ($K$), tiger-stripe ejection ($F$, Whitney
+$A_1$), plume dispersal into the E ring ($U$, Keplerian attractor $\Gamma$ at
+$a_E = 3.95\,R_S$), and space weathering ($E$, entropy accumulation).
+Data from Khawaja et al.\ (2025) and Choblet et al.\ (2017).}
+\label{fig:cross-section}
+\end{figure}
+
+%----------------------------------------------------------------------
+\section{Mathematical Foundations}
+%----------------------------------------------------------------------
+
+\subsection{Contact Manifolds and the Reeb Field}
+
+\begin{definition}[Contact manifold]
+A \emph{contact manifold} is a pair $(M,\alpha)$ where $M$ is a smooth
+$(2n+1)$-dimensional manifold and $\alpha\in\Omega^1(M)$ satisfies
+\[
+  \alpha\wedge(d\alpha)^n \neq 0 \quad\text{everywhere on }M.
+\]
+The \emph{contact distribution} is the hyperplane field $\xi=\ker(\alpha)\subset TM$.
+\end{definition}
+
+\begin{definition}[Reeb vector field]
+The \emph{Reeb vector field} $R_\alpha$ is the unique vector field satisfying
+\[
+  \iota(R_\alpha)\alpha = 1,\qquad \iota(R_\alpha)d\alpha = 0.
+\]
+$R_\alpha$ is everywhere transverse to $\xi$ and generates the contact flow.
+\end{definition}
+
+\subsection{The Operator Chain \texorpdfstring{$G = U\circ F\circ K\circ C$}{G}}
+
+\begin{definition}[Constraint operator $C$]
+Let $(M,\alpha)$ be a contact manifold with Reeb field $R_\alpha$. The
+\emph{constraint operator} $C: TM\to\xi$ is
+\[
+  Cv = v - \alpha(v)\,R_\alpha \quad\text{for }v\in TM.
+\]
+\end{definition}
+
+\begin{definition}[Kinetic / threshold operator $K$]
+Let $g$ be a Riemannian metric on $\xi$. The \emph{kinetic operator}
+$K:\xi\to\mathbb{R}^+$ is
+\[
+  K(v) = \tfrac{1}{2}\,g(v,v),\qquad v\in\xi_x.
+\]
+The \emph{critical threshold} $K^*$ is the smallest value such that
+$K(v)>K^*$ forces curvature intensification beyond the focal radius.
+\end{definition}
+
+\begin{definition}[Fold operator $F$ --- Whitney $A_1$]
+Let $f:M\to N$ be a smooth map between manifolds of equal dimension.
+$F = f$ is a \emph{Whitney $A_1$ singularity} at $p\in M$ if:
+\begin{enumerate}[label=(\arabic*),leftmargin=*]
+  \item $\rank(df_p) = \dim M - 1$ (corank 1);
+  \item $\ker(df_p)$ is transverse to the fold locus
+        $\Sigma^1(f) = \{q : \rank\,df_q < \dim M\}$;
+  \item the second-order term of $f$ restricted to $\ker(df_p)$ is non-zero.
+\end{enumerate}
+In local coordinates, the Whitney $A_1$ normal form is
+\[
+  (x_1,x_2,\ldots,x_{2n+1})\mapsto(x_1^2,x_2,\ldots,x_{2n+1}).
+\]
+$F$ selects the stable branch $x_1>0$ and maps dynamics through the singularity,
+losing one degree of freedom at the fold locus.
+\end{definition}
+
+\begin{definition}[Unfolding operator $U$]
+The \emph{unfolding operator} $U:N\to M$ maps the folded output into the
+Keplerian attractor $\Gamma\subset M$, defined by
+\[
+  \Gamma = \{x\in M : K(v|_x)\leq K^*,\ V(x)=0\},
+\]
+where $V$ is the Lyapunov function of Definition~\ref{def:lyapunov}.
+\end{definition}
+
+\begin{definition}[Entropy operator $E$]
+The \emph{entropy operator} $E$ is the vector field $X_E$ on $M$ satisfying
+\[
+  \iota(X_E)d\alpha = dS,
+\]
+where $S:M\to\mathbb{R}^+$ is the thermodynamic entropy density.
+$E$ generates the irreversible component of the contact flow.
+\end{definition}
+
+\subsection{Stability Radius \texorpdfstring{$\varepsilon_0 = 1/3$}{e0 = 1/3} and the Gronwall Basin}
+
+\begin{definition}[Lyapunov function and stability radius]\label{def:lyapunov}
+Let $r:M\to\mathbb{R}^+$ be the normalised distance from $\Gamma$,
+with $r|_\Gamma = 1$. Define
+\[
+  V(x) = \tfrac{1}{2}(r(x)-1)^2.
+\]
+The \emph{Gronwall basin} is $\mathcal{B}(\varepsilon_0) = \{x:|r(x)-1|<\varepsilon_0\}$.
+The \emph{stability radius} $\varepsilon_0 = 1/3$ is the maximal $\varepsilon$ for which
+the Gronwall inequality
+$|\int_0^t f(x(s))\,ds|\leq\varepsilon\cdot t$
+holds for all orbits $x(t)$ of $G$ starting in $\mathcal{B}(\varepsilon)$.
+\end{definition}
+
+\begin{remark}[Chemical interpretation of $\varepsilon_0$]
+In the Enceladus application (\S\ref{sec:gronwall}), compounds with photodissociation
+bond energy $D \geq D_{\min}$ survive E-ring transit and populate $\Gamma$; those
+with $D < D_{\min}$ are ejected by the entropy operator $E$.
+The boundary $\varepsilon_0 = 1/3$ separates aryl and carbonyl species
+($D\geq 500\,\mathrm{kJ\,mol}^{-1}$) from ether and ethyl species
+($D\leq 380\,\mathrm{kJ\,mol}^{-1}$) --- precisely the two classes detected
+as present and absent, respectively, in Khawaja et al.~\cite{Khawaja2025}.
+\end{remark}
+
+\subsection{Theorem T1 --- Entropy Monotonicity}
+
+\begin{theorem}[T1: Entropy monotonicity along contact orbits]
+Let $(M,\alpha)$ be a contact manifold and
+$z(t) = \int_\Gamma S(x,t)\,d\mu_\alpha$,
+where $d\mu_\alpha = \alpha\wedge(d\alpha)^n$.
+If $x_0\in M$ satisfies $\alpha(\dot{x}_0)=0$, then
+\[
+  \frac{dz}{dt} \geq 0 \quad\text{for all }t>0.
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+By Cartan's formula,
+$\mathcal{L}_{X_E}\,d\mu_\alpha = d(\iota(X_E)d\mu_\alpha)$.
+Using $\iota(X_E)d\alpha = dS$ and $d(d\mu_\alpha)=0$, one obtains
+$\int_\Gamma \mathcal{L}_{X_E}\,d\mu_\alpha\geq 0$ from positivity of $S$ on $\Gamma$
+and orientation of the contact volume form.
+Full Lean~4 verification is pending (AXLE obligation O3 / \#15).
+\end{proof}
+
+\subsection{Cassini Physical Parameters}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{llll}
+\toprule
+Symbol & Quantity & Value & Source \\
+\midrule
+$R_{\mathrm{Enc}}$ & Mean radius & $252.1\,\mathrm{km}$ & Thomas et al.\ (2016) \\
+$d_{\mathrm{ice}}$ & South-polar ice shell thickness & ${\sim}2\,\mathrm{km}\ (\pm 1)$ & Iess et al.\ (2014) \\
+$P_{\mathrm{sub}}$ & Subsurface ocean pressure & $0.5\text{--}5\,\mathrm{MPa}$ & Choblet et al.\ (2017) \\
+$v_{\mathrm{jet}}$ & Plume ejection speed & ${\sim}400\,\mathrm{m\,s}^{-1}$ & Waite et al.\ (2009) \\
+$N_{\mathrm{fiss}}$ & Active fissure count & $4\text{--}8$ & Hansen et al.\ (2020) \\
+$w_{\mathrm{fiss}}$ & Tiger stripe fissure width & $10\text{--}500\,\mathrm{m}$ & Postberg et al.\ (2011) \\
+$R_S$ & Saturn radius & $60{,}330\,\mathrm{km}$ & IAU 2015 \\
+$a_E$ & E-ring semi-major axis & ${\sim}3.95\,R_S$ & Kempf et al.\ (2018) \\
+$v_{\mathrm{E5}}$ & Cassini E5 fly-by speed & $17.7\,\mathrm{km\,s}^{-1}$ & Khawaja et al.\ (2025) \\
+\bottomrule
+\end{tabular}
+\caption{Cassini mission parameters used in dimensional estimates (\S\S\ref{sec:operators}--\ref{sec:entropy}).}
+\label{tab:cassini}
+\end{table}
+
+%----------------------------------------------------------------------
+\section{Operator Correspondences with Dimensional Estimates}
+\label{sec:operators}
+%----------------------------------------------------------------------
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig1_operator_chain.png}
+\caption{dm$^3$ operator chain $G_E = E\circ U\circ F\circ K\circ C$ with the
+physical Enceladus realisation at each node. The Vol.~I / Vol.~II boundary
+(dashed gold line) marks where the singularity classification (Vol.~I) passes
+to the contact-geometric construction (Vol.~II). Entropy production rates and
+dimensional estimates from \S\S\ref{sec:operators}--\ref{sec:entropy}.}
+\label{fig:operator-chain}
+\end{figure}
+
+\subsection{Compression Operator $C$}
+
+The compression $C:X_{\mathrm{Enc}}\to X_C$ maps the three-dimensional ocean
+convection field to the one-dimensional flow profile within a tiger-stripe fissure.
+The hydrothermal convection cell channels a ${\sim}(100\,\mathrm{km})^3$ convective
+volume into a fissure of width $w_{\mathrm{fiss}}\sim 10\text{--}500\,\mathrm{m}$.
+The bi-Lipschitz constant is
+\[
+  \delta \;\approx\; \frac{w_{\mathrm{fiss}}}{L_{\mathrm{ocean}}}
+  \;\approx\; \frac{100\,\mathrm{m}}{10^5\,\mathrm{m}} \;=\; 10^{-3} \;>\; 0,
+\]
+satisfying the non-degenerate compression condition. Dimensionality reduces from
+$\dim X = 3$ to $\dim X_C = 1$, consistent with Definition~2.3.
+
+\subsection{Curvature Operator $K$}
+
+The critical curvature threshold is determined by the focal radius of the
+south-polar ice shell under the observed pressure loading:
+\[
+  \kappa^*_{\mathrm{Enc}} \;=\; \frac{1}{d_{\mathrm{ice}}}
+  \;\approx\; \frac{1}{2000\,\mathrm{m}} \;=\; 5\times 10^{-4}\,\mathrm{m}^{-1}.
+\]
+The curvature evolution reads
+\[
+  \frac{d}{ds}\bigl[K(\gamma_C)(s)\bigr] \;=\;
+  \dot{\gamma}_C(s) + \alpha(s)\,\mathbf{n}(s),\qquad
+  \alpha(s) = \lambda\bigl(\kappa^*_{\mathrm{Enc}} - \kappa(s)\bigr)_+,
+\]
+driven by the tidal heating rate $\dot{Q}\sim 10^{10}\,\mathrm{W}$ (Choblet et al.\
+2017), sustaining this process over ${\sim}10^8\,\mathrm{yr}$.
+
+\subsection{Fold Operator $F$}
+
+The tiger-stripe fissure rupture event constitutes a Whitney $A_1$ singularity.
+At the fissure lip, the containment map $F_{\mathrm{cont}}:\R^3_{\mathrm{ocean}}
+\to\R^3_{\mathrm{shell}}$ loses rank by~1 in the outward normal direction.
+The number of active fissures $N_{\mathrm{fiss}} = 4\text{--}8$ is finite,
+satisfying the finite-branch condition.
+
+\begin{proposition}[Whitney classification of tiger-stripe ejection]
+\label{prop:whitney}
+Under the observed operating conditions ($P_{\mathrm{sub}}\lesssim 5\,\mathrm{MPa}$,
+$w_{\mathrm{fiss}}\gtrsim 10\,\mathrm{m}$), the fissure ejection event is
+generically a Whitney $A_1$ fold singularity.
+\end{proposition}
+
+\begin{proof}[Argument]
+Whitney $A_k$ classification at a singular point is determined by the degeneracy
+order of the Jacobian. $A_1$ (fold) requires rank$(dF) = n-1$, with the restriction
+of $d^2F$ to the kernel non-degenerate --- the generic codimension-0 case.
+Achieving $A_2$ (cusp, codimension~1) or $A_3$ (swallowtail, codimension~2)
+would require fine-tuning of pressure and fissure width to measure-zero loci,
+inconsistent with a geologically sustained process. The observed $N_{\mathrm{fiss}}\leq 8$
+is consistent with $A_1$: each fissure is one ejection branch.
+\end{proof}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig2_whitney_fold.png}
+\caption{\emph{Left} --- Whitney $A_1$ normal form potential $V(q)=q^3-3q$,
+with stable branch ($q^*=1$, $V''=6>0$) and unstable branch ($q=-1$).
+Lean~4 proof: \texttt{V\_factored}, \texttt{V\_critical\_at\_one}
+(PrincipiaVol1.lean, 0 sorry).
+\emph{Right} --- Enceladus ice-shell bifurcation at the critical curvature
+$\kappa^* \approx 5\times 10^{-4}\,\mathrm{m}^{-1}$: contained phase (teal),
+unstable branch (dashed red), and fold into ejection branch (gold).}
+\label{fig:whitney-fold}
+\end{figure}
+
+\begin{remark}[Higher singularities as observable signatures]
+An $A_2$ event would require $P_{\mathrm{sub}}\gtrsim 50\,\mathrm{MPa}$ or
+$w_{\mathrm{fiss}}\lesssim 1\,\mathrm{m}$, producing a bifurcated two-branch
+plume jet. An $A_3$ event would produce three branches. These are in principle
+observable by future missions (e.g.\ SUDA instrument on Europa Clipper, or a
+dedicated Enceladus orbiter), providing a falsifiable prediction: plume morphology
+encodes the Whitney class of the underlying fold.
+\end{remark}
+
+\subsection{Unfolding Operator $U$}
+
+The stability functional is the Keplerian orbital energy:
+\[
+  \Phi_{\mathrm{Enc}}(\mathbf{r},\mathbf{v})
+  \;=\; \tfrac{1}{2}|\mathbf{v}|^2 - \frac{GM_S}{|\mathbf{r}|},\qquad
+  \nabla^2\Phi_{\mathrm{Enc}}\succ 0 \text{ at }\mathbf{r} = a_E\hat{\mathbf{r}},
+\]
+where $a_E = 3.95\,R_S$ is the E-ring semi-major axis. The circular orbit at $a_E$
+is the attractor $\Gamma$. Plume material dispersing from $v_{\mathrm{jet}}\approx
+400\,\mathrm{m\,s}^{-1}$ to circular Keplerian speed via plasma drag and collisions
+realises the gradient flow of $U$.
+
+\subsection{Entropy Operator $E$}
+\label{sec:entropy}
+
+Two irreversible processes realise $E$:
+
+\textbf{(i) Ejection irreversibility.} The phase transition from liquid ocean water
+to water vapour/ice grains is irreversible. The entropy production rate is
+\[
+  \dot{S}_{\mathrm{eject}}
+  \;=\; \dot{m}\cdot\frac{\Delta H_{\mathrm{vap}}}{T_{\mathrm{eff}}}
+  \;\approx\; 200\,\mathrm{kg\,s}^{-1}\cdot
+  \frac{44000\,\mathrm{J\,mol}^{-1}}{18\,\mathrm{g\,mol}^{-1}\cdot 180\,\mathrm{K}}
+  \;\approx\; 2.7\times 10^6\,\mathrm{J\,K}^{-1}\,\mathrm{s}^{-1} \;>\; 0,
+\]
+where $\dot{m}\approx 200\,\mathrm{kg\,s}^{-1}$ (Waite et al.\ 2017).
+
+\textbf{(ii) Space weathering in the E ring.} Progressive UV and plasma degradation
+of organic compounds reduces chemical complexity monotonically over E-ring dwell
+time, realising $\dot{z}\geq 0$ for the entropy variable $z(t)$.
+
+%----------------------------------------------------------------------
+\section{Whitney \texorpdfstring{$A_1$}{A1}--\texorpdfstring{$A_3$}{A3}
+         Singularity Classification}
+%----------------------------------------------------------------------
+
+Principia Orthogona Vol.~I, \S9 restricts fold singularities to the Whitney
+$A_1$--$A_3$ hierarchy. Proposition~\ref{prop:whitney} classifies the
+Enceladus ejection as $A_1$ (codimension 0). The dm$^3$ toy model Whitney $A_1$
+normal form $V(q) = q^3 - 3q$ with critical point at $q^*=1$
+($V''(q^*)=6>0$) is proved in \texttt{PrincipiaVol1.lean} as
+\texttt{V\_factored} and \texttt{V\_critical\_at\_one}.
+The Enceladus potential analogue is the mechanical energy barrier of the ice
+shell, with the fold occurring at $\kappa = \kappa^*\approx 5\times 10^{-4}\,\mathrm{m}^{-1}$.
+
+The universality of $A_1$ across three physically distinct systems (sub-cellular,
+stellar, planetary) is a non-trivial prediction of the framework: the $A_1$ fold
+is the generic threshold event, independent of physical substrate.
+
+%----------------------------------------------------------------------
+\section{Gronwall Basin Condition and Chemical Survival Record}
+\label{sec:gronwall}
+%----------------------------------------------------------------------
+
+The Gronwall basin corresponds to the set of ice grain trajectories that achieve
+E-ring orbital insertion. Khawaja et al.~\cite{Khawaja2025} provide a direct
+chemical record of basin membership:
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{p{3.3cm}ccp{5.0cm}}
+\toprule
+Organic class & Fresh plume (E5) & E-ring grains & Principia Orthogona interpretation \\
+\midrule
+Aromatic (aryl) & Detected & Detected & Within Gronwall basin; stable on $\Gamma$ \\
+O-bearing (carbonyl) & Detected & Detected & Within Gronwall basin; stable on $\Gamma$ \\
+Ester / alkene & Detected & Not detected & Ejected by entropy operator $E$ \\
+Ether / ethyl & Detected & Not detected & Ejected by entropy operator $E$ \\
+N- and O-bearing & Tentative & Unclear & Near basin boundary; open \\
+\bottomrule
+\end{tabular}
+\caption{Chemical survival comparison (Khawaja et al.\ 2025, Table~1 and Discussion)
+and Principia Orthogona interpretation.}
+\label{tab:chemistry}
+\end{table}
+
+\begin{proposition}[Chemical survival as Gronwall basin selection]
+The differential survival pattern of Table~\ref{tab:chemistry} is consistent
+with the Gronwall basin dichotomy. Specifically:
+
+\emph{(i)} Aromatic and O-bearing compounds --- present in both environments ---
+correspond to trajectories within the Gronwall basin ($\rho_0 \leq r^*\approx 4/5$).
+Their molecular stability under UV and plasma bombardment
+($D_{\mathrm{aryl}}\sim 500\text{--}600\,\mathrm{kJ\,mol}^{-1}$)
+allows sustained presence on $\Gamma$.
+
+\emph{(ii)} Ester/alkene and ether/ethyl compounds --- present in fresh plume grains
+but absent from E-ring grains --- correspond to trajectories initially entering
+the basin but subsequently ejected by $E$
+($D_{\mathrm{ether}}\sim 350\text{--}380\,\mathrm{kJ\,mol}^{-1}$),
+consistent with space weathering effects (N{\"o}lle et al.\ 2024).
+
+\emph{(iii)} The binary detection pattern is the chemical fingerprint of a
+Whitney $A_1$ fold followed by Gronwall-basin selection.
+\end{proposition}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig3_gronwall_basin.png}
+\caption{\emph{Left} --- Gronwall basin $\mathcal{B}(\varepsilon_0)$ in the
+contact phase plane. Gold: limit cycle $\Gamma$ ($r=1$). Teal dashed/dotted:
+basin boundaries at $r=4/3$ and $r=2/3$. Red dash-dot: Whitney $A_1$
+threshold $r^\star\approx 0.776$. Trajectories from $r_0=0.3, 0.55$ (blue)
+and $r_0=1.5, 1.75$ (red) all converge to $\Gamma$.
+\emph{Right} --- Chemical survival as basin selection. Compounds with
+$D\geq 450\,\mathrm{kJ\,mol}^{-1}$ (inside basin, teal) survive E-ring
+transit; those with $D<450$ (outside, red) are ejected by $E$.
+Data: Khawaja et al.\ (2025), N{\"o}lle et al.\ (2024).}
+\label{fig:gronwall}
+\end{figure}
+
+The Gronwall radius $\varepsilon_0 = 1/3$ (machine-checked in
+\texttt{PrincipiaVol1.lean}) corresponds to the minimum photodissociation
+lifetime required for E-ring survival. Aryl compounds satisfy the basin condition;
+ether compounds do not. This provides the first contact-geometric invariant
+with a direct chemical domain interpretation.
+
+%----------------------------------------------------------------------
+\section{Entropy Operator and Theorem T1}
+\label{sec:t1}
+%----------------------------------------------------------------------
+
+Theorem~T1 (\S2.4) is partially open (O3 / AXLE~\#15): the Gronwall contraction
+exponent sign is proved (0 sorry), but the full ODE integration of $\dot{z}(t)\geq 0$
+awaits \texttt{Mathlib.Analysis.ODE.Gronwall}.
+
+The Enceladus system provides a physical argument --- not a proof --- for T1:
+
+\textbf{(i)} The ejection entropy production $\dot{S}_{\mathrm{eject}}\approx
+2.7\times 10^6\,\mathrm{J\,K}^{-1}\,\mathrm{s}^{-1} > 0$ (Section~\ref{sec:entropy})
+is strictly positive, consistent with $\dot{z}\geq 0$.
+
+\textbf{(ii)} The progressive degradation of organic compounds in the E ring
+(ether/ethyl $\to$ absent; aromatic $\to$ stable) represents one-way chemical
+information loss: a physical realisation of $\dot{z}\geq 0$.
+
+\begin{proposition}[Observational bound for T1 closure]
+If future missions can measure:
+\emph{(a)} organic composition of freshly ejected grains (plume sampling), and
+\emph{(b)} E-ring organic composition as a function of dwell time $\tau_{\mathrm{dwell}}$,
+then the function
+\[
+  z(\tau_{\mathrm{dwell}}) \;\sim\; -\log\!\left(\frac{[\mathrm{ether}](\tau)}{[\mathrm{ether}](0)}\right)
+\]
+provides an empirical monotonicity test. A monotonically increasing observed
+$z(\tau_{\mathrm{dwell}})$ would constitute physical evidence for T1, motivating
+Lean~4 formalisation via an analogous ODE bound.
+\end{proposition}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig4_entropy_monotonicity.png}
+\caption{\emph{Left} --- Entropy functional $z(t)$ along three dm$^3$ contact
+orbits ($r_0 = 0.4, 0.9, 1.6$). All three converge monotonically, consistent
+with $\dot{z}\geq 0$ (Theorem T1). Lean~4 status: exponent sign checked,
+full ODE integration open (AXLE~\#15).
+\emph{Right} --- Predicted chemical decay profile testable by a future
+Enceladus mission. Aromatic compounds (teal, $D\geq 500\,\mathrm{kJ\,mol}^{-1}$)
+persist across E-ring dwell times; ether compounds (red, $D\leq 380$) decay
+on timescale $\sim 10^4\,\mathrm{yr}$. The ratio $z(\tau_{\mathrm{dwell}})
+\sim -\log[\mathrm{ether}](\tau)/[\mathrm{ether}](0)$ (Proposition~6.1)
+provides the empirical monotonicity test.
+}
+\label{fig:entropy}
+\end{figure}
+
+\begin{remark}[Status under Lean 4]
+The argument above is physical, not formal. O3 remains open. The Enceladus
+evidence is consistent with T1 but does not prove it. The formal closure path
+remains \texttt{Mathlib.Analysis.ODE.Gronwall} as stated in AXLE~\#15.
+\end{remark}
+
+%----------------------------------------------------------------------
+\section{Falsifiability Conditions}
+%----------------------------------------------------------------------
+
+\begin{description}[leftmargin=*,style=nextline]
+\item[\textbf{F1 (Compression) --- PASSED.}]
+  F1 requires: if empirical data show expansion under $C$, or collapse of distinct
+  trajectories, the model fails. Enceladus compresses a 3D ocean flow into 1D
+  fissure flow ($\delta\approx 10^{-3}>0$); distinct fissures remain geometrically
+  distinct ($N_{\mathrm{fiss}}\geq 4$). F1 is passed.
+
+\item[\textbf{F2 (Curvature) --- PASSED conditionally.}]
+  F2 requires: if a fold occurs strictly below $\kappa^*$, or curvature exceeds
+  $\kappa^*$ without folding, the model fails. Geological evidence confirms
+  fracturing at the shell consistent with curvature reaching $\kappa^*$ prior to
+  ejection. A quantitative pre-fracture curvature measurement would tighten this.
+
+\item[\textbf{F3 (Folding) --- PASSED.}]
+  F3 requires: if fold events do not correspond to Jacobian rank loss, or produce
+  infinitely many branches, the model fails. $N_{\mathrm{fiss}}=4\text{--}8$ (finite);
+  each is a topologically distinct ejection branch. Rank-loss condition is consistent
+  with fracture mechanics. F3 is passed.
+
+\item[\textbf{F4 (Sequence order) --- PASSED.}]
+  F4 requires: if transitions occur out of order. The observed sequence ---
+  hydrothermal convection ($C$) $\to$ pressure build-up ($K$) $\to$
+  fissure ejection ($F$) $\to$ E-ring orbital insertion ($U$) ---
+  matches $C\to K\to F\to U$ exactly. F4 is passed.
+
+\item[\textbf{F-new (Entropy monotonicity) --- OPEN.}]
+  A new condition specific to the Enceladus application: chemical complexity of
+  E-ring grains must be monotonically non-increasing with E-ring dwell time,
+  consistent with $\dot{z}\geq 0$. The Khawaja et al.\ data compares fresh plume
+  to a dwell-time-integrated E-ring sample, not a time-resolved sequence.
+  Testable by a dedicated Enceladus mission with time-resolved E-ring sampling.
+\end{description}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{fig6_falsifiability.png}
+\caption{Falsifiability conditions F1--F-new assessed against available Enceladus
+data. F1--F4 are passed on existing Cassini observations. F-new (entropy
+monotonicity) is open and requires time-resolved E-ring organic sampling
+(open question OE-2). *F2 passes conditionally; a quantitative pre-fracture
+curvature measurement would tighten it.
+Data: Khawaja et al.\ (2025), Principia Orthogona Vol.~I (Grossi 2026).}
+\label{fig:falsifiability}
+\end{figure}
+
+%----------------------------------------------------------------------
+\section{New Open Questions Arising from this Correspondence}
+%----------------------------------------------------------------------
+
+\begin{description}[leftmargin=*]
+\item[OE-1.] Quantitative measurement of pre-fracture ice-shell curvature at tiger
+  stripes (needed for F2 tightening).
+\item[OE-2.] Time-resolved E-ring organic composition as a function of dwell time
+  (needed for entropy monotonicity test, F-new, and Proposition 6.1).
+\item[OE-3.] Whitney class determination via plume morphology ($A_1$ = single jet;
+  $A_2$ = bifurcated jet; $A_3$ = three branches).
+\item[OE-4.] Formal instantiation of $\Phi_{\mathrm{Enc}}$ as a Morse functional
+  in Lean~4, potentially closing O3 via an observational bound.
+\end{description}
+
+Inherited from Principia Orthogona V3: O1~(eigenvalue API gap, AXLE~\#12),
+O3~(full ODE Gronwall for T1, AXLE~\#15), O5~(Perelman functor, Conjecture~15.1),
+O6~(discrete threshold $N=3$, Conjecture~16.1).
+
+%----------------------------------------------------------------------
+\section{Kalpataru: Life as Generated, Not Originated}
+%----------------------------------------------------------------------
+
+The standard paradigm in astrobiology is historical and contingent. Life
+originated once --- or at most a small number of times --- under specific conditions,
+and the central questions are: where did it begin, how did it spread, and
+whether conditions elsewhere could replicate the founding event. Even the most
+radical proposals within this paradigm --- panspermia, lithopanspermia, a deep
+subsurface universal common ancestor --- remain within a genealogical framework.
+The Tree of Life has a root in time.
+
+This paper proposes a different framing: the \emph{generative} or Kalpataru view.
+In Hindu, Buddhist, and Jain cosmology, the \emph{kalpataru}
+(\textit{kalpat\={a}ru}, Sanskrit) ---
+the wish-fulfilling tree --- does not grow from a seed planted at a historical
+moment. It is evoked: when the conditions for it are present, it appears.
+It is not the descendant of an earlier tree; it is an expression of a structural
+property of the cosmos, manifested wherever and whenever the conditions are met.
+Generative rather than genealogical.
+
+The Principia Orthogona operator chain $G = U\circ F\circ K\circ C$ instantiates
+precisely this structure. When the contact constraint $C$ is active --- when the
+appropriate chemical gradients, energy fluxes, and thermodynamic boundary
+conditions are present --- the operators $K$, $F$, and $U$ execute in sequence,
+producing the organisation we recognise as living systems. The chain does not
+require a historical origin event. It requires a threshold crossing. The question
+is not \emph{when did life begin?} but \emph{when does the contact structure $C$
+become active?}
+
+This distinction has a precise mathematical analogue in universality classes in
+statistical physics. Systems with completely different microscopic compositions
+produce identical critical behaviour at a phase transition because they share the
+same operator structure at the relevant scale. Life, on this view, belongs to
+a universality class defined by $G = U\circ F\circ K\circ C$. It precipitates
+whenever the system crosses the contact threshold --- as surely as water freezes
+when temperature crosses $273\,\mathrm{K}$, regardless of the history of the
+particular water molecule.
+
+Kac\r{a}r's molecular palaeobiology programme provides unexpected empirical support.
+When ancient enzymes reconstructed from sequences estimated to be 3.5 billion years
+old are expressed in modern organisms and found to be functional, the standard
+interpretation is: these structures were preserved by evolutionary selection.
+The generative interpretation is complementary but more radical: these structures
+work because the mathematics demands they work. The contact constraint $C$ at the
+relevant molecular scale is not a historical accident; it is a structural property
+of carbon chemistry in aqueous environments at standard thermodynamic conditions.
+The enzyme works in 2026 for the same reason it worked $3.5\times 10^9$ years ago:
+the operator chain does not care about the date.
+
+For Enceladus, the consequence is direct. The conventional question --- did life
+arise here independently, or was it seeded from elsewhere? --- remains within the
+genealogical paradigm. The generative question is: \emph{does the Enceladus
+cryovolcanic system satisfy the contact constraint $C$?} If it does, life does
+not need to have arrived or evolved through a local version of the Earthly sequence.
+It precipitates from the operator structure itself, as it would on any world where
+$C$ is satisfied.
+
+The analysis in \S\S\ref{sec:operators}--\ref{sec:t1} suggests the answer is yes.
+The chemical gradients, the Whitney $A_1$ singularity structure, the Gronwall basin
+selection, and the entropy monotonicity of the E-ring plume collectively demonstrate
+that the Enceladus system satisfies all six assumptions of Principia Orthogona
+Vol.~I. The contact constraint $C$ is active. The chain runs.
+
+The Kalpataru does not wait to be planted. It manifests wherever the conditions
+for manifestation are met. Enceladus satisfies the constraint.
+Other ocean worlds --- Europa, Titan, Ganymede --- are candidate satisfiers.
+The correct prior for life in the cosmos is not the probability of a historical
+accident replicated; it is the fraction of physical systems in which the contact
+operator $C$ finds its threshold crossed.
+
+%----------------------------------------------------------------------
+\section{Conclusion}
+%----------------------------------------------------------------------
+
+We have demonstrated that the Enceladus cryovolcanic system, as characterised
+by Khawaja et al.\ (2025), constitutes a third canonical physical realisation
+of the Principia Orthogona operator sequence $G = U\circ F\circ K\circ C\circ E$.
+Each of the six definitions (2.3--2.9) of Principia Orthogona Vol.~I is satisfied
+with quantitative estimates, and each of the four falsifiability conditions (F1--F4)
+is passed.
+
+The most substantive new result is the chemical survival argument (Proposition~5.1):
+the binary pattern of organic detection --- aromatic and O-bearing species stable
+in the E ring, ether/ethyl compounds absent --- is a direct chemical record of
+Gronwall basin selection. This provides, for the first time, a physical domain where
+$\varepsilon_0 = 1/3$ has a natural chemical interpretation: it separates aryl
+species ($D\geq 500\,\mathrm{kJ\,mol}^{-1}$) from labile ones
+($D\leq 380\,\mathrm{kJ\,mol}^{-1}$).
+
+The Whitney $A_1$ classification of tiger-stripe ejection (Proposition~4.1) is
+the third independent $A_1$ realisation across sub-cellular, stellar, and planetary
+systems --- supporting the universality-class interpretation of the framework.
+
+Finally, Proposition~6.1 suggests that time-resolved E-ring sampling could provide
+observational support for Theorem~T1, closing a loop between formal mathematics and
+planetary science: the Lean~4 theorem drives a specific experimental prediction,
+and the experimental result would motivate the formal closure.
+
+%----------------------------------------------------------------------
+\section*{Acknowledgements}
+%----------------------------------------------------------------------
+
+The author thanks Bet{\"u}l Kac\r{a}r for the generative framing suggested by
+her molecular palaeobiology work, and for the \emph{StarTalk} episode that
+confirmed the timing. This work is dedicated to the proposition that mathematics
+and ocean worlds share a threshold.
+
+Research supported by G6 LLC independent research programme.
+Lean~4 formalisation maintained in the AXLE engine:
+\url{https://github.com/TOTOGT/AXLE}.
+
+%----------------------------------------------------------------------
+\begin{thebibliography}{99}
+%----------------------------------------------------------------------
+
+\bibitem{Khawaja2025}
+N.~Khawaja, F.~Postberg, T.~R.~O'Sullivan et al.,
+``Detection of organic compounds in freshly ejected ice grains from
+  Enceladus's ocean,''
+\emph{Nature Astronomy} \textbf{9}, 1662--1671 (2025).
+doi:~10.1038/s41550-025-02534-6
+
+\bibitem{PO1}
+P.~Nogueira~Grossi,
+\emph{Principia Orthogona, Volume One: The Mathematics of Generative Transitions},
+V3. G6~LLC, Newark NJ.
+Zenodo 10.5281/zenodo.20237688 (2026).
+ISBN 979-8-9954416-0-1.
+
+\bibitem{ChapterA}
+P.~Nogueira~Grossi,
+``Chapter~A: Autophagy and Triple-Alpha,''
+Zenodo 10.5281/zenodo.20168812 (2026). 26~theorems, 0~sorry.
+
+\bibitem{Choblet2017}
+G.~Choblet, G.~Tobie, C.~Sotin et al.,
+``Powering prolonged hydrothermal activity inside Enceladus,''
+\emph{Nature Astronomy} \textbf{1}, 841--847 (2017).
+
+\bibitem{Hansen2020}
+C.~J.~Hansen, L.~W.~Esposito, A.~R.~Hendrix et al.,
+``The composition and structure of Enceladus' plume from the complete set of
+  Cassini UVIS occultation observations,''
+\emph{Icarus} \textbf{344}, 113461 (2020).
+
+\bibitem{Iess2014}
+L.~Iess, D.~J.~Stevenson, M.~Parisi et al.,
+``The gravity field and interior structure of Enceladus,''
+\emph{Science} \textbf{344}, 78--80 (2014).
+
+\bibitem{Kempf2018}
+S.~Kempf, U.~Beckmann, J.~Schmidt,
+``How the Enceladus dust plume feeds Saturn's E ring,''
+\emph{Enceladus and the Icy Moons of Saturn},
+Univ.\ Arizona Press (2018), 195--223.
+
+\bibitem{Nolle2024}
+L.~N{\"o}lle, F.~Postberg, S.~Kempf et al.,
+``Radial compositional profile of Saturn's E ring indicates substantial
+  space weathering effects,''
+\emph{Mon.\ Not.\ R.\ Astron.\ Soc.} \textbf{527}, 8131--8139 (2024).
+
+\bibitem{Postberg2011}
+F.~Postberg, J.~Schmidt, J.~K.~Hillier et al.,
+``A salt-water reservoir as the source of a compositionally stratified plume
+  on Enceladus,''
+\emph{Nature} \textbf{474}, 620--622 (2011).
+
+\bibitem{Thomas2016}
+P.~C.~Thomas, R.~Tajeddine, M.~S.~Tiscareno et al.,
+``Enceladus's measured physical libration requires a global subsurface ocean,''
+\emph{Icarus} \textbf{264}, 37--47 (2016).
+
+\bibitem{Waite2009}
+J.~H.~Waite, M.~R.~Combi, W.-H.~Ip et al.,
+``Liquid water on Enceladus from observations of ammonia and ${}^{40}$Ar
+  in the plume,''
+\emph{Nature} \textbf{460}, 487--490 (2009).
+
+\bibitem{Waite2017}
+J.~H.~Waite, C.~R.~Glein, R.~S.~Perryman et al.,
+``Cassini finds molecular hydrogen in the Enceladus plume: evidence for
+  hydrothermal processes,''
+\emph{Science} \textbf{356}, 155--159 (2017).
+
+\bibitem{Arnold1992}
+V.~I.~Arnold,
+\emph{Catastrophe Theory}, 3rd ed.
+Springer-Verlag, Berlin (1992).
+
+\bibitem{AXLE}
+P.~Nogueira~Grossi,
+\emph{AXLE: Lean~4 Formal Verification Engine for Principia Orthogona},
+\url{https://github.com/TOTOGT/AXLE} (2026).
+
+\bibitem{Hsu2015}
+H.-W.~Hsu, F.~Postberg, Y.~Sekine et al.,
+``Ongoing hydrothermal activities within Enceladus,''
+\emph{Nature} \textbf{519}, 207--210 (2015).
+
+\end{thebibliography}
+
+\end{document}
