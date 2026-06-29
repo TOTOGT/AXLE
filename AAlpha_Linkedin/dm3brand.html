@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dm&#xB3;&#x007E; Geometry &middot; GOMC Science &middot; Pablo Nogueira Grossi</title>
+<title>dm&#xB3; Geometry &middot; GOMC Science &middot; Pablo Nogueira Grossi</title>
 <style>
 :root {
   --navy: #1a2744;
@@ -23,103 +23,73 @@ a:hover { color: var(--gold); }
 nav {
   background: var(--navy);
   padding: 0.5rem 1.4rem;
-  display: flex;
-  gap: 1.6rem;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  align-items: center;
-  flex-wrap: wrap;
+  display: flex; gap: 1.6rem;
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  align-items: center; flex-wrap: wrap;
 }
 nav a { color: rgba(255,255,255,0.6); }
 nav a:first-child { color: var(--gold); }
 nav a:hover { color: var(--gold); }
 
 /*
-  BRAND ANATOMY:
-  [d][m][ ³ ][ ~ ]
-        ↑comet  ↑tail
-        head    (lags behind with delay)
+  BRAND STRUCTURE:
+  ┌────────────────────────────────┐
+  │  dm  ³ ≋≋≋≋≋≋≋              │
+  │      ↑ ↑ travelling sine wave  │
+  │      │ └─ SVG animated wave    │
+  │      └── true superscript      │
+  └────────────────────────────────┘
 
-  The ³ and ~ are both superscript-height.
-  They share the same up/down fly animation.
-  The ~ has animation-delay so it always trails.
-  Together they look like a single comet: ³~
+  .dm3-brand is an inline-flex container.
+  .dm = large base letters
+  .sup-and-wave = inline-block, positions ³ and wave together
+  .cube = the ³ superscript (font-size 60%, vertical-align super)
+  .wave-svg = SVG whose path is animated by JS as a travelling sine
 */
 .dm3-brand {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: baseline;
   font-family: Georgia, serif;
   font-weight: bold;
   color: var(--gold);
   line-height: 1;
   cursor: default;
-  padding-bottom: 0.1em; /* room for the comet to dip */
+  position: relative;
 }
 
-/* "dm" — static anchor */
 .dm3-brand .dm {
   font-size: 1em;
   letter-spacing: -0.02em;
   display: inline-block;
-  align-self: flex-end;
 }
 
-/* Comet group: 3 + tail together, positioned as superscript */
-.dm3-brand .comet-group {
+/* ³ and wave sit together as a unit */
+.dm3-brand .exponent-wake {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: flex-start;
+  gap: 0.05em;
+  /* shift the whole unit up to superscript position */
   vertical-align: super;
-  font-size: 0.6em;
+  font-size: 0.62em;
   line-height: 1;
-  gap: 0;
 }
 
-/* ³ — the comet HEAD, flies up and down */
 .dm3-brand .cube {
+  font-size: 1em;
   display: inline-block;
-  animation: comet-fly 2.6s ease-in-out infinite;
-  will-change: transform;
-  transform-origin: center bottom;
-  position: relative;
-  z-index: 2;
+  flex-shrink: 0;
 }
 
-/* SVG tilde — the comet TAIL, same motion but delayed so it lags */
-.dm3-brand .tail {
+/* The animated wave SVG — sized in em so it scales */
+.dm3-brand .wave-svg {
   display: inline-block;
-  animation: comet-fly 2.6s ease-in-out infinite;
-  animation-delay: 0.22s;   /* lag behind the head */
-  will-change: transform;
-  transform-origin: left bottom;
-  position: relative;
-  z-index: 1;
-  /* fade slightly so tail is less bright than head */
-  opacity: 0.75;
-}
-
-/* The tail SVG scales with font size via em units */
-.dm3-brand .tail svg {
-  display: block;
-  /* width/height in em so it scales with hero/nav/card sizes */
-  width: 1.4em;
-  height: 0.7em;
+  /* width generous enough for a visible wave */
+  width: 2em;
+  height: 1em;
   overflow: visible;
-}
-
-/* Shared fly animation — smooth sinusoidal lift */
-@keyframes comet-fly {
-  0%   { transform: translateY(0)    translateX(0); }
-  20%  { transform: translateY(-2px) translateX(0.5px); }
-  50%  { transform: translateY(-4px) translateX(1px); }
-  80%  { transform: translateY(-2px) translateX(0.5px); }
-  100% { transform: translateY(0)    translateX(0); }
-}
-
-/* On hover: speed up both — comet accelerates */
-.dm3-brand:hover .cube,
-.dm3-brand:hover .tail {
-  animation-duration: 0.8s;
+  flex-shrink: 0;
+  /* align wave vertically to mid of superscript */
+  align-self: center;
 }
 
 /* Size variants */
@@ -127,16 +97,9 @@ nav a:hover { color: var(--gold); }
 .dm3-brand.nav-size  { font-size: 0.88rem; }
 .dm3-brand.card-size { font-size: 2rem; }
 
-/* ── REST OF PAGE STYLES ── */
-.hero {
-  background: var(--navy); color: var(--cream); text-align: center;
-  padding: 4rem 1.5rem 3rem; position: relative; overflow: hidden;
-}
-.hero::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
+/* ── REST OF PAGE ── */
+.hero { background: var(--navy); color: var(--cream); text-align: center; padding: 4rem 1.5rem 3rem; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%); pointer-events: none; }
 .hero-brand { display: flex; justify-content: center; margin-bottom: 1.2rem; }
 .hero-sub { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.24em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
 .hero h1 { font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: normal; letter-spacing: 0.02em; margin-bottom: 0.6rem; color: var(--cream); }
@@ -193,41 +156,23 @@ footer a:hover { opacity: 1; }
 </head>
 <body>
 
-<!--
-  BRAND COMPONENT — reusable snippet:
-  <span class="dm3-brand [SIZE]">
-    <span class="dm">dm</span>
-    <span class="comet-group">
-      <span class="cube">3</span>
-      <span class="tail"><svg ...></svg></span>
-    </span>
-  </span>
-
-  The SVG tilde path: a single sinusoidal wave,
-  drawn left-to-right, fading from full gold to transparent.
-  It trails the 3 like a comet tail.
--->
+<!-- BRAND MACRO — used in nav, hero, about -->
+<!-- Structure: dm [superscript: 3 + animated-sine-wave] -->
 
 <nav>
-  <a href="#" class="dm3-brand nav-size" title="dm&#xB3;~ Geometry — GOMC Science">
+  <a href="#" class="dm3-brand nav-size" title="dm&#xB3; Geometry — GOMC Science">
     <span class="dm">dm</span>
-    <span class="comet-group">
+    <span class="exponent-wake">
       <span class="cube">3</span>
-      <span class="tail">
-        <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="tailgrad-n" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0"/>
-              <stop offset="40%" stop-color="#c9a84c" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.9"/>
-            </linearGradient>
-          </defs>
-          <!-- single sine wave: starts faint on left, bright at right where it meets the 3 -->
-          <path d="M0,7 C4,1 8,1 14,7 C20,13 24,13 28,7"
-                stroke="url(#tailgrad-n)" stroke-width="1.8"
-                fill="none" stroke-linecap="round"/>
-        </svg>
-      </span>
+      <svg class="wave-svg" data-wave="true" viewBox="0 0 40 10" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path class="wave-path" stroke="url(#wg1)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
     </span>
   </a>
   <a href="https://sluing.github.io/neuro/SBM/1080.html" target="_blank">AXLE &#8599;</a>
@@ -242,22 +187,17 @@ footer a:hover { opacity: 1; }
   <div class="hero-brand">
     <div class="dm3-brand hero-size">
       <span class="dm">dm</span>
-      <span class="comet-group">
+      <span class="exponent-wake">
         <span class="cube">3</span>
-        <span class="tail">
-          <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="tailgrad-h" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#c9a84c" stop-opacity="0"/>
-                <stop offset="40%" stop-color="#c9a84c" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.9"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,7 C4,1 8,1 14,7 C20,13 24,13 28,7"
-                  stroke="url(#tailgrad-h)" stroke-width="1.8"
-                  fill="none" stroke-linecap="round"/>
-          </svg>
-        </span>
+        <svg class="wave-svg" data-wave="true" viewBox="0 0 40 10" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path class="wave-path" stroke="url(#wg2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
       </span>
     </div>
   </div>
@@ -301,72 +241,17 @@ footer a:hover { opacity: 1; }
     <div class="const-card"><div class="const-eq">&mu;&#x2098;&#x2090;&#x2093; = &minus;2</div><div class="const-desc">Transverse Lyapunov exponent &mdash; attracting limit cycle</div></div>
   </div>
 
-  <div class="section-title">All Volumes &mdash; dm&#xB3;~ Geometry &middot; All Free &middot; All Live <span class="free-badge">Free</span></div>
+  <div class="section-title">All Volumes &mdash; dm&#xB3; Geometry &middot; All Free &middot; All Live <span class="free-badge">Free</span></div>
   <div class="volumes-grid">
-
-    <div class="vol-card">
-      <div class="vol-num">&#x211D; &middot; Vol I &middot; Operator Algebra</div>
-      <div class="vol-title">GOMC &mdash; The Mathematics of Generative Transitions</div>
-      <div class="vol-desc">G-chain &middot; Whitney singularities &middot; Symplectic preservation &middot; Invariant triple (T*,&mu;,&tau;)=(2&pi;,&minus;2,2) &middot; Five theorems, seven proofs each &middot; AXLE Lean 4.</div>
-      <a class="vol-link" href="https://zenodo.org/records/20784030" target="_blank">Zenodo &#8599;</a>
-    </div>
-
-    <div class="vol-card">
-      <div class="vol-num">&#x211D;&sup2; &middot; Vol II &middot; Contact Geometry</div>
-      <div class="vol-title">TOGT &mdash; Contact Realization of Generative Transitions</div>
-      <div class="vol-desc">Reeb orbits &middot; dm&sup3; contact manifold &middot; GCM Theorems A&ndash;D &middot; RK4 toy model &middot; Stability radius &epsilon;&#x2080; = 1/3 &middot; Lean 4 verified.</div>
-      <a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a>
-    </div>
-
-    <div class="vol-card featured">
-      <div class="vol-num">&#x211D;&sup3; &middot; Vol III &middot; Biology &middot; Physics &middot; Language</div>
-      <div class="vol-title">The Mini-Beast &mdash; 121+ Living Chapters</div>
-      <div class="vol-desc">121+ HTML chapters &middot; CEFR A2&ndash;C1 &middot; Biology, physics, consciousness, language &middot; 17 orders of magnitude &middot; The Cajueiro Principle. Updates weekly.</div>
-      <a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live Book &#8599;</a>
-    </div>
-
-    <div class="vol-card">
-      <div class="vol-num">&#x2102; &middot; Vol IV &middot; Formal Theory</div>
-      <div class="vol-title">GTCT &mdash; Generative Temporal Contact Theory</div>
-      <div class="vol-desc">9 axioms &middot; 12 operators &middot; [F,T]=iJ &middot; 0 sorry in Chain.lean &middot; g&#x2083;&#x2083; = 33 &middot; Lean 4 + Mathlib4 &middot; Bilingual EN/PT &middot; SBM Bienal 2026.</div>
-      <a class="vol-link" href="https://github.com/TOTOGT/GTCT" target="_blank">Lean 4 &#8599;</a>
-    </div>
-
-    <div class="vol-card">
-      <div class="vol-num">&#x210D;&rarr;&#x1D546; &middot; Vol V &middot; Higher Dimensions</div>
-      <div class="vol-title">Dimensional Theory &mdash; Quaternionic &amp; Octonionic dm&sup3;</div>
-      <div class="vol-desc">Non-commutative &amp; non-associative turn &middot; G&#x210D;, G&#x1D546; &middot; E&#x2088; first appears &middot; 1D&rarr;5D+t arc &middot; Cayley-Dickson ladder.</div>
-      <a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a>
-    </div>
-
-    <div class="vol-card">
-      <div class="vol-num">E&#x2088; &middot; Vol VI &middot; Exceptional Algebras</div>
-      <div class="vol-title">Explicit Operators &mdash; E&#x2088; Dynkin = G-chain</div>
-      <div class="vol-desc">G = U&#x2218;F&#x2218;K&#x2218;C IS the Dynkin diagram of E&#x2088; &middot; 240 roots &middot; Sorry-free A&#x1D35; matrices &middot; Division is lost here.</div>
-      <a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a>
-    </div>
-
-    <div class="vol-card">
-      <div class="vol-num">&#x1D544; &middot; Vol VII &middot; Moonshine</div>
-      <div class="vol-title">Monster Group &amp; Moonshine</div>
-      <div class="vol-desc">dm&sup3; as organizing principle for the Monster group &middot; Moonshine correspondences &middot; g-series g&#x2070;&rarr;g&#x2076;&#x2074; &middot; g&#x2086; = 33 &middot; g&#x2086;&#x2084; = 2&#x2076; ladder.</div>
-      <a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a>
-    </div>
-
-    <div class="vol-card featured">
-      <div class="vol-num">&#x211D;&sup3; &middot; Astrophysics &middot; Gravitational Lensing</div>
-      <div class="vol-title">Sub-Halo Anomalies &mdash; Contact Geometry &amp; GGSL</div>
-      <div class="vol-desc">Parameter-free 2.1&times; CDM enhancement &middot; &chi;&sup2;/n=2.3 (p=0.044) &middot; Zero free parameters &middot; Six JWST NIRCam testable predictions.</div>
-      <a class="vol-link" href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a>
-    </div>
-
-    <div class="vol-card">
-      <div class="vol-num">&#x2119; &middot; Planetary Architecture &middot; NASA</div>
-      <div class="vol-title">Orthogenesis &mdash; Moon Base Colony Geometry</div>
-      <div class="vol-desc">dm&sup3; as lunar hex-grid colony &middot; 50+ NASA gap closures &middot; Colony.expand = U&#x2218;F&#x2218;K&#x2218;C proved &middot; Planetary scaling from geometry. Mars &amp; Moon.</div>
-      <a class="vol-link" href="https://github.com/TOTOGT/geometry" target="_blank">GitHub &#8599;</a>
-    </div>
-
+    <div class="vol-card"><div class="vol-num">&#x211D; &middot; Vol I &middot; Operator Algebra</div><div class="vol-title">GOMC &mdash; The Mathematics of Generative Transitions</div><div class="vol-desc">G-chain &middot; Whitney singularities &middot; Symplectic preservation &middot; Invariant triple (T*,&mu;,&tau;)=(2&pi;,&minus;2,2) &middot; Five theorems, seven proofs each.</div><a class="vol-link" href="https://zenodo.org/records/20784030" target="_blank">Zenodo &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x211D;&sup2; &middot; Vol II &middot; Contact Geometry</div><div class="vol-title">TOGT &mdash; Contact Realization of Generative Transitions</div><div class="vol-desc">Reeb orbits &middot; dm&sup3; contact manifold &middot; GCM Theorems A&ndash;D &middot; RK4 toy model &middot; &epsilon;&#x2080; = 1/3 &middot; Lean 4 verified.</div><a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a></div>
+    <div class="vol-card featured"><div class="vol-num">&#x211D;&sup3; &middot; Vol III &middot; Biology &middot; Physics &middot; Language</div><div class="vol-title">The Mini-Beast &mdash; 121+ Living Chapters</div><div class="vol-desc">121+ HTML chapters &middot; CEFR A2&ndash;C1 &middot; 17 orders of magnitude &middot; The Cajueiro Principle. Updates weekly.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live Book &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x2102; &middot; Vol IV &middot; Formal Theory</div><div class="vol-title">GTCT &mdash; Generative Temporal Contact Theory</div><div class="vol-desc">9 axioms &middot; 12 operators &middot; [F,T]=iJ &middot; 0 sorry &middot; g&#x2083;&#x2083; = 33 &middot; Lean 4 + Mathlib4 &middot; SBM Bienal 2026.</div><a class="vol-link" href="https://github.com/TOTOGT/GTCT" target="_blank">Lean 4 &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x210D;&rarr;&#x1D546; &middot; Vol V &middot; Higher Dimensions</div><div class="vol-title">Dimensional Theory &mdash; Quaternionic &amp; Octonionic dm&sup3;</div><div class="vol-desc">Non-commutative &amp; non-associative &middot; G&#x210D;, G&#x1D546; &middot; E&#x2088; first appears &middot; Cayley-Dickson ladder.</div><a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">E&#x2088; &middot; Vol VI &middot; Exceptional Algebras</div><div class="vol-title">Explicit Operators &mdash; E&#x2088; Dynkin = G-chain</div><div class="vol-desc">G = U&#x2218;F&#x2218;K&#x2218;C IS the Dynkin diagram of E&#x2088; &middot; 240 roots &middot; Division is lost here.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x1D544; &middot; Vol VII &middot; Moonshine</div><div class="vol-title">Monster Group &amp; Moonshine</div><div class="vol-desc">dm&sup3; as organizing principle for the Monster &middot; g-series g&#x2070;&rarr;g&#x2076;&#x2074; &middot; g&#x2086; = 33 &middot; g&#x2086;&#x2084; = 2&#x2076;.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a></div>
+    <div class="vol-card featured"><div class="vol-num">&#x211D;&sup3; &middot; Astrophysics &middot; Gravitational Lensing</div><div class="vol-title">Sub-Halo Anomalies &mdash; Contact Geometry &amp; GGSL</div><div class="vol-desc">2.1&times; CDM enhancement &middot; &chi;&sup2;/n=2.3 (p=0.044) &middot; Zero free parameters &middot; Six JWST testable predictions.</div><a class="vol-link" href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x2119; &middot; Planetary Architecture &middot; NASA</div><div class="vol-title">Orthogenesis &mdash; Moon Base Colony Geometry</div><div class="vol-desc">Lunar hex-grid colony &middot; 50+ NASA gap closures &middot; Colony.expand = U&#x2218;F&#x2218;K&#x2218;C &middot; Mars &amp; Moon scaling.</div><a class="vol-link" href="https://github.com/TOTOGT/geometry" target="_blank">GitHub &#8599;</a></div>
   </div>
 
   <div class="section-title">Formal Verification Coverage &mdash; AXLE</div>
@@ -385,54 +270,99 @@ footer a:hover { opacity: 1; }
 
   <div class="section-title">Six Falsifiable Predictions &mdash; JWST Testable</div>
   <ul class="pred-list">
-    <li><span class="pred-tag">F1</span> Sub-halo density exponent &beta; &isin; [1.4, 1.6] vs. CDM &beta; &asymp; 1.0</li>
-    <li><span class="pred-tag">F2</span> Convergence peak at r &asymp; &epsilon;&#x2080; &middot; r&#x2099; &mdash; JWST Cycle 3 lensing maps</li>
-    <li><span class="pred-tag">F3</span> Core density scaling &rho;&#x2099;&#x2092;&#x2071;&#x2071; &prop; M&#x00B9;&#x2044;&#x00B3; &mdash; archival multi-cluster data</li>
-    <li><span class="pred-tag">F4</span> Magnification excess evolves as (1+z)&#x2070;&#x22C5;&#x00B3; &mdash; JWST high-z clusters</li>
+    <li><span class="pred-tag">F1</span> Sub-halo density exponent &beta; &isin; [1.4,1.6] vs. CDM &beta; &asymp; 1.0 &mdash; high-res core imaging</li>
+    <li><span class="pred-tag">F2</span> Convergence peak at r &asymp; &epsilon;&#x2080;&middot;r&#x2099; &mdash; JWST Cycle 3 lensing maps</li>
+    <li><span class="pred-tag">F3</span> Core density &rho; &prop; M&#x00B9;&#x2044;&#x00B3; &mdash; archival multi-cluster data</li>
+    <li><span class="pred-tag">F4</span> Magnification excess (1+z)&#x2070;&#x22C5;&#x00B3; &mdash; JWST high-z clusters</li>
     <li><span class="pred-tag">F5</span> &chi;&sup2;/n improvement over CDM with zero free parameters &mdash; already demonstrated</li>
-    <li><span class="pred-tag">F6</span> Broken power-law with kink at r ~ 0.01 R&#x2082;&#x2080;&#x2080; &mdash; JWST NIRCam 3&ndash;10 kpc</li>
+    <li><span class="pred-tag">F6</span> Broken power-law kink at r~0.01R&#x2082;&#x2080;&#x2080; &mdash; JWST NIRCam 3&ndash;10 kpc</li>
   </ul>
 
   <div class="about-block">
     <div class="about-brand">
       <div class="dm3-brand card-size">
         <span class="dm">dm</span>
-        <span class="comet-group">
+        <span class="exponent-wake">
           <span class="cube">3</span>
-          <span class="tail">
-            <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="tailgrad-a" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#c9a84c" stop-opacity="0"/>
-                  <stop offset="40%" stop-color="#c9a84c" stop-opacity="0.6"/>
-                  <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.9"/>
-                </linearGradient>
-              </defs>
-              <path d="M0,7 C4,1 8,1 14,7 C20,13 24,13 28,7"
-                    stroke="url(#tailgrad-a)" stroke-width="1.8"
-                    fill="none" stroke-linecap="round"/>
-            </svg>
-          </span>
+          <svg class="wave-svg" data-wave="true" viewBox="0 0 40 10" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="wg3" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
+                <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="wave-path" stroke="url(#wg3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          </svg>
         </span>
       </div>
     </div>
     <div class="about-text">
       <h2>Pablo Nogueira Grossi &middot; G6 LLC</h2>
       <p>Newark, NJ &middot; ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &middot; <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br><br>
-      The dm&#xB3;~ framework is a formally verified science of generative transitions &mdash; threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy clusters, and the growth phases of a lunar colony.</p>
+      The dm&#xB3; framework is a formally verified science of generative transitions &mdash; threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy clusters, and the growth phases of a lunar colony.</p>
     </div>
   </div>
 
 </main>
 
 <footer>
-  dm&#xB3;~ Geometry &middot; GOMC Science &middot; &copy; 2026 Pablo Nogueira Grossi, G6 LLC &middot;
+  dm&#xB3; Geometry &middot; GOMC Science &middot; &copy; 2026 Pablo Nogueira Grossi, G6 LLC &middot;
   <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a> &middot;
   <a href="https://zenodo.org/records/19117399" target="_blank">Series DOI</a> &middot;
-  CC BY 4.0 &middot; MIT (code) &middot; All volumes free
+  CC BY 4.0 &middot; MIT &middot; All volumes free
 </footer>
 
 <script>
+// ── TRAVELLING SINE WAVE ANIMATOR ──
+// For each .wave-svg[data-wave], animate the <path> as a travelling
+// sine wave using requestAnimationFrame.
+// The wave moves left-to-right (phase increases with time),
+// creating the impression of a wake flowing away from the ³.
+
+(function() {
+  const STEPS = 40;       // number of points sampled along the wave
+  const W = 40;           // viewBox width
+  const CY = 5;           // vertical center of viewBox
+  const AMP = 3.2;        // amplitude of the wave (half-height of viewBox = 5)
+  const FREQ = 1.5;       // number of full cycles across the wave
+  const SPEED = 2.5;      // radians per second (travelling speed)
+  // Amplitude envelope: full at x=0 (near the 3), fading to 0 at x=W
+  // This makes the wave look like it dissipates as it trails away
+  function envelope(t) { return 1 - t; }  // t in [0,1]
+
+  let startTime = null;
+
+  function buildPath(phase) {
+    // Sample STEPS+1 points from x=0 to x=W
+    const pts = [];
+    for (let i = 0; i <= STEPS; i++) {
+      const t = i / STEPS;           // normalized x position [0,1]
+      const x = t * W;
+      const env = envelope(t);       // amplitude envelope
+      // Travelling sine: y = CY + AMP * env * sin(2π*freq*t - phase)
+      const y = CY + AMP * env * Math.sin(2 * Math.PI * FREQ * t - phase);
+      pts.push([x.toFixed(2), y.toFixed(2)]);
+    }
+    // Build SVG path as polyline (M + L commands)
+    return 'M' + pts[0].join(',') + pts.slice(1).map(p => 'L' + p.join(',')).join('');
+  }
+
+  const svgs = document.querySelectorAll('.wave-svg[data-wave]');
+  const paths = Array.from(svgs).map(s => s.querySelector('.wave-path'));
+
+  function animate(ts) {
+    if (!startTime) startTime = ts;
+    const elapsed = (ts - startTime) / 1000;  // seconds
+    const phase = elapsed * SPEED;             // travelling phase
+    const d = buildPath(phase);
+    paths.forEach(p => p.setAttribute('d', d));
+    requestAnimationFrame(animate);
+  }
+
+  if (paths.length > 0) requestAnimationFrame(animate);
+})();
+
+// ── STAT COUNTERS ──
 function animateCounter(el) {
   const target = parseInt(el.dataset.target);
   if (isNaN(target)) return;
