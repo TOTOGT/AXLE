@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dm&#x0303;&#xB3; Geometry &middot; GOMC Science &middot; Pablo Nogueira Grossi</title>
+<title>dm&#xB3;&#x007E; Geometry &middot; GOMC Science &middot; Pablo Nogueira Grossi</title>
 <style>
 :root {
   --navy: #1a2744;
@@ -35,204 +35,131 @@ nav a { color: rgba(255,255,255,0.6); }
 nav a:first-child { color: var(--gold); }
 nav a:hover { color: var(--gold); }
 
-/* ═══ dm3 BRAND ═══
-   Structure: [ dm (with tilde over it) ] [ 3 (flying, with wind streaks from right) ]
-   The tilde crowns "dm". The "3" is the flying object — wind lines stream in from the right.
+/*
+  BRAND ANATOMY:
+  [d][m][ ³ ][ ~ ]
+        ↑comet  ↑tail
+        head    (lags behind with delay)
+
+  The ³ and ~ are both superscript-height.
+  They share the same up/down fly animation.
+  The ~ has animation-delay so it always trails.
+  Together they look like a single comet: ³~
 */
 .dm3-brand {
   display: inline-flex;
-  align-items: flex-start;
+  align-items: flex-end;
   font-family: Georgia, serif;
   font-weight: bold;
   color: var(--gold);
-  position: relative;
   line-height: 1;
   cursor: default;
-  gap: 0.04em;
+  padding-bottom: 0.1em; /* room for the comet to dip */
 }
 
-/* "dm" with tilde above it */
-.dm3-brand .dm-wrap {
-  position: relative;
-  display: inline-block;
-}
+/* "dm" — static anchor */
 .dm3-brand .dm {
   font-size: 1em;
   letter-spacing: -0.02em;
-  display: block;
-}
-.dm3-brand .dm-tilde {
-  position: absolute;
-  top: -0.45em;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.7em;
-  color: var(--gold);
-  letter-spacing: -0.1em;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0.9;
+  display: inline-block;
+  align-self: flex-end;
 }
 
-/* "3" superscript — the flying object */
-.dm3-brand .sup-wrap {
-  position: relative;
+/* Comet group: 3 + tail together, positioned as superscript */
+.dm3-brand .comet-group {
   display: inline-flex;
-  align-items: flex-start;
-  font-size: 0.6em;
+  align-items: flex-end;
   vertical-align: super;
+  font-size: 0.6em;
   line-height: 1;
+  gap: 0;
 }
+
+/* ³ — the comet HEAD, flies up and down */
 .dm3-brand .cube {
-  display: block;
+  display: inline-block;
+  animation: comet-fly 2.6s ease-in-out infinite;
+  will-change: transform;
+  transform-origin: center bottom;
   position: relative;
   z-index: 2;
-  animation: cube-fly 2.8s ease-in-out infinite;
+}
+
+/* SVG tilde — the comet TAIL, same motion but delayed so it lags */
+.dm3-brand .tail {
+  display: inline-block;
+  animation: comet-fly 2.6s ease-in-out infinite;
+  animation-delay: 0.22s;   /* lag behind the head */
   will-change: transform;
-}
-@keyframes cube-fly {
-  0%   { transform: translateY(0px)   translateX(0px); }
-  20%  { transform: translateY(-3px)  translateX(1px); }
-  50%  { transform: translateY(-5px)  translateX(2px); }
-  80%  { transform: translateY(-3px)  translateX(1px); }
-  100% { transform: translateY(0px)   translateX(0px); }
+  transform-origin: left bottom;
+  position: relative;
+  z-index: 1;
+  /* fade slightly so tail is less bright than head */
+  opacity: 0.75;
 }
 
-/* Wind streaks — SVG lines coming from the right, fading in, meeting the 3 */
-.dm3-brand .wind {
-  position: absolute;
-  right: -1.6em;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 0.18em;
-  pointer-events: none;
-}
-.dm3-brand .wind-line {
-  height: 1.5px;
-  background: linear-gradient(to left, transparent, var(--gold));
-  border-radius: 1px;
-  animation: wind-blow 2.8s ease-in-out infinite;
-  transform-origin: right center;
-}
-.dm3-brand .wind-line:nth-child(1) { width: 1.4em; opacity: 0.7; animation-delay: 0s;    }
-.dm3-brand .wind-line:nth-child(2) { width: 1.0em; opacity: 0.5; animation-delay: 0.15s; }
-.dm3-brand .wind-line:nth-child(3) { width: 0.7em; opacity: 0.3; animation-delay: 0.3s;  }
-
-@keyframes wind-blow {
-  0%   { transform: scaleX(0.3); opacity: 0; }
-  30%  { transform: scaleX(1);   opacity: 1; }
-  70%  { transform: scaleX(1);   opacity: 1; }
-  100% { transform: scaleX(0.3); opacity: 0; }
+/* The tail SVG scales with font size via em units */
+.dm3-brand .tail svg {
+  display: block;
+  /* width/height in em so it scales with hero/nav/card sizes */
+  width: 1.4em;
+  height: 0.7em;
+  overflow: visible;
 }
 
-.dm3-brand:hover .cube { animation-duration: 0.9s; }
-.dm3-brand:hover .wind-line { animation-duration: 0.9s; }
+/* Shared fly animation — smooth sinusoidal lift */
+@keyframes comet-fly {
+  0%   { transform: translateY(0)    translateX(0); }
+  20%  { transform: translateY(-2px) translateX(0.5px); }
+  50%  { transform: translateY(-4px) translateX(1px); }
+  80%  { transform: translateY(-2px) translateX(0.5px); }
+  100% { transform: translateY(0)    translateX(0); }
+}
 
+/* On hover: speed up both — comet accelerates */
+.dm3-brand:hover .cube,
+.dm3-brand:hover .tail {
+  animation-duration: 0.8s;
+}
+
+/* Size variants */
 .dm3-brand.hero-size { font-size: 3.6rem; }
 .dm3-brand.nav-size  { font-size: 0.88rem; }
 .dm3-brand.card-size { font-size: 2rem; }
 
-/* ── HERO ── */
+/* ── REST OF PAGE STYLES ── */
 .hero {
-  background: var(--navy);
-  color: var(--cream);
-  text-align: center;
-  padding: 4rem 1.5rem 3rem;
-  position: relative;
-  overflow: hidden;
+  background: var(--navy); color: var(--cream); text-align: center;
+  padding: 4rem 1.5rem 3rem; position: relative; overflow: hidden;
 }
 .hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 .hero-brand { display: flex; justify-content: center; margin-bottom: 1.2rem; }
-.hero-sub {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.24em;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-.hero h1 {
-  font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: normal;
-  letter-spacing: 0.02em;
-  margin-bottom: 0.6rem;
-  color: var(--cream);
-}
-.hero-tagline {
-  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
-  color: rgba(250,247,240,0.72);
-  max-width: 640px;
-  margin: 0 auto 2rem;
-  line-height: 1.7;
-}
+.hero-sub { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.24em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
+.hero h1 { font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: normal; letter-spacing: 0.02em; margin-bottom: 0.6rem; color: var(--cream); }
+.hero-tagline { font-size: clamp(0.85rem, 1.6vw, 1.05rem); color: rgba(250,247,240,0.72); max-width: 640px; margin: 0 auto 2rem; line-height: 1.7; }
 .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1.6rem auto 0; border-radius: 1px; }
-
-/* ── STATS ── */
-.stats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2.4rem;
-  padding: 2rem 1.5rem;
-  background: var(--navy);
-  border-top: 1px solid rgba(201,168,76,0.2);
-}
+.stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 2.4rem; padding: 2rem 1.5rem; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2); }
 .stat-item { text-align: center; }
 .stat-num { font-family: var(--mono); font-size: 2rem; font-weight: bold; color: var(--gold); display: block; }
 .stat-label { font-family: sans-serif; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,247,240,0.55); margin-top: 0.2rem; }
-
-/* ── MAIN ── */
 main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
-.section-title {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(201,168,76,0.25);
-}
-
-/* ── OPERATOR CHAIN ── */
-.operator-chain {
-  background: var(--navy);
-  color: var(--cream);
-  border-radius: 8px;
-  padding: 2rem 2.2rem;
-  margin-bottom: 3rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.operator-chain::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
-  pointer-events: none;
-}
+.section-title { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 1.2rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(201,168,76,0.25); }
+.operator-chain { background: var(--navy); color: var(--cream); border-radius: 8px; padding: 2rem 2.2rem; margin-bottom: 3rem; text-align: center; position: relative; overflow: hidden; }
+.operator-chain::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%); pointer-events: none; }
 .op-formula { font-family: var(--mono); font-size: clamp(1rem, 2.5vw, 1.5rem); color: var(--gold); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
 .op-sub { font-size: 0.78rem; color: rgba(250,247,240,0.6); font-style: italic; }
 .op-labels { display: flex; justify-content: center; gap: 3rem; margin-top: 1.4rem; flex-wrap: wrap; }
 .op-label { text-align: center; font-family: sans-serif; }
 .op-letter { display: block; font-family: var(--mono); font-size: 1.1rem; color: var(--gold); font-weight: bold; }
 .op-name { display: block; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(250,247,240,0.5); margin-top: 0.2rem; }
-
-/* ── CONSTANTS ── */
 .constants-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
 .const-card { background: white; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 1.2rem 1.4rem; border-left: 3px solid var(--gold); }
 .const-eq { font-family: var(--mono); font-size: 1.05rem; color: var(--navy); font-weight: bold; margin-bottom: 0.3rem; }
 .const-desc { font-size: 0.75rem; color: #666; line-height: 1.5; }
-
-/* ── VOLUMES ── */
 .volumes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; margin-bottom: 3rem; }
 .vol-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.6rem; transition: transform 0.15s, box-shadow 0.15s; }
 .vol-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,39,68,0.1); }
@@ -243,8 +170,6 @@ main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 .vol-link { font-family: var(--mono); font-size: 0.68rem; color: var(--mid); letter-spacing: 0.05em; border: 1px solid var(--mid); padding: 0.25rem 0.6rem; border-radius: 3px; display: inline-block; transition: background 0.12s, color 0.12s; }
 .vol-link:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
 .free-badge { display: inline-block; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; background: #e8f5e9; color: var(--green); border: 1px solid #c3e6cb; padding: 0.15rem 0.45rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; text-transform: uppercase; }
-
-/* ── PROOF BAR ── */
 .proof-bar-wrap { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.6rem; margin-bottom: 3rem; }
 .proof-bar-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem; color: #555; margin-bottom: 0.6rem; }
 .proof-bar-track { height: 10px; background: var(--smoke); border-radius: 5px; overflow: hidden; }
@@ -252,19 +177,14 @@ main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
 .proof-repos { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
 .repo-badge { font-family: var(--mono); font-size: 0.68rem; background: var(--smoke); color: var(--navy); padding: 0.2rem 0.55rem; border-radius: 3px; border: 1px solid #ddd; }
 .repo-badge span { color: var(--gold); font-weight: bold; }
-
-/* ── PREDICTIONS ── */
 .pred-list { list-style: none; margin-bottom: 3rem; }
 .pred-list li { display: flex; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--smoke); align-items: baseline; font-size: 0.88rem; line-height: 1.6; }
 .pred-tag { font-family: var(--mono); font-size: 0.65rem; background: var(--navy); color: var(--gold); padding: 0.15rem 0.45rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
-
-/* ── ABOUT ── */
 .about-block { background: var(--navy); color: var(--cream); border-radius: 8px; padding: 2rem 2.2rem; margin-bottom: 3rem; display: flex; gap: 2rem; flex-wrap: wrap; align-items: center; }
 .about-brand { flex-shrink: 0; }
 .about-text h2 { font-size: 1rem; color: var(--gold); font-weight: normal; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
 .about-text p { font-size: 0.85rem; color: rgba(250,247,240,0.72); line-height: 1.8; }
 .about-text a { color: var(--gold); }
-
 footer { background: var(--navy); color: rgba(250,247,240,0.45); font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-align: center; padding: 1.2rem; border-top: 1px solid rgba(201,168,76,0.15); }
 footer a { color: var(--gold); opacity: 0.7; }
 footer a:hover { opacity: 1; }
@@ -273,19 +193,40 @@ footer a:hover { opacity: 1; }
 </head>
 <body>
 
-<!-- The brand component: tilde over "dm", flying "3" with wind streaks -->
-<nav>
-  <a href="#" class="dm3-brand nav-size" title="dm3 Geometry — GOMC Science">
-    <span class="dm-wrap">
-      <span class="dm">dm</span>
-      <span class="dm-tilde">&#x007E;&#x007E;</span>
-    </span>
-    <span class="sup-wrap">
+<!--
+  BRAND COMPONENT — reusable snippet:
+  <span class="dm3-brand [SIZE]">
+    <span class="dm">dm</span>
+    <span class="comet-group">
       <span class="cube">3</span>
-      <span class="wind">
-        <span class="wind-line"></span>
-        <span class="wind-line"></span>
-        <span class="wind-line"></span>
+      <span class="tail"><svg ...></svg></span>
+    </span>
+  </span>
+
+  The SVG tilde path: a single sinusoidal wave,
+  drawn left-to-right, fading from full gold to transparent.
+  It trails the 3 like a comet tail.
+-->
+
+<nav>
+  <a href="#" class="dm3-brand nav-size" title="dm&#xB3;~ Geometry — GOMC Science">
+    <span class="dm">dm</span>
+    <span class="comet-group">
+      <span class="cube">3</span>
+      <span class="tail">
+        <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="tailgrad-n" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0"/>
+              <stop offset="40%" stop-color="#c9a84c" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.9"/>
+            </linearGradient>
+          </defs>
+          <!-- single sine wave: starts faint on left, bright at right where it meets the 3 -->
+          <path d="M0,7 C4,1 8,1 14,7 C20,13 24,13 28,7"
+                stroke="url(#tailgrad-n)" stroke-width="1.8"
+                fill="none" stroke-linecap="round"/>
+        </svg>
       </span>
     </span>
   </a>
@@ -300,16 +241,22 @@ footer a:hover { opacity: 1; }
   <div class="hero-sub">GOMC Science &middot; Generative Orthogonal Matrix Contact</div>
   <div class="hero-brand">
     <div class="dm3-brand hero-size">
-      <span class="dm-wrap">
-        <span class="dm">dm</span>
-        <span class="dm-tilde">&#x007E;&#x007E;</span>
-      </span>
-      <span class="sup-wrap">
+      <span class="dm">dm</span>
+      <span class="comet-group">
         <span class="cube">3</span>
-        <span class="wind">
-          <span class="wind-line"></span>
-          <span class="wind-line"></span>
-          <span class="wind-line"></span>
+        <span class="tail">
+          <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="tailgrad-h" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#c9a84c" stop-opacity="0"/>
+                <stop offset="40%" stop-color="#c9a84c" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.9"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,7 C4,1 8,1 14,7 C20,13 24,13 28,7"
+                  stroke="url(#tailgrad-h)" stroke-width="1.8"
+                  fill="none" stroke-linecap="round"/>
+          </svg>
         </span>
       </span>
     </div>
@@ -350,73 +297,73 @@ footer a:hover { opacity: 1; }
   <div class="constants-grid">
     <div class="const-card"><div class="const-eq">&epsilon;&#x2080; = 1/3</div><div class="const-desc">Gronwall stability radius &mdash; outer basin of attraction</div></div>
     <div class="const-card"><div class="const-eq">&tau; = 2</div><div class="const-desc">Embodiment threshold &mdash; curvature / noise ratio at crossing</div></div>
-    <div class="const-card"><div class="const-eq">&eta; &asymp; 1.839</div><div class="const-desc">Tribonacci constant &mdash; dominant root of &lambda;&sup3;&minus;&lambda;&sup2;&minus;&lambda;&minus;1=0, forced by 3D operator algebra</div></div>
+    <div class="const-card"><div class="const-eq">&eta; &asymp; 1.839</div><div class="const-desc">Tribonacci constant &mdash; dominant root of &lambda;&sup3;&minus;&lambda;&sup2;&minus;&lambda;&minus;1=0</div></div>
     <div class="const-card"><div class="const-eq">&mu;&#x2098;&#x2090;&#x2093; = &minus;2</div><div class="const-desc">Transverse Lyapunov exponent &mdash; attracting limit cycle</div></div>
   </div>
 
-  <div class="section-title">All Volumes &mdash; dm&#x0303;&sup3; Geometry &middot; All Free &middot; All Live <span class="free-badge">Free</span></div>
+  <div class="section-title">All Volumes &mdash; dm&#xB3;~ Geometry &middot; All Free &middot; All Live <span class="free-badge">Free</span></div>
   <div class="volumes-grid">
 
     <div class="vol-card">
       <div class="vol-num">&#x211D; &middot; Vol I &middot; Operator Algebra</div>
       <div class="vol-title">GOMC &mdash; The Mathematics of Generative Transitions</div>
-      <div class="vol-desc">G-chain &middot; Whitney singularities &middot; Symplectic preservation &middot; Invariant triple (T*,&mu;&#x2098;&#x2090;&#x2093;,&tau;)=(2&pi;,&minus;2,2) &middot; Five theorems, seven proofs each &middot; AXLE Lean 4 companion.</div>
+      <div class="vol-desc">G-chain &middot; Whitney singularities &middot; Symplectic preservation &middot; Invariant triple (T*,&mu;,&tau;)=(2&pi;,&minus;2,2) &middot; Five theorems, seven proofs each &middot; AXLE Lean 4.</div>
       <a class="vol-link" href="https://zenodo.org/records/20784030" target="_blank">Zenodo &#8599;</a>
     </div>
 
     <div class="vol-card">
       <div class="vol-num">&#x211D;&sup2; &middot; Vol II &middot; Contact Geometry</div>
       <div class="vol-title">TOGT &mdash; Contact Realization of Generative Transitions</div>
-      <div class="vol-desc">Reeb orbits &middot; dm&sup3; contact manifold &middot; Symmetry s&#x2194;1&minus;s &middot; GCM Theorems A&ndash;D &middot; RK4 toy model &middot; Stability radius &epsilon;&#x2080; = 1/3 &middot; Lean 4 verified.</div>
+      <div class="vol-desc">Reeb orbits &middot; dm&sup3; contact manifold &middot; GCM Theorems A&ndash;D &middot; RK4 toy model &middot; Stability radius &epsilon;&#x2080; = 1/3 &middot; Lean 4 verified.</div>
       <a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a>
     </div>
 
     <div class="vol-card featured">
       <div class="vol-num">&#x211D;&sup3; &middot; Vol III &middot; Biology &middot; Physics &middot; Language</div>
       <div class="vol-title">The Mini-Beast &mdash; 121+ Living Chapters</div>
-      <div class="vol-desc">121+ HTML chapters &middot; CEFR A2&ndash;C1 &middot; Biology, physics, consciousness, language &middot; 17 orders of magnitude &middot; The Cajueiro Principle &middot; Pedagogical entry point. Updates weekly.</div>
+      <div class="vol-desc">121+ HTML chapters &middot; CEFR A2&ndash;C1 &middot; Biology, physics, consciousness, language &middot; 17 orders of magnitude &middot; The Cajueiro Principle. Updates weekly.</div>
       <a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live Book &#8599;</a>
     </div>
 
     <div class="vol-card">
       <div class="vol-num">&#x2102; &middot; Vol IV &middot; Formal Theory</div>
       <div class="vol-title">GTCT &mdash; Generative Temporal Contact Theory</div>
-      <div class="vol-desc">9 axioms &middot; 12 operators &middot; [F,T]=iJ complex structure &middot; 0 sorry in Chain.lean &middot; g&#x2083;&#x2083; = 33 &middot; Lean 4 + Mathlib4 &middot; Bilingual EN/PT &middot; SBM Bienal 2026.</div>
+      <div class="vol-desc">9 axioms &middot; 12 operators &middot; [F,T]=iJ &middot; 0 sorry in Chain.lean &middot; g&#x2083;&#x2083; = 33 &middot; Lean 4 + Mathlib4 &middot; Bilingual EN/PT &middot; SBM Bienal 2026.</div>
       <a class="vol-link" href="https://github.com/TOTOGT/GTCT" target="_blank">Lean 4 &#8599;</a>
     </div>
 
     <div class="vol-card">
       <div class="vol-num">&#x210D;&rarr;&#x1D546; &middot; Vol V &middot; Higher Dimensions</div>
       <div class="vol-title">Dimensional Theory &mdash; Quaternionic &amp; Octonionic dm&sup3;</div>
-      <div class="vol-desc">Non-commutative &amp; non-associative turn &middot; G&#x210D;, G&#x1D546; operators &middot; E&#x2088; first appears &middot; 1D&rarr;5D+t arc &middot; Cayley-Dickson ladder step from &#x2102;.</div>
+      <div class="vol-desc">Non-commutative &amp; non-associative turn &middot; G&#x210D;, G&#x1D546; &middot; E&#x2088; first appears &middot; 1D&rarr;5D+t arc &middot; Cayley-Dickson ladder.</div>
       <a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a>
     </div>
 
     <div class="vol-card">
       <div class="vol-num">E&#x2088; &middot; Vol VI &middot; Exceptional Algebras</div>
       <div class="vol-title">Explicit Operators &mdash; E&#x2088; Dynkin = G-chain</div>
-      <div class="vol-desc">G = U&#x2218;F&#x2218;K&#x2218;C IS the Dynkin diagram of E&#x2088; &middot; 240 roots &middot; Sorry-free A&#x1D35; matrices &middot; Explicit operator realization &middot; Division is lost here.</div>
+      <div class="vol-desc">G = U&#x2218;F&#x2218;K&#x2218;C IS the Dynkin diagram of E&#x2088; &middot; 240 roots &middot; Sorry-free A&#x1D35; matrices &middot; Division is lost here.</div>
       <a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a>
     </div>
 
     <div class="vol-card">
       <div class="vol-num">&#x1D544; &middot; Vol VII &middot; Moonshine</div>
       <div class="vol-title">Monster Group &amp; Moonshine</div>
-      <div class="vol-desc">dm&sup3; as organizing principle for the Monster group &middot; Moonshine correspondences &middot; g-series g&#x2070;&rarr;g&#x2076;&#x2074; &middot; g&#x2086; = 33 &middot; g&#x2086;&#x2084; = 2&#x2076; canonical ladder.</div>
+      <div class="vol-desc">dm&sup3; as organizing principle for the Monster group &middot; Moonshine correspondences &middot; g-series g&#x2070;&rarr;g&#x2076;&#x2074; &middot; g&#x2086; = 33 &middot; g&#x2086;&#x2084; = 2&#x2076; ladder.</div>
       <a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a>
     </div>
 
     <div class="vol-card featured">
       <div class="vol-num">&#x211D;&sup3; &middot; Astrophysics &middot; Gravitational Lensing</div>
       <div class="vol-title">Sub-Halo Anomalies &mdash; Contact Geometry &amp; GGSL</div>
-      <div class="vol-desc">Parameter-free 2.1&times; CDM enhancement &middot; Hybrid contact+GIZMO-SIMBA: &chi;&sup2;/n=2.3 (p=0.044) &middot; Zero free parameters &middot; Six JWST NIRCam testable predictions.</div>
+      <div class="vol-desc">Parameter-free 2.1&times; CDM enhancement &middot; &chi;&sup2;/n=2.3 (p=0.044) &middot; Zero free parameters &middot; Six JWST NIRCam testable predictions.</div>
       <a class="vol-link" href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a>
     </div>
 
     <div class="vol-card">
       <div class="vol-num">&#x2119; &middot; Planetary Architecture &middot; NASA</div>
       <div class="vol-title">Orthogenesis &mdash; Moon Base Colony Geometry</div>
-      <div class="vol-desc">dm&sup3; operator chain as lunar hex-grid colony &middot; 50+ formally verified NASA gap closures &middot; Colony.expand = U&#x2218;F&#x2218;K&#x2218;C proved &middot; Planetary scaling from geometry. Mars &amp; Moon.</div>
+      <div class="vol-desc">dm&sup3; as lunar hex-grid colony &middot; 50+ NASA gap closures &middot; Colony.expand = U&#x2218;F&#x2218;K&#x2218;C proved &middot; Planetary scaling from geometry. Mars &amp; Moon.</div>
       <a class="vol-link" href="https://github.com/TOTOGT/geometry" target="_blank">GitHub &#8599;</a>
     </div>
 
@@ -438,27 +385,33 @@ footer a:hover { opacity: 1; }
 
   <div class="section-title">Six Falsifiable Predictions &mdash; JWST Testable</div>
   <ul class="pred-list">
-    <li><span class="pred-tag">F1</span> Sub-halo density exponent &beta; &isin; [1.4, 1.6] vs. CDM &beta; &asymp; 1.0 &mdash; high-res core imaging</li>
+    <li><span class="pred-tag">F1</span> Sub-halo density exponent &beta; &isin; [1.4, 1.6] vs. CDM &beta; &asymp; 1.0</li>
     <li><span class="pred-tag">F2</span> Convergence peak at r &asymp; &epsilon;&#x2080; &middot; r&#x2099; &mdash; JWST Cycle 3 lensing maps</li>
     <li><span class="pred-tag">F3</span> Core density scaling &rho;&#x2099;&#x2092;&#x2071;&#x2071; &prop; M&#x00B9;&#x2044;&#x00B3; &mdash; archival multi-cluster data</li>
     <li><span class="pred-tag">F4</span> Magnification excess evolves as (1+z)&#x2070;&#x22C5;&#x00B3; &mdash; JWST high-z clusters</li>
     <li><span class="pred-tag">F5</span> &chi;&sup2;/n improvement over CDM with zero free parameters &mdash; already demonstrated</li>
-    <li><span class="pred-tag">F6</span> Broken power-law convergence with kink at r ~ 0.01 R&#x2082;&#x2080;&#x2080; &mdash; JWST NIRCam 3&ndash;10 kpc</li>
+    <li><span class="pred-tag">F6</span> Broken power-law with kink at r ~ 0.01 R&#x2082;&#x2080;&#x2080; &mdash; JWST NIRCam 3&ndash;10 kpc</li>
   </ul>
 
   <div class="about-block">
     <div class="about-brand">
       <div class="dm3-brand card-size">
-        <span class="dm-wrap">
-          <span class="dm">dm</span>
-          <span class="dm-tilde">&#x007E;&#x007E;</span>
-        </span>
-        <span class="sup-wrap">
+        <span class="dm">dm</span>
+        <span class="comet-group">
           <span class="cube">3</span>
-          <span class="wind">
-            <span class="wind-line"></span>
-            <span class="wind-line"></span>
-            <span class="wind-line"></span>
+          <span class="tail">
+            <svg viewBox="0 0 28 14" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="tailgrad-a" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#c9a84c" stop-opacity="0"/>
+                  <stop offset="40%" stop-color="#c9a84c" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.9"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,7 C4,1 8,1 14,7 C20,13 24,13 28,7"
+                    stroke="url(#tailgrad-a)" stroke-width="1.8"
+                    fill="none" stroke-linecap="round"/>
+            </svg>
           </span>
         </span>
       </div>
@@ -466,17 +419,17 @@ footer a:hover { opacity: 1; }
     <div class="about-text">
       <h2>Pablo Nogueira Grossi &middot; G6 LLC</h2>
       <p>Newark, NJ &middot; ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &middot; <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br><br>
-      The dm&#x0303;&sup3; framework is a formally verified science of generative transitions &mdash; threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy clusters, and the growth phases of a lunar colony. All constants are machine-checked in Lean 4 with zero extra axioms beyond Mathlib4.</p>
+      The dm&#xB3;~ framework is a formally verified science of generative transitions &mdash; threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy clusters, and the growth phases of a lunar colony.</p>
     </div>
   </div>
 
 </main>
 
 <footer>
-  dm&#x0303;&sup3; Geometry &middot; GOMC Science &middot; &copy; 2026 Pablo Nogueira Grossi, G6 LLC &middot;
+  dm&#xB3;~ Geometry &middot; GOMC Science &middot; &copy; 2026 Pablo Nogueira Grossi, G6 LLC &middot;
   <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a> &middot;
   <a href="https://zenodo.org/records/19117399" target="_blank">Series DOI</a> &middot;
-  CC BY 4.0 (papers) &middot; MIT (code) &middot; All volumes free
+  CC BY 4.0 &middot; MIT (code) &middot; All volumes free
 </footer>
 
 <script>
