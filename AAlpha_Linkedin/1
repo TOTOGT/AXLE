@@ -1,1 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dm&#x0303;&#xB3; Geometry &middot; GOMC Science &middot; Pablo Nogueira Grossi</title>
+<style>
+:root {
+  --navy: #1a2744;
+  --gold: #c9a84c;
+  --cream: #faf7f0;
+  --smoke: #f0ece4;
+  --green: #155724;
+  --mid: #3a4f7a;
+  --mono: 'Courier New', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); font-family: Georgia, serif; color: #1c1c1c; }
+a { color: var(--mid); text-decoration: none; }
+a:hover { color: var(--gold); }
 
+/* ── NAV ── */
+nav {
+  background: var(--navy);
+  padding: 0.5rem 1.4rem;
+  display: flex;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  align-items: center;
+  flex-wrap: wrap;
+}
+nav a { color: rgba(255,255,255,0.6); }
+nav a:first-child { color: var(--gold); }
+nav a:hover { color: var(--gold); }
+
+/* ── dm3 BRAND ── */
+.dm3-brand {
+  display: inline-flex;
+  align-items: flex-start;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  color: var(--gold);
+  position: relative;
+  line-height: 1;
+  cursor: default;
+}
+.dm3-brand .dm { font-size: 1em; letter-spacing: -0.02em; }
+.dm3-brand .sup-wrap {
+  position: relative;
+  display: inline-block;
+  font-size: 0.6em;
+  vertical-align: super;
+  line-height: 1;
+}
+.dm3-brand .cube { display: block; }
+.dm3-brand .tilde {
+  display: block;
+  position: absolute;
+  top: -0.6em;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.15em;
+  color: var(--gold);
+  animation: tilde-fly 2.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes tilde-fly {
+  0%   { transform: translateX(-50%) translateY(0px)  rotate(-8deg); opacity: 0.65; }
+  25%  { transform: translateX(-50%) translateY(-4px) rotate(0deg);  opacity: 1;    }
+  50%  { transform: translateX(-50%) translateY(-2px) rotate(8deg);  opacity: 0.85; }
+  75%  { transform: translateX(-50%) translateY(-5px) rotate(2deg);  opacity: 1;    }
+  100% { transform: translateX(-50%) translateY(0px)  rotate(-8deg); opacity: 0.65; }
+}
+.dm3-brand:hover .tilde { animation-duration: 0.5s; }
+.dm3-brand.hero-size { font-size: 3.6rem; }
+.dm3-brand.nav-size  { font-size: 0.88rem; }
+.dm3-brand.card-size { font-size: 2rem; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--navy);
+  color: var(--cream);
+  text-align: center;
+  padding: 4rem 1.5rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-brand { display: flex; justify-content: center; margin-bottom: 1.2rem; }
+.hero-sub {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.24em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: normal;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.6rem;
+  color: var(--cream);
+}
+.hero-tagline {
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  color: rgba(250,247,240,0.72);
+  max-width: 640px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.gold-rule {
+  width: 60px; height: 2px;
+  background: var(--gold);
+  margin: 1.6rem auto 0;
+  border-radius: 1px;
+}
+
+/* ── STATS STRIP ── */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.4rem;
+  padding: 2rem 1.5rem;
+  background: var(--navy);
+  border-top: 1px solid rgba(201,168,76,0.2);
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-family: var(--mono);
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--gold);
+  display: block;
+}
+.stat-label {
+  font-family: sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250,247,240,0.55);
+  margin-top: 0.2rem;
+}
+
+/* ── MAIN CONTENT ── */
+main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+.section-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(201,168,76,0.25);
+}
+
+/* ── OPERATOR CHAIN ── */
+.operator-chain {
+  background: var(--navy);
+  color: var(--cream);
+  border-radius: 8px;
+  padding: 2rem 2.2rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.operator-chain::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.op-formula {
+  font-family: var(--mono);
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.8rem;
+}
+.op-sub {
+  font-size: 0.78rem;
+  color: rgba(250,247,240,0.6);
+  font-style: italic;
+}
+.op-labels {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 1.4rem;
+  flex-wrap: wrap;
+}
+.op-label {
+  text-align: center;
+  font-family: sans-serif;
+}
+.op-letter {
+  display: block;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  color: var(--gold);
+  font-weight: bold;
+}
+.op-name {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(250,247,240,0.5);
+  margin-top: 0.2rem;
+}
+
+/* ── CONSTANTS ── */
+.constants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+.const-card {
+  background: white;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+  border-left: 3px solid var(--gold);
+}
+.const-eq {
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  color: var(--navy);
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+.const-desc {
+  font-size: 0.75rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* ── VOLUMES ── */
+.volumes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.4rem;
+  margin-bottom: 3rem;
+}
+.vol-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.6rem;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+.vol-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26,39,68,0.1);
+}
+.vol-card.featured { border-color: var(--gold); border-width: 2px; }
+.vol-num {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.vol-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--navy);
+  margin-bottom: 0.6rem;
+  line-height: 1.35;
+}
+.vol-desc {
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+.vol-link {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--mid);
+  letter-spacing: 0.05em;
+  border: 1px solid var(--mid);
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  display: inline-block;
+  transition: background 0.12s, color 0.12s;
+}
+.vol-link:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+
+/* ── PREDICTIONS ── */
+.pred-list {
+  list-style: none;
+  margin-bottom: 3rem;
+}
+.pred-list li {
+  display: flex;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--smoke);
+  align-items: baseline;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.pred-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  background: var(--navy);
+  color: var(--gold);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── PROOF BAR ── */
+.proof-bar-wrap {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.6rem;
+  margin-bottom: 3rem;
+}
+.proof-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #555;
+  margin-bottom: 0.6rem;
+}
+.proof-bar-track {
+  height: 10px;
+  background: var(--smoke);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.proof-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--navy), var(--gold));
+  border-radius: 5px;
+  width: 0%;
+  transition: width 1.5s cubic-bezier(0.22,1,0.36,1);
+}
+.proof-repos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.repo-badge {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  background: var(--smoke);
+  color: var(--navy);
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}
+.repo-badge span { color: var(--gold); font-weight: bold; }
+
+/* ── ABOUT ── */
+.about-block {
+  background: var(--navy);
+  color: var(--cream);
+  border-radius: 8px;
+  padding: 2rem 2.2rem;
+  margin-bottom: 3rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.about-brand { flex-shrink: 0; }
+.about-text h2 {
+  font-size: 1rem;
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.6rem;
+}
+.about-text p {
+  font-size: 0.85rem;
+  color: rgba(250,247,240,0.72);
+  line-height: 1.8;
+}
+.about-text a { color: var(--gold); }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy);
+  color: rgba(250,247,240,0.45);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  padding: 1.2rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+footer a { color: var(--gold); opacity: 0.7; }
+footer a:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .op-labels { gap: 1.5rem; }
+  .about-block { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="dm3-brand nav-size" title="dm3 Geometry">
+    <span class="dm">dm</span>
+    <span class="sup-wrap"><span class="cube">3</span><span class="tilde">~</span></span>
+  </a>
+  <a href="https://sluing.github.io/neuro/SBM/1080.html" target="_blank">AXLE &#8599;</a>
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub &#8599;</a>
+  <a href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a>
+  <a href="https://totogt.github.io/AXLE/" target="_blank">Lean 4 &#8599;</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-sub">GOMC Science &middot; Generative Orthogonal Matrix Contact</div>
+  <div class="hero-brand">
+    <div class="dm3-brand hero-size">
+      <span class="dm">dm</span>
+      <span class="sup-wrap"><span class="cube">3</span><span class="tilde">~</span></span>
+    </div>
+  </div>
+  <h1>Geometry</h1>
+  <p class="hero-tagline">
+    A formally verified science of irreversible threshold-crossings &mdash;
+    one contact-geometric operator chain unifying astrophysics, biology,
+    planetary architecture, and number theory.
+  </p>
+  <div class="gold-rule"></div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats">
+  <div class="stat-item">
+    <span class="stat-num" data-target="1170">0</span>
+    <span class="stat-label">Total theorems</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" data-target="1080" style="color:#c9a84c;">0</span>
+    <span class="stat-label">&#10003; Proved</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" data-target="90">0</span>
+    <span class="stat-label">Open obligations</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" data-target="0">0</span>
+    <span class="stat-label">Extra axioms</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num" data-target="6">0</span>
+    <span class="stat-label">Repositories</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">92.3%</span>
+    <span class="stat-label">Proof rate</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- OPERATOR CHAIN -->
+  <div class="section-title">The Operator Chain</div>
+  <div class="operator-chain">
+    <div class="op-formula">G &nbsp;=&nbsp; U &compfn; F &compfn; K &compfn; C</div>
+    <div class="op-sub">acting on the contact 3-manifold (M, &alpha; = dz &minus; r&sup2;d&theta;)</div>
+    <div class="op-labels">
+      <div class="op-label"><span class="op-letter">C</span><span class="op-name">Compression</span></div>
+      <div class="op-label"><span class="op-letter">K</span><span class="op-name">Curvature</span></div>
+      <div class="op-label"><span class="op-letter">F</span><span class="op-name">Fold</span></div>
+      <div class="op-label"><span class="op-letter">U</span><span class="op-name">Unfold</span></div>
+    </div>
+  </div>
+
+  <!-- CERTIFIED CONSTANTS -->
+  <div class="section-title">Certified Constants &mdash; Machine-Verified in Lean 4 / AXLE</div>
+  <div class="constants-grid">
+    <div class="const-card">
+      <div class="const-eq">&epsilon;&#x2080; = 1/3</div>
+      <div class="const-desc">Gronwall stability radius &mdash; outer basin of attraction</div>
+    </div>
+    <div class="const-card">
+      <div class="const-eq">&tau; = 2</div>
+      <div class="const-desc">Embodiment threshold &mdash; curvature / noise ratio at crossing</div>
+    </div>
+    <div class="const-card">
+      <div class="const-eq">&eta; &asymp; 1.839</div>
+      <div class="const-desc">Tribonacci constant &mdash; dominant root of &lambda;&sup3;&minus;&lambda;&sup2;&minus;&lambda;&minus;1=0, forced by 3D operator algebra</div>
+    </div>
+    <div class="const-card">
+      <div class="const-eq">&mu;&#x2098;&#x2090;&#x2093; = &minus;2</div>
+      <div class="const-desc">Transverse Lyapunov exponent &mdash; attracting limit cycle</div>
+    </div>
+  </div>
+
+  <!-- VOLUMES -->
+  <div class="section-title">Series Volumes &mdash; dm&#x0303;&sup3; Geometry</div>
+  <div class="volumes-grid">
+    <div class="vol-card">
+      <div class="vol-num">Vol. I &middot; Foundations</div>
+      <div class="vol-title">The Mathematics of Generative Transitions</div>
+      <div class="vol-desc">Operator algebra, Whitney singularity classification, symplectic preservation, Gronwall stability. Five structural theorems each proved by seven independent arguments. 30+ facts in Lean 4.</div>
+      <a class="vol-link" href="https://zenodo.org/records/20784030" target="_blank">Zenodo &#8599;</a>
+    </div>
+    <div class="vol-card">
+      <div class="vol-num">Vol. II &middot; Contact Realization</div>
+      <div class="vol-title">Contact Realization of Generative Transitions</div>
+      <div class="vol-desc">Explicit contact-geometric realization on (M, dz&minus;r&sup2;d&theta;). dm&sup3; toy model equations. Bijection between dm&sup3; bifurcations and Whitney A&#x2081;&ndash;A&#x2083; singularity types.</div>
+      <a class="vol-link" href="https://zenodo.org/records/20159456" target="_blank">Zenodo &#8599;</a>
+    </div>
+    <div class="vol-card featured">
+      <div class="vol-num">Vol. III &middot; Astrophysics</div>
+      <div class="vol-title">Generative Transitions in Gravitational Lensing</div>
+      <div class="vol-desc">Contact geometry applied to the galaxy-galaxy strong lensing discrepancy. Parameter-free 2.1&times; enhancement over CDM. Hybrid contact+GIZMO-SIMBA achieves &chi;&sup2;/n=2.3 (p=0.044). Six JWST-testable predictions.</div>
+      <a class="vol-link" href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a>
+    </div>
+    <div class="vol-card">
+      <div class="vol-num">Vol. IV &middot; Planetary Architecture</div>
+      <div class="vol-title">Orthogenesis &mdash; Moon Base Colony Geometry</div>
+      <div class="vol-desc">The dm&sup3; operator chain realized as a lunar hex-grid colony. 50+ formally verified NASA gap closures. Colony.expand = U&compfn;F&compfn;K&compfn;C proved. Planetary scaling from geometry alone.</div>
+      <a class="vol-link" href="https://github.com/TOTOGT/geometry" target="_blank">GitHub &#8599;</a>
+    </div>
+  </div>
+
+  <!-- PROOF COVERAGE -->
+  <div class="section-title">Formal Verification Coverage &mdash; AXLE</div>
+  <div class="proof-bar-wrap">
+    <div class="proof-bar-label">
+      <span>1,080 / 1,170 theorems proved</span>
+      <span style="color:var(--gold);font-weight:bold;">92.3%</span>
+    </div>
+    <div class="proof-bar-track">
+      <div class="proof-bar-fill" id="proofFill"></div>
+    </div>
+    <div class="proof-repos">
+      <span class="repo-badge">AXLE <span>764</span></span>
+      <span class="repo-badge">geometry <span>123</span></span>
+      <span class="repo-badge">GTCT <span>105</span></span>
+      <span class="repo-badge">cajueiro <span>103</span></span>
+      <span class="repo-badge">Claude <span>39</span></span>
+      <span class="repo-badge">3M <span>36</span></span>
+    </div>
+  </div>
+
+  <!-- FALSIFIABLE PREDICTIONS -->
+  <div class="section-title">Six Falsifiable Predictions</div>
+  <ul class="pred-list">
+    <li><span class="pred-tag">F1</span> Sub-halo density exponent &beta; &isin; [1.4, 1.6] vs. CDM &beta; &asymp; 1.0 &mdash; high-res core imaging</li>
+    <li><span class="pred-tag">F2</span> Convergence peak at r &asymp; &epsilon;&#x2080; &middot; r&#x2099; &mdash; JWST Cycle 3 lensing maps</li>
+    <li><span class="pred-tag">F3</span> Core density scaling &rho;&#x2099;&#x2092;&#x2071;&#x2071; &prop; M&#x00B9;&#x2044;&#x00B3; &mdash; archival multi-cluster data</li>
+    <li><span class="pred-tag">F4</span> Magnification excess evolves as (1+z)&#x2070;&#x22C5;&#x00B3; &mdash; JWST high-z clusters</li>
+    <li><span class="pred-tag">F5</span> &chi;&sup2;/n improvement over CDM with zero free parameters &mdash; already demonstrated</li>
+    <li><span class="pred-tag">F6</span> Broken power-law convergence profile with kink at r ~ 0.01 R&#x2082;&#x2080;&#x2080; &mdash; JWST NIRCam 3&ndash;10 kpc</li>
+  </ul>
+
+  <!-- ABOUT -->
+  <div class="about-block">
+    <div class="about-brand">
+      <div class="dm3-brand card-size">
+        <span class="dm">dm</span>
+        <span class="sup-wrap"><span class="cube">3</span><span class="tilde">~</span></span>
+      </div>
+    </div>
+    <div class="about-text">
+      <h2>Pablo Nogueira Grossi &middot; G6 LLC</h2>
+      <p>
+        Newark, NJ &middot;
+        ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &middot;
+        <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br><br>
+        The dm&#x0303;&sup3; framework is a formally verified science of generative transitions &mdash;
+        threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence
+        describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy
+        clusters, and the growth phases of a lunar colony. All constants are machine-checked in Lean 4
+        with zero extra axioms beyond Mathlib4.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  dm&#x0303;&sup3; Geometry &middot; GOMC Science &middot; &copy; 2026 Pablo Nogueira Grossi, G6 LLC &middot;
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a> &middot;
+  <a href="https://zenodo.org/records/19117399" target="_blank">Series DOI</a> &middot;
+  CC BY 4.0 (papers) &middot; MIT (code)
+</footer>
+
+<script>
+// Animate stat counters
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  if (isNaN(target)) return;
+  const dur = 1600;
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / dur, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(ease * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// Animate proof bar
+function animateBar() {
+  setTimeout(() => {
+    document.getElementById('proofFill').style.width = '92.3%';
+  }, 400);
+}
+
+// Intersection observer to trigger on scroll
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('[data-target]').forEach(animateCounter);
+      animateBar();
+      obs.disconnect();
+    }
+  });
+}, { threshold: 0.2 });
+
+const statsEl = document.querySelector('.stats');
+if (statsEl) obs.observe(statsEl);
+</script>
+</body>
+</html>
