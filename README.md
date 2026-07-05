@@ -1,13 +1,13 @@
 # AXLE — Formal Verification Hub
 ### Principia Orthogona Series · G6 LLC · Newark NJ · 2026
 
-**AXLE** (Automated eXtensible Lean Engine) is the formal verification repository for the
+**AXLE** (Algebraic eXpression Language for Evaluation) is the formal verification repository for the
 *Principia Orthogona* series. It contains Lean 4 / Mathlib4 proof files, Python simulations,
 companion papers, and the HTML living-book chapters for Book 3 (The Mini-Beast).
 
 **0 axioms beyond Mathlib4 · 9 honest sorrys · AXLE v6.1**
 
-Author: Pablo Nogueira Grossi · ORCID: [0009-0000-6496-2186](https://orcid.org/0009-0000-6496-2186)  
+Author: Pablo Nogueira Grossi · ORCID: [0009-0000-6496-2186](https://orcid.org/0009-0000-6496-2186)
 Contact: g6llc@proton.me · G6 LLC · Newark, NJ
 
 ---
@@ -32,81 +32,81 @@ Contact: g6llc@proton.me · G6 LLC · Newark, NJ
 AXLE/
 │
 ├── Lean 4 proof files
-│   ├── Main_v6.lean                     AXLE v6.1 master — 0 extra axioms, 9 sorrys
-│   ├── AXLE.lean / AXLE_v5_1.lean / AXLE_v6.lean
-│   ├── AutophagyDm3.lean                Ch. A — 18 theorems proved
-│   ├── AutophagyDm3_v2.lean             26 theorems, Issue #14 obligations
-│   ├── TribonacciMeasure.lean           Tribonacci / DNLS measure
-│   ├── gronwall_proof.lean              Gronwall contraction (Issue #13)
-│   ├── DiscreteDM3.lean / discreteDm3.lean
-│   ├── Dm3Comp.lean                     dm³ compositional structures
-│   ├── Dm3GoldbachToy.lean / Dm3NSToy.lean / Dm3RHToy.lean
-│   ├── finite.lean                      Finite Kakeya — complete proofs
-│   ├── Monotonicity.lean
-│   ├── MultiChamber.lean
-│   ├── Examples.lean
-│   ├── WaveNumber6/Wavenumber6.lean
-│   └── lean/                            Lake project (lakefile.toml)
+│ ├── Main_v6.lean AXLE v6.1 master — 0 extra axioms, 9 sorrys
+│ ├── AXLE.lean / AXLE_v5_1.lean / AXLE_v6.lean
+│ ├── AutophagyDm3.lean Ch. A — 18 theorems proved
+│ ├── AutophagyDm3_v2.lean 26 theorems, Issue #14 obligations
+│ ├── TribonacciMeasure.lean Tribonacci / DNLS measure
+│ ├── gronwall_proof.lean Gronwall contraction (Issue #13)
+│ ├── DiscreteDM3.lean / discreteDm3.lean
+│ ├── Dm3Comp.lean dm³ compositional structures
+│ ├── Dm3GoldbachToy.lean / Dm3NSToy.lean / Dm3RHToy.lean
+│ ├── finite.lean Finite Kakeya — complete proofs
+│ ├── Monotonicity.lean
+│ ├── MultiChamber.lean
+│ ├── Examples.lean
+│ ├── WaveNumber6/Wavenumber6.lean
+│ └── lean/ Lake project (lakefile.toml)
 │
 ├── Papers
-│   ├── autophagy_dm3.pdf / .tex         Ch. A — Autophagy & Triple-Alpha as dm³
-│   ├── Collatz_Paper_Grossi2026.pdf
-│   ├── Grossi2026_Number33_Intelligencer.pdf
-│   ├── GCM-Manifesto.docx.pdf
-│   ├── NuclearPhysicsB_latex.pdf
-│   ├── G6_TOGT_NASA_MoonBase_Research_Contribution.pdf
-│   ├── GTCT_v1.LaTex
-│   └── Papers/
+│ ├── autophagy_dm3.pdf / .tex Ch. A — Autophagy & Triple-Alpha as dm³
+│ ├── Collatz_Paper_Grossi2026.pdf
+│ ├── Grossi2026_Number33_Intelligencer.pdf
+│ ├── GCM-Manifesto.docx.pdf
+│ ├── NuclearPhysicsB_latex.pdf
+│ ├── G6_TOGT_NASA_MoonBase_Research_Contribution.pdf
+│ ├── GTCT_v1.LaTex
+│ └── Papers/
 │
 ├── Python simulations
-│   ├── dnls_nbonacci.py
-│   ├── dnls_long_time.py / _parallel.py
-│   ├── nbonacci_criticality.py / nbonacci_critical_lambda.py
-│   ├── DNLS/TribonacciDNLS_annotated.ipynb
-│   ├── simulations/
-│   └── scripts/
+│ ├── dnls_nbonacci.py
+│ ├── dnls_long_time.py / _parallel.py
+│ ├── nbonacci_criticality.py / nbonacci_critical_lambda.py
+│ ├── DNLS/TribonacciDNLS_annotated.ipynb
+│ ├── simulations/
+│ └── scripts/
 │
 ├── Book 3 — The Mini-Beast (HTML living book)
-│   ├── book3/                           chapter map and assets
-│   ├── ch00-introduction.html
-│   ├── ch01-one-equation.html
-│   ├── ch-e-gtct.html                   Ch. E — GTCT bridge
-│   ├── chW-wigner.html                  Ch. W — Wigner crystallisation
-│   ├── collatz.html                     Ch. H — Collatz
-│   ├── chapter-eta-dnls.html            Ch. η — DNLS
-│   ├── chapters-pi-phi-mu-eta-delta-sigma-omega.html
-│   ├── sample-chapter-autophagy.html    Ch. A
-│   ├── sample-chapter-tubulin.html      Ch. T
-│   ├── sample-chapter-wigner.html       Ch. W
-│   └── living-book.html
+│ ├── book3/ chapter map and assets
+│ ├── ch00-introduction.html
+│ ├── ch01-one-equation.html
+│ ├── ch-e-gtct.html Ch. E — GTCT bridge
+│ ├── chW-wigner.html Ch. W — Wigner crystallisation
+│ ├── collatz.html Ch. H — Collatz
+│ ├── chapter-eta-dnls.html Ch. η — DNLS
+│ ├── chapters-pi-phi-mu-eta-delta-sigma-omega.html
+│ ├── sample-chapter-autophagy.html Ch. A
+│ ├── sample-chapter-tubulin.html Ch. T
+│ ├── sample-chapter-wigner.html Ch. W
+│ └── living-book.html
 │
 ├── Domain folders
-│   ├── AnuclearPhysics/                 Nuclear Physics B materials
-│   ├── Autophagy/
-│   ├── DNLS/
-│   ├── DigitalHerbarium/
-│   ├── FruitFly/                        MultiOrbitBioSwarm
-│   ├── GTCT/
-│   ├── Lexicon/
-│   ├── PrincipiaOrthogona_v2/           Vol. II v2a deposit
-│   ├── WaveNumber6/
-│   └── a.PolyLaminin/
+│ ├── AnuclearPhysics/ Nuclear Physics B materials
+│ ├── Autophagy/
+│ ├── DNLS/
+│ ├── DigitalHerbarium/
+│ ├── FruitFly/ MultiOrbitBioSwarm
+│ ├── GTCT/
+│ ├── Lexicon/
+│ ├── PrincipiaOrthogona_v2/ Vol. II v2a deposit
+│ ├── WaveNumber6/
+│ └── a.PolyLaminin/
 │
 ├── SVG diagrams
-│   ├── 01_operator_sequence.svg
-│   ├── 02_saturn_hexagon.svg
-│   ├── 03_coherence_bridge.svg
-│   ├── 04_collatz_dm3.svg
-│   └── 05_domain_map.svg
+│ ├── 01_operator_sequence.svg
+│ ├── 02_saturn_hexagon.svg
+│ ├── 03_coherence_bridge.svg
+│ ├── 04_collatz_dm3.svg
+│ └── 05_domain_map.svg
 │
 └── Metadata
-    ├── README.md                        this file
-    ├── AXLE-REPO-PROFILE.md
-    ├── ZENODO_DESCRIPTION.md
-    ├── CONTRIBUTING.md
-    ├── LICENSE                          MIT (code); CC BY 4.0 (papers, figures)
-    ├── axle_sorry_roadmap.svg
-    └── topics.json
+├── README.md this file
+├── AXLE-REPO-PROFILE.md
+├── ZENODO_DESCRIPTION.md
+├── CONTRIBUTING.md
+├── LICENSE MIT (code); CC BY 4.0 (papers, figures)
+├── axle_sorry_roadmap.svg
+└── topics.json
 ```
 
 ---
@@ -169,5 +169,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add files, including via the G
 
 ## License
 
-Code and Lean 4: MIT · Papers and figures: CC BY 4.0  
+Code and Lean 4: MIT · Papers and figures: CC BY 4.0
 © 2026 Pablo Nogueira Grossi · G6 LLC
