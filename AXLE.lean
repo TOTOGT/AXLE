@@ -1,20 +1,29 @@
 /-
-  AXLE — Principia Orthogona Formal Verification Engine
-  G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026
-  MIT License
+AXLE — Principia Orthogona Formal Verification Engine
+G6 LLC · Pablo Nogueira Grossi · Newark NJ · 2026
+MIT License
 
-  This is the barrel file for the AXLE library.
-  It imports every module that Lake should compile as part of
-  the AXLE build target.
+This is the barrel file for the AXLE library.
+It imports every module that Lake should compile as part of
+the AXLE build target.
 
-  Structure:
-    · Verified geometric fragment  — Finite.lean (Kakeya)
-    · Verified toy pillars         — Dm3*Toy.lean (6 pillars)
-    · Verified ordinal hierarchy   — AXLE_v5_1.lean (Mahlo)
-    · Real conjectural pillars     — dm3Collatz.lean, Dm3Comp.lean
+Structure:
+· Verified geometric fragment — finite.lean (Kakeya)
+· Verified toy pillars — Dm3*Toy.lean (pillars; PoincareToy removed, see below)
+· Verified ordinal hierarchy — AXLE_v5_1.lean (Mahlo)
+· Real conjectural pillars — dm3Collatz.lean, Dm3Comp.lean
 
-  sorry count across verified modules: 0
-  sorry count across conjectural modules: see individual files
+sorry count across verified modules: 0
+sorry count across conjectural modules: see individual files
+
+NOTE (fixed — real bugs found via the first real `lake build` ever run
+against this repo):
+· import Finite -> import finite: the real file on disk is lowercase
+  finite.lean. Case-sensitive on Linux CI runners; invisible on
+  case-insensitive macOS filesystems, so this went undetected until now.
+· import Dm3PoincareToy removed: Dm3PoincareToy.lean does not exist
+  anywhere in this repository (confirmed via repo-wide file search).
+  The "Topological pillar" it was meant to cover has no source file yet.
 -/
 
 -- ============================================================
@@ -23,15 +32,16 @@
 -- Proves: finite-directions Kakeya with thickened segments.
 -- namespace AXLE.Kakeya.Finite
 -- sorry count: 0
-import Finite
+import finite
 
 -- ============================================================
 -- VERIFIED: Toy pillars (zero sorry each)
 -- ============================================================
 
--- Topological pillar: discrete Ricci flow → sphereComplex
--- namespace Dm3PoincareToy
-import Dm3PoincareToy
+-- Topological pillar (discrete Ricci flow -> sphereComplex): REMOVED.
+-- Dm3PoincareToy.lean does not exist in this repository — there is
+-- nothing to import here. Restore this import if/when that file is
+-- actually added to the repo.
 
 -- Additive-arithmetic pillar: compression toward prime-pair base
 -- namespace Dm3GoldbachToy
