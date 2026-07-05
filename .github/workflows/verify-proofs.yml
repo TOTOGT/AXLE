@@ -19,6 +19,13 @@ name: Verify Lean proofs (real kernel check)
 #      unresolved from the real output.
 #   5. Writes a dynamic shields.io badge JSON from that real result and
 #      commits it back to the repo.
+#
+# NOTE (fixed, this pass): the build target list below previously included
+# PoincareToy, whose source file (Dm3PoincareToy.lean) does not exist
+# anywhere in this repo -- removed. Main (Main_v6.lean) is newly added:
+# it was never wired into any lakefile target before, so the README's
+# "0 axioms beyond Mathlib4 . 9 honest sorrys" claim about that file was
+# never actually checked by anything. It now is.
 
 on:
   push:
@@ -54,7 +61,7 @@ jobs:
       - name: lake build (the real check — fails the job if anything doesn't compile)
         run: |
           lake update
-          lake build AXLE Kakeya PoincareToy GoldbachToy NSToy RHToy MahloHierarchy
+          lake build AXLE Kakeya GoldbachToy NSToy RHToy MahloHierarchy Main
 
       - name: Determine which modules actually compiled (real build output, not a folder guess)
         run: |
