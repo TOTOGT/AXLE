@@ -25,6 +25,18 @@
 #      was: "ill-formed dependency: dependency is missing a source and is
 #      missing a scope for Reservoir".
 # Both fixed here; no other content changed.
+#
+# NOTE (fixed, this pass -- three more real bugs found by continuing the
+# first real `lake build`):
+#   3. roots = ["Finite"] did not match the real file, which is lowercase
+#      finite.lean. Case-sensitive on Linux CI runners; invisible on
+#      case-insensitive macOS filesystems, so this went undetected until now.
+#   4. The PoincareToy target (roots = ["Dm3PoincareToy"]) pointed at a file
+#      that does not exist anywhere in this repository. Removed.
+#   5. Main_v6.lean (the file the README's "0 axioms beyond Mathlib4 . 9
+#      honest sorrys" claim is actually about) was never wired into any
+#      lakefile target, so it was never compiled or checked by anything.
+#      Added as its own target so CI can genuinely verify that claim.
 
 name = "AXLE"
 version = "0.1.0"
@@ -35,26 +47,13 @@ name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "v4.14.0"
 
-# ============================================================
-# Main library: all verified and conjectural modules
-# Entry point: AXLE.lean (barrel file at root)
-# ============================================================
 [[lean_lib]]
 name = "AXLE"
 roots = ["AXLE"]
 
-# ============================================================
-# Standalone verified modules (can be built independently)
-# Useful for CI checks on individual pillars
-# ============================================================
-
 [[lean_lib]]
 name = "Kakeya"
-roots = ["Finite"]
-
-[[lean_lib]]
-name = "PoincareToy"
-roots = ["Dm3PoincareToy"]
+roots = ["finite"]
 
 [[lean_lib]]
 name = "GoldbachToy"
@@ -71,3 +70,7 @@ roots = ["Dm3RHToy"]
 [[lean_lib]]
 name = "MahloHierarchy"
 roots = ["AXLE_v5_1"]
+
+[[lean_lib]]
+name = "Main"
+roots = ["Main_v6"]
