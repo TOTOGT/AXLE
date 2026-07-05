@@ -13,11 +13,18 @@
 # Current Mathlib pin: v4.14.0 release commit
 # Update this intentionally, not automatically.
 #
-# NOTE (fixed): this file previously used `--` (Lean-style) comments, which is
-# not valid TOML syntax (TOML comments use `#`) -- this made `lake build` fail
-# to even parse the file at all (`lakefile.toml:1:3: error: unexpected 'A';
-# expected '='`), confirmed by the first real CI run. Fixed here; no other
-# content changed.
+# NOTE (fixed, two real bugs found via the first real `lake build` this repo
+# has ever had run against it):
+#   1. This file previously used `--` (Lean-style) comments, which is not
+#      valid TOML syntax (TOML comments use `#`) -- `lake build` failed to
+#      even parse the file (`lakefile.toml:1:3: error: unexpected 'A';
+#      expected '='`).
+#   2. The [[require]] block used `from = "git"` / `url = "..."`, which are
+#      not real Lake TOML fields -- the correct field is `git = "<url>"`
+#      (verified against a real, working lakefile.toml). Lake's actual error
+#      was: "ill-formed dependency: dependency is missing a source and is
+#      missing a scope for Reservoir".
+# Both fixed here; no other content changed.
 
 name = "AXLE"
 version = "0.1.0"
@@ -25,8 +32,7 @@ defaultTargets = ["AXLE"]
 
 [[require]]
 name = "mathlib"
-from = "git"
-url = "https://github.com/leanprover-community/mathlib4"
+git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "v4.14.0"
 
 # ============================================================
