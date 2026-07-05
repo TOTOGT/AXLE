@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Verified Archive — clay, chalk, kernel</title>
+<meta name="description" content="Lean 4 formalizations of historical teaching materials, from Babylonian clay tablets to MIT's 1987 chalkboard lectures. An AXLE / DM³ prototype.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#22302B;        /* chalkboard */
+    --board-deep:#1A2521;
+    --chalk:#EDE7D8;        /* card paper / chalk */
+    --chalk-dim:#C9C2AF;
+    --ink:#20261F;          /* card text */
+    --clay:#C4763B;         /* tablet ochre */
+    --clay-deep:#9C5427;
+    --verify:#8FD6A4;       /* kernel green on dark */
+    --verify-ink:#2E6B45;   /* kernel green on light */
+    --reject:#B4452F;
+    --rule:rgba(237,231,216,.18);
+    --rule-ink:rgba(32,38,31,.16);
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --sans:'IBM Plex Sans',system-ui,sans-serif;
+    --disp:'Instrument Serif',Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} .reveal{transition:none !important;opacity:1 !important;transform:none !important} }
+  body{
+    background:var(--board);
+    background-image:
+      radial-gradient(ellipse 120% 60% at 50% -10%, rgba(237,231,216,.06), transparent 60%),
+      repeating-linear-gradient(115deg, transparent 0 90px, rgba(255,255,255,.012) 90px 92px);
+    color:var(--chalk);
+    font-family:var(--sans);
+    font-size:16px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 24px}
+
+  /* ---------- header ---------- */
+  header{padding:20px 0;border-bottom:1px solid var(--rule)}
+  .masthead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .brand{font-family:var(--mono);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--chalk-dim)}
+  .brand b{color:var(--clay);font-weight:500}
+  nav{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em}
+  nav a{color:var(--chalk-dim);text-decoration:none;margin-left:18px}
+  nav a:hover, nav a:focus-visible{color:var(--verify)}
+  a:focus-visible{outline:2px solid var(--verify);outline-offset:3px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:84px 0 56px;text-align:left}
+  .hero h1{
+    font-family:var(--disp);font-weight:400;
+    font-size:clamp(2.4rem,6vw,4.4rem);
+    line-height:1.06;letter-spacing:-.01em;max-width:17ch;
+  }
+  .hero h1 em{font-style:italic;color:var(--clay)}
+  .hero p.dek{margin-top:22px;max-width:56ch;color:var(--chalk-dim);font-size:1.05rem}
+  .hero p.dek strong{color:var(--chalk);font-weight:500}
+
+  /* surfaces triptych — the signature strip */
+  .surfaces{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:44px}
+  .surface{
+    border:1px solid var(--rule);border-radius:4px;padding:16px 16px 14px;
+    font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;
+    min-height:118px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;
+    position:relative;overflow:hidden;
+  }
+  .surface .era{position:absolute;top:12px;left:16px;color:var(--chalk-dim);font-size:.72rem}
+  .surface .name{font-size:1rem;letter-spacing:.14em;text-transform:uppercase}
+  .surface .note{color:var(--chalk-dim)}
+  .s-clay{background:linear-gradient(160deg,#7d4c26 0%,#5e3a1e 60%,#4a2e18 100%)}
+  .s-clay .name{color:#F0CDA8}
+  .s-chalk{background:linear-gradient(160deg,#2c3b35 0%,#233029 100%)}
+  .s-chalk .name{color:var(--chalk)}
+  .s-kernel{background:linear-gradient(160deg,#101815 0%,#0B110E 100%)}
+  .s-kernel .name{color:var(--verify)}
+  .s-kernel .note{color:#5f8a70}
+
+  /* ---------- legend ---------- */
+  .legend{margin:64px 0 0;padding:22px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+    display:flex;gap:28px;flex-wrap:wrap;align-items:center}
+  .legend .cap{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--chalk-dim)}
+  .stamp{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+    border:1.5px solid currentColor;border-radius:3px;padding:3px 9px;display:inline-block;white-space:nowrap}
+  .st-verified{color:var(--verify)}
+  .st-mathlib{color:#9DB8E8}
+  .st-target{color:var(--clay)}
+  .st-rejected{color:#E08A76}
+  .legend span.desc{color:var(--chalk-dim);font-size:.82rem;margin-left:6px}
+  .legend .pair{display:flex;align-items:center}
+
+  /* ---------- timeline / entries ---------- */
+  section.archive{padding:24px 0 40px}
+  .entry{
+    display:grid;grid-template-columns:150px 1fr;gap:0 34px;
+    padding:64px 0;position:relative;
+  }
+  .entry + .entry{border-top:1px dashed var(--rule)}
+  .when{position:sticky;top:24px;align-self:start;text-align:right;padding-top:6px}
+  .when .yr{font-family:var(--disp);font-size:clamp(1.9rem,3.4vw,2.6rem);line-height:1;color:var(--clay)}
+  .when .place{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--chalk-dim);margin-top:8px}
+  .when .acc{font-family:var(--mono);font-size:.72rem;color:var(--chalk-dim);margin-top:16px;opacity:.8}
+
+  /* the card */
+  .card{
+    background:var(--chalk);color:var(--ink);border-radius:5px;
+    box-shadow:0 2px 0 rgba(0,0,0,.25), 0 18px 44px -18px rgba(0,0,0,.55);
+    padding:30px 32px 26px;position:relative;
+  }
+  .card::before{ /* punched accession hole, like a catalog card */
+    content:"";position:absolute;top:18px;right:20px;width:10px;height:10px;border-radius:50%;
+    background:var(--board);box-shadow:inset 0 1px 2px rgba(0,0,0,.5);
+  }
+  .card .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--clay-deep)}
+  .card h2{font-family:var(--disp);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.12;margin:10px 0 6px}
+  .card .src{font-size:.85rem;color:#5a5f52;margin-bottom:18px}
+  .card .src a{color:var(--clay-deep);text-decoration-color:rgba(156,84,39,.4)}
+  .claim{border-left:3px solid var(--clay);padding:6px 0 6px 16px;margin:18px 0;font-size:1rem}
+  .claim .lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#5a5f52;display:block;margin-bottom:4px}
+
+  .leanpanel{margin:20px 0 6px;border-radius:4px;overflow:hidden;border:1px solid #14201A}
+  .leanhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+    background:#14201A;color:var(--chalk-dim);padding:9px 14px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em}
+  .leanhead .stamps{display:flex;gap:8px;flex-wrap:wrap}
+  pre{background:#0E1512;color:#D9E4DC;padding:18px 16px;overflow-x:auto;font-family:var(--mono);
+    font-size:.82rem;line-height:1.65;tab-size:2}
+  code .kw{color:#E0A968}       /* theorem, def, by, example */
+  code .id{color:#9DD6B4}       /* names */
+  code .cm{color:#6D8578;font-style:italic}
+  code .num{color:#C9B8E8}
+
+  .glossrow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  .gloss{border:1px solid var(--rule-ink);border-radius:4px;padding:12px 14px;font-size:.88rem;background:rgba(255,255,255,.35)}
+  .gloss .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--verify-ink);display:block;margin-bottom:5px}
+  .gloss.l1 .tag{color:var(--clay-deep)}
+  .gloss.l1 em{font-style:italic}
+
+  /* ---------- schema section ---------- */
+  .schema{border-top:1px solid var(--rule);padding:72px 0}
+  .schema h2{font-family:var(--disp);font-weight:400;font-size:clamp(1.7rem,3.4vw,2.5rem);max-width:22ch}
+  .schema p.lead{color:var(--chalk-dim);max-width:62ch;margin-top:14px}
+  .pipeline{display:flex;align-items:stretch;gap:0;margin-top:36px;flex-wrap:wrap;font-family:var(--mono)}
+  .step{border:1px solid var(--rule);border-radius:4px;padding:14px 16px;min-width:150px;flex:1}
+  .step .n{font-size:.66rem;letter-spacing:.16em;color:var(--clay);text-transform:uppercase}
+  .step .t{font-size:.86rem;margin-top:6px;color:var(--chalk)}
+  .step .d{font-size:.74rem;color:var(--chalk-dim);margin-top:4px;font-family:var(--sans)}
+  .arrow{align-self:center;padding:0 10px;color:var(--clay);font-size:1.1rem}
+  .schema .claim-dark{border-left:3px solid var(--verify);padding-left:16px;margin-top:34px;max-width:66ch;color:var(--chalk)}
+  .schema .claim-dark b{color:var(--verify);font-weight:500}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--rule);padding:44px 0 64px;color:var(--chalk-dim);font-size:.82rem}
+  footer .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  footer h3{font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--chalk);margin-bottom:10px}
+  footer ul{list-style:none}
+  footer li{margin:6px 0}
+  footer a{color:var(--chalk-dim);text-decoration-color:var(--rule)}
+  footer a:hover{color:var(--verify)}
+  footer .fine{margin-top:34px;padding-top:18px;border-top:1px solid var(--rule);font-size:.76rem;line-height:1.7}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease, transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:760px){
+    .entry{grid-template-columns:1fr;gap:18px}
+    .when{position:static;text-align:left;display:flex;gap:16px;align-items:baseline;flex-wrap:wrap}
+    .when .acc{margin-top:0}
+    .surfaces{grid-template-columns:1fr}
+    .glossrow{grid-template-columns:1fr}
+    footer .cols{grid-template-columns:1fr}
+    .card{padding:22px 18px}
+    .arrow{display:none}
+    .pipeline{flex-direction:column;gap:10px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap masthead">
+    <div class="brand">AXLE · DM³ · <b>The Verified Archive</b> · prototype 0.1</div>
+    <nav>
+      <a href="#archive">Accessions</a>
+      <a href="#schema">Schema</a>
+      <a href="#provenance">Provenance</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Every century writes its proofs on a <em>different surface.</em></h1>
+      <p class="dek">A scribe pressed number triples into wet clay in Larsa, ~1800 BCE. Alan Oppenheim chalked the convolution integral onto an MIT board in 1987. In 2026, a proof kernel re-reads both — and <strong>accepts the mathematics while catching the copying errors</strong>. This archive collects historical teaching materials, extracts their claims, and submits them to Lean 4. Clay, chalk, kernel: same discipline, new referee.</p>
+
+      <div class="surfaces" aria-label="Three teaching surfaces">
+        <div class="surface s-clay">
+          <span class="era">c. 1800 BCE</span>
+          <span class="name">Clay</span>
+          <span class="note">stylus · base 60 · Larsa</span>
+        </div>
+        <div class="surface s-chalk">
+          <span class="era">1987 CE</span>
+          <span class="name">Chalk</span>
+          <span class="note">videotape · MIT 6.003 → OCW</span>
+        </div>
+        <div class="surface s-kernel">
+          <span class="era">2026 CE</span>
+          <span class="name">Kernel</span>
+          <span class="note">Lean 4 · decide · rfl</span>
+        </div>
+      </div>
+
+      <div class="legend" aria-label="Verdict stamps used in this archive">
+        <span class="cap">Kernel verdicts</span>
+        <span class="pair"><span class="stamp st-verified">✓ kernel-checked</span><span class="desc">compiles here, core Lean</span></span>
+        <span class="pair"><span class="stamp st-mathlib">◆ in Mathlib</span><span class="desc">already formalized upstream</span></span>
+        <span class="pair"><span class="stamp st-target">⧗ target</span><span class="desc">general theorem planned</span></span>
+        <span class="pair"><span class="stamp st-rejected">✗ rejected as written</span><span class="desc">source contains an error</span></span>
+      </div>
+    </section>
+
+    <section class="archive" id="archive">
+
+      <!-- VA-001 -->
+      <article class="entry reveal">
+        <div class="when">
+          <div class="yr">−1800</div>
+          <div class="place">Larsa, Mesopotamia</div>
+          <div class="acc">VA-001 · clay</div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">Accession VA-001 · Columbia University, Plimpton Collection</span>
+          <h2>Plimpton 322</h2>
+          <p class="src">Old Babylonian tablet, 15 rows of Pythagorean data in base 60. Column II gives the short side, Column III the diagonal; the long side is left for the reader to reconstruct.</p>
+          <div class="claim">
+            <span class="lbl">Extracted claim</span>
+            Each row (s, d) admits a natural number l with s² + l² = d². Row 1: 119² + 120² = 169².
+          </div>
+          <div class="leanpanel">
+            <div class="leanhead">
+              <span>Plimpton322.lean · core Lean 4, no Mathlib</span>
+              <span class="stamps"><span class="stamp st-verified">✓ kernel-checked</span><span class="stamp st-rejected">✗ rows 9·13·15 as written</span></span>
+            </div>
+<pre><code><span class="kw">def</span> <span class="id">IsPythagoreanTriple</span> (s l d : Nat) : Prop :=
+  s * s + l * l = d * d
+
+<span class="kw">theorem</span> <span class="id">row_01</span> : IsPythagoreanTriple <span class="num">119 120 169</span> := <span class="kw">by</span> decide
+
+<span class="cm">-- The scribe's hand slips; the kernel notices, 3,800 years later.</span>
+<span class="cm">-- Row 9 as written: 541 (9,01) where 481 (8,01) belongs.</span>
+<span class="kw">example</span> : ¬ IsPythagoreanTriple <span class="num">541 600 769</span> := <span class="kw">by</span> decide
+<span class="cm">-- Row 15 as written: diagonal 53 — half the true value 106.</span>
+<span class="kw">example</span> : ¬ IsPythagoreanTriple <span class="num">56 90 53</span> := <span class="kw">by</span> decide</code></pre>
+          </div>
+          <div class="glossrow">
+            <div class="gloss">
+              <span class="tag">English gloss · B1</span>
+              A clay tablet from ancient Iraq lists special number triples. The computer checks all fifteen rows. The math is correct — but the writer made three copying mistakes, and the computer finds them.
+            </div>
+            <div class="gloss l1">
+              <span class="tag">L1 note · PT-BR</span>
+              Aqui, <em>tablet</em> = tabuinha de argila — não o aparelho eletrônico. E <em>diagonal</em> é cognato transparente: pode confiar.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- VA-002 -->
+      <article class="entry reveal">
+        <div class="when">
+          <div class="yr">−300</div>
+          <div class="place">Alexandria</div>
+          <div class="acc">VA-002 · papyrus</div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">Accession VA-002 · Euclid, Elements, Book I</span>
+          <h2>Proposition I.47</h2>
+          <p class="src">The general theorem behind every row of VA-001, stated and proved two millennia later — the square on the hypotenuse equals the sum of the squares on the legs.</p>
+          <div class="claim">
+            <span class="lbl">Extracted claim</span>
+            In a triangle, the angle at C is right ⇔ dist(A,C)² + dist(B,C)² = dist(A,B)².
+          </div>
+          <div class="leanpanel">
+            <div class="leanhead">
+              <span>Mathlib · Geometry.Euclidean.Angle</span>
+              <span class="stamps"><span class="stamp st-mathlib">◆ in Mathlib</span></span>
+            </div>
+<pre><code><span class="cm">-- Already upstream; the archive cites rather than re-proves.</span>
+<span class="kw">#check</span> @<span class="id">EuclideanGeometry.dist_sq_add_dist_sq_eq_dist_sq_iff_angle_eq_pi_div_two</span>
+<span class="cm">-- ∠ A C B = π / 2  ↔  dist A C ^ 2 + dist B C ^ 2 = dist A B ^ 2</span></code></pre>
+          </div>
+          <div class="glossrow">
+            <div class="gloss">
+              <span class="tag">English gloss · B1</span>
+              Euclid proved the general rule for right triangles. Mathematicians have already put this proof inside the computer library, so we point to it — we do not repeat it.
+            </div>
+            <div class="gloss l1">
+              <span class="tag">L1 note · PT-BR</span>
+              <em>Right angle</em> = ângulo <em>reto</em> — não "ângulo direito". Em inglês, <em>right</em> tem dois sentidos: "direita" e "correto/reto".
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- VA-003 -->
+      <article class="entry reveal">
+        <div class="when">
+          <div class="yr">825</div>
+          <div class="place">Baghdad</div>
+          <div class="acc">VA-003 · paper</div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">Accession VA-003 · al-Khwarizmi, al-Kitab al-mukhtasar fi hisab al-jabr wa'l-muqabala</span>
+          <h2>Completing the square</h2>
+          <p class="src">The book that named algebra solves quadratics by a geometric recipe: build the square, balance the sides. The recipe's engine is one polynomial identity.</p>
+          <div class="claim">
+            <span class="lbl">Extracted claim</span>
+            x² + bx = (x + b/2)² − b²/4, the identity that reduces every quadratic to a square root.
+          </div>
+          <div class="leanpanel">
+            <div class="leanhead">
+              <span>with Mathlib.Tactic.Ring · rationals</span>
+              <span class="stamps"><span class="stamp st-verified">✓ kernel-checked</span></span>
+            </div>
+<pre><code><span class="kw">theorem</span> <span class="id">al_jabr</span> (x b : ℚ) :
+    x ^ <span class="num">2</span> + b * x = (x + b / <span class="num">2</span>) ^ <span class="num">2</span> - (b / <span class="num">2</span>) ^ <span class="num">2</span> := <span class="kw">by</span> ring</code></pre>
+          </div>
+          <div class="glossrow">
+            <div class="gloss">
+              <span class="tag">English gloss · A2</span>
+              This old book gives a recipe for solving equations. In Lean, one word — <em>ring</em> — checks the whole recipe.
+            </div>
+            <div class="gloss l1">
+              <span class="tag">L1 note · PT-BR</span>
+              <em>Square</em> = quadrado (a forma) e também "elevar ao quadrado" (a operação). O inglês usa a mesma palavra para as duas ideias.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- VA-004 -->
+      <article class="entry reveal">
+        <div class="when">
+          <div class="yr">1987</div>
+          <div class="place">MIT, Cambridge MA</div>
+          <div class="acc">VA-004 · videotape</div>
+        </div>
+        <div class="card">
+          <span class="eyebrow">Accession VA-004 · Oppenheim, RES.6-007 Signals and Systems, Lecture 4</span>
+          <h2>Convolution</h2>
+          <p class="src">Twenty-six chalkboard lectures, taped in 1987 and republished on MIT OpenCourseWare. Lecture 4 builds the convolution sum y[n] = Σ x[k]·h[n−k] and asserts, at the board, that the operation is commutative.</p>
+          <div class="claim">
+            <span class="lbl">Extracted claim</span>
+            For finite discrete signals, x ∗ h = h ∗ x.
+          </div>
+          <div class="leanpanel">
+            <div class="leanhead">
+              <span>Convolution.lean · core Lean 4, no Mathlib</span>
+              <span class="stamps"><span class="stamp st-verified">✓ instances</span><span class="stamp st-target">⧗ general theorem</span></span>
+            </div>
+<pre><code><span class="kw">def</span> <span class="id">addZ</span> : List Int → List Int → List Int
+  | [], ys => ys
+  | xs, [] => xs
+  | x :: xs, y :: ys => (x + y) :: addZ xs ys
+
+<span class="kw">def</span> <span class="id">conv</span> : List Int → List Int → List Int
+  | [], _ => []
+  | a :: as, h => addZ (h.map (a * ·)) (<span class="num">0</span> :: conv as h)
+
+<span class="cm">-- Lecture 4's blackboard example, replayed by the kernel:</span>
+<span class="kw">example</span> : conv [<span class="num">1, 2</span>] [<span class="num">3, 4</span>] = [<span class="num">3, 10, 8</span>] := <span class="kw">by</span> decide
+<span class="cm">-- x ∗ h = h ∗ x — a concrete instance; the ∀ version is the open target.</span>
+<span class="kw">example</span> : conv [<span class="num">1, 2, 3</span>] [<span class="num">4, 5</span>] = conv [<span class="num">4, 5</span>] [<span class="num">1, 2, 3</span>] := <span class="kw">by</span> decide</code></pre>
+          </div>
+          <div class="glossrow">
+            <div class="gloss">
+              <span class="tag">English gloss · B1</span>
+              In 1987, a professor filmed his lectures with chalk on a board. He says the order of convolution does not matter. The computer confirms his examples; the full proof for all signals is our next goal.
+            </div>
+            <div class="gloss l1">
+              <span class="tag">L1 note · PT-BR</span>
+              Falso amigo clássico: <em>convolution</em> = convolução (operação matemática) — nada a ver com <em>convulsão</em> (convulsion).
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <section class="schema" id="schema">
+      <h2>One schema, any archive.</h2>
+      <p class="lead">An accession is not an essay someone must write; it is a record someone (or something) can fill. Five fields, fixed order. The source can be a tablet, a treatise, a videotape, a problem set — anything with a claim inside it.</p>
+      <div class="pipeline" aria-label="Entry pipeline">
+        <div class="step"><span class="n">1 · source</span><div class="t">archival material</div><div class="d">openly licensed; linked, never rehosted</div></div>
+        <span class="arrow">→</span>
+        <div class="step"><span class="n">2 · claim</span><div class="t">extracted statement</div><div class="d">one sentence of mathematics</div></div>
+        <span class="arrow">→</span>
+        <div class="step"><span class="n">3 · kernel</span><div class="t">Lean 4 panel</div><div class="d">checked, cited, targeted, or rejected</div></div>
+        <span class="arrow">→</span>
+        <div class="step"><span class="n">4 · gloss</span><div class="t">CEFR English</div><div class="d">A2–B2, no simplification of the math</div></div>
+        <span class="arrow">→</span>
+        <div class="step"><span class="n">5 · L1 note</span><div class="t">learner's language</div><div class="d">false friends, cognates — PT-BR first</div></div>
+      </div>
+      <p class="claim-dark">Fields 4 and 5 are where this differs from every formalization gallery: <b>the verification layer and the language layer travel together.</b> Swap the L1 module and the same archive serves Spanish, Mandarin, or Arabic learners — no entry rewritten.</p>
+    </section>
+  </div>
+
+  <footer id="provenance">
+    <div class="wrap">
+      <div class="cols">
+        <div>
+          <h3>Sources</h3>
+          <ul>
+            <li><a href="https://ocw.mit.edu/courses/res-6-007-signals-and-systems-spring-2011/video_galleries/video-lectures/" rel="noopener">MIT OCW RES.6-007, Oppenheim, Signals and Systems (26 video lectures)</a></li>
+            <li>Plimpton 322 — Columbia University, Rare Book &amp; Manuscript Library</li>
+            <li><a href="https://leanprover-community.github.io/" rel="noopener">Lean 4 &amp; Mathlib — Lean prover community</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Project</h3>
+          <ul>
+            <li><a href="https://github.com/TOTOGT/AXLE" rel="noopener">AXLE — Lean 4 repository</a></li>
+            <li>DM³ — verified mathematics for L2 English learners</li>
+            <li>Errata &amp; Dependency Ledger — Zenodo (deposit pending)</li>
+          </ul>
+        </div>
+      </div>
+      <p class="fine">
+        MIT OpenCourseWare materials are © MIT, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener">CC BY-NC-SA 4.0</a>. This page links to OCW and describes its content; it does not reproduce or rehost lectures, notes, or problem sets, and no endorsement by MIT is implied. Kernel verdicts describe the Lean panels on this page, not the archival sources themselves. Prototype 0.1 · G6 LLC · Newark, NJ.
+      </p>
+    </div>
+  </footer>
+</main>
+
+<script>
+  // scroll reveal, disabled when the visitor prefers reduced motion
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const targets = document.querySelectorAll('.reveal');
+  if (prefersReduced || !('IntersectionObserver' in window)) {
+    targets.forEach(t => t.classList.add('in'));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    targets.forEach(t => io.observe(t));
+  }
+</script>
+</body>
+</html>
