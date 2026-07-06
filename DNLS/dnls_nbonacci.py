@@ -27,7 +27,7 @@ Dependencies
 Author
 ------
     Pablo Nogueira Grossi  |  ORCID: 0009-0000-6496-2186
-    G6 LLC, Newark NJ  |  pablogrossi@hotmail.com
+    G6 LLC, Newark NJ  |  g6llc@proton.me
     GitHub: https://github.com/TOTOGT/AXLE
 
 License: MIT

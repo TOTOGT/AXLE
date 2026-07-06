@@ -19,9 +19,28 @@
 
 import Mathlib.Algebra.LinearRecurrence
 import Mathlib.Algebra.QuadraticDiscriminant
-import Mathlib.LinearAlgebra.Matrix.Irreducible.Defs
-import Mathlib.Analysis.SpecificLimits.Fibonacci
+import Mathlib.Algebra.Polynomial.Degree.Definitions
 import Mathlib.Analysis.SpecificLimits.Basic
+import Mathlib.Data.Matrix.Mul
+import Mathlib.Data.Matrix.Notation
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.Data.Complex.Abs
+import Mathlib.Data.Complex.Module
+
+-- NOTE (build fix, this session): `Mathlib.LinearAlgebra.Matrix.Irreducible.Defs` and
+-- `Mathlib.Analysis.SpecificLimits.Fibonacci` were removed from the import list above.
+-- Confirmed by direct `find` against the actual checked-out mathlib commit (the real
+-- pinned `v4.14.0` tag, not the stray newer master snapshot that caused the earlier
+-- toolchain mismatch): NEITHER file exists at this pin. `Mathlib.Data.Matrix.Mul` and
+-- `Mathlib.Data.Fin.VecNotation` are added explicitly in their place since `TriboM`
+-- below needs `Matrix` and `.mulVec` regardless — both of those modules are confirmed
+-- present (they built successfully in the last full run). NOTE: the 2-D `!![a, b; c, d]`
+-- matrix-literal notation is NOT provided by `Fin.VecNotation` (that only gives the
+-- 1-D `![...]` vector notation) — it lives in `Mathlib.Data.Matrix.Notation`, added
+-- explicitly below after a genuine parse failure (`unexpected token ';'`) confirmed
+-- this was the missing piece. `Mathlib.Data.Complex.Module` is added for the
+-- `Algebra ℝ ℂ` instance (`instAlgebraOfReal`, line 95 of that file) needed by
+-- `algebraMap ℝ ℂ` in Section 7.
 
 open Polynomial Matrix
 
@@ -29,6 +48,14 @@ open Polynomial Matrix
 
 -- w(n+3) = w(n+2) + w(n+1) + w(n)
 noncomputable def tribRec : LinearRecurrence ℝ where
+  order := 3
+  coeffs := ![1, 1, 1]
+
+-- Complex-valued companion recurrence, defined DIRECTLY (same integer coefficients,
+-- just living in ℂ) rather than via a `tribRec.map (algebraMap ℝ ℂ)`-style construction:
+-- `LinearRecurrence.map` does not exist anywhere in Mathlib (confirmed by grep against
+-- the actual pinned commit), so this sidesteps that gap entirely instead of assuming it.
+noncomputable def tribRecC : LinearRecurrence ℂ where
   order := 3
   coeffs := ![1, 1, 1]
 
@@ -60,7 +87,12 @@ theorem eta_cubic : η ^ 3 = η ^ 2 + η + 1 := by
 theorem eta_pos : 0 < η := (eta_mem_Ioo).1.trans_le' (by norm_num) |>.le.lt_of_ne (by
   sorry) -- or just: `lt_trans one_pos eta_mem_Ioo.1` style; η > 1 > 0
 
-theorem eta_ne_zero : η ≠ 0 := fun h => by simp [h] at eta_cubic -- h ⟹ 0 = 1, false
+theorem eta_ne_zero : η ≠ 0 := by
+  intro h
+  have h3 := eta_cubic
+  rw [h] at h3
+  norm_num at h3
+  -- h : η = 0, substituted into eta_cubic gives 0^3 = 0^2+0+1, i.e. 0 = 1, false
 
 /-! ## 2. Root separation: the other two roots are a non-real conjugate pair, modulus 1/√η
 
@@ -71,29 +103,35 @@ theorem eta_ne_zero : η ≠ 0 := fun h => by simp [h] at eta_cubic -- h ⟹ 0 =
 -/
 
 theorem eta_inv_eq : (1 : ℝ) / η = η ^ 2 - η - 1 := by
-  field_simp
-  nlinarith [eta_cubic] -- clears to `1 = η*(η²-η-1) = η³-η²-η`, i.e. `eta_cubic` rearranged
+  rw [div_eq_iff eta_ne_zero]
+  linear_combination -eta_cubic
+  -- goal: 1 = (η²-η-1)*η, i.e. 1-η³+η²+η = 0 = -(eta_cubic rearranged); needs coefficient -1
 
 -- CONFIRMED against docs: `tribCharPoly_factor` needs no new discriminant theory,
 -- just this polynomial identity, which holds BECAUSE η satisfies eta_cubic
 -- (it is not a free-variable ring identity — `ring` alone cannot close it).
 theorem tribCharPoly_factor :
     tribCharPoly = (X - C η) * (X ^ 2 + C (η - 1) * X + C (1 / η)) := by
-  rw [eta_inv_eq, tribCharPoly]
-  simp only [Polynomial.C_add, Polynomial.C_mul, Polynomial.C_sub, Polynomial.C_1] -- CONFIRMED names
-  ring_nf
-  linarith [eta_cubic] -- the one leftover scalar equation; NOT closable by `ring`
+  sorry
+  -- BUILD-FIX NOTE (this session): the original attempt (`simp only [...]; ring_nf;
+  -- linarith [eta_cubic]`) doesn't typecheck as written — `linarith` operates on ordered
+  -- fields, not on `Polynomial ℝ` values, and this goal lives in `Polynomial ℝ` even
+  -- after expanding both sides. The genuine proof needs a coefficient-by-coefficient
+  -- comparison (e.g. `Polynomial.ext` + `Polynomial.coeff_X_pow` / `coeff_C` lemmas)
+  -- reducing to the SAME scalar identity `eta_cubic` supplies, but that reduction is
+  -- itself real work, not a one-line tactic swap — left as `sorry` per this file's own
+  -- stated convention (header: sorries mark either routine gaps or genuinely new content).
 
 -- CONFIRMED against docs: `discrim` (Mathlib.Algebra.QuadraticDiscriminant, quadratics only)
 -- and `discrim_eq_sq_of_quadratic_eq_zero` both exist with the expected signatures.
 theorem trib_quotient_discrim_eq :
     discrim 1 (η - 1) (1 / η) = (η - 1) ^ 2 - 4 / η := by
-  simp [discrim]; ring
+  unfold discrim
+  ring
 
 theorem trib_quotient_discrim_neg : discrim 1 (η - 1) (1 / η) < 0 := by
-  rw [trib_quotient_discrim_eq]
-  rw [sub_neg, div_lt_iff eta_pos]
-  -- reduces to η(η-1)² < 4; substitute η³=η²+η+1 ⟹ reduces to (η-1)²+2 > 0, unconditional
+  rw [trib_quotient_discrim_eq, sub_neg, lt_div_iff₀ eta_pos]
+  -- reduces to (η-1)²*η < 4; substitute η³=η²+η+1 ⟹ reduces to (η-1)²+2 > 0, unconditional
   nlinarith [sq_nonneg (η - 1), eta_cubic]
 
 -- CONFIRMED: `discrim_eq_sq_of_quadratic_eq_zero` + `sq_nonneg` + `linarith` closes this
@@ -101,7 +139,15 @@ theorem trib_quotient_discrim_neg : discrim 1 (η - 1) (1 / η) < 0 := by
 theorem trib_quotient_no_real_root :
     ¬ ∃ x : ℝ, x ^ 2 + (η - 1) * x + 1 / η = 0 := by
   rintro ⟨x, hx⟩
-  have hsq := discrim_eq_sq_of_quadratic_eq_zero hx -- discrim = (2x+(η-1))²  [UNVERIFIED exact form]
+  -- BUILD-FIX NOTE: `discrim_eq_sq_of_quadratic_eq_zero` (Mathlib.Algebra.QuadraticDiscriminant,
+  -- checked directly against source) actually has signature
+  -- `(h : a * (x * x) + b * x + c = 0) : discrim a b c = (2*a*x+b)^2` — it pattern-matches
+  -- on `x * x`, NOT `x ^ 2`. `hx`'s shape (`x ^ 2 + ...`) never matched at all (the earlier
+  -- "leading coefficient" diagnosis was wrong; the real gap is `^2` vs `x*x`). Restating
+  -- in the exact required shape fixes it.
+  have hx' : (1 : ℝ) * (x * x) + (η - 1) * x + 1 / η = 0 := by
+    rw [one_mul, ← pow_two]; exact hx
+  have hsq := discrim_eq_sq_of_quadratic_eq_zero hx' -- discrim = (2x+(η-1))²
   linarith [sq_nonneg (2 * x + (η - 1)), trib_quotient_discrim_neg, hsq]
 
 -- α, β: the non-real conjugate pair, existence packaged abstractly
@@ -129,14 +175,15 @@ theorem alpha_modulus_lt_one : Complex.abs α < 1 := by
 
 /-! ## 3. Perron–Frobenius framing (independent cross-check via the substitution matrix)
 
-   Uses the OPEN, UNMERGED Mathlib PR chain #39917–#39922 (mkaratarakis/or4nge19,
-   confirmed live and unmerged as of this session — NOT usable in a real proof today,
-   included here only as the target API once/if that chain lands).
+   NOTE (build fix, this session): `TriboM.IsPrimitive`
+   (Mathlib.LinearAlgebra.Matrix.Irreducible.Defs) and `Matrix.perronRoot` (open,
+   unmerged Mathlib PR chain #39917–#39922, mkaratarakis/or4nge19) are confirmed
+   ABSENT at the pinned mathlib rev (v4.14.0) — checked directly against the actual
+   checked-out commit via `find`, not assumed. The two theorems that depended on them,
+   `triboM_isPrimitive` and `triboM_perronRoot_eq_eta`, have been dropped. Everything
+   else in this section (`triboM_eigen_eq`, `triboM_eigenvector_pos`) is plain matrix
+   algebra and doesn't need either missing module — kept as-is.
 -/
-
-theorem triboM_isPrimitive : TriboM.IsPrimitive := by
-  refine ⟨2, ?_⟩
-  decide
 
 theorem triboM_eigen_eq :
     TriboM.mulVec ![η ^ 2, η, 1] = η • ![η ^ 2, η, 1] := by
@@ -145,22 +192,18 @@ theorem triboM_eigen_eq :
 theorem triboM_eigenvector_pos : ∀ i, 0 < (![η ^ 2, η, 1] : Fin 3 → ℝ) i := by
   sorry -- from eta_pos
 
--- from PR #39919 (`eq_perron_root_of_positive_eigenvector`) — NOT YET IN MASTER
-theorem triboM_perronRoot_eq_eta : Matrix.perronRoot TriboM = η :=
-  sorry -- eq_perron_root_of_positive_eigenvector triboM_eigen_eq triboM_eigenvector_pos
-
 /-! ## 4. Binet-type closed form -/
 
 theorem geom_eta_isSol :
-    (tribRec.map (algebraMap ℝ ℂ)).IsSolution (fun n => (η : ℂ) ^ n) := by
-  sorry -- geom_sol_iff_root_charPoly, η is a root of tribCharPoly
+    tribRecC.IsSolution (fun n => (η : ℂ) ^ n) := by
+  sorry -- geom_sol_iff_root_charPoly, η is a root of tribCharPoly (tribRecC.charPoly = tribCharPoly.map (algebraMap ℝ ℂ))
 
 theorem geom_alpha_isSol :
-    (tribRec.map (algebraMap ℝ ℂ)).IsSolution (fun n => α ^ n) := by
+    tribRecC.IsSolution (fun n => α ^ n) := by
   sorry -- geom_sol_iff_root_charPoly, α is a root of tribCharPoly
 
 theorem geom_beta_isSol :
-    (tribRec.map (algebraMap ℝ ℂ)).IsSolution (fun n => β ^ n) := by
+    tribRecC.IsSolution (fun n => β ^ n) := by
   sorry -- geom_sol_iff_root_charPoly, β is a root of tribCharPoly
 
 theorem trib_geom_basis :
@@ -206,7 +249,7 @@ theorem tendsto_trib_succ_div_trib_atTop (c1 : ℝ) (hc1 : c1 ≠ 0) :
 
 theorem LinearRecurrence.tendsto_succ_div_of_dominant_simple_root
     (E : LinearRecurrence ℝ) (r : Fin E.order → ℂ)
-    (hroots : ∀ i, (E.map (algebraMap ℝ ℂ)).charPoly.IsRoot (r i))
+    (hroots : ∀ i, (E.charPoly.map (algebraMap ℝ ℂ)).IsRoot (r i))
     (hdistinct : Function.Injective r)
     (hsplit : Fintype.card (Fin E.order) = E.charPoly.natDegree)
     (i₀ : Fin E.order) (hreal : (r i₀).im = 0)

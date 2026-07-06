@@ -1,6 +1,6 @@
 -- ============================================================================
 /-
-  AXLE — Automated eXtensible Lean Engine
+  AXLE — Algebraic eXpression Language for Evaluation
   Principia Orthogona · G⁵ · Complete Completeness
   Version 7.0 — 6 sorrys closed with real Mathlib4
 -/

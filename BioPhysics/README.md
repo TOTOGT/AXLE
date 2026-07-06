@@ -5,7 +5,7 @@
 **Concept DOI (all versions):** https://doi.org/10.5281/zenodo.19208015  
 **Series root:** https://doi.org/10.5281/zenodo.19117399  
 **GitHub:** https://github.com/TOTOGT/AXLE  
-**Contact:** pgrossi888@outlook.com · g6llc@proton.me  
+**Contact:** g6llc@proton.me · g6llc@proton.me  
 **ORCID:** 0009-0000-6496-2186
 
 ---

@@ -80,7 +80,7 @@ Runtime: approximately 30–60 seconds on a modern laptop.
 - **Theorem count** corrected: 18 (not 16); `V_double_root` is now explicitly a Corollary
 - **Remark 5.1** added: bridges μ_canonical = −3 to μ_dm3 = −2 via ε-rescaling (no longer a gap)
 - **Remark 6.1** added: explains why sup‖Hess Φ‖ = 2 (it is Φ(ρ)=ρ², not V(q)=q³−3q)
-- **Author email** corrected to pgrossi888@outlook.com and g6llc@proton.me
+- **Author email** corrected to g6llc@proton.me and g6llc@proton.me
 - **References** extended: Thom (1975) and Zeeman (1977) added for adjacency to catastrophe theory
 - **Notation** harmonised: κ* is the abstract fold threshold; ρ* is its X_auto realisation
 - **Python script** fully rewritten: DOP853 integration, navy/gold/teal design system, all 4 figures from scratch, CSV export

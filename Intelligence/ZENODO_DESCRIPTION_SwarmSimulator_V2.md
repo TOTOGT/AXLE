@@ -129,4 +129,4 @@ Lean 4 formal verification · Principia Orthogona · G6 LLC
 
 **License:** CC BY-NC-ND 4.0 (paper) · MIT (code)
 **Copyright:** © 2026 Pablo Nogueira Grossi, G6 LLC
-**Contact:** pgrossi888@outlook.com · g6llc@proton.me
+**Contact:** g6llc@proton.me · g6llc@proton.me

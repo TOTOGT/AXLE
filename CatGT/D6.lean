@@ -1,6 +1,6 @@
 -- AXLE/lean/Symmetry/D6.lean
 -- Symmetry.D6 module: D₆ action, orthogonal stepping, eigenmode locking
--- Integrates with Crystal.G6 and GQM strata for Collatz lock-in
+-- Integrates with Crystal.G6 and dm³ strata for Collatz lock-in
 -- Pablo Nogueira Grossi, G6 LLC, April 2026
 
 import Mathlib.Data.Real.Basic
