@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifting to a Box Domain (2D/3D) — Principia Orthogona, Book 6</title>
+<style>
+  :root { --navy: #1a2744; --gold: #c9a84c; --cream: #faf7f0; --smoke: #f0ece4; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: var(--cream); color: var(--navy); }
+  main { max-width: 760px; margin: 0 auto; padding: 64px 40px 80px; }
+  .eyebrow { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .op-chain { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; margin-bottom: 44px; }
+  .op-chain .sep { opacity: 0.5; }
+  .op-chain .active { color: var(--gold); font-weight: bold; }
+  .symbol-block { text-align: center; margin: 8px 0 28px; }
+  .symbol-block .glyph { font-size: 30px; line-height: 1.3; color: var(--navy); font-style: italic; }
+  .symbol-block .label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: #9ca3af; margin-top: 10px; }
+  h1 { font-size: 36px; font-weight: normal; text-align: center; margin: 0 0 6px; line-height: 1.25; }
+  .value-line { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13.5px; color: #6b7280; margin-bottom: 28px; }
+  .gold-rule { height: 1px; width: 120px; margin: 0 auto 32px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  h2 { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--smoke); padding-bottom: 8px; margin: 44px 0 16px; }
+  p { font-size: 16.5px; line-height: 1.75; margin: 0 0 20px; }
+  .eqn { text-align: center; font-style: italic; font-size: 18px; margin: 22px 0; color: var(--navy); }
+  table.status-table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 14.5px; }
+  table.status-table th, table.status-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--smoke); }
+  table.status-table th { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: #9ca3af; }
+  .numeric-check { background: var(--smoke); border-radius: 4px; padding: 16px 20px; font-family: 'SF Mono', Menlo, monospace; font-size: 13px; line-height: 1.7; margin: 20px 0 28px; overflow-x: auto; white-space: pre; }
+  .caveat { font-size: 15px; line-height: 1.7; color: #4b5563; border-left: 2px solid var(--gold); padding-left: 18px; margin: 24px 0 32px; }
+  .prevnext { display: flex; justify-content: space-between; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; padding-top: 24px; margin-top: 44px; border-top: 1px solid var(--smoke); }
+  .prevnext a { color: inherit; text-decoration: none; }
+  .prevnext a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="eyebrow">Principia Orthogona &nbsp;·&nbsp; Book 6 &nbsp;·&nbsp; Differential Equations</div>
+
+  <div class="op-chain">
+    <span>Elliptic / Poisson Foundations</span>
+    <span class="sep">→</span>
+    <span class="sep">Heat Equation</span>
+    <span class="sep">→</span>
+    <span class="active">Lifting to a Box Domain</span>
+    <span class="sep">→</span>
+    <span class="sep">Helix Toy Model</span>
+    <span class="sep">→</span>
+    <span class="sep">The Cosmic No-Go</span>
+    <span class="sep">→</span>
+    <span class="sep">A Nonlinear Reaction-Diffusion Fold</span>
+  </div>
+
+  <div class="symbol-block">
+    <div class="glyph">A<sub>h</sub><sup>(2D)</sup> = A<sub>h</sub> &otimes; I + I &otimes; A<sub>h</sub></div>
+    <div class="label">the discrete lift, exactly</div>
+  </div>
+
+  <h1>Lifting to a Box Domain (2D/3D)</h1>
+  <div class="value-line">the continuous side is a real, checkable question; the discrete side is already mechanical</div>
+
+  <div class="gold-rule"></div>
+
+  <p>
+    Book 6's first three chapters all fixed <em>d=1</em> deliberately.
+    The question this chapter takes on is whether that was a genuine
+    simplification or just a starting point &mdash; and the honest answer
+    splits in two, one half settled here, one half still open pending an
+    actual compile.
+  </p>
+
+  <h2>The discrete side: mechanical, verified this session</h2>
+  <p>
+    The heat equation chapter's discrete Laplacian <em>A<sub>h</sub></em>
+    (Part II) is the standard 1D tridiagonal matrix. Its two-dimensional
+    analogue on an <em>N&times;N</em> grid &mdash; the 5-point stencil
+    finite-difference Laplacian on the box <em>(0,1)&sup2;</em> &mdash; is
+    not a new object requiring new machinery. It is exactly the
+    <strong>Kronecker sum</strong> of the same 1D matrix with itself:
+  </p>
+  <div class="eqn">A<sub>h</sub><sup>(2D)</sup> = A<sub>h</sub> &otimes; I<sub>N</sub> + I<sub>N</sub> &otimes; A<sub>h</sub>,</div>
+  <p>
+    and because Kronecker sums of symmetric matrices diagonalize in the
+    tensor-product eigenbasis, the eigenvalues lift by simple addition:
+    every 2D eigenvalue is a sum of two 1D eigenvalues from the heat
+    equation chapter's own Prop. 12.1,
+  </p>
+  <div class="eqn">&lambda;<sub>k,l</sub> = &lambda;<sub>k</sub> + &lambda;<sub>l</sub> = (4/h&sup2;)[sin&sup2;(k&pi;h/2) + sin&sup2;(l&pi;h/2)].</div>
+
+  <div class="numeric-check">Verified this session (numpy, N=6 grid, exact eigendecomposition,
+  not assumed from the algebra alone):
+
+  max |eigenvalues(A_h^2D) - {lambda_k + lambda_l : all pairs}| = 2.8e-13
+
+  -- i.e. exact agreement to machine precision.
+
+  Conditioning scaling, N = 4, 8, 16, 32, 48, 64:
+    h:      0.2000   0.1111   0.0588   0.0303   0.0204   0.0154
+    kappa:  9.47     32.16    116.46   440.69   972.42   1711.66
+
+  Fitted log-log slope: -2.0224
+  (heat equation chapter's own 1D result, Thm 13.1: -2.016)</div>
+
+  <p>
+    The conditioning bound is the genuinely interesting fact here: despite
+    moving from 1 to 2 dimensions, <em>&kappa;(A<sub>h</sub><sup>(2D)</sup>)
+    = &Theta;(h<sup>&minus;2</sup>)</em> &mdash; the same exponent as the 1D
+    case, not <em>h<sup>&minus;4</sup></em> or some dimension-dependent
+    rate. Iterative solver cost still scales as <em>O(h<sup>&minus;1</sup>)</em>
+    CG iterations regardless of dimension, for this discretization. This
+    is not obvious in advance; it falls directly out of the Kronecker
+    structure once the eigenvalues are additive.
+  </p>
+
+  <h2>The continuous side: a real, still-open question</h2>
+  <p>
+    The harder half is whether the heat equation's Part I &mdash; the
+    <em>H&#178;&#8320;(0,1)</em> construction currently sitting behind an
+    axiom &mdash; lifts as cleanly. The reconnaissance into Scott Armstrong
+    and Julia Kempe's <code>DeGiorgi</code> Sobolev-space library found
+    real reason for optimism: their core definitions
+    (<code>MemW1p</code>, <code>MemW1pWitness</code>, <code>MemW01p</code>,
+    <code>MemH01</code>) are stated for <em>&Omega; : Set E</em> with
+    <em>E := EuclideanSpace &#8477; (Fin d)</em> and <em>d</em> a fully
+    generic variable &mdash; no ball, no <em>d &ge; 3</em> restriction
+    anywhere in that layer. A scratch test
+    (<code>degiorgi-sobolev-scratch/DeGiorgiSobolevScratch/BoxDomainTest.lean</code>)
+    applies their own <code>memW01p_of_contDiff_hasCompactSupport_subset</code>
+    lemma directly to a 2D box domain and to the exact 1D interval this
+    corpus already uses, producing two theorems
+    (<code>boxBump2D_memH01</code>, <code>intervalBump1D_memH01</code>)
+    that are not <code>sorry</code> &mdash; they are real applications of
+    the real, fetched lemma signature.
+  </p>
+  <p class="caveat">
+    That test has not been compiled. It is a strong, source-grounded
+    reason to expect the lift works, not a proof that it does &mdash;
+    the scratch project needs an actual <code>lake build</code>, on a
+    separate Lean/Mathlib pin (v4.29.0-rc6) from this repo's own
+    (v4.14.0), which has not yet been run. Until it is, this chapter's
+    continuous half stays exactly where the reconnaissance left it:
+    plausible and specific, not confirmed.
+  </p>
+
+  <table class="status-table">
+    <tr><th>Statement</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>2D discrete Laplacian as Kronecker sum</td><td>verified numerically</td><td>Exact to machine precision against the 1D eigenvalue formula; not yet a Lean theorem</td></tr>
+    <tr><td><em>&kappa;(A<sub>h</sub><sup>(2D)</sup>) = &Theta;(h<sup>&minus;2</sup>)</em></td><td>verified numerically</td><td>Fitted slope &minus;2.022 across six mesh sizes, matching the 1D result</td></tr>
+    <tr><td><code>MemH01</code> domain-genericity (box, 2D and 1D)</td><td>written, not compiled</td><td>Real applications of <code>DeGiorgi</code>'s own lemma; pending <code>lake build</code></td></tr>
+    <tr><td>Full Parts I&ndash;III lift to 2D/3D</td><td>not started</td><td>Depends on the compile above; the discrete half (this chapter) is ready to receive it</td></tr>
+  </table>
+
+  <div class="prevnext">
+    <a href="ch-elliptic-poisson-foundations.html">&larr; Elliptic / Poisson Foundations</a>
+    <a href="index.html">Book 6 index &rarr;</a>
+  </div>
+
+</main>
+</body>
+</html>
