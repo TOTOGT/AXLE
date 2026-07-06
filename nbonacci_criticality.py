@@ -31,7 +31,7 @@ Symbol C (absorber,    D_C = 1.2,  Sigma_r_C = 2.0,  nu_Sigma_f_C = 0
 Author
 ------
     Pablo Nogueira Grossi  |  ORCID: 0009-0000-6496-2186
-    G6 LLC, Newark NJ  |  pablogrossi@hotmail.com
+    G6 LLC, Newark NJ  |  g6llc@proton.me
 
 License: MIT
 """

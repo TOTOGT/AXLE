@@ -1,7 +1,7 @@
 -- AXLE/lean/Crystal/G6.lean
 -- Crystal.G6 module: g⁶ = 33 crystal law + orthogonality saturation
 -- Pablo Nogueira Grossi, G6 LLC, April 2026
--- Integrates with GQM Tribonacci strata and dm³ operator chain
+-- Integrates with dm³ Tribonacci strata and dm³ operator chain
 
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Basic
@@ -13,7 +13,7 @@ namespace AXLE.Crystal
 /-- Tribonacci constant η (real root of x³ - x² - x - 1 = 0) -/
 def η : ℝ := 1.839286755214161
 
-/-- Geometric weighting η^{-k} from GQM strata -/
+/-- η weighting from dm³ strata -/
 def weight (k : ℕ) : ℝ := η ^ (-k)
 
 /-- 12-dimensional phase-field vector (D₆ regular representation) -/
@@ -40,7 +40,7 @@ def applyG (v : PhaseVector) : PhaseVector :=
 /-- Main theorem: every orbit contracts to saturation after ≤ 33 steps -/
 theorem crystal_lockin (v : PhaseVector) :
   ∃ m ≤ 33, isCrystalSaturated (applyG^[m] v) := by
-  -- This is the key lemma that closes the Collatz–GQM bridge
+  -- This is the key lemma that closes the Collatz–dm³ bridge
   -- After 33 applications the cumulative geometric weighting η^{-k}
   -- forces the trajectory into the lowest stratum (k=0)
   -- where the only fixed point is the 4-2-1 cycle.

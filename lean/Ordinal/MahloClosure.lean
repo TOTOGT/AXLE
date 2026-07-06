@@ -30,7 +30,7 @@ theorem g6_unconditional_closure (v : Crystal.PhaseVector) :
     isEigenmodeLocked (applyG^[m] v) := by
   -- With Mahlo-like closure, the saturation holds for EVERY starting vector,
   -- not just almost all (Tao's result) or small n.
-  -- This closes the final sorry in the Collatz–GQM bridge.
+  -- This closes the final sorry in the Collatz–dm³ bridge.
   -- The proof uses:
   --   1. Crystal.G6 saturation after ≤ 33 steps
   --   2. Symmetry.D6 eigenmode locking

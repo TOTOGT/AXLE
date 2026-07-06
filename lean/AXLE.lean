@@ -1,6 +1,6 @@
 -- ============================================================================
 /-
-  AXLE — Automated eXtensible Lean Engine
+  AXLE — Algebraic eXpression Language for Evaluation
   Principia Orthogona · G⁵ · Complete Completeness
   Version 8.1 — All type errors fixed; 5 honest admits remain
 
@@ -61,7 +61,7 @@ theorem closurePoints_stationary_regular
   sorry  -- honest admit #5
 
 -- ============================================================================
--- PART B–F: dm³ OPERATOR CHAIN & GQM STRATA
+-- PART B–F: dm³ OPERATOR CHAIN & dm³ STRATA
 -- ============================================================================
 
 def η : ℝ := 1.839286755214161

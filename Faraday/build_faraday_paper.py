@@ -133,7 +133,7 @@ def build():
     S += [sp(6)]
     S.append(Paragraph("Pablo Nogueira Grossi (Sri Brodananda)", AUTH))
     S.append(Paragraph("G6 LLC \u00b7 Newark, New Jersey", AFF))
-    S.append(Paragraph("ORCID: 0009-0000-6496-2186 \u00b7 pablogrossi@hotmail.com", AFF))
+    S.append(Paragraph("ORCID: 0009-0000-6496-2186 \u00b7 g6llc@proton.me", AFF))
     S += [sp(8)]
     S.append(Paragraph(
         "Series root: 10.5281/zenodo.19117399 \u00b7 "
@@ -661,7 +661,7 @@ def build():
     S.append(HR())
     S.append(Paragraph(
         "G6 LLC \u00b7 Newark, New Jersey \u00b7 2026 \u00b7 "
-        "pgrossi888@outlook.com \u00b7 pablogrossi@hotmail.com \u00b7 "
+        "g6llc@proton.me \u00b7 g6llc@proton.me \u00b7 "
         "ORCID: 0009-0000-6496-2186\n"
         "Series root: 10.5281/zenodo.19117399 \u00b7 github.com/TOTOGT/AXLE\n"
         "C \u2192 K \u2192 F \u2192 U \u2192 T \u2192 source",
