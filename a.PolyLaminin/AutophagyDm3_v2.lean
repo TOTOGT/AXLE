@@ -185,9 +185,23 @@ Linearising around r = 1: set δ = r − 1.
   2(r−1)e^{−z} = 2δ·e^{−z} → 0 as z → ∞.
 So ẋδ ≈ −2δ, giving μ_dm3 = −2.
 
-The gap between −3 and −2 is the ε-rescaling, not a sorry.
-In physiological units, μ_max ≈ −0.41 s⁻¹ follows by further
-dividing by the mTORC1 kinase time constant τ_mTOR ≈ 4.9 s.
+The gap between −3 and −2 is the ε-rescaling, not a sorry: these are
+two distinct, correctly-computed quantities from two distinct models,
+not the same number computed two ways.
+
+CORRECTION (see geometry/book6/wp30-the-missing-anchor.html): a previous
+version of this remark claimed "In physiological units, μ_max ≈ −0.41 s⁻¹
+follows by further dividing by the mTORC1 kinase time constant
+τ_mTOR ≈ 4.9 s." That figure is withdrawn. It is not traceable to
+Mizushima et al. (2010) or a findable Melia et al. (2020); a sibling
+HTML chapter in the same corpus (sample-chapter-autophagy.html) cited
+7.3 s for the identical claimed -0.41 s⁻¹ result, which is arithmetically
+inconsistent with 4.9 s for the same target; and the searchable ULK1/
+mTORC1 kinetics literature reports starvation-response timescales of
+hours (ULK1 levels reduced over roughly the first 4h, restored by
+roughly 6h), not single-digit seconds — several orders of magnitude off
+from either cited value. No physiological calibration for μ_max or ε₀
+is currently established in this corpus.
 -/
 
 
