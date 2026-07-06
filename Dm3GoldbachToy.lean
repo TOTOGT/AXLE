@@ -156,8 +156,7 @@ theorem M_goldbach_iff_E_goldbach (X : GoldbachState) :
       _ = goldbachAttractor := rfl
   · intro h
     have hX : X = goldbachAttractor := h
-    show X.n = 0
-    rw [hX]
+    simp [M_goldbach, hX, goldbachAttractor]
 
 /-- Perelman-style monotonicity: n strictly decreases until M_goldbach.
 As long as the state has not reached the entropic boundary, each
