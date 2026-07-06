@@ -2,11 +2,7 @@
 --   import Mathlib.Data.Nat.Basic
 --   import Mathlib.Init.Function
 -- no longer exist in Mathlib v4.14.0 (the toolchain this repo is pinned
--- to) -- `lake build` failed with "unknown package" / file-not-found
--- errors on both. Replaced with the umbrella `import Mathlib`, which
--- resolves every lemma this file actually uses (Function.iterate_zero,
--- Function.iterate_succ', Nat.sub_zero, omega). This is a mechanical
--- import fix only -- no theorem statement or proof below was touched.
+-- to). Replaced with the umbrella `import Mathlib`.
 import Mathlib
 
 /-!
@@ -39,8 +35,8 @@ namespace Dm3GoldbachToy
 In the toy model we track only the "remaining distance" to the canonical
 representation, not the actual primality of the parts. -/
 structure GoldbachState where
-n : ℕ
-deriving DecidableEq
+  n : ℕ
+  deriving DecidableEq
 
 /-- The canonical attractor: the zero state, representing full compression
 to the base case. -/
@@ -53,20 +49,20 @@ def isSimplyConnected (_X : GoldbachState) : Prop := True
 
 /-- dm³ operator grammar: identical across all pillars. -/
 inductive Dm3Op
-| C | K | F | U
-deriving DecidableEq, Repr
+  | C | K | F | U
+  deriving DecidableEq, Repr
 
 open Dm3Op
 
 /-- TOGT composite operator: U ∘ F ∘ K ∘ C. -/
 def G {α} (C K F U : α → α) : α → α :=
-U ∘ F ∘ K ∘ C
+  U ∘ F ∘ K ∘ C
 
 /-- C_goldbach: additive compression — decrease n by 2, floor at 0.
 Semantics: compress the even integer by one additive step toward the
 canonical prime-pair base. -/
 def C_goldbach (X : GoldbachState) : GoldbachState :=
-⟨X.n - 2⟩
+  ⟨X.n - 2⟩
 
 /-- K_goldbach: curvature — identity in this toy model.
 Semantics: in the full theory K encodes prime-density curvature
@@ -84,39 +80,42 @@ def U_goldbach (X : GoldbachState) : GoldbachState := X
 /-- One step of the toy Goldbach flow: pure additive compression (C only).
 K, F, U are identities so the composite reduces to C. -/
 def goldbachStep (X : GoldbachState) : GoldbachState :=
-C_goldbach X
+  C_goldbach X
 
 /-! ## Operator decomposition -/
 
 /-- goldbachStep factors as G C_goldbach K_goldbach F_goldbach U_goldbach.
 Proof: K, F, U are identities, so G reduces to C_goldbach. -/
 theorem goldbach_operatorDecomposition :
-∀ X, goldbachStep X = (G C_goldbach K_goldbach F_goldbach U_goldbach) X :=
-fun _ => rfl
+    ∀ X, goldbachStep X = (G C_goldbach K_goldbach F_goldbach U_goldbach) X :=
+  fun _ => rfl
 
 /-! ## Core iteration lemma -/
 
 /-- Iterating goldbachStep k times subtracts 2*k from n, floored at 0. -/
 lemma iterate_goldbachStep_n (X : GoldbachState) (k : ℕ) :
-(goldbachStep^[k] X).n = X.n - 2 * k := by
-induction k generalizing X with
-| zero =>
-simp [Function.iterate_zero, Nat.sub_zero]
-| succ k ih =>
-rw [Function.iterate_succ', Function.comp]
-simp only [goldbachStep, C_goldbach]
-rw [ih ⟨X.n - 2⟩]
-omega
+    (goldbachStep^[k] X).n = X.n - 2 * k := by
+  induction k generalizing X with
+  | zero =>
+    simp [Function.iterate_zero, Nat.sub_zero]
+  | succ k ih =>
+    rw [Function.iterate_succ', Function.comp]
+    simp only [goldbachStep, C_goldbach]
+    rw [ih X]
+    omega
 
 /-! ## Convergence to attractor -/
 
 /-- After ⌈n/2⌉ steps every GoldbachState reaches goldbachAttractor. -/
 lemma iterate_to_attractor (X : GoldbachState) :
-goldbachStep^[X.n] X = goldbachAttractor := by
-apply GoldbachState.ext
-simp only [goldbachAttractor]
-rw [iterate_goldbachStep_n]
-omega
+    goldbachStep^[X.n] X = goldbachAttractor := by
+  have h : (goldbachStep^[X.n] X).n = goldbachAttractor.n := by
+    simp only [goldbachAttractor]
+    rw [iterate_goldbachStep_n]
+    omega
+  calc goldbachStep^[X.n] X = ⟨(goldbachStep^[X.n] X).n⟩ := rfl
+    _ = ⟨goldbachAttractor.n⟩ := by rw [h]
+    _ = goldbachAttractor := rfl
 
 /-! ## Main convergence theorem -/
 
@@ -124,9 +123,9 @@ omega
 Every simply-connected GoldbachState flows to `goldbachAttractor`
 under iteration of `goldbachStep`. -/
 theorem goldbach_toy_converges
-(X : GoldbachState) (_hX : isSimplyConnected X) :
-∃ k : ℕ, goldbachStep^[k] X = goldbachAttractor :=
-⟨X.n, iterate_to_attractor X⟩
+    (X : GoldbachState) (_hX : isSimplyConnected X) :
+    ∃ k : ℕ, goldbachStep^[k] X = goldbachAttractor :=
+  ⟨X.n, iterate_to_attractor X⟩
 
 /-! ## Entropy chain (M and E) -/
 
@@ -143,20 +142,30 @@ def E_goldbach (X : GoldbachState) : Prop := X = goldbachAttractor
 
 /-- E_goldbach detects exactly goldbachAttractor. -/
 theorem E_goldbach_iff_attractor (X : GoldbachState) :
-E_goldbach X ↔ X = goldbachAttractor := by rfl
+    E_goldbach X ↔ X = goldbachAttractor := by rfl
 
 /-- M_goldbach and E_goldbach coincide on this model. -/
 theorem M_goldbach_iff_E_goldbach (X : GoldbachState) :
-M_goldbach X ↔ E_goldbach X := by
-simp [M_goldbach, E_goldbach, goldbachAttractor, GoldbachState.ext_iff]
+    M_goldbach X ↔ E_goldbach X := by
+  constructor
+  · intro h
+    have hn : X.n = 0 := h
+    show X = goldbachAttractor
+    calc X = ⟨X.n⟩ := rfl
+      _ = ⟨(0:ℕ)⟩ := by rw [hn]
+      _ = goldbachAttractor := rfl
+  · intro h
+    have hX : X = goldbachAttractor := h
+    show X.n = 0
+    rw [hX]
 
 /-- Perelman-style monotonicity: n strictly decreases until M_goldbach.
 As long as the state has not reached the entropic boundary, each
 goldbachStep strictly decreases n (by 2). -/
 theorem entropy_monotone (X : GoldbachState) (h : ¬ M_goldbach X) :
-(goldbachStep X).n < X.n := by
-simp [goldbachStep, C_goldbach, M_goldbach] at *
-omega
+    (goldbachStep X).n < X.n := by
+  simp [goldbachStep, C_goldbach, M_goldbach] at *
+  omega
 
 /-! ## Sanity checks -/
 
@@ -164,12 +173,12 @@ omega
 -- GoldbachState → isSimplyConnected X → ∃ k, step^[k] X = goldbachAttractor
 
 example : goldbachStep^[4] ⟨8⟩ = goldbachAttractor :=
-iterate_to_attractor ⟨8⟩
+  iterate_to_attractor ⟨8⟩
 
 example : goldbachStep^[0] ⟨0⟩ = goldbachAttractor :=
-iterate_to_attractor ⟨0⟩
+  iterate_to_attractor ⟨0⟩
 
 example : goldbachStep^[3] ⟨6⟩ = goldbachAttractor :=
-iterate_to_attractor ⟨6⟩
+  iterate_to_attractor ⟨6⟩
 
 end Dm3GoldbachToy
