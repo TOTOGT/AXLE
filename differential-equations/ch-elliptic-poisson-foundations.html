@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elliptic / Poisson Foundations — Principia Orthogona, Book 6</title>
+<style>
+  :root { --navy: #1a2744; --gold: #c9a84c; --cream: #faf7f0; --smoke: #f0ece4; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: var(--cream); color: var(--navy); }
+  main { max-width: 760px; margin: 0 auto; padding: 64px 40px 80px; }
+  .eyebrow { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .op-chain { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; margin-bottom: 44px; }
+  .op-chain .sep { opacity: 0.5; }
+  .op-chain .active { color: var(--gold); font-weight: bold; }
+  .symbol-block { text-align: center; margin: 8px 0 28px; }
+  .symbol-block .glyph { font-size: 34px; line-height: 1.3; color: var(--navy); font-style: italic; }
+  .symbol-block .label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: #9ca3af; margin-top: 10px; }
+  h1 { font-size: 36px; font-weight: normal; text-align: center; margin: 0 0 6px; line-height: 1.25; }
+  .value-line { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13.5px; color: #6b7280; margin-bottom: 28px; }
+  .gold-rule { height: 1px; width: 120px; margin: 0 auto 32px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  h2 { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--smoke); padding-bottom: 8px; margin: 44px 0 16px; }
+  p { font-size: 16.5px; line-height: 1.75; margin: 0 0 20px; }
+  .eqn { text-align: center; font-style: italic; font-size: 18px; margin: 22px 0; color: var(--navy); }
+  table.status-table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 14.5px; }
+  table.status-table th, table.status-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--smoke); }
+  table.status-table th { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: #9ca3af; }
+  .numeric-check { background: var(--smoke); border-radius: 4px; padding: 16px 20px; font-family: 'SF Mono', Menlo, monospace; font-size: 13px; line-height: 1.7; margin: 20px 0 28px; overflow-x: auto; white-space: pre; }
+  .caveat { font-size: 15px; line-height: 1.7; color: #4b5563; border-left: 2px solid var(--gold); padding-left: 18px; margin: 24px 0 32px; }
+  .prevnext { display: flex; justify-content: space-between; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; padding-top: 24px; margin-top: 44px; border-top: 1px solid var(--smoke); }
+  .prevnext a { color: inherit; text-decoration: none; }
+  .prevnext a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="eyebrow">Principia Orthogona &nbsp;·&nbsp; Book 6 &nbsp;·&nbsp; Differential Equations</div>
+
+  <div class="op-chain">
+    <span class="active">Elliptic / Poisson Foundations</span>
+    <span class="sep">→</span>
+    <span class="sep">Heat Equation</span>
+    <span class="sep">→</span>
+    <span class="sep">Helix Toy Model</span>
+    <span class="sep">→</span>
+    <span class="sep">The Cosmic No-Go</span>
+    <span class="sep">→</span>
+    <span class="sep">A Nonlinear Reaction-Diffusion Fold</span>
+  </div>
+
+  <div class="symbol-block">
+    <div class="glyph">&minus;u&Prime; = f,&nbsp;&nbsp; u(0)=u(1)=0</div>
+    <div class="label">the elliptic base case</div>
+  </div>
+
+  <h1>Elliptic / Poisson Foundations</h1>
+  <div class="value-line">the base layer every later chapter in this corpus already leans on, without ever stating it</div>
+
+  <div class="gold-rule"></div>
+
+  <p>
+    The heat equation chapter's own well-posedness argument (Part I,
+    Prop. 3.1) makes a quiet remark worth taking seriously: its bilinear
+    form <em>a<sub>&tau;</sub>(w,v) = &int;w&prime;v&prime; +
+    &tau;<sup>&minus;1</sup>&int;wv</em> is coercive <em>without needing a
+    Poincar&eacute; inequality</em>, because the mass term
+    <em>&tau;<sup>&minus;1</sup>&int;wv</em> already controls the
+    <em>L&sup2;</em> part on its own. That was not a simplification &mdash;
+    it was a genuine escape from the one piece of analysis every later
+    chapter's foundation actually depends on. Strip the mass term away
+    entirely, as the pure Poisson equation does, and Poincar&eacute;'s
+    inequality is no longer optional. This chapter is that base case, and
+    it belongs first in the reading order, not third.
+  </p>
+
+  <h2>The model</h2>
+  <p>
+    Take the simplest genuinely elliptic problem on <em>(0,1)</em>:
+  </p>
+  <div class="eqn">&minus;u&Prime;(x) = f(x)&nbsp;&nbsp; on&nbsp;(0,1),&nbsp;&nbsp;&nbsp; u(0) = u(1) = 0.</div>
+  <p>
+    Multiplying by a test function <em>v &isin; H&#178;&#8320;(0,1)</em> and
+    integrating by parts (the boundary term vanishes exactly as in the
+    heat equation's own Part I) gives the weak formulation: find
+    <em>u &isin; H&#178;&#8320;(0,1)</em> such that
+  </p>
+  <div class="eqn">a(u,v) := &int;&#8320;&sup1; u&prime;v&prime; dx = &int;&#8320;&sup1; fv dx = &lang;f,v&rang;&nbsp;&nbsp; &forall;v &isin; H&#178;&#8320;(0,1).</div>
+
+  <h2>Poincar&eacute;'s inequality</h2>
+  <p>
+    Boundedness of <em>a</em> is the same Cauchy&ndash;Schwarz argument as
+    before. Coercivity is where this chapter earns its keep:
+    <em>a(u,u) = &int;(u&prime;)&sup2;dx</em> controls the derivative, but
+    controlling the full <em>H&sup1;</em> norm requires also controlling
+    <em>&int;u&sup2;dx</em>, and nothing in <em>a(u,u)</em> does that
+    directly. Poincar&eacute;'s inequality supplies it: for
+    <em>u &isin; H&#178;&#8320;(0,1)</em>,
+  </p>
+  <div class="eqn">&int;&#8320;&sup1; u&sup2; dx &le; (1/&pi;&sup2;)&nbsp;&int;&#8320;&sup1; (u&prime;)&sup2; dx,</div>
+  <p>
+    with the constant <em>1/&pi;&sup2;</em> sharp &mdash; attained in the
+    limit by the first Dirichlet eigenfunction <em>sin(&pi;x)</em>. Coercivity
+    of <em>a</em> on <em>H&#178;&#8320;(0,1)</em> follows immediately with
+    constant <em>&alpha; = &pi;&sup2;/(&pi;&sup2;+1)</em>, and Lax&ndash;Milgram
+    (the same real theorem in Mathlib the heat equation chapter cites) gives
+    a unique weak solution for every <em>f &isin; H&#8315;&sup1;(0,1)</em>.
+  </p>
+
+  <div class="numeric-check">Verified this session (scipy.integrate.quad, Rayleigh quotient
+  int(u')^2 / int(u)^2 on (0,1), Dirichlet BC):
+
+  sin(pi x):    ratio = 9.869604401089358    pi^2 = 9.869604401089358   (sharp, exact)
+  x(1-x):       ratio = 10.0                                            (> pi^2, as required)
+  x^2(1-x):     ratio = 14.0                                            (> pi^2, as required)
+  sin(2 pi x):  ratio = 39.47841760435743    (2pi)^2 = 39.47841760435743 (next eigenvalue)
+
+  The minimizer sin(pi x) attains the bound exactly; every other test
+  function checked gives a strictly larger ratio, consistent with pi^2
+  being the sharp constant, not merely a valid one.</div>
+
+  <h2>A worked example</h2>
+  <p>
+    For <em>f &equiv; 1</em>, the exact solution of <em>&minus;u&Prime;=1</em>,
+    <em>u(0)=u(1)=0</em> is <em>u(x) = x(1&minus;x)/2</em>. Directly checked
+    this session (central finite difference, <em>h=10&#8315;&#8310;</em>, five
+    interior points): <em>&minus;u&Prime;(x) = 1.000006</em> to six digits at
+    every tested point, and <em>u(0)=u(1)=0</em> exactly.
+  </p>
+
+  <h2>How this threads through the rest of the corpus</h2>
+  <p>
+    Two honest connections, not coincidences dressed up as ones. First: the
+    heat equation chapter's discrete Laplacian eigenvalues (Part III,
+    Prop. 12.1) are <em>&lambda;<sub>k</sub> = (4/h&sup2;)sin&sup2;(k&pi;h/2)</em>,
+    and as <em>h &rarr; 0</em> the first of these converges to exactly
+    <em>&pi;&sup2;</em> &mdash; the reciprocal of this chapter's own sharp
+    Poincar&eacute; constant. The discrete spectrum computed there and the
+    continuous constant derived here are the same fact, seen from the two
+    ends of the discretization the heat equation chapter is built around.
+    Second: the mass term that let the heat equation dodge Poincar&eacute;
+    entirely is exactly the <em>&tau;<sup>&minus;1</sup></em> term that
+    disappears as <em>&tau; &rarr; &infin;</em> &mdash; this chapter is, in
+    a precise sense, what the heat equation's own well-posedness argument
+    degenerates to in that limit.
+  </p>
+
+  <table class="status-table">
+    <tr><th>Statement</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Weak form <em>a(u,v)</em></td><td>axiom-backed</td><td>Reuses the <code>H10</code> placeholder from <code>HeatEquation_Step1.lean</code></td></tr>
+    <tr><td>Poincar&eacute;'s inequality</td><td>sorry</td><td>Sharp constant 1/&pi;&sup2;; Mathlib likely has a general Poincar&eacute; lemma, exact API surface not yet checked</td></tr>
+    <tr><td>Coercivity of <em>a</em></td><td>sorry</td><td>Mechanical once Poincar&eacute; is real, same pattern as the heat equation's Prop. 3.1</td></tr>
+    <tr><td>Well-posedness (Lax&ndash;Milgram)</td><td>sorry</td><td>Depends on the above two</td></tr>
+    <tr><td>Worked example, <em>f=1</em></td><td>verified numerically</td><td>Not yet a Lean statement</td></tr>
+  </table>
+
+  <div class="caveat">
+    This chapter does not yet formalize anything new in Lean &mdash; it
+    reuses the same <code>H10</code> axiom placeholder as
+    <code>HeatEquation_Step1.lean</code> and adds one genuinely new
+    obligation, the Poincar&eacute; inequality itself, which the heat
+    equation chapter was specifically able to avoid. No claim is made here
+    beyond what's checked above: the sharp constant is verified
+    numerically against the known eigenfunction, not derived from a
+    general theorem in this session.
+  </div>
+
+  <div class="prevnext">
+    <a href="index.html">&larr; Book 6 index</a>
+    <a href="heat-equation/heat_equation_monograph.pdf">Heat Equation &rarr;</a>
+  </div>
+
+</main>
+</body>
+</html>
