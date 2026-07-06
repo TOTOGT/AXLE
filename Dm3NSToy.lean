@@ -175,8 +175,7 @@ theorem M_ns_iff_E_ns (X : NSState) :
       _ = nsAttractor := rfl
   · intro h
     have hX : X = nsAttractor := h
-    show X.energy = 0
-    rw [hX]
+    simp [M_ns, hX, nsAttractor]
 
 /-- Perelman-style monotonicity (energy inequality):
 energy strictly decreases at every step until M_ns.
