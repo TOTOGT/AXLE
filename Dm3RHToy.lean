@@ -216,8 +216,7 @@ theorem M_rh_iff_E_rh (X : RHState) :
       _ = rhAttractor := rfl
   · intro h
     have hX : X = rhAttractor := h
-    show X.offset = 0
-    rw [hX]
+    simp [M_rh, hX, rhAttractor]
 
 /-- Perelman-style monotonicity (spectral compression):
 |offset| strictly decreases at every step until M_rh.
@@ -242,7 +241,6 @@ example : rhStep^[3] ⟨3⟩ = rhAttractor :=
   iterate_to_attractor ⟨3⟩
 
 -- Zero 4 units to the left
-example : rhStep^[4] ⟨-4⟩ = rhAttractor :=
-  iterate_to_attractor ⟨-4⟩
-
+example : rhStep^[4] (⟨-4⟩ : RHState) = rhAttractor := by
+  simpa using iterate_to_attractor (⟨-4⟩ : RHState)
 end Dm3RHToy
