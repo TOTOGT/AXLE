@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wave Equation — Principia Orthogona, Book 6</title>
+<style>
+  :root { --navy: #1a2744; --gold: #c9a84c; --cream: #faf7f0; --smoke: #f0ece4; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: var(--cream); color: var(--navy); }
+  main { max-width: 760px; margin: 0 auto; padding: 64px 40px 80px; }
+  .eyebrow { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+  .op-chain { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; margin-bottom: 44px; }
+  .op-chain .sep { opacity: 0.5; }
+  .op-chain .active { color: var(--gold); font-weight: bold; }
+  .symbol-block { text-align: center; margin: 8px 0 28px; }
+  .symbol-block .glyph { font-size: 30px; line-height: 1.3; color: var(--navy); font-style: italic; }
+  .symbol-block .label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: #9ca3af; margin-top: 10px; }
+  h1 { font-size: 36px; font-weight: normal; text-align: center; margin: 0 0 6px; line-height: 1.25; }
+  .value-line { text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13.5px; color: #6b7280; margin-bottom: 28px; }
+  .gold-rule { height: 1px; width: 120px; margin: 0 auto 32px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  h2 { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--smoke); padding-bottom: 8px; margin: 44px 0 16px; }
+  p { font-size: 16.5px; line-height: 1.75; margin: 0 0 20px; }
+  .eqn { text-align: center; font-style: italic; font-size: 18px; margin: 22px 0; color: var(--navy); }
+  table.status-table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 14.5px; }
+  table.status-table th, table.status-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--smoke); }
+  table.status-table th { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: #9ca3af; }
+  .numeric-check { background: var(--smoke); border-radius: 4px; padding: 16px 20px; font-family: 'SF Mono', Menlo, monospace; font-size: 13px; line-height: 1.7; margin: 20px 0 28px; overflow-x: auto; white-space: pre; }
+  .caveat { font-size: 15px; line-height: 1.7; color: #4b5563; border-left: 2px solid var(--gold); padding-left: 18px; margin: 24px 0 32px; }
+  .prevnext { display: flex; justify-content: space-between; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; padding-top: 24px; margin-top: 44px; border-top: 1px solid var(--smoke); }
+  .prevnext a { color: inherit; text-decoration: none; }
+  .prevnext a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="eyebrow">Principia Orthogona &nbsp;·&nbsp; Book 6 &nbsp;·&nbsp; Differential Equations</div>
+
+  <div class="op-chain">
+    <span>Elliptic / Poisson Foundations</span>
+    <span class="sep">→</span>
+    <span class="sep">Heat Equation</span>
+    <span class="sep">→</span>
+    <span class="sep">Lifting to a Box Domain</span>
+    <span class="sep">→</span>
+    <span class="active">The Wave Equation</span>
+    <span class="sep">→</span>
+    <span class="sep">Helix Toy Model</span>
+    <span class="sep">→</span>
+    <span class="sep">The Cosmic No-Go</span>
+    <span class="sep">→</span>
+    <span class="sep">A Nonlinear Reaction-Diffusion Fold</span>
+  </div>
+
+  <div class="symbol-block">
+    <div class="glyph">d/dt&nbsp;&#8961;&#189;(u<sub>t</sub>&sup2;+u<sub>x</sub>&sup2;)dx&nbsp;=&nbsp;0</div>
+    <div class="label">energy conserved, not decayed</div>
+  </div>
+
+  <h1>The Wave Equation</h1>
+  <div class="value-line">the hyperbolic leg: a different toolkit, and the exact mirror of the heat equation's own H-theorem</div>
+
+  <div class="gold-rule"></div>
+
+  <p>
+    The first three chapters of this corpus share one toolkit: a static
+    bilinear form, coercivity, Lax&ndash;Milgram. That toolkit is elliptic
+    machinery, and it does not extend to this chapter. The wave equation is
+    genuinely second-order in time &mdash; it needs both an initial position
+    and an initial velocity to be well-posed &mdash; and its natural
+    well-posedness argument is the <em>energy method</em>: multiply by the
+    time derivative, integrate by parts, and track a conserved quantity
+    directly, rather than inverting a stationary operator. Completing the
+    elliptic/parabolic/hyperbolic triad this deliberately is also what makes
+    the comparison to the heat equation's own Part V exact rather than
+    rhetorical, which is the real payoff of this chapter.
+  </p>
+
+  <h2>The model</h2>
+  <p>
+    Take the 1D wave equation on <em>(0,1)</em> with homogeneous Dirichlet
+    boundary conditions and both initial position and initial velocity data:
+  </p>
+  <div class="eqn">u<sub>tt</sub> = u<sub>xx</sub>,&nbsp;&nbsp; u(0,t)=u(1,t)=0,&nbsp;&nbsp; u(x,0)=u&#8320;(x),&nbsp; u<sub>t</sub>(x,0)=u&#8321;(x).</div>
+  <p>
+    Unlike the heat equation, there is no mass term and no dissipation
+    anywhere in this equation &mdash; nothing to make a stationary bilinear
+    form coercive, because there is no stationary bilinear form to begin
+    with. What replaces it is a quantity that is exactly conserved along
+    trajectories.
+  </p>
+
+  <h2>The energy method</h2>
+  <p>
+    Multiply the equation by <em>u<sub>t</sub></em> and integrate over
+    <em>(0,1)</em>:
+  </p>
+  <div class="eqn">&#8747;u<sub>tt</sub>u<sub>t</sub>dx = &#8747;u<sub>xx</sub>u<sub>t</sub>dx.</div>
+  <p>
+    The left side is <em>&#189; d/dt &#8747;u<sub>t</sub>&sup2;dx</em>.
+    Integrating the right side by parts gives a boundary term
+    <em>[u<sub>x</sub>u<sub>t</sub>]&#8320;&sup1;</em>, which vanishes exactly:
+    the Dirichlet condition <em>u(0,t)=u(1,t)=0</em> for all <em>t</em>
+    forces <em>u<sub>t</sub>(0,t)=u<sub>t</sub>(1,t)=0</em> as well, so both
+    endpoints kill the term regardless of what <em>u<sub>x</sub></em> does
+    there &mdash; the same vanishing-boundary-term step every earlier
+    chapter in this corpus has used, applied here to the time derivative of
+    the boundary condition rather than to a test function. What remains is
+    <em>&minus;&#189; d/dt &#8747;u<sub>x</sub>&sup2;dx</em>. Together:
+  </p>
+  <div class="eqn">d/dt&nbsp;&#8963;<sub>E</sub>(t) = 0,&nbsp;&nbsp;&nbsp; E(t) := &#189;&#8747;&#8320;&sup1;(u<sub>t</sub>&sup2;+u<sub>x</sub>&sup2;)dx.</div>
+  <p>
+    <em>E(t)</em> is exactly conserved, not merely bounded. This single
+    identity is the whole well-posedness argument for this class of
+    problems in outline: a Galerkin approximation (project onto finitely
+    many Dirichlet eigenmodes, solve the resulting finite-dimensional ODE
+    system exactly, and pass to the limit) inherits the same energy
+    identity at every finite level, which supplies the a priori bound
+    needed to extract a convergent subsequence. No coercive bilinear form
+    and no Lax&ndash;Milgram appear anywhere in that argument &mdash; energy
+    conservation does the entire job elliptic coercivity did in the earlier
+    chapters.
+  </p>
+
+  <h2>The exact mirror of the heat equation's H-theorem</h2>
+  <p>
+    The heat equation chapter's Part V (Prop. 20.1) proves
+    <em>H(t) := &#189;&#8747;u&sup2;dx</em> is <em>strictly decreasing</em>
+    along solutions &mdash; the same multiply-and-integrate-by-parts
+    technique, applied to <em>u</em> itself rather than <em>u<sub>t</sub></em>,
+    because the heat equation is only first-order in time. That decay is
+    irreversible: Corollary 20.3 there notes the forward solution map loses
+    information, since two different initial states can decay toward
+    indistinguishable states as <em>t &rarr; &infin;</em>, and nothing
+    recovers the initial data from a late-time snapshot. This chapter's
+    <em>E(t)</em> is the structurally identical computation with the
+    opposite outcome: because the equation is second-order in time, the
+    boundary term that killed the mass term's contribution here instead
+    preserves both the kinetic (<em>u<sub>t</sub>&sup2;</em>) and potential
+    (<em>u<sub>x</sub>&sup2;</em>) pieces exactly, and the solution map
+    <em>(u&#8320;,u&#8321;) &#8614; (u(&middot;,T),u<sub>t</sub>(&middot;,T))</em> is
+    invertible &mdash; run time backward from any snapshot and the
+    original data returns exactly, because <em>u(x,&minus;t)</em> solves the
+    same equation whenever <em>u(x,t)</em> does. Heat loses information;
+    waves do not. Same corpus, same integration-by-parts step, opposite
+    conclusion &mdash; which is exactly what a second-order-in-time versus
+    first-order-in-time distinction should produce, not a coincidence
+    needing further explanation.
+  </p>
+
+  <div class="numeric-check">Verified this session (scipy.integrate.quad, exact standing-wave
+solution u(x,t) = cos(pi t) sin(pi x) on (0,1), Dirichlet BC,
+u0=sin(pi x), u1=0):
+
+  PDE check u_tt = u_xx at 4 sample points: exact agreement (diff = 0.0)
+  Boundary check u(0,t)=u(1,t)=0 at t=1.23: confirmed (~1e-17)
+
+  Energy E(t) = (1/2) int (u_t^2 + u_x^2) dx, sampled at
+  t = 0, 0.3, 0.77, 1.5, pi, 10.0:
+
+    every value = 2.4674011003  (= pi^2/4, exact, to 10 digits)
+
+  Conserved across more than 3 full periods -- not just at t=0.</div>
+
+  <h2>Finite propagation speed</h2>
+  <p>
+    The other qualitative break from the heat equation is how information
+    travels. The heat equation's Green's function is a Gaussian supported
+    on all of <em>&#8477;</em> for any <em>t&gt;0</em> &mdash; a localized
+    disturbance is felt everywhere instantly, however faintly. The wave
+    equation on the whole line admits the classical d'Alembert solution
+  </p>
+  <div class="eqn">u(x,t) = &#189;[u&#8320;(x&minus;t)+u&#8320;(x+t)] + &#189;&#8747;<sub>x&minus;t</sub><sup>x+t</sup>u&#8321;(s)ds,</div>
+  <p>
+    which shows the value at <em>(x,t)</em> depends only on initial data
+    within the interval <em>[x&minus;t,x+t]</em> &mdash; a finite domain of
+    dependence, propagation speed exactly 1 in these units. A compactly
+    supported disturbance stays compactly supported, expanding at a fixed
+    rate rather than spreading into a tail everywhere at once.
+  </p>
+
+  <div class="numeric-check">Verified this session (numpy, d'Alembert's formula, u0 a smooth
+bump on [0.4,0.6], u1=0, sampled on a fine grid on the line):
+
+  t=0.0:  support = [0.4000, 0.6000]   predicted [0.4000, 0.6000]
+  t=0.5:  support = [-0.1000, 1.1000]  predicted [-0.1000, 1.1000]
+  t=1.0:  support = [-0.6000, 1.6000]  predicted [-0.6000, 1.6000]
+  t=2.0:  support = [-1.6000, 2.6000]  predicted [-1.6000, 2.6000]
+
+  Point x=2.0 at t=1.0 (strictly outside the light cone [-0.6,1.6]):
+  u = 0.0 exactly -- not yet reached, not a small residual.</div>
+
+  <table class="status-table">
+    <tr><th>Statement</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Energy identity d/dt E(t) = 0</td><td>derived + numerically checked</td><td>Verified against the exact standing-wave solution over 3+ periods, not just at t=0</td></tr>
+    <tr><td>Time-reversibility / invertible solution map</td><td>derived</td><td>Follows from u(x,-t) solving the same equation; contrasted directly against the heat equation's Cor. 20.3</td></tr>
+    <tr><td>Finite propagation speed (d'Alembert)</td><td>derived + numerically checked</td><td>Exact light-cone support confirmed on a fine grid, whole-line case</td></tr>
+    <tr><td>Galerkin / energy-method well-posedness on (0,1)</td><td>sorry</td><td>Outlined above; the finite-dimensional ODE step and the passage to the limit are not yet formalized</td></tr>
+    <tr><td>Lean / AXLE formalization</td><td>not started</td><td>No scaffold file yet; would need a genuinely new object (u_t as an independent field) rather than reusing <code>H10</code> alone</td></tr>
+  </table>
+
+  <p class="caveat">
+    What this chapter shows: the energy identity and the finite-propagation
+    result, both derived honestly and both checked against an exact
+    solution or exact formula, not merely asserted. What it does not show:
+    a formalized existence-uniqueness theorem on the bounded domain
+    (0,1) &mdash; the Galerkin argument is described, not carried out in
+    Lean, and no scaffold file exists yet for this chapter, unlike the heat
+    equation's <code>HeatEquation_Step1.lean</code>. The energy method
+    outlined here is the standard textbook route (Evans, <em>Partial
+    Differential Equations</em>, &sect;7.2), not a novel result; the
+    contribution of this chapter is placing it inside this corpus's own
+    honest-ledger convention and making its contrast with the heat
+    equation's H-theorem explicit rather than left implicit.
+  </p>
+
+  <div class="prevnext">
+    <a href="ch-box-domain-lift.html">&larr; Lifting to a Box Domain</a>
+    <a href="index.html">Book 6 index &rarr;</a>
+  </div>
+
+</main>
+</body>
+</html>
