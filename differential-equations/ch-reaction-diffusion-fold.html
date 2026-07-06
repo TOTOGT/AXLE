@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Nonlinear Reaction-Diffusion Fold — Principia Orthogona, Book 6</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: var(--cream); color: var(--navy); }
+  main { max-width: 760px; margin: 0 auto; padding: 64px 40px 80px; }
+  .eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 18px;
+  }
+  .op-chain {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #9ca3af; margin-bottom: 44px;
+  }
+  .op-chain .sep { opacity: 0.5; }
+  .op-chain .active { color: var(--gold); font-weight: bold; }
+  .symbol-block { text-align: center; margin: 8px 0 28px; }
+  .symbol-block .glyph { font-size: 34px; line-height: 1.3; color: var(--navy); font-style: italic; }
+  .symbol-block .label {
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: #9ca3af; margin-top: 10px;
+  }
+  h1 { font-size: 36px; font-weight: normal; text-align: center; margin: 0 0 6px; line-height: 1.25; }
+  .value-line {
+    text-align: center; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13.5px;
+    color: #6b7280; margin-bottom: 28px;
+  }
+  .gold-rule { height: 1px; width: 120px; margin: 0 auto 32px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 14px; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--smoke);
+    padding-bottom: 8px; margin: 44px 0 16px;
+  }
+  p { font-size: 16.5px; line-height: 1.75; margin: 0 0 20px; }
+  .eqn { text-align: center; font-style: italic; font-size: 18px; margin: 22px 0; color: var(--navy); }
+  table.status-table { width: 100%; border-collapse: collapse; margin: 16px 0 28px; font-size: 14.5px; }
+  table.status-table th, table.status-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--smoke); }
+  table.status-table th { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; color: #9ca3af; }
+  .numeric-check {
+    background: var(--smoke); border-radius: 4px; padding: 16px 20px; font-family: 'SF Mono', Menlo, monospace;
+    font-size: 13px; line-height: 1.7; margin: 20px 0 28px; overflow-x: auto; white-space: pre;
+  }
+  .caveat {
+    font-size: 15px; line-height: 1.7; color: #4b5563; border-left: 2px solid var(--gold);
+    padding-left: 18px; margin: 24px 0 32px;
+  }
+  .prevnext {
+    display: flex; justify-content: space-between; font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px; color: #9ca3af; padding-top: 24px; margin-top: 44px; border-top: 1px solid var(--smoke);
+  }
+  .prevnext a { color: inherit; text-decoration: none; }
+  .prevnext a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="eyebrow">Principia Orthogona &nbsp;·&nbsp; Book 6 &nbsp;·&nbsp; Differential Equations</div>
+
+  <div class="op-chain">
+    <span>Heat Equation</span>
+    <span class="sep">→</span>
+    <span class="sep">Helix Toy Model</span>
+    <span class="sep">→</span>
+    <span class="sep">The Cosmic No-Go</span>
+    <span class="sep">→</span>
+    <span class="active">A Nonlinear Reaction-Diffusion Fold</span>
+  </div>
+
+  <div class="symbol-block">
+    <div class="glyph">&#7841; &nbsp;=&nbsp; h + r a &minus; &frac34; a&sup3;</div>
+    <div class="label">the reduced amplitude equation</div>
+  </div>
+
+  <h1>A Nonlinear Reaction-Diffusion Fold</h1>
+  <div class="value-line">a genuine saddle-node threshold emerges from a one-mode reduction &mdash; matched asymptotics, not yet a theorem</div>
+
+  <div class="gold-rule"></div>
+
+  <p>
+    Every chapter so far in this corpus has been linear: the heat equation's
+    weak form, its discretization, its conditioning are all governed by a
+    single tridiagonal (or Sturm&ndash;Liouville) linear operator, and the
+    helix toy model's transverse dynamics are a linear relaxation modulated
+    by a scalar factor. Linear systems can decay, oscillate, or diverge, but
+    they cannot fold: a fold requires two equilibria to collide and
+    annihilate, which needs at least a cubic nonlinearity. This chapter is
+    the first place in Book 6 a genuine nonlinear competing reaction term
+    appears, and the first place a real fold threshold &mdash; not an
+    analogy to one &mdash; can be computed.
+  </p>
+
+  <h2>Setup: a tilted bistable reaction-diffusion equation</h2>
+
+  <p>
+    Take the classical Chafee&ndash;Infante reaction-diffusion equation,
+    <em>u<sub>t</sub> = u<sub>xx</sub> + &lambda;u &minus; u&sup3;</em> on
+    <em>(0,1)</em> with homogeneous Dirichlet boundary conditions, and add a
+    constant-in-time forcing term aligned with the first Dirichlet
+    eigenmode &mdash; the &ldquo;competing reaction&rdquo; ingredient that
+    breaks the equation's odd symmetry (<em>u &rarr; &minus;u</em>) and is
+    exactly what turns a symmetric pitchfork into a genuine, asymmetric
+    fold:
+  </p>
+  <div class="eqn">u<sub>t</sub> = u<sub>xx</sub> + &lambda;u &minus; u&sup3; + h&nbsp;sin(&pi;x),&nbsp;&nbsp; u(0,t)=u(1,t)=0</div>
+  <p>
+    The first Dirichlet eigenvalue of &minus;&part;<sub>xx</sub> on
+    <em>(0,1)</em> is &lambda;&#8321; = &pi;&sup2;. Write
+    <em>r := &lambda; &minus; &lambda;&#8321;</em> for the distance from the
+    onset of instability of the trivial state.
+  </p>
+
+  <h2>Single-mode reduction</h2>
+
+  <p>
+    Near onset (<em>r</em> small, forcing <em>h</em> small), the unstable
+    mode is <em>sin(&pi;x)</em> and all other modes are strongly damped;
+    the standard center-manifold heuristic is that the higher modes slave
+    to the unstable one on a fast timescale, leaving a single amplitude
+    <em>a(t)</em> governing <em>u(x,t) &approx; a(t)&nbsp;sin(&pi;x)</em>.
+    Substituting this ansatz, multiplying by <em>sin(&pi;x)</em>, and
+    integrating over <em>(0,1)</em> &mdash; using the standard identities
+    &int;sin&sup2;(&pi;x)dx = &frac12; and &int;sin&#8308;(&pi;x)dx =
+    &frac38; &mdash; gives the reduced amplitude equation:
+  </p>
+  <div class="eqn">&#7841; = r a &minus; &frac34;a&sup3; + h</div>
+  <p>
+    At <em>h = 0</em> this is the textbook pitchfork: a single trivial
+    equilibrium for <em>r &lt; 0</em>, splitting into three
+    (<em>a = 0, &plusmn;&radic;(4r/3)</em>) once <em>r</em> crosses zero.
+    Turning on <em>h &ne; 0</em> is what unfolds the pitchfork into a
+    genuine cusp catastrophe &mdash; and it is on that unfolded surface
+    that an honest fold (a saddle-node, not a symmetry-breaking
+    bifurcation) exists.
+  </p>
+
+  <h2>The fold threshold</h2>
+
+  <p>
+    Equilibria of the reduced equation solve the cubic
+    <em>&frac34;a&sup3; &minus; ra &minus; h = 0</em>. Writing this as a
+    depressed cubic and setting its discriminant to zero (the condition
+    for a repeated root &mdash; two equilibria colliding) gives a closed
+    form for the fold locus in the <em>(r,h)</em> plane:
+  </p>
+  <div class="eqn">h*(r) = &plusmn;(4/9)&nbsp;r<sup>3/2</sup>,&nbsp;&nbsp; r &gt; 0</div>
+  <p>
+    For <em>|h| &lt; h*(r)</em> the cubic has three real roots (bistability
+    survives, tilted); for <em>|h| &gt; h*(r)</em> two of them have
+    collided and annihilated, leaving one &mdash; the fold itself.
+  </p>
+
+  <div class="numeric-check">Verified this session (numpy, exact cubic roots, not the closed form alone):
+r = 3.0  (i.e. &lambda; = &lambda;&#8321; + 3)
+predicted fold:  h*(3) = (4/9)&middot;3^1.5 = 4&#8730;3/3 &approx; 2.309
+
+h = +1.90   3 real equilibria   (-1.532, -0.731, 2.263)
+h = +2.00   3 real equilibria   (-1.485, -0.790, 2.274)
+h = +2.10   3 real equilibria   (-1.428, -0.858, 2.286)
+h = +2.50   1 real equilibrium  (2.330)
+
+Transition falls between h=2.10 and h=2.50, consistent with the
+closed-form prediction 2.309 -- confirmed directly from the cubic's
+roots, not assumed from the formula.</div>
+
+  <table class="status-table">
+    <tr><th>Statement</th><th>Status</th><th>Notes</th></tr>
+    <tr><td>Reduced amplitude equation</td><td>derived</td><td>Standard Galerkin projection, mechanical once stated</td></tr>
+    <tr><td>Fold locus h*(r) = &plusmn;(4/9)r<sup>3/2</sup></td><td>derived + numerically checked</td><td>Discriminant of the equilibrium cubic; confirmed against exact roots, not just algebra</td></tr>
+    <tr><td>Rigorous center-manifold reduction</td><td>not done</td><td>Needs an invariant-manifold theorem controlling the neglected modes &mdash; this chapter uses the formal one-mode ansatz only</td></tr>
+    <tr><td>Lean / AXLE formalization</td><td>not started</td><td>No scaffold file yet &mdash; planned, follows the same axiom/sorry ledger convention as the rest of Book 6</td></tr>
+  </table>
+
+  <h2>What this does and does not show</h2>
+
+  <p class="caveat">
+    This chapter's reduction is a formal one-mode Galerkin truncation, not
+    yet a rigorous center-manifold or inertial-manifold argument: making it
+    rigorous requires a spectral-gap estimate showing the neglected higher
+    modes really do slave to the first one on the relevant timescale, plus
+    justification for truncating the projected nonlinearity at cubic order.
+    Neither is established here. Separately, and just as important: the
+    numeric fold threshold found above, h*(3) &approx; 2.309, is what this
+    particular toy instance gives &mdash; it is not fitted or adjusted
+    toward the series' standing constants (&tau;=2, &epsilon;&#8320;=1/3,
+    &mu;<sub>max</sub>=&minus;2), and no claim is made that it equals or
+    relates to any of them. This chapter does not yet claim the equation
+    above is a dm&sup3; system in the sense of Volume I, only that it is
+    the first place in Book 6 where a genuine fold &mdash; the structure
+    that language is <em>about</em> &mdash; can actually be computed
+    rather than gestured at.
+  </p>
+
+  <div class="prevnext">
+    <a href="ch-cosmic-no-go.html">&larr; The Cosmic No-Go</a>
+    <a href="index.html">Book 6 index &rarr;</a>
+  </div>
+
+</main>
+</body>
+</html>
