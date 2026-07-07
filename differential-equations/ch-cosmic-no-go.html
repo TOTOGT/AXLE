@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Cosmic No-Go — Principia Orthogona, Book 6</title>
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    /* chapter-local cosmic accents -- scoped to this page only */
+    --cosmic-bg: #05060d;
+    --cosmic-violet: #8b7fff;
+    --cosmic-cyan: #5fd8d0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--cosmic-bg);
+    color: var(--cream);
+  }
+  .starfield {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 8% 12%, #fff, transparent),
+      radial-gradient(1px 1px at 22% 34%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 38% 8%, #fff, transparent),
+      radial-gradient(1px 1px at 51% 62%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 66% 22%, #fff, transparent),
+      radial-gradient(1px 1px at 73% 48%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 85% 15%, #fff, transparent),
+      radial-gradient(1px 1px at 91% 66%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 12% 78%, #fff, transparent),
+      radial-gradient(1px 1px at 28% 88%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 45% 92%, #fff, transparent),
+      radial-gradient(1px 1px at 60% 80%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 96% 90%, #fff, transparent),
+      radial-gradient(1px 1px at 5% 55%, #fff, transparent),
+      radial-gradient(1.5px 1.5px at 80% 40%, #fff, transparent);
+    opacity: 0.9;
+  }
+  .nebula {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse at 20% 15%, rgba(139,127,255,0.16), transparent 45%),
+      radial-gradient(ellipse at 82% 78%, rgba(95,216,208,0.13), transparent 50%),
+      radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.08), transparent 60%);
+  }
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 40px 80px;
+  }
+  .eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.85;
+    margin-bottom: 18px;
+  }
+  .op-chain {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    color: rgba(244,241,232,0.45);
+    margin-bottom: 44px;
+  }
+  .op-chain a { color: inherit; text-decoration: none; }
+  .op-chain a:hover { color: var(--cyan, var(--cosmic-cyan)); }
+  .op-chain .sep { opacity: 0.4; }
+  .op-chain .active { color: var(--cosmic-cyan); font-weight: bold; opacity: 1; }
+  .symbol-block { text-align: center; margin: 8px 0 28px; }
+  .symbol-block .glyph {
+    font-size: 56px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--gold), var(--cosmic-violet) 55%, var(--cosmic-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 1px;
+  }
+  .symbol-block .label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(244,241,232,0.5);
+    margin-top: 10px;
+  }
+  h1 {
+    font-size: 38px;
+    font-weight: normal;
+    text-align: center;
+    margin: 0 0 6px;
+    line-height: 1.25;
+    color: var(--cream);
+  }
+  .value-line {
+    text-align: center;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    color: var(--cosmic-violet);
+    letter-spacing: 0.5px;
+    margin-bottom: 28px;
+  }
+  .gold-rule {
+    height: 1px;
+    width: 120px;
+    margin: 0 auto 32px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 40px 0 14px;
+  }
+  p {
+    font-size: 16.5px;
+    line-height: 1.75;
+    color: rgba(244,241,232,0.88);
+    margin: 0 0 20px;
+  }
+  .pointer {
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(244,241,232,0.68);
+    border-left: 2px solid rgba(139,127,255,0.4);
+    padding-left: 18px;
+    margin: 28px 0 32px;
+  }
+  .pointer a { color: var(--cosmic-cyan); }
+  ul.chip-list { list-style: none; padding: 0; margin: 0 0 32px; }
+  ul.chip-list li {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(244,241,232,0.78);
+    margin-bottom: 10px;
+    padding-left: 18px;
+    position: relative;
+  }
+  ul.chip-list li::before {
+    content: "·";
+    position: absolute;
+    left: 0;
+    color: var(--cosmic-cyan);
+  }
+  .prevnext {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px;
+    color: rgba(244,241,232,0.4);
+    padding-top: 24px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(244,241,232,0.12);
+  }
+  .prevnext a { color: inherit; text-decoration: none; }
+  .prevnext a:hover { color: var(--cosmic-cyan); }
+</style>
+</head>
+<body>
+<div class="starfield"></div>
+<div class="nebula"></div>
+<main>
+
+  <div class="eyebrow">Principia Orthogona &nbsp;·&nbsp; Book 6 &nbsp;·&nbsp; Differential Equations</div>
+
+  <div class="op-chain">
+    <span>Helix Toy Model</span>
+    <span class="sep">→</span>
+    <span class="sep">Neutral Line</span>
+    <span class="sep">→</span>
+    <span class="sep">Escape Basin</span>
+    <span class="sep">→</span>
+    <span class="sep">Degenerate Hopf</span>
+    <span class="sep">→</span>
+    <span class="active">The Cosmic No-Go</span>
+  </div>
+
+  <div class="symbol-block">
+    <div class="glyph">c(z) = H&prime;(z)</div>
+    <div class="label">the locking identity</div>
+  </div>
+
+  <h1>The Cosmic No-Go</h1>
+  <div class="value-line">a transverse attractor and a de&nbsp;Sitter expansion rate cannot coexist</div>
+
+  <div class="gold-rule"></div>
+
+  <p>
+    Under any contact-Hamiltonian flow with constant rotation, the transverse
+    contraction rate is rigidly locked to the derivative of the cosmic
+    expansion rate. Push the transverse rate toward a genuine attractor
+    (&mu; &rarr; &minus;2) and the expansion rate is forced unbounded
+    below &mdash; a structural obstruction, not a gap waiting to be closed.
+    The coupling that makes this model a faithful <em>relaxation</em> system
+    is exactly what makes it a poor <em>expansion</em> model. The kinematic
+    correspondence to de&nbsp;Sitter cosmology (&#380; = H, e<sup>&minus;z</sup>
+    &prop; a<sup>&minus;1</sup>) is genuine but strictly kinematic: it has no
+    matter or radiation era, and the correction it carries corresponds to an
+    equation of state matching neither.
+  </p>
+
+  <h2>Where this sits in a wider effort</h2>
+
+  <p class="pointer">
+    This chapter's formalization work is one small corner of a much larger,
+    live effort to bring hard analysis into Lean 4. Worth knowing about
+    independent of anything here: Scott Armstrong and Julia Kempe's 2026
+    formalization of De Giorgi&ndash;Nash&ndash;Moser elliptic regularity
+    theory &mdash; the first proof-assistant Sobolev-space library built from
+    weak derivatives at this scale, sorry-free and axiom-free beyond Lean and
+    Mathlib itself. See
+    <a href="https://arxiv.org/abs/2604.05984" target="_blank" rel="noopener">arXiv:2604.05984</a>
+    and <a href="https://github.com/scottnarmstrong/DeGiorgi" target="_blank" rel="noopener">github.com/scottnarmstrong/DeGiorgi</a>.
+    Where our differential-equations line and theirs overlap &mdash; weak
+    derivatives, Sobolev witnesses, well-posedness on a domain &mdash; is a
+    real seam worth watching, not a claim of collaboration.
+  </p>
+
+  <h2>In this chapter's corpus</h2>
+  <ul class="chip-list">
+    <li>Formal Verification of the Heat Equation (monograph, Lax&ndash;Milgram &rarr; discretization &rarr; conditioning)</li>
+    <li>A Contact-Geometric Toy Model on the Solid Cylinder (helix paper &mdash; source of this chapter's no-go theorem)</li>
+    <li><code>HeatEquation_Step1.lean</code> &mdash; axiom-tagged Lean scaffold</li>
+    <li><code>HelixToyModel.lean</code> &mdash; Lean scaffold with real proofs + tagged sorries</li>
+  </ul>
+
+  <div class="prevnext">
+    <a href="#">&larr; Degenerate Hopf</a>
+    <a href="ch-reaction-diffusion-fold.html">A Nonlinear Reaction-Diffusion Fold &rarr;</a>
+  </div>
+
+</main>
+</body>
+</html>
