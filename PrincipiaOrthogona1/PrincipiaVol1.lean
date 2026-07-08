@@ -724,23 +724,23 @@ theorem commuting_instance (x : ℤ) :
   split_ifs <;> omega
 
 theorem exists_order_dependent :
-    ∃ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+    ∃ (M : GenerativeManifold.{0}) (C : CompressionOp M) (K : CurvatureOp M)
       (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
       GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x :=
   ⟨intManifold, C_nd, K_nd, F_ex, U_nd, 4, nonCommutativity_nondegenerate⟩
 
 theorem not_forall_order_dependent :
-    ¬ (∀ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+    ¬ (∀ (M : GenerativeManifold.{0}) (C : CompressionOp M) (K : CurvatureOp M)
          (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
          GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x) :=
   fun h => h intManifold C_ex K_ex F_sym U_ex 5 (commuting_instance 5)
 
 theorem thm_5_3_is_exactly_existential :
-    (∃ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+    (∃ (M : GenerativeManifold.{0}) (C : CompressionOp M) (K : CurvatureOp M)
        (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
        GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x)
     ∧
-    ¬ (∀ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+    ¬ (∀ (M : GenerativeManifold.{0}) (C : CompressionOp M) (K : CurvatureOp M)
          (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
          GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x) :=
   ⟨exists_order_dependent, not_forall_order_dependent⟩
