@@ -73,12 +73,18 @@ def GenerativeOp (M : GenerativeManifold)
 
 -- ============================================================================
 -- THEOREM 5.3 NON-COMMUTATIVITY -- CONCRETE INSTANCES
--- Reproduced from PrincipiaVol1.lean section 14 (v4), with two fixes:
+-- Reproduced from PrincipiaVol1.lean section 14 (v4), with fixes:
 -- (1) GenerativeManifold pinned to .{0} throughout so the universe-
 --     polymorphic forall/exists statements unify with the concrete intManifold.
 -- (2) Numeral arguments passed at type `M.carrier` / `intManifold.carrier`
 --     are explicitly ascribed `(_ : ℤ)` so elaboration doesn't need to
---     unfold `intManifold` during OfNat typeclass search.
+--     unfold `intManifold` during OfNat/Neg typeclass search.
+-- (3) `Set.finite_insert` (unknown constant in current Mathlib) replaced
+--     with `Set.Finite.insert`.
+-- (4) commuting_instance's proof rewritten as an explicit case split
+--     instead of `split_ifs <;> omega`, because `split_ifs` treats
+--     `-x = 5` and `x = -5` as syntactically distinct conditions and the
+--     resulting spurious branches were not closing automatically.
 -- ============================================================================
 
 def idMap : ℤ -> ℤ := fun x => x
@@ -114,10 +120,10 @@ noncomputable def K_ex : CurvatureOp intManifold where
 
 noncomputable def F_ex : FoldOp intManifold where
   map := foldMap
-  has_fold := ⟨5, 6, by norm_num, by norm_num [foldMap]⟩
+  has_fold := ⟨(5 : ℤ), (6 : ℤ), by norm_num, by norm_num [foldMap]⟩
   finite_branch := by
     apply Set.Finite.subset
-      (Set.finite_insert (0 : ℤ) (Set.finite_insert 5 (Set.finite_singleton 6)))
+      (Set.Finite.insert (0 : ℤ) (Set.Finite.insert 5 (Set.finite_singleton 6)))
     rintro p ⟨q, hqp, heq⟩
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
     simp only [foldMap] at heq
@@ -166,10 +172,10 @@ noncomputable def U_nd : UnfoldOp intManifold where
 
 noncomputable def F_sym : FoldOp intManifold where
   map := foldSym
-  has_fold := ⟨5, -5, by norm_num, by norm_num [foldSym]⟩
+  has_fold := ⟨(5 : ℤ), (-5 : ℤ), by norm_num, by norm_num [foldSym]⟩
   finite_branch := by
     apply Set.Finite.subset
-      (Set.finite_insert (0 : ℤ) (Set.finite_insert 5 (Set.finite_singleton (-5))))
+      (Set.Finite.insert (0 : ℤ) (Set.Finite.insert 5 (Set.finite_singleton (-5))))
     rintro p ⟨q, hqp, heq⟩
     simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
     simp only [foldSym] at heq
@@ -200,7 +206,13 @@ theorem commuting_instance (x : ℤ) :
       = (U_ex.map ∘ K_ex.map ∘ F_sym.map ∘ C_ex.map) x := by
   simp only [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_sym, U_ex,
     idMap, negMap, foldSym]
-  split_ifs <;> omega
+  rcases eq_or_ne x 5 with h5 | h5
+  · subst h5; norm_num
+  rcases eq_or_ne x (-5) with hn5 | hn5
+  · subst hn5; norm_num
+  · have h1 : ¬ (-x = 5) := by omega
+    have h2 : ¬ (-x = -5) := by omega
+    simp [h1, h2, h5, hn5]
 
 theorem exists_order_dependent :
     ∃ (M : GenerativeManifold.{0}) (C : CompressionOp M) (K : CurvatureOp M)
