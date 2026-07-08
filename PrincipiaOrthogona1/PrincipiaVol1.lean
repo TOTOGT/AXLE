@@ -581,4 +581,168 @@ Tracked in AXLE issue tracker.  No sorry beyond what is scoped above.
   Pablo Nogueira Grossi · G6 LLC · Newark NJ · 2026
 -/
 
+-- ============================================================================
+-- §14 THEOREM 5.3 · NON-COMMUTATIVITY — CONCRETE INSTANCES (v4)
+-- Paper: §5 Structural Theorems, Theorem 5.3
+-- STATUS: NOT MACHINE-CHECKED beyond this file's own `lake build` in CI.
+-- Hand-audited only prior to commit; semantics verified by exhaustive
+-- brute force over x in [-80, 80] in a companion script (not included here).
+-- UPSTREAM NOTES (see also file header, Open Obligations):
+--   UnfoldOp.stable_branch is vacuous as stated (n = 0 always satisfies it).
+--   CurvatureOp.kappa_star is unused by drives_threshold as stated.
+-- ============================================================================
+
+def idMap : ℤ → ℤ := fun x => x
+def negMap : ℤ → ℤ := fun x => -x
+def shrinkMap : ℤ → ℤ := fun x => if 0 < x then x - 1 else if x < 0 then x + 1 else 0
+def shiftMap : ℤ → ℤ := fun x => x + 1
+def foldMap : ℤ → ℤ := fun x => if x = 5 then 0 else if x = 6 then 0 else x
+def foldSym : ℤ → ℤ := fun x => if x = 5 then 0 else if x = -5 then 0 else x
+
+/-- An odd function commutes with negation, so the fold set must be
+    asymmetric for K↔F to fail to commute. foldMap is not odd. -/
+theorem foldMap_not_odd : ¬ (∀ x : ℤ, foldMap (-x) = -foldMap x) := by
+  intro h
+  have h5 := h 5
+  norm_num [foldMap] at h5
+
+noncomputable def intManifold : GenerativeManifold where
+  carrier := ℤ
+  Phi     := fun x => (x : ℝ) ^ 2
+  field   := id
+
+noncomputable def C_ex : CompressionOp intManifold where
+  map         := idMap
+  contractive := fun x y => le_refl (dist x y)
+  injective   := fun _ _ h => h
+
+noncomputable def K_ex : CurvatureOp intManifold where
+  map              := negMap
+  kappa_star       := 0
+  drives_threshold := by
+    intro x
+    have h : ((negMap x : ℤ) : ℝ) ^ 2 = ((x : ℤ) : ℝ) ^ 2 := by
+      simp only [negMap]; push_cast; ring
+    exact h.le
+
+noncomputable def F_ex : FoldOp intManifold where
+  map      := foldMap
+  has_fold := ⟨5, 6, by norm_num, by norm_num [foldMap]⟩
+  finite_branch := by
+    apply Set.Finite.subset
+      (Set.finite_insert (0 : ℤ) (Set.finite_insert 5 (Set.finite_singleton 6)))
+    rintro p ⟨q, hqp, heq⟩
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+    simp only [foldMap] at heq
+    split_ifs at heq <;> omega
+
+noncomputable def U_ex : UnfoldOp intManifold where
+  map           := idMap
+  decreases_Phi := fun x => le_refl _
+  stable_branch := fun x => ⟨0, rfl⟩
+
+noncomputable def C_nd : CompressionOp intManifold where
+  map         := shiftMap
+  contractive := by
+    intro x y
+    simp [shiftMap, Int.dist_eq]
+  injective := by
+    intro x y h
+    simp only [shiftMap] at h
+    omega
+
+noncomputable def K_nd : CurvatureOp intManifold where
+  map        := shrinkMap
+  kappa_star := 0
+  drives_threshold := by
+    intro x
+    have key : (shrinkMap x) ^ 2 ≤ x ^ 2 := by
+      simp only [shrinkMap]
+      split_ifs with h1 h2
+      · have hx : 1 ≤ x := by omega
+        nlinarith
+      · have hx : x ≤ -1 := by omega
+        nlinarith
+      · have hx : x = 0 := by omega
+        subst hx; simp
+    show ((shrinkMap x : ℤ) : ℝ) ^ 2 ≤ ((x : ℤ) : ℝ) ^ 2
+    exact_mod_cast key
+
+noncomputable def U_nd : UnfoldOp intManifold where
+  map           := negMap
+  decreases_Phi := by
+    intro x
+    have h : ((negMap x : ℤ) : ℝ) ^ 2 = ((x : ℤ) : ℝ) ^ 2 := by
+      simp only [negMap]; push_cast; ring
+    exact h.le
+  stable_branch := fun x => ⟨0, rfl⟩
+
+noncomputable def F_sym : FoldOp intManifold where
+  map      := foldSym
+  has_fold := ⟨5, -5, by norm_num, by norm_num [foldSym]⟩
+  finite_branch := by
+    apply Set.Finite.subset
+      (Set.finite_insert (0 : ℤ) (Set.finite_insert 5 (Set.finite_singleton (-5))))
+    rintro p ⟨q, hqp, heq⟩
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+    simp only [foldSym] at heq
+    split_ifs at heq <;> omega
+
+/-- Swapping K and F changes the result at x = 5.
+    G(5)  = F(-5) = -5      (-5 ∉ {5,6})
+    G'(5) = K(0)  =  0 -/
+theorem nonCommutativity_instance :
+    GenerativeOp intManifold C_ex K_ex F_ex U_ex 5
+      ≠ (U_ex.map ∘ K_ex.map ∘ F_ex.map ∘ C_ex.map) 5 := by
+  first
+    | norm_num [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_ex, U_ex,
+                idMap, negMap, foldMap]
+    | (simp only [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_ex, U_ex,
+                  idMap, negMap, foldMap]
+       split_ifs <;> omega)
+
+/-- Order-dependence with NO operator equal to the identity, and with K
+    strictly driving Φ downward off the origin.
+    C(4) = 5.  G(4) = F(K 5) = F 4 = -4.  G'(4) = K(F 5) = K 0 = 0. -/
+theorem nonCommutativity_nondegenerate :
+    GenerativeOp intManifold C_nd K_nd F_ex U_nd 4
+      ≠ (U_nd.map ∘ K_nd.map ∘ F_ex.map ∘ C_nd.map) 4 := by
+  first
+    | norm_num [GenerativeOp, Function.comp_apply, C_nd, K_nd, F_ex, U_nd,
+                shiftMap, shrinkMap, negMap, foldMap]
+    | (simp only [GenerativeOp, Function.comp_apply, C_nd, K_nd, F_ex, U_nd,
+                  shiftMap, shrinkMap, negMap, foldMap]
+       split_ifs <;> omega)
+
+/-- The symmetric fold is odd, hence commutes with negation, hence the chain
+    is order-INDEPENDENT for this instance, at every point. -/
+theorem commuting_instance (x : ℤ) :
+    GenerativeOp intManifold C_ex K_ex F_sym U_ex x
+      = (U_ex.map ∘ K_ex.map ∘ F_sym.map ∘ C_ex.map) x := by
+  simp only [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_sym, U_ex,
+             idMap, negMap, foldSym]
+  split_ifs <;> omega
+
+theorem exists_order_dependent :
+    ∃ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+      (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
+      GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x :=
+  ⟨intManifold, C_nd, K_nd, F_ex, U_nd, 4, nonCommutativity_nondegenerate⟩
+
+theorem not_forall_order_dependent :
+    ¬ (∀ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+         (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
+         GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x) :=
+  fun h => h intManifold C_ex K_ex F_sym U_ex 5 (commuting_instance 5)
+
+theorem thm_5_3_is_exactly_existential :
+    (∃ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+       (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
+       GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x)
+    ∧
+    ¬ (∀ (M : GenerativeManifold) (C : CompressionOp M) (K : CurvatureOp M)
+         (F : FoldOp M) (U : UnfoldOp M) (x : M.carrier),
+         GenerativeOp M C K F U x ≠ (U.map ∘ K.map ∘ F.map ∘ C.map) x) :=
+  ⟨exists_order_dependent, not_forall_order_dependent⟩
+
 end PrincipiaVol1
