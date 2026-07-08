@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 06 — WorldQuant Top 10, Country Strategies · Hour House · Principia Orthogona</title>
+<meta name="description" content="Hour House ESL Lesson 06 — Advanced reading of International Quant Championship 2026 leaderboard data. Students compute score-per-participant ratios to compare quality vs. quantity strategies across countries. Newark, NJ · 2026.">
+<style>
+  :root {
+    --navy:  #1a2744; --gold:  #c9a84c; --cream: #faf7f0; --smoke: #f0ece4;
+    --mid:   #3a4f7a; --rule:  #8a7340; --text:  #1c1c1c; --green: #2d5a27;
+    --light: #e8e2d4; --amber: #fff8e1; --amber-border: #f9a825;
+    --parchment: #f4ead5; --ink: #3b2a1a; --teal:#1a6b5a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', serif; color: var(--text); background: var(--cream); }
+
+  nav { background: var(--navy); padding: 0.75rem 2rem; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-links { display: flex; gap: 1.2rem; list-style: none; flex-wrap: wrap; }
+  .nav-links a { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .hero { background: var(--navy); color: white; padding: 3.5rem 2rem 3rem; text-align: center; }
+  .hero-eyebrow { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: white; margin-bottom: 0.5rem; line-height: 1.2; }
+  .hero-sub { color: var(--gold); font-style: italic; font-size: 1.05rem; margin-bottom: 0.6rem; }
+  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+  .hero-desc { max-width: 640px; margin: 0 auto; color: #bbb; font-size: 0.95rem; line-height: 1.8; }
+
+  .lesson-body { max-width: 860px; margin: 0 auto; padding: 2rem; }
+  .lesson-header { padding: 1.5rem 0 1rem; border-bottom: 2px solid var(--gold); margin-bottom: 1.8rem; }
+  .lesson-header .level-tag { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.3rem; }
+  .lesson-header h2 { font-size: 1.6rem; color: var(--navy); line-height: 1.25; margin-bottom: 0.3rem; }
+  .lesson-header .lesson-source { font-style: italic; color: #666; font-size: 0.9rem; line-height: 1.6; }
+
+  .basics-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.9rem; }
+  .basics-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.5rem 0.8rem; font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.08em; }
+  .basics-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light); vertical-align: top; }
+  .basics-table td:first-child { font-family: sans-serif; font-size: 0.78rem; font-weight: bold; color: var(--mid); width: 160px; background: #eef2f8; text-transform: uppercase; letter-spacing: 0.04em; }
+  .basics-table tr:last-child td { border-bottom: none; }
+
+  .qr-row { display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+  .qr-box { flex: 1; min-width: 220px; background: var(--amber); border: 1.5px solid var(--amber-border); padding: 1rem 1.2rem; text-align: center; }
+  .qr-box .qr-label { font-family: sans-serif; font-size: 0.75rem; font-weight: bold; color: var(--navy); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .qr-box .qr-url { font-family: monospace; font-size: 0.82rem; color: var(--mid); word-break: break-all; }
+  .qr-box .qr-caption { font-style: italic; font-size: 0.82rem; color: #666; margin-top: 0.4rem; }
+
+  .marginalia-banner { background: var(--parchment); border: 1px solid #c9a37a; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-family: 'Georgia', serif; color: var(--ink); font-size: 0.92rem; line-height: 1.7; position: relative; }
+  .marginalia-banner::before { content: "📊"; position: absolute; top: -10px; left: 14px; background: var(--parchment); padding: 0 6px; font-size: 1.1rem; }
+  .marginalia-banner em { color: var(--rule); }
+
+  .wpppw-strip { display:flex; gap:.4rem; flex-wrap:wrap; margin:1.2rem 0 1.8rem; font-family:sans-serif; }
+  .wpppw-chip { flex:1; min-width:90px; text-align:center; padding:.5rem .3rem; font-size:.68rem; font-weight:bold; letter-spacing:.06em; text-transform:uppercase; color:#888; background:var(--smoke); border-bottom:3px solid var(--light); }
+  .wpppw-chip.active { color:var(--navy); background:var(--amber); border-bottom-color:var(--gold); }
+
+  .stage-block { margin-bottom: 2.5rem; }
+  .stage-header { background: var(--green); color: white; padding: 0.7rem 1rem; font-family: sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 0.03em; margin-bottom: 1rem; }
+  .stage-activity { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; font-family: sans-serif; }
+  .body-p { font-size: 0.93rem; line-height: 1.75; margin-bottom: 0.7rem; }
+  .body-p b { color: var(--navy); }
+
+  .lesson-list { list-style: none; margin: 0.5rem 0 0.8rem; padding-left: 1.2rem; }
+  .lesson-list li { font-size: 0.93rem; line-height: 1.7; margin-bottom: 0.3rem; padding-left: 0.3rem; }
+  .lesson-list li::before { content: attr(data-n) ".\00a0"; color: var(--mid); font-weight: bold; }
+
+  .lesson-quote { border-left: 3px solid var(--gold); background: var(--smoke); padding: 0.8rem 1.2rem; margin: 0.8rem 0 1rem; font-style: italic; font-size: 0.92rem; color: #444; line-height: 1.7; }
+
+  .vocab-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 0.88rem; }
+  .vocab-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.45rem 0.7rem; font-family: sans-serif; font-size: 0.73rem; letter-spacing: 0.08em; }
+  .vocab-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--light); vertical-align: top; }
+  .vocab-table td:first-child { font-weight: bold; color: var(--mid); width: 170px; }
+  .vocab-table tr:nth-child(even) td { background: var(--smoke); }
+  .vocab-table tr:last-child td { border-bottom: none; }
+
+  .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .cards-grid { grid-template-columns: 1fr; } }
+  .disc-card { background: var(--amber); border: 1.5px solid var(--amber-border); padding: 1rem 1.1rem; }
+  .disc-card-title { font-family: sans-serif; font-size: 0.8rem; font-weight: bold; color: #c45000; margin-bottom: 0.5rem; }
+  .disc-card p { font-size: 0.88rem; line-height: 1.65; color: #333; }
+
+  .timing-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 0.8rem 0 1.2rem; }
+  .timing-table th { background: var(--navy); color: var(--gold); padding: 0.45rem 0.7rem; font-family: sans-serif; font-size: 0.73rem; text-align: left; letter-spacing: 0.06em; }
+  .timing-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--light); }
+  .timing-table tr:nth-child(even) td { background: var(--smoke); }
+  .timing-table tr:last-child td { font-weight: bold; background: #eef2f8; border-top: 2px solid var(--gold); }
+  .timing-table td:first-child, .timing-table td:last-child { text-align: center; font-family: monospace; }
+
+  .teacher-note { background: var(--smoke); border-left: 3px solid var(--mid); padding: 1rem 1.2rem; margin: 1rem 0; font-size: 0.88rem; line-height: 1.7; color: #444; }
+  .teacher-note strong { color: var(--navy); }
+
+  .leaderboard-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.87rem; }
+  .leaderboard-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.55rem 0.6rem; font-family:sans-serif; font-size:.72rem; letter-spacing:.04em; }
+  .leaderboard-table td { padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--light); font-family:monospace; }
+  .leaderboard-table td:nth-child(2) { font-family:'Georgia',serif; }
+  .leaderboard-table tr:nth-child(9) td { background: #fff8e1; font-weight: bold; border: 2px solid var(--gold); }
+  .fillblank { display:inline-block; min-width:70px; border-bottom:1.5px dotted var(--mid); text-align:center; }
+
+  .quiz-box { background:white; border:2px solid var(--teal); padding:1.3rem 1.5rem; margin:1rem 0; }
+  .quiz-box h4 { color:var(--teal); font-family:sans-serif; font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; margin-bottom:.8rem; }
+  .quiz-q { font-size:.92rem; margin-bottom:.5rem; line-height:1.6; }
+  .quiz-q b { color:var(--navy); }
+  .quiz-choices { list-style:none; margin:.3rem 0 1rem 1rem; font-size:.88rem; }
+  .quiz-choices li { margin-bottom:.25rem; }
+  .quiz-answers { margin-top:1rem; padding-top:.8rem; border-top:1px dashed var(--light); font-family:sans-serif; font-size:.8rem; color:#666; }
+
+  footer { background: var(--navy); color: #888; padding: 2rem; text-align: center; font-size: 0.78rem; font-family: sans-serif; line-height: 1.7; }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav style="background:#1a2744;padding:.65rem 2rem;position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;border-bottom:2px solid rgba(201,168,76,.35)">
+  <a href="../index.html" style="color:#c9a84c;font-family:sans-serif;font-weight:bold;font-size:.85rem;letter-spacing:.1em;text-decoration:none;">HOUR HOUSE &middot; PRINCIPIA ORTHOGONA</a>
+  <ul style="display:flex;gap:1rem;list-style:none;flex-wrap:wrap;align-items:center;margin:0;padding:0">
+    <li><a href="../index.html#lessons" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">All Lessons</a></li>
+    <li><a href="../index.html#support" style="color:#ccc;text-decoration:none;font-family:sans-serif;font-size:.78rem;">Support Hour House</a></li>
+    <li><a href="../esl-101/Lesson04_USA_Top10.html" style="color:#aaa;text-decoration:none;font-family:sans-serif;font-size:.78rem;">&larr; 04: USA Top 10</a></li><li><a href="Lesson07_Alpha_Submission_v2.html" style="color:#aaa;text-decoration:none;font-family:sans-serif;font-size:.78rem;">07: Your First Alpha &rarr;</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Hour House &middot; Newark, NJ &middot; Adult ESL &middot; Lesson 06</div>
+  <h1>The WorldQuant Top 10</h1>
+  <div class="hero-sub">Country Strategies in the IQC &mdash; Quality vs. Quantity</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">Lesson 04 asked what the leaderboard says. This lesson asks what the leaderboard means. Using the same data, students calculate a new number &mdash; score per participant &mdash; and discover that the USA&rsquo;s problem in 2026 is not only that it has fewer people in the competition.</p>
+</div>
+
+<div class="lesson-body" id="lesson-06">
+
+  <div class="lesson-header">
+    <div class="level-tag">Lesson 06 &middot; Level B1&ndash;B2 &middot; 90 minutes &middot; Delivered WPPPW</div>
+    <h2>Country Strategies in the IQC<br><span style="font-size:1rem;font-weight:normal;color:#666;">Advanced Reading of Competition Data &mdash; A Companion to Lesson 04</span></h2>
+    <div class="lesson-source">Source: WorldQuant BRAIN Platform &mdash; Live Leaderboard (May 2026 snapshot, same dataset as Lesson 04)</div>
+  </div>
+
+  <div class="marginalia-banner">
+    <em>Efficiency (n.):</em> In this lesson, a country&rsquo;s aggregate score divided by its number of participants &mdash; how much each researcher contributes, on average. A country can rank high by having many participants (scale) or by having each participant score high (efficiency). Most winning strategies mix both.
+  </div>
+
+  <table class="basics-table">
+    <tr><th colspan="2">Lesson Basics</th></tr>
+    <tr><td>Topic</td><td>Data Analysis &middot; Ratios &middot; National Strategy &middot; Academic English</td></tr>
+    <tr><td>CAELA Objective</td><td>Students will be able to <em>calculate and compare a derived statistic (score-per-participant) across ten countries</em> in order to <em>construct an evidence-based argument about competition strategy</em>, as evidenced by <em>a completed ratio table and a written comparative analysis using hedged academic language</em>.</td></tr>
+    <tr><td>Level</td><td>Intermediate to Upper-Intermediate (B1&ndash;B2)</td></tr>
+    <tr><td>Duration</td><td>90 minutes</td></tr>
+    <tr><td>Skills</td><td>Data Analysis &middot; Reading &middot; Speaking &middot; Argumentative Writing</td></tr>
+    <tr><td>Grammar</td><td>Comparatives &middot; Hedging language (<em>this may suggest, it is possible that</em>) &middot; Cause-and-effect connectors</td></tr>
+    <tr><td>Prerequisite</td><td>Lesson 04 (USA Enters Top 10) &mdash; same leaderboard, new question</td></tr>
+  </table>
+
+  <div class="qr-row">
+    <div class="qr-box">
+      <div class="qr-label">📊 Live Leaderboard</div>
+      <div class="qr-url">platform.worldquantbrain.com &rarr; Competitions &rarr; IQC 2026</div>
+      <div class="qr-caption">The numbers below are a May 2026 snapshot &mdash; check today's live ranking in Wrap-Up</div>
+    </div>
+  </div>
+
+  <div class="wpppw-strip">
+    <div class="wpppw-chip active">W · Warm-Up</div>
+    <div class="wpppw-chip active">P · Presentation</div>
+    <div class="wpppw-chip active">P · Practice</div>
+    <div class="wpppw-chip active">P · Production</div>
+    <div class="wpppw-chip active">W · Wrap-Up</div>
+  </div>
+
+  <!-- WARM-UP -->
+  <div class="stage-block">
+    <div class="stage-header">W &mdash; WARM-UP &middot; 10 minutes</div>
+    <div class="stage-activity">Two Numbers, One Question</div>
+    <p class="body-p">Teacher writes on the board: <strong>China: 24,454 participants, 53,568,436 points. USA: 2,331 participants, 674,966 points.</strong></p>
+    <ol class="lesson-list">
+      <li data-n="1">China has about 10&times; the participants of the USA. Roughly how many times more points does China have?</li>
+      <li data-n="2">Is China&rsquo;s advantage <em>only</em> about having more people? How could you check?</li>
+      <li data-n="3">If you ran the USA team, would you rather have 10&times; more participants, or participants who each score 10&times; higher? Why?</li>
+    </ol>
+  </div>
+
+  <!-- PRESENTATION -->
+  <div class="stage-block">
+    <div class="stage-header">P &mdash; PRESENTATION &middot; 20 minutes</div>
+    <div class="stage-activity">Introducing Score-per-Participant + Comprehension Check</div>
+    <p class="body-p">Teacher introduces the formula: <strong>score &divide; participants = score per participant</strong>. Model it together with China: 53,568,436 &divide; 24,454 &asymp; <strong>2,191</strong> points per participant. Then the USA: 674,966 &divide; 2,331 &asymp; <strong>290</strong> points per participant.</p>
+    <table class="vocab-table">
+      <tr><th>Word</th><th>Meaning</th></tr>
+      <tr><td>ratio</td><td>a relationship between two numbers showing how many times one contains the other</td></tr>
+      <tr><td>efficiency</td><td>how much output is produced per unit of input &mdash; here, points per participant</td></tr>
+      <tr><td>scale</td><td>the size of an operation &mdash; here, the number of participants</td></tr>
+      <tr><td>outlier</td><td>a data point far above or below the rest of the pattern</td></tr>
+      <tr><td>hedge (v.)</td><td>to soften a claim so it isn&rsquo;t stated as 100% certain (<em>this may suggest&hellip;</em>)</td></tr>
+    </table>
+    <p class="body-p"><b>Comprehension check (pairs, 5 min):</b> Is China&rsquo;s per-participant score (2,191) higher or lower than the USA&rsquo;s (290)? By roughly how many times? <em>(Answer: about 7&ndash;8 times higher &mdash; so the gap is not only about scale.)</em></p>
+  </div>
+
+  <!-- PRACTICE -->
+  <div class="stage-block">
+    <div class="stage-header">P &mdash; PRACTICE &middot; 25 minutes</div>
+    <div class="stage-activity">Guided Practice &mdash; Complete the Ratio Table</div>
+    <p class="body-p">In pairs, with a calculator, complete the <strong>Score per Participant</strong> column. Two rows are done for you.</p>
+    <table class="leaderboard-table">
+      <tr><th>Rank</th><th>Country</th><th>Participants</th><th>Score</th><th>Score / Participant</th></tr>
+      <tr><td>1</td><td>Mainland China</td><td>24,454</td><td>53,568,436</td><td>2,191</td></tr>
+      <tr><td>2</td><td>India</td><td>52,650</td><td>14,474,518</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td>3</td><td>Kenya</td><td>28,417</td><td>14,410,481</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td>4</td><td>Vietnam</td><td>8,229</td><td>4,628,973</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td>5</td><td>Taiwan</td><td>1,747</td><td>1,737,107</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td>6</td><td>South Korea</td><td>3,099</td><td>1,666,464</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td>7</td><td>Nigeria</td><td>11,701</td><td>975,163</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td>8</td><td>Singapore</td><td>1,088</td><td>770,343</td><td><span class="fillblank">?</span></td></tr>
+      <tr><td><strong>9</strong></td><td><strong>United States</strong></td><td><strong>2,331</strong></td><td><strong>674,966</strong></td><td><strong>290</strong></td></tr>
+      <tr><td>10</td><td>Thailand</td><td>1,222</td><td>642,805</td><td><span class="fillblank">?</span></td></tr>
+    </table>
+    <p class="body-p"><b>Now re-rank:</b> On a separate line, order all 10 countries by score-per-participant instead of total score. Where does the USA land? Where does Nigeria land? What surprises you?</p>
+    <div class="teacher-note" style="margin-top:.5rem">
+      <strong>Answer key (score per participant, rounded):</strong> India 275 &middot; Kenya 507 &middot; Vietnam 563 &middot; Taiwan 994 &middot; South Korea 538 &middot; Nigeria 83 &middot; Singapore 708 &middot; Thailand 526. Re-ranked by efficiency: China (2,191) &middot; Taiwan (994) &middot; Singapore (708) &middot; Vietnam (563) &middot; South Korea (538) &middot; Kenya (507) &middot; Thailand (526) &middot; USA (290) &middot; India (275) &middot; Nigeria (83). The USA moves from 9th (by total score) to 8th (by efficiency) &mdash; barely better, and still near the bottom of this Top 10 by either measure.
+    </div>
+  </div>
+
+  <!-- PRODUCTION -->
+  <div class="stage-block">
+    <div class="stage-header">P &mdash; PRODUCTION &middot; 25 minutes</div>
+    <div class="stage-activity">Students Produce: Discussion &rarr; Written Argument</div>
+    <div class="cards-grid">
+      <div class="disc-card">
+        <div class="disc-card-title">Card A &mdash; China's Outlier Number</div>
+        <p>China&rsquo;s 2,191 points per participant is far above everyone else. What could explain a number this high &mdash; individual skill, team submissions counted per member, more experienced researchers, something else? You don&rsquo;t have to be sure. Practice hedging: <em>&ldquo;This may suggest&hellip;&rdquo;, &ldquo;One possible explanation is&hellip;&rdquo;</em></p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-card-title">Card B &mdash; Two Strategies</div>
+        <p>Nigeria has 11,701 participants but only 83 points each. Taiwan has 1,747 participants but 994 points each. Both are &ldquo;behind&rdquo; China. Which country is in a better position to climb the leaderboard by 2027, and why?</p>
+      </div>
+    </div>
+    <p class="body-p" style="margin-top:1rem"><b>Written Production (choose one, 150&ndash;200 words):</b></p>
+    <ol class="lesson-list">
+      <li data-n="1"><b>Strategy Memo:</b> Advise the USA team. Should it recruit more participants (scale), train existing participants to submit better alphas (efficiency), or both? Use at least two numbers from the table and at least one hedge.</li>
+      <li data-n="2"><b>Country Case Study:</b> Pick any country except the USA and China. Explain its position using both total score and score-per-participant. What does each number tell you that the other doesn&rsquo;t?</li>
+    </ol>
+  </div>
+
+  <!-- WRAP-UP -->
+  <div class="stage-block">
+    <div class="stage-header">W &mdash; WRAP-UP &middot; 10 minutes</div>
+    <div class="stage-activity">Self-Study Quiz + Forward Link</div>
+    <p class="body-p">Works in class or alone. Answers below &mdash; cover them and check yourself after.</p>
+
+    <div class="quiz-box">
+      <h4>Wrap-Up Quiz &mdash; 5 Questions</h4>
+      <div class="quiz-q"><b>1.</b> What is score-per-participant a measure of?
+        <ul class="quiz-choices"><li>(a) total scale</li><li>(b) efficiency</li><li>(c) rank</li></ul>
+      </div>
+      <div class="quiz-q"><b>2.</b> True or False: The USA's main problem in 2026 is only that it has too few participants.</div>
+      <div class="quiz-q"><b>3.</b> Which country has the highest score-per-participant in the Top 10?</div>
+      <div class="quiz-q"><b>4.</b> Fill in the hedge: &ldquo;____________ China's institutions submit team alphas that count for each member.&rdquo; <span style="color:#999">(this may suggest / it is possible that)</span></div>
+      <div class="quiz-q"><b>5.</b> Nigeria has more participants than Vietnam but a lower score-per-participant. Which country is winning on <em>scale</em>, and which is winning on <em>efficiency</em>?</div>
+      <div class="quiz-answers">
+        <strong>Answers:</strong> 1&mdash;(b) efficiency &middot; 2&mdash;False, its per-participant score also lags most of the Top 10 &middot; 3&mdash;China (2,191) &middot; 4&mdash;either hedge works grammatically &middot; 5&mdash;Nigeria wins on scale, Vietnam wins on efficiency.
+      </div>
+    </div>
+
+    <p class="body-p" style="margin-top:1rem">Open <a href="https://platform.worldquantbrain.com" target="_blank" style="color:var(--mid)">platform.worldquantbrain.com</a> &rarr; Competitions &rarr; IQC 2026. Recalculate the USA's current score-per-participant with today's live numbers. Has it changed since May?</p>
+    <p class="body-p"><b>Forward link &mdash; Lesson 07:</b> Efficiency isn&rsquo;t abstract &mdash; it&rsquo;s built one alpha at a time. In Lesson 07, you submit one, and the USA's per-participant number moves because of you.</p>
+  </div>
+
+  <h3 style="color:var(--navy); font-family:sans-serif; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin:1.5rem 0 0.6rem;">Timing Summary</h3>
+  <table class="timing-table">
+    <tr><th>#</th><th>Stage (WPPPW)</th><th>Activity</th><th>Time</th></tr>
+    <tr><td>1</td><td>Warm-Up</td><td>Two Numbers, One Question</td><td>10 min</td></tr>
+    <tr><td>2</td><td>Presentation</td><td>Score-per-Participant + Comprehension Check</td><td>20 min</td></tr>
+    <tr><td>3</td><td>Practice</td><td>Complete &amp; Re-Rank the Ratio Table</td><td>25 min</td></tr>
+    <tr><td>4</td><td>Production</td><td>Discussion Cards + Written Argument</td><td>25 min</td></tr>
+    <tr><td>5</td><td>Wrap-Up</td><td>Self-Study Quiz + Live Leaderboard Check</td><td>10 min</td></tr>
+    <tr><td></td><td colspan="2"><strong>TOTAL</strong></td><td><strong>90 min</strong></td></tr>
+  </table>
+
+  <div class="teacher-note">
+    <strong>Teacher Notes &mdash;</strong> This lesson only works if students actually do the division in Practice &mdash; don't hand them the answer key early. Calculators or phones are fine; the skill being taught is reading a ratio and reasoning about what it hides, not mental math.<br><br>
+    <strong>China's outlier number:</strong> The lesson deliberately does not resolve why China's per-participant score is so high. Real leaderboards contain numbers whose causes aren't fully known from the data alone &mdash; that's a genuine research/data-literacy lesson, not a gap in the material.<br><br>
+    <strong>Self-study use:</strong> This lesson was designed to also work without a teacher present. A student can complete Warm-Up through Production alone using a calculator and the answer key in Practice, then self-grade with the Wrap-Up quiz.
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr;gap:1.2rem;margin:2rem 0;max-width:480px">
+    <div style="background:#e8f5e9;border:2px solid #2d5a27;padding:1.4rem 1.5rem">
+      <h3 style="color:#2d5a27;font-family:sans-serif;font-size:.95rem;margin-bottom:.5rem">&#x1F3E0; Support Hour House &mdash; Newark, NJ</h3>
+      <p style="font-size:.87rem;color:#1b5e20;line-height:1.7;margin-bottom:.7rem">Hour House is Pablo&rsquo;s own adult ESL programme &mdash; independent, community-funded, and free or low-cost for immigrant and refugee learners. Your support keeps it open.</p>
+      <a href="https://g6llc.gumroad.com" target="_blank" style="display:inline-block;background:#2d5a27;color:white;font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.4rem .9rem;text-decoration:none;margin-right:.5rem;margin-bottom:.4rem">&#x1F4D6; Buy the Membership</a>
+      <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="display:inline-block;background:transparent;color:#2d5a27;border:1.5px solid #2d5a27;font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.4rem .9rem;text-decoration:none">&#x1F6D2; Buy the Book</a>
+    </div>
+  </div>
+  <div class="copyright-strip">
+    © 2026 Pablo Nogueira Grossi / Hour House · Newark, NJ ·
+    Lesson 06 — The WorldQuant Top 10 · Country Strategies in the IQC
+  </div>
+
+</div>
+
+<div style="background:#f0ece4;border-top:2px solid #c9a84c;padding:2rem;margin-top:2rem">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem"><a href="../esl-101/Lesson04_USA_Top10.html" style="display:inline-block;color:#c9a84c;border:1px solid rgba(201,168,76,.4);font-family:sans-serif;font-size:.75rem;padding:.45rem 1rem;text-decoration:none;">&larr; 04: USA Top 10</a><a href="Lesson07_Alpha_Submission_v2.html" style="display:inline-block;background:#c9a84c;color:#1a2744;font-family:sans-serif;font-size:.75rem;font-weight:bold;padding:.45rem 1rem;text-decoration:none;">07: Your First Alpha &rarr;</a></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.2rem">
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">All Lessons</div>
+        <a href="../esl-103/Lesson01_Vitruvian_Approximation.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">01: The Vitruvian Approximation</a><a href="Lesson02_Cajueiro_Principle.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">02: The Cajueiro Principle</a><a href="Lesson02b_Galilean_Confluence.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">02b: The Galilean Confluence</a><a href="../esl-101/Lesson03_Number33.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">03: The Number 33</a><a href="../esl-101/Lesson03b_Chladni_Plates.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">03b: Chladni Plates</a><a href="../esl-101/Lesson04_USA_Top10.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">04: USA Enters Top 10</a><a href="Lesson06_WorldQuant_Top10.html" style="color:#c9a84c;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">&rsaquo; 06: Country Strategies</a><a href="Lesson07_Alpha_Submission_v2.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">07: Your First Alpha</a><a href="../esl-103/voynich-caela-lesson.html" style="color:#aaa;text-decoration:none;display:block;margin-bottom:.25rem;font-size:.78rem;font-family:sans-serif;">V: The Voynich Manuscript</a>
+      </div>
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">Support &amp; Connect</div>
+        <a href="https://g6llc.gumroad.com" target="_blank" style="color:#2d5a27;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F4D6; Buy the Membership &mdash; g6llc.gumroad.com</a>
+        <a href="https://www.ebay.com/str/principiaorthogona" target="_blank" style="color:#2d5a27;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F6D2; Buy the Book &mdash; Principia Orthogona on eBay</a>
+        <a href="https://platform.worldquantbrain.com" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;margin-bottom:.3rem;font-family:sans-serif;font-size:.78rem;">&#x1F4C8; WorldQuant Brain</a>
+        <a href="https://github.com/TOTOGT/AXLE" target="_blank" style="color:#3a4f7a;text-decoration:none;display:block;font-family:sans-serif;font-size:.78rem;">&#x1F4BB; github.com/TOTOGT/AXLE</a>
+      </div>
+    </div>
+  </div>
+</div>
+<footer style="background:#1a2744;color:#888;padding:1.8rem 2rem;text-align:center;font-size:.75rem;font-family:sans-serif;line-height:1.8">
+  <div style="color:#c9a84c;font-size:.8rem;margin-bottom:.4rem">&#x1F949;&#x1F948; Bronze &amp; Silver Quant Medals &mdash; IQC 2026 &middot; Pablo Nogueira Grossi</div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; Hour House &middot; Newark, NJ 07104</div>
+  <div style="margin-top:.3rem">ORCID: <a href="https://orcid.org/0009-0000-6496-2186" target="_blank" style="color:#777;text-decoration:none">0009-0000-6496-2186</a> &middot; Principia Orthogona &middot; AXLE v6.1 &middot; CC BY-NC-ND 4.0 &middot; CAELA/WPPPW</div>
+  <div style="margin-top:.4rem"><a href="../index.html" style="color:#c9a84c;text-decoration:none">&larr; Hour House Homepage</a></div>
+</footer>
+</body>
+</html>

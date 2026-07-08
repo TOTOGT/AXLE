@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dm³ 102 — Middle Operators · Principia Orthogona</title>
+<meta name="description" content="The middle arc: three operators μ (Lyapunov −2), η (Tribonacci ≈ 1.839), and Δ (Tetranacci ≈ 1.927). The critDim formula emerges — critDim(3) = 26 con">
+<style>
+:root {
+  --navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;
+  --mid:#3a4f7a;--rule:#8a7340;--text:#1c1c1c;
+  --light:#e8e2d4;--surface2:rgba(255,255,255,0.05);
+  --muted:#888;--teal:#1a5c5c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);}
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.95rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1.2rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.hero{background:var(--navy);color:white;padding:5rem 2rem 3.5rem;text-align:center;}
+.eyebrow{font-family:sans-serif;font-size:.82rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.hero h1{font-size:clamp(1.9rem,4.5vw,3.2rem);line-height:1.2;color:white;margin-bottom:.6rem;}
+.hero-sub{color:var(--gold);font-size:1.25rem;font-style:italic;margin-bottom:1.2rem;}
+.gold-rule{width:70px;height:2px;background:var(--gold);margin:1.2rem auto;}
+.hero-desc{max-width:680px;margin:0 auto 2rem;color:#c0c0c0;font-size:.97rem;line-height:1.85;}
+.op-chain{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0;}
+.op-chip{font-family:sans-serif;font-size:.85rem;padding:.3rem .8rem;border:1px solid rgba(201,168,76,.3);color:#aaa;letter-spacing:.06em;}
+.op-chip.active{background:var(--gold);color:var(--navy);font-weight:bold;border-color:var(--gold);}
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));background:var(--mid);}
+.ov-cell{padding:1.5rem 1rem;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.ov-cell:last-child{border-right:none;}
+.ov-num{font-size:2rem;font-weight:bold;color:var(--gold);font-family:sans-serif;}
+.ov-label{font-size:.78rem;color:#aaa;font-family:sans-serif;margin-top:.3rem;line-height:1.4;}
+.phase-header{padding:2.5rem 2rem 1.5rem;border-top:4px solid var(--gold);background:var(--navy);}
+.phase-inner{max-width:960px;margin:0 auto;display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap;}
+.phase-op{font-family:sans-serif;font-size:3.5rem;font-weight:bold;color:var(--gold);line-height:1;flex-shrink:0;width:80px;text-align:center;}
+.phase-op small{display:block;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,168,76,.7);margin-top:.2rem;}
+.phase-info{flex:1;min-width:200px;}
+.phase-title{font-size:1.5rem;color:white;font-weight:bold;margin-bottom:.4rem;}
+.phase-weeks{font-family:sans-serif;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;}
+.phase-desc{color:rgba(255,255,255,.8);font-size:.93rem;line-height:1.7;max-width:600px;}
+section.weeks{padding:2rem;background:var(--smoke);}
+.section-inner{max-width:960px;margin:0 auto;}
+.weeks-grid{display:grid;gap:1.2rem;margin-top:1.5rem;}
+.week-card{background:white;border-left:4px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;}
+.week-card.milestone{border-left-color:#8b1a1a;}
+.week-head{display:flex;align-items:stretch;}
+.week-num{background:var(--navy);color:var(--gold);font-family:sans-serif;font-size:1.6rem;font-weight:bold;min-width:70px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:1rem .8rem;flex-shrink:0;}
+.week-num small{font-size:.6rem;letter-spacing:.1em;color:#999;text-transform:uppercase;}
+.week-meta{padding:1rem 1.2rem;flex:1;border-bottom:1px solid var(--light);}
+.week-title{font-size:1.1rem;font-weight:bold;color:var(--navy);margin-bottom:.2rem;}
+.week-sub{font-size:.82rem;color:#666;font-family:sans-serif;}
+.week-op{font-family:sans-serif;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rule);margin-top:.4rem;}
+.week-body{padding:1rem 1.2rem;font-size:.88rem;color:#555;line-height:1.7;}
+.week-stub{padding:.8rem 1.2rem;background:rgba(201,168,76,.05);border-top:1px dashed rgba(201,168,76,.3);font-family:sans-serif;font-size:.75rem;color:var(--muted);font-style:italic;}
+.course-nav{background:var(--navy);padding:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.btn{display:inline-block;padding:.65rem 1.4rem;font-family:sans-serif;font-size:.82rem;letter-spacing:.08em;text-decoration:none;text-transform:uppercase;cursor:pointer;}
+.btn-gold{background:var(--gold);color:var(--navy);font-weight:bold;}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+footer{background:var(--navy);color:#888;text-align:center;padding:2rem;font-family:sans-serif;font-size:.78rem;line-height:2;}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="classroom-index.html">dm³ · Principia Orthogona</a>
+  <ul class="nav-links">
+    <li><a href="classroom-index.html">Hub</a></li>
+    <li><span style="opacity:.4;cursor:default" title="Not yet published">π</span></li>
+    <li><span style="opacity:.4;cursor:default" title="Not yet published">φ</span></li>
+    <li><span style="opacity:.4;cursor:default" title="Not yet published">Ω</span></li>
+    <li><span style="opacity:.4;cursor:default" title="Not yet published">τ</span></li>
+    <li><a href="course-dm3-101.html">← dm³ 101</a></li>
+    <li><a href="course-dm3-103.html">dm³ 103 →</a></li>
+  </ul>
+    <a href="../living-book.html">Living Book</a>
+    <a href="103/dm3-courses-101-102-103.html">Series ↗</a>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Principia Orthogona · dm³ Programme · Course 102</div>
+  <h1>dm³ 102 — Middle Operators</h1>
+  <div class="hero-sub">Lyapunov Stability · Tribonacci · Tetranacci</div>
+  <div class="gold-rule"></div>
+  <div class="hero-desc">The middle arc: three operators μ (Lyapunov −2), η (Tribonacci ≈ 1.839), and Δ (Tetranacci ≈ 1.927). The critDim formula emerges — critDim(3) = 26 connects to string theory; critDim(4) = 112 to the 1080-proofs programme. AXLE mechanisation deepens.</div>
+  <div class="op-chain"><span class="op-chip">π</span><span class="op-chip">φ</span><span class="op-chip  active">μ</span><span class="op-chip  active">η</span><span class="op-chip  active">Δ</span><span class="op-chip">Σ</span><span class="op-chip">Ω</span><span class="op-chip">ρ</span><span class="op-chip">τ</span></div>
+</div>
+
+<div class="overview">
+  <div class="ov-cell"><div class="ov-num">16</div><div class="ov-label">Weeks</div></div>
+  <div class="ov-cell"><div class="ov-num">3</div><div class="ov-label">Operators</div></div>
+  <div class="ov-cell"><div class="ov-num">4</div><div class="ov-label">Milestones</div></div>
+  <div class="ov-cell"><div class="ov-num">16</div><div class="ov-label">Lean 4 Labs</div></div>
+  <div class="ov-cell"><div class="ov-num">AXLE</div><div class="ov-label">Proof Engine</div></div>
+</div>
+
+
+  <div class="phase-header">
+    <div class="phase-inner">
+      <div class="phase-op">μ<small>−2</small></div>
+      <div class="phase-info">
+        <div class="phase-title">The μ Operator — Lyapunov Exponent</div>
+        <div class="phase-weeks">Weeks 1–4</div>
+        <div class="phase-desc">μ = −2 is the Lyapunov exponent of the dm³ fixed-point iteration. Negative value: the orbit is stable. This is why G converges to τ = 2.</div>
+      </div>
+    </div>
+  </div>
+  <section class="weeks">
+    <div class="section-inner">
+      <div class="weeks-grid">
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">1<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">Review: π, φ and the Operator Chain</div>
+            <div class="week-sub">Quick recap of 101. The chain so far: G = U∘F∘K∘C, period T* = 2π, golden ratio φ ≈ 1.618. Gap to τ = 2.</div>
+            <div class="week-op">Operator: μ &nbsp;·&nbsp; <a href="102/dm3-102-w01.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">2<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">The μ Operator — Lyapunov Exponent −2</div>
+            <div class="week-sub">Lyapunov exponent of G at fixed point Γ*. μ = −2 means exponential contraction. Stability radius ε₀ = 1/3.</div>
+            <div class="week-op">Operator: μ &nbsp;·&nbsp; <a href="102/dm3-102-w02.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">3<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">Stability in Contact Geometry</div>
+            <div class="week-sub">What ε₀ = 1/3 means geometrically. Basin of attraction. chMu-lyapunov.html as primary text.</div>
+            <div class="week-op">Operator: μ &nbsp;·&nbsp; <a href="102/dm3-102-w03.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card milestone">
+        <div class="week-head">
+          <div class="week-num">4<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">AXLE: Mechanising μ</div>
+            <div class="week-sub">Lean 4 encoding of Lyapunov stability. First critDim appearances in the proof environment.</div>
+            <div class="week-op">Operator: μ &nbsp;·&nbsp; <a href="102/dm3-102-w04.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        <div style="background:#8b1a1a;color:white;padding:.5rem 1.2rem;font-family:sans-serif;font-size:.78rem;font-weight:bold;letter-spacing:.08em;">★ MILESTONE · Submit to Zenodo</div>
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      </div>
+    </div>
+  </section>
+  <div class="phase-header">
+    <div class="phase-inner">
+      <div class="phase-op">η<small>≈ 1.839</small></div>
+      <div class="phase-info">
+        <div class="phase-title">The η Operator — Tribonacci</div>
+        <div class="phase-weeks">Weeks 5–8</div>
+        <div class="phase-desc">η ≈ 1.839 is the dominant root of x³ = x² + x + 1 (3-bonacci). η weighting — the η⁻ᵏ scheme that appears throughout dm³ — is named for this operator.</div>
+      </div>
+    </div>
+  </div>
+  <section class="weeks">
+    <div class="section-inner">
+      <div class="weeks-grid">
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">5<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">The η Operator — Tribonacci ≈ 1.839</div>
+            <div class="week-sub">3-bonacci: T(n) = T(n-1)+T(n-2)+T(n-3). Dominant root η. nBonacciRingSize(3) = 13. chEta-tribonacci.html.</div>
+            <div class="week-op">Operator: η &nbsp;·&nbsp; <a href="102/dm3-102-w05.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">6<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">η Weighting — The Core dm³ Tool</div>
+            <div class="week-sub">η⁻ᵏ weighting in phase decompositions. Why η, not a generic geometric series. Distinction from Hilbert-space Born rule.</div>
+            <div class="week-op">Operator: η &nbsp;·&nbsp; <a href="102/dm3-102-w06.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">7<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">critDim(3) = 26 — String Theory Bridge</div>
+            <div class="week-sub">critDim(n) = 2*(nBonacciRingSize(n)−1)+2. critDim(3) = 26. The 26-dimensional bosonic string as a contact-geometric landmark.</div>
+            <div class="week-op">Operator: η &nbsp;·&nbsp; <a href="102/dm3-102-w07.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card milestone">
+        <div class="week-head">
+          <div class="week-num">8<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">Milestone III — η and critDim(3)</div>
+            <div class="week-sub">Prove critDim(3)=26 from nBonacciRingSize_3=13. Submit Lean 4 proof. Zenodo timestamp.</div>
+            <div class="week-op">Operator: η &nbsp;·&nbsp; <a href="102/dm3-102-w08.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        <div style="background:#8b1a1a;color:white;padding:.5rem 1.2rem;font-family:sans-serif;font-size:.78rem;font-weight:bold;letter-spacing:.08em;">★ MILESTONE · Submit to Zenodo</div>
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      </div>
+    </div>
+  </section>
+  <div class="phase-header">
+    <div class="phase-inner">
+      <div class="phase-op">Δ<small>≈ 1.927</small></div>
+      <div class="phase-info">
+        <div class="phase-title">The Δ Operator — Tetranacci</div>
+        <div class="phase-weeks">Weeks 9–12</div>
+        <div class="phase-desc">Δ ≈ 1.927 is the 4-bonacci dominant root. nBonacciRingSize(4) = 56 gives critDim(4) = 112 — exactly the number of proofs in the AXLE 1080-proofs programme.</div>
+      </div>
+    </div>
+  </div>
+  <section class="weeks">
+    <div class="section-inner">
+      <div class="weeks-grid">
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">9<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">The Δ Operator — Tetranacci ≈ 1.927</div>
+            <div class="week-sub">4-bonacci recurrence. Dominant root Δ. nBonacciRingSize(4) = 56. chDelta-tetranacci.html.</div>
+            <div class="week-op">Operator: Δ &nbsp;·&nbsp; <a href="102/dm3-102-w09.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">10<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">critDim(4) = 112 — The 1080-Proofs Connection</div>
+            <div class="week-sub">critDim(4) = 2*(56−1)+2 = 112, a real Lean-proved lemma (critDim_4). Correction: the sorry_inventory.csv audit file does have 112 rows, but that is a count of distinct file/theorem entries under review, not a count of sorrys — the actual sorry count in that file is 1,041 (1,027 still open as of the last audit). The 112/112 match is a coincidence between a fixed arithmetic constant and the row-count of a CSV that changes as entries are closed, not a structural finding.</div>
+            <div class="week-op">Operator: Δ &nbsp;·&nbsp; <a href="102/dm3-102-w10.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">11<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">critDim_monotone — A Closed Lean Proof</div>
+            <div class="week-sub">Walk through the proof of critDim_monotone closed in session 2026-06-14. Axioms, omega tactic, proof term.</div>
+            <div class="week-op">Operator: Δ &nbsp;·&nbsp; <a href="102/dm3-102-w11.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card milestone">
+        <div class="week-head">
+          <div class="week-num">12<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">no_return_to_critical — Second Closed Proof</div>
+            <div class="week-sub">Walk through no_return_to_critical: for n > 3, critDim(n) > 26. Proof by cases on n ≥ 4.</div>
+            <div class="week-op">Operator: Δ &nbsp;·&nbsp; <a href="102/dm3-102-w12.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        <div style="background:#8b1a1a;color:white;padding:.5rem 1.2rem;font-family:sans-serif;font-size:.78rem;font-weight:bold;letter-spacing:.08em;">★ MILESTONE · Submit to Zenodo</div>
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      </div>
+    </div>
+  </section>
+  <div class="phase-header">
+    <div class="phase-inner">
+      <div class="phase-op">G⁵<small>synthesis</small></div>
+      <div class="phase-info">
+        <div class="phase-title">G⁵ and the Midpoint — Three Operators Closed</div>
+        <div class="phase-weeks">Weeks 13–16</div>
+        <div class="phase-desc">Five operators of nine now defined. The n-bonacci ladder is half-climbed. G⁵ brings the orbit visibly closer to τ = 2. Preview: Σ, Ω, ρ, τ in dm³ 103.</div>
+      </div>
+    </div>
+  </div>
+  <section class="weeks">
+    <div class="section-inner">
+      <div class="weeks-grid">
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">13<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">G⁵ — Fifth Iteration and Convergence Rate</div>
+            <div class="week-sub">Orbit after five G applications. Distance to τ = 2 shrinks. Lyapunov exponent μ = −2 doing its work.</div>
+            <div class="week-op">Operator: G⁵ &nbsp;·&nbsp; <a href="102/dm3-102-w13.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">14<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">Applications — Immune Memory and Allostatic Load</div>
+            <div class="week-sub">ch5-immune.html, ch2-allostatic.html: Δ operator in biological n-bonacci rhythms.</div>
+            <div class="week-op">Operator: G⁵ &nbsp;·&nbsp; <a href="102/dm3-102-w14.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card">
+        <div class="week-head">
+          <div class="week-num">15<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">Preview: Σ, Ω, ρ, τ — The Final Ascent to the Omega Point</div>
+            <div class="week-sub">Road map to dm³ 103. Pentanacci, Hexabonacci, Spectral Radius, Embodiment Threshold. The Omega Point.</div>
+            <div class="week-op">Operator: G⁵ &nbsp;·&nbsp; <a href="102/dm3-102-w15.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      <div class="week-card milestone">
+        <div class="week-head">
+          <div class="week-num">16<small>week</small></div>
+          <div class="week-meta">
+            <div class="week-title">Milestone IV — 102 Complete · Ready for 103</div>
+            <div class="week-sub">Final assessment: write a 2-page proof summary of critDim_monotone and no_return_to_critical. Lean 4 portfolio.</div>
+            <div class="week-op">Operator: G⁵ &nbsp;·&nbsp; <a href="102/dm3-102-w16.html" style="color:var(--gold);">Full week page →</a></div>
+          </div>
+        </div>
+        <div style="background:#8b1a1a;color:white;padding:.5rem 1.2rem;font-family:sans-serif;font-size:.78rem;font-weight:bold;letter-spacing:.08em;">★ MILESTONE · Submit to Zenodo</div>
+        <div class="week-stub">Stub — prose content, Lean 4 exercises, and problem sets to be filled in.</div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+<div class="course-nav">
+  <a href="course-dm3-101.html" class="btn btn-outline">← dm³ 101</a>
+  <span style="font-family:sans-serif;font-size:.78rem;color:#888;letter-spacing:.08em;">G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; dm³ 102 &nbsp;·&nbsp; Pablo Nogueira Grossi · G6 LLC 2026</span>
+  <a href="course-dm3-103.html" class="btn btn-gold">dm³ 103 →</a>
+</div>
+
+<footer>
+  G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Principia Orthogona G1–G9 &nbsp;·&nbsp;
+  Pablo Nogueira Grossi &nbsp;·&nbsp; G6 LLC · Newark NJ &nbsp;·&nbsp; 2026<br>
+  ORCID: 0009-0000-6496-2186 &nbsp;·&nbsp;
+  <a href="https://zenodo.org/records/19117400">Zenodo DOI ↗</a> &nbsp;·&nbsp;
+  <a href="https://github.com/TOTOGT/AXLE">AXLE ↗</a>
+</footer>
+
+<div style="background:#0e1525;border-top:1px solid #2a3a5a;padding:.55rem 2rem;text-align:right;font-family:sans-serif;font-size:.72rem;color:#666">
+  <a href="https://grossi-ops.github.io/g6/" target="_blank" style="color:#c9a84c;text-decoration:none;letter-spacing:.05em">G6 LLC</a>
+  <span style="color:#333">&nbsp;·&nbsp;</span>
+  <span>g6llc@proton.me</span>
+  <span style="color:#333">&nbsp;·&nbsp;</span>
+  <span>+1 (646) 342-3751</span>
+</div>
+</body>
+</html>

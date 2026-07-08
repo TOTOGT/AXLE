@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dm³ 101 · 102 · 103 — Three 16-Week Curricula · Principia Orthogona</title>
+<style>
+:root {
+  --navy:#1a2744; --gold:#c9a84c; --cream:#faf7f0; --smoke:#f0ece4;
+  --mid:#3a4f7a; --rule:#8a7340; --text:#1c1c1c; --light:#e8e2d4;
+  --c-phase:#2d4a8a; --k-phase:#5a2d8a; --f-phase:#2d6b3a; --u-phase:#8a5a1a;
+  --red:#8b1a1a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:Georgia,serif;color:var(--text);background:var(--cream);}
+
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.nav-logo{color:var(--gold);font-weight:bold;font-size:.95rem;letter-spacing:.1em;text-decoration:none;font-family:sans-serif;}
+.nav-links{display:flex;gap:1rem;list-style:none;flex-wrap:wrap;}
+.nav-links a{color:#ccc;text-decoration:none;font-size:.82rem;font-family:sans-serif;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+
+/* course selector */
+.course-sel{background:#111a30;padding:1rem 2rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;border-bottom:2px solid var(--gold);}
+.cs-label{color:#888;font-family:sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;}
+.cs-btn{padding:.45rem 1.3rem;font-family:sans-serif;font-size:.85rem;font-weight:bold;cursor:pointer;
+  border:2px solid rgba(201,168,76,.4);background:transparent;color:#ccc;border-radius:3px;transition:all .2s;}
+.cs-btn:hover,.cs-btn.active{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+
+/* hero */
+.hero{background:var(--navy);color:white;padding:4rem 2rem 3rem;text-align:center;}
+.eyebrow{font-family:sans-serif;font-size:.8rem;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:.8rem;}
+.hero h1{font-size:clamp(1.7rem,4vw,2.9rem);line-height:1.2;margin-bottom:.5rem;}
+.hero-sub{color:var(--gold);font-size:1.1rem;font-style:italic;margin-bottom:.8rem;}
+.gold-rule{width:60px;height:2px;background:var(--gold);margin:.9rem auto;}
+.hero-desc{max-width:660px;margin:0 auto 1.5rem;color:#bbb;font-size:.93rem;line-height:1.85;}
+.hero-chips{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+.chip{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.35);color:var(--gold);
+  padding:.3rem .85rem;font-family:sans-serif;font-size:.76rem;letter-spacing:.07em;}
+
+.op-banner{background:var(--gold);color:var(--navy);text-align:center;padding:.7rem 2rem;
+  font-size:1.2rem;font-weight:bold;letter-spacing:.18em;font-family:sans-serif;}
+
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));background:var(--navy);}
+.ov-cell{padding:1.3rem 1rem;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.ov-cell:last-child{border-right:none;}
+.ov-num{font-size:1.9rem;font-weight:bold;color:var(--gold);font-family:sans-serif;}
+.ov-label{font-size:.74rem;color:#aaa;font-family:sans-serif;margin-top:.2rem;line-height:1.4;}
+
+/* journey */
+.journey-bg{background:var(--navy);padding:2.5rem 2rem;}
+.journey-title{text-align:center;color:white;font-size:1.3rem;margin-bottom:.4rem;}
+.journey-sub{text-align:center;color:#888;font-family:sans-serif;font-size:.8rem;margin-bottom:1.5rem;}
+.journey-row{display:flex;align-items:stretch;overflow-x:auto;gap:0;}
+.j-cell{flex:1;min-width:72px;padding:.8rem .4rem;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.j-cell:last-child{border-right:none;}
+.j-week{font-family:sans-serif;font-size:.6rem;color:#777;margin-bottom:.2rem;}
+.j-op{font-size:1.3rem;font-weight:bold;color:var(--gold);}
+.j-name{font-size:.62rem;color:#aaa;margin-top:.2rem;line-height:1.35;}
+.j-milestone{background:rgba(139,26,26,.25);border-top:2px solid var(--red);}
+.j-focus{background:rgba(201,168,76,.12);border-top:2px solid var(--gold);}
+
+/* phase headers */
+.phase-header{padding:2rem 2rem 1.5rem;border-top:4px solid var(--gold);}
+.phase-header.c{background:var(--c-phase);}
+.phase-header.k{background:var(--k-phase);}
+.phase-header.f{background:var(--f-phase);}
+.phase-header.u{background:var(--u-phase);}
+.phase-header .si{display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap;max-width:960px;margin:0 auto;}
+.phase-op{font-family:sans-serif;font-size:3rem;font-weight:bold;color:var(--gold);line-height:1;flex-shrink:0;width:72px;text-align:center;}
+.phase-op small{display:block;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(201,168,76,.65);margin-top:.15rem;}
+.phase-info{flex:1;min-width:180px;}
+.phase-title{font-size:1.35rem;color:white;font-weight:bold;margin-bottom:.3rem;}
+.phase-weeks{font-family:sans-serif;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem;}
+.phase-desc{color:rgba(255,255,255,.8);font-size:.9rem;line-height:1.7;max-width:580px;}
+.phase-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.8rem;}
+.phase-tag{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);font-family:sans-serif;font-size:.68rem;padding:.15rem .55rem;}
+
+/* week cards */
+.weeks-grid{display:grid;gap:1.2rem;max-width:960px;margin:0 auto;padding:1.5rem 2rem 2.5rem;}
+.week-card{background:white;border-left:4px solid var(--gold);box-shadow:0 2px 8px rgba(0,0,0,.06);overflow:hidden;}
+.week-card.milestone{border-left-color:var(--red);}
+.week-card.focus{border-left-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.3),0 2px 8px rgba(0,0,0,.1);}
+.week-head{display:flex;align-items:stretch;}
+.week-num{background:var(--navy);color:var(--gold);font-family:sans-serif;font-size:1.5rem;font-weight:bold;
+  min-width:64px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:.9rem .7rem;flex-shrink:0;}
+.week-num small{font-size:.55rem;letter-spacing:.1em;color:#999;text-transform:uppercase;}
+.week-meta{padding:.9rem 1.1rem;flex:1;border-bottom:1px solid var(--light);}
+.week-title{font-size:1.05rem;font-weight:bold;color:var(--navy);margin-bottom:.15rem;}
+.week-sub{font-size:.8rem;color:#666;font-family:sans-serif;}
+.week-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.4rem;}
+.tag{font-family:sans-serif;font-size:.62rem;padding:.12rem .4rem;letter-spacing:.05em;border-radius:2px;}
+.tag-study{background:#dbeafe;color:#1e40af;}
+.tag-math{background:#ede9fe;color:#4c1d95;}
+.tag-axle{background:#f0fdf4;color:#14532d;border:1px solid #bbf7d0;}
+.tag-pub{background:#fee2e2;color:#991b1b;}
+.tag-chapter{background:#fef3c7;color:#92400e;}
+.tag-milestone{background:var(--red);color:white;font-weight:bold;}
+.tag-focus{background:#f59e0b;color:#1c1c1c;font-weight:bold;}
+
+.week-body{padding:.9rem 1.1rem 1.1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.week-body{grid-template-columns:1fr;}}
+.wb-col h4{font-family:sans-serif;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--rule);margin-bottom:.4rem;}
+.wb-col ul{list-style:none;padding:0;}
+.wb-col li{font-size:.84rem;line-height:1.6;padding:.18rem 0 .18rem 1rem;position:relative;color:#333;}
+.wb-col li::before{content:"→";position:absolute;left:0;color:var(--gold);font-size:.72rem;top:.28rem;}
+
+.week-prompt{background:#fffbeb;border-top:1px solid #fde68a;padding:.7rem 1.1rem;}
+.prompt-label{font-family:sans-serif;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--rule);margin-bottom:.35rem;}
+.prompt-box{background:white;border:1px solid #fde68a;border-left:3px solid var(--gold);
+  padding:.5rem .75rem;font-size:.81rem;font-style:italic;color:#555;line-height:1.6;}
+
+.week-output{background:var(--smoke);border-top:1px solid var(--light);padding:.7rem 1.1rem;font-size:.81rem;color:#444;}
+.week-output strong{font-family:sans-serif;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--rule);display:block;margin-bottom:.25rem;}
+
+.milestone-banner{background:var(--red);color:white;padding:.6rem 1.1rem;font-family:sans-serif;font-size:.78rem;font-weight:bold;letter-spacing:.07em;}
+.focus-banner{background:#f59e0b;color:#1a1a00;padding:.6rem 1.1rem;font-family:sans-serif;font-size:.78rem;font-weight:bold;}
+
+/* course section visibility */
+.course-section{display:none;}
+.course-section.active{display:block;}
+
+/* course divider */
+.course-divider{background:var(--navy);color:var(--gold);text-align:center;padding:2.5rem 1rem;
+  font-family:sans-serif;font-size:1.6rem;font-weight:bold;letter-spacing:.15em;border-top:4px solid var(--gold);}
+.course-divider small{display:block;font-size:.8rem;color:#aaa;letter-spacing:.1em;margin-top:.3rem;font-weight:normal;}
+
+footer{background:var(--navy);color:#999;padding:2rem 2rem;text-align:center;font-size:.77rem;font-family:sans-serif;}
+footer a{color:#888;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="../classroom-index.html">dm³ · Principia Orthogona</a>
+  <ul class="nav-links">
+    <li><a href="../classroom-index.html">Hub</a></li>
+    <li><a href="../../book3/ch-turing-morphogenesis.html">Turing</a></li>
+    <li><a href="../../book3/ch-lorenz-chaos.html">Lorenz</a></li>
+    <li><a href="../../book3/ch-mandelbrot-fractals.html">Mandelbrot</a></li>
+    <li><a href="../../living-book.html">Living Book</a></li>
+    <li><a href="../103/dm3-courses-101-102-103.html">Series ↗</a></li>
+  </ul>
+</nav>
+
+<!-- course selector -->
+<div class="course-sel">
+  <span class="cs-label">Jump to course:</span>
+  <button class="cs-btn active" onclick="showCourse('101',this)">dm³ 101 — Foundations</button>
+  <button class="cs-btn" onclick="showCourse('102',this)">dm³ 102 — Applications</button>
+  <button class="cs-btn" onclick="showCourse('103',this)">dm³ 103 — Mechanisation</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- COURSE 101 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="course-101" class="course-section active">
+
+<div class="hero">
+  <div class="eyebrow">Principia Orthogona · dm³ Series · Course 1 of 3</div>
+  <h1>dm³ 101 — Foundations</h1>
+  <div class="hero-sub">Contact Geometry, the Cajueiro Seed, and the Operator Chain</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">The first course in the dm³ sequence. Students build from topology to contact manifolds, derive
+  the n-bonacci ladder from first principles, and arrive at the embodiment threshold τ = 2.
+  No prior differential geometry required — only curiosity and the willingness to follow a seed to its canopy.</p>
+  <div class="hero-chips">
+    <span class="chip">16 Weeks</span>
+    <span class="chip">Prerequisite: Calculus I</span>
+    <span class="chip">Zenodo Paper × 2</span>
+    <span class="chip">AXLE Intro</span>
+    <span class="chip">Leads to dm³ 102</span>
+  </div>
+</div>
+
+<div class="op-banner">C &nbsp;→&nbsp; K &nbsp;→&nbsp; F &nbsp;→&nbsp; U &nbsp;→&nbsp; τ = 2</div>
+
+<div class="overview">
+  <div class="ov-cell"><div class="ov-num">16</div><div class="ov-label">Weeks</div></div>
+  <div class="ov-cell"><div class="ov-num">4</div><div class="ov-label">Operator phases</div></div>
+  <div class="ov-cell"><div class="ov-num">2</div><div class="ov-label">Zenodo papers</div></div>
+  <div class="ov-cell"><div class="ov-num">7</div><div class="ov-label">n-bonacci rungs</div></div>
+  <div class="ov-cell"><div class="ov-num">τ=2</div><div class="ov-label">Embodiment threshold</div></div>
+</div>
+
+<div class="journey-bg">
+  <div class="journey-title">dm³ 101 — 16-Week Journey</div>
+  <div class="journey-sub">C = Compress · K = Threshold · F = Fold · U = Unfold · ● = milestone</div>
+  <div class="journey-row">
+    <div class="j-cell"><div class="j-week">W1</div><div class="j-op">C</div><div class="j-name">Seed / Cajueiro</div></div>
+    <div class="j-cell"><div class="j-week">W2</div><div class="j-op">C</div><div class="j-name">Topology Primer</div></div>
+    <div class="j-cell"><div class="j-week">W3</div><div class="j-op">C</div><div class="j-name">Contact Forms</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W4</div><div class="j-op" style="color:#ff9999;">●</div><div class="j-name">Paper 1 · Zenodo</div></div>
+    <div class="j-cell"><div class="j-week">W5</div><div class="j-op">K</div><div class="j-name">LAW3M ODE</div></div>
+    <div class="j-cell"><div class="j-week">W6</div><div class="j-op">K</div><div class="j-name">Lyapunov / ε₀</div></div>
+    <div class="j-cell"><div class="j-week">W7</div><div class="j-op">K</div><div class="j-name">r★ Whitney Fold</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W8</div><div class="j-op" style="color:#ff9999;">●</div><div class="j-name">Paper 2 · GitHub</div></div>
+    <div class="j-cell"><div class="j-week">W9</div><div class="j-op">F</div><div class="j-name">π · φ · Fibonacci</div></div>
+    <div class="j-cell"><div class="j-week">W10</div><div class="j-op">F</div><div class="j-name">η · Δ · Σ · Ω</div></div>
+    <div class="j-cell"><div class="j-week">W11</div><div class="j-op">F</div><div class="j-name">Operator Chain G</div></div>
+    <div class="j-cell"><div class="j-week">W12</div><div class="j-op">F</div><div class="j-name">Fixed Point</div></div>
+    <div class="j-cell"><div class="j-week">W13</div><div class="j-op">U</div><div class="j-name">AXLE Setup</div></div>
+    <div class="j-cell"><div class="j-week">W14</div><div class="j-op">U</div><div class="j-name">First Proof</div></div>
+    <div class="j-cell"><div class="j-week">W15</div><div class="j-op">U</div><div class="j-name">Cajueiro Cycle</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W16</div><div class="j-op" style="color:#ff9999;">τ=2</div><div class="j-name">Complete Circuit</div></div>
+  </div>
+</div>
+
+<!-- PHASE C 101 -->
+<div class="phase-header c">
+  <div class="si">
+    <div class="phase-op">C<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 1 – 4 · Compression Phase</div>
+      <div class="phase-title">Perceiving Structure — From Topology to Contact Geometry</div>
+      <p class="phase-desc">Before a student can use the operator chain, they must see it. Phase C of 101
+      compresses the necessary mathematical vocabulary into four weeks: sets and maps, smooth manifolds,
+      differential forms, and the contact structure α = dz − r²dθ on ℝ³. The Cajueiro seed is the frame:
+      everything visible was once invisible and compressed.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">Topology primer</span>
+        <span class="phase-tag">Differential forms</span>
+        <span class="phase-tag">ch1-seed.html</span>
+        <span class="phase-tag">Zenodo Paper 1</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">01<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Cajueiro Principle — We Perceive the Unfolding First</div>
+      <div class="week-sub">ch1-seed.html · Operator C · No prerequisites</div>
+      <div class="week-tags"><span class="tag tag-study">Study</span><span class="tag tag-chapter">Chapter</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study</h4><ul>
+      <li>Read ch1-seed.html — the cajueiro as model of scientific unfolding</li>
+      <li>Observe: what is visible first in any system you already know?</li>
+      <li>Vocabulary: operator, compression, observable, threshold, seed</li>
+    </ul></div>
+    <div class="wb-col"><h4>Write</h4><ul>
+      <li>One-page reflection: describe a system you know well in cajueiro terms (seed → canopy)</li>
+      <li>Post to GitHub as your first README entry</li>
+    </ul></div>
+  </div>
+  <div class="week-prompt">
+    <div class="prompt-label">LLM Prompt 1.1</div>
+    <div class="prompt-box">"Explain the cajueiro principle to me as if I have never studied mathematics. What does it mean that we always perceive the unfolding before the seed?"</div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">02<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Topology Primer — Sets, Maps, and Continuity</div>
+      <div class="week-sub">Foundations · Operator C · Level: pre-calculus comfort</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span><span class="tag tag-study">Study</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Open and closed sets; continuous maps; homeomorphisms</li>
+      <li>Manifold definition: locally ℝⁿ, globally interesting</li>
+      <li>Tangent vectors and tangent bundle TM</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>ℝ³ with coordinates (r, θ, z) as the ambient manifold for dm³</li>
+      <li>What does "the limit cycle Γ lives in ℝ³" mean concretely?</li>
+      <li>Sketch Γ: a closed curve at r=1</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">03<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Contact Structures — The Geometry of Constraint</div>
+      <div class="week-sub">α = dz − r²dθ · contact form · Legendrian submanifolds</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Differential 1-forms; the form α = dz − r²dθ on ℝ³</li>
+      <li>Contact condition: α ∧ dα ≠ 0 everywhere</li>
+      <li>Legendrian submanifolds: curves tangent to ker(α)</li>
+      <li>Reeb vector field R_α: the flow along the contact structure</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>The LAW3M limit cycle Γ is Legendrian in (ℝ³, α)</li>
+      <li>Why this matters: dynamics constrained by contact form ↔ G preserving α</li>
+      <li>Draw α as a field of planes in ℝ³ — where are they tangent to Γ?</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 4 · First Zenodo Deposit</div>
+  <div class="week-head">
+    <div class="week-num">04<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Paper 1 — The Contact Structure of dm³: A Reading Report</div>
+      <div class="week-sub">Zenodo deposit · 3–4 pages · cite Vol I DOI</div>
+      <div class="week-tags"><span class="tag tag-pub">Zenodo</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverable</h4><ul>
+      <li>3–4 page PDF: explain the contact structure α = dz − r²dθ in your own words</li>
+      <li>Include: definition, contact condition, one example (Γ)</li>
+      <li>Cite: Principia Orthogona Vol I, doi:10.5281/zenodo.20298665</li>
+    </ul></div>
+    <div class="wb-col"><h4>Process</h4><ul>
+      <li>Draft using LLM Prompt 4.1 below</li>
+      <li>Upload to Zenodo — record your DOI</li>
+      <li>Add DOI to your GitHub README</li>
+    </ul></div>
+  </div>
+  <div class="week-prompt">
+    <div class="prompt-label">LLM Prompt 4.1</div>
+    <div class="prompt-box">"I have studied contact geometry for three weeks. Help me write a clear 3-page report explaining the contact structure α = dz − r²dθ, why the contact condition α ∧ dα ≠ 0 matters, and what a Legendrian curve is. Audience: first-year graduate student."</div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid phase C 101 -->
+
+<!-- PHASE K 101 -->
+<div class="phase-header k">
+  <div class="si">
+    <div class="phase-op">K<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 5 – 8 · Threshold Phase</div>
+      <div class="phase-title">Stability — LAW3M, Lyapunov, and the Whitney Fold</div>
+      <p class="phase-desc">Phase K asks: what is stable, and how do we know? The LAW3M ODE is the core dynamical system.
+      Students derive ε₀ = 1/3 from the Lyapunov energy function V = (r−1)²/2, locate the Whitney A₁ fold threshold
+      r★ ≈ 0.776, and learn why det(J) ≈ −0.364 is not the same number as ε₀. Precision here pays off in every course that follows.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">LAW3M ODE</span><span class="phase-tag">Lyapunov stability</span>
+        <span class="phase-tag">ε₀ = 1/3</span><span class="phase-tag">r★ ≈ 0.776</span>
+        <span class="phase-tag">GitHub Paper 2</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">05<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The LAW3M ODE — The Core Dynamical System</div>
+      <div class="week-sub">ṙ = r(1−r²) + 2(r−1)e^{−z} · θ̇ = 1 · ż = r² − 2(r−1)²e^{−z}</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Write down the LAW3M system; identify each term</li>
+      <li>Limit cycle Γ: r=1, θ̇=1, ż=1 — verify this is a solution</li>
+      <li>Linearise around r=1: obtain the Jacobian J at Γ</li>
+      <li>Compute det(J) at the saddle r_s = 2cos(3π/7) ≈ 0.445 → det(J) ≈ −0.364</li>
+    </ul></div>
+    <div class="wb-col"><h4>Key Distinction</h4><ul>
+      <li>det(J) ≈ −0.364 is the Jacobian determinant at the saddle — a property of the unstable fixed point</li>
+      <li>ε₀ = 1/3 will come from Lyapunov (next week) — a property of the stable cycle</li>
+      <li>These are different quantities; conflating them is the most common error in dm³ literature</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">06<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Lyapunov Stability — Deriving ε₀ = 1/3</div>
+      <div class="week-sub">V = (r−1)²/2 · stability radius · μ = −2</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span><span class="tag tag-chapter">chMu-lyapunov.html</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Lyapunov function V(r) = (r−1)²/2 ≥ 0, V=0 iff r=1</li>
+      <li>Compute dV/dt along LAW3M trajectories; show dV/dt ≤ 0 for |r−1| &lt; ε₀</li>
+      <li>Solve for ε₀: the stability radius is ε₀ = 1/3 (Theorem D, Vol II)</li>
+      <li>Transverse decay rate μ = −2: linearise transversely to Γ</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>ε₀ = 1/3 means: initial conditions within 1/3 of r=1 converge to Γ</li>
+      <li>μ = −2 is the Lyapunov exponent — third rung of the operator chain</li>
+      <li>Read chMu-lyapunov.html; cross-reference Vol II, Theorem D</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">07<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Whitney A₁ Fold — r★ ≈ 0.776</div>
+      <div class="week-sub">Inner basin boundary · Whitney fold threshold · distinct from ε₀</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Whitney A₁ fold singularity: where the basin boundary has a fold-type geometry</li>
+      <li>r★ = 0.77594059 ≈ 0.776: numerical inner boundary of the LAW3M basin</li>
+      <li>Initial conditions with ρ₀ &gt; r★ and within ε₀ of Γ converge to Γ</li>
+      <li>Initial conditions with ρ₀ &lt; r★ may escape — the fold is a one-way door</li>
+    </ul></div>
+    <div class="wb-col"><h4>Three Numbers to Distinguish</h4><ul>
+      <li>r★ ≈ 0.776 — Whitney fold / inner basin boundary</li>
+      <li>ε₀ = 1/3 ≈ 0.333 — Lyapunov stability radius from V=(r−1)²/2</li>
+      <li>det(J) ≈ −0.364 — Jacobian at the saddle r_s ≈ 0.445</li>
+      <li>None of these equals any other. Know all three by name.</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 8 · GitHub Paper</div>
+  <div class="week-head">
+    <div class="week-num">08<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Paper 2 — Stability Analysis of the LAW3M System</div>
+      <div class="week-sub">GitHub Pages · 4–6 pages · derive ε₀, r★, det(J) clearly</div>
+      <div class="week-tags"><span class="tag tag-pub">GitHub Pages</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverable</h4><ul>
+      <li>4–6 page technical note: the three stability numbers, derived and distinguished</li>
+      <li>Must include: Lyapunov derivation of ε₀, Whitney fold description of r★, Jacobian computation of det(J)</li>
+      <li>Publish on GitHub Pages; link from Zenodo Paper 1</li>
+    </ul></div>
+    <div class="wb-col"><h4>Self-check</h4><ul>
+      <li>Does your paper clearly state ε₀ ≠ det(J)?</li>
+      <li>Does it state ε₀ comes from Lyapunov, NOT Gronwall?</li>
+      <li>Does r★ appear with all 8 significant figures: 0.77594059?</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid phase K 101 -->
+
+<!-- PHASE F 101 -->
+<div class="phase-header f">
+  <div class="si">
+    <div class="phase-op">F<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 9 – 12 · Fold Phase</div>
+      <div class="phase-title">The n-Bonacci Ladder — π to Ω</div>
+      <p class="phase-desc">Each rung of the ladder is a root of an n-th degree characteristic polynomial.
+      The sequence π, φ, η, Δ, Σ, Ω converges to τ = 2 — the diameter of the circle the limit cycle
+      traces, the embodiment threshold, the fixed point of G. Students climb all seven rungs.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">ch9-phi.html</span><span class="phase-tag">chEta-tribonacci.html</span>
+        <span class="phase-tag">chDelta-tetranacci.html</span><span class="phase-tag">chSigma-pentanacci.html</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">09<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">π and φ — Period and the Golden Ratio</div>
+      <div class="week-sub">chPI-recurrence.html · ch9-phi.html · rungs 1 and 2</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span><span class="tag tag-chapter">Chapters</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>π — Period T★ = 2π</h4><ul>
+      <li>The limit cycle has period T★ = 2π in θ — this is rung 1</li>
+      <li>Read chPI-recurrence.html: period as the opener of the operator chain</li>
+      <li>Why 2π? The contact rotation θ̇ = 1 completes one circuit per 2π units of time</li>
+    </ul></div>
+    <div class="wb-col"><h4>φ ≈ 1.618 — Fibonacci</h4><ul>
+      <li>2-term recurrence: a(n) = a(n−1) + a(n−2)</li>
+      <li>Dominant root of x² − x − 1 = 0: φ = (1+√5)/2</li>
+      <li>Read ch9-phi.html: φ in spiral geometry, phyllotaxis, dm³ phase weights</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">10<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">η, Δ, Σ, Ω — Tribonacci to Hexabonacci</div>
+      <div class="week-sub">Rungs 3–6 · convergence to τ = 2</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span><span class="tag tag-chapter">Chapters</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>The Four Middle Rungs</h4><ul>
+      <li>η ≈ 1.839: root of x³ − x² − x − 1 = 0 (tribonacci)</li>
+      <li>Δ ≈ 1.927: root of x⁴ − x³ − x² − x − 1 = 0 (tetranacci)</li>
+      <li>Σ ≈ 1.966: root of x⁵ polynomial (pentanacci)</li>
+      <li>Ω ≈ 1.984: root of x⁶ polynomial (hexabonacci)</li>
+    </ul></div>
+    <div class="wb-col"><h4>The Convergence</h4><ul>
+      <li>Gap to τ=2: |φ−2| = 0.382; |η−2| = 0.161; |Δ−2| = 0.073; |Σ−2| = 0.034; |Ω−2| = 0.016</li>
+      <li>The gap halves (roughly) at each rung — exponential convergence</li>
+      <li>lim_{k→∞} g_k = 2 = τ: the n-bonacci ladder closes at the embodiment threshold</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">11<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Operator Chain G = U ∘ F ∘ K ∘ C</div>
+      <div class="week-sub">chE-gtct.html · composition · fixed point theorem</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>The Chain</h4><ul>
+      <li>C: compression operator — maps observables to structure</li>
+      <li>K: threshold operator — locates the critical transition</li>
+      <li>F: fold operator — the Whitney-type fold geometry</li>
+      <li>U: unfolding operator — traces the canopy from the seed</li>
+      <li>G = U ∘ F ∘ K ∘ C: one complete circuit</li>
+    </ul></div>
+    <div class="wb-col"><h4>Fixed Point</h4><ul>
+      <li>G(x★) = x★: the fixed point is τ = 2, the embodiment threshold</li>
+      <li>Banach fixed-point theorem applies on the basin of attraction</li>
+      <li>G⁶ = G∘G∘G∘G∘G∘G: the sixth iterate closes the recurrence cycle (g₃₃ = 33)</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">12<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Fixed Point — G(x★) = x★ and the Complete Circuit</div>
+      <div class="week-sub">ch7-complete-circuit.html · synthesis week</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span><span class="tag tag-chapter">Chapters</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Synthesis</h4><ul>
+      <li>Trace one full G-orbit from a point near r★ to τ=2</li>
+      <li>Connect the n-bonacci ladder to G: each rung is one application of F</li>
+      <li>The chain closes: Ω → π. What does this mean geometrically?</li>
+    </ul></div>
+    <div class="wb-col"><h4>Prepare for 101 Final</h4><ul>
+      <li>Write a one-page summary: the three stability numbers, the ladder, the fixed point</li>
+      <li>This becomes the introduction to your dm³ 101 final paper (Week 16)</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid phase F 101 -->
+
+<!-- PHASE U 101 -->
+<div class="phase-header u">
+  <div class="si">
+    <div class="phase-op">U<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 13 – 16 · Unfolding Phase</div>
+      <div class="phase-title">AXLE Introduction and the First Complete Proof</div>
+      <p class="phase-desc">Phase U of 101 introduces Lean 4 and the AXLE proof environment.
+      Students verify a single small claim from Phase K — the Lyapunov bound ε₀ = 1/3 —
+      and publish the result. The Cajueiro cycle completes: seed→canopy→new seed.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">Lean 4 basics</span><span class="phase-tag">AXLE repo</span>
+        <span class="phase-tag">github.com/TOTOGT/AXLE</span><span class="phase-tag">Final Paper</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">13<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Lean 4 and AXLE — Reading the Proof Environment</div>
+      <div class="week-sub">github.com/TOTOGT/AXLE · chV-axle.html</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Setup</h4><ul>
+      <li>Install Lean 4 and Mathlib; clone AXLE repo</li>
+      <li>Read chV-axle.html: the proof architecture overview</li>
+      <li>Understand: theorem vs axiom vs sorry in AXLE tier system</li>
+    </ul></div>
+    <div class="wb-col"><h4>First Read</h4><ul>
+      <li>Open AXLE/main.lean; locate the Lyapunov stability theorem</li>
+      <li>Identify every `sorry` — these are the open problems</li>
+      <li>Read the `gronwall_outer` identifier — it is a Lean name, not a mathematical claim about Gronwall</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">14<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Your First Lean Proof — Verifying a Tier-A Lemma</div>
+      <div class="week-sub">chV-sorrys.html · clear one sorry</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Task</h4><ul>
+      <li>Choose one Tier-A (simplest) sorry from chV-sorrys.html</li>
+      <li>Write the Lean 4 proof; get Lean to accept it (no red squiggles)</li>
+      <li>Commit to your fork of AXLE with a descriptive message</li>
+    </ul></div>
+    <div class="wb-col"><h4>Document</h4><ul>
+      <li>Write 1 page explaining: what was the claim, how you proved it, what Mathlib lemmas you used</li>
+      <li>This is the core of your Week 16 final paper</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">15<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Cajueiro Cycle — Reflecting on a Complete Circuit</div>
+      <div class="week-sub">Synthesis · connect seed (W1) to canopy (W14)</div>
+      <div class="week-tags"><span class="tag tag-study">Reflection</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Reflection</h4><ul>
+      <li>Return to your Week 1 cajueiro reflection — what was the seed?</li>
+      <li>Map your 14-week trajectory onto the G = U∘F∘K∘C chain</li>
+      <li>Where in the chain are you now? Where is your paper?</li>
+    </ul></div>
+    <div class="wb-col"><h4>Final Paper Draft</h4><ul>
+      <li>Combine: Week 8 stability paper + Week 14 AXLE proof + this reflection</li>
+      <li>Title: "One Circuit of the dm³ Operator Chain: Stability, Ladder, and First Proof"</li>
+      <li>Draft complete; submit for peer review to course partner</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 16 · Complete Circuit · Zenodo Final Paper</div>
+  <div class="week-head">
+    <div class="week-num">16<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">τ = 2 — The Complete Circuit · Final Publication</div>
+      <div class="week-sub">Zenodo DOI · GitHub Pages · ready for dm³ 102</div>
+      <div class="week-tags"><span class="tag tag-pub">Zenodo</span><span class="tag tag-milestone">Milestone · τ = 2</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverables</h4><ul>
+      <li>Final paper: 8–12 pages, Zenodo DOI, CC BY 4.0</li>
+      <li>AXLE contribution: one cleared sorry committed and documented</li>
+      <li>GitHub repo: complete with README, all papers linked</li>
+    </ul></div>
+    <div class="wb-col"><h4>Readiness for dm³ 102</h4><ul>
+      <li>You know: α = dz − r²dθ, ε₀ = 1/3 (Lyapunov), r★ ≈ 0.776, det(J) ≈ −0.364</li>
+      <li>You can distinguish the three stability numbers and state why they differ</li>
+      <li>You have: 2 published papers, 1 AXLE contribution, 1 GitHub repo</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid phase U 101 -->
+</div><!-- /course-101 -->
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- COURSE 102 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="course-102" class="course-section">
+
+<div class="hero">
+  <div class="eyebrow">Principia Orthogona · dm³ Series · Course 2 of 3</div>
+  <h1>dm³ 102 — Applications</h1>
+  <div class="hero-sub">The Scientists Series · Chaos · Morphogenesis · Fractals · Contact Geometry in Nature</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">The second course applies the dm³ framework to landmark results in modern mathematics and biology.
+  Lorenz (chaos), Turing (morphogenesis), Mandelbrot (fractals), Poincaré–Einstein (relativity contact structure),
+  and Waddington (epigenetic landscape) — each chapter is a case study in G = U∘F∘K∘C in the wild.
+  The μ-η-Δ arc in Weeks 13–14 anchors the Turing chapter.</p>
+  <div class="hero-chips">
+    <span class="chip">16 Weeks</span>
+    <span class="chip">Prerequisite: dm³ 101</span>
+    <span class="chip">Scientists Series chapters</span>
+    <span class="chip">Turing at W13–14</span>
+    <span class="chip">Leads to dm³ 103</span>
+  </div>
+</div>
+
+<div class="op-banner">Lorenz &nbsp;→&nbsp; Poincaré &nbsp;→&nbsp; Turing &nbsp;→&nbsp; Mandelbrot &nbsp;→&nbsp; Waddington &nbsp;→&nbsp; τ = 2</div>
+
+<div class="overview">
+  <div class="ov-cell"><div class="ov-num">16</div><div class="ov-label">Weeks</div></div>
+  <div class="ov-cell"><div class="ov-num">5</div><div class="ov-label">Scientist case studies</div></div>
+  <div class="ov-cell"><div class="ov-num">W13–14</div><div class="ov-label">Turing / μ-η-Δ arc</div></div>
+  <div class="ov-cell"><div class="ov-num">2</div><div class="ov-label">Zenodo papers</div></div>
+  <div class="ov-cell"><div class="ov-num">AXLE</div><div class="ov-label">Tier-B sorrys</div></div>
+</div>
+
+<div class="journey-bg">
+  <div class="journey-title">dm³ 102 — 16-Week Journey</div>
+  <div class="journey-sub">Highlighted cells = Scientists Series chapters · Gold = μ-η-Δ arc (Turing placement)</div>
+  <div class="journey-row">
+    <div class="j-cell"><div class="j-week">W1</div><div class="j-op">C</div><div class="j-name">Lorenz · Chaos</div></div>
+    <div class="j-cell"><div class="j-week">W2</div><div class="j-op">C</div><div class="j-name">Strange Attractors</div></div>
+    <div class="j-cell"><div class="j-week">W3</div><div class="j-op">C</div><div class="j-name">Symmetry Breaking</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W4</div><div class="j-op" style="color:#ff9999;">●</div><div class="j-name">Paper 1 · Chaos</div></div>
+    <div class="j-cell"><div class="j-week">W5</div><div class="j-op">K</div><div class="j-name">Poincaré · Topology</div></div>
+    <div class="j-cell"><div class="j-week">W6</div><div class="j-op">K</div><div class="j-name">Einstein · Relativity</div></div>
+    <div class="j-cell"><div class="j-week">W7</div><div class="j-op">K</div><div class="j-name">Contact + Relativity</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W8</div><div class="j-op" style="color:#ff9999;">●</div><div class="j-name">Paper 2 · P–E</div></div>
+    <div class="j-cell"><div class="j-week">W9</div><div class="j-op">F</div><div class="j-name">Mandelbrot · Fractals</div></div>
+    <div class="j-cell"><div class="j-week">W10</div><div class="j-op">F</div><div class="j-name">Waddington · Landscape</div></div>
+    <div class="j-cell"><div class="j-week">W11</div><div class="j-op">F</div><div class="j-name">Lyapunov Potential</div></div>
+    <div class="j-cell"><div class="j-week">W12</div><div class="j-op">F</div><div class="j-name">Pattern vs Chaos</div></div>
+    <div class="j-cell j-focus"><div class="j-week">W13</div><div class="j-op" style="color:#f59e0b;">μ</div><div class="j-name">Turing · RD Equations</div></div>
+    <div class="j-cell j-focus"><div class="j-week">W14</div><div class="j-op" style="color:#f59e0b;">η·Δ</div><div class="j-name">Turing · Contact Geom</div></div>
+    <div class="j-cell"><div class="j-week">W15</div><div class="j-op">U</div><div class="j-name">Synthesis</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W16</div><div class="j-op" style="color:#ff9999;">τ=2</div><div class="j-name">Final Paper</div></div>
+  </div>
+</div>
+
+<!-- PHASE C 102 -->
+<div class="phase-header c">
+  <div class="si">
+    <div class="phase-op">C<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 1 – 4 · Compression Phase</div>
+      <div class="phase-title">Chaos Theory — Lorenz and the Strange Attractor</div>
+      <p class="phase-desc">Phase C of 102 compresses chaos theory through the Lorenz system, establishing the
+      contrast that makes Turing's pattern-formation result surprising: chaos and pattern emerge from
+      structurally similar nonlinear systems. The student who understands why Lorenz is chaotic
+      understands why Turing's result is remarkable.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">ch-lorenz-chaos.html</span>
+        <span class="phase-tag">Strange attractor</span>
+        <span class="phase-tag">Sensitive dependence</span>
+        <span class="phase-tag">Zenodo Paper 1</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">01<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Lorenz (1963) — Deterministic Nonperiodic Flow</div>
+      <div class="week-sub">ch-lorenz-chaos.html · strange attractor · butterfly effect</div>
+      <div class="week-tags"><span class="tag tag-study">Study</span><span class="tag tag-chapter">Chapter</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study</h4><ul>
+      <li>Read ch-lorenz-chaos.html in full</li>
+      <li>The Lorenz system: ẋ = σ(y−x), ẏ = x(ρ−z)−y, ż = xy − βz</li>
+      <li>The strange attractor: bounded but never periodic, fractal cross-section</li>
+      <li>Sensitive dependence on initial conditions: why prediction fails</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>Lorenz is NOT a fixed-point attractor — it is a strange attractor</li>
+      <li>dm³ G converges to a fixed point τ=2; Lorenz orbits never settle</li>
+      <li>This contrast is the first lesson of 102: not all nonlinear systems have fixed points</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">02<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Strange Attractors and Fractal Dimension</div>
+      <div class="week-sub">Hausdorff dimension · Lyapunov spectrum · KAM theory intro</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Fractal dimension d_H of the Lorenz attractor ≈ 2.06</li>
+      <li>Lyapunov exponent spectrum: one positive (chaos), one zero (flow direction), one negative</li>
+      <li>dm³ has μ = −2 (all negative transverse exponents) — hence convergence, not chaos</li>
+    </ul></div>
+    <div class="wb-col"><h4>Key Contrast Table</h4><ul>
+      <li>Lorenz: Lyapunov exponents (+, 0, −) → chaos</li>
+      <li>dm³ LAW3M on Γ: exponents (0, −2, ...) → stable limit cycle</li>
+      <li>The sign of the largest Lyapunov exponent is the chaos/order boundary</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">03<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Symmetry Breaking — From Order to Chaos and Back</div>
+      <div class="week-sub">Bifurcation theory · Hopf bifurcation · period-doubling</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Bifurcation: a qualitative change in dynamics as a parameter varies</li>
+      <li>Hopf bifurcation: stable fixed point → limit cycle (as in LAW3M)</li>
+      <li>Period-doubling route to chaos: Feigenbaum constant δ ≈ 4.669</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>The LAW3M ODE undergoes a Hopf bifurcation producing the limit cycle Γ</li>
+      <li>Before the bifurcation: stable fixed point. After: stable cycle at r=1</li>
+      <li>r★ ≈ 0.776 is the post-bifurcation fold — the inner basin boundary</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 4 · Paper 1</div>
+  <div class="week-head">
+    <div class="week-num">04<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Paper 1 — Chaos vs Order: Lorenz and dm³ Compared</div>
+      <div class="week-sub">Zenodo · 4–5 pages · Lyapunov exponent comparison</div>
+      <div class="week-tags"><span class="tag tag-pub">Zenodo</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverable</h4><ul>
+      <li>Compare Lorenz and LAW3M via their Lyapunov exponent spectra</li>
+      <li>Explain why one produces a strange attractor and one a fixed point</li>
+      <li>Include: bifurcation diagram, exponent table, one figure</li>
+    </ul></div>
+    <div class="wb-col"><h4>Citations</h4><ul>
+      <li>Lorenz 1963, J. Atmos. Sci. 20:130–141</li>
+      <li>Principia Orthogona Vol II, doi:10.5281/zenodo.20159456</li>
+      <li>ch-lorenz-chaos.html (cite URL)</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid C 102 -->
+
+<!-- PHASE K 102 -->
+<div class="phase-header k">
+  <div class="si">
+    <div class="phase-op">K<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 5 – 8 · Threshold Phase</div>
+      <div class="phase-title">Poincaré–Einstein — Contact Geometry Meets Relativity</div>
+      <p class="phase-desc">The threshold of 102 is the recognition that contact geometry is not an
+      invention of the dm³ framework — it is the natural language for constrained dynamics,
+      from Poincaré's three-body work to Einstein's spacetime. This phase reads
+      ch-poincare-einstein.html and connects the contact condition to the null-cone structure of
+      special relativity.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">ch-poincare-einstein.html</span>
+        <span class="phase-tag">Poincaré recurrence</span>
+        <span class="phase-tag">Null cone</span>
+        <span class="phase-tag">Paper 2</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">05<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Poincaré — Topology, Three-Body Problem, Recurrence</div>
+      <div class="week-sub">ch-poincare-einstein.html · Poincaré recurrence theorem · homoclinic orbit</div>
+      <div class="week-tags"><span class="tag tag-study">Study</span><span class="tag tag-chapter">Chapter</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study</h4><ul>
+      <li>Poincaré recurrence: almost every trajectory returns arbitrarily close to its start</li>
+      <li>The three-body problem as the first recognised chaotic system (1890)</li>
+      <li>Poincaré section: reduce continuous flow to discrete map</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>The dm³ G-orbit returns: G(x★)=x★ is the fixed-point version of recurrence</li>
+      <li>Poincaré section of LAW3M at θ=0: reduces to a 2D map in (r,z)</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">06<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Einstein — Spacetime Geometry and the Contact Analogy</div>
+      <div class="week-sub">Minkowski metric · null cone · contact condition on lightlike hypersurfaces</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Minkowski metric: ds² = −c²dt² + dx² + dy² + dz²</li>
+      <li>Null cone: ds²=0 defines lightlike directions</li>
+      <li>Contact structure on null hypersurfaces: the restriction of the metric to the null cone has a contact structure</li>
+    </ul></div>
+    <div class="wb-col"><h4>Analogy</h4><ul>
+      <li>LAW3M contact form α = dz − r²dθ: a non-degenerate constraint on ℝ³</li>
+      <li>Null cone contact structure: a non-degenerate constraint on lightlike surfaces in ℝ³˒¹</li>
+      <li>Both: the contact condition α ∧ dα ≠ 0 is the non-degeneracy condition</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">07<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Contact Geometry as Universal Language</div>
+      <div class="week-sub">Symplectic vs contact · Legendrian submanifolds in physics</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Symplectic geometry (even-dim): Hamiltonian mechanics, phase space</li>
+      <li>Contact geometry (odd-dim): adds time/energy coordinate, thermodynamics, optics</li>
+      <li>Every symplectic manifold has a contact boundary (Gromov, 1985)</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Placement</h4><ul>
+      <li>ℝ³ is 3-dimensional (odd) → contact, not symplectic</li>
+      <li>The LAW3M dynamics live in the contact setting by construction</li>
+      <li>This is why G preserves α: it is a contactomorphism</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 8 · Paper 2</div>
+  <div class="week-head">
+    <div class="week-num">08<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Paper 2 — Contact Geometry from Poincaré to dm³</div>
+      <div class="week-sub">GitHub Pages · 5–6 pages</div>
+      <div class="week-tags"><span class="tag tag-pub">GitHub</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverable</h4><ul>
+      <li>Trace contact geometry from Poincaré's three-body work → Einstein's null cone → LAW3M</li>
+      <li>Show: same mathematical structure, three historical appearances</li>
+      <li>Section 3 must state precisely why dm³ uses contact geometry (not symplectic)</li>
+    </ul></div>
+    <div class="wb-col"><h4>Self-check</h4><ul>
+      <li>Do you distinguish symplectic (even-dim) from contact (odd-dim)?</li>
+      <li>Is the contact condition stated correctly: α ∧ dα ≠ 0?</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid K 102 -->
+
+<!-- PHASE F 102 -->
+<div class="phase-header f">
+  <div class="si">
+    <div class="phase-op">F<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 9 – 12 · Fold Phase</div>
+      <div class="phase-title">Fractals, Waddington, and the Edge Between Pattern and Chaos</div>
+      <p class="phase-desc">Mandelbrot showed that the boundary between bounded and unbounded iteration
+      is infinitely complex — a fractal. Waddington showed that development follows valleys in an
+      energy landscape. Both are fold-phase phenomena in dm³ terms: the Whitney fold is the edge
+      between two basins, and every valley in Waddington's landscape is a Lyapunov minimum.
+      Weeks 9–12 prepare the ground for the Turing arc in Weeks 13–14.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">ch-mandelbrot-fractals.html</span>
+        <span class="phase-tag">chDev-waddington.html</span>
+        <span class="phase-tag">Lyapunov landscape</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">09<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Mandelbrot — The Geometry of Iteration Boundaries</div>
+      <div class="week-sub">ch-mandelbrot-fractals.html · Mandelbrot set · Julia sets · self-similarity</div>
+      <div class="week-tags"><span class="tag tag-study">Study</span><span class="tag tag-chapter">Chapter</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study</h4><ul>
+      <li>Read ch-mandelbrot-fractals.html</li>
+      <li>Mandelbrot set M: {c ∈ ℂ : |z_n| stays bounded under z↦z²+c}</li>
+      <li>The boundary ∂M is a fractal of infinite complexity — every zoom reveals new structure</li>
+      <li>Hausdorff dimension of ∂M = 2 (Shishikura, 1998)</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>The basin boundary of LAW3M (near r★ ≈ 0.776) is the dm³ analogue of ∂M</li>
+      <li>The Whitney fold at r★ is a smooth fold, not a fractal — this is what the contact structure buys</li>
+      <li>Contrast: fractal basin boundary (generic nonlinear) vs smooth fold (contact-geometric)</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">10<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Waddington — The Epigenetic Landscape as Lyapunov Potential</div>
+      <div class="week-sub">chDev-waddington.html · valleys = attractors · ridges = separatrices</div>
+      <div class="week-tags"><span class="tag tag-study">Study</span><span class="tag tag-chapter">Chapter</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study</h4><ul>
+      <li>Waddington (1957): development as a ball rolling down a landscape of valleys</li>
+      <li>Each valley = one cell fate (attractor); ridges = unstable boundaries (separatrices)</li>
+      <li>The landscape IS the Lyapunov function V — valleys are minima of V</li>
+    </ul></div>
+    <div class="wb-col"><h4>dm³ Connection</h4><ul>
+      <li>V(r) = (r−1)²/2: the dm³ Lyapunov function has one valley at r=1 (the limit cycle Γ)</li>
+      <li>r★ ≈ 0.776 is the ridge — below it, the trajectory escapes to a different fate</li>
+      <li>Cross-reference: this sets up the Turing chapter (W13–14): Turing patterns ARE Waddington valleys in chemical space</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">11<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Lyapunov Landscape — Potential Theory for Pattern Formation</div>
+      <div class="week-sub">Gradient systems · quasi-potential · chemical potential</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Gradient system: ẋ = −∇V(x). Trajectories follow steepest descent.</li>
+      <li>LAW3M is NOT a gradient system (it has rotation) — but V(r)=(r−1)²/2 captures the radial component</li>
+      <li>Quasi-potential: for non-gradient systems, define V via the stationary Fokker-Planck equation</li>
+    </ul></div>
+    <div class="wb-col"><h4>Preview of Turing</h4><ul>
+      <li>Turing patterns: the uniform state is a local maximum of the chemical "potential"</li>
+      <li>Turing instability = the uniform state becomes a saddle, and spatial modes are the new valleys</li>
+      <li>dm³ contact structure selects which spatial modes are Legendrian (stable)</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">12<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Pattern vs Chaos — The Classification Problem</div>
+      <div class="week-sub">Synthesis week · preparing the μ-η-Δ arc</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Synthesis</h4><ul>
+      <li>Three regimes: fixed point (dm³ G), limit cycle (LAW3M), strange attractor (Lorenz)</li>
+      <li>Pattern formation (Turing) is a fourth regime: spatial structure from instability</li>
+      <li>The μ operator (Lyapunov exponent −2) is what distinguishes dm³ from chaos</li>
+    </ul></div>
+    <div class="wb-col"><h4>Prepare for W13–14</h4><ul>
+      <li>Re-read chMu-lyapunov.html and chEta-tribonacci.html from dm³ 101</li>
+      <li>Write one paragraph: how does Turing instability connect to the μ operator?</li>
+      <li>This paragraph becomes the introduction to your W13 report</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid F 102 -->
+
+<!-- PHASE U 102 — the μ-η-Δ arc -->
+<div class="phase-header u">
+  <div class="si">
+    <div class="phase-op">U<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 13 – 16 · Unfolding Phase · μ-η-Δ Arc</div>
+      <div class="phase-title">Turing Morphogenesis — Reaction-Diffusion in Contact Geometry</div>
+      <p class="phase-desc">The μ-η-Δ arc is the culmination of 102. Weeks 13–14 work through
+      ch-turing-morphogenesis.html in full: the 1952 paper, the RD equations, the Gierer-Meinhardt model,
+      and the dm³ reading (Turing instability as G-orbit divergence from the uniform state).
+      Week 15 synthesises all five scientists. Week 16 is the final publication.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">ch-turing-morphogenesis.html</span>
+        <span class="phase-tag">μ = −2 stabilises patterns</span>
+        <span class="phase-tag">η weighting</span>
+        <span class="phase-tag">AXLE Turing stub</span>
+        <span class="phase-tag">Final Paper</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card focus">
+  <div class="focus-banner">★ μ-η-Δ ARC — Week 13 · Turing: The Mathematics</div>
+  <div class="week-head">
+    <div class="week-num">13<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Turing (1952) — Reaction-Diffusion and Symmetry Breaking</div>
+      <div class="week-sub">ch-turing-morphogenesis.html §1–3 · RD equations · Gierer-Meinhardt · dispersion relation</div>
+      <div class="week-tags"><span class="tag tag-study">Study</span><span class="tag tag-chapter">Turing Chapter §1–3</span><span class="tag tag-focus">μ-η-Δ Arc</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study: §1–2 of Turing chapter</h4><ul>
+      <li>Read §1: the 1952 paper context — post-Bletchley, pattern without blueprint</li>
+      <li>Read §2: the RD system du/dt = D_u·∇²u + f(u,v); dv/dt = D_v·∇²v + g(u,v)</li>
+      <li>Turing condition: D_v/D_u ≫ 1 (inhibitor diffuses much faster than activator)</li>
+      <li>Dispersion relation: critical wavenumber k★² = √(f_u·g_v / D_u·D_v)</li>
+    </ul></div>
+    <div class="wb-col"><h4>Mathematics</h4><ul>
+      <li>Linear stability analysis of uniform steady state (u₀, v₀)</li>
+      <li>Without diffusion: stable. With diffusion + D_v ≫ D_u: unstable to spatial mode k★</li>
+      <li>Gierer-Meinhardt model (1972): canonical RD with explicit f, g</li>
+      <li>Biological confirmation: CIMA reaction (1990); Sheth et al. digit spacing (Science 2012)</li>
+    </ul></div>
+  </div>
+  <div class="week-prompt">
+    <div class="prompt-label">LLM Prompt 13.1</div>
+    <div class="prompt-box">"Explain Turing's 1952 morphogenesis result to me: what is the activator-inhibitor mechanism, why does fast inhibitor diffusion cause instability, and what is the critical wavenumber k★? Use the Gierer-Meinhardt model as your example."</div>
+  </div>
+</div>
+
+<div class="week-card focus">
+  <div class="focus-banner">★ μ-η-Δ ARC — Week 14 · Turing: Contact Geometry Reading</div>
+  <div class="week-head">
+    <div class="week-num">14<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Turing in Contact Geometry — §3–5 and the AXLE Stub</div>
+      <div class="week-sub">ch-turing-morphogenesis.html §3–5 · dm³ reading · Legendrian pattern · G stabilises Turing</div>
+      <div class="week-tags"><span class="tag tag-math">Mathematics</span><span class="tag tag-axle">AXLE</span><span class="tag tag-focus">μ-η-Δ Arc</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study: §3–5 of Turing chapter</h4><ul>
+      <li>§3: the contact-geometric reading — tissue manifold (M, α), Legendrian submanifold L where pattern develops</li>
+      <li>§4: dm³ claim — Turing instability selects spatial mode k★; G selects fixed point τ=2. Same phenomenon, different scale.</li>
+      <li>Analogy: n (n-bonacci index) ↔ k★ (Turing wavenumber); both break symmetry to select a preferred scale</li>
+      <li>§5: the AXLE stub — three parts, all marked sorry (Tier C)</li>
+    </ul></div>
+    <div class="wb-col"><h4>AXLE Engagement</h4><ul>
+      <li>Open the AXLE Turing stub: <code>turing_instability</code> axiom + <code>G_stabilises_turing_pattern</code> theorem</li>
+      <li>The theorem uses <code>sorry</code> — it is Tier C (requires μ-operator mechanisation first)</li>
+      <li>Task: write a 1-page proof sketch for how you would clear the sorry, given the Banach fixed-point theorem on morphogen space</li>
+    </ul></div>
+  </div>
+  <div class="week-prompt">
+    <div class="prompt-label">LLM Prompt 14.1</div>
+    <div class="prompt-box">"In the dm³ framework, Turing morphogenesis is read as G-orbit divergence from a uniform state followed by convergence to a patterned fixed point. Explain this analogy precisely: what plays the role of the n-bonacci index n in Turing's system, and why does the μ operator (Lyapunov exponent −2) stabilise the resulting pattern?"</div>
+  </div>
+  <div class="week-output">
+    <strong>Cross-references from Turing §6 (Curriculum Placement)</strong>
+    chDev-waddington.html · chMu-lyapunov.html · ch-lorenz-chaos.html · this page (dm3-102 W13–14)
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">15<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Five Scientists, One Framework — Synthesis</div>
+      <div class="week-sub">Lorenz · Poincaré · Mandelbrot · Waddington · Turing through the dm³ lens</div>
+      <div class="week-tags"><span class="tag tag-study">Synthesis</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Synthesis Task</h4><ul>
+      <li>Build a comparison table: Scientist · System · Attractor type · dm³ analogue</li>
+      <li>Lorenz: strange attractor ↔ μ &gt; 0 regime (not dm³ but instructive contrast)</li>
+      <li>Turing: patterned fixed point ↔ G-stabilised Legendrian mode</li>
+      <li>Waddington: Lyapunov landscape ↔ V(r)=(r−1)²/2</li>
+    </ul></div>
+    <div class="wb-col"><h4>Final Paper Outline</h4><ul>
+      <li>Section 1: Chaos and pattern as two sides of nonlinearity (Lorenz vs Turing)</li>
+      <li>Section 2: Contact geometry as the unifying language (Poincaré–Einstein bridge)</li>
+      <li>Section 3: The μ-η-Δ arc — how dm³ stabilises Turing patterns</li>
+      <li>Section 4: Open problems (the three sorry theorems in AXLE)</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 16 · Final Paper · τ = 2</div>
+  <div class="week-head">
+    <div class="week-num">16<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Final Paper — dm³ Reads Five Scientists</div>
+      <div class="week-sub">Zenodo DOI · 8–12 pages · ready for dm³ 103</div>
+      <div class="week-tags"><span class="tag tag-pub">Zenodo</span><span class="tag tag-milestone">Milestone · τ = 2</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverables</h4><ul>
+      <li>Final paper: 8–12 pages, synthesis of all five scientists via dm³</li>
+      <li>Must include: the Turing / μ-η-Δ connection as the centrepiece argument</li>
+      <li>Zenodo deposit with DOI; link from dm³ 101 final paper</li>
+    </ul></div>
+    <div class="wb-col"><h4>Readiness for dm³ 103</h4><ul>
+      <li>You can read AXLE sorry stubs and write proof sketches</li>
+      <li>You have traced contact geometry through five historical case studies</li>
+      <li>You understand why Turing patterns are Legendrian and G-stable</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid U 102 -->
+</div><!-- /course-102 -->
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- COURSE 103 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="course-103" class="course-section">
+
+<div class="hero">
+  <div class="eyebrow">Principia Orthogona · dm³ Series · Course 3 of 3</div>
+  <h1>dm³ 103 — Mechanisation</h1>
+  <div class="hero-sub">AXLE · Lean 4 · Clearing Sorrys · The Full Publication Pipeline</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">The third course is for those who want to build the proof, not just read it.
+  Students work directly in AXLE, clearing sorry stubs tier by tier — from the simplest
+  algebraic identities (Tier A) to the contact-geometric fixed-point theorems (Tier C).
+  The course ends with a co-authored Zenodo paper contributing new mechanised proofs to the series.</p>
+  <div class="hero-chips">
+    <span class="chip">16 Weeks</span>
+    <span class="chip">Prerequisite: dm³ 102</span>
+    <span class="chip">Lean 4 + Mathlib</span>
+    <span class="chip">Co-authored Zenodo paper</span>
+    <span class="chip">AXLE contributor</span>
+  </div>
+</div>
+
+<div class="op-banner">Tier A → Tier B → Tier C → Co-Author → DOI</div>
+
+<div class="overview">
+  <div class="ov-cell"><div class="ov-num">16</div><div class="ov-label">Weeks</div></div>
+  <div class="ov-cell"><div class="ov-num">3</div><div class="ov-label">Tier levels (A→C)</div></div>
+  <div class="ov-cell"><div class="ov-num">≥4</div><div class="ov-label">Sorrys cleared</div></div>
+  <div class="ov-cell"><div class="ov-num">1</div><div class="ov-label">Co-authored paper</div></div>
+  <div class="ov-cell"><div class="ov-num">DOI</div><div class="ov-label">Zenodo contribution</div></div>
+</div>
+
+<div class="journey-bg">
+  <div class="journey-title">dm³ 103 — 16-Week Journey</div>
+  <div class="journey-sub">A = simplest proofs · B = intermediate · C = contact-geometric · ● = milestone</div>
+  <div class="journey-row">
+    <div class="j-cell"><div class="j-week">W1</div><div class="j-op">C</div><div class="j-name">AXLE Read</div></div>
+    <div class="j-cell"><div class="j-week">W2</div><div class="j-op">C</div><div class="j-name">Lean 4 Tactics</div></div>
+    <div class="j-cell"><div class="j-week">W3</div><div class="j-op">C</div><div class="j-name">Mathlib Survey</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W4</div><div class="j-op" style="color:#ff9999;">A</div><div class="j-name">Tier A Cleared</div></div>
+    <div class="j-cell"><div class="j-week">W5</div><div class="j-op">K</div><div class="j-name">ε₀ Proof Setup</div></div>
+    <div class="j-cell"><div class="j-week">W6</div><div class="j-op">K</div><div class="j-name">Lyapunov in Lean</div></div>
+    <div class="j-cell"><div class="j-week">W7</div><div class="j-op">K</div><div class="j-name">r★ Computation</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W8</div><div class="j-op" style="color:#ff9999;">B</div><div class="j-name">Tier B Cleared</div></div>
+    <div class="j-cell"><div class="j-week">W9</div><div class="j-op">F</div><div class="j-name">Contact Forms</div></div>
+    <div class="j-cell"><div class="j-week">W10</div><div class="j-op">F</div><div class="j-name">G Preserves α</div></div>
+    <div class="j-cell"><div class="j-week">W11</div><div class="j-op">F</div><div class="j-name">Fixed Point Thm</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W12</div><div class="j-op" style="color:#ff9999;">C</div><div class="j-name">Tier C Attempt</div></div>
+    <div class="j-cell"><div class="j-week">W13</div><div class="j-op">U</div><div class="j-name">Paper Draft</div></div>
+    <div class="j-cell"><div class="j-week">W14</div><div class="j-op">U</div><div class="j-name">Peer Review</div></div>
+    <div class="j-cell"><div class="j-week">W15</div><div class="j-op">U</div><div class="j-name">Revision</div></div>
+    <div class="j-cell j-milestone"><div class="j-week">W16</div><div class="j-op" style="color:#ff9999;">DOI</div><div class="j-name">Zenodo Deposit</div></div>
+  </div>
+</div>
+
+<!-- PHASE C 103 -->
+<div class="phase-header c">
+  <div class="si">
+    <div class="phase-op">C<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 1 – 4 · Compression Phase · Tier A</div>
+      <div class="phase-title">Reading AXLE — The Sorry Architecture and Lean 4 Fluency</div>
+      <p class="phase-desc">Before clearing any sorry, the student must understand the full AXLE
+      proof architecture. Weeks 1–3 build Lean 4 tactic fluency and survey the Mathlib library.
+      Week 4 clears the first Tier-A sorrys — algebraic identities and basic ODE existence results
+      that require only `ring`, `norm_num`, and `linarith`.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">chV-axle.html</span><span class="phase-tag">chV-sorrys.html</span>
+        <span class="phase-tag">Lean 4 tactics</span><span class="phase-tag">Mathlib.Analysis.ODE</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">01<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Reading the AXLE Architecture — chV-axle.html in Full</div>
+      <div class="week-sub">github.com/TOTOGT/AXLE · proof tiers · sorry map</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-study">Study</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Study</h4><ul>
+      <li>Read chV-axle.html completely — every section</li>
+      <li>Clone AXLE repo; run `lake build` — understand the build system</li>
+      <li>Map every `sorry` in the repo into: Tier A (algebraic), Tier B (analytic), Tier C (geometric)</li>
+      <li>The <code>gronwall_outer</code> identifier is a Lean name for an auxiliary lemma — it is NOT a claim that ε₀=1/3 comes from Gronwall</li>
+    </ul></div>
+    <div class="wb-col"><h4>Critical Distinctions</h4><ul>
+      <li><code>Mathlib.Analysis.ODE.Gronwall</code>: a real Mathlib import used for ODE bounds</li>
+      <li><code>gronwall_outer</code>: an AXLE-specific identifier for an outer basin lemma</li>
+      <li>ε₀ = 1/3 is derived from V=(r−1)²/2, NOT from Gronwall's lemma</li>
+      <li>These must be stated precisely in any paper using AXLE</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">02<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Lean 4 Tactics — The Proof Language</div>
+      <div class="week-sub">ring · norm_num · linarith · simp · exact · apply · intro</div>
+      <div class="week-tags"><span class="tag tag-axle">Lean 4</span><span class="tag tag-math">Tactics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Core Tactics</h4><ul>
+      <li><code>ring</code>: proves equalities in commutative rings — for algebraic identities</li>
+      <li><code>norm_num</code>: proves numerical facts (e.g., 1/3 &lt; 1/2)</li>
+      <li><code>linarith</code>: proves linear arithmetic goals</li>
+      <li><code>nlinarith</code>: nonlinear arithmetic — needed for quadratic inequalities</li>
+    </ul></div>
+    <div class="wb-col"><h4>Structure Tactics</h4><ul>
+      <li><code>intro h</code>: introduce a hypothesis</li>
+      <li><code>apply lemma</code>: reduce to subgoals via a lemma</li>
+      <li><code>exact h</code>: close goal with exact term</li>
+      <li><code>simp [lemma1, lemma2]</code>: simplify using lemmas</li>
+      <li><code>constructor</code>: split a conjunction</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">03<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Mathlib Survey — What Is Already Proved</div>
+      <div class="week-sub">Mathlib.Analysis.ODE · Mathlib.Topology.MetricSpace · Banach fixed point</div>
+      <div class="week-tags"><span class="tag tag-axle">Mathlib</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Key Mathlib Modules</h4><ul>
+      <li><code>Mathlib.Analysis.ODE.Gronwall</code>: Gronwall inequality for ODE bounds</li>
+      <li><code>Mathlib.Analysis.ODE.PicardLindelof</code>: existence and uniqueness for Lipschitz ODEs</li>
+      <li><code>Mathlib.Topology.MetricSpace.Contraction</code>: Banach fixed-point theorem</li>
+      <li><code>Mathlib.Analysis.SpecialFunctions.Pow</code>: exponential decay estimates</li>
+    </ul></div>
+    <div class="wb-col"><h4>AXLE Import Strategy</h4><ul>
+      <li>Identify which Mathlib lemmas are needed for each Tier-A sorry</li>
+      <li>Practice: search Mathlib4 docs for "Lyapunov" — what exists?</li>
+      <li>Gap: Mathlib has no contact geometry library — AXLE must build it</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 4 · Tier A Sorrys Cleared</div>
+  <div class="week-head">
+    <div class="week-num">04<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Clear All Tier-A Sorrys — Algebraic and Arithmetic</div>
+      <div class="week-sub">ring · norm_num · linarith suffice for all Tier A</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Task</h4><ul>
+      <li>Clear every sorry marked Tier A in chV-sorrys.html</li>
+      <li>Each proof: ring / norm_num / linarith in 1–3 lines</li>
+      <li>Commit each cleared sorry with message: "clear: [lemma name] (Tier A, dm³ 103 W4)"</li>
+      <li>Open a pull request against TOTOGT/AXLE with all Tier-A clears</li>
+    </ul></div>
+    <div class="wb-col"><h4>Documentation</h4><ul>
+      <li>Write a 2-page summary: which sorrys were cleared, which tactic worked, why</li>
+      <li>This becomes Section 2 of your final paper (Week 16)</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid C 103 -->
+
+<!-- PHASE K 103 -->
+<div class="phase-header k">
+  <div class="si">
+    <div class="phase-op">K<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 5 – 8 · Threshold Phase · Tier B</div>
+      <div class="phase-title">Lyapunov in Lean — Mechanising ε₀ = 1/3 and r★</div>
+      <p class="phase-desc">Tier B is the analytic core: proving ε₀ = 1/3 from V=(r−1)²/2 in Lean 4,
+      and bounding the Whitney fold numerically at r★ ≈ 0.776. These require
+      Mathlib.Analysis.ODE and careful handling of the distinction between
+      the Lyapunov bound, the Gronwall bound, and the Jacobian determinant.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">Lyapunov in Lean 4</span>
+        <span class="phase-tag">ε₀ = 1/3 mechanised</span>
+        <span class="phase-tag">r★ numerical bound</span>
+        <span class="phase-tag">Gronwall vs Lyapunov distinction</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">05<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Setting Up the Lyapunov Proof in Lean 4</div>
+      <div class="week-sub">V = (r−1)²/2 · dV/dt ≤ 0 · stability ball</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Lean Setup</h4><ul>
+      <li>Define <code>lyapunov_V : ℝ → ℝ := fun r => (r - 1)^2 / 2</code></li>
+      <li>State: <code>∀ r ∈ Ioo (2/3 : ℝ) (4/3), deriv lyapunov_V r * law3m_r r ≤ 0</code></li>
+      <li>This encodes dV/dt ≤ 0 along the ṙ component of LAW3M</li>
+    </ul></div>
+    <div class="wb-col"><h4>Key Distinction in Code</h4><ul>
+      <li>The proof uses <code>nlinarith</code> after expanding — it does NOT invoke Gronwall</li>
+      <li><code>gronwall_outer</code> is a separate lemma bounding the outer basin — cite it carefully</li>
+      <li>Write a comment in the proof: "ε₀=1/3 from Lyapunov V, not from Gronwall inequality"</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">06<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Mechanising ε₀ = 1/3 — The Full Proof</div>
+      <div class="week-sub">Lyapunov stability theorem in Lean 4 · Theorem D of Vol II</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>The Proof</h4><ul>
+      <li>Theorem: if |r₀ − 1| &lt; 1/3 then the LAW3M trajectory with r(0)=r₀ satisfies |r(t)−1| → 0</li>
+      <li>Proof strategy: (1) show V decreasing on (2/3, 4/3); (2) V(r₀) &lt; V(2/3); (3) V bounded below by 0; (4) apply LaSalle</li>
+      <li>Lean: use Mathlib.Analysis.Lyapunov (if available) or build from primitives</li>
+    </ul></div>
+    <div class="wb-col"><h4>If Mathlib has no Lyapunov module</h4><ul>
+      <li>Build a local <code>Lyapunov.lean</code> in AXLE with the key stability theorem</li>
+      <li>This itself is a contribution — document it in the final paper</li>
+      <li>Use Picard-Lindelöf for existence, then Gronwall for the bound (outer basin only)</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">07<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">r★ = 0.77594059 — Numerical Verification in Lean</div>
+      <div class="week-sub">Interval arithmetic · Lean.Numeric · bounding r★</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-math">Numerics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Task</h4><ul>
+      <li>r★ is defined as the Whitney fold threshold — a root of a polynomial equation in the LAW3M system</li>
+      <li>Prove (or verify numerically): r★ ∈ (0.775, 0.776) using interval arithmetic</li>
+      <li>Lean tool: <code>native_decide</code> or <code>norm_num</code> with rational interval bounds</li>
+    </ul></div>
+    <div class="wb-col"><h4>Documentation Requirement</h4><ul>
+      <li>Any paper using r★ must state: r★ = 0.77594059 (8 significant figures)</li>
+      <li>State clearly: r★ is the Whitney A₁ fold threshold / inner basin boundary</li>
+      <li>State clearly: r★ ≠ ε₀ ≠ |det(J)|. Three separate quantities.</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 8 · Tier B Cleared · Pull Request</div>
+  <div class="week-head">
+    <div class="week-num">08<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Tier B Complete — ε₀ and r★ Mechanised</div>
+      <div class="week-sub">Pull request to AXLE · peer review by course partner</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE PR</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Deliverables</h4><ul>
+      <li>Pull request: all Tier-B sorrys cleared, with proofs</li>
+      <li>Each proof commented: what tactic, which Mathlib lemma, why this approach</li>
+      <li>Companion document: 3–4 pages explaining ε₀ and r★ mechanisation</li>
+    </ul></div>
+    <div class="wb-col"><h4>Peer Review</h4><ul>
+      <li>Exchange PRs with course partner — review each other's proofs</li>
+      <li>Check: does the proof comment distinguish Lyapunov from Gronwall correctly?</li>
+      <li>Reviewer sign-off required before merging</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid K 103 -->
+
+<!-- PHASE F 103 -->
+<div class="phase-header f">
+  <div class="si">
+    <div class="phase-op">F<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 9 – 12 · Fold Phase · Tier C Approach</div>
+      <div class="phase-title">Contact Geometry in Lean — G Preserves α</div>
+      <p class="phase-desc">Tier C is the frontier: proving that G = U∘F∘K∘C preserves the contact form α,
+      and that the fixed point G(x★)=x★ is τ=2. This requires building contact geometry
+      structures in Lean 4 — structures that do not yet exist in Mathlib.
+      Weeks 9–12 build the necessary scaffolding; Week 12 makes the first Tier-C attempt.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">Contact forms in Lean</span>
+        <span class="phase-tag">ContactManifold type</span>
+        <span class="phase-tag">G preserves α</span>
+        <span class="phase-tag">Banach on contact bundle</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">09<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Building ContactManifold in Lean 4</div>
+      <div class="week-sub">DifferentialForm · α = dz − r²dθ · contact condition</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>The Type</h4><ul>
+      <li>Define <code>structure ContactManifold (M : Type*) extends SmoothManifold M</code></li>
+      <li>Field: <code>α : DifferentialForm 1 M</code> (the contact form)</li>
+      <li>Condition: <code>contact_cond : ∀ x, α x ∧ (dα) x ≠ 0</code> (non-degeneracy)</li>
+      <li>Instance: ℝ³ with α = dz − r²dθ is a ContactManifold</li>
+    </ul></div>
+    <div class="wb-col"><h4>Challenges</h4><ul>
+      <li>Differential forms are not in Mathlib in the most useful form for this</li>
+      <li>May need to use <code>Mathlib.Geometry.Manifold.DeRhamCohomology</code></li>
+      <li>Fallback: define α as a smooth function and state the contact condition axiomatically</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">10<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">G Preserves α — Stating the Contactomorphism Theorem</div>
+      <div class="week-sub">Contactomorphism · G★(α) = α · pullback</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>The Theorem Statement</h4><ul>
+      <li>G is a contactomorphism: G★(α) = α (G preserves the contact form)</li>
+      <li>In Lean: <code>theorem G_contactomorphism : G.pullback α = α</code></li>
+      <li>This requires: definition of pullback of a form; smoothness of G; contact condition</li>
+    </ul></div>
+    <div class="wb-col"><h4>Sorry Status</h4><ul>
+      <li>This is Tier C — currently a sorry in AXLE</li>
+      <li>The proof would require: (1) explicit formula for G on ℝ³; (2) computation of G★(dz − r²dθ)</li>
+      <li>Week 10 goal: state the theorem cleanly without sorry, even if the proof body is still sorry</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">11<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">The Fixed-Point Theorem — Banach on Contact Bundle</div>
+      <div class="week-sub">ContactionMap on contact sections · G^n converges</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-math">Mathematics</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Approach</h4><ul>
+      <li>Banach fixed-point theorem: if G is a contraction on a complete metric space, ∃! fixed point</li>
+      <li>The metric space: sections of the contact bundle (smooth functions near Γ)</li>
+      <li>Contraction rate: μ = −2 (the Lyapunov exponent — already mechanised in Tier B)</li>
+      <li>Fixed point: τ = 2 = the embodiment threshold</li>
+    </ul></div>
+    <div class="wb-col"><h4>Using Mathlib</h4><ul>
+      <li><code>Mathlib.Topology.MetricSpace.Contraction.contractionMapping</code></li>
+      <li>Apply to G restricted to the Lyapunov ball |r−1| &lt; ε₀ = 1/3</li>
+      <li>The Tier-B result (ε₀ mechanised) feeds directly into Tier C here</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 12 · First Tier-C Attempt</div>
+  <div class="week-head">
+    <div class="week-num">12<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Tier-C Attempt — Partial Proof or Proof Sketch</div>
+      <div class="week-sub">Clear or reduce at least one Tier-C sorry · document what remains</div>
+      <div class="week-tags"><span class="tag tag-axle">AXLE</span><span class="tag tag-milestone">Milestone</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Goal</h4><ul>
+      <li>Attempt: clear G_contactomorphism or G_stabilises_turing_pattern (Turing stub)</li>
+      <li>Even a partial reduction (sorry → two smaller sorrys) counts as progress</li>
+      <li>Document exactly where the proof gets stuck — this is the research frontier</li>
+    </ul></div>
+    <div class="wb-col"><h4>If No Tier-C Sorry Is Clearable</h4><ul>
+      <li>Write a detailed proof sketch: exactly what Lean terms and tactics would be needed</li>
+      <li>Identify the missing Mathlib lemma — this is a potential future contribution</li>
+      <li>This sketch becomes the open-problems section of your final paper</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid F 103 -->
+
+<!-- PHASE U 103 -->
+<div class="phase-header u">
+  <div class="si">
+    <div class="phase-op">U<small>operator</small></div>
+    <div class="phase-info">
+      <div class="phase-weeks">Weeks 13 – 16 · Unfolding Phase · Publication</div>
+      <div class="phase-title">Co-Authored Zenodo Paper — Your AXLE Contribution</div>
+      <p class="phase-desc">The final phase is publication. Students write a co-authored technical
+      paper documenting every cleared sorry, every proof technique, and every open problem
+      encountered. The paper is deposited on Zenodo with a DOI under CC BY 4.0,
+      and linked from the AXLE GitHub repo as an official contribution to the series.</p>
+      <div class="phase-tags">
+        <span class="phase-tag">Co-authored paper</span><span class="phase-tag">Zenodo DOI</span>
+        <span class="phase-tag">CC BY 4.0</span><span class="phase-tag">AXLE contributor credit</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="weeks-grid">
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">13<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Paper Draft — Documenting the Proof Journey</div>
+      <div class="week-sub">IMRaD structure · proof excerpts · open problems</div>
+      <div class="week-tags"><span class="tag tag-pub">Writing</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Paper Structure</h4><ul>
+      <li>Introduction: AXLE, the sorry architecture, this paper's contribution</li>
+      <li>Methods: Lean 4 tactics used; Mathlib lemmas invoked</li>
+      <li>Results: Tier-A and Tier-B sorrys cleared (with proof excerpts)</li>
+      <li>Discussion: Tier-C status, what remains, proof sketches</li>
+      <li>Open Problems: the frontier — what Mathlib is missing</li>
+    </ul></div>
+    <div class="wb-col"><h4>Precision Requirements</h4><ul>
+      <li>State ε₀ = 1/3 comes from Lyapunov V=(r−1)²/2, NOT Gronwall</li>
+      <li>State r★ = 0.77594059 with 8 sig figs; define it as Whitney A₁ fold threshold</li>
+      <li>State det(J) ≈ −0.364 and explain it is the Jacobian at the saddle r_s ≈ 0.445</li>
+      <li>These three numbers must be clearly distinguished every time they appear</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">14<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Peer Review — Course Partner Exchange</div>
+      <div class="week-sub">Technical review · proof correctness · notation consistency</div>
+      <div class="week-tags"><span class="tag tag-pub">Peer Review</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Review Checklist</h4><ul>
+      <li>Are all three stability numbers (ε₀, r★, det(J)) clearly defined and distinguished?</li>
+      <li>Is every proof excerpt syntactically valid Lean 4?</li>
+      <li>Is the Gronwall/Lyapunov distinction stated at least once?</li>
+      <li>Is the dm³ notation used consistently (dm³ with superscript, never dm3)?</li>
+    </ul></div>
+    <div class="wb-col"><h4>Feedback</h4><ul>
+      <li>Write 1-page review; share with author; receive 1-page review in return</li>
+      <li>Flag any claim that is not backed by a Lean proof or an explicit sorry</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card">
+  <div class="week-head">
+    <div class="week-num">15<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Revision and ORCID Registration</div>
+      <div class="week-sub">Address reviewer comments · ORCID iD · author metadata</div>
+      <div class="week-tags"><span class="tag tag-pub">Revision</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Revision</h4><ul>
+      <li>Address all reviewer comments; re-run any affected Lean proofs</li>
+      <li>Register at orcid.org — get your ORCID iD (free, 5 minutes)</li>
+      <li>Final paper: PDF, LaTeX source, all .lean files in a zip</li>
+    </ul></div>
+    <div class="wb-col"><h4>Metadata for Zenodo</h4><ul>
+      <li>Title: "Mechanising dm³ Stability: Cleared Sorrys in the AXLE Proof Environment"</li>
+      <li>Authors: [your name] + Pablo Nogueira Grossi (ORCID: 0009-0000-6496-2186)</li>
+      <li>License: CC BY 4.0 · Related to: doi:10.5281/zenodo.19117399</li>
+    </ul></div>
+  </div>
+</div>
+
+<div class="week-card milestone">
+  <div class="milestone-banner">● MILESTONE — Week 16 · Zenodo DOI · AXLE Contributor</div>
+  <div class="week-head">
+    <div class="week-num">16<small>week</small></div>
+    <div class="week-meta">
+      <div class="week-title">Deposit — Your Name on a DOI · AXLE Contributor Credit</div>
+      <div class="week-sub">doi:10.5281/zenodo.XXXXXXX · github.com/TOTOGT/AXLE</div>
+      <div class="week-tags"><span class="tag tag-pub">Zenodo DOI</span><span class="tag tag-milestone">Milestone · Complete</span></div>
+    </div>
+  </div>
+  <div class="week-body">
+    <div class="wb-col"><h4>Final Deliverables</h4><ul>
+      <li>Zenodo deposit: paper PDF + .lean files + README</li>
+      <li>Your DOI added to AXLE README as a contribution</li>
+      <li>GitHub: your fork of AXLE with all PRs merged (or documented as pending)</li>
+    </ul></div>
+    <div class="wb-col"><h4>What You Have Now</h4><ul>
+      <li>A citable Zenodo paper with your name and DOI</li>
+      <li>Mechanised proofs in a live Lean 4 repo</li>
+      <li>Precise knowledge of ε₀, r★, det(J), and why they differ</li>
+      <li>You are an AXLE contributor. The cajueiro grew a new branch.</li>
+    </ul></div>
+  </div>
+</div>
+
+</div><!-- /weeks-grid U 103 -->
+</div><!-- /course-103 -->
+
+<script>
+function showCourse(id, btn) {
+  document.querySelectorAll('.course-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.cs-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('course-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+
+<footer>
+  <div style="color:var(--gold);font-weight:bold;font-family:sans-serif;margin-bottom:.6rem;">dm³ · Principia Orthogona · Courses 101 · 102 · 103</div>
+  <div>
+    <a href="../classroom-index.html">Hub</a> ·
+    <a href="../../book3/ch-turing-morphogenesis.html">Turing Chapter</a> ·
+    <a href="https://github.com/TOTOGT/AXLE">AXLE · github.com/TOTOGT/AXLE</a> ·
+    <a href="https://zenodo.org/doi/10.5281/zenodo.19117399">Zenodo Series DOI</a>
+  </div>
+  <div style="margin-top:.5rem;">Pablo Nogueira Grossi · G6 LLC · Newark NJ · g6llc@proton.me · ORCID 0009-0000-6496-2186</div>
+  <div style="margin-top:.3rem;opacity:.5;">ISBN 979-8-9954416-6-3 · CC BY 4.0</div>
+</footer>
+
+</body>
+</html>
