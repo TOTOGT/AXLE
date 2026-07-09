@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dm&sup3; 102 &middot; Week 10 &mdash; critDim(4) = 112 &mdash; and a Coincidence That Isn&rsquo;t One &middot; Principia Orthogona</title>
+<title>dm&sup3; 102 &middot; Week 10 &mdash; Collatz Descent &mdash; The Real, Open Lean File &middot; Principia Orthogona</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>
 :root {
@@ -52,51 +52,55 @@ footer a{color:var(--gold);text-decoration:none;}
   <ul class="nav-links">
     <li><a href="../classroom-index.html">Hub</a></li>
     <li><a href="../course-dm3-102.html">dm&sup3; 102</a></li>
-    <li><a href="https://github.com/TOTOGT/GTCT/blob/main/dm3CriticalityPrinciple_extended.lean">dm3CriticalityPrinciple_extended.lean</a></li>
+    <li><a href="https://github.com/TOTOGT/AXLE">CollatzDescent.lean</a></li>
   </ul>
 </nav>
 
 <div class="hero">
-  <div class="eyebrow">dm&sup3; 102 &middot; Week 10 &middot; critDim</div>
-  <h1>critDim(4) = 112 &mdash; and a Coincidence That Isn&rsquo;t One</h1>
-  <div class="hero-sub">Same axiom-dependency as Week 7, plus a real self-correction worth preserving</div>
+  <div class="eyebrow">dm&sup3; 102 &middot; Week 10 &middot; Lean Lab</div>
+  <h1>Collatz Descent &mdash; The Real, Open Lean File</h1>
+  <div class="hero-sub">What&rsquo;s actually proved about &#8707;k, orbit(n,k) &lt; n, and what honestly isn&rsquo;t</div>
   <div class="gold-rule"></div>
 </div>
 
 <div class="stub-body">
   <div class="stub-box">
-    <div class="stub-label">dm&sup3; 102 &middot; Week 10 &middot; critDim</div>
-    <div class="stub-title">critDim(4) = 112 &mdash; and a Coincidence That Isn&rsquo;t One</div>
+    <div class="stub-label">dm&sup3; 102 &middot; Week 10 &middot; Lean Lab</div>
+    <div class="stub-title">Collatz Descent &mdash; The Real, Open Lean File</div>
     <div class="stub-meta">
       Course: <a href="../course-dm3-102.html" style="color:var(--gold);">dm&sup3; 102</a> &nbsp;&middot;&nbsp;
-      critDim &nbsp;&middot;&nbsp;
-      Source: <code>dm3CriticalityPrinciple_extended.lean</code>
+      Lean Lab &nbsp;&middot;&nbsp;
+      Source: <code>CollatzDescent.lean</code>
     </div>
 
     <div class="stub-content">
 
-      <p>By the same construction as Week 7: <code>axiom nBonacciRingSize_4 : nBonacciRingSize 4 = 56</code>, and <code>lemma critDim_4 : critDim 4 = 112 := by unfold critDim; rw [nBonacciRingSize_4]; norm_num</code> &mdash; genuinely sorry-free, again conditional on an externally-sourced axiom, not independently computed in AXLE.</p>
+      <p><code>CollatzDescent.lean</code> formalizes the Collatz step function directly: <code>step n = if n even then n/2 else 3*n+1</code>, <code>orbit n k = step^[k] n</code> (k-fold iteration), and works toward <code>theorem descent (n : &#8469;) (hn : 2 &le; n) : &#8707; k, orbit n k &lt; n</code> &mdash; every orbit eventually dips below its starting value. This is proved by strong induction, dispatching on parity: the even case is a one-line consequence of \(n/2<n\); the odd case is genuinely hard and is where the file&rsquo;s real content lives.</p>
       <div class="def-callout">
-        <div class="dc-label">A correction worth restating, not glossing over</div>
-        An earlier version of this course description noted that the AXLE <code>sorry_inventory.csv</code> audit file happens to have 112 rows, and flagged &mdash; correctly &mdash; that this is a coincidence, not a structural finding: that file&rsquo;s row count is a snapshot of distinct file/theorem entries under review (1,041 total sorrys, 1,027 still open as of the last audit cited), not the same kind of object as the fixed arithmetic constant \(\text{{critDim}}(4)=112\). A CSV row count changes as entries are opened or closed; \(\text{{critDim}}(4)\) does not. Matching numbers between a fixed constant and a moving audit count is exactly the kind of pattern worth being suspicious of, and this course caught it before it became a claim. Keep applying that same suspicion to every numeric match you encounter in this material, including the string-theory \(D=26\) match from Week 7.
+        <div class="dc-label">What is actually, fully proved (0 sorry)</div>
+        All the supporting number-theoretic machinery: <code>v2</code> (2-adic valuation) and its behavior under even/odd splitting, <code>two_pow_v2_dvd</code>, the &ldquo;burst&rdquo; lemmas for \(n\equiv1\) and \(n\equiv3\pmod4\) (<code>v2_mod4_one</code>, <code>burst_lt_mod4_one</code>, <code>v2_mod4_three</code>, <code>burst_exceeds_mod4_three</code>), the even-descent case, and the small odd cases \(n\in\{{3,5,7\}}\) &mdash; these last three closed by <code>native_decide</code>, literally running the computation inside Lean&rsquo;s kernel and checking the result.
       </div>
-      <p>What <em>is</em> real here: the arithmetic \(2\cdot(56-1)+2=112\) is mechanically verified, exactly like Week 7&rsquo;s \(2\cdot(13-1)+2=26\). What remains open: independent verification of \(\text{{nBonacciRingSize}}(4)=56\) itself, sourced from the same external &ldquo;Navr&aacute;til&rdquo; document as Week 7&rsquo;s \(13\).</p>
+      <p>What is <em>not</em> proved: the general odd case for \(n\ge9\) has two explicit <code>sorry</code>s, and the file documents both honestly in its own &sect;7, &ldquo;Honest Accounting of the Two Remaining Admits&rdquo; &mdash; worth reading verbatim rather than summarizing, since it&rsquo;s a genuinely good model of how to scope an open proof precisely. Week 11 covers exactly what those two gaps are and what closing them would take.</p>
     
     </div>
 
-    <div class="source-note">This week&rsquo;s content is grounded in the AXLE/GTCT Lean sources and Book 3 chapters cited above &mdash; where a claim rests on an axiom sourced outside this repo, that is stated explicitly rather than presented as independently verified.</div>
+    <div class="source-note">This week&rsquo;s content is grounded directly in the AXLE Lean sources cited above &mdash; no material in this page depends on the external, unverified source removed from earlier drafts of this course.</div>
 
     <div class="stub-lean">
-      <pre>-- dm³ 102 · Week 10 · critDim(4)=112 — same axiom pattern as Week 7
+      <pre>-- dm³ 102 · Week 10 · CollatzDescent.lean — real, honestly scoped
 
--- axiom nBonacciRingSize_4 : nBonacciRingSize 4 = 56   -- AXIOM, external
-lemma critDim_4 : critDim 4 = 112 := by
-  unfold critDim; rw [nBonacciRingSize_4]; norm_num
+def step (n : ℕ) : ℕ := if n % 2 = 0 then n / 2 else 3 * n + 1
+def orbit (n k : ℕ) : ℕ := step^[k] n
 
--- sorry_inventory.csv having 112 rows is a COINCIDENCE with this
--- constant, not a structural fact — the CSV changes as sorrys close;
--- critDim(4) doesn't. Real count at last audit: 1041 total sorrys,
--- 1027 open. Don't let a matching number substitute for a real link.
+-- FULLY PROVED (0 sorry):
+--   v2, two_pow_v2_dvd, v2_mod4_one, burst_lt_mod4_one,
+--   v2_mod4_three, burst_exceeds_mod4_three
+--   descent_even  (n even ⟹ orbit n 1 < n)
+--   descent for n ∈ {3,5,7}  (via native_decide, kernel computation)
+
+-- theorem descent (n) (hn : 2 ≤ n) : ∃ k, orbit n k < n
+--   Even case + n∈{3,5,7}: proved.
+--   General odd case (n≥9): 2 sorries — see Week 11.
 example : True := trivial</pre>
     </div>
 

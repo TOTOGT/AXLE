@@ -75,7 +75,7 @@ footer a{color:var(--gold);text-decoration:none;}
 
     <div class="stub-content">
 
-      <p>Final assessment: a 2-page written proof summary of <code>critDim_monotone</code> and <code>no_return_to_critical</code> (Weeks 11&ndash;12), including the full 3-axiom dependency map, submitted alongside your Lean portfolio (Weeks 4&rsquo;s abstract-vs-concrete \(r^*\) distinction, Week 8&rsquo;s Cardano derivation, Weeks 11&ndash;12&rsquo;s proof terms). Grading rewards precision about the proved/axiom boundary over enthusiasm about the string-theory or Standard-Model framing &mdash; the same standard this course has held since Week 1.</p>
+      <p>Final assessment: a 2-page written proof summary covering (a) Theorem C.1&rsquo;s \(c^*=3\) derivation (Weeks 7&ndash;8) and (b) the <code>orbit_halving</code> attempt and the Terras/Everett strategy for the harder gap (Weeks 10&ndash;12), submitted alongside your Lean portfolio (Week 4&rsquo;s abstract-vs-concrete \(r^*\) distinction, Week 8&rsquo;s Cardano derivation for \(\eta\), your Week 12 Lean attempt). Grading rewards precision about the proved/open boundary over enthusiasm about any external framing &mdash; the same standard this course has held since Week 1.</p>
       <table style="width:100%;border-collapse:collapse;font-size:.85rem;margin:1rem 0">
         <tr style="background:var(--navy);color:white"><th style="padding:.5rem .6rem;text-align:left">Constant</th><th style="padding:.5rem .6rem;text-align:left">Value</th><th style="padding:.5rem .6rem;text-align:left">Status</th></tr>
         <tr style="border-bottom:1px solid var(--light)"><td style="padding:.5rem .6rem">\(\mu_{{\max}}\)</td><td style="padding:.5rem .6rem">&minus;2</td><td style="padding:.5rem .6rem">Proved (two independent derivations agree)</td></tr>
@@ -83,14 +83,14 @@ footer a{color:var(--gold);text-decoration:none;}
         <tr style="border-bottom:1px solid var(--light)"><td style="padding:.5rem .6rem">\(r^*\)</td><td style="padding:.5rem .6rem">0.77594059</td><td style="padding:.5rem .6rem">Value certified (8dp); general asymmetry still an axiom</td></tr>
         <tr style="border-bottom:1px solid var(--light)"><td style="padding:.5rem .6rem">\(\eta\) (n=3)</td><td style="padding:.5rem .6rem">1.839&hellip;</td><td style="padding:.5rem .6rem">Proved (Cardano, closed form); 3 Lean files, 0 sorry</td></tr>
         <tr style="border-bottom:1px solid var(--light)"><td style="padding:.5rem .6rem">\(\Delta\) (n=4)</td><td style="padding:.5rem .6rem">1.928&hellip;</td><td style="padding:.5rem .6rem">Proved (root); rank-supercritical, potential-subcritical</td></tr>
-        <tr style="border-bottom:1px solid var(--light)"><td style="padding:.5rem .6rem">critDim(3), critDim(4)</td><td style="padding:.5rem .6rem">26, 112</td><td style="padding:.5rem .6rem">Proved-from-axioms; ring-size premises external, unverified</td></tr>
-        <tr><td style="padding:.5rem .6rem">critDim_monotone, no_return_to_critical</td><td style="padding:.5rem .6rem">&mdash;</td><td style="padding:.5rem .6rem">Genuinely proved, 0 sorry, given the 3 axioms above</td></tr>
+        <tr style="border-bottom:1px solid var(--light)"><td style="padding:.5rem .6rem">Theorem C.1 (\(c^*=3\))</td><td style="padding:.5rem .6rem">&mdash;</td><td style="padding:.5rem .6rem">Proved (Weeks 7&ndash;8, worked in full)</td></tr>
+        <tr><td style="padding:.5rem .6rem">Collatz <code>descent</code></td><td style="padding:.5rem .6rem">&mdash;</td><td style="padding:.5rem .6rem">Even case + n&isin;{{3,5,7}} proved; general odd case: 2 open sorries (Weeks 10&ndash;12)</td></tr>
       </table>
-      <p>Portfolio submission: proof summary + axiom map + this table, annotated. dm&sup3; 103 opens with \(\Sigma\), \(\Omega\), \(\rho\), and the Galilean Confluence&rsquo;s three-way convergence claim (\(\kappa\to0\), \(\rho_n\to\tau\), \(\text{{critDim}}(n)\to\infty\)) &mdash; itself a claim whose proof status deserves the same scrutiny this course has applied throughout.</p>
-    
+      <p>Portfolio submission: proof summary + this table, annotated with your own check marks. dm&sup3; 103 opens with \(\Sigma\), \(\Omega\), and \(\rho\) (spectral radius, developed properly) &mdash; built entirely on material this course has verified directly, with no dependency on the external source removed earlier in this course.</p>
+
     </div>
 
-    <div class="source-note">This week&rsquo;s content is grounded in the AXLE/GTCT Lean sources and Book 3 chapters cited above &mdash; where a claim rests on an axiom sourced outside this repo, that is stated explicitly rather than presented as independently verified.</div>
+    <div class="source-note">This week&rsquo;s content is grounded in <code>CollatzDescent.lean</code>, the criticality bridge (Weeks 7&ndash;8), and this course&rsquo;s own constants &mdash; no material in this page depends on the external, unverified source removed from earlier drafts of this course.</div>
 
     <div class="stub-lean">
       <pre>-- dm³ 102 · Week 16 · Milestone IV — full constants + axiom audit
@@ -100,18 +100,18 @@ footer a{color:var(--gold);text-decoration:none;}
 --   ε₀ = 1/3         (gronwall_outer)
 --   η ≈ 1.839        (Cardano closed form; 3 Lean files, 0 sorry)
 --   Δ ≈ 1.928        (quartic root)
---   critDim_monotone, no_return_to_critical  (0 sorry, given axioms)
+--   Theorem C.1 (c*=3 fold, Weeks 7-8) — worked in full by hand
 --
 -- Certified numerically, not formally proved as general theorem:
 --   r* = 0.77594059  (asymmetry itself still an axiom)
 --
--- Proved FROM external, unverified axioms:
---   critDim(3)=26, critDim(4)=112
---   (nBonacciRingSize_3, _4, _monotone are all axioms, sourced
---    outside AXLE, attributed to an external "Navrátil" document)
+-- Genuine open problem, honestly scoped (CollatzDescent.lean):
+--   descent: even case + n∈{3,5,7} proved; general odd case has
+--   2 sorries — orbit_halving (tractable, attempted Week 12) and
+--   the Nat.log 2-induction case (harder, Terras/Everett strategy)
 --
--- Course complete. dm³ 103 begins with Σ, Ω, ρ, and the Galilean
--- Confluence's three-way convergence claim.
+-- Course complete. dm³ 103 begins with Σ, Ω, ρ — built entirely on
+-- material this course verified directly.
 example : True := trivial</pre>
     </div>
 

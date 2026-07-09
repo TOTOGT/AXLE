@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dm&sup3; 102 &middot; Week 11 &mdash; critDim_monotone &mdash; A Genuinely Closed Proof &middot; Principia Orthogona</title>
+<title>dm&sup3; 102 &middot; Week 11 &mdash; The Terras/Everett Argument &mdash; What Closing the Gaps Takes &middot; Principia Orthogona</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>
 :root {
@@ -52,60 +52,59 @@ footer a{color:var(--gold);text-decoration:none;}
   <ul class="nav-links">
     <li><a href="../classroom-index.html">Hub</a></li>
     <li><a href="../course-dm3-102.html">dm&sup3; 102</a></li>
-    <li><a href="https://github.com/TOTOGT/GTCT/blob/main/dm3CriticalityPrinciple_extended.lean">dm3CriticalityPrinciple_extended.lean</a></li>
+    <li><a href="https://github.com/TOTOGT/AXLE">CollatzDescent.lean</a></li>
   </ul>
 </nav>
 
 <div class="hero">
-  <div class="eyebrow">dm&sup3; 102 &middot; Week 11 &middot; Lean Lab</div>
-  <h1>critDim_monotone &mdash; A Genuinely Closed Proof</h1>
-  <div class="hero-sub">Walking the real proof term, sorry-free, given its axioms</div>
+  <div class="eyebrow">dm&sup3; 102 &middot; Week 11 &middot; Open problem</div>
+  <h1>The Terras/Everett Argument &mdash; What Closing the Gaps Takes</h1>
+  <div class="hero-sub">Reading a real, self-correcting account of two open Lean sorries</div>
   <div class="gold-rule"></div>
 </div>
 
 <div class="stub-body">
   <div class="stub-box">
-    <div class="stub-label">dm&sup3; 102 &middot; Week 11 &middot; Lean Lab</div>
-    <div class="stub-title">critDim_monotone &mdash; A Genuinely Closed Proof</div>
+    <div class="stub-label">dm&sup3; 102 &middot; Week 11 &middot; Open problem</div>
+    <div class="stub-title">The Terras/Everett Argument &mdash; What Closing the Gaps Takes</div>
     <div class="stub-meta">
       Course: <a href="../course-dm3-102.html" style="color:var(--gold);">dm&sup3; 102</a> &nbsp;&middot;&nbsp;
-      Lean Lab &nbsp;&middot;&nbsp;
-      Source: <code>dm3CriticalityPrinciple_extended.lean</code>
+      Open problem &nbsp;&middot;&nbsp;
+      Source: <code>CollatzDescent.lean</code>, &sect;7
     </div>
 
     <div class="stub-content">
 
-      <p>Unlike Weeks 7 and 10, this week&rsquo;s theorem is a genuine derivation, not a one-line arithmetic check: <code>theorem critDim_monotone : &forall; m n : &#8469;, 3 &lt; m &rarr; m &lt; n &rarr; critDim m &lt; critDim n</code>. The proof uses <code>nBonacciRingSize_monotone</code> (itself an axiom: \(\forall m\,n, m<n \to \text{{nBonacciRingSize}}(m)<\text{{nBonacciRingSize}}(n)\)) to get \(\text{{nBonacciRingSize}}(m)<\text{{nBonacciRingSize}}(n)\), combines it with \(\text{{nBonacciRingSize}}(3)=13\) to establish positivity bounds, then closes with Lean&rsquo;s <code>omega</code> tactic &mdash; a decision procedure for linear arithmetic over integers, which can mechanically verify the final inequality once the pieces are in place.</p>
-      <div class="def-callout">
-        <div class="dc-label">What omega actually buys you here</div>
-        <code>omega</code> is not doing anything mysterious &mdash; given \(\text{{nBonacciRingSize}}(m)<\text{{nBonacciRingSize}}(n)\) and the definition \(\text{{critDim}}(k)=2(\text{{nBonacciRingSize}}(k)-1)+2\), the inequality \(\text{{critDim}}(m)<\text{{critDim}}(n)\) is pure linear arithmetic, and Lean can check that mechanically and completely. The genuine mathematical content is entirely in the <em>monotonicity axiom</em> being assumed &mdash; once you have it, the rest is bookkeeping. This is a clean example of a real, valid, sorry-free Lean proof whose actual difficulty lives entirely upstream, in an axiom this course cannot independently verify.
+      <p>The file&rsquo;s own \(\S\)7 names the two open gaps precisely. <strong>Sorry #A (orbit unrolling, \(n\equiv1\bmod4\) branch):</strong> needs <code>lemma orbit_halving (m k : &#8469;) (hdvd : 2^k &#8739; m) : orbit m k = m / 2^k</code> &mdash; an elementary induction on \(k\), described in the file as &ldquo;fully provable in Lean with existing Mathlib,&rdquo; omitted only because wiring it into the surrounding proof needs roughly 15 more lines of bookkeeping.</p>
+      <p><strong>Sorry #B (\(n\equiv3\bmod4\) branch):</strong> genuinely harder. Strong induction on \(n\)&rsquo;s <em>value</em> fails here, because one odd step from \(n\equiv3\bmod4\) produces \((3n+1)/2>n\) &mdash; the induction hypothesis doesn&rsquo;t apply to a larger number. The file&rsquo;s documented fix: induct on \(\text{{Nat.log}}_2 n\) (bit-length) instead of on \(n\) directly. A &ldquo;double burst&rdquo; (one odd step, then repeated bursts) multiplies by less than \((3/2)^2=9/4<4\), so the bit-length grows by at most 1 per double-step, and the number of times the orbit can stay above \(n\) is bounded &mdash; this is the standard Terras/Everett argument for Collatz, made constructive.</p>
+      <div class="warn-callout">
+        <div class="dc-label">The file corrects its own earlier estimate &mdash; read this passage directly</div>
+        Verbatim from \(\S\)7: <em>&ldquo;This requires approximately 80&ndash;100 additional lines of Lean and is NOT &lsquo;~40 lines.&rsquo; The earlier claim that sorry #1 was &lsquo;closeable in ~40 lines&rsquo; was incorrect. It conflated the provable \(n\equiv1\pmod4\) sub-lemma with the general odd case. Both sorries here are mathematically closeable; neither is trivial.&rdquo;</em> This is exactly the discipline this course has asked you to practice since 101 Week 1 &mdash; not just distinguishing proved from open, but catching and correcting your own prior overconfidence about how hard an open gap actually is. A course built on real formalization should show you what that correction looks like when it happens inside the actual research, not just when an AI-generated course description gets it wrong.
       </div>
-      <p>Minor discrepancy worth noting for accuracy&rsquo;s sake: this course&rsquo;s own week description elsewhere cites the closure date as &ldquo;session 2026-06-14,&rdquo; while the source chapter (<code>chE-gtct.html</code>) cites &ldquo;Closed 2026-06-15.&rdquo; A one-day discrepancy in secondary metadata, not a substantive issue &mdash; but worth flagging on the same principle as everything else this week: check the primary source rather than repeating a date from memory.</p>
     
     </div>
 
-    <div class="source-note">This week&rsquo;s content is grounded in the AXLE/GTCT Lean sources and Book 3 chapters cited above &mdash; where a claim rests on an axiom sourced outside this repo, that is stated explicitly rather than presented as independently verified.</div>
+    <div class="source-note">This week&rsquo;s content is grounded directly in the AXLE Lean sources cited above &mdash; no material in this page depends on the external, unverified source removed from earlier drafts of this course.</div>
 
     <div class="stub-lean">
-      <pre>-- dm³ 102 · Week 11 · critDim_monotone — real proof term
+      <pre>-- dm³ 102 · Week 11 · The two open gaps, precisely
 
-theorem critDim_monotone :
-    ∀ m n : ℕ, 3 < m → m < n → critDim m < critDim n := by
-  intro m n hm hmn
-  have hmono : nBonacciRingSize m < nBonacciRingSize n :=
-    nBonacciRingSize_monotone m n hmn
-  have hgt : nBonacciRingSize 3 < nBonacciRingSize m :=
-    nBonacciRingSize_monotone 3 m hm
-  have h13 : nBonacciRingSize 3 = 13 := nBonacciRingSize_3
-  have hpos : 1 ≤ nBonacciRingSize m := by omega
-  unfold critDim
-  omega
--- Genuinely sorry-free. Difficulty lives entirely in the assumed
--- nBonacciRingSize_monotone axiom; the omega step is pure bookkeeping.
+-- Sorry #A (n ≡ 1 mod 4): needs
+--   lemma orbit_halving (m k) (hdvd : 2^k ∣ m) : orbit m k = m / 2^k
+-- "Fully provable with existing Mathlib" — elementary induction on k,
+-- omitted only for ~15 lines of wiring/bookkeeping.
 
--- Source metadata discrepancy: course text says "2026-06-14",
--- chE-gtct.html says "Closed 2026-06-15". Minor, but check primary
--- sources rather than trusting secondary dates from memory.</pre>
+-- Sorry #B (n ≡ 3 mod 4): genuinely harder.
+-- Strong induction on VALUE fails: one odd step gives (3n+1)/2 > n.
+-- Fix: induct on Nat.log 2 n (bit-length) instead — the standard
+-- Terras/Everett argument, made constructive. "Double burst"
+-- multiplies by < 9/4 < 4, bounding bit-length growth.
+
+-- File's own correction: "~80-100 lines... NOT ~40 lines... the
+-- earlier claim... was incorrect... Both sorries are mathematically
+-- closeable; neither is trivial." — an honest re-scoping, in the
+-- actual source, not a hypothetical example.
+example : True := trivial</pre>
     </div>
 
     <div class="back-nav">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dm&sup3; 102 &middot; Week 12 &mdash; Milestone IV &mdash; no_return_to_critical &middot; Principia Orthogona</title>
+<title>dm&sup3; 102 &middot; Week 12 &mdash; Milestone IV &mdash; Attempt the Orbit-Unrolling Lemma &middot; Principia Orthogona</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>
 :root {
@@ -52,60 +52,53 @@ footer a{color:var(--gold);text-decoration:none;}
   <ul class="nav-links">
     <li><a href="../classroom-index.html">Hub</a></li>
     <li><a href="../course-dm3-102.html">dm&sup3; 102</a></li>
-    <li><a href="https://github.com/TOTOGT/GTCT/blob/main/dm3CriticalityPrinciple_extended.lean">dm3CriticalityPrinciple_extended.lean</a></li>
+    <li><a href="https://github.com/TOTOGT/AXLE">CollatzDescent.lean</a></li>
   </ul>
 </nav>
 
 <div class="hero">
   <div class="eyebrow">dm&sup3; 102 &middot; Week 12 &middot; Milestone</div>
-  <h1>Milestone IV &mdash; no_return_to_critical</h1>
-  <div class="hero-sub">The second closed proof, and a portfolio-ready axiom map</div>
+  <h1>Milestone IV &mdash; Attempt the Orbit-Unrolling Lemma</h1>
+  <div class="hero-sub">The more tractable of the two open gaps &mdash; a real contribution opportunity</div>
   <div class="gold-rule"></div>
 </div>
 
 <div class="stub-body">
   <div class="stub-box milestone">
     <div class="stub-label">dm&sup3; 102 &middot; Week 12 &middot; Milestone</div>
-    <div class="stub-title">Milestone IV &mdash; no_return_to_critical</div>
+    <div class="stub-title">Milestone IV &mdash; Attempt the Orbit-Unrolling Lemma</div>
     <div class="stub-meta">
       Course: <a href="../course-dm3-102.html" style="color:var(--gold);">dm&sup3; 102</a> &nbsp;&middot;&nbsp;
       Milestone &nbsp;&middot;&nbsp;
-      Source: <code>dm3CriticalityPrinciple_extended.lean</code>
+      Source: <code>CollatzDescent.lean</code>, &sect;7, Sorry #A
     </div>
 
     <div class="stub-content">
 
-      <p><code>theorem no_return_to_critical : &forall; n : &#8469;, n &gt; 3 &rarr; critDim n &gt; 26</code>. The proof splits on whether \(n=4\) or \(n>4\): if \(n=4\), it uses <code>critDim_4 = 112 &gt; 26</code> directly (Week 10); if \(n>4\), it applies <code>critDim_monotone</code> (Week 11) to get \(\text{{critDim}}(n) &gt; \text{{critDim}}(4) = 112 &gt; 26\). Both branches close with <code>omega</code>. Sorry-free, genuinely &mdash; and a clean illustration of how a small library of proved lemmas (\(\text{{critDim}}\_3\), \(\text{{critDim}}\_4\), \(\text{{critDim}}\_monotone\)) combine into a stronger result without needing new axioms beyond what Weeks 7&ndash;11 already introduced.</p>
+      <p>Milestone task: attempt <code>orbit_halving (m k : &#8469;) (hdvd : 2^k &#8739; m) : orbit m k = m / 2^k</code>, the tractable gap from Week 11. Base case: \(k=0\), \(\text{{orbit}}\,m\,0=m=m/1\), trivial by definition. Inductive step: assuming \(\text{{orbit}}\,m\,k=m/2^k\) for \(2^k\mid m\), show \(\text{{orbit}}\,m\,(k{{+}}1)=\text{{step}}(\text{{orbit}}\,m\,k)=\text{{step}}(m/2^k)\); since \(2^{{k+1}}\mid m\), the quotient \(m/2^k\) is even, so \(\text{{step}}(m/2^k)=(m/2^k)/2=m/2^{{k+1}}\), closing the induction.</p>
       <div class="def-callout">
-        <div class="dc-label">Milestone: the full axiom map for this phase</div>
-        Before submitting, write out every axiom this entire Phase III argument actually rests on: <code>nBonacciRingSize_3=13</code>, <code>nBonacciRingSize_4=56</code>, <code>nBonacciRingSize_monotone</code> &mdash; three axioms, all sourced from the external &ldquo;Navr&aacute;til&rdquo; document, none independently verified in AXLE. Everything else in <code>critDim_3</code>, <code>critDim_4</code>, <code>critDim_monotone</code>, and <code>no_return_to_critical</code> is genuinely, mechanically derived from those three. That is the accurate, complete picture of this phase&rsquo;s proof status &mdash; not &ldquo;proved&rdquo; unqualified, and not &ldquo;unproved&rdquo; either. Both would be wrong.
+        <div class="dc-label">This is not a toy exercise &mdash; it is the actual open gap</div>
+        Unlike a constructed classroom problem, succeeding here produces a real, usable Lean lemma that the actual <code>CollatzDescent.lean</code> file is missing, needed to close its \(n\equiv1\bmod4\) branch. If your proof compiles cleanly, it is a legitimate candidate for a pull request against <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a>, following the same pattern 101 established for <code>FibonacciRatioConvergence.lean</code>: find the real gap, close it for real, submit it. Sorry #B (the \(n\equiv3\bmod4\) branch, Week 11) is the harder milestone for anyone who wants to go further &mdash; described honestly in the source as genuinely non-trivial, not a quick follow-up.
       </div>
-      <p>Submission: the <code>no_return_to_critical</code> proof walkthrough plus the three-axiom map. Phase III is closed &mdash; Week 13 begins the synthesis phase with \(G^5\).</p>
+      <p>Submission: your <code>orbit_halving</code> proof (compiling or not &mdash; document where it breaks if it doesn&rsquo;t close cleanly), plus a short note on whether you see a path to Sorry #B using the Nat.log 2 strategy from Week 11. Phase III is closed &mdash; Week 13 opens the synthesis phase with \(G^5\).</p>
     
     </div>
 
-    <div class="source-note">This week&rsquo;s content is grounded in the AXLE/GTCT Lean sources and Book 3 chapters cited above &mdash; where a claim rests on an axiom sourced outside this repo, that is stated explicitly rather than presented as independently verified.</div>
+    <div class="source-note">This week&rsquo;s content is grounded directly in the AXLE Lean sources cited above &mdash; no material in this page depends on the external, unverified source removed from earlier drafts of this course.</div>
 
     <div class="stub-lean">
-      <pre>-- dm³ 102 · Week 12 · Milestone IV — no_return_to_critical
+      <pre>-- dm³ 102 · Week 12 · Milestone IV — orbit_halving attempt
 
-theorem no_return_to_critical :
-    ∀ n : ℕ, n > 3 → critDim n > 26 := by
-  intro n hn
-  have hcrit4 : critDim 4 = 112 := by
-    unfold critDim; rw [nBonacciRingSize_4]
-  rcases (show (4:ℕ) ≤ n from hn).lt_or_eq with h4 | h4
-  · have := critDim_monotone 4 n (by norm_num) h4
-    omega
-  · rw [← h4, hcrit4]; norm_num
--- Sorry-free. Rests entirely on the 3-axiom base below.
+lemma orbit_halving (m k : ℕ) (hdvd : 2 ^ k ∣ m) :
+    orbit m k = m / 2 ^ k := by
+  induction k with
+  | zero => simp [orbit]
+  | succ k ih =>
+    -- 2^(k+1) ∣ m ⟹ 2^k ∣ m, apply ih, then one more halving step
+    sorry -- your attempt goes here
 
--- FULL AXIOM MAP for Phase III (submit with your milestone):
---   nBonacciRingSize_3 = 13        -- axiom, external "Navrátil" source
---   nBonacciRingSize_4 = 56        -- axiom, external "Navrátil" source
---   nBonacciRingSize_monotone      -- axiom, external "Navrátil" source
--- critDim_3, critDim_4, critDim_monotone, no_return_to_critical are
--- ALL genuinely derived from just these three — no hidden extra axioms.
+-- If this closes with 0 sorry, it's a real candidate PR against
+-- github.com/TOTOGT/AXLE — the actual gap CollatzDescent.lean names.
 example : True := trivial</pre>
     </div>
 

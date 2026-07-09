@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>dm&sup3; 102 &middot; Week 8 &mdash; Milestone III &mdash; &eta; and critDim(3) &middot; Principia Orthogona</title>
+<title>dm&sup3; 102 &middot; Week 8 &mdash; Milestone III &mdash; Deriving the Fold by Hand &middot; Principia Orthogona</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>
 :root {
@@ -52,49 +52,46 @@ footer a{color:var(--gold);text-decoration:none;}
   <ul class="nav-links">
     <li><a href="../classroom-index.html">Hub</a></li>
     <li><a href="../course-dm3-102.html">dm&sup3; 102</a></li>
-    <li><a href="https://github.com/TOTOGT/GTCT/blob/main/dm3CriticalityPrinciple_extended.lean">dm3CriticalityPrinciple_extended.lean</a></li>
+    <li><a href="../../chapters-pi-phi-mu-eta-delta-sigma-omega.html#criticality">Criticality Bridge Source</a></li>
   </ul>
 </nav>
 
 <div class="hero">
   <div class="eyebrow">dm&sup3; 102 &middot; Week 08 &middot; Milestone</div>
-  <h1>Milestone III &mdash; &eta; and critDim(3)</h1>
-  <div class="hero-sub">Walk the actual proof term, and state precisely what it does and doesn&rsquo;t settle</div>
+  <h1>Milestone III &mdash; Deriving the Fold by Hand</h1>
+  <div class="hero-sub">Reproduce Theorem C.1 from scratch, then connect it to Collatz precisely</div>
   <div class="gold-rule"></div>
 </div>
 
 <div class="stub-body">
   <div class="stub-box milestone">
     <div class="stub-label">dm&sup3; 102 &middot; Week 08 &middot; Milestone</div>
-    <div class="stub-title">Milestone III &mdash; &eta; and critDim(3)</div>
+    <div class="stub-title">Milestone III &mdash; Deriving the Fold by Hand</div>
     <div class="stub-meta">
       Course: <a href="../course-dm3-102.html" style="color:var(--gold);">dm&sup3; 102</a> &nbsp;&middot;&nbsp;
       Milestone &nbsp;&middot;&nbsp;
-      Source: <code>dm3CriticalityPrinciple_extended.lean</code>
+      Source: Book 3, Criticality Bridge (Theorem C.1)
     </div>
 
     <div class="stub-content">
 
-      <p>Milestone task, two parts. <strong>Part 1:</strong> reproduce the Cardano derivation from Week 5 by hand &mdash; the depressed cubic, the discriminant sign, the closed-form \(\eta\). <strong>Part 2:</strong> reproduce the <code>critDim_3</code> proof term from Week 7 by hand, then write one paragraph on what it establishes and what it assumes: the arithmetic step \(2(13-1)+2=26\) is genuinely, mechanically checked; the premise \(\text{{nBonacciRingSize}}(3)=13\) is an axiom sourced from an external document (&ldquo;Navr&aacute;til&rdquo;) this course has not independently verified.</p>
+      <p>Milestone task, two parts. <strong>Part 1:</strong> starting only from \(V(q)=q^3-cq\), derive \(c^*=3\) as the unique value producing a double root at \(q=1\) &mdash; the full argument from Week 7, reproduced without looking it up: find \(V'(q)\), solve for the critical point, impose \(q^*=1\), solve for \(c\), verify \(V''(1)\neq0\), factor \(V(q)+2\). <strong>Part 2:</strong> write one paragraph connecting this to the Collatz map precisely &mdash; not just &ldquo;Collatz has \(c=3\) too&rdquo; as a slogan, but stating exactly what &ldquo;coefficient\(=3\)&rdquo; means for the odd branch \(T(n)=3n+1\) and why that identification is meaningful rather than superficial (hint: it&rsquo;s the same linear coefficient in both the continuous potential and the discrete map, not merely two unrelated appearances of the digit 3).</p>
       <div class="def-callout">
-        <div class="dc-label">Why this milestone matters more than a typical arithmetic check</div>
-        The whole point of formal verification is that &ldquo;proved&rdquo; should mean something stronger than &ldquo;asserted with confidence.&rdquo; <code>critDim_3</code> genuinely is proved &mdash; Lean will not accept the tactic proof if the arithmetic is wrong. But a formal system is only as trustworthy as its axioms, and this file has axioms sourced from outside AXLE itself. Distinguishing &ldquo;this specific deduction is airtight&rdquo; from &ldquo;the whole conclusion is airtight&rdquo; is the actual skill &mdash; not a technicality, the real discipline this course has built toward since Week 1 of 101.
+        <div class="dc-label">Why this milestone replaced the critDim material</div>
+        This course originally planned to build Weeks 7&ndash;8 and 10&ndash;12 around a &ldquo;critDim(n)&rdquo; formula tied to an external, unverified source (a document referenced only as &ldquo;Navr&aacute;til&rdquo; in a separate repo). That material has been removed entirely, not merely re-caveated &mdash; a repeat of the same lesson 101 taught with \(\pi\)/\(\varphi\)-as-operators and this course&rsquo;s own \(r^*\) correction: when a claim&rsquo;s foundation can&rsquo;t be verified, the right move is removing it, not qualifying it indefinitely. What replaces it (this week, and Weeks 10&ndash;12) is grounded entirely in material this course can actually check: the criticality bridge derived above, and a real, honestly-scoped open Lean file on Collatz descent, next.
       </div>
-      <p>Submission: your Cardano derivation, your <code>critDim_3</code> proof-term walkthrough, and the one-paragraph axiom analysis. Phase II continues in Week 9 with \(\Delta\) (Tetranacci), the first supercritical rank.</p>
     
     </div>
 
-    <div class="source-note">This week&rsquo;s content is grounded in the AXLE/GTCT Lean sources and Book 3 chapters cited above &mdash; where a claim rests on an axiom sourced outside this repo, that is stated explicitly rather than presented as independently verified.</div>
+    <div class="source-note">This week&rsquo;s content is grounded directly in the AXLE Lean sources cited above &mdash; no material in this page depends on the external, unverified source removed from earlier drafts of this course.</div>
 
     <div class="stub-lean">
-      <pre>-- dm³ 102 · Week 08 · Milestone III
+      <pre>-- dm³ 102 · Week 08 · Milestone III — Theorem C.1 by hand
 --
--- Part 1: reproduce η's Cardano derivation by hand (Week 5).
--- Part 2: reproduce critDim_3 (Week 7) and classify its status:
---   Arithmetic step 2*(13-1)+2=26          -- mechanically checked
---   Premise nBonacciRingSize(3)=13          -- AXIOM, external source
+-- Part 1: reproduce the c*=3 derivation without reference material.
+-- Part 2: one paragraph — what "Collatz has c=3" precisely means.
 --
--- Submit: derivation + proof walkthrough + one-paragraph analysis.
+-- Submit: your derivation + paragraph.
 example : True := trivial</pre>
     </div>
 
