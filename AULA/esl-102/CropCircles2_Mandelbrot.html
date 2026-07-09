@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mandelbrot's Crop Circle — Fractals & Evidence — Hour House · Principia Orthogona</title>
+  <meta name="description" content="B-Level ESL Lesson (Part 2): Mandelbrot's Crop Circle, Fractals, and the Limits of Evidence. 90 minutes. Hour House, Newark, NJ · 2026.">
+  <style>
+    :root {
+      --navy:  #1a2744; --gold:  #c9a84c; --cream: #faf7f0; --smoke: #f0ece4;
+      --mid:   #3a4f7a; --rule:  #8a7340; --text:  #1c1c1c; --green: #2d5a27;
+      --light: #e8e2d4; --amber: #fff8e1; --amber-border: #f9a825;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; color: var(--text); background: var(--cream); }
+    nav {
+      background: var(--navy); padding: 0.75rem 2rem;
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
+      border-bottom: 2px solid rgba(201,168,76,.35);
+    }
+    .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+    .nav-links { display: flex; gap: 1.2rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a { color: #ccc; text-decoration: none; font-size: 0.85rem; font-family: sans-serif; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold); }
+    .hero { background: var(--navy); color: white; padding: 3.5rem 2rem 3rem; text-align: center; }
+    .hero-eyebrow { font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem; }
+    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); color: white; margin-bottom: 0.5rem; line-height: 1.2; }
+    .hero-sub { color: var(--gold); font-style: italic; font-size: 1.05rem; margin-bottom: 0.6rem; }
+    .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+    .hero-desc { max-width: 620px; margin: 0 auto; color: #bbb; font-size: 0.95rem; line-height: 1.8; }
+    .lesson-body { max-width: 860px; margin: 0 auto; padding: 2rem; }
+    .lesson-header { padding: 1.5rem 0 1rem; border-bottom: 2px solid var(--gold); margin-bottom: 1.8rem; }
+    .lesson-header .level-tag { font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rule); margin-bottom: 0.3rem; }
+    .lesson-header h2 { font-size: 1.6rem; color: var(--navy); line-height: 1.25; margin-bottom: 0.3rem; }
+    .lesson-header .lesson-source { font-style: italic; color: #666; font-size: 0.9rem; line-height: 1.6; }
+    .basics-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.9rem; }
+    .basics-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.5rem 0.8rem; font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.08em; }
+    .basics-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--light); vertical-align: top; }
+    .basics-table td:first-child { font-family: sans-serif; font-size: 0.78rem; font-weight: bold; color: var(--mid); width: 160px; background: #eef2f8; text-transform: uppercase; letter-spacing: 0.04em; }
+    .basics-table tr:last-child td { border-bottom: none; }
+    .qr-row { display: flex; gap: 1.5rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .qr-box { flex: 1; min-width: 220px; background: var(--amber); border: 1.5px solid var(--amber-border); padding: 1rem 1.2rem; text-align: center; }
+    .qr-box .qr-label { font-family: sans-serif; font-size: 0.75rem; font-weight: bold; color: var(--navy); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+    .qr-box .qr-url { font-family: monospace; font-size: 0.82rem; color: var(--mid); word-break: break-all; }
+    .qr-box .qr-caption { font-style: italic; font-size: 0.82rem; color: #666; margin-top: 0.4rem; }
+    .stage-block { margin-bottom: 2.5rem; }
+    .stage-header { background: var(--green); color: white; padding: 0.7rem 1rem; font-family: sans-serif; font-size: 0.9rem; font-weight: bold; letter-spacing: 0.03em; margin-bottom: 1rem; }
+    .stage-activity { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; font-family: sans-serif; }
+    .body-p { font-size: 0.93rem; line-height: 1.75; margin-bottom: 0.7rem; }
+    .body-p b { color: var(--navy); }
+    .lesson-list { list-style: none; margin: 0.5rem 0 0.8rem; padding-left: 1.2rem; }
+    .lesson-list li { font-size: 0.93rem; line-height: 1.7; margin-bottom: 0.3rem; padding-left: 0.3rem; }
+    .lesson-list li::before { content: attr(data-n) ".\00a0"; color: var(--mid); font-weight: bold; }
+    .lesson-quote { border-left: 3px solid var(--gold); background: var(--smoke); padding: 0.8rem 1.2rem; margin: 0.8rem 0 1rem; font-style: italic; font-size: 0.92rem; color: #444; line-height: 1.7; }
+    .vocab-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 0.88rem; }
+    .vocab-table th { background: var(--navy); color: var(--gold); text-align: left; padding: 0.45rem 0.7rem; font-family: sans-serif; font-size: 0.73rem; letter-spacing: 0.08em; }
+    .vocab-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--light); vertical-align: top; }
+    .vocab-table td:first-child { font-weight: bold; color: var(--mid); width: 160px; }
+    .vocab-table tr:nth-child(even) td { background: var(--smoke); }
+    .vocab-table tr:last-child td { border-bottom: none; }
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    @media (max-width: 600px) { .cards-grid { grid-template-columns: 1fr; } }
+    .disc-card { background: var(--amber); border: 1.5px solid var(--amber-border); padding: 1rem 1.1rem; }
+    .disc-card-title { font-family: sans-serif; font-size: 0.8rem; font-weight: bold; color: #c45000; margin-bottom: 0.5rem; }
+    .disc-card p { font-size: 0.88rem; line-height: 1.65; color: #333; }
+    .disc-card .disc-question { font-style: italic; color: #444; margin-top: 0.5rem; font-size: 0.86rem; }
+    .timing-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 0.8rem 0 1.2rem; }
+    .timing-table th { background: var(--navy); color: var(--gold); padding: 0.45rem 0.7rem; font-family: sans-serif; font-size: 0.73rem; text-align: left; letter-spacing: 0.06em; }
+    .timing-table td { padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--light); }
+    .timing-table tr:nth-child(even) td { background: var(--smoke); }
+    .timing-table tr:last-child td { font-weight: bold; background: #eef2f8; border-top: 2px solid var(--gold); }
+    .timing-table td:first-child, .timing-table td:last-child { text-align: center; font-family: monospace; }
+    .teacher-note { background: var(--smoke); border-left: 3px solid var(--mid); padding: 1rem 1.2rem; margin: 1rem 0; font-size: 0.88rem; line-height: 1.7; color: #444; }
+    .teacher-note strong { color: var(--navy); }
+    .copyright-strip { background: var(--smoke); padding: 0.8rem 1.5rem; margin: 1.5rem 0; font-size: 0.8rem; color: #777; font-family: sans-serif; border-top: 1px solid var(--light); }
+    .copyright-strip a { color: var(--mid); }
+    footer { background: var(--navy); color: #888; padding: 2rem; text-align: center; font-size: 0.78rem; font-family: sans-serif; line-height: 1.7; }
+    footer a { color: var(--gold); text-decoration: none; }
+    .timeline { border-left: 3px solid var(--gold); margin: 1rem 0 1.2rem; padding-left: 1.2rem; }
+    .timeline-item { margin-bottom: 1rem; position: relative; }
+    .timeline-year { font-family: sans-serif; font-weight: bold; color: var(--mid); font-size: 0.85rem; letter-spacing: 0.04em; }
+    .timeline-text { font-size: 0.92rem; line-height: 1.7; margin-top: 0.15rem; }
+    .fact-check { background: #eef2f8; border-left: 3px solid var(--mid); padding: 0.9rem 1.2rem; margin: 1rem 0; font-size: 0.87rem; line-height: 1.7; color: #333; }
+    .fact-check .fc-label { font-family: sans-serif; font-size: 0.7rem; font-weight: bold; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.4rem; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">HOUR HOUSE &middot; PRINCIPIA ORTHOGONA</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#lessons">All Lessons</a></li>
+    <li><a href="CropCircles.html">&larr; Part 1: Crop Circles &amp; Geometry</a></li>
+    <li><a href="#timing">Timing Summary</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Hour House &middot; Newark, NJ &middot; Adult ESL &middot; Part 2</div>
+  <h1>Mandelbrot's Crop Circle</h1>
+  <div class="hero-sub">Fractals, Prediction, and the Limits of Evidence</div>
+  <div class="gold-rule"></div>
+  <p class="hero-desc">A follow-up to Crop Circles &amp; Geometry. One more crop circle story — this one about a real mathematician, a magazine letter that seemed to predict the future, and a field in England that made international news.</p>
+</div>
+
+<div class="lesson-body" id="lesson-caela-b2">
+
+  <div class="lesson-header">
+    <div class="level-tag">CAELA Lesson &middot; Level B (Intermediate&ndash;Upper Intermediate) &middot; 90 minutes &middot; Part 2 of 2</div>
+    <h2>Mandelbrot's Crop Circle<br>Fractals, Prediction, and Reaction</h2>
+    <div class="lesson-source">
+      Based on: the Ickleton, Cambridgeshire crop circle (12 August 1991) and the documentary <em>The Colours of Infinity</em> (1995, narrated by Arthur C. Clarke, featuring mathematician Benoit Mandelbrot)
+    </div>
+  </div>
+
+  <div class="fact-check">
+    <div class="fc-label">A note on this story, for the teacher</div>
+    In August 1991, a crop circle shaped like the "Mandelbrot Set" — a famous mathematical shape — appeared in a field near Cambridge, England. This is well documented in news archives and in the 1995 documentary <em>The Colours of Infinity</em>. What is <b>not</b> confirmed anywhere is who made it — unlike the "Doug and Dave" hoax from Part 1, nobody ever confessed to this one. It is widely believed (based on timing and location) that Cambridge University students made it, but that is an inference, not a confession. This distinction — a confirmed hoax vs. a strongly suspected one — is the heart of today's critical-thinking work, so keep it precise when you teach it.
+  </div>
+
+  <table class="basics-table">
+    <tr><th colspan="2">Lesson Basics</th></tr>
+    <tr><td>Topic</td><td>Fractals, Sequencing Language, Documentary Literacy, Confirmed vs. Suspected Evidence</td></tr>
+    <tr><td>Objective</td><td>Sequence events in English using time-order language. Describe a self-similar (fractal) pattern. Distinguish a <em>confirmed</em> explanation from a <em>suspected</em> one.</td></tr>
+    <tr><td>Level</td><td>B-Level (Intermediate&ndash;Upper Intermediate) — B1 to B2</td></tr>
+    <tr><td>Duration</td><td>90 minutes &nbsp;&middot;&nbsp; one session, or two 45-min classes</td></tr>
+    <tr><td>Prerequisite</td><td><a href="CropCircles.html">Crop Circles &amp; Geometry (Part 1)</a> — students should already know "evidence," "hoax," and "phenomenon"</td></tr>
+    <tr><td>Skills</td><td>Listening &middot; Speaking &middot; Reading &middot; Writing &middot; Sequencing &middot; Critical Thinking</td></tr>
+    <tr><td>Materials</td><td>This page &middot; YouTube documentary clip (with subtitles) &middot; Timeline event cards &middot; Discussion cards</td></tr>
+  </table>
+
+  <div class="qr-row">
+    <div class="qr-box">
+      <div class="qr-label">Watch the Documentary</div>
+      <div class="qr-url">youtube.com/watch?v=DyeR19m8gGk</div>
+      <div class="qr-caption"><em>"Arthur C. Clarke — Fractals: The Colours of Infinity"</em> (1995) — use the opening segment below</div>
+    </div>
+    <div class="qr-box">
+      <div class="qr-label">The Shape</div>
+      <div class="qr-url">The "Mandelbrot Set" fractal</div>
+      <div class="qr-caption">Search "Mandelbrot Set image" to project one — a shape that looks the same at every zoom level</div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 1 &mdash; WARM-UP / REVIEW &nbsp;&middot;&nbsp; 10 minutes</div>
+    <div class="stage-activity">Activity A: Recall Part 1</div>
+    <p class="body-p">Ask: "What did we learn about crop circles last time? Who made the Doug and Dave circles? How do we know?" (Answer: two men confessed; that is strong, confirmed evidence.)</p>
+    <div class="teacher-note"><strong>Teacher note:</strong> If this is a new group that did not attend Part 1, briefly summarize: "Some crop circles are made by humans. We know this because two men, Doug and Dave, confessed and demonstrated how, in 1991."</div>
+
+    <div class="stage-activity" style="margin-top:1.2rem;">Activity B: Today's Question</div>
+    <p class="lesson-quote">"What happens when evidence points STRONGLY toward an answer, but nobody ever confirms it?"</p>
+    <p class="body-p">Tell students: "Today's story is about a real scientist, a magazine, and a field — and about a mystery that is still, technically, unsolved."</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 2 &mdash; INTRODUCTION &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">Activity: Vocabulary Preview + Sentence Frames</div>
+    <p class="body-p"><b>Introduce 8 KEY VOCABULARY WORDS.</b> Students copy into notebooks or handout:</p>
+
+    <table class="vocab-table">
+      <tr><th>Word</th><th>Meaning</th><th>Example Sentence (B-level)</th></tr>
+      <tr><td>Fractal</td><td>a shape that looks the same (or similar) at every size, when you zoom in</td><td>A snowflake is a natural example of a _____.</td></tr>
+      <tr><td>Self-similar</td><td>made of smaller copies of the same pattern</td><td>This shape is _____ — the small part looks like the big part.</td></tr>
+      <tr><td>Speculate / Speculation</td><td>to guess about something without proof</td><td>The letter did not prove anything — it was just _____.</td></tr>
+      <tr><td>Predict / Prediction</td><td>to say what will happen before it happens</td><td>His letter made a _____ that came true a year later.</td></tr>
+      <tr><td>Confirm / Confirmed</td><td>to prove something is definitely true</td><td>Nobody ever _____ who made the circle.</td></tr>
+      <tr><td>Suspect / Suspected</td><td>to believe someone probably did something, without proof</td><td>People _____ Cambridge students made it, but no one is sure.</td></tr>
+      <tr><td>React / Reaction</td><td>what someone says or does after an event</td><td>Mandelbrot's _____ was calm — he seemed amused, not angry.</td></tr>
+      <tr><td>Coincidence</td><td>two events happening close together, by chance, without a planned connection</td><td>Was it a _____, or did the letter inspire the circle?</td></tr>
+    </table>
+
+    <p class="body-p"><b>SENTENCE FRAMES FOR B-LEVEL SPEAKERS (post on wall or provide as handout):</b></p>
+    <div class="lesson-quote">
+      &bull; "First _____. Then _____. After that, _____. Finally, _____."<br>
+      &bull; "This was never confirmed, but people suspected _____."<br>
+      &bull; "I think this was a coincidence / not a coincidence because _____."<br>
+      &bull; "His reaction was _____ because _____."
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 3 &mdash; PRESENTATION &nbsp;&middot;&nbsp; 20 minutes</div>
+    <div class="stage-activity">Activity A: The Story, Told as a Timeline</div>
+    <p class="body-p">Present the real timeline on the board, one event at a time. Read each aloud; students repeat key words.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1979&ndash;1980</div>
+        <div class="timeline-text">Mathematician <b>Benoit Mandelbrot</b>, using early computer graphics at IBM, discovers and names a strange, endlessly-detailed shape: the <b>Mandelbrot Set</b>. It is <b>self-similar</b> — zoom in, and you find smaller copies of the same pattern, forever.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">August 1990</div>
+        <div class="timeline-text">A reader's letter is published in the British magazine <em>New Scientist</em>, joking that the ultimate crop circle would be a Mandelbrot Set. It is <b>speculation</b> — a guess, for fun, with no evidence behind it.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">12 August 1991</div>
+        <div class="timeline-text">A crop circle in the exact shape of the Mandelbrot Set appears in a field near Ickleton, a village close to Cambridge, England. It becomes one of the most famous crop circles ever photographed. People <b>suspect</b> Cambridge University students made it — but nobody ever confesses, so this is never <b>confirmed</b>.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Soon after</div>
+        <div class="timeline-text">Journalists ask Mandelbrot for his <b>reaction</b>. He responds with something close to delight, not anger: <em>"I am very pleased to hear of the theory taking root&hellip; I can't wait to see what the next one will look like."</em></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1995</div>
+        <div class="timeline-text">The documentary <em>The Colours of Infinity</em>, narrated by science writer Arthur C. Clarke, features Mandelbrot explaining fractals — patterns that repeat at every scale, found in clouds, coastlines, and plants.</div>
+      </div>
+    </div>
+
+    <div class="stage-activity" style="margin-top:1.2rem;">Activity B: Documentary Viewing (Segment)</div>
+    <p class="body-p"><b>Watch a 6&ndash;8 minute opening segment</b> of <em>The Colours of Infinity</em> (subtitles on). Students have a simple note-taking sheet:</p>
+    <div style="background:#f5f5f5;padding:1rem;margin:0.8rem 0;border-radius:4px;font-size:0.9rem;">
+      <b>What did I see?</b><br>
+      &bull; What is a fractal? (in your own words) _______________<br>
+      &bull; Name one example of a fractal in nature. _______________<br>
+      &bull; How did the shape look when the camera "zoomed in"? _______________
+    </div>
+    <div class="teacher-note"><strong>Teacher tip:</strong> Pause when the Mandelbrot Set first appears on screen. Ask: "Does this shape look like anything you've seen before? A leaf? A coastline? A cloud?"</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 4 &mdash; GUIDED PRACTICE &nbsp;&middot;&nbsp; 20 minutes</div>
+
+    <div class="stage-activity">Activity A: Timeline Sequencing (Pairs)</div>
+    <p class="body-p">Write the five timeline events (from Stage 3) on separate cards or strips of paper, out of order. In pairs, students put them back in the correct order and explain why, using sequencing language.</p>
+    <div class="lesson-quote">
+      "First, Mandelbrot discovered the shape. Then, a magazine printed a joke about it. After that, the real circle appeared in a field. Next, Mandelbrot reacted to the news. Finally, the documentary was made."
+    </div>
+
+    <div class="stage-activity" style="margin-top:1.2rem;">Activity B: Confirmed vs. Suspected (Sorting)</div>
+    <p class="body-p">Give students six short statements. In pairs, sort each into <b>CONFIRMED</b> (we have proof) or <b>SUSPECTED</b> (we believe it, but no proof):</p>
+    <ul class="lesson-list">
+      <li data-n="1">Doug and Dave made crop circles with wooden planks. <span style="color:var(--mid);font-style:italic;">(Confirmed — they confessed and demonstrated it.)</span></li>
+      <li data-n="2">Cambridge students made the Mandelbrot Set circle. <span style="color:var(--mid);font-style:italic;">(Suspected — no confession exists.)</span></li>
+      <li data-n="3">Mandelbrot discovered the Mandelbrot Set in 1979&ndash;1980. <span style="color:var(--mid);font-style:italic;">(Confirmed — published, dated mathematics.)</span></li>
+      <li data-n="4">The 1990 letter directly inspired the 1991 circle. <span style="color:var(--mid);font-style:italic;">(Suspected — the timing suggests it, but no one has proven a direct link.)</span></li>
+      <li data-n="5">Fractals appear in real nature, such as coastlines and ferns. <span style="color:var(--mid);font-style:italic;">(Confirmed — measurable, published science.)</span></li>
+      <li data-n="6">Mandelbrot was upset or angry about the crop circle. <span style="color:var(--mid);font-style:italic;">(Not confirmed — his own quoted words show the opposite: pleasure and curiosity.)</span></li>
+    </ul>
+    <div class="teacher-note"><strong>Differentiation:</strong> For lower B-level, do this sorting activity as a whole class on the board. For upper B-level, have pairs write one additional "confirmed" and one "suspected" statement of their own about the story.</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 5 &mdash; COMMUNICATIVE PRACTICE &nbsp;&middot;&nbsp; 15 minutes</div>
+    <div class="stage-activity">Activity: Discussion Cards — Group Conversations</div>
+
+    <p class="body-p">Divide class into 4 groups. Each group gets one discussion card. Students read the card, discuss, then report to the class.</p>
+
+    <div class="cards-grid">
+      <div class="disc-card">
+        <div class="disc-card-title">Card A &mdash; Coincidence or Inspiration?</div>
+        <p><b>Fact:</b> In 1990, a magazine printed a joke about a Mandelbrot Set crop circle. In 1991, a real one appeared nearby.</p>
+        <p class="disc-question">Question: Do you think the letter caused the circle, or is this a coincidence? Use: "I think _____ because _____."</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-card-title">Card B &mdash; A Good Reaction</div>
+        <p><b>Fact:</b> Mandelbrot reacted with curiosity and pleasure, not anger, when a shape with his name appeared, without his permission, in a field.</p>
+        <p class="disc-question">Question: How would you react if this happened to you? Is his reaction unusual? Use: "If this happened to me, I would _____."</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-card-title">Card C &mdash; Confirmed vs. Suspected</div>
+        <p><b>Fact:</b> Doug and Dave's hoax was confirmed by confession. The Cambridge students' circle was only ever suspected.</p>
+        <p class="disc-question">Question: Why does the difference between "confirmed" and "suspected" matter, in science and in daily life? Use: "The difference matters because _____."</p>
+      </div>
+      <div class="disc-card">
+        <div class="disc-card-title">Card D &mdash; Patterns in Nature</div>
+        <p><b>Fact:</b> Fractals — self-similar patterns — appear in coastlines, ferns, clouds, and blood vessels.</p>
+        <p class="disc-question">Question: Where else in nature or in your own country might you find a repeating pattern like this? Use: "In _____, I have seen a pattern that repeats."</p>
+      </div>
+    </div>
+
+    <p class="body-p"><b>Group Report (2&ndash;3 min per group):</b> Each group reports their answer to the class.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 6 &mdash; EVALUATION &nbsp;&middot;&nbsp; 10 minutes</div>
+    <div class="stage-activity">Activity: Exit Writing — Choose One</div>
+
+    <p class="body-p"><b>Students choose ONE task and write 4&ndash;6 sentences.</b></p>
+
+    <p class="body-p" style="background:#ffe8cc;padding:0.8rem;border-left:3px solid #ff9800;border-radius:3px;"><b>OPTION A — Retell the Timeline:</b><br>
+    Retell the Mandelbrot crop circle story in your own words, in order, using "first," "then," "after that," and "finally."</p>
+
+    <p class="body-p" style="background:#e8f5ff;padding:0.8rem;border-left:3px solid #2196f3;border-radius:3px;margin-top:1rem;"><b>OPTION B — Confirmed or Suspected?</b><br>
+    Explain the difference between something that is confirmed and something that is only suspected. Use one example from today's lesson and one example from your own life.</p>
+
+    <p class="body-p" style="background:#e8ffe8;padding:0.8rem;border-left:3px solid #4caf50;border-radius:3px;margin-top:1rem;"><b>OPTION C — Your Reaction:</b><br>
+    If a strange, beautiful pattern with your name appeared somewhere without your permission, how would you react? Would you be angry, curious, or something else? Why?</p>
+
+    <div class="teacher-note"><strong>Assessment note:</strong> A B-level student who correctly uses "confirmed," "suspected," and at least one sequencing word ("first," "then," "finally") = success.</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="stage-block">
+    <div class="stage-header">STAGE 7 &mdash; APPLICATION &nbsp;&middot;&nbsp; 5 minutes</div>
+    <div class="stage-activity">Activity: Reflection & Connection to Life</div>
+
+    <p class="body-p"><b>Ask students (whole group or pairs):</b></p>
+    <ul class="lesson-list">
+      <li data-n="1">Have you ever guessed something correctly, and then it actually happened? How did you feel?</li>
+      <li data-n="2">Why do you think this story connects to Part 1 (Crop Circles &amp; Geometry)? What is the same, and what is different?</li>
+      <li data-n="3">What is one word from today that you want to remember and use this week?</li>
+    </ul>
+
+    <p class="lesson-quote">"Today, you learned that not every mystery gets solved — and that 'we don't know for sure' is a perfectly good, honest answer. That is real thinking, in English."</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h3 style="color:var(--navy); font-family:sans-serif; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin-top:2rem; margin-bottom:0.8rem;">Timing Summary</h3>
+
+  <table class="timing-table" id="timing">
+    <tr><th>#</th><th>Activity</th><th>Time</th></tr>
+    <tr><td>1</td><td>Warm-Up: Recall Part 1 + Today's Question</td><td>10 min</td></tr>
+    <tr><td>2</td><td>Introduction: Vocabulary + Sentence Frames</td><td>15 min</td></tr>
+    <tr><td>3</td><td>Presentation: Timeline + Documentary Segment</td><td>20 min</td></tr>
+    <tr><td>4</td><td>Guided Practice: Sequencing + Sorting</td><td>20 min</td></tr>
+    <tr><td>5</td><td>Communicative Practice: Discussion Cards</td><td>15 min</td></tr>
+    <tr><td>6</td><td>Evaluation: Exit Writing</td><td>10 min</td></tr>
+    <tr><td>7</td><td>Application: Reflection</td><td>5 min</td></tr>
+    <tr><td></td><td><strong>TOTAL</strong></td><td><strong>95 min</strong></td></tr>
+  </table>
+
+  <div class="teacher-note" style="margin-top:2rem;">
+    <strong>Flexible Timing:</strong> If you have only 45 minutes, do Stages 1, 2, 3, and 6 (skip 4 &amp; 5). If teaching two 45-min sessions: Session 1 = Stages 1&ndash;3; Session 2 = Stages 4&ndash;7.
+  </div>
+
+  <h3 style="color:var(--navy); font-family:sans-serif; font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin-top:2rem; margin-bottom:0.8rem;">Materials Checklist</h3>
+
+  <div style="background:var(--smoke);padding:1.2rem;border-radius:4px;margin:1rem 0;">
+    <b style="display:block;margin-bottom:0.6rem;">Before class, prepare:</b>
+    <ul class="lesson-list">
+      <li data-n="1">Print vocabulary sheet (8 words)</li>
+      <li data-n="2">Print or cut 5 timeline event cards (one set per pair)</li>
+      <li data-n="3">Print the 6-statement Confirmed/Suspected sorting sheet</li>
+      <li data-n="4">Print 4 discussion cards (one per group)</li>
+      <li data-n="5">Print exit writing prompts (one per student)</li>
+      <li data-n="6">Test YouTube video with subtitles ON (English captions)</li>
+      <li data-n="7">A projected image of the Mandelbrot Set, if possible (search "Mandelbrot Set image")</li>
+    </ul>
+  </div>
+
+</div>
+
+<div style="background:#f0ece4;border-top:2px solid #c9a84c;padding:2rem;margin-top:2rem">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">Hour House</div>
+        <p style="font-size:0.88rem;color:#555;line-height:1.8;margin-bottom:.5rem"><b>Hour House Adult ESL</b><br>229 Ballantine Parkway<br>Newark, NJ 07104</p>
+        <p style="font-size:0.82rem;color:#777;"><b>Teacher:</b> Pablo Nogueira Grossi<br><a href="https://g6llc.gumroad.com" style="color:#2d5a27;text-decoration:none;">g6llc.gumroad.com</a></p>
+      </div>
+      <div>
+        <div style="font-family:sans-serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:#8a7340;margin-bottom:.6rem">Resources</div>
+        <p style="font-size:0.82rem;color:#777;line-height:1.8;">
+          <a href="https://www.youtube.com/watch?v=DyeR19m8gGk" target="_blank" style="color:#2196f3;text-decoration:none;">YouTube: The Colours of Infinity (1995)</a><br>
+          <a href="CropCircles.html" style="color:#2196f3;text-decoration:none;">Part 1: Crop Circles &amp; Geometry</a><br>
+          CAELA Framework for Adult ESL<br>
+          <a href="https://totogt.github.io/" target="_blank" style="color:#2196f3;text-decoration:none;">totogt.github.io (all lessons)</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="copyright-strip">
+  &copy; 2026 Pablo Nogueira Grossi / Hour House &middot; Newark, NJ 07104 &middot;
+  CAELA-Aligned B-Level Lesson &middot; CC BY-NC-ND 4.0
+</div>
+
+<footer>
+  <div style="color:#c9a84c;font-size:.8rem;margin-bottom:.4rem">Hour House &middot; Newark, NJ &middot; Adult English Language Learning</div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; Hour House</div>
+  <div style="margin-top:.5rem">
+    ORCID: <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &middot;
+    <a href="../index.html">&larr; Back to Hour House</a>
+  </div>
+</footer>
+
+</body>
+</html>
