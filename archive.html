@@ -121,6 +121,8 @@
   .leanhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
     background:#14201A;color:var(--chalk-dim);padding:9px 14px;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em}
   .leanhead .stamps{display:flex;gap:8px;flex-wrap:wrap}
+  .leanhead a{color:var(--chalk-dim);text-decoration:underline;text-decoration-color:rgba(237,231,216,.35)}
+  .leanhead a:hover, .leanhead a:focus-visible{color:var(--verify)}
   pre{background:#0E1512;color:#D9E4DC;padding:18px 16px;overflow-x:auto;font-family:var(--mono);
     font-size:.82rem;line-height:1.65;tab-size:2}
   code .kw{color:#E0A968}       /* theorem, def, by, example */
@@ -389,33 +391,41 @@
           </div>
           <div class="leanpanel">
             <div class="leanhead">
-              <span>PrincipiaVol1.lean + CatGT_Main.lean · core Lean 4 + Mathlib4</span>
-              <span class="stamps"><span class="stamp st-verified">✓ helical_selectivity (Lean, 0 sorry)</span><span class="stamp st-target">⧗ thm_5_3_is_exactly_existential — drafted v4, awaiting kernel</span></span>
+              <span><a href="https://github.com/TOTOGT/io/blob/main/PrincipiaOrthogona1/Theorem53NonCommutativity.lean" rel="noopener">Theorem53NonCommutativity.lean</a> (TOTOGT/io) + <a href="https://github.com/TOTOGT/io/blob/main/CatGT/CatGT_Main.lean" rel="noopener">CatGT_Main.lean</a> (TOTOGT/io) · core Lean 4 + Mathlib4</span>
+              <span class="stamps"><span class="stamp st-verified">✓ helical_selectivity (Lean, 0 sorry)</span><span class="stamp st-verified">✓ thm_5_3_is_exactly_existential (Lean, 0 sorry)</span></span>
             </div>
 <pre><code><span class="cm">-- Closed in Lean (CatGT_Main.lean) — the confinement bound the HSP rests on:</span>
 <span class="kw">theorem</span> <span class="id">helical_selectivity</span> (J λ : ℝ) (hJ : <span class="num">0</span> &lt; J) (hλ : <span class="num">0</span> &lt; λ)
     (r_state : ℝ) (hr : <span class="num">0</span> ≤ r_state)
     (h_confined : r_state ^ <span class="num">2</span> ≤ J / λ) :
     r_state ≤ criticalRadius J λ hJ hλ := <span class="kw">by</span> ...
-<span class="cm">-- Non-Commutativity (Thm 5.3, Principia Orthogona Vol. I) has no Lean proof</span>
-<span class="cm">-- anywhere in the repo. Three drafted theorems close the gap honestly:</span>
-<span class="cm">--   nonCommutativity_nondegenerate : ∃ instance, no operator = identity,</span>
-<span class="cm">--     K strictly Φ-decreasing, swapping K↔F changes the output (-4 vs 0)</span>
-<span class="cm">--   not_forall_order_dependent : the ∀-form is FALSE — an odd fold set</span>
-<span class="cm">--     provably commutes with negation, exhibited on the same manifold</span>
-<span class="cm">--   thm_5_3_is_exactly_existential : the two combined, i.e. what Theorem</span>
-<span class="cm">--     5.3 actually is and provably no more than that</span>
-<span class="cm">-- Hand-verified through four review passes (v1→v4); no Lean toolchain</span>
-<span class="cm">-- reachable to run it through the kernel. Not claiming ✓ until it compiles.</span></code></pre>
+<span class="cm">-- Non-Commutativity (Thm 5.3, Principia Orthogona Vol. I) — isolated into</span>
+<span class="cm">-- its own file (Theorem53NonCommutativity.lean, TOTOGT/io) so this</span>
+<span class="cm">-- citation points at something dedicated, not a file buried in the</span>
+<span class="cm">-- monolithic PrincipiaVol1.lean draft (which has unrelated pre-existing</span>
+<span class="cm">-- breakage elsewhere -- see that file's own header). Kernel-checked in</span>
+<span class="cm">-- CI on every push; #print axioms shows only Mathlib's standard axioms</span>
+<span class="cm">-- (propext, Classical.choice, Quot.sound) on all seven theorems, zero</span>
+<span class="cm">-- sorryAx:</span>
+<span class="kw">theorem</span> <span class="id">thm_5_3_is_exactly_existential</span> :
+    (∃ M C K F U x, GenerativeOp M C K F U x ≠
+      (U.map ∘ K.map ∘ F.map ∘ C.map) x) ∧
+    ¬ (∀ M C K F U x, GenerativeOp M C K F U x ≠
+      (U.map ∘ K.map ∘ F.map ∘ C.map) x) :=
+  ⟨exists_order_dependent, not_forall_order_dependent⟩
+<span class="cm">-- exists_order_dependent : an explicit instance (shrinkMap/negMap/foldMap</span>
+<span class="cm">--   on ℤ) where firing order changes the output.</span>
+<span class="cm">-- not_forall_order_dependent : an explicit instance (an odd fold, foldSym)</span>
+<span class="cm">--   where two valid operators provably commute -- the ∀-form is false.</span></code></pre>
           </div>
           <div class="glossrow">
             <div class="gloss">
               <span class="tag">English gloss · B1</span>
-              In a zeolite, a chemical reaction has to happen in a certain order to work. If you do the steps in a different order, the reaction can fail — even though every step is the same. The author has written and versioned a mathematical proof of this idea (four drafts, each one publicly dated), but the computer has not yet checked that specific proof — only a related, smaller piece of it.
+              In a zeolite, a chemical reaction has to happen in a certain order to work. If you do the steps in a different order, the reaction can fail — even though every step is the same. The author wrote a mathematical proof of this idea, and in July 2026 a computer program (a Lean 4 proof checker) confirmed every step of it against pure logic — not just a smaller, related piece, but the full claim itself.
             </div>
             <div class="gloss l1">
               <span class="tag">L1 note · PT-BR</span>
-              <em>Commutative</em> = comutativo — quando a ordem não importa (2+3 = 3+2). <em>Non-commutative</em> é o oposto: aqui, a ordem importa porque o sistema tem memória do estado anterior. E: "provado" (prosa, revisado por versão) ≠ "verificado" (por computador) — a página é honesta sobre essa diferença.
+              <em>Commutative</em> = comutativo — quando a ordem não importa (2+3 = 3+2). <em>Non-commutative</em> é o oposto: aqui, a ordem importa porque o sistema tem memória do estado anterior. Aqui, "provado" (pelo autor) e "verificado" (pelo computador, Lean 4) finalmente coincidem — a distinção que esta página costumava marcar já não se aplica a este item.
             </div>
           </div>
         </div>
@@ -454,6 +464,7 @@
           <h3>Project</h3>
           <ul>
             <li><a href="https://github.com/TOTOGT/AXLE" rel="noopener">AXLE — Lean 4 repository</a></li>
+            <li><a href="https://github.com/TOTOGT/io" rel="noopener">TOTOGT/io</a> — Theorem 5.3 &amp; CatGT zeolite selectivity, isolated Lean repo (CI-verified on every push)</li>
             <li><a href="AULA/classroom-index.html">DM³ Classroom</a> — verified mathematics for L2 English learners</li>
             <li><a href="AULA/index.html">AULA — Hour House / Principia Orthogona course hub</a></li>
             <li>Errata &amp; Dependency Ledger — Zenodo (deposit pending)</li>
