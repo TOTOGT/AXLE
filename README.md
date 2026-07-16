@@ -18,7 +18,7 @@ Contact: g6llc@proton.me · G6 LLC · Newark, NJ
 |---|---|---|
 | Series root | [10.5281/zenodo.19117399](https://doi.org/10.5281/zenodo.19117399) | All volumes |
 | Vols. I–III + Applications | [10.5281/zenodo.19117400](https://doi.org/10.5281/zenodo.19117400) | GOMC Science |
-| Vol. II v2a (Contact Geometry) | [10.5281/zenodo.20159456](https://doi.org/10.5281/zenodo.20159456) | TOGT + AXLE skeleton |
+| Vol. II v2a (Contact Geometry) | [10.5281/zenodo.21148424](https://doi.org/10.5281/zenodo.21148424) | TOGT + AXLE skeleton |
 | GTCT (Ring 5) | [10.5281/zenodo.20239928](https://doi.org/10.5281/zenodo.20239928) | Generative Time Circuit Theorem |
 | Autophagy / Triple-Alpha (Ch. A) | [10.5281/zenodo.20168812](https://doi.org/10.5281/zenodo.20168812) | dm³ biological instantiation |
 | DNLS companion | [10.5281/zenodo.20026942](https://doi.org/10.5281/zenodo.20026942) | Discrete nonlinear Schrödinger |
