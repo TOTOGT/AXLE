@@ -76,15 +76,17 @@ def GenerativeOp (M : GenerativeManifold)
 -- Reproduced from PrincipiaVol1.lean section 14 (v4), with fixes:
 -- (1) GenerativeManifold pinned to .{0} throughout so the universe-
 --     polymorphic forall/exists statements unify with the concrete intManifold.
--- (2) Numeral arguments passed at type `M.carrier` / `intManifold.carrier`
---     are explicitly ascribed `(_ : ℤ)` so elaboration doesn't need to
---     unfold `intManifold` during OfNat/Neg typeclass search.
+-- (2) The Phi-monotonicity proofs unfold `intManifold.Phi` via `simp only
+--     [intManifold]` rather than hand-writing `((x : ℤ) : ℝ)` casts, which
+--     failed: `x : intManifold.carrier` has no Coe to ℤ even though the
+--     carrier is defeq ℤ.
 -- (3) `Set.finite_insert` (unknown constant in current Mathlib) replaced
 --     with `Set.Finite.insert`.
--- (4) commuting_instance's proof rewritten as an explicit case split
---     instead of `split_ifs <;> omega`, because `split_ifs` treats
---     `-x = 5` and `x = -5` as syntactically distinct conditions and the
---     resulting spurious branches were not closing automatically.
+-- (4) The two `finite_branch` proofs are done by an explicit `by_cases`
+--     ladder with targeted `if_pos`/`if_neg` rewrites, rather than
+--     `split_ifs at heq <;> omega`, which left a branch omega could not
+--     close (spurious `p ≤ -6` counterexample) and made the whole
+--     definition elaborate to `sorry`.
 -- ============================================================================
 
 def idMap : ℤ -> ℤ := fun x => x
@@ -114,20 +116,30 @@ noncomputable def K_ex : CurvatureOp intManifold where
   kappa_star := 0
   drives_threshold := by
     intro x
-    have h : ((negMap x : ℤ) : ℝ) ^ 2 = ((x : ℤ) : ℝ) ^ 2 := by
-      simp only [negMap]; push_cast; ring
+    have h : intManifold.Phi (negMap x) = intManifold.Phi x := by
+      simp only [intManifold, negMap, Int.cast_neg, neg_sq]
     exact h.le
 
 noncomputable def F_ex : FoldOp intManifold where
   map := foldMap
   has_fold := ⟨(5 : ℤ), (6 : ℤ), by norm_num, by norm_num [foldMap]⟩
   finite_branch := by
-    apply Set.Finite.subset
-      (Set.Finite.insert (0 : ℤ) (Set.Finite.insert 5 (Set.finite_singleton 6)))
-    rintro p ⟨q, hqp, heq⟩
-    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
-    simp only [foldMap] at heq
-    split_ifs at heq <;> omega
+    have hsub : {p : ℤ | ∃ q, q ≠ p ∧ foldMap q = foldMap p} ⊆ {0, 5, 6} := by
+      rintro p ⟨q, hqp, heq⟩
+      simp only [foldMap] at heq
+      simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+      by_cases hp5 : p = 5
+      · right; left; exact hp5
+      by_cases hp6 : p = 6
+      · right; right; exact hp6
+      · left
+        rw [if_neg hp5, if_neg hp6] at heq
+        by_cases hq5 : q = 5
+        · rw [if_pos hq5] at heq; omega
+        by_cases hq6 : q = 6
+        · rw [if_neg hq5, if_pos hq6] at heq; omega
+        · rw [if_neg hq5, if_neg hq6] at heq; exact absurd heq hqp
+    exact (((Set.finite_singleton (6 : ℤ)).insert (5 : ℤ)).insert (0 : ℤ)).subset hsub
 
 noncomputable def U_ex : UnfoldOp intManifold where
   map := idMap
@@ -158,15 +170,15 @@ noncomputable def K_nd : CurvatureOp intManifold where
         nlinarith
       · have hx : x = 0 := by omega
         subst hx; simp
-    show ((shrinkMap x : ℤ) : ℝ) ^ 2 ≤ ((x : ℤ) : ℝ) ^ 2
+    simp only [intManifold]
     exact_mod_cast key
 
 noncomputable def U_nd : UnfoldOp intManifold where
   map := negMap
   decreases_Phi := by
     intro x
-    have h : ((negMap x : ℤ) : ℝ) ^ 2 = ((x : ℤ) : ℝ) ^ 2 := by
-      simp only [negMap]; push_cast; ring
+    have h : intManifold.Phi (negMap x) = intManifold.Phi x := by
+      simp only [intManifold, negMap, Int.cast_neg, neg_sq]
     exact h.le
   stable_branch := fun x => ⟨0, rfl⟩
 
@@ -174,32 +186,34 @@ noncomputable def F_sym : FoldOp intManifold where
   map := foldSym
   has_fold := ⟨(5 : ℤ), (-5 : ℤ), by norm_num, by norm_num [foldSym]⟩
   finite_branch := by
-    apply Set.Finite.subset
-      (Set.Finite.insert (0 : ℤ) (Set.Finite.insert 5 (Set.finite_singleton (-5))))
-    rintro p ⟨q, hqp, heq⟩
-    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
-    simp only [foldSym] at heq
-    split_ifs at heq <;> omega
+    have hsub : {p : ℤ | ∃ q, q ≠ p ∧ foldSym q = foldSym p} ⊆ {0, 5, -5} := by
+      rintro p ⟨q, hqp, heq⟩
+      simp only [foldSym] at heq
+      simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+      by_cases hp5 : p = 5
+      · right; left; exact hp5
+      by_cases hpm5 : p = -5
+      · right; right; exact hpm5
+      · left
+        rw [if_neg hp5, if_neg hpm5] at heq
+        by_cases hq5 : q = 5
+        · rw [if_pos hq5] at heq; omega
+        by_cases hqm5 : q = -5
+        · rw [if_neg hq5, if_pos hqm5] at heq; omega
+        · rw [if_neg hq5, if_neg hqm5] at heq; exact absurd heq hqp
+    exact (((Set.finite_singleton (-5 : ℤ)).insert (5 : ℤ)).insert (0 : ℤ)).subset hsub
 
 theorem nonCommutativity_instance :
     GenerativeOp intManifold C_ex K_ex F_ex U_ex (5 : ℤ)
       ≠ (U_ex.map ∘ K_ex.map ∘ F_ex.map ∘ C_ex.map) (5 : ℤ) := by
-  first
-  | norm_num [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_ex, U_ex,
-      idMap, negMap, foldMap]
-  | (simp only [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_ex, U_ex,
-      idMap, negMap, foldMap]
-     split_ifs <;> omega)
+  norm_num [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_ex, U_ex,
+    idMap, negMap, foldMap]
 
 theorem nonCommutativity_nondegenerate :
     GenerativeOp intManifold C_nd K_nd F_ex U_nd (4 : ℤ)
       ≠ (U_nd.map ∘ K_nd.map ∘ F_ex.map ∘ C_nd.map) (4 : ℤ) := by
-  first
-  | norm_num [GenerativeOp, Function.comp_apply, C_nd, K_nd, F_ex, U_nd,
-      shiftMap, shrinkMap, negMap, foldMap]
-  | (simp only [GenerativeOp, Function.comp_apply, C_nd, K_nd, F_ex, U_nd,
-      shiftMap, shrinkMap, negMap, foldMap]
-     split_ifs <;> omega)
+  norm_num [GenerativeOp, Function.comp_apply, C_nd, K_nd, F_ex, U_nd,
+    shiftMap, shrinkMap, negMap, foldMap]
 
 theorem commuting_instance (x : ℤ) :
     GenerativeOp intManifold C_ex K_ex F_sym U_ex x
