@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reference Implementation · RAG &amp; Context Engineering</title>
+<meta name="description" content="AXLE-RAG: a working retrieval system over the Principia Orthogona corpus, mapped week by week onto the RAG & Context Engineering syllabus. Provenance-preserving retrieval, refusal contracts, and a corpus that audits itself.">
+<style>
+:root{
+  --navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--mid:#3a4f7a;--rule:#8a7340;
+  --text:#1c1c1c;--green:#2d5a27;--light:#e8e2d4;--teal:#1a6b5a;--amber:#fff8e1;
+  --dim:#6f6857;--red:#8b1a1a;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Georgia,serif;color:var(--text);background:var(--cream);font-size:18px;line-height:1.7}
+nav{background:var(--navy);padding:.75rem 2rem;position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-family:sans-serif;font-size:.8rem}
+nav a{color:#ccc;text-decoration:none;margin-right:1.1rem}
+nav a:hover,nav .brand{color:var(--gold)}
+nav .brand{font-weight:bold;letter-spacing:.08em}
+header{max-width:900px;margin:0 auto;padding:3rem 2rem 1.5rem;border-bottom:2px solid var(--navy)}
+.kicker{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);margin-bottom:.9rem}
+h1{font-size:clamp(1.8rem,4.4vw,2.8rem);color:var(--navy);font-weight:500;line-height:1.15;margin-bottom:.5rem}
+.sub{font-size:1.05rem;color:var(--dim);font-style:italic;margin-bottom:1.3rem}
+.facts{display:flex;flex-wrap:wrap;gap:1.5rem;padding:.9rem 0;border-top:1px solid var(--light);border-bottom:1px solid var(--light)}
+.facts div{font-family:var(--mono);font-size:.62rem;color:var(--dim);line-height:1.7}
+.facts strong{display:block;color:var(--text);font-weight:600}
+main{max-width:900px;margin:0 auto;padding:2rem 2rem 4rem}
+h2{font-size:1.4rem;color:var(--navy);font-weight:500;border-bottom:1px solid var(--light);padding-bottom:.3rem;margin:2.6rem 0 .9rem}
+h3{font-size:1.02rem;font-weight:600;color:var(--navy);margin:1.6rem 0 .5rem}
+p{margin-bottom:.9rem}
+.lede{background:#fff;border-left:3px solid var(--gold);padding:1.2rem 1.4rem;font-style:italic;margin-bottom:1.4rem;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+table{width:100%;border-collapse:collapse;margin:1.3rem 0;font-size:.86rem}
+th{font-family:var(--mono);font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--mid);text-align:left;padding:.45rem .6rem;border-bottom:2px solid var(--navy)}
+td{padding:.5rem .6rem;border-bottom:1px solid var(--light);vertical-align:top}
+td.mono{font-family:var(--mono);font-size:.76rem;color:var(--teal);white-space:nowrap}
+tr:hover td{background:#fff}
+.box{background:#fff;border:1px solid var(--light);border-left:4px solid var(--teal);padding:1.1rem 1.3rem;margin:1.4rem 0;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.box .lab{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.11em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem}
+.box.warn{border-left-color:#c47a00}.box.warn .lab{color:#c47a00}
+.box.key{border-left-color:var(--green);background:#f2f7f1}.box.key .lab{color:var(--green)}
+pre{background:#1e1e2e;color:#cdd6f4;padding:1rem 1.2rem;margin:1.1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.76rem;line-height:1.75;border-radius:2px}
+code{font-family:var(--mono);font-size:.88em;background:#efe9db;padding:.05rem .3rem;border-radius:2px}
+pre code{background:none;padding:0;color:inherit}
+.tagline{font-family:var(--mono);font-size:.58rem;font-weight:700;padding:.08rem .38rem;border-radius:2px;border:1px solid}
+.t-open{background:#f6dede;color:#8b1a1a;border-color:#d9a8a8}
+.t-data{background:#dfeaf4;color:#17435f;border-color:#a8c2d8}
+ul,ol{margin:0 0 1rem 1.4rem}
+li{margin-bottom:.35rem}
+footer{background:var(--navy);color:#8f8878;padding:2.4rem 2rem;font-family:var(--mono);font-size:.62rem;line-height:1.9;margin-top:3rem}
+.fin{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;gap:1.4rem;flex-wrap:wrap}
+footer a{color:var(--gold);text-decoration:none}
+@media(max-width:640px){header,main,footer{padding-left:1.3rem;padding-right:1.3rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">AXLE · RAG &amp; CONTEXT ENGINEERING</span>
+  <span>
+    <a href="index.html">Home</a>
+    <a href="syllabus.html">Syllabus</a>
+    <a href="week1.html">Week 1</a>
+    <a href="reference-implementation.html" style="color:var(--gold)">Reference Implementation</a>
+  </span>
+</nav>
+
+<header>
+  <div class="kicker">Companion · Worked Example · Read alongside Weeks 2, 4, 5, 8</div>
+  <h1>Reference Implementation</h1>
+  <div class="sub">AXLE-RAG — a retrieval system over a corpus that answers back</div>
+  <div class="facts">
+    <div><strong>What it is</strong>A real, running system<br>~1,100 lines, pure stdlib</div>
+    <div><strong>Corpus</strong>Principia Orthogona<br>HTML · Markdown · LaTeX · Lean 4</div>
+    <div><strong>No dependencies</strong>No API key, no embedding<br>model, no network</div>
+    <div><strong>Licence</strong>MIT · read it, fork it,<br>break it, improve it</div>
+  </div>
+</header>
+
+<main>
+
+<p class="lede">Most course examples retrieve from a tidy demo corpus and stop
+when the answer looks plausible. This one retrieves from a live research corpus
+with real defects in it — and its most useful output is not an answer, but a
+list of the places where the corpus contradicts itself.</p>
+
+<h2>Why a second worked example</h2>
+
+<p>Your capstone runs on a document collection you chose in Week 1. This one runs
+on a corpus with an unusual property: <strong>every claim already carries its own
+epistemic status.</strong> The Principia Orthogona papers tag each assertion
+<code>[DATA]</code>, <code>[MODEL]</code>, <code>[OPEN]</code>,
+<code>[VALUE PREMISE]</code>, or <code>[ASSUMPTION]</code>, cite DOIs, and mark
+which theorems a Lean kernel has actually checked.</p>
+
+<p>That changes what retrieval can do. A normal RAG system returns text and hopes
+the model uses it responsibly. This one returns text <em>with its status
+attached</em> — and can refuse to let an <code>[OPEN]</code> claim be presented
+as established. Read it as one answer to the Week 1 question — <em>when should
+the system decline?</em> — implemented rather than discussed.</p>
+
+<h2>Module map</h2>
+
+<table>
+  <thead><tr><th>Module</th><th>Does</th><th>Course week</th></tr></thead>
+  <tbody>
+    <tr>
+      <td class="mono">ingest.py</td>
+      <td>Parses HTML/MD/TeX/Lean into <em>claims</em> rather than fixed-size chunks. Each record keeps tags, DOI, working-paper number, extracted constants, and a trust tier 0–4.</td>
+      <td>Week 3 — the chunking decision, made on semantics instead of token count</td>
+    </tr>
+    <tr>
+      <td class="mono">retrieve.py</td>
+      <td>Okapi BM25 in pure Python, then a mild trust re-weighting, then a context block carrying a refusal contract the generator must satisfy.</td>
+      <td>Weeks 2 &amp; 4 — the baseline, and what "fusion" looks like when the second signal is provenance rather than vectors</td>
+    </tr>
+    <tr>
+      <td class="mono">audit.py</td>
+      <td>Seven checks (C1–C7) over the ingested claims: constant drift, DOI incoherence, dangling references, tag laundering, verification drift, orphan constants, stale hedges.</td>
+      <td>Week 5 — evaluation, pointed at the corpus instead of the retriever</td>
+    </tr>
+    <tr>
+      <td class="mono">flow.py</td>
+      <td>Dependency graph over claims, constants, DOIs and Lean files. Ask what breaks if a constant changes; get the closure and a work order.</td>
+      <td>Week 6 — multihop, as dependency traversal rather than query decomposition</td>
+    </tr>
+    <tr>
+      <td class="mono">handoff.py</td>
+      <td>Session-state protocol so parallel operators inherit decisions instead of re-deriving them.</td>
+      <td>Week 8 — the operational reality nobody's demo includes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Three design decisions worth arguing with</h2>
+
+<h3>1 · A chunk is a claim, not a window</h3>
+<p>Fixed-size chunking splits a sentence from the tag that qualifies it. If the
+sentence "the boundary is 0.776" lands in one chunk and "<code>[OPEN]</code> —
+this value is not established" lands in the next, retrieval has manufactured a
+false certainty. So chunking follows document structure, and each chunk inherits
+its <strong>weakest</strong> tag: one <code>[OPEN]</code> contaminates the claim.</p>
+
+<h3>2 · BM25, deliberately, with no embeddings</h3>
+<p>Not because dense retrieval is worse — Week 3 shows where it wins — but
+because for a corpus that must be <em>citable</em>, exact and reproducible
+beats marginally better recall. The same query returns the same passages next
+year. A dense reranker can be layered on later without touching the contract;
+that is left as an exercise, and it is a real one.</p>
+
+<h3>3 · The context block carries a contract</h3>
+<pre><code>RETRIEVAL CONTRACT — binding on the answer you generate:
+1. Cite by [source · tag · DOI] for every factual sentence.
+2. A claim tagged OPEN is NOT established. Never launder OPEN into DATA.
+3. Do not state a numeric constant absent from the context below.
+4. If two blocks disagree on a constant, report the conflict and its
+   sources; do not silently pick one.
+5. VERIFIED means machine-checked by the Lean kernel. Nothing else.</code></pre>
+<p>Rule 4 is the one that matters. Ordinary RAG, handed two contradictory
+retrieved passages, picks one — usually the higher-ranked — and states it
+confidently. That is the failure mode this corpus is most exposed to, so it is
+the one the contract addresses directly.</p>
+
+<h2>The reverse direction: the corpus audits itself</h2>
+
+<p>Retrieval is half the system. The other half runs backwards: the same
+claim-level index is the input to a defect sweep. Run on a 240-claim slice, with
+two defects planted to confirm detection, it reported:</p>
+
+<pre><code>[HIGH] C1  constant r* asserted with 4 distinct values:
+           0.773 vs 0.7732 vs 0.77594 vs 0.8
+       where: GTCT_2026_v4.tex, SITE_ERRATA.md,
+              certify_rstar.py, stale_findings.md
+
+[HIGH] C5  prose claims ForcedUrgency.lean is sorry-free;
+           the ingested ForcedUrgency.lean contains a sorry
+
+[MED ] C2  WP-32 cited under 2 different DOIs</code></pre>
+
+<p>The r* finding was not planted. One physical constant appeared at four
+different values across four files, and it had taken a full working session to
+chase down by hand. The sweep finds it in under a second.</p>
+
+<div class="box warn">
+  <span class="lab">The false positive that teaches the most</span>
+  <p style="margin-bottom:0">A corrected document <em>quotes the value it
+  retires</em> — "supersedes the 0.7732 reported in V1–V3." A naive drift
+  detector flags that correction as a contradiction, which is exactly backwards:
+  the file doing the right thing gets the alarm. The fix is a suppression rule
+  for correction notices. <strong>Every evaluation harness you build will have a
+  class like this.</strong> Find it before you trust the numbers, and write it
+  down where the next person will see it.</p>
+</div>
+
+<h2>What flows: invalidation, not documents</h2>
+
+<p>An index is static, and nobody reads a corpus — not a person, not a retriever.
+What has to travel is the <strong>invalidation signal</strong>. <code>flow.py</code>
+is <code>make</code> for a body of knowledge: claims depend on constants, DOIs,
+and Lean files; change a root and the dependent closure is stale by
+construction.</p>
+
+<pre><code>$ python3 flow.py chunks.jsonl --change "const:r*"
+changing const:r* invalidates 10 claims across 4 files:
+  GTCT_2026_v4.tex
+  SITE_ERRATA.md
+  certify_rstar.py
+  stale_findings.md
+
+$ python3 flow.py chunks.jsonl --change "const:r*" --order
+# → a markdown work order with completion criteria</code></pre>
+
+<p>The single correction that motivated this took nine edits across papers,
+figures, captions, a Lean constant, and three copies of one web page. They were
+found one at a time, over several sessions, each discovery arriving as an
+unpleasant surprise. The closure computes all of them at once — which is the
+difference between a retrieval demo and a system someone depends on.</p>
+
+<div class="box key">
+  <span class="lab">The transferable lesson</span>
+  <p style="margin-bottom:0">Ask of your own capstone corpus: <em>what is the
+  root node here?</em> A price, a threshold, a schema version, a model name, a
+  regulation. Then ask whether your system can answer "what breaks if this
+  changes?" If it cannot, it is a search box. Retrieval that knows its own
+  dependency structure is worth more than retrieval that scores marginally
+  better on recall@10.</p>
+</div>
+
+<h2>Run it yourself</h2>
+
+<pre><code># any corpus of .html / .md / .tex / .lean
+python3 ingest.py   ./my-corpus        -o chunks.jsonl
+python3 audit.py    chunks.jsonl --severity HIGH
+python3 retrieve.py chunks.jsonl "your question" --context
+python3 flow.py     chunks.jsonl --roots</code></pre>
+
+<p>Pure standard library. No API key, no embedding model, no network call. It
+will run on a laptop with no internet, which is a property worth preserving
+longer than it is fashionable to.</p>
+
+<h2>Honest limits</h2>
+<ul>
+  <li><span class="tagline t-open">OPEN</span> BM25 is lexical. Synonym-heavy queries miss. Adding a dense reranker is the obvious next increment and does not require changing the contract.</li>
+  <li><span class="tagline t-open">OPEN</span> Constant extraction is regex-based over seven tracked constants. Broadening it is mechanical but unglamorous.</li>
+  <li><span class="tagline t-data">DATA</span> The trust tier is inherited from the author's own tags. It measures <em>labeling discipline</em>, not truth. A mislabeled claim retrieves as mislabeled — the system cannot rescue a corpus that lies to it.</li>
+  <li><span class="tagline t-open">OPEN</span> The audit finds contradiction, never falsehood. A corpus can be perfectly self-consistent and entirely wrong.</li>
+</ul>
+
+<p>That last one is the boundary worth internalising before Week 5. Evaluation
+tells you whether a system is behaving consistently with its own data. It cannot
+tell you the data is right. Knowing which question you have answered is most of
+the engineering judgment this course is trying to build.</p>
+
+</main>
+
+<footer>
+  <div class="fin">
+    <div>
+      <strong style="color:var(--gold)">Reference Implementation</strong><br>
+      RAG &amp; Context Engineering · AXLE · AULA<br>
+      Instructor: Pablo Grossi · G6 LLC · Newark NJ · 2026<br>
+      <a href="index.html">Course home</a> · <a href="syllabus.html">Syllabus</a>
+    </div>
+    <div style="max-width:460px;color:#6f6a5c">
+      AXLE-RAG is MIT-licensed and intentionally small enough to read in one
+      sitting. Corpus: Principia Orthogona, series DOI
+      <a href="https://doi.org/10.5281/zenodo.19117399">10.5281/zenodo.19117399</a>.
+      Findings quoted above are from a 240-claim slice, 2026-07-30.
+    </div>
+  </div>
+</footer>
+</body>
+</html>
