@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 7 Study Material · RAG & Context Engineering</title>
+<style>
+:root{--bg:#0f1117;--panel:#181b24;--panel2:#1f2330;--text:#e8eaf0;--muted:#9aa3b5;
+--accent:#4f8ef7;--accent2:#7c5cff;--ok:#3ecf8e;--warn:#f7b84f;--border:#2a2f3e;
+--radius:14px;--maxw:880px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.65}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.site{background:linear-gradient(135deg,#141827 0%,#1a1440 100%);border-bottom:1px solid var(--border);padding:18px 24px}
+header.site .inner{max-width:var(--maxw);margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.brand{font-weight:800;letter-spacing:2px;color:#fff;font-size:15px}
+.brand span{color:var(--accent)}
+nav.top a{color:var(--muted);margin-left:18px;font-size:14px;font-weight:600}
+nav.top a:hover{color:#fff;text-decoration:none}
+main{max-width:var(--maxw);margin:0 auto;padding:40px 24px 80px}
+.hero{padding:60px 0 40px;text-align:center}
+.hero h1{font-size:40px;line-height:1.15;background:linear-gradient(90deg,#fff,#9db8ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px}
+.hero p.tag{color:var(--muted);font-size:19px;max-width:640px;margin:0 auto 28px}
+.pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.pill{background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:7px 16px;font-size:13px;color:var(--muted)}
+.pill b{color:var(--text)}
+.cta{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;padding:13px 30px;border-radius:10px;font-size:16px}
+.cta:hover{text-decoration:none;opacity:.92}
+h2.sec{font-size:22px;margin:48px 0 18px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:border-color .15s}
+.card:hover{border-color:var(--accent)}
+.card .wk{font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.card h3{font-size:17px;margin-bottom:8px}
+.card h3 a{color:var(--text)}
+.card p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.card .links a{font-size:13px;font-weight:600;margin-right:16px}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:26px}
+.crumb a{color:var(--muted)}.crumb a:hover{color:var(--accent)}
+article h1{font-size:30px;line-height:1.2;margin-bottom:6px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.lede{color:var(--muted);font-size:17px;margin:14px 0 30px}
+article h2{font-size:20px;margin:38px 0 14px;color:#fff}
+article h3{font-size:16px;margin:22px 0 8px;color:#cdd6ea}
+article p{margin-bottom:14px}
+article ul,article ol{margin:0 0 16px 24px}
+article li{margin-bottom:8px}
+.box{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:18px 20px;margin:22px 0}
+.box.ok{border-left-color:var(--ok)}
+.box.warn{border-left-color:var(--warn)}
+.box .label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+code{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:.88em;font-family:'SF Mono',Menlo,Consolas,monospace}
+pre{background:#12141c;border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;font-size:13px;line-height:1.6}
+.res{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.res a{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600}
+.res a:hover{border-color:var(--accent);text-decoration:none}
+.res a span{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:3px}
+.pagenav{display:flex;justify-content:space-between;margin-top:56px;padding-top:22px;border-top:1px solid var(--border);gap:12px}
+.pagenav a{font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:600px){.hero h1{font-size:28px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site"><div class="inner">
+<div class="brand">AXLE <span>·</span> RAG &amp; Context Engineering</div>
+<nav class="top"><a href="index.html">Home</a><a href="syllabus.html">Syllabus</a><a href="week1.html">Start Week 1</a></nav>
+</div></header>
+<main>
+
+<div class="crumb"><a href="index.html">Home</a> / <a href="week7.html">Week 7</a> / Study material</div>
+<article>
+<div class="kicker">Week 7 · Study Material</div>
+<h1>Agentic RAG: Retrieval-Aware Workflows</h1>
+<p class="lede">Your Week 6 router made one decision, once, with a fixed script behind it. This week the model takes the wheel: it decides whether to search, what to search for, whether what came back is enough, and whether to go again. The honest finding this week is often that the agent <em>loses</em> — and knowing exactly when is the professional skill.</p>
+
+<h2>Part 1 — Retrieval as a tool, not a pipeline stage</h2>
+<p>Every system you've built so far shares a shape: <em>always retrieve, once, then answer</em>. The query is a passive input; the pipeline is a fixed track. An agent inverts the relationship — retrieval becomes a <b>tool the model chooses to invoke</b>, with arguments it writes itself.</p>
+<p>That single change unlocks four behaviors your pipeline can't express:</p>
+<ul>
+<li><b>Skip retrieval</b> when the question doesn't need it (Week 1's decision, now made per query, by the model).</li>
+<li><b>Write a better query</b> than the user did — the Week 4 rewrite, applied selectively.</li>
+<li><b>Search again</b> after seeing that the first results were insufficient.</li>
+<li><b>Choose a source</b> when several indexes exist (docs vs. FAQ vs. changelog).</li>
+</ul>
+<p>The cost is control. A pipeline's behavior is inspectable and its latency is predictable; an agent's is neither. You are trading determinism for adaptability — which is exactly why this week ends with a measurement, not a celebration.</p>
+
+<h2>Part 2 — The ReAct loop</h2>
+<p>ReAct (Reason + Act) is the pattern nearly all agent frameworks implement, usually with far more ceremony than it needs. The loop:</p>
+<pre><code>┌─────────────────────────────────────────────┐
+│  THOUGHT   what do I know? what's missing?  │
+│  ACTION    search("...")  or  answer("...") │
+│  OBSERVE   results appended to the trace    │
+└──────────────── repeat, max N ──────────────┘</code></pre>
+<p>Three implementation realities the tutorials gloss over:</p>
+<p><b>The trace is the state.</b> There's no hidden memory — the accumulated thought/action/observation text <em>is</em> everything the model knows. Manage that text and you manage the agent.</p>
+<p><b>The stop condition is load-bearing.</b> Without a hard iteration cap, agents loop: search, get the same results, decide they're insufficient, search again. Always cap (3–5 hops), and always define a fallback answer when the cap is hit.</p>
+<p><b>Small models drift from output formats.</b> An 8B model will eventually emit prose where you expected <code>ACTION: search(...)</code>. Parse defensively and treat unparseable output as "answer now" rather than crashing. Robustness here is most of the engineering.</p>
+
+<h2>Part 3 — Self-correction: draft, critique, re-retrieve</h2>
+<p>A second, complementary loop. Instead of deciding <em>before</em> answering whether context suffices, the agent answers, then audits itself:</p>
+<ol>
+<li><b>Draft</b> an answer from the retrieved context.</li>
+<li><b>Critique</b> it: which claims aren't supported by the sources? (You already built this in Week 5 — it's your faithfulness judge, pointed inward.)</li>
+<li><b>Re-retrieve</b> for the unsupported claims specifically.</li>
+<li><b>Revise</b> with the enlarged context.</li>
+</ol>
+<p>This measurably raises faithfulness and roughly doubles cost and latency. Two warnings worth stating to students plainly: models are weaker at critiquing their own output than others' (self-preference bias, from Week 5), and more than one revision cycle rarely pays. One cycle, measured — not a philosophy.</p>
+
+<h2>Part 4 — Context engineering for agents</h2>
+<p>Loops accumulate text fast: four hops × four chunks each = sixteen chunks in the window, most of them from queries that turned out to be wrong turns. Left unmanaged, the agent drowns in its own history — and "lost in the middle" (Week 6) hits hardest at exactly the moment the agent needs to reason over everything it gathered.</p>
+<p>Three strategies, in increasing order of effort:</p>
+<table>
+<tr><th>Strategy</th><th>How</th><th>Trade-off</th></tr>
+<tr><td><b>Windowing</b></td><td>Keep only the last N observations verbatim</td><td>Simplest; can drop the one useful early hit</td></tr>
+<tr><td><b>Summarizing</b></td><td>Compress old observations into a running note</td><td>Cheap on tokens; lossy — details vanish and can't be cited</td></tr>
+<tr><td><b>Scratchpad</b></td><td>Extract facts found so far into a structured list; keep raw text only for the current hop</td><td>Best quality; most code</td></tr>
+</table>
+<p>This is the heart of the course title. Retrieval decides what <em>could</em> enter the window; context engineering decides what <em>does</em> — and in an agent, that decision is made repeatedly, under a growing budget, which is what makes it hard.</p>
+
+<h2>Lab — build the agent, then interrogate it</h2>
+
+<h3>Step 1 · The tool interface</h3>
+<p>Create <code>agent_tools.py</code> — thin wrappers over what you already built:</p>
+<pre><code>from retrieve import retrieve_chunks
+
+def search(query, k=3):
+    chunks = retrieve_chunks(query, k=k)
+    return [{"doc": c["doc"], "text": c["text"][:900]} for c in chunks]
+
+TOOL_SPEC = """Available actions:
+  SEARCH: &lt;query&gt;   — search the knowledge base
+  ANSWER: &lt;answer&gt;  — give the final answer with [doc] citations"""</code></pre>
+
+<h3>Step 2 · The ReAct loop</h3>
+<p>Create <code>agent.py</code>:</p>
+<pre><code>import ollama, re
+from agent_tools import search, TOOL_SPEC
+
+SYSTEM = """You answer questions using a knowledge base.
+
+{tools}
+
+Rules:
+- Reply with EXACTLY ONE line: either "SEARCH: ..." or "ANSWER: ...".
+- Search when you lack information. Answer when the observations suffice.
+- Never answer from prior knowledge; only from observations.
+- If after searching the knowledge base still lacks the answer, ANSWER: I don't know."""
+
+def run_agent(question, max_hops=4, verbose=True):
+    trace = [f"QUESTION: {question}"]
+    used_chunks = []
+    for hop in range(max_hops):
+        prompt = (SYSTEM.format(tools=TOOL_SPEC) + "\n\n" + "\n".join(trace)
+                  + "\n\nYour next line:")
+        line = ollama.chat(model="llama3.1:8b",
+                           messages=[{"role": "user", "content": prompt}]
+                           )["message"]["content"].strip().splitlines()[0]
+        if verbose: print(f"  hop {hop+1}: {line[:100]}")
+
+        m = re.match(r"SEARCH:\s*(.+)", line, re.I)
+        if m:
+            q = m.group(1).strip().strip('"')
+            results = search(q)
+            used_chunks.extend(results)
+            obs = "\n".join(f"  [{r['doc']}] {r['text'][:400]}" for r in results) or "  (nothing found)"
+            trace += [f"THOUGHT: I need to search for: {q}", f"OBSERVATION:\n{obs}"]
+            continue
+
+        m = re.match(r"ANSWER:\s*(.+)", line, re.I | re.S)
+        if m:
+            return m.group(1).strip(), {"hops": hop + 1, "chunks": used_chunks, "trace": trace}
+
+        # defensive: model drifted from the format — treat the text as the answer
+        return line, {"hops": hop + 1, "chunks": used_chunks, "trace": trace, "drift": True}
+
+    return "I don't know.", {"hops": max_hops, "chunks": used_chunks,
+                             "trace": trace, "hit_cap": True}</code></pre>
+<p>Run it on a multihop question from your gauntlet and watch the hops print. The first time an agent writes its own second query and finds what it was missing is the moment this week clicks.</p>
+
+<h3>Step 3 · Sufficiency check and self-correction</h3>
+<p>Create <code>self_correct.py</code>:</p>
+<pre><code>import ollama
+from generate import generate
+from retrieve import retrieve_chunks
+from generate import PROMPT, format_sources
+
+def unsupported_claims(answer_text, chunks):
+    ctx = "\n\n".join(c["text"] for c in chunks)[:5000]
+    r = ollama.chat(model="llama3.1:8b", messages=[{"role": "user", "content":
+        f"Context:\n{ctx}\n\nAnswer:\n{answer_text}\n\n"
+        f"List any claims in the answer NOT supported by the context, one per line. "
+        f"If all claims are supported, reply exactly: NONE"}])
+    text = r["message"]["content"].strip()
+    return [] if text.upper().startswith("NONE") else \
+           [c.strip("-• ") for c in text.splitlines() if len(c.strip()) &gt; 10]
+
+def corrected_answer(question):
+    draft, chunks = generate(question)
+    gaps = unsupported_claims(draft, chunks)
+    if not gaps:
+        return draft, {"revised": False, "gaps": []}
+    for gap in gaps[:2]:                      # re-retrieve for what was unsupported
+        chunks.extend(retrieve_chunks(gap, k=2))
+    for i, c in enumerate(chunks, 1):
+        c["id"] = f"S{i}"
+    r = ollama.chat(model="llama3.1:8b", messages=[{"role": "user", "content":
+        PROMPT.format(sources=format_sources(chunks), question=question)}])
+    return r["message"]["content"].strip(), {"revised": True, "gaps": gaps}</code></pre>
+
+<h3>Step 4 · Context management</h3>
+<p>Add windowing to <code>run_agent</code>: keep the question and the last two observations verbatim, and replace older observations with a one-line summary. Re-run your gauntlet. Did quality hold? Did token use drop? Break it deliberately — window down to one observation and watch a multihop question fail because hop 1's finding was evicted. <b>That controlled failure is the lesson</b>; students who have caused it never forget why context management is a design decision.</p>
+
+<h3>Step 5 · The head-to-head — this week's real deliverable</h3>
+<p>Create <code>compare.py</code>: run your full golden set through three systems — Week 6 pipeline, agent, self-correcting pipeline — recording per item: correctness (Week 5 judge), faithfulness, latency, and token count. Then break results down <b>by query type</b>, because the aggregate hides the finding:</p>
+<table>
+<tr><th>Query type</th><th>Expect</th></tr>
+<tr><td>Simple factual</td><td>Pipeline usually wins — same answer, a fraction of the cost</td></tr>
+<tr><td>Multihop</td><td>Agent wins — this is what the loop is for</td></tr>
+<tr><td>Unanswerable</td><td>Agent often <em>worse</em>: it searches repeatedly before admitting defeat, burning tokens; sometimes it talks itself into an answer</td></tr>
+<tr><td>Ambiguous / vague</td><td>Agent wins when it rewrites the query well; loses when it wanders</td></tr>
+</table>
+<p>Write the deployment recommendation: which traffic goes to which system, with numbers. "Route multihop to the agent, everything else to the pipeline — the agent costs 3.4× the tokens for +0.02 faithfulness on simple queries" is a professional conclusion. "Agents are better" is not.</p>
+
+<div class="box warn"><div class="label">Troubleshooting</div>
+<ul>
+<li><b>Agent never searches:</b> it's answering from parametric memory. Strengthen the rule ("You have NO prior knowledge of this domain") and make the first hop a forced search.</li>
+<li><b>Agent loops on the same query:</b> add the previous queries to the prompt with "Do not repeat these searches", and keep the cap at 3–4.</li>
+<li><b>Format drift (prose instead of SEARCH:/ANSWER:):</b> expected with 8B models — the defensive branch handles it. Count drift events; it's a legitimate metric for your comparison table.</li>
+<li><b>Everything is slow:</b> agents make 3–8 LLM calls per question. Test on 15 golden items, not 50, while iterating.</li>
+</ul></div>
+
+<div class="box ok"><div class="label">Week 7 checkpoint — done when</div>
+<ul>
+<li><code>agent.py</code> runs a ReAct loop with a hard hop cap and defensive parsing</li>
+<li>Sufficiency check and one self-correction cycle implemented</li>
+<li>Context management added, and its failure mode demonstrated deliberately</li>
+<li>Three-system comparison broken down by query type: quality, latency, tokens</li>
+<li>A written deployment recommendation with numbers behind it</li>
+<li>Committed: <code>git commit -m "Week 7: agentic RAG + head-to-head comparison"</code></li>
+</ul></div>
+
+<div class="box warn"><div class="label">This weekend</div>
+<p><b><a href="challenge7.html">Challenge 7: Agent vs. Pipeline</a></b> — the rigorous head-to-head, with the stretch goal of building the router you just recommended and measuring blended cost and quality. Reading and videos on the <a href="week7.html">Week 7 page</a>.</p></div>
+
+<div class="pagenav"><a href="week7.html">← Week 7 overview</a><a href="challenge7.html">Challenge 7 →</a></div>
+</article>
+
+</main>
+<footer class="site">RAG &amp; Context Engineering — Building Production-Grade AI Systems<br>Instructor: Pablo Grossi · AXLE · 2026</footer>
+</body>
+</html>

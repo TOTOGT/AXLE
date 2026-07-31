@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Week 3 · RAG & Context Engineering</title>
+<style>
+:root{--bg:#0f1117;--panel:#181b24;--panel2:#1f2330;--text:#e8eaf0;--muted:#9aa3b5;
+--accent:#4f8ef7;--accent2:#7c5cff;--ok:#3ecf8e;--warn:#f7b84f;--border:#2a2f3e;
+--radius:14px;--maxw:880px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.65}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.site{background:linear-gradient(135deg,#141827 0%,#1a1440 100%);border-bottom:1px solid var(--border);padding:18px 24px}
+header.site .inner{max-width:var(--maxw);margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.brand{font-weight:800;letter-spacing:2px;color:#fff;font-size:15px}
+.brand span{color:var(--accent)}
+nav.top a{color:var(--muted);margin-left:18px;font-size:14px;font-weight:600}
+nav.top a:hover{color:#fff;text-decoration:none}
+main{max-width:var(--maxw);margin:0 auto;padding:40px 24px 80px}
+.hero{padding:60px 0 40px;text-align:center}
+.hero h1{font-size:40px;line-height:1.15;background:linear-gradient(90deg,#fff,#9db8ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px}
+.hero p.tag{color:var(--muted);font-size:19px;max-width:640px;margin:0 auto 28px}
+.pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.pill{background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:7px 16px;font-size:13px;color:var(--muted)}
+.pill b{color:var(--text)}
+.cta{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;padding:13px 30px;border-radius:10px;font-size:16px}
+.cta:hover{text-decoration:none;opacity:.92}
+h2.sec{font-size:22px;margin:48px 0 18px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:border-color .15s}
+.card:hover{border-color:var(--accent)}
+.card .wk{font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.card h3{font-size:17px;margin-bottom:8px}
+.card h3 a{color:var(--text)}
+.card p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.card .links a{font-size:13px;font-weight:600;margin-right:16px}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:26px}
+.crumb a{color:var(--muted)}.crumb a:hover{color:var(--accent)}
+article h1{font-size:30px;line-height:1.2;margin-bottom:6px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.lede{color:var(--muted);font-size:17px;margin:14px 0 30px}
+article h2{font-size:20px;margin:38px 0 14px;color:#fff}
+article h3{font-size:16px;margin:22px 0 8px;color:#cdd6ea}
+article p{margin-bottom:14px}
+article ul,article ol{margin:0 0 16px 24px}
+article li{margin-bottom:8px}
+.box{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:18px 20px;margin:22px 0}
+.box.ok{border-left-color:var(--ok)}
+.box.warn{border-left-color:var(--warn)}
+.box .label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+code{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:.88em;font-family:'SF Mono',Menlo,Consolas,monospace}
+pre{background:#12141c;border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;font-size:13px;line-height:1.6}
+.res{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.res a{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600}
+.res a:hover{border-color:var(--accent);text-decoration:none}
+.res a span{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:3px}
+.pagenav{display:flex;justify-content:space-between;margin-top:56px;padding-top:22px;border-top:1px solid var(--border);gap:12px}
+.pagenav a{font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:600px){.hero h1{font-size:28px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site"><div class="inner">
+<div class="brand">AXLE <span>·</span> RAG &amp; Context Engineering</div>
+<nav class="top"><a href="index.html">Home</a><a href="syllabus.html">Syllabus</a><a href="week1.html">Start Week 1</a></nav>
+</div></header>
+<main>
+
+<div class="crumb"><a href="index.html">Home</a> / <a href="syllabus.html">Syllabus</a> / Week 3</div>
+<article>
+<div class="kicker">Week 3 of 8</div>
+<h1>Semantic Retrieval: Embeddings and Vector Search</h1>
+<p class="lede">Meaning as geometry: how embeddings find what keywords miss — and the chunking decision that quietly dominates quality.</p>
+<div class="box"><div class="label">Learning objectives</div><ul><li>Explain what an embedding is and why cosine similarity approximates semantic relatedness</li><li>Design and compare chunking strategies empirically</li><li>Stand up a vector database and query it programmatically</li><li>Benchmark semantic retrieval against your BM25 baseline</li></ul></div>
+<div class="box ok"><div class="label">Study material</div><p><b><a href="week3-material.html">Open the full Week 3 study material →</a></b> Complete lesson: concepts in depth, the full lab with all code, and troubleshooting.</p></div>
+<h2>Concepts</h2>
+<h3>1. Embeddings: meaning as coordinates</h3><p>An embedding model maps text to a point in high-dimensional space where distance tracks meaning. 'Car' and 'automobile' land near each other even though they share no letters — exactly the failure BM25 can't fix.</p><h3>2. Approximate nearest-neighbor search</h3><p>Comparing a query against millions of vectors exactly is too slow. ANN indexes (HNSW, IVF) trade a sliver of accuracy for orders-of-magnitude speed. You'll learn what those trade-offs cost you.</p><h3>3. Chunking: the highest-leverage decision</h3><p>Documents must be split before embedding. Too small: fragments lose context. Too large: the signal drowns and the context budget bloats. Chunk size, overlap, and structure-awareness routinely matter more than the choice of embedding model.</p><h3>4. Vector databases</h3><p>Chroma, Qdrant, pgvector, and friends persist embeddings, filter on metadata, and serve ANN queries. You'll learn what they actually do — and why they're not magic, just indexes plus bookkeeping.</p>
+<h2>Lab — live session</h2>
+<ol><li>Embed your corpus with <code>nomic-embed-text</code> via Ollama</li><li>Index in Chroma; wire a query pipeline</li><li>Run three chunking strategies: fixed-size, paragraph-based, structure-aware</li><li>Score each against your Week 2 query set; compare with the BM25 baseline head-to-head</li></ol>
+<div class="box ok"><div class="label">Checkpoint</div><p>A vector index plus a chunking comparison table with real numbers — and a verdict on which queries semantics fixed and which it broke.</p></div>
+<h2>Reading</h2>
+<div class="res"><a href="https://weaviate.io/blog/vector-embeddings-explained" target="_blank" rel="noopener">Vector Embeddings Explained — Weaviate<span>A clear, practitioner-level explanation of embeddings and similarity.</span></a></div>
+<h2>Watch</h2>
+<div class="res"><a href="https://www.youtube.com/watch?v=03LdHj6miTE" target="_blank" rel="noopener">What Are Embeddings? (Visual Breakdown)<span>Visual intuition for how meaning becomes geometry.</span></a><a href="https://www.youtube.com/watch?v=OATCgQtNX2o" target="_blank" rel="noopener">Text embeddings &amp; semantic search<span>How transformer models produce document and query vectors.</span></a></div>
+<h2>Reflection — bring answers to the next session</h2>
+<ol><li>Which of Week 2's 'Break BM25' failures did embeddings fix? Which survived?</li><li>Did any query get <em>worse</em> under semantic search? What does that tell you?</li><li>Why might a smaller chunk retrieve better but generate worse answers?</li></ol>
+
+<div class="box warn"><div class="label">Weekend challenge</div>
+<p><b><a href="challenge3.html">Challenge 3: The Chunking Bake-Off</a></b> — Everyone copies chunk_size=1000, overlap=200 from a tutorial. You're going to find out what those numbers should be for YOUR corpus.</p></div>
+<div class="pagenav"><a href="week2.html">← Week 2</a><a href="week4.html">Week 4 →</a></div>
+</article>
+</main>
+<footer class="site">RAG &amp; Context Engineering — Building Production-Grade AI Systems<br>Instructor: Pablo Grossi · AXLE · 2026</footer>
+</body>
+</html>
