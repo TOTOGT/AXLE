@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Syllabus · RAG & Context Engineering</title>
+<style>
+:root{--bg:#0f1117;--panel:#181b24;--panel2:#1f2330;--text:#e8eaf0;--muted:#9aa3b5;
+--accent:#4f8ef7;--accent2:#7c5cff;--ok:#3ecf8e;--warn:#f7b84f;--border:#2a2f3e;
+--radius:14px;--maxw:880px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.65}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.site{background:linear-gradient(135deg,#141827 0%,#1a1440 100%);border-bottom:1px solid var(--border);padding:18px 24px}
+header.site .inner{max-width:var(--maxw);margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.brand{font-weight:800;letter-spacing:2px;color:#fff;font-size:15px}
+.brand span{color:var(--accent)}
+nav.top a{color:var(--muted);margin-left:18px;font-size:14px;font-weight:600}
+nav.top a:hover{color:#fff;text-decoration:none}
+main{max-width:var(--maxw);margin:0 auto;padding:40px 24px 80px}
+.hero{padding:60px 0 40px;text-align:center}
+.hero h1{font-size:40px;line-height:1.15;background:linear-gradient(90deg,#fff,#9db8ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:14px}
+.hero p.tag{color:var(--muted);font-size:19px;max-width:640px;margin:0 auto 28px}
+.pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:30px}
+.pill{background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:7px 16px;font-size:13px;color:var(--muted)}
+.pill b{color:var(--text)}
+.cta{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;padding:13px 30px;border-radius:10px;font-size:16px}
+.cta:hover{text-decoration:none;opacity:.92}
+h2.sec{font-size:22px;margin:48px 0 18px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:border-color .15s}
+.card:hover{border-color:var(--accent)}
+.card .wk{font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.card h3{font-size:17px;margin-bottom:8px}
+.card h3 a{color:var(--text)}
+.card p{font-size:14px;color:var(--muted);margin-bottom:12px}
+.card .links a{font-size:13px;font-weight:600;margin-right:16px}
+.crumb{font-size:13px;color:var(--muted);margin-bottom:26px}
+.crumb a{color:var(--muted)}.crumb a:hover{color:var(--accent)}
+article h1{font-size:30px;line-height:1.2;margin-bottom:6px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:10px}
+.lede{color:var(--muted);font-size:17px;margin:14px 0 30px}
+article h2{font-size:20px;margin:38px 0 14px;color:#fff}
+article h3{font-size:16px;margin:22px 0 8px;color:#cdd6ea}
+article p{margin-bottom:14px}
+article ul,article ol{margin:0 0 16px 24px}
+article li{margin-bottom:8px}
+.box{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:10px;padding:18px 20px;margin:22px 0}
+.box.ok{border-left-color:var(--ok)}
+.box.warn{border-left-color:var(--warn)}
+.box .label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+code{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:.88em;font-family:'SF Mono',Menlo,Consolas,monospace}
+pre{background:#12141c;border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto;margin:16px 0}
+pre code{background:none;border:none;padding:0;font-size:13px;line-height:1.6}
+.res{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.res a{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600}
+.res a:hover{border-color:var(--accent);text-decoration:none}
+.res a span{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:3px}
+.pagenav{display:flex;justify-content:space-between;margin-top:56px;padding-top:22px;border-top:1px solid var(--border);gap:12px}
+.pagenav a{font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+footer.site{border-top:1px solid var(--border);padding:26px 24px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:600px){.hero h1{font-size:28px}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site"><div class="inner">
+<div class="brand">AXLE <span>·</span> RAG &amp; Context Engineering</div>
+<nav class="top"><a href="index.html">Home</a><a href="syllabus.html">Syllabus</a><a href="week1.html">Start Week 1</a></nav>
+</div></header>
+<main>
+
+<div class="crumb"><a href="index.html">Home</a> / Syllabus</div>
+<article>
+<div class="kicker">Program Document</div>
+<h1>Syllabus</h1>
+<p class="lede">RAG &amp; Context Engineering: Building Production-Grade AI Systems — an eight-week applied program in retrieval-augmented generation and context engineering.</p>
+
+<h2>Program description</h2>
+<p>Large language models are powerful but bounded: they know only what they were trained on, and they fail silently when asked to go beyond it. Retrieval-augmented generation (RAG) — connecting models to external knowledge at inference time — is how production AI systems ground their answers in private, fresh, and verifiable data. This program teaches RAG as an engineering discipline: not a framework tutorial, but the design decisions, measurement practices, and production concerns that separate demos from systems.</p>
+<p>The program is build-first. Each participant selects a document corpus in Week 1 and constructs a complete system over it across eight weeks: classical and semantic retrieval, hybrid fusion and reranking, systematic evaluation, multihop and agentic workflows, and finally secure deployment. All tooling is local-first and open source.</p>
+
+<h2>Learning outcomes</h2>
+<p>On completion, participants will be able to:</p>
+<ul><li>Decide when and why external retrieval is necessary in LLM systems, and defend that decision</li><li>Design classical, semantic, and hybrid retrieval pipelines, and justify each stage with measurement</li><li>Diagnose accuracy and performance failures using structured evaluation and a root-cause taxonomy</li><li>Build end-to-end RAG systems, including query decomposition and multihop retrieval</li><li>Implement retrieval-aware agentic workflows and judge when they beat static pipelines</li><li>Deploy secure, observable, production-grade RAG systems with layered injection defenses</li><li>Communicate system behavior and design trade-offs to technical and non-technical stakeholders</li></ul>
+
+<h2>Schedule</h2>
+<table>
+<tr><th>Week</th><th>Lesson</th><th>Weekend challenge</th></tr>
+<tr><td><b>1</b></td><td><a href="week1.html">When (and When Not) to Retrieve</a></td><td><a href="challenge1.html">Catch Your Model Lying</a></td></tr><tr><td><b>2</b></td><td><a href="week2.html">Classical Retrieval: BM25 and the Inverted Index</a></td><td><a href="challenge2.html">Break BM25</a></td></tr><tr><td><b>3</b></td><td><a href="week3.html">Semantic Retrieval: Embeddings and Vector Search</a></td><td><a href="challenge3.html">The Chunking Bake-Off</a></td></tr><tr><td><b>4</b></td><td><a href="week4.html">Hybrid Retrieval and Reranking</a></td><td><a href="challenge4.html">Beat the Baseline</a></td></tr><tr><td><b>5</b></td><td><a href="week5.html">Evaluation: Diagnosing Failures Systematically</a></td><td><a href="challenge5.html">The Failure Audit</a></td></tr><tr><td><b>6</b></td><td><a href="week6.html">End-to-End RAG and Multihop Retrieval</a></td><td><a href="challenge6.html">The Multihop Gauntlet</a></td></tr><tr><td><b>7</b></td><td><a href="week7.html">Agentic RAG: Retrieval-Aware Workflows</a></td><td><a href="challenge7.html">Agent vs. Pipeline</a></td></tr><tr><td><b>8</b></td><td><a href="week8.html">Production: Secure, Observable, Deployable</a></td><td><a href="challenge8.html">Red Team Your Own System</a></td></tr>
+</table>
+
+<h2>Methodology</h2>
+<p>This program follows a <b>guided-cohort model</b>: one live 90-minute session per week in which the cohort studies the concepts and builds the labs <em>together</em>, with the instructor facilitating pace, discussion, and debugging. The materials are designed to carry the technical content; the sessions exist so that nobody struggles alone and every question gets worked through out loud. Between sessions, participants complete a weekend challenge (approximately 3–4 hours) that stress-tests the week's build and produces a committed deliverable. Expect a total commitment of 6–8 hours per week. Every artifact is version-controlled from day one; the accumulated repository is itself a program outcome — a portfolio piece demonstrating professional practice.</p>
+
+<h2>Assessment</h2>
+<p>Assessment is continuous and evidence-based: eight weekly checkpoints (committed, working code with measured results), eight challenge deliverables, and a capstone defense. The capstone is presented twice — a technical deep-dive and a stakeholder briefing — and is evaluated on whether design choices are supported by the participant's own evaluation data, not on feature count.</p>
+
+<h2>Tools and materials</h2>
+<p>Python 3.11+, uv, git, Ollama (llama3.1:8b and nomic-embed-text), rank-bm25, Chroma, sentence-transformers, RAGAS, FastAPI, and Docker. All tools are free and run locally; a laptop with 8&nbsp;GB+ RAM is sufficient. Readings draw on primary sources — the original RAG, ReAct, and Lost-in-the-Middle papers, the Stanford IR textbook, and OWASP security guidance — linked from each week's page.</p>
+
+<h2>Prerequisites</h2>
+<p>Working Python proficiency (functions, classes, virtual environments, pip/uv) and basic command-line comfort. No prior experience with LLM APIs, vector databases, or information retrieval is assumed — Weeks 1–3 build these foundations explicitly.</p>
+
+<h2>Instructor</h2>
+<p>Pablo Grossi — program design and session facilitation, AXLE. Sessions are run in the guided-cohort format: the instructor leads the study, works the labs alongside the cohort, and keeps every participant moving — the accompaniment model AXLE programs are built on.</p>
+<div class="pagenav"><a href="index.html">← Course home</a><a href="week1.html">Begin Week 1 →</a></div>
+</article>
+</main>
+<footer class="site">RAG &amp; Context Engineering — Building Production-Grade AI Systems<br>Instructor: Pablo Grossi · AXLE · 2026</footer>
+</body>
+</html>
