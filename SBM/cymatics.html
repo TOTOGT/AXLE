@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chladni Plate — cymatic visualizer</title>
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --plate:#101014;
+    --sand:#f2e8d5;
+    --ink:#8a8a96;
+    --ink-bright:#e8e8ef;
+    --accent:#d4a24c;
+    --line:#22222a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    display:flex;flex-direction:column;align-items:center;
+    padding:20px;gap:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;justify-content:center}
+  h1{font-size:14px;font-weight:600;color:var(--ink-bright);letter-spacing:.08em;text-transform:uppercase}
+  header span{font-size:12px;color:var(--ink)}
+
+  #stage{position:relative;line-height:0}
+  canvas{
+    background:var(--plate);
+    border-radius:2px;
+    box-shadow:0 0 0 1px var(--line), 0 24px 60px -20px #000;
+    max-width:100%;height:auto;touch-action:none;
+  }
+  #overlay{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:rgba(10,10,12,.92);border-radius:2px;cursor:pointer;
+    flex-direction:column;gap:10px;text-align:center;padding:24px;line-height:1.5;
+  }
+  #overlay strong{color:var(--ink-bright);font-size:14px;letter-spacing:.06em}
+  #overlay em{font-style:normal;color:var(--ink);max-width:34ch;font-size:12px}
+  #overlay.hidden{display:none}
+
+  .readout{
+    display:grid;grid-template-columns:repeat(4,minmax(84px,1fr));
+    gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;
+    width:100%;max-width:640px;overflow:hidden;
+  }
+  .readout div{background:var(--plate);padding:9px 12px}
+  .readout dt{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:3px}
+  .readout dd{font-size:17px;color:var(--ink-bright);font-variant-numeric:tabular-nums}
+  .readout dd small{font-size:11px;color:var(--ink)}
+  #modeCell dd{color:var(--accent)}
+
+  .controls{
+    display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center;
+    width:100%;max-width:640px;padding-top:2px;
+  }
+  label{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.04em}
+  input[type=range]{width:130px;accent-color:var(--accent);cursor:pointer}
+  input[type=checkbox]{accent-color:var(--accent);cursor:pointer}
+  .val{color:var(--ink-bright);font-variant-numeric:tabular-nums;min-width:44px}
+
+  #meter{width:100%;max-width:640px;height:2px;background:var(--line);border-radius:1px;overflow:hidden}
+  #meterFill{height:100%;width:0;background:var(--accent);transition:width .05s linear}
+
+  footer{font-size:11px;color:#55555f;max-width:640px;text-align:center;line-height:1.6}
+  code{color:var(--ink);background:#15151a;padding:1px 4px;border-radius:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Chladni Plate</h1>
+  <span>standing-wave modes of a square plate, driven by what it hears</span>
+</header>
+
+<div id="stage">
+  <canvas id="c" width="640" height="640"></canvas>
+  <div id="overlay">
+    <strong>CLICK TO LISTEN</strong>
+    <em>Grants microphone access. Audio is analysed in the browser and never leaves this page.</em>
+  </div>
+</div>
+
+<div id="meter"><div id="meterFill"></div></div>
+
+<dl class="readout">
+  <div><dt>Pitch</dt><dd id="freq">—<small> Hz</small></dd></div>
+  <div><dt>Note</dt><dd id="note">—</dd></div>
+  <div id="modeCell"><dt>Mode</dt><dd id="mode">—</dd></div>
+  <div><dt>Grains</dt><dd id="count">—</dd></div>
+</dl>
+
+<div class="controls">
+  <label>Plate <input type="range" id="tune" min="8" max="46" step="0.5" value="20"><span class="val" id="tuneVal">20</span></label>
+  <label>Grains <input type="range" id="grains" min="2000" max="40000" step="1000" value="16000"><span class="val" id="grainsVal">16k</span></label>
+  <label>Settle <input type="range" id="settle" min="0" max="100" step="1" value="55"><span class="val" id="settleVal">55</span></label>
+  <label><input type="checkbox" id="manual"> Manual</label>
+  <label id="manualWrap" style="display:none">Hz <input type="range" id="manualHz" min="60" max="1400" step="1" value="220"><span class="val" id="manualVal">220</span></label>
+</div>
+
+<footer>
+  Nodal lines solve <code>cos(nπx)cos(mπy) − cos(mπx)cos(nπy) = 0</code> — the free-edge square plate.
+  Grains are agitated in proportion to local displacement, so they random-walk away from antinodes and
+  accumulate where the plate is still. Pitch is mapped to a mode by <code>f ∝ m²+n²</code>;
+  the <em>Plate</em> slider sets the constant, i.e. how big and stiff the plate is.
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const overlay = document.getElementById('overlay');
+
+  const el = {
+    freq: document.getElementById('freq'),
+    note: document.getElementById('note'),
+    mode: document.getElementById('mode'),
+    count: document.getElementById('count'),
+    meterFill: document.getElementById('meterFill'),
+    tune: document.getElementById('tune'),
+    tuneVal: document.getElementById('tuneVal'),
+    grains: document.getElementById('grains'),
+    grainsVal: document.getElementById('grainsVal'),
+    settle: document.getElementById('settle'),
+    settleVal: document.getElementById('settleVal'),
+    manual: document.getElementById('manual'),
+    manualWrap: document.getElementById('manualWrap'),
+    manualHz: document.getElementById('manualHz'),
+    manualVal: document.getElementById('manualVal')
+  };
+
+  /* ---------- plate geometry ---------- */
+  const SIZE = 640;
+  const HALF_PI = Math.PI;
+
+  // current + target mode numbers; morphs between them so transitions read as motion
+  let m = 2, n = 3;
+  let mT = 2, nT = 3;
+  let morph = 1;             // 0 = fully previous mode, 1 = fully target
+  let mPrev = 2, nPrev = 3;
+
+  let baseHz = 20;           // f = baseHz * (m^2 + n^2)
+  let settleK = 0.55;        // gradient-descent weight
+
+  // Precompute the admissible mode set. m === n makes chi vanish identically.
+  function modeTable(base) {
+    const out = [];
+    for (let a = 1; a <= 9; a++) {
+      for (let b = a + 1; b <= 9; b++) {
+        out.push({ m: a, n: b, f: base * (a * a + b * b) });
+      }
+    }
+    return out.sort((p, q) => p.f - q.f);
+  }
+  let modes = modeTable(baseHz);
+
+  function pickMode(f) {
+    let best = modes[0], bestErr = Infinity;
+    for (const md of modes) {
+      // compare in log-frequency so the match is perceptually even across octaves
+      const err = Math.abs(Math.log(f / md.f));
+      if (err < bestErr) { bestErr = err; best = md; }
+    }
+    return best;
+  }
+
+  function chi(x, y, a, b) {
+    return Math.cos(b * HALF_PI * x) * Math.cos(a * HALF_PI * y)
+         - Math.cos(a * HALF_PI * x) * Math.cos(b * HALF_PI * y);
+  }
+
+  /* ---------- particles ---------- */
+  let N = 16000;
+  let px = new Float32Array(N), py = new Float32Array(N);
+
+  function seed(count) {
+    N = count;
+    px = new Float32Array(N);
+    py = new Float32Array(N);
+    for (let i = 0; i < N; i++) { px[i] = Math.random(); py[i] = Math.random(); }
+    el.count.textContent = (N / 1000).toFixed(0) + 'k';
+  }
+  seed(N);
+
+  function scatter(frac) {
+    // kick a fraction of grains loose so a new mode visibly reorganises the plate
+    const k = Math.floor(N * frac);
+    for (let j = 0; j < k; j++) {
+      const i = (Math.random() * N) | 0;
+      px[i] = Math.random(); py[i] = Math.random();
+    }
+  }
+
+  /* ---------- audio ---------- */
+  let analyser = null, buf = null, sampleRate = 44100;
+  let listening = false;
+
+  async function start() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+      });
+      const actx = new (window.AudioContext || window.webkitAudioContext)();
+      await actx.resume();
+      sampleRate = actx.sampleRate;
+      analyser = actx.createAnalyser();
+      analyser.fftSize = 2048;
+      buf = new Float32Array(analyser.fftSize);
+      actx.createMediaStreamSource(stream).connect(analyser);
+      listening = true;
+      overlay.classList.add('hidden');
+    } catch (err) {
+      overlay.innerHTML = '<strong>NO MICROPHONE</strong>' +
+        '<em>Access was blocked. Enable the mic for this page, or tick <b>Manual</b> below ' +
+        'to drive the plate with the frequency slider.</em>';
+    }
+  }
+  overlay.addEventListener('click', start);
+
+  // Autocorrelation pitch detection — robust on plucked strings, where FFT peak-picking
+  // tends to latch onto a harmonic instead of the fundamental.
+  function detectPitch(b, rate) {
+    const size = b.length;
+    let rms = 0;
+    for (let i = 0; i < size; i++) rms += b[i] * b[i];
+    rms = Math.sqrt(rms / size);
+    if (rms < 0.008) return { hz: -1, rms };
+
+    // trim near-silent head and tail
+    let r1 = 0, r2 = size - 1;
+    const thres = 0.2;
+    for (let i = 0; i < size / 2; i++) if (Math.abs(b[i]) < thres) { r1 = i; break; }
+    for (let i = 1; i < size / 2; i++) if (Math.abs(b[size - i]) < thres) { r2 = size - i; break; }
+    const s = b.slice(r1, r2);
+    const L = s.length;
+    if (L < 128) return { hz: -1, rms };
+
+    const c = new Float32Array(L);
+    for (let lag = 0; lag < L; lag++) {
+      let sum = 0;
+      for (let j = 0; j < L - lag; j++) sum += s[j] * s[j + lag];
+      c[lag] = sum;
+    }
+    let d = 0;
+    while (d < L - 1 && c[d] > c[d + 1]) d++;
+    let maxval = -1, maxpos = -1;
+    for (let i = d; i < L; i++) if (c[i] > maxval) { maxval = c[i]; maxpos = i; }
+    if (maxpos <= 0) return { hz: -1, rms };
+
+    // parabolic interpolation around the peak for sub-sample precision
+    let T0 = maxpos;
+    const x1 = c[T0 - 1] || 0, x2 = c[T0], x3 = c[T0 + 1] || 0;
+    const a = (x1 + x3 - 2 * x2) / 2, bb = (x3 - x1) / 2;
+    if (a) T0 = T0 - bb / (2 * a);
+
+    const hz = rate / T0;
+    if (hz < 55 || hz > 2000) return { hz: -1, rms };
+    return { hz, rms };
+  }
+
+  const NOTES = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+  function noteName(hz) {
+    const nsemi = Math.round(12 * Math.log2(hz / 440)) + 69;
+    const cents = Math.round(100 * (12 * Math.log2(hz / 440) + 69 - nsemi));
+    return NOTES[((nsemi % 12) + 12) % 12] + (Math.floor(nsemi / 12) - 1) +
+           (cents ? ` ${cents > 0 ? '+' : ''}${cents}` : '');
+  }
+
+  /* ---------- render loop ---------- */
+  const img = ctx.createImageData(SIZE, SIZE);
+  const pix = new Uint32Array(img.data.buffer);
+  const SAND = (255 << 24) | (0xd5 << 16) | (0xe8 << 8) | 0xf2;   // ABGR
+  const PLATE = (255 << 24) | (0x14 << 16) | (0x10 << 8) | 0x10;
+
+  let drive = 0;          // smoothed loudness, 0..1
+  let heldHz = -1;
+  let stableHz = -1, stableFrames = 0;
+  let frame = 0;
+
+  function loop() {
+    requestAnimationFrame(loop);
+    frame++;
+
+    /* --- input --- */
+    let hz = -1, rms = 0;
+    if (el.manual.checked) {
+      hz = +el.manualHz.value;
+      rms = 0.25;
+    } else if (listening && frame % 3 === 0) {
+      analyser.getFloatTimeDomainData(buf);
+      const r = detectPitch(buf, sampleRate);
+      hz = r.hz; rms = r.rms;
+      heldHz = hz > 0 ? hz : heldHz;
+    } else if (listening) {
+      analyser.getFloatTimeDomainData(buf);
+      let s = 0;
+      for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+      rms = Math.sqrt(s / buf.length);
+      hz = heldHz;
+    }
+
+    const target = Math.min(1, rms * 9);
+    drive += (target - drive) * (target > drive ? 0.35 : 0.045);
+
+    /* --- mode selection, with hysteresis so vibrato doesn't strobe the plate --- */
+    if (hz > 0 && drive > 0.08) {
+      const md = pickMode(hz);
+      if (md.m !== mT || md.n !== nT) {
+        stableFrames++;
+        if (stableFrames > 5) {
+          mPrev = m; nPrev = n;
+          mT = md.m; nT = md.n;
+          morph = 0;
+          scatter(0.55);
+          stableFrames = 0;
+        }
+      } else stableFrames = 0;
+
+      el.freq.innerHTML = hz.toFixed(1) + '<small> Hz</small>';
+      el.note.textContent = noteName(hz);
+      el.mode.textContent = `${mT},${nT}`;
+    }
+
+    if (morph < 1) morph = Math.min(1, morph + 0.045);
+    m = mT; n = nT;
+
+    el.meterFill.style.width = (drive * 100).toFixed(1) + '%';
+
+    /* --- integrate grains --- */
+    // step scales with |chi|: grains sit still on nodal lines, jump at antinodes
+    const jitter = 0.010 * drive;
+    const grad = 0.0022 * settleK * (0.35 + drive);
+    const blend = morph < 1 ? morph : 1;
+
+    for (let i = 0; i < N; i++) {
+      let x = px[i], y = py[i];
+
+      let v = chi(x, y, m, n);
+      if (blend < 1) {
+        const vp = chi(x, y, mPrev, nPrev);
+        v = vp * (1 - blend) + v * blend;
+      }
+      const av = Math.abs(v);
+
+      // gradient of chi^2 = 2*chi*grad(chi) — pushes grains downhill toward v = 0
+      const cx = HALF_PI * n, cy = HALF_PI * m;
+      const dx = -cx * Math.sin(cx * x) * Math.cos(cy * y)
+                 + cy * Math.sin(cy * x) * Math.cos(cx * y);
+      const dy = -cy * Math.cos(cx * x) * Math.sin(cy * y)
+                 + cx * Math.cos(cy * x) * Math.sin(cx * y);
+
+      x -= grad * v * dx;
+      y -= grad * v * dy;
+
+      const j = jitter * av;
+      x += (Math.random() - 0.5) * j;
+      y += (Math.random() - 0.5) * j;
+
+      // reflect at the rim
+      if (x < 0) x = -x; else if (x > 1) x = 2 - x;
+      if (y < 0) y = -y; else if (y > 1) y = 2 - y;
+
+      px[i] = x; py[i] = y;
+    }
+
+    /* --- draw --- */
+    pix.fill(PLATE);
+    for (let i = 0; i < N; i++) {
+      const sx = (px[i] * (SIZE - 1)) | 0;
+      const sy = (py[i] * (SIZE - 1)) | 0;
+      pix[sy * SIZE + sx] = SAND;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  requestAnimationFrame(loop);
+
+  /* ---------- controls ---------- */
+  el.tune.addEventListener('input', e => {
+    baseHz = +e.target.value;
+    el.tuneVal.textContent = baseHz;
+    modes = modeTable(baseHz);
+  });
+  el.grains.addEventListener('input', e => {
+    seed(+e.target.value);
+    el.grainsVal.textContent = (+e.target.value / 1000).toFixed(0) + 'k';
+  });
+  el.settle.addEventListener('input', e => {
+    settleK = +e.target.value / 100;
+    el.settleVal.textContent = e.target.value;
+  });
+  el.manual.addEventListener('change', e => {
+    el.manualWrap.style.display = e.target.checked ? 'flex' : 'none';
+    if (e.target.checked) overlay.classList.add('hidden');
+  });
+  el.manualHz.addEventListener('input', e => { el.manualVal.textContent = e.target.value; });
+
+  el.count.textContent = (N / 1000).toFixed(0) + 'k';
+})();
+</script>
+</body>
+</html>

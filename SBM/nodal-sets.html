@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nodal Sets</title>
+<meta name="description" content="Chladni figures driven by a microphone: nodal sets of the square plate, the circular plate, the sphere and the 3-sphere — with proofs.">
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#101014; --panel2:#15151a;
+    --ink:#8a8a96; --ink-bright:#e8e8ef; --accent:#d4a24c; --lean:#7aa2c8; --line:#22222a;
+    --serif:ui-serif,Georgia,'Iowan Old Style','Times New Roman',serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);font:13px/1.5 var(--mono);
+    display:flex;flex-direction:column;align-items:center;padding:18px 18px 70px;gap:13px;
+    -webkit-font-smoothing:antialiased;min-height:100vh;
+  }
+  .topbar{display:flex;align-items:center;gap:13px;flex-wrap:wrap;justify-content:center;width:100%;max-width:820px}
+  h1{font-size:14px;font-weight:600;color:var(--ink-bright);letter-spacing:.08em;text-transform:uppercase}
+  .tagline{font-size:12px}
+  .spacer{flex:1;min-width:0}
+  .langwrap{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  #lang{background:var(--panel2);color:var(--ink-bright);border:1px solid var(--line);border-radius:2px;
+        padding:5px 8px;font:inherit;font-size:11px;cursor:pointer;max-width:200px}
+  #lang:focus{outline:1px solid var(--accent)}
+
+  .tabs{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden;flex-wrap:wrap}
+  .tabs button{background:var(--panel);color:var(--ink);border:0;padding:7px 16px;cursor:pointer;
+    font:inherit;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:color .12s,background .12s}
+  .tabs button:hover{color:var(--ink-bright)}
+  .tabs button.on{background:#191920;color:var(--accent)}
+
+  #stage{position:relative;line-height:0}
+  canvas{background:var(--panel);border-radius:2px;cursor:grab;
+    box-shadow:0 0 0 1px var(--line),0 24px 60px -20px #000;max-width:100%;height:auto;touch-action:none}
+  canvas.flat{cursor:default}
+  canvas.drag{cursor:grabbing}
+  #overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(10,10,12,.92);border-radius:2px;cursor:pointer;gap:10px;text-align:center;padding:24px;line-height:1.55}
+  #overlay strong{color:var(--ink-bright);font-size:14px;letter-spacing:.06em}
+  #overlay em{font-style:normal;max-width:36ch;font-size:12px}
+  #overlay.hidden{display:none}
+
+  #meter{width:100%;max-width:660px;height:2px;background:var(--line);border-radius:1px;overflow:hidden}
+  #meterFill{height:100%;width:0;background:var(--accent);transition:width .05s linear}
+
+  .readout{display:grid;grid-template-columns:repeat(4,minmax(78px,1fr));gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:2px;width:100%;max-width:660px;overflow:hidden}
+  .readout div{background:var(--panel);padding:9px 12px}
+  .readout dt{font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+  .readout dd{font-size:17px;color:var(--ink-bright);font-variant-numeric:tabular-nums}
+  .readout dd small{font-size:11px;color:var(--ink)}
+  #modeCell dd{color:var(--accent)}
+
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;width:100%;max-width:700px}
+  label{display:flex;align-items:center;gap:7px;font-size:11px;letter-spacing:.04em}
+  input[type=range]{width:100px;accent-color:var(--accent);cursor:pointer}
+  input[type=checkbox]{accent-color:var(--accent);cursor:pointer}
+  select.mini{background:var(--panel2);color:var(--ink-bright);border:1px solid var(--line);
+    border-radius:2px;padding:3px 6px;font:inherit;font-size:11px;cursor:pointer}
+  .val{color:var(--ink-bright);font-variant-numeric:tabular-nums;min-width:36px}
+  .hide{display:none!important}
+  button.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:2px;
+    padding:4px 12px;font:inherit;font-size:11px;letter-spacing:.06em;cursor:pointer}
+  button.ghost:hover{color:var(--accent)}
+
+  article{width:100%;max-width:720px;margin-top:24px;font-family:var(--serif);font-size:15.5px;line-height:1.72;color:#9a9aa6}
+  article section{margin-bottom:32px}
+  article h2{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+  article p{margin-bottom:12px}
+  article p:last-child{margin-bottom:0}
+  article strong{color:var(--ink-bright);font-weight:600}
+
+  .thm{border-inline-start:2px solid var(--accent);background:var(--panel);padding:12px 16px;margin:14px 0;border-radius:0 2px 2px 0}
+  .thm .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+  .thm.pf{border-inline-start-color:var(--line);background:transparent;padding-block:5px}
+  .thm.pf .lbl{color:var(--ink)}
+  .thm.pf p{font-size:14.5px;color:#84848f}
+  .thm.lean{border-inline-start-color:var(--lean)}
+  .thm.lean .lbl{color:var(--lean)}
+
+  .eq{display:block;font-family:var(--mono);font-size:13px;color:var(--ink-bright);background:var(--panel2);
+    border:1px solid var(--line);border-radius:2px;padding:11px 14px;margin:13px 0;overflow-x:auto;
+    white-space:nowrap;direction:ltr;text-align:center}
+  pre.lean{font-family:var(--mono);font-size:11.5px;line-height:1.65;color:#9aa8b8;background:#0d1016;
+    border:1px solid #1c2430;border-inline-start:2px solid var(--lean);border-radius:0 2px 2px 0;
+    padding:12px 15px;margin:13px 0;overflow-x:auto;direction:ltr;text-align:start}
+  pre.lean .kw{color:#c58fd8}.pre-fn,pre.lean .fn{color:#7aa2c8}pre.lean .cm{color:#4f5a68;font-style:italic}
+  code{font-family:var(--mono);font-size:.88em;color:var(--ink-bright);background:var(--panel2);
+    padding:1px 5px;border-radius:2px;direction:ltr;display:inline-block}
+
+  table.verify{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:14px 0}
+  table.verify th,table.verify td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+  table.verify th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);font-weight:600;border-bottom-color:#2e2e38}
+  table.verify td.num{color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap;text-align:end;direction:ltr}
+  table.verify td.lean{color:var(--lean);white-space:nowrap;text-align:end;direction:ltr}
+  .caveat{border-inline-start:2px solid #4a4a56;background:var(--panel);padding:12px 16px;margin:14px 0;border-radius:0 2px 2px 0}
+  .caveat .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6f6f7d;display:block;margin-bottom:6px}
+
+  footer{width:100%;max-width:720px;margin-top:10px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:11px;color:#4e4e58;font-family:var(--mono);line-height:1.7}
+  @media (max-width:520px){article{font-size:14.5px}.readout{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1 data-i="title">Nodal Sets</h1>
+  <span class="tagline" data-i="tagline">where a vibrating body stays still</span>
+  <span class="spacer"></span>
+  <span class="langwrap"><span data-i="lang_label">Language</span><select id="lang"></select></span>
+</div>
+
+<div class="tabs">
+  <button data-view="plate" class="on" data-i="tab_plate">Plate</button>
+  <button data-view="disc" data-i="tab_disc">Saturn</button>
+  <button data-view="globe" data-i="tab_globe">Globe</button>
+  <button data-view="hyper" data-i="tab_hyper">Hypersphere</button>
+</div>
+
+<div id="stage">
+  <canvas id="c" width="660" height="660" class="flat"></canvas>
+  <div id="overlay">
+    <strong data-i="ov_title">CLICK TO LISTEN</strong>
+    <em data-i="ov_body">Grants microphone access. Audio is analysed in your browser and never leaves this page.</em>
+  </div>
+</div>
+
+<div id="meter"><div id="meterFill"></div></div>
+
+<dl class="readout">
+  <div><dt data-i="lbl_pitch">Pitch</dt><dd id="freq">—<small> Hz</small></dd></div>
+  <div><dt data-i="lbl_note">Note</dt><dd id="note">—</dd></div>
+  <div id="modeCell"><dt data-i="lbl_mode">Mode</dt><dd id="mode">—</dd></div>
+  <div><dt data-i="lbl_grains">Grains</dt><dd id="count">—</dd></div>
+</dl>
+
+<div class="controls">
+  <label><span data-i="ctl_scale">Scale</span> <input type="range" id="tune" min="6" max="46" step="0.5" value="20"><span class="val" id="tuneVal">20</span></label>
+  <label><span data-i="ctl_grains">Grains</span> <input type="range" id="grains" min="4000" max="60000" step="2000" value="24000"><span class="val" id="grainsVal">24k</span></label>
+  <label><span data-i="ctl_settle">Settle</span> <input type="range" id="settle" min="0" max="100" step="1" value="60"><span class="val" id="settleVal">60</span></label>
+  <label class="v3d hide"><span data-i="ctl_spin">Spin</span> <input type="range" id="spin" min="0" max="100" step="1" value="30"><span class="val" id="spinVal">30</span></label>
+  <label class="vhyper hide"><span data-i="ctl_project">Project</span>
+    <select id="proj" class="mini">
+      <option value="stereo" data-i="opt_stereo">stereographic</option>
+      <option value="ortho" data-i="opt_ortho">orthographic</option>
+    </select>
+  </label>
+  <label class="vhyper hide"><span data-i="ctl_spin4">4D spin</span> <input type="range" id="spin4" min="0" max="100" step="1" value="35"><span class="val" id="spin4Val">35</span></label>
+  <button class="ghost vpartner hide" id="partner" data-i="ctl_partner">next partner</button>
+  <span class="vstar hide" id="starWrap">
+    <span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-inline-end:6px" data-i="ctl_star">SGR 1806−20</span>
+    <button class="ghost star" data-l="2">18 Hz</button><button class="ghost star" data-l="3">30 Hz</button><button class="ghost star" data-l="10">93 Hz</button><button class="ghost star" data-l="16">150 Hz</button>
+  </span>
+  <label><input type="checkbox" id="manual"> <span data-i="ctl_manual">Manual</span></label>
+  <label id="manualWrap" class="hide">Hz <input type="range" id="manualHz" min="60" max="1400" step="1" value="220"><span class="val" id="manualVal">220</span></label>
+</div>
+
+<article>
+  <section>
+    <h2 data-i="h_seeing">What you are seeing</h2>
+    <p data-i="p_seeing"></p>
+  </section>
+
+  <section>
+    <h2 data-i="h_plate">The square plate</h2>
+    <p data-i="p_plate"></p>
+    <span class="eq">u(x,y) = cos(nπx)·cos(mπy) − cos(mπx)·cos(nπy)</span>
+    <div class="thm"><span class="lbl" data-i="lbl_theorem">Theorem</span><p data-i="t_plate"></p></div>
+    <div class="thm pf"><span class="lbl" data-i="lbl_proof">Proof</span><p data-i="pr_plate"></p></div>
+  </section>
+
+  <section>
+    <h2 data-i="h_disc">The circular plate, and Saturn</h2>
+    <p data-i="p_disc1"></p>
+    <span class="eq">u(r,θ) = J<sub>k</sub>(α<sub>k,s</sub>·r) · cos(kθ)</span>
+    <p data-i="p_disc2"></p>
+    <div class="thm"><span class="lbl" data-i="lbl_theorem">Theorem</span><p data-i="t_disc"></p></div>
+    <div class="thm pf"><span class="lbl" data-i="lbl_proof">Proof</span><p data-i="pr_disc"></p></div>
+    <p data-i="p_disc3"></p>
+    <pre class="lean"><span class="cm">/-- Standing wave pattern of Saturn's polar hexagon.
+    f(theta) = cos(6 * theta).
+    Nodal lines {f = 0} form the six sides of the hexagon. -/</span>
+<span class="kw">noncomputable def</span> <span class="fn">chladni6</span> (theta : ℝ) : ℝ :=
+  cos (<span class="fn">6</span> * theta)
+
+<span class="cm">/-- Invariant under rotation by π/3: six-fold symmetry. -/</span>
+<span class="kw">theorem</span> <span class="fn">chladni6_sixfold_sym</span> (theta : ℝ) :
+    <span class="fn">chladni6</span> (theta + π / 3) = <span class="fn">chladni6</span> theta := <span class="kw">by</span>
+  unfold <span class="fn">chladni6</span>
+  <span class="kw">have</span> h : 6 * (theta + π / 3) = 6 * theta + 2 * π := <span class="kw">by</span> ring
+  rw [h, cos_add_two_pi]
+
+<span class="cm">/-- Each nodal angle is a zero of chladni6. -/</span>
+<span class="kw">theorem</span> <span class="fn">hexagon_nodes_are_zeros</span> (i : Fin 6) :
+    <span class="fn">chladni6</span> (<span class="fn">hexagon_nodal_angles</span> i) = 0 := <span class="kw">by</span>
+  unfold <span class="fn">chladni6</span> <span class="fn">hexagon_nodal_angles</span>
+  push_cast
+  <span class="kw">have</span> h : 6 * ((i.val : ℝ) * (π / 6) + π / 12)
+           = i.val * π + π / 2 := <span class="kw">by</span> ring
+  rw [h, cos_add, cos_pi_div_two, sin_pi_div_two]
+  simp [sin_int_mul_pi]</pre>
+    <p data-i="p_disc4"></p>
+  </section>
+
+  <section>
+    <h2 data-i="h_globe">The globe</h2>
+    <p data-i="p_globe"></p>
+    <span class="eq">Y<sub>l</sub><sup>m</sup>(θ,φ) = P<sub>l</sub><sup>m</sup>(cos θ) · cos(mφ)  |  sin(mφ)</span>
+    <div class="thm"><span class="lbl" data-i="lbl_theorem">Theorem</span><p data-i="t_globe"></p></div>
+    <div class="thm pf"><span class="lbl" data-i="lbl_proof">Proof</span><p data-i="pr_globe"></p></div>
+  </section>
+
+  <section>
+    <h2 data-i="h_hyper">The hypersphere</h2>
+    <p data-i="p_hyper1"></p>
+    <span class="eq">Φ = cos<sup>p</sup>(η) · sin<sup>q</sup>(η) · cos(p·ξ₁ + q·ξ₂)</span>
+    <p data-i="p_hyper2"></p>
+    <div class="thm"><span class="lbl" data-i="lbl_theorem">Theorem</span><p data-i="t_hyper"></p></div>
+    <div class="thm pf"><span class="lbl" data-i="lbl_proof">Proof</span><p data-i="pr_hyper"></p></div>
+  </section>
+
+  <section>
+    <h2 data-i="h_star">Sonic Starquakes — the missing math</h2>
+    <p data-i="p_star1"></p>
+    <p data-i="p_star2"></p>
+    <span class="eq">ω<sub>ℓ</sub> ∝ √((ℓ−1)(ℓ+2))</span>
+    <table class="verify">
+      <thead><tr><th data-i="th_obs">Observed</th><th data-i="th_mode">Mode</th><th data-i="th_pred">Predicted</th><th data-i="th_err">Error</th></tr></thead>
+      <tbody>
+        <tr><td>18 Hz</td><td>ℓ = 2</td><td class="num">18.0 Hz</td><td class="num">anchor</td></tr>
+        <tr><td>30 Hz</td><td>ℓ = 3</td><td class="num">28.5 Hz</td><td class="num">5.1 %</td></tr>
+        <tr><td>93 Hz</td><td>ℓ = 10</td><td class="num">93.5 Hz</td><td class="num">0.6 %</td></tr>
+        <tr><td>150 Hz</td><td>ℓ = 16</td><td class="num">147.9 Hz</td><td class="num">1.4 %</td></tr>
+      </tbody>
+    </table>
+    <p data-i="p_star3"></p>
+    <div class="caveat"><span class="lbl" data-i="lbl_caveat2">What is and is not settled</span><p data-i="p_star4"></p></div>
+  </section>
+
+  <section>
+    <h2 data-i="h_proved">Is the mathematics proved?</h2>
+    <p data-i="p_proved1"></p>
+    <table class="verify">
+      <thead><tr><th data-i="th_check">Statement</th><th data-i="th_status">Status</th></tr></thead>
+      <tbody>
+        <tr><td data-i="v_plate">Plate gradient, analytic against numerical</td><td class="num">9 × 10⁻¹⁰</td></tr>
+        <tr><td data-i="v_harm">Φ harmonic in ℝ⁴, five (p,q) pairs</td><td class="num">4 × 10⁻⁷</td></tr>
+        <tr><td data-i="v_hopf">Hopf form against polynomial form</td><td class="num">6 × 10⁻¹⁶</td></tr>
+        <tr><td data-i="v_sph">Spherical harmonic eigenvalue −l(l+1)</td><td class="num">5 × 10⁻⁷</td></tr>
+        <tr><td data-i="v_lean">Six-fold symmetry, hexagon nodes are zeros</td><td class="lean">Lean ✓</td></tr>
+      </tbody>
+    </table>
+    <p data-i="p_proved2"></p>
+    <div class="caveat"><span class="lbl" data-i="lbl_caveat">One honest caveat</span><p data-i="p_caveat"></p></div>
+  </section>
+
+  <section>
+    <h2 data-i="h_grains">How the grains move</h2>
+    <p data-i="p_grains"></p>
+  </section>
+
+  <section>
+    <h2 data-i="h_degen">Why several patterns share one pitch</h2>
+    <p data-i="p_degen"></p>
+  </section>
+
+  <section>
+    <h2 data-i="h_controls">Controls</h2>
+    <p data-i="p_controls"></p>
+  </section>
+
+  <section>
+    <h2 data-i="h_privacy">Privacy</h2>
+    <p data-i="p_privacy"></p>
+  </section>
+</article>
+
+<footer><span data-i="foot"></span></footer>
+
+<script src="i18n.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* ============================== i18n ============================== */
+const RTL = new Set(['ar','he','fa','ur']);
+const I18N = window.NODAL_I18N || {en:{_name:'English'}};
+let L = 'en';
+
+function applyLang(code){
+  L = I18N[code] ? code : 'en';
+  const pack = I18N[L] || {}, base = I18N.en || {};
+  document.querySelectorAll('[data-i]').forEach(node=>{
+    const k = node.getAttribute('data-i');
+    const val = pack[k] !== undefined ? pack[k] : base[k];
+    if(val !== undefined) node.innerHTML = val;
+  });
+  document.documentElement.lang = L;
+  document.documentElement.dir = RTL.has(L) ? 'rtl' : 'ltr';
+  document.title = (pack.title || base.title || 'Nodal Sets');
+  try{ localStorage.setItem('nodal-lang', L); }catch(e){}
+}
+function buildLangMenu(){
+  const sel = document.getElementById('lang');
+  const codes = Object.keys(I18N).sort((a,b)=>(I18N[a]._name||a).localeCompare(I18N[b]._name||b));
+  sel.innerHTML = codes.map(c=>`<option value="${c}">${I18N[c]._name||c}</option>`).join('');
+  let start='';
+  try{ start = localStorage.getItem('nodal-lang') || ''; }catch(e){}
+  if(!I18N[start]){
+    for(const nav of (navigator.languages || [navigator.language || 'en'])){
+      const short = String(nav).toLowerCase().split('-')[0];
+      if(I18N[short]){ start = short; break; }
+    }
+  }
+  if(!I18N[start]) start='en';
+  sel.value=start; applyLang(start);
+  sel.addEventListener('change', e=>applyLang(e.target.value));
+}
+
+/* ============================== setup ============================== */
+const SIZE=660;
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d',{alpha:false});
+const overlay=document.getElementById('overlay');
+const TAU=Math.PI*2, PI=Math.PI;
+const el=id=>document.getElementById(id);
+const ui={freq:el('freq'),note:el('note'),mode:el('mode'),count:el('count'),meterFill:el('meterFill'),
+  tune:el('tune'),tuneVal:el('tuneVal'),grains:el('grains'),grainsVal:el('grainsVal'),
+  settle:el('settle'),settleVal:el('settleVal'),spin:el('spin'),spinVal:el('spinVal'),
+  spin4:el('spin4'),spin4Val:el('spin4Val'),proj:el('proj'),partner:el('partner'),
+  manual:el('manual'),manualWrap:el('manualWrap'),manualHz:el('manualHz'),manualVal:el('manualVal')};
+
+let view='plate', baseHz=20, settleK=0.60, spinRate=0.30, spin4Rate=0.35;
+
+/* ---------------- square plate: exact Neumann eigenfunction ---------------- */
+function plateModes(base){
+  const out=[];
+  for(let a=1;a<=9;a++) for(let b=a+1;b<=9;b++)
+    out.push({f:base*(a*a+b*b), label:`${a},${b}`, p:{m:a,n:b}});
+  return out;
+}
+function plateField(x,y,_z,P){
+  return Math.cos(P.n*PI*x)*Math.cos(P.m*PI*y) - Math.cos(P.m*PI*x)*Math.cos(P.n*PI*y);
+}
+
+/* ---------------- circular plate: Bessel J_k, tabulated ---------------- */
+function besselJ(k,x){
+  // power series; ample for the argument range used here (alpha*r <= ~30)
+  if(x===0) return k===0?1:0;
+  const h=x/2; let term=1;
+  for(let i=1;i<=k;i++) term*=h/i;      // (x/2)^k / k!
+  let sum=term;
+  for(let i=1;i<60;i++){
+    term *= -(h*h)/(i*(i+k));
+    sum += term;
+    if(Math.abs(term)<1e-17*Math.abs(sum)) break;
+  }
+  return sum;
+}
+function besselZeros(k,count){
+  // bracket-and-bisect along x; J_k has simple, interlacing zeros
+  const out=[]; let x=(k===0?2.0:k+1.0), prev=besselJ(k,x);
+  const step=0.05;
+  while(out.length<count && x<260){
+    const nx=x+step, cv=besselJ(k,nx);
+    if(prev===0 || (prev<0)!==(cv<0)){
+      let lo=x, hi=nx;
+      for(let it=0;it<70;it++){
+        const mid=(lo+hi)/2;
+        if((besselJ(k,lo)<0)!==(besselJ(k,mid)<0)) hi=mid; else lo=mid;
+      }
+      out.push((lo+hi)/2);
+    }
+    x=nx; prev=cv;
+  }
+  return out;
+}
+const LUT_N=1400;
+const discLUT={};                       // key "k:s" -> Float32Array of J_k(alpha*r)
+const discAlpha={};
+function ensureLUT(k,s){
+  const key=k+':'+s;
+  if(discLUT[key]) return key;
+  if(!discAlpha[k]) discAlpha[k]=besselZeros(k,6);
+  const alpha=discAlpha[k][s-1];
+  const arr=new Float32Array(LUT_N+1);
+  for(let i=0;i<=LUT_N;i++) arr[i]=besselJ(k,alpha*(i/LUT_N));
+  discLUT[key]=arr;
+  return key;
+}
+function discModes(base){
+  const out=[];
+  for(let k=0;k<=8;k++) for(let s=1;s<=4;s++){
+    if(!discAlpha[k]) discAlpha[k]=besselZeros(k,6);
+    const alpha=discAlpha[k][s-1];
+    out.push({f:base*alpha*alpha/12, label:`k=${k} s=${s}`, p:{k,s,key:ensureLUT(k,s)}});
+  }
+  return out.sort((a,b)=>a.f-b.f);
+}
+function discField(u,v,_w,P){
+  // u = radius in [0,1], v = angle in [0,1)
+  const arr=discLUT[P.key];
+  const t=Math.max(0,Math.min(1,u))*LUT_N;
+  const i=t|0, fr=t-i;
+  const R = i>=LUT_N ? arr[LUT_N] : arr[i]+(arr[i+1]-arr[i])*fr;
+  return R*Math.cos(P.k*v*TAU);
+}
+
+/* ---------------- sphere: real spherical harmonics ---------------- */
+function legendre(l,m,x){
+  let pmm=1;
+  if(m>0){ const s=Math.sqrt(Math.max(0,(1-x)*(1+x))); let f=1;
+    for(let i=1;i<=m;i++){ pmm*=-f*s; f+=2; } }
+  if(l===m) return pmm;
+  let p1=x*(2*m+1)*pmm;
+  if(l===m+1) return p1;
+  let pll=0;
+  for(let ll=m+2;ll<=l;ll++){ pll=(x*(2*ll-1)*p1-(ll+m-1)*pmm)/(ll-m); pmm=p1; p1=pll; }
+  return pll;
+}
+function globeModes(base){
+  const out=[];
+  for(let l=1;l<=11;l++){
+    const partners=[];
+    for(let mm=0;mm<=l;mm++){ partners.push({l,m:mm,sin:false}); if(mm>0) partners.push({l,m:mm,sin:true}); }
+    out.push({f:base*l*(l+1)/2, label:`l=${l}`, partners});
+  }
+  return out;
+}
+function globeField(u,v,_w,P){
+  const th=u*PI, ph=v*TAU;
+  return legendre(P.l,P.m,Math.cos(th))*(P.sin?Math.sin(P.m*ph):Math.cos(P.m*ph));
+}
+
+/* ---------------- 3-sphere: Re[(x1+ix2)^p (x3+ix4)^q] ---------------- */
+function hyperModes(base){
+  const out=[];
+  for(let n=1;n<=9;n++){
+    const partners=[];
+    for(let p=0;p<=n;p++) partners.push({p,q:n-p});
+    out.push({f:base*n*(n+2)/3, label:`n=${n}`, partners});
+  }
+  return out;
+}
+function hyperField(u,v,w,P){
+  const eta=u*PI/2, a1=v*TAU, a2=w*TAU;
+  return Math.pow(Math.cos(eta),P.p)*Math.pow(Math.sin(eta),P.q)*Math.cos(P.p*a1+P.q*a2);
+}
+
+const VIEWS={
+  plate:{dims:2,flat:true, modes:plateModes,field:plateField},
+  disc :{dims:2,flat:true, modes:discModes, field:discField},
+  globe:{dims:2,flat:false,modes:globeModes,field:globeField},
+  hyper:{dims:3,flat:false,modes:hyperModes,field:hyperField}
+};
+
+let modes=plateModes(baseHz), cur=modes[2], P=cur.p, partnerIx=0, norm=1;
+
+function rebuildModes(){
+  modes=VIEWS[view].modes(baseHz);
+  cur=modes[Math.min(2,modes.length-1)]; partnerIx=0; applyParams();
+}
+function applyParams(){
+  P = cur.p ? cur.p : cur.partners[partnerIx % cur.partners.length];
+  let mx=1e-6;
+  for(let k=0;k<3000;k++){
+    const v=Math.abs(VIEWS[view].field(Math.random(),Math.random(),Math.random(),P));
+    if(v>mx) mx=v;
+  }
+  norm=mx;
+  ui.mode.textContent = cur.p ? cur.label
+    : (view==='globe' ? `${cur.label} m=${P.sin?'−':''}${P.m}` : `p=${P.p} q=${P.q}`);
+  scatter(0.75);
+}
+function pickMode(f){
+  let best=modes[0], bestErr=Infinity;
+  for(const md of modes){ const e=Math.abs(Math.log(f/md.f)); if(e<bestErr){bestErr=e;best=md;} }
+  return best;
+}
+
+/* ---------------- particles ---------------- */
+let N=24000, pa=new Float32Array(N), pb=new Float32Array(N), pc=new Float32Array(N);
+function seed(count){
+  N=count; pa=new Float32Array(N); pb=new Float32Array(N); pc=new Float32Array(N);
+  scatter(1); ui.count.textContent=(N/1000).toFixed(0)+'k';
+}
+function scatter(frac){
+  const k=Math.floor(N*frac);
+  for(let j=0;j<k;j++){
+    const i = frac>=1 ? j : (Math.random()*N)|0;
+    if(view==='globe')      { pa[i]=Math.acos(1-2*Math.random())/PI; pb[i]=Math.random(); pc[i]=Math.random(); }
+    else if(view==='hyper') { pa[i]=Math.asin(Math.sqrt(Math.random()))/(PI/2); pb[i]=Math.random(); pc[i]=Math.random(); }
+    else if(view==='disc')  { pa[i]=Math.sqrt(Math.random()); pb[i]=Math.random(); pc[i]=Math.random(); }
+    else                    { pa[i]=Math.random(); pb[i]=Math.random(); pc[i]=Math.random(); }
+  }
+}
+seed(N);
+
+/* ---------------- audio ---------------- */
+let analyser=null, abuf=null, sampleRate=44100, listening=false;
+async function start(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({
+      audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    const actx=new (window.AudioContext||window.webkitAudioContext)();
+    await actx.resume();
+    sampleRate=actx.sampleRate;
+    analyser=actx.createAnalyser(); analyser.fftSize=2048;
+    abuf=new Float32Array(analyser.fftSize);
+    actx.createMediaStreamSource(stream).connect(analyser);
+    listening=true; overlay.classList.add('hidden');
+  }catch(e){
+    const pack=I18N[L]||I18N.en||{};
+    overlay.innerHTML='<strong>'+(pack.ov_fail_title||'NO MICROPHONE')+'</strong><em>'+
+                      (pack.ov_fail_body||'Access was blocked.')+'</em>';
+  }
+}
+overlay.addEventListener('click',start);
+
+function detectPitch(b,rate){
+  const size=b.length;
+  let rms=0; for(let i=0;i<size;i++) rms+=b[i]*b[i];
+  rms=Math.sqrt(rms/size);
+  if(rms<0.008) return {hz:-1,rms};
+  let r1=0,r2=size-1; const thr=0.2;
+  for(let i=0;i<size/2;i++) if(Math.abs(b[i])<thr){r1=i;break;}
+  for(let i=1;i<size/2;i++) if(Math.abs(b[size-i])<thr){r2=size-i;break;}
+  const s=b.slice(r1,r2), Ln=s.length;
+  if(Ln<128) return {hz:-1,rms};
+  const c=new Float32Array(Ln);
+  for(let lag=0;lag<Ln;lag++){ let sum=0; for(let j=0;j<Ln-lag;j++) sum+=s[j]*s[j+lag]; c[lag]=sum; }
+  let d=0; while(d<Ln-1&&c[d]>c[d+1]) d++;
+  let mv=-1,mp=-1;
+  for(let i=d;i<Ln;i++) if(c[i]>mv){mv=c[i];mp=i;}
+  if(mp<=0) return {hz:-1,rms};
+  let T0=mp;
+  const x1=c[T0-1]||0,x2=c[T0],x3=c[T0+1]||0;
+  const a=(x1+x3-2*x2)/2,bb=(x3-x1)/2;
+  if(a) T0=T0-bb/(2*a);
+  const hz=rate/T0;
+  return (hz<55||hz>2000)?{hz:-1,rms}:{hz,rms};
+}
+const NOTES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+function noteName(hz){
+  const ns=Math.round(12*Math.log2(hz/440))+69;
+  const cents=Math.round(100*(12*Math.log2(hz/440)+69-ns));
+  return NOTES[((ns%12)+12)%12]+(Math.floor(ns/12)-1)+(cents?` ${cents>0?'+':''}${cents}`:'');
+}
+
+/* ---------------- camera ---------------- */
+let yaw=0.6,pitch=-0.35,autoYaw=0,a4=0,dragging=false,lx=0,ly=0;
+canvas.addEventListener('pointerdown',e=>{
+  if(VIEWS[view].flat) return;
+  dragging=true; lx=e.clientX; ly=e.clientY;
+  canvas.classList.add('drag'); canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!dragging) return;
+  yaw+=(e.clientX-lx)*0.008;
+  pitch=Math.max(-1.5,Math.min(1.5,pitch+(e.clientY-ly)*0.008));
+  lx=e.clientX; ly=e.clientY;
+});
+addEventListener('pointerup',()=>{dragging=false;canvas.classList.remove('drag');});
+
+/* ---------------- raster ---------------- */
+const img=ctx.createImageData(SIZE,SIZE);
+const pix=new Uint32Array(img.data.buffer);
+const zbuf=new Float32Array(SIZE*SIZE);
+const BG=(255<<24)|(0x14<<16)|(0x10<<8)|0x10;
+const SHADES=new Uint32Array(64);
+for(let i=0;i<64;i++){
+  const t=0.30+0.70*(i/63);
+  SHADES[i]=(255<<24)|(Math.round(0xd5*t)<<16)|(Math.round(0xe8*t)<<8)|Math.round(0xf2*t);
+}
+
+/* ---------------- loop ---------------- */
+let drive=0,heldHz=-1,stableFrames=0,frame=0;
+function loop(){
+  requestAnimationFrame(loop);
+  frame++;
+
+  let hz=-1,rms=0;
+  if(ui.manual.checked){ hz=+ui.manualHz.value; rms=0.25; }
+  else if(listening && frame%3===0){
+    analyser.getFloatTimeDomainData(abuf);
+    const r=detectPitch(abuf,sampleRate); hz=r.hz; rms=r.rms;
+    if(hz>0) heldHz=hz;
+  } else if(listening){
+    analyser.getFloatTimeDomainData(abuf);
+    let s=0; for(let i=0;i<abuf.length;i++) s+=abuf[i]*abuf[i];
+    rms=Math.sqrt(s/abuf.length); hz=heldHz;
+  }
+  const target=Math.min(1,rms*9);
+  drive+=(target-drive)*(target>drive?0.35:0.045);
+
+  if(hz>0&&drive>0.08){
+    const md=pickMode(hz);
+    if(md!==cur){ if(++stableFrames>5){ cur=md; partnerIx=0; applyParams(); stableFrames=0; } }
+    else stableFrames=0;
+    ui.freq.innerHTML=hz.toFixed(1)+'<small> Hz</small>';
+    ui.note.textContent=noteName(hz);
+  }
+  ui.meterFill.style.width=(drive*100).toFixed(1)+'%';
+
+  const field=VIEWS[view].field, dims=VIEWS[view].dims;
+  const jitter=0.011*drive, grad=0.030*settleK*(0.35+drive), h=0.004;
+
+  for(let i=0;i<N;i++){
+    let a=pa[i],b=pb[i],c=pc[i];
+    const v=field(a,b,c,P)/norm, av=Math.abs(v);
+    const ga=(field(a+h,b,c,P)-field(a-h,b,c,P))/(2*h)/norm;
+    const gb=(field(a,b+h,c,P)-field(a,b-h,c,P))/(2*h)/norm;
+    a-=grad*v*ga; b-=grad*v*gb;
+    if(dims===3){ const gc=(field(a,b,c+h,P)-field(a,b,c-h,P))/(2*h)/norm; c-=grad*v*gc; }
+    const j=jitter*av;
+    a+=(Math.random()-0.5)*j; b+=(Math.random()-0.5)*j;
+    if(dims===3) c+=(Math.random()-0.5)*j;
+
+    if(view==='plate'){
+      if(a<0)a=-a; else if(a>1)a=2-a;
+      if(b<0)b=-b; else if(b>1)b=2-b;
+    } else if(view==='disc'){
+      if(a<0)a=-a; else if(a>1)a=2-a;   // radius reflects at centre and rim
+      b-=Math.floor(b);                  // angle wraps
+    } else if(view==='globe'){
+      if(a<0)a=-a; else if(a>1)a=2-a;
+      b-=Math.floor(b);
+    } else {
+      if(a<0)a=-a; else if(a>1)a=2-a;
+      b-=Math.floor(b); c-=Math.floor(c);
+    }
+    pa[i]=a; pb[i]=b; pc[i]=c;
+  }
+
+  pix.fill(BG);
+  if(view==='plate'){
+    for(let i=0;i<N;i++) pix[((pb[i]*(SIZE-1))|0)*SIZE + ((pa[i]*(SIZE-1))|0)] = SHADES[63];
+  } else if(view==='disc'){
+    const R=SIZE*0.46, CX=SIZE/2, CY=SIZE/2;
+    for(let i=0;i<N;i++){
+      const r=pa[i]*R, th=pb[i]*TAU;
+      const sx=(CX+r*Math.cos(th))|0, sy=(CY+r*Math.sin(th))|0;
+      if(sx<0||sx>=SIZE||sy<0||sy>=SIZE) continue;
+      pix[sy*SIZE+sx]=SHADES[63];
+    }
+  } else {
+    zbuf.fill(1e9);
+    autoYaw+=spinRate*0.004; a4+=spin4Rate*0.006;
+    const cy=Math.cos(yaw+autoYaw), sy=Math.sin(yaw+autoYaw);
+    const cp=Math.cos(pitch), sp=Math.sin(pitch);
+    const c4=Math.cos(a4), s4=Math.sin(a4);
+    const stereo=ui.proj.value==='stereo';
+    const R=SIZE*0.40, CX=SIZE/2, CY=SIZE/2;
+    for(let i=0;i<N;i++){
+      let X,Y,Z;
+      if(view==='globe'){
+        const th=pa[i]*PI, ph=pb[i]*TAU, st=Math.sin(th);
+        X=st*Math.cos(ph); Y=st*Math.sin(ph); Z=Math.cos(th);
+      } else {
+        const eta=pa[i]*(PI/2), u1=pb[i]*TAU, u2=pc[i]*TAU;
+        const ce=Math.cos(eta), se=Math.sin(eta);
+        let x1=ce*Math.cos(u1),x2=ce*Math.sin(u1),x3=se*Math.cos(u2),x4=se*Math.sin(u2);
+        const t1=x1*c4-x4*s4,t4=x1*s4+x4*c4,t2=x2*c4-x3*s4,t3=x2*s4+x3*c4;
+        x1=t1;x2=t2;x3=t3;x4=t4;
+        if(stereo){
+          if(x4>0.86) continue;
+          const d=1-x4;
+          X=x1/d*0.5; Y=x2/d*0.5; Z=x3/d*0.5;
+          if(X*X+Y*Y+Z*Z>9) continue;
+        } else { X=x1; Y=x2; Z=x3; }
+      }
+      const rx=X*cy-Z*sy, rz=X*sy+Z*cy;
+      const ry=Y*cp-rz*sp, rzz=Y*sp+rz*cp;
+      const sxp=(CX+rx*R)|0, syp=(CY-ry*R)|0;
+      if(sxp<0||sxp>=SIZE||syp<0||syp>=SIZE) continue;
+      const idx=syp*SIZE+sxp;
+      if(rzz<zbuf[idx]){
+        zbuf[idx]=rzz;
+        let t=(1-rzz)*0.5; t=t<0?0:t>1?1:t;
+        pix[idx]=SHADES[(t*63)|0];
+      }
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+requestAnimationFrame(loop);
+
+/* ---------------- controls ---------------- */
+document.querySelectorAll('.tabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    view=btn.dataset.view;
+    const flat=VIEWS[view].flat;
+    canvas.classList.toggle('flat',flat);
+    document.querySelectorAll('.v3d').forEach(e=>e.classList.toggle('hide',flat));
+    document.querySelectorAll('.vhyper').forEach(e=>e.classList.toggle('hide',view!=='hyper'));
+    document.querySelectorAll('.vpartner').forEach(e=>e.classList.toggle('hide',view!=='globe'&&view!=='hyper'));
+    document.querySelectorAll('.vstar').forEach(e=>e.classList.toggle('hide',view!=='globe'));
+    rebuildModes(); scatter(1);
+  });
+});
+ui.tune.addEventListener('input',e=>{ baseHz=+e.target.value; ui.tuneVal.textContent=baseHz; rebuildModes(); });
+ui.grains.addEventListener('input',e=>{ seed(+e.target.value); ui.grainsVal.textContent=(+e.target.value/1000).toFixed(0)+'k'; });
+ui.settle.addEventListener('input',e=>{ settleK=+e.target.value/100; ui.settleVal.textContent=e.target.value; });
+ui.spin.addEventListener('input',e=>{ spinRate=+e.target.value/100; ui.spinVal.textContent=e.target.value; });
+ui.spin4.addEventListener('input',e=>{ spin4Rate=+e.target.value/100; ui.spin4Val.textContent=e.target.value; });
+ui.partner.addEventListener('click',()=>{ if(cur.partners){ partnerIx++; applyParams(); } });
+document.querySelectorAll('button.star').forEach(b=>{
+  b.addEventListener('click',()=>{
+    if(view!=='globe') return;
+    const want='l='+b.dataset.l;
+    const md=modes.find(m=>m.label===want);
+    if(md){ cur=md; partnerIx=0; applyParams(); ui.freq.innerHTML=b.textContent.replace(' Hz','')+'<small> Hz</small>'; ui.note.textContent='SGR 1806−20'; }
+  });
+});
+ui.manual.addEventListener('change',e=>{
+  ui.manualWrap.classList.toggle('hide',!e.target.checked);
+  if(e.target.checked) overlay.classList.add('hidden');
+});
+ui.manualHz.addEventListener('input',e=>{ ui.manualVal.textContent=e.target.value; });
+
+ui.count.textContent=(N/1000).toFixed(0)+'k';
+applyParams();
+buildLangMenu();
+})();
+</script>
+</body>
+</html>

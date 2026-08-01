@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cimática com Máquinas · EXP13</title>
+<meta name="description" content="Dez máquinas cimáticas — figuras de Chladni, ressonância e a matemática do som estacionário. XII Bienal da SBM, Natal-RN.">
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#101014; --panel2:#15151a; --sand:#f2e8d5;
+    --ink:#8a8a96; --bright:#e8e8ef; --accent:#d4a24c; --line:#22262f; --ok:#6bbf8a;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:13px/1.55 var(--mono);
+       -webkit-font-smoothing:antialiased;padding:16px 16px 60px;
+       display:flex;flex-direction:column;align-items:center;gap:12px;min-height:100vh}
+  .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;width:100%;max-width:900px}
+  h1{font-size:13px;font-weight:600;color:var(--bright);letter-spacing:.14em;text-transform:uppercase}
+  .tag{font-size:11px}
+  .spacer{flex:1}
+  .pill{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:99px;
+        border:1px solid var(--line);color:var(--ink)}
+  .pill.on{color:var(--ok);border-color:#2c4a3a}
+
+  .rack{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
+        border:1px solid var(--line);border-radius:3px;overflow:hidden;width:100%;max-width:900px}
+  .rack button{background:var(--panel);border:0;color:var(--ink);cursor:pointer;font:inherit;
+               padding:9px 6px;text-align:center;transition:background .12s,color .12s;line-height:1.35}
+  .rack button b{display:block;font-size:10px;letter-spacing:.08em;color:var(--accent);font-weight:600}
+  .rack button span{display:block;font-size:11px;margin-top:2px}
+  .rack button:hover{background:#181820;color:var(--bright)}
+  .rack button.on{background:#1c1c24;color:var(--bright)}
+  .rack button.on b{color:var(--sand)}
+  .rack button i{font-style:normal;font-size:9px;color:#5d5d68;display:block;margin-top:2px}
+
+  #stage{position:relative;line-height:0}
+  canvas{background:var(--panel);border-radius:3px;box-shadow:0 0 0 1px var(--line),0 20px 50px -18px #000;
+         max-width:100%;height:auto;touch-action:none;cursor:grab}
+  canvas.flat{cursor:crosshair}
+  #ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      background:rgba(10,10,12,.93);border-radius:3px;cursor:pointer;gap:9px;text-align:center;padding:26px}
+  #ov strong{color:var(--bright);font-size:13px;letter-spacing:.08em}
+  #ov em{font-style:normal;font-size:12px;max-width:38ch;line-height:1.6}
+  #ov.hide{display:none}
+
+  .readout{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+           border:1px solid var(--line);border-radius:3px;width:100%;max-width:720px;overflow:hidden}
+  .readout div{background:var(--panel);padding:8px 11px}
+  .readout dt{font-size:9px;letter-spacing:.11em;text-transform:uppercase;margin-bottom:2px}
+  .readout dd{font-size:16px;color:var(--bright);font-variant-numeric:tabular-nums}
+  .readout dd small{font-size:10px;color:var(--ink)}
+
+  .ctl{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;width:100%;max-width:820px}
+  label{display:flex;align-items:center;gap:7px;font-size:11px}
+  input[type=range]{width:98px;accent-color:var(--accent);cursor:pointer}
+  input[type=checkbox]{accent-color:var(--accent);cursor:pointer}
+  .v{color:var(--bright);font-variant-numeric:tabular-nums;min-width:38px}
+  .hide{display:none!important}
+  button.g{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:3px;
+           padding:5px 12px;font:inherit;font-size:11px;cursor:pointer}
+  button.g:hover{color:var(--accent)}
+  button.g.on{color:var(--ok);border-color:#2c4a3a}
+  .desc{width:100%;max-width:720px;font-size:12px;line-height:1.7;color:#7a7a86;text-align:center}
+  .desc b{color:var(--bright);font-weight:600}
+  footer{margin-top:8px;font-size:10px;color:#4e4e58;text-align:center;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>Cimática com Máquinas</h1>
+  <span class="tag">EXP13 · XII Bienal da SBM · Saguão do CETECH</span>
+  <span class="spacer"></span>
+  <span class="pill" id="micPill">microfone: desligado</span>
+</div>
+
+<div class="rack" id="rack"></div>
+
+<div id="stage">
+  <canvas id="c" width="720" height="720" class="flat"></canvas>
+  <div id="ov" class="hide"><strong>TOQUE PARA OUVIR</strong>
+    <em>Concede acesso ao microfone. O áudio é analisado no seu navegador e nunca sai desta página.</em></div>
+</div>
+
+<dl class="readout">
+  <div><dt>Frequência</dt><dd id="rFreq">—<small> Hz</small></dd></div>
+  <div><dt>Nota</dt><dd id="rNote">—</dd></div>
+  <div><dt>Modo</dt><dd id="rMode">—</dd></div>
+  <div><dt>Nível</dt><dd id="rLvl">—</dd></div>
+</dl>
+
+<div class="ctl" id="ctl">
+  <button class="g" id="micBtn">ligar microfone</button>
+  <label class="needTone"><span>Hz</span> <input type="range" id="hz" min="60" max="1200" step="1" value="220"><span class="v" id="hzV">220</span></label>
+  <button class="g needTone" id="playBtn">▶ tocar tom</button>
+  <label class="needK hide"><span>k</span> <input type="range" id="kk" min="0" max="9" step="1" value="6"><span class="v" id="kkV">6</span></label>
+  <label class="needS hide"><span>anéis</span> <input type="range" id="ss" min="1" max="5" step="1" value="3"><span class="v" id="ssV">3</span></label>
+  <label class="needL hide"><span>ℓ</span> <input type="range" id="ll" min="1" max="12" step="1" value="10"><span class="v" id="llV">10</span></label>
+  <label class="needL hide"><span>m</span> <input type="range" id="mm" min="0" max="12" step="1" value="4"><span class="v" id="mmV">4</span></label>
+  <label class="needSrc hide"><span>fontes</span> <input type="range" id="src" min="2" max="8" step="1" value="3"><span class="v" id="srcV">3</span></label>
+  <label class="needRatio hide"><span>a:b</span> <input type="range" id="ra" min="1" max="9" step="1" value="3"><span class="v" id="raV">3</span>:<input type="range" id="rb" min="1" max="9" step="1" value="2" style="width:70px"><span class="v" id="rbV">2</span></label>
+  <label><span>grãos</span> <input type="range" id="gr" min="30" max="100" step="1" value="70"><span class="v" id="grV">70</span></label>
+  <button class="g" id="freezeBtn">congelar</button>
+</div>
+
+<div class="desc" id="desc"></div>
+
+<footer>
+  Tudo roda no navegador · sem internet · sem instalação · CC BY 4.0<br>
+  Pablo Nogueira Grossi · G6 LLC · pg6llc@gmail.com
+</footer>
+
+<script>
+(() => {
+'use strict';
+const SZ=720, PI=Math.PI, TAU=PI*2;
+const cv=document.getElementById('c'), ctx=cv.getContext('2d',{alpha:false});
+const el=id=>document.getElementById(id);
+const ov=el('ov');
+const img=ctx.createImageData(SZ,SZ), pix=new Uint32Array(img.data.buffer);
+const zbuf=new Float32Array(SZ*SZ);
+const BG=(255<<24)|(0x14<<16)|(0x10<<8)|0x10;
+const SH=new Uint32Array(64);
+for(let i=0;i<64;i++){const t=.28+.72*(i/63);
+  SH[i]=(255<<24)|(Math.round(0xd5*t)<<16)|(Math.round(0xe8*t)<<8)|Math.round(0xf2*t);}
+
+/* ---------- audio ---------- */
+let actx=null, analyser=null, abuf=null, sr=44100, micOn=false, osc=null, gain=null, playing=false;
+async function ensureCtx(){ if(!actx){ actx=new (window.AudioContext||window.webkitAudioContext)(); } await actx.resume(); return actx; }
+async function micStart(){
+  try{
+    await ensureCtx();
+    const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    sr=actx.sampleRate; analyser=actx.createAnalyser(); analyser.fftSize=2048;
+    abuf=new Float32Array(analyser.fftSize);
+    actx.createMediaStreamSource(st).connect(analyser);
+    micOn=true; ov.classList.add('hide');
+    el('micPill').textContent='microfone: ligado'; el('micPill').classList.add('on');
+    el('micBtn').textContent='microfone ligado'; el('micBtn').classList.add('on');
+  }catch(e){
+    el('micPill').textContent='microfone: bloqueado';
+    ov.innerHTML='<strong>SEM MICROFONE</strong><em>O acesso foi bloqueado. Use as máquinas de tom — elas não precisam de microfone.</em>';
+  }
+}
+async function toneToggle(){
+  await ensureCtx();
+  if(playing){ osc.stop(); osc=null; playing=false; el('playBtn').textContent='▶ tocar tom'; el('playBtn').classList.remove('on'); return; }
+  osc=actx.createOscillator(); gain=actx.createGain();
+  gain.gain.value=.08; osc.type='sine'; osc.frequency.value=+el('hz').value;
+  osc.connect(gain).connect(actx.destination); osc.start();
+  playing=true; el('playBtn').textContent='■ parar'; el('playBtn').classList.add('on');
+}
+function detect(b,rate){
+  const n=b.length; let rms=0; for(let i=0;i<n;i++) rms+=b[i]*b[i];
+  rms=Math.sqrt(rms/n); if(rms<.008) return {hz:-1,rms};
+  let r1=0,r2=n-1; const th=.2;
+  for(let i=0;i<n/2;i++) if(Math.abs(b[i])<th){r1=i;break;}
+  for(let i=1;i<n/2;i++) if(Math.abs(b[n-i])<th){r2=n-i;break;}
+  const s=b.slice(r1,r2), L=s.length; if(L<128) return {hz:-1,rms};
+  const c=new Float32Array(L);
+  for(let l=0;l<L;l++){let x=0; for(let j=0;j<L-l;j++) x+=s[j]*s[j+l]; c[l]=x;}
+  let d=0; while(d<L-1&&c[d]>c[d+1]) d++;
+  let mv=-1,mp=-1; for(let i=d;i<L;i++) if(c[i]>mv){mv=c[i];mp=i;}
+  if(mp<=0) return {hz:-1,rms};
+  let T=mp; const x1=c[T-1]||0,x2=c[T],x3=c[T+1]||0, a=(x1+x3-2*x2)/2, bb=(x3-x1)/2;
+  if(a) T-=bb/(2*a);
+  const hz=rate/T; return (hz<55||hz>2200)?{hz:-1,rms}:{hz,rms};
+}
+const NOTES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+function noteName(hz){const n=Math.round(12*Math.log2(hz/440))+69;
+  return NOTES[((n%12)+12)%12]+(Math.floor(n/12)-1);}
+
+/* ---------- math ---------- */
+function besselJ(k,x){ if(x===0) return k===0?1:0;
+  const h=x/2; let t=1; for(let i=1;i<=k;i++) t*=h/i;
+  let s=t; for(let i=1;i<60;i++){ t*=-(h*h)/(i*(i+k)); s+=t; if(Math.abs(t)<1e-16*Math.abs(s))break; } return s; }
+const zc={};
+function jz(k,s){ const key=k+':'+s; if(zc[key]) return zc[key];
+  let x=(k===0?2:k+1), p=besselJ(k,x), out=[];
+  while(out.length<s&&x<220){ const nx=x+.05, c=besselJ(k,nx);
+    if((p<0)!==(c<0)){ let lo=x,hi=nx; for(let i=0;i<60;i++){const m=(lo+hi)/2;
+      if((besselJ(k,lo)<0)!==(besselJ(k,m)<0)) hi=m; else lo=m;} out.push((lo+hi)/2);} x=nx;p=c; }
+  return zc[key]=out[s-1]; }
+function legendre(l,m,x){ let pmm=1;
+  if(m>0){const s=Math.sqrt(Math.max(0,(1-x)*(1+x))); let f=1; for(let i=1;i<=m;i++){pmm*=-f*s;f+=2;}}
+  if(l===m) return pmm;
+  let p1=x*(2*m+1)*pmm; if(l===m+1) return p1;
+  let pl=0; for(let ll=m+2;ll<=l;ll++){pl=(x*(2*ll-1)*p1-(ll+m-1)*pmm)/(ll-m);pmm=p1;p1=pl;} return pl; }
+
+/* ---------- state ---------- */
+let hz=220, rms=0, drive=0, held=220, frozen=false, t0=performance.now();
+let yaw=.6, pit=-.35, drag=false, lx=0, ly=0;
+let P={m:2,n:3}, curLabel='';
+
+/* ---------- machines ---------- */
+const M={
+ chladni:{name:'Placa Quadrada',sub:'Chladni 1787',needs:['tone'],dim:2,flat:true,
+  desc:'A placa que <b>Ernst Chladni</b> tocou com um arco em 1787. As linhas são o conjunto nodal: onde a solução da equação vale zero. Toque uma nota — ou use o tom puro.',
+  mode(f){const t=[];for(let a=1;a<=9;a++)for(let b=a+1;b<=9;b++)t.push({f:20*(a*a+b*b),p:{m:a,n:b},lab:a+','+b});
+    return pick(t,f);},
+  field(x,y,p){return Math.cos(p.n*PI*x)*Math.cos(p.m*PI*y)-Math.cos(p.m*PI*x)*Math.cos(p.n*PI*y);}},
+
+ disco:{name:'Placa Circular',sub:'Bessel',needs:['tone','k','s'],dim:2,flat:true,disc:true,
+  desc:'Uma placa redonda soa diferente: o fator radial é uma <b>função de Bessel</b>. O conjunto nodal são k diâmetros mais os círculos onde J<sub>k</sub> se anula.',
+  mode(f){return {p:{k:+el('kk').value,s:+el('ss').value},lab:'k='+el('kk').value+' s='+el('ss').value};},
+  field(x,y,p){const a=jz(p.k,p.s); return besselJ(p.k,a*Math.min(x,1))*Math.cos(p.k*y*TAU);}},
+
+ saturno:{name:'Saturno',sub:'k = 6',needs:['tone','s'],dim:2,flat:true,disc:true,
+  desc:'O caso <b>k = 6</b>: simetria de ordem seis. É o número de onda que o jato polar de Saturno mantém há mais de quarenta anos. A simetria está <b>verificada em Lean 4</b>.',
+  mode(){return {p:{k:6,s:+el('ss').value},lab:'k=6 s='+el('ss').value};},
+  field(x,y,p){const a=jz(6,p.s); return besselJ(6,a*Math.min(x,1))*Math.cos(6*y*TAU);}},
+
+ esfera:{name:'Esfera',sub:'Y_l^m',needs:['tone','l'],dim:2,flat:false,
+  desc:'Uma casca esférica vibrando. O conjunto nodal são <b>ℓ−|m| paralelos</b> e <b>|m| meridianos</b> — os mesmos harmônicos que descrevem os modos de uma estrela. Arraste para girar.',
+  mode(){const l=+el('ll').value, m=Math.min(+el('mm').value,l);
+    return {p:{l,m},lab:'ℓ='+l+' m='+m};},
+  field(u,v,p){return legendre(p.l,p.m,Math.cos(u*PI))*Math.cos(p.m*v*TAU);},
+  pt(u,v){const th=u*PI,ph=v*TAU,st=Math.sin(th);
+    return [st*Math.cos(ph),st*Math.sin(ph),Math.cos(th)];}},
+
+ estrela:{name:'Estrelamoto',sub:'SGR 1806−20',needs:[],dim:2,flat:false,
+  desc:'Em 2004 a magnetar <b>SGR 1806−20</b> fraturou a crosta e vibrou. Telescópios de raios X registraram 18, 30, 93 e 150 Hz. Cada frequência é um ℓ: <b>93 Hz → ℓ=10</b>. Isto é a forma real.',
+  presets:[[18,2],[30,3],[93,10],[150,16]],
+  mode(){const p=M.estrela.presets[M.estrela.i||0]; return {p:{l:p[1],m:4,hz:p[0]},lab:p[0]+' Hz · ℓ='+p[1]};},
+  field(u,v,p){return legendre(p.l,Math.min(p.m,p.l),Math.cos(u*PI))*Math.cos(Math.min(p.m,p.l)*v*TAU);},
+  pt(u,v){return M.esfera.pt(u,v);}},
+
+ hiper:{name:'Hiperesfera',sub:'S³ · Hopf',needs:['tone'],dim:3,flat:false,
+  desc:'A esfera de dimensão três. Os conjuntos nodais são <b>toros de Clifford</b>; projetados no espaço comum aparecem como anéis encaixados. O objeto não se deforma — só o seu ângulo sobre ele muda.',
+  mode(f){const t=[];for(let n=1;n<=9;n++)for(let p=0;p<=n;p++)t.push({f:20*n*(n+2)/3,p:{p,q:n-p},lab:'p='+p+' q='+(n-p)});
+    return pick(t,f);},
+  field(u,v,w,p){const e=u*PI/2;
+    return Math.pow(Math.cos(e),p.p)*Math.pow(Math.sin(e),p.q)*Math.cos(p.p*v*TAU+p.q*w*TAU);}},
+
+ agua:{name:'Água',sub:'interferência',needs:['tone','src'],dim:0,flat:true,
+  desc:'Um tanque de ondas. N fontes pontuais em círculo, todas na mesma frequência. As faixas claras são <b>interferência construtiva</b> — o mesmo princípio que a fenda dupla.',
+  mode(){return {p:{n:+el('src').value},lab:el('src').value+' fontes'};},
+  raster(p,f,tt){
+    const n=p.n, k=f/90, R=.62;
+    for(let y=0;y<SZ;y++){ const Y=(y/SZ-.5)*2;
+      for(let x=0;x<SZ;x++){ const X=(x/SZ-.5)*2; let s=0;
+        for(let i=0;i<n;i++){ const a=i/n*TAU, dx=X-R*Math.cos(a), dy=Y-R*Math.sin(a);
+          const d=Math.sqrt(dx*dx+dy*dy); s+=Math.cos(k*d*12-tt*3)/(1+d*1.6); }
+        const v=Math.abs(s/n); const t=v>1?1:v;
+        pix[y*SZ+x]=SH[(t*63)|0]; } } }},
+
+ lissajous:{name:'Lissajous',sub:'a : b',needs:['tone','ratio'],dim:0,flat:true,
+  desc:'Duas frequências em ângulo reto. A razão <b>a:b</b> decide a figura — 1:1 é um círculo, 3:2 é um laço. É o mesmo desenho que um osciloscópio faz com dois tons.',
+  mode(){return {p:{a:+el('ra').value,b:+el('rb').value},lab:el('ra').value+':'+el('rb').value};},
+  raster(p,f,tt){
+    pix.fill(BG); const N=9000, ph=tt*.35;
+    for(let i=0;i<N;i++){ const u=i/N*TAU*6;
+      const X=Math.sin(p.a*u+ph), Y=Math.sin(p.b*u);
+      const sx=((X*.44+.5)*SZ)|0, sy=((Y*.44+.5)*SZ)|0;
+      if(sx<0||sx>=SZ||sy<0||sy>=SZ) continue;
+      pix[sy*SZ+sx]=SH[63]; } }},
+
+ batimento:{name:'Batimento',sub:'f₁ − f₂',needs:['tone'],dim:0,flat:true,
+  desc:'Dois tons quase iguais produzem uma pulsação lenta na diferença das frequências. É por isso que <b>sinos reais tremem</b> — não são perfeitamente redondos, e os modos degenerados se separam.',
+  mode(){return {p:{},lab:'Δf = 3 Hz'};},
+  raster(p,f,tt){
+    pix.fill(BG);
+    const f1=f, f2=f+3;
+    for(let x=0;x<SZ;x++){ const u=x/SZ*.9;
+      const s=(Math.sin(TAU*f1*u*.02+tt*2)+Math.sin(TAU*f2*u*.02+tt*2))/2;
+      const y=((.5-s*.34)*SZ)|0;
+      const env=Math.abs(Math.cos(PI*3*u*.5));
+      for(let d=-1;d<=1;d++){const yy=y+d; if(yy<0||yy>=SZ)continue;
+        pix[yy*SZ+x]=SH[(20+43*env)|0];}
+      const ey=((.5-env*.42)*SZ)|0, ey2=((.5+env*.42)*SZ)|0;
+      if(ey>=0&&ey<SZ) pix[ey*SZ+x]=SH[16];
+      if(ey2>=0&&ey2<SZ) pix[ey2*SZ+x]=SH[16]; } }},
+
+ espectro:{name:'Espectro',sub:'FFT ao vivo',needs:[],dim:0,flat:true,
+  desc:'O que o microfone realmente ouve. Cada barra é uma frequência; a altura é a energia. A <b>fundamental</b> é a barra mais à esquerda que se destaca — as outras são harmônicos.',
+  mode(){return {p:{},lab:'—'};},
+  raster(p,f,tt){
+    pix.fill(BG);
+    if(!analyser){ return; }
+    const N=analyser.frequencyBinCount, fd=new Uint8Array(N);
+    analyser.getByteFrequencyData(fd);
+    const bars=110, per=Math.floor(SZ/bars);
+    for(let b=0;b<bars;b++){
+      const idx=Math.floor(Math.pow(b/bars,1.7)*N*0.35);
+      const v=fd[idx]/255, h=(v*SZ*.82)|0;
+      for(let x=b*per;x<b*per+per-2&&x<SZ;x++)
+        for(let y=SZ-1;y>SZ-1-h;y--) pix[y*SZ+x]=SH[(18+45*v)|0];
+    } }},
+};
+function pick(tab,f){ let best=tab[0],e=1e9;
+  for(const m of tab){ const d=Math.abs(Math.log(f/m.f)); if(d<e){e=d;best=m;} } return best; }
+
+const ORDER=['chladni','disco','saturno','esfera','estrela','hiper','agua','lissajous','batimento','espectro'];
+let cur='chladni';
+
+/* ---------- particles ---------- */
+let N=Math.round(9000+ (70/100)*40000), pa,pb,pc;
+function seed(){ pa=new Float32Array(N); pb=new Float32Array(N); pc=new Float32Array(N); scatter(1); }
+function scatter(frac){
+  const mm=M[cur], k=Math.floor(N*frac);
+  for(let j=0;j<k;j++){ const i=frac>=1?j:(Math.random()*N)|0;
+    if(mm.disc){ pa[i]=Math.sqrt(Math.random()); pb[i]=Math.random(); pc[i]=Math.random(); }
+    else if(mm.pt){ pa[i]=Math.acos(1-2*Math.random())/PI; pb[i]=Math.random(); pc[i]=Math.random(); }
+    else if(mm.dim===3){ pa[i]=Math.asin(Math.sqrt(Math.random()))/(PI/2); pb[i]=Math.random(); pc[i]=Math.random(); }
+    else { pa[i]=Math.random(); pb[i]=Math.random(); pc[i]=Math.random(); } } }
+seed();
+
+/* ---------- ui ---------- */
+const rack=el('rack');
+ORDER.forEach((k,i)=>{ const m=M[k]; const b=document.createElement('button');
+  b.innerHTML='<b>'+String(i+1).padStart(2,'0')+'</b><span>'+m.name+'</span><i>'+m.sub+'</i>';
+  b.onclick=()=>select(k); b.dataset.k=k; rack.appendChild(b); });
+
+function select(k){
+  cur=k; const m=M[k];
+  [...rack.children].forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  el('desc').innerHTML=m.desc;
+  cv.classList.toggle('flat',!!m.flat);
+  document.querySelectorAll('.needTone').forEach(e=>e.classList.toggle('hide',!(m.needs||[]).includes('tone')));
+  document.querySelectorAll('.needK').forEach(e=>e.classList.toggle('hide',!(m.needs||[]).includes('k')));
+  document.querySelectorAll('.needS').forEach(e=>e.classList.toggle('hide',!(m.needs||[]).includes('s')));
+  document.querySelectorAll('.needL').forEach(e=>e.classList.toggle('hide',!(m.needs||[]).includes('l')));
+  document.querySelectorAll('.needSrc').forEach(e=>e.classList.toggle('hide',!(m.needs||[]).includes('src')));
+  document.querySelectorAll('.needRatio').forEach(e=>e.classList.toggle('hide',!(m.needs||[]).includes('ratio')));
+  if(k==='estrela'){ M.estrela.i=(M.estrela.i||0); }
+  scatter(1);
+}
+cv.addEventListener('pointerdown',e=>{
+  const m=M[cur];
+  if(m.flat){ if(cur==='estrela'){} return; }
+  drag=true; lx=e.clientX; ly=e.clientY; cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove',e=>{ if(!drag) return;
+  yaw+=(e.clientX-lx)*.008; pit=Math.max(-1.5,Math.min(1.5,pit+(e.clientY-ly)*.008));
+  lx=e.clientX; ly=e.clientY; });
+addEventListener('pointerup',()=>drag=false);
+
+el('micBtn').onclick=()=>{ if(!micOn) micStart(); };
+el('playBtn').onclick=toneToggle;
+el('hz').oninput=e=>{ el('hzV').textContent=e.target.value; if(osc) osc.frequency.value=+e.target.value; };
+['kk','ss','ll','mm','src','ra','rb','gr'].forEach(id=>{
+  el(id).oninput=e=>{ el(id+'V').textContent=e.target.value;
+    if(id==='gr'){ N=Math.round(9000+(+e.target.value/100)*40000); seed(); } else scatter(.8); }; });
+el('freezeBtn').onclick=()=>{ frozen=!frozen; el('freezeBtn').classList.toggle('on',frozen);
+  el('freezeBtn').textContent=frozen?'descongelar':'congelar'; };
+// star presets cycle on canvas click
+cv.addEventListener('click',()=>{ if(cur==='estrela'){ M.estrela.i=((M.estrela.i||0)+1)%4; scatter(1);} });
+
+/* ---------- loop ---------- */
+let frame=0;
+function loop(){
+  requestAnimationFrame(loop); frame++;
+  const m=M[cur], tt=(performance.now()-t0)/1000;
+
+  // input
+  let f=+el('hz').value;
+  if(micOn){
+    if(frame%3===0){ analyser.getFloatTimeDomainData(abuf);
+      const r=detect(abuf,sr); rms=r.rms; if(r.hz>0){ held=r.hz; } }
+    else { analyser.getFloatTimeDomainData(abuf); let s=0;
+      for(let i=0;i<abuf.length;i++) s+=abuf[i]*abuf[i]; rms=Math.sqrt(s/abuf.length); }
+    if(rms>.008) f=held;
+  } else if(playing){ rms=.25; }
+  else rms=Math.max(rms*.96,.02);
+  const tgt=Math.min(1,rms*9); drive+=(tgt-drive)*(tgt>drive?.35:.05);
+  hz=f;
+
+  // mode
+  const md=m.mode?m.mode(hz):{p:{},lab:''};
+  P=md.p; curLabel=md.lab;
+  el('rFreq').innerHTML=(md.p.hz||hz).toFixed(1)+'<small> Hz</small>';
+  el('rNote').textContent=noteName(md.p.hz||hz);
+  el('rMode').textContent=curLabel;
+  el('rLvl').textContent=(drive*100).toFixed(0)+'%';
+
+  if(m.raster){ m.raster(P,hz,tt); ctx.putImageData(img,0,0); return; }
+
+  // grain dynamics
+  if(!frozen){
+    const dim=m.dim, jit=.011*Math.max(drive,.25), gd=.030*(0.35+drive), h=.004;
+    const F=(a,b,c)=>m.field(a,b,c,P);
+    let nrm=1e-6;
+    for(let s=0;s<400;s++){ const v=Math.abs(F(Math.random(),Math.random(),Math.random())); if(v>nrm) nrm=v; }
+    for(let i=0;i<N;i++){
+      let a=pa[i],b=pb[i],c=pc[i];
+      const v=F(a,b,c)/nrm, av=Math.abs(v);
+      a-=gd*v*((F(a+h,b,c)-F(a-h,b,c))/(2*h)/nrm);
+      b-=gd*v*((F(a,b+h,c)-F(a,b-h,c))/(2*h)/nrm);
+      if(dim===3) c-=gd*v*((F(a,b,c+h)-F(a,b,c-h))/(2*h)/nrm);
+      const j=jit*av;
+      a+=(Math.random()-.5)*j; b+=(Math.random()-.5)*j;
+      if(dim===3) c+=(Math.random()-.5)*j;
+      if(m.disc||m.pt||dim===3){ if(a<0)a=-a; else if(a>1)a=2-a; b-=Math.floor(b); if(dim===3) c-=Math.floor(c); }
+      else { if(a<0)a=-a; else if(a>1)a=2-a; if(b<0)b=-b; else if(b>1)b=2-b; }
+      pa[i]=a; pb[i]=b; pc[i]=c;
+    }
+  }
+
+  // draw
+  pix.fill(BG);
+  if(m.flat && !m.pt && m.dim!==3){
+    if(m.disc){ const R=SZ*.46, CX=SZ/2, CY=SZ/2;
+      for(let i=0;i<N;i++){ const r=pa[i]*R, th=pb[i]*TAU;
+        const sx=(CX+r*Math.cos(th))|0, sy=(CY+r*Math.sin(th))|0;
+        if(sx<0||sx>=SZ||sy<0||sy>=SZ) continue; pix[sy*SZ+sx]=SH[63]; } }
+    else { for(let i=0;i<N;i++) pix[((pb[i]*(SZ-1))|0)*SZ+((pa[i]*(SZ-1))|0)]=SH[63]; }
+  } else {
+    zbuf.fill(1e9);
+    const cy=Math.cos(yaw), sy=Math.sin(yaw), cp=Math.cos(pit), sp=Math.sin(pit);
+    const R=SZ*.40, CX=SZ/2, CY=SZ/2;
+    for(let i=0;i<N;i++){
+      let X,Y,Z;
+      if(m.pt){ const q=m.pt(pa[i],pb[i]); X=q[0];Y=q[1];Z=q[2]; }
+      else { const e=pa[i]*(PI/2), u1=pb[i]*TAU, u2=pc[i]*TAU;
+        const ce=Math.cos(e), se=Math.sin(e);
+        let x1=ce*Math.cos(u1),x2=ce*Math.sin(u1),x3=se*Math.cos(u2),x4=se*Math.sin(u2);
+        const a4=tt*.25, c4=Math.cos(a4), s4=Math.sin(a4);
+        const t1=x1*c4-x4*s4,t4=x1*s4+x4*c4,t2=x2*c4-x3*s4,t3=x2*s4+x3*c4;
+        x1=t1;x2=t2;x3=t3;x4=t4;
+        if(x4>.86) continue; const d=1-x4;
+        X=x1/d*.5; Y=x2/d*.5; Z=x3/d*.5; if(X*X+Y*Y+Z*Z>9) continue; }
+      const rx=X*cy-Z*sy, rz=X*sy+Z*cy, ry=Y*cp-rz*sp, rzz=Y*sp+rz*cp;
+      const sx=(CX+rx*R)|0, sy2=(CY-ry*R)|0;
+      if(sx<0||sx>=SZ||sy2<0||sy2>=SZ) continue;
+      const ix=sy2*SZ+sx;
+      if(rzz<zbuf[ix]){ zbuf[ix]=rzz; let t=(1-rzz)*.5; t=t<0?0:t>1?1:t; pix[ix]=SH[(t*63)|0]; }
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+select('chladni');
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
