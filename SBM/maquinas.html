@@ -199,23 +199,23 @@ const M={
   desc:'A placa que <b>Ernst Chladni</b> tocou com um arco em 1787. As linhas são o conjunto nodal: onde a solução da equação vale zero. Toque uma nota — ou use o tom puro.',
   mode(f){const t=[];for(let a=1;a<=9;a++)for(let b=a+1;b<=9;b++)t.push({f:20*(a*a+b*b),p:{m:a,n:b},lab:a+','+b});
     return pick(t,f);},
-  field(x,y,p){return Math.cos(p.n*PI*x)*Math.cos(p.m*PI*y)-Math.cos(p.m*PI*x)*Math.cos(p.n*PI*y);}},
+  field(x,y,_w,p){return Math.cos(p.n*PI*x)*Math.cos(p.m*PI*y)-Math.cos(p.m*PI*x)*Math.cos(p.n*PI*y);}},
 
  disco:{name:'Placa Circular',sub:'Bessel',needs:['tone','k','s'],dim:2,flat:true,disc:true,
   desc:'Uma placa redonda soa diferente: o fator radial é uma <b>função de Bessel</b>. O conjunto nodal são k diâmetros mais os círculos onde J<sub>k</sub> se anula.',
   mode(f){return {p:{k:+el('kk').value,s:+el('ss').value},lab:'k='+el('kk').value+' s='+el('ss').value};},
-  field(x,y,p){const a=jz(p.k,p.s); return besselJ(p.k,a*Math.min(x,1))*Math.cos(p.k*y*TAU);}},
+  field(x,y,_w,p){const a=jz(p.k,p.s); return besselJ(p.k,a*Math.min(x,1))*Math.cos(p.k*y*TAU);}},
 
  saturno:{name:'Saturno',sub:'k = 6',needs:['tone','s'],dim:2,flat:true,disc:true,
   desc:'O caso <b>k = 6</b>: simetria de ordem seis. É o número de onda que o jato polar de Saturno mantém há mais de quarenta anos. A simetria está <b>verificada em Lean 4</b>.',
   mode(){return {p:{k:6,s:+el('ss').value},lab:'k=6 s='+el('ss').value};},
-  field(x,y,p){const a=jz(6,p.s); return besselJ(6,a*Math.min(x,1))*Math.cos(6*y*TAU);}},
+  field(x,y,_w,p){const a=jz(6,p.s); return besselJ(6,a*Math.min(x,1))*Math.cos(6*y*TAU);}},
 
  esfera:{name:'Esfera',sub:'Y_l^m',needs:['tone','l'],dim:2,flat:false,
   desc:'Uma casca esférica vibrando. O conjunto nodal são <b>ℓ−|m| paralelos</b> e <b>|m| meridianos</b> — os mesmos harmônicos que descrevem os modos de uma estrela. Arraste para girar.',
   mode(){const l=+el('ll').value, m=Math.min(+el('mm').value,l);
     return {p:{l,m},lab:'ℓ='+l+' m='+m};},
-  field(u,v,p){return legendre(p.l,p.m,Math.cos(u*PI))*Math.cos(p.m*v*TAU);},
+  field(u,v,_w,p){return legendre(p.l,p.m,Math.cos(u*PI))*Math.cos(p.m*v*TAU);},
   pt(u,v){const th=u*PI,ph=v*TAU,st=Math.sin(th);
     return [st*Math.cos(ph),st*Math.sin(ph),Math.cos(th)];}},
 
@@ -223,7 +223,7 @@ const M={
   desc:'Em 2004 a magnetar <b>SGR 1806−20</b> fraturou a crosta e vibrou. Telescópios de raios X registraram 18, 30, 93 e 150 Hz. Cada frequência é um ℓ: <b>93 Hz → ℓ=10</b>. Isto é a forma real.',
   presets:[[18,2],[30,3],[93,10],[150,16]],
   mode(){const p=M.estrela.presets[M.estrela.i||0]; return {p:{l:p[1],m:4,hz:p[0]},lab:p[0]+' Hz · ℓ='+p[1]};},
-  field(u,v,p){return legendre(p.l,Math.min(p.m,p.l),Math.cos(u*PI))*Math.cos(Math.min(p.m,p.l)*v*TAU);},
+  field(u,v,_w,p){return legendre(p.l,Math.min(p.m,p.l),Math.cos(u*PI))*Math.cos(Math.min(p.m,p.l)*v*TAU);},
   pt(u,v){return M.esfera.pt(u,v);}},
 
  hiper:{name:'Hiperesfera',sub:'S³ · Hopf',needs:['tone'],dim:3,flat:false,
