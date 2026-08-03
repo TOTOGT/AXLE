@@ -1,0 +1,45 @@
+AULA RAG reference implementation; AXLE-RAG toolkit; DPS survey; Lean estimator (UNVERIFIED)
+
+Branch note: committed on aula/rag-course (current), not main — the course
+material belongs here and the working tree had 10 untracked paths left
+untouched. Merge to main when ready.
+
+AULA/rag-course/site/reference-implementation.html
+  AXLE-RAG as the course's second worked example, mapped module-by-module onto
+  Weeks 2/3/4/5/6/8. Uses the real r* drift finding (one constant at four
+  values across four files) as the Week 5 evaluation case study, and the
+  correction-notice false positive as the lesson that every eval harness has a
+  class like it. States the boundary plainly: the audit finds contradiction,
+  never falsehood.
+
+AULA/index.html    new AI Engineering tier (course, syllabus, reference impl);
+                   nav + footer links.
+AULA/job-nyc.html  CTS-1 bilingual EN/PT civil-service lesson, FY2027 facts.
+
+research/axle-rag/  the toolkit, pure stdlib, MIT:
+  ingest.py   claims (not paragraphs) with tags, DOIs, constants, trust tier
+  retrieve.py BM25 + trust weighting + a refusal contract for the generator
+  audit.py    C1-C7 defect sweep; --handoff writes shared session state
+  flow.py     dependency graph; --change const:r* -> everything now stale
+  handoff.py  empty-tank protocol; 'check' exits 1 while a session is open
+
+research/dps/  Duplicate Provisioning Survey (DPS-1), pre-registration draft.
+  Measures the number WP-36 needs. Behaviour asked before attribution;
+  competing explanations offered as equals; a revealed-preference tradeoff that
+  is costly to answer strategically. Reporting rule fixed in advance: publish
+  both estimates, lead with the lower. power.py: n=29 for "more than a
+  quarter"; n=48 to show the tradeoff is not a coin flip; n~150 suffices.
+  Frame bias, not n, is the binding constraint.
+
+DPSEstimator.lean  *** UNVERIFIED — written without a toolchain, never
+  compiled. No document may call it verified until lean-verify.yml is green. ***
+  Formalizes the estimator, not the empirics: transfer_headline_conservative
+  shows min(stated, revealed) is bounded above by both candidates. The kernel
+  cannot say the number is true; it can say the procedure cannot inflate it.
+
+.github/workflows/
+  lean-verify.yml   build + #print axioms on all six theorems; FAILS on sorryAx
+                    (compiling != proved); writes a VERIFICATION.md receipt;
+                    weekly cron catches Mathlib drift.
+  corpus-audit.yml  daily sweep, commits HANDOFF.md, issues on HIGH, red badge
+  work-order.yml    on demand: what does changing X break?

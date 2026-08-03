@@ -1,0 +1,156 @@
+name: corpus audit
+
+# Keeps tabs on the whole Principia corpus.
+#  · every morning, and on every push to this repo
+#  · re-ingests the corpus repos, runs the C1–C7 sweep
+#  · commits HANDOFF.md so ANY session/account reads the same current state
+#  · opens (or updates) one issue when a HIGH finding appears
+#  · fails the run on HIGH, so the badge goes red and you can see it from outside
+
+on:
+  schedule:
+    - cron: "0 11 * * *"        # 11:00 UTC ≈ 06:00 Newark (EDT). GH may delay ~15 min.
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: "Minimum severity to report"
+        type: choice
+        options: [HIGH, MED, LOW]
+        default: MED
+
+permissions:
+  contents: write        # commit HANDOFF.md / state
+  issues: write          # open the alert issue
+
+concurrency:
+  group: corpus-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout monitor repo
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # ---- corpus sources -------------------------------------------------
+      # Public repos: no token needed. For private ones set CORPUS_TOKEN and
+      # swap the URL for https://x-access-token:${{ secrets.CORPUS_TOKEN }}@...
+      - name: Fetch corpus
+        run: |
+          set -euo pipefail
+          mkdir -p corpus
+          clone () {  # $1 = repo, $2 = dest
+            echo "::group::clone $1"
+            git clone --depth 1 --quiet "https://github.com/$1.git" "corpus/$2" \
+              || echo "WARN: could not clone $1 (skipping)"
+            echo "::endgroup::"
+          }
+          clone TOTOGT/AXLE     axle
+          clone TOTOGT/GTCT     gtct
+          clone TOTOGT/geometry geometry
+          echo "files fetched: $(find corpus -type f \
+            \( -name '*.html' -o -name '*.md' -o -name '*.tex' -o -name '*.lean' \) | wc -l)"
+
+      - name: Ingest
+        run: |
+          python3 ingest.py corpus -o chunks.jsonl | tee ingest.log
+
+      - name: Audit
+        id: audit
+        continue-on-error: true          # we want the report even when it fails
+        run: |
+          SEV="${{ github.event.inputs.severity || 'MED' }}"
+          python3 audit.py chunks.jsonl --json findings.json
+          python3 audit.py chunks.jsonl --severity "$SEV" | tee audit.txt
+          HIGH=$(python3 -c "import json;print(sum(1 for f in json.load(open('findings.json')) if f['severity']=='HIGH'))")
+          echo "high=$HIGH" >> "$GITHUB_OUTPUT"
+          echo "### Corpus audit — $HIGH high-severity finding(s)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          head -60 audit.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Regenerate handoff brief
+        run: |
+          python3 audit.py chunks.jsonl --handoff > HANDOFF.md
+          {
+            echo ""
+            echo "---"
+            echo "_Generated $(date -u '+%Y-%m-%d %H:%M UTC') by corpus-audit"
+            echo "(run ${{ github.run_number }}). Do not edit by hand — edit the corpus._"
+          } >> HANDOFF.md
+
+      - name: Dependency graph + constant ledger
+        run: |
+          python3 flow.py chunks.jsonl --graph graph.json
+          python3 flow.py chunks.jsonl --roots > ROOTS.md || true
+
+      - name: Commit state
+        run: |
+          set -euo pipefail
+          git config user.name  "axle-audit[bot]"
+          git config user.email "actions@github.com"
+          git add HANDOFF.md ROOTS.md findings.json graph.json
+          if git diff --cached --quiet; then
+            echo "no state change"
+          else
+            git commit -m "corpus audit $(date -u '+%Y-%m-%d'): refresh handoff + findings"
+            git push
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: corpus-audit-${{ github.run_number }}
+          path: |
+            chunks.jsonl
+            findings.json
+            graph.json
+            audit.txt
+            HANDOFF.md
+          retention-days: 30
+
+      # ---- alerting -------------------------------------------------------
+      - name: Open / update alert issue
+        if: steps.audit.outputs.high != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TITLE="Corpus audit: HIGH findings"
+          BODY=$(mktemp)
+          {
+            echo "**${{ steps.audit.outputs.high }} high-severity finding(s)** as of $(date -u '+%Y-%m-%d %H:%M UTC')."
+            echo ""
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo ""
+            echo '```'
+            grep -A3 '^\[HIGH' audit.txt | head -60 || true
+            echo '```'
+            echo ""
+            echo "Read \`HANDOFF.md\` before editing anything. To see what a fix propagates to:"
+            echo '```bash'
+            echo 'python3 flow.py chunks.jsonl --change "const:r*" --order'
+            echo '```'
+          } > "$BODY"
+
+          EXISTING=$(gh issue list --state open --search "$TITLE in:title" --json number --jq '.[0].number' || echo "")
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file "$BODY"
+            echo "commented on #$EXISTING"
+          else
+            gh issue create --title "$TITLE" --body-file "$BODY" --label audit
+            echo "issue created"
+          fi
+
+      - name: Fail on HIGH
+        if: steps.audit.outputs.high != '0'
+        run: |
+          echo "::error::${{ steps.audit.outputs.high }} high-severity corpus finding(s) — see HANDOFF.md"
+          exit 1

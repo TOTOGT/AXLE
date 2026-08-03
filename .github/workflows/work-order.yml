@@ -1,0 +1,61 @@
+name: work order
+
+# On demand: "I am about to change X — what else must change?"
+# Produces the invalidation closure as a checklist you can paste into any
+# session (or hand to another account) so the repair is complete the first time.
+
+on:
+  workflow_dispatch:
+    inputs:
+      change:
+        description: 'Root node, e.g. const:r*  ·  lean:Chain_updated.lean  ·  doi:10.5281/zenodo.21708678'
+        required: true
+        default: "const:r*"
+      open_issue:
+        description: "Also open an issue with the work order"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  order:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch corpus
+        run: |
+          set -euo pipefail
+          mkdir -p corpus
+          for r in TOTOGT/AXLE TOTOGT/GTCT TOTOGT/geometry; do
+            git clone --depth 1 --quiet "https://github.com/$r.git" "corpus/$(basename $r)" \
+              || echo "WARN: skip $r"
+          done
+
+      - name: Build closure
+        run: |
+          python3 ingest.py corpus -o chunks.jsonl
+          python3 flow.py chunks.jsonl --change "${{ github.event.inputs.change }}" --order \
+            | tee WORK_ORDER.md
+          cat WORK_ORDER.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: work-order
+          path: WORK_ORDER.md
+
+      - name: Open issue
+        if: ${{ github.event.inputs.open_issue == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Work order: ${{ github.event.inputs.change }}" \
+            --body-file WORK_ORDER.md \
+            --label work-order

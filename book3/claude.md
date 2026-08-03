@@ -7,7 +7,7 @@
 
 ## WHO
 
-Pablo Nogueira Grossi — founder G6 LLC (Newark NJ), Academic Coordinator UCEDA School of English (Elizabeth NJ).
+Pablo Nogueira Grossi — founder G6 LLC (Newark NJ), formerly Academic Coordinator, UCEDA School of English (Elizabeth NJ; the school closed July 2026).
 ORCID: 0009-0000-6496-2186. Physical limitations make typing difficult — prefer clean deliverable blocks, minimal back-and-forth.
 Email: g6llc@proton.me / pg6llc@gmail.com. EIN: 33-2880433.
 
