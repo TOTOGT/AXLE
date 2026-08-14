@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G6 LLC — Formal Verification for Scientific Models</title>
+<meta name="description" content="G6 LLC is an independent research company in Newark, New Jersey. We build machine-verified geometric models of threshold and switching behaviour in biological and physical systems, and formally verify scientific results in Lean 4.">
+<meta property="og:title" content="G6 LLC — Formal Verification for Scientific Models">
+<meta property="og:description" content="Machine-verified geometric models of threshold behaviour. Lean 4 formal verification. Newark, New Jersey.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12141a;--navy:#1a2744;--gold:#c9a84c;--paper:#fbfaf7;--rule:#dedbd2;--dim:#5c5f68;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'Libre Caslon Text',Georgia,serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:940px;margin:0 auto;padding:0 30px}
+.sans{font-family:'IBM Plex Sans',-apple-system,sans-serif}
+.kick{font-family:'IBM Plex Sans',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+
+/* header */
+header{border-bottom:1px solid var(--rule);padding:20px 0;background:#fff;position:sticky;top:0;z-index:10}
+.hrow{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px}
+.logo{font-family:'Libre Caslon Display',Georgia,serif;font-size:25px;letter-spacing:.01em}
+.logo span{color:var(--gold)}
+nav{font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;display:flex;gap:22px}
+nav a{text-decoration:none;color:var(--dim)}
+nav a:hover{color:var(--navy)}
+
+/* hero */
+.hero{padding:74px 0 60px;border-bottom:1px solid var(--rule)}
+h1{font-family:'Libre Caslon Display',Georgia,serif;font-weight:400;font-size:clamp(30px,4.6vw,50px);line-height:1.12;max-width:20ch}
+h1 em{font-style:italic;color:var(--navy)}
+.sub{font-size:17px;color:#3f434d;max-width:62ch;margin-top:20px}
+.rule{width:56px;height:2px;background:var(--gold);margin:26px 0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:38px}
+.fact{background:#fff;padding:15px 17px}
+.fact b{display:block;font-family:'Libre Caslon Display',serif;font-size:23px;line-height:1.15;color:var(--navy)}
+.fact span{font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;color:var(--dim);letter-spacing:.02em}
+
+section{padding:58px 0;border-bottom:1px solid var(--rule)}
+h2{font-family:'IBM Plex Sans',sans-serif;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:22px}
+h3{font-family:'Libre Caslon Display',Georgia,serif;font-weight:400;font-size:20px;margin-bottom:7px}
+p{max-width:66ch;margin-bottom:14px;color:#33373f}
+.lede{font-size:18.5px;color:#23262d;max-width:64ch}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:34px;margin-top:8px}
+.cols p{font-size:14.5px;margin-bottom:9px}
+
+.ev{border-left:2px solid var(--navy);padding:3px 0 3px 20px;margin:22px 0;max-width:70ch}
+.ev p{font-style:italic;color:#3f434d;margin:0}
+
+ul{list-style:none;max-width:70ch}
+li{padding:11px 0;border-bottom:1px solid var(--rule);font-size:14.5px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:baseline}
+li:last-child{border-bottom:0}
+li .d{font-family:'IBM Plex Sans',sans-serif;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--gold);white-space:nowrap;padding-top:3px}
+li a{color:var(--navy)}
+
+.contact{display:grid;grid-template-columns:1fr auto;gap:34px;align-items:start}
+@media(max-width:660px){.contact{grid-template-columns:1fr}}
+.card{border:1px solid var(--rule);background:#fff;padding:20px 22px;font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;line-height:2;min-width:262px}
+.card b{font-family:'Libre Caslon Display',serif;font-size:17px;font-weight:400;display:block;margin-bottom:6px}
+.card a{color:var(--navy);text-decoration:none;border-bottom:1px solid #cfcbbe}
+
+footer{padding:32px 0 60px;font-family:'IBM Plex Sans',sans-serif;font-size:11.5px;color:var(--dim);line-height:1.9}
+footer a{color:var(--dim)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hrow">
+    <div class="logo">G<span>6</span> LLC</div>
+    <nav>
+      <a href="#what">What we do</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#research">Research</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kick">Newark, New Jersey · Independent research company</div>
+    <h1 style="margin-top:16px;">Scientific models that can be <em>checked</em>, not just fitted.</h1>
+    <div class="rule"></div>
+    <p class="sub">G6 LLC builds geometric models of threshold and switching behaviour in biological and physical systems — and proves them correct with a machine. Where conventional modelling fits parameters to data, our results are verified in Lean 4 against a proof kernel, so a reviewer can confirm them independently rather than take our word.</p>
+
+    <div class="facts">
+      <div class="fact"><b>Lean 4</b><span>Formal verification, Mathlib4</span></div>
+      <div class="fact"><b>3,003 / 3,003</b><span>Independent kernel recompilation, zero unproved steps</span></div>
+      <div class="fact"><b>DOI-archived</b><span>Every result publicly deposited and citable</span></div>
+      <div class="fact"><b>Registered SBC</b><span>Active SAM · UEI · CAGE · US-owned</span></div>
+    </div>
+  </div>
+</div>
+
+<section id="what">
+  <div class="wrap">
+    <h2>What we do</h2>
+    <p class="lede">Three capabilities, all built on the same discipline: a claim is not finished until a machine has checked it.</p>
+
+    <div class="cols" style="margin-top:26px;">
+      <div>
+        <h3>Threshold modelling</h3>
+        <p>Many systems — a molecular switch flipping, a surface saturating, a material yielding — turn on a critical value that is normally found by trial. We derive those thresholds from geometry, with no fitted parameters, and state in advance what result would prove us wrong.</p>
+      </div>
+      <div>
+        <h3>Formal verification</h3>
+        <p>We convert results proved on paper into machine-checked theorems in Lean 4. This is the discipline used for avionics and cryptographic code, applied to scientific models. The output is a file anyone can compile.</p>
+      </div>
+      <div>
+        <h3>Reproducible numerics</h3>
+        <p>Every numerical claim we publish ships with the script that produced it, in the same deposit, with stated tolerances. No figure exists in our work that a reader cannot regenerate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="evidence">
+  <div class="wrap">
+    <h2>Evidence, not assertion</h2>
+    <p class="lede">Capability claims are cheap. These two are checkable by anyone, in an afternoon, on their own machine.</p>
+
+    <div class="ev">
+      <p>We independently recompiled a recently published, field-defining mathematical disproof from scratch against the Lean kernel — 3,003 of 3,003 verification jobs passing, zero unproved steps. We claim no part of that result. The point is that the check was run, and can be run again.</p>
+    </div>
+
+    <div class="ev">
+      <p>We then audited our own published corpus for claims of machine verification, found two that did not hold, and published the failures on the front page of our journal with the files named.</p>
+    </div>
+
+    <p>The second matters more than the first. Work whose value is its auditability is only worth buying from a group that audits itself.</p>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <h2>Research</h2>
+    <p>Our published work applies one geometric framework across biological and physical domains. All of it is open-access, permanently archived, and citable.</p>
+    <ul style="margin-top:14px;">
+      <li><span class="d">Biology</span><span>Contact-geometric operator framework for RNA conformational switching, next-generation sequencing surface amplification, and microtubule curvature dynamics — with falsifiable predictions and stated kill conditions. <a href="https://doi.org/10.5281/zenodo.20560849">doi:10.5281/zenodo.20560849</a></span></li>
+      <li><span class="d">Foundations</span><span>Contact-geometric theory of generative transitions: mathematical foundations and contact realization. <a href="https://doi.org/10.5281/zenodo.20682934">doi:10.5281/zenodo.20682934</a></span></li>
+      <li><span class="d">Transfer</span><span>Topological orthogenesis and the universality class of generative transitions — cross-domain transfer and falsifiability. <a href="https://doi.org/10.5281/zenodo.20849638">doi:10.5281/zenodo.20849638</a></span></li>
+      <li><span class="d">Verified</span><span>Self-regulation as generative transitions — eighteen machine-verified theorems. <a href="https://doi.org/10.5281/zenodo.20221723">doi:10.5281/zenodo.20221723</a></span></li>
+      <li><span class="d">Software</span><span><b>AXLE</b> — Algebraic eXpression Language for Evaluation. Lean 4 / Mathlib4 verification environment, public source. <a href="https://github.com/TOTOGT/AXLE">github.com/TOTOGT/AXLE</a></span></li>
+      <li><span class="d">Full record</span><span>Complete deposit record, all versions. <a href="https://zenodo.org/communities/principia-orthogona">Zenodo · Principia Orthogona</a></span></li>
+      <li><span class="d">Journal</span><span><i>Imaginary Origin</i> — our weekly research journal, including published corrections. <a href="https://totogt.github.io/AXLE/Journal/">Read current issue</a></span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <div class="contact">
+      <div>
+        <p class="lede">We work with laboratories, platform companies and research groups who need a model that can be defended, not only one that fits.</p>
+        <p style="margin-top:14px;">We are currently seeking a nucleic-acid bench partner to test three stated predictions in RNA switching and DNA surface amplification. Protocols and falsification criteria are published. Correspondence in English or Portuguese.</p>
+      </div>
+      <div class="card">
+        <b>G6 LLC</b>
+        Newark, New Jersey 07104<br>
+        United States<br>
+        <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br>
+        +1 (646) 342-3751<br>
+        <span style="font-size:11.5px;color:#5c5f68;">Principal: Pablo Nogueira Grossi<br>
+        ORCID <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    G6 LLC · Newark, New Jersey, USA · A registered small business concern, wholly owned and controlled by a U.S. citizen.<br>
+    Research published open-access under CC BY 4.0 · Series ISBN 979-8-9954416-6-3 · <a href="https://github.com/TOTOGT/AXLE">Source</a> · <a href="https://zenodo.org/communities/principia-orthogona">Deposits</a><br>
+    © 2026 G6 LLC. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>
