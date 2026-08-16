@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch Gal · The Galois Group of the Ladder · Principia Orthogona</title>
+<meta name="description" content="The n-bonacci ladder has a symmetry group. What is proved, what is assumed, what is open — and 1,468 degree-24 polynomials checked by someone else's verifier.">
+<style>
+  :root {
+    --navy:  #1a2744;
+    --gold:  #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    --deep:  #0f1a2e;
+    --muted: #8899aa;
+    --op-c:  #f472b6;
+    --op-k:  #60a5fa;
+    --op-f:  #fb923c;
+    --op-u:  #4ade80;
+    --op-g:  #c9a84c;
+    --ok:    #4a7c59;
+    --open:  #b8860b;
+    --warn:  #a0522d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: var(--cream);
+         color: var(--navy); line-height: 1.75; }
+  .nav { display:flex; justify-content:space-between; align-items:center;
+         padding:.6rem 2rem; background:var(--navy); color:var(--gold);
+         font-family:'Courier New',monospace; font-size:.72rem; letter-spacing:.12em; }
+  .nav a { color: var(--gold); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .hero { background: linear-gradient(160deg,var(--deep),var(--navy));
+          color: var(--cream); padding: 3.4rem 2rem 2.8rem; text-align:center; }
+  .eyebrow { font-family:'Courier New',monospace; font-size:.68rem; letter-spacing:.22em;
+             text-transform:uppercase; color:var(--gold); margin-bottom:1.1rem; }
+  .op-chain { font-family:'Courier New',monospace; font-size:1.05rem; letter-spacing:.1em;
+              margin-bottom:1.4rem; }
+  .op { font-weight:bold; }
+  .op-c{color:var(--op-c)} .op-k{color:var(--op-k)} .op-f{color:var(--op-f)}
+  .op-u{color:var(--op-u)} .op-sep{color:var(--muted)}
+  .op-g-active { color:var(--gold); border:1px solid var(--gold); padding:.05rem .45rem;
+                 border-radius:3px; }
+  .symbol-block { margin: .5rem 0 1rem; }
+  .symbol-glyph { font-size:3.2rem; color:var(--gold); display:block; line-height:1; }
+  .symbol-title { font-size:1.5rem; letter-spacing:.04em; margin-top:.5rem; }
+  .value { font-family:'Courier New',monospace; font-size:.9rem; color:var(--gold);
+           letter-spacing:.08em; }
+  .gold-rule { width:70px; height:2px; background:var(--gold); margin:1.2rem auto; }
+  .hero-desc { max-width:64ch; margin:0 auto; font-size:1.02rem; color:#dfe6ef; }
+  .container { max-width: 860px; margin: 0 auto; padding: 2.6rem 1.6rem 4rem; }
+  h2 { font-size:1.22rem; font-weight:normal; color:var(--navy); margin:2.6rem 0 1rem;
+       padding-bottom:.5rem; border-bottom:2px solid var(--gold); letter-spacing:.01em; }
+  h3 { font-size:1.02rem; font-weight:normal; margin:1.7rem 0 .6rem; color:var(--navy); }
+  p { margin-bottom:1rem; }
+  code { font-family:'Courier New',monospace; font-size:.88em;
+         background:var(--smoke); padding:.1em .35em; border-radius:3px; }
+  .eq { background:var(--smoke); border-left:3px solid var(--gold); padding:1rem 1.2rem;
+        margin:1.3rem 0; font-family:'Courier New',monospace; font-size:.86rem;
+        overflow-x:auto; line-height:1.6; }
+  .theorem { border:1px solid var(--gold); border-radius:6px; padding:1.1rem 1.3rem;
+             margin:1.5rem 0; background:rgba(201,168,76,.07); }
+  .theorem .lbl { font-family:'Courier New',monospace; font-size:.66rem; letter-spacing:.18em;
+                  text-transform:uppercase; color:var(--gold); display:block; margin-bottom:.5rem; }
+  .correction { border:1px solid var(--warn); border-radius:6px; padding:1.1rem 1.3rem;
+                margin:1.5rem 0; background:rgba(160,82,45,.06); }
+  .correction .lbl { font-family:'Courier New',monospace; font-size:.66rem; letter-spacing:.18em;
+                     text-transform:uppercase; color:var(--warn); display:block; margin-bottom:.5rem; }
+  table { width:100%; border-collapse:collapse; margin:1.3rem 0; font-size:.88rem; }
+  th { text-align:left; font-family:'Courier New',monospace; font-size:.66rem;
+       letter-spacing:.12em; text-transform:uppercase; color:var(--navy);
+       border-bottom:2px solid var(--gold); padding:.5rem .6rem; font-weight:normal; }
+  td { padding:.5rem .6rem; border-bottom:1px solid #ded8cc; vertical-align:top; }
+  td.num { font-family:'Courier New',monospace; white-space:nowrap; }
+  .badge { font-family:'Courier New',monospace; font-size:.62rem; letter-spacing:.08em;
+           padding:.15rem .45rem; border-radius:2px; white-space:nowrap; display:inline-block; }
+  .b-ok   { background:rgba(74,124,89,.15);  color:var(--ok);   border:1px solid rgba(74,124,89,.45); }
+  .b-open { background:rgba(184,134,11,.13); color:var(--open); border:1px solid rgba(184,134,11,.45); }
+  .b-ass  { background:rgba(136,153,170,.15);color:#5a6b7c;     border:1px solid rgba(136,153,170,.5); }
+  .pull { border-left:3px solid var(--gold); padding:.4rem 0 .4rem 1.1rem; margin:1.5rem 0;
+          font-size:1.03rem; font-style:italic; color:#3a4a63; }
+  .pull cite { display:block; font-style:normal; font-size:.78rem;
+               font-family:'Courier New',monospace; color:var(--muted); margin-top:.4rem; }
+  .fine { font-size:.85rem; color:#5a6b7c; }
+  .chapend { display:flex; justify-content:space-between; gap:1rem; margin-top:3rem;
+             padding-top:1.4rem; border-top:1px solid #ded8cc;
+             font-family:'Courier New',monospace; font-size:.74rem; }
+  .chapend a { color:var(--navy); text-decoration:none; }
+  .chapend a:hover { color:var(--gold); }
+  footer { background:var(--navy); color:#c3ccd8; padding:2rem; font-size:.78rem;
+           text-align:center; line-height:1.9; }
+  footer a { color:var(--gold); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="chapters.html">← Chapter Map</a>
+  <span>Ch Gal · Galois · The Recurrence Ladder</span>
+  <a href="chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-eta">Ch η: Tribonacci →</a>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Principia Orthogona · Recurrence Ladder</div>
+
+  <div class="op-chain">
+    <span class="op op-c">π</span><span class="op-sep">·</span>
+    <span class="op op-k">φ</span><span class="op-sep">·</span>
+    <span class="op op-f">μ</span><span class="op-sep">·</span>
+    <span class="op op-u">η</span><span class="op-sep">·</span>
+    <span class="op op-c">Δ</span><span class="op-sep">·</span>
+    <span class="op op-k">Σ</span><span class="op-sep">·</span>
+    <span class="op op-f">Ω</span>
+    <span class="op-sep" style="margin:0 .6rem">→</span>
+    <span class="op op-g-active">Gal</span>
+  </div>
+
+  <div class="symbol-block">
+    <span class="symbol-glyph">Gal</span>
+    <div class="symbol-title">Chapter Gal · The Galois Group of the Ladder</div>
+  </div>
+
+  <div class="value">p_n(X) = X^n − (X^(n−1) + ⋯ + X + 1) · φ → η → Δ → Σ → Ω → τ = 2</div>
+  <div class="gold-rule"></div>
+
+  <p class="hero-desc">
+    Every other chapter on the ladder studies one rung — one constant, one fixed point of one
+    recurrence. This chapter asks what the rungs have in common: the ladder is a single family
+    of polynomials, and a family of polynomials has a symmetry group. What that group is, we
+    can prove for one case and not the others. This chapter says exactly which, and why.
+  </p>
+</header>
+
+<main class="container">
+
+<p class="fine" style="margin-bottom:1.6rem">Naming note: this chapter is <b>Ch Gal</b>, not &ldquo;Ch &Gamma;&rdquo;. &Gamma; is already the series&rsquo; limit cycle &mdash; the closed orbit at r = 1 in the contact normal form, used across Vol I, the PolyLaminin chapter and the recurrence-ladder page. A second meaning would be a name collision of exactly the kind the repo ledger records elsewhere. The mnemonic-letter convention (Ch A &middot; Autophagy, Ch W &middot; Wigner, Ch T &middot; Tubulin) is followed instead.</p>
+
+<h2>§ 1 · The Ladder Is One Polynomial</h2>
+
+<p>
+  Seven chapters on this ladder name seven constants. φ = 1.618 is the root of
+  <code>x² = x + 1</code>. η ≈ 1.8393 is the root of <code>x³ = x² + x + 1</code>. Δ ≈ 1.9276
+  answers the four-term recurrence, Σ ≈ 1.9659 the five-term, and the sequence climbs toward
+  τ = 2 without ever arriving.
+</p>
+
+<p>
+  Those are not seven separate facts. They are one polynomial evaluated at seven values of a
+  parameter:
+</p>
+
+<div class="eq">
+p_n(X)  =  X^n  −  ( X^(n−1) + X^(n−2) + ⋯ + X + 1 )        n ≥ 2
+
+n = 2 → φ    n = 3 → η    n = 4 → Δ    n = 5 → Σ    n = 6 → Ω    n → ∞ → τ = 2
+</div>
+
+<p>
+  The dominant real root of <code>p_n</code> is the n-bonacci constant. That the roots increase
+  with n and converge to 2 is the ladder's shape; it is why τ = 2 is a limit and not a rung.
+  Multiplying by <code>(X − 1)</code> telescopes the sum and gives a trinomial,
+  <code>X^(n+1) − 2X^n + 1</code>, which is what lets the trinomial literature speak to the
+  ladder at all — with a caveat that turns out to be load-bearing, and is the subject of §&nbsp;3.
+</p>
+
+<h2>§ 2 · From a Constant to a Symmetry</h2>
+
+<p>
+  A number is a weak object. The interesting question is not <em>what is η</em> but <em>what
+  else is η</em> — which other numbers are indistinguishable from it by any polynomial identity
+  with rational coefficients. That set is η's conjugates, and the group permuting them is the
+  Galois group of <code>p_n</code>.
+</p>
+
+<p>
+  The group is the ladder's real invariant. Two rungs with the same group are structurally the
+  same rung wearing a different number. When the group is the full symmetric group
+  <code>S_n</code> — every permutation of the roots is legitimate — the rung has no hidden
+  structure: no subfield, no partial symmetry, nothing that survives to constrain the recurrence.
+  When the group is smaller, something does.
+</p>
+
+<div class="pull">
+  A degree-n polynomial with Galois group S_n is one where nothing is special about any root.
+  Every smaller group is a statement that something is.
+</div>
+
+<p>
+  For the ladder the expected answer is <code>S_n</code>, and the machinery to prove it is
+  standard in outline: irreducibility gives transitivity, complex conjugation supplies a
+  transposition, and a transitive group with a transposition is <code>S_n</code> — provided it
+  is also primitive. That proviso is where the chapter stops being a summary and starts being
+  an open problem.
+</p>
+
+<h2>§ 3 · The Obstruction, Named</h2>
+
+<p>
+  For <b>prime</b> degree the proviso is free: a transitive subgroup of <code>S_p</code>
+  containing a transposition is all of <code>S_p</code>, and surjectivity closes immediately.
+  <b>Odd composite n defeats that route.</b> The chain becomes irreducible ⇒ transitive, then
+  transitive + <b>primitive</b> + a transposition ⇒ <code>S_n</code> by Jordan. Primitivity is
+  the load-bearing step, and it is not free.
+</p>
+
+<div class="theorem">
+  <span class="lbl">Lean 4 status · AXLE</span>
+  <table>
+    <thead><tr><th>Result</th><th>Status</th><th>Evidence</th></tr></thead>
+    <tbody>
+    <tr><td><code>nBonacci_action_injective</code></td><td><span class="badge b-ok">VERIFIED</span></td>
+        <td>Mathlib <code>galActionHom_injective</code>, applied directly. No <code>sorry</code>.</td></tr>
+    <tr><td><code>nBonacci_action_bijective</code></td><td><span class="badge b-open">OPEN</span></td>
+        <td><code>sorry</code>. Surjectivity.</td></tr>
+    <tr><td><code>Theorem_Galois</code></td><td><span class="badge b-open">OPEN</span></td>
+        <td>Compiles, derives from the line above, inherits its <code>sorry</code>.</td></tr>
+    <tr><td>Irreducibility of <code>p_n</code></td><td><span class="badge b-ass">ASSUMED</span></td>
+        <td>Carried as hypothesis <code>hirr</code>, not discharged.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+  The primitivity results for trinomials are Movahhedi–Salinier (1996) and
+  Cohen–Movahhedi–Salinier (1997, 1999), and <b>they are not in Mathlib</b>. Formalizing them is
+  a prerequisite; no tactic search closes this <code>sorry</code> without them.
+</p>
+
+<p>
+  <b>A second gap sits in front of that one.</b> Those theorems concern <em>irreducible</em>
+  trinomials, and their permutation action is on the full root set of the trinomial. Here
+  <code>X^(n+1) − 2X^n + 1</code> factors as <code>(X − 1) · p_n(X)</code>, so it is reducible
+  by construction: the action on its n+1 roots fixes 1 and is not transitive. The hypotheses do
+  not apply as stated, and the transfer from the trinomial back to <code>p_n</code> is a
+  reduction argument that has not been written. Citing the literature does not discharge it.
+</p>
+
+<p class="fine">
+  No theorem number from any of those papers is cited on this page. The PDFs have not been read
+  against this repository, and a numbered result quoted from working knowledge is a claim rather
+  than a citation. This is not fastidiousness: a replacement reference proposed for this very
+  paragraph — complete with title, journal, volume, pages and DOI — turned out on checking to
+  describe <b>no such article</b>. Only the authors and the year were right.
+</p>
+
+<h2>§ 4 · Building Fields to Order</h2>
+
+<p>
+  The ladder poses the group question in one direction: here is a polynomial, what is its group?
+  The <b>inverse Galois problem</b> poses it in the other: here is a group, produce a polynomial.
+  In 2026 the SAIR foundation ran that problem as an open competition at degree 24 — 25,000
+  transitive groups <code>24T1</code>–<code>24T25000</code>, each with several possible
+  signatures, most of the map blank. This chapter's computational half is what that produced.
+</p>
+
+<h3>Composita — building imprimitively on purpose</h3>
+
+<p>
+  Since 24 = 2·12 = 3·8 = 4·6 = 2·2·6 = 2·3·4, a field can be assembled from smaller ones. The
+  compositum of two linearly disjoint subfields contains both, so its group is
+  <b>imprimitive by construction</b> — the opposite of the ladder's expected <code>S_n</code>,
+  and precisely the region a random search never reaches, because random polynomials land in
+  <code>S24</code> or <code>A24</code>. The minimal polynomial of a sum of generators comes from
+  Newton power sums, exactly:
+</p>
+
+<div class="eq">
+s_k  =  Σ_m  C(k,m) · p_m(f) · p_(k−m)(g)          deg f · deg g = 24
+</div>
+
+<h3>Towers — reaching what composita cannot</h3>
+
+<p>
+  A tower is not a compositum, and the difference is not cosmetic. Let <code>K12</code> be
+  <b>totally real</b> of degree 12 and let α ∈ <code>K12</code> be negative at exactly j of its
+  twelve real places. In <code>K24 = K12(√α)</code> the 12−j positive places each split into two
+  real places and the j negative ones each contribute a complex conjugate pair:
+</p>
+
+<div class="eq">
+signature ( 2(12−j), j )        r = 24 − 2j        j = 0 … 12
+</div>
+
+<p>
+  Choosing α is exact rather than a search. If θ generates <code>K12</code> with real conjugates
+  θ₁ &lt; ⋯ &lt; θ₁₂, then <code>mθ − k</code> is negative precisely where θᵢ &lt; k/m, so placing
+  k/m in the gap (θⱼ, θⱼ₊₁) gives exactly j negative places. The minimal polynomial is
+  <code>g_α(x²)</code> where <code>g_α = m¹²·g((x+k)/m)</code> — integer arithmetic, no
+  resultants, no power sums. And irreducibility is free: <code>K12</code> totally real means
+  every square in it is non-negative at every real place, α is negative somewhere, so α is not a
+  square, so <code>[K12(√α):K12] = 2</code> and <code>g_α(x²)</code> is irreducible. No
+  factorization is performed or needed.
+</p>
+
+<h2>§ 5 · The Signature Ladder, and a Parity Law</h2>
+
+<p>
+  The tower is a one-parameter machine for the signature axis: fix <code>K12</code>, slide k/m up
+  the conjugate ladder, and j = 0…12 delivers r = 24, 22, 20, …, 0 from a single field. Three of
+  those signatures are unreachable by any compositum.
+</p>
+
+<div class="theorem">
+  <span class="lbl">Lemma · compositum-unreachable signatures</span>
+  <p style="margin-bottom:.6rem">
+    Across a generic compositum the signature multiplies: r = ∏ rᵢ with rᵢ ≤ dᵢ and
+    rᵢ ≡ dᵢ (mod 2). Enumerating the shapes 2·12, 3·8, 4·6, 2·2·6, 2·3·4, 2·2·2·3 over all
+    parity-admissible constituent signatures gives reachable
+    r ∈ {0, 2, 4, 6, 8, 12, 16, 18, 20, 24}. The complement is exactly
+    <b>r ∈ {10, 14, 22}</b>: 22 would need 2·11 or 1·22, and 11 and 22 each overshoot or
+    mis-parity every available dᵢ; likewise 10 and 14.
+  </p>
+  <p class="fine" style="margin:0">
+    Stated for the generic primitive element. This is unreachability by the generic compositum,
+    not a theorem about every degree-24 field possessing a proper subfield.
+  </p>
+</div>
+
+<p>
+  The second axis is subtler, and it is not free. Write <code>N(α) = ∏σ(α)</code> over the twelve
+  real embeddings. Since <code>√N(α) = ∏√σ(α)</code> always lies in the Galois closure, whether
+  <code>N(α)</code> is a rational square decides whether that element is rational — confining the
+  twist module to the index-2 kernel of the sum map — or generates a quadratic subfield not
+  inherited from <code>K12</code>, letting the module reach the full <code>2¹²</code>. Two
+  different groups at the same signature.
+</p>
+
+<div class="theorem">
+  <span class="lbl">Lemma · parity couples the two axes</span>
+  <p style="margin-bottom:.6rem">
+    Exactly j of the factors of <code>N(α)</code> are negative, so
+    <b>sign N(α) = (−1)ʲ</b>. For odd j this is negative, and a negative rational is never a
+    square. Hence at <b>r ≡ 2 (mod 4)</b> — that is r = 22, 18, 14, 10, 6, 2 — only the
+    non-confined module class occurs, for <em>every</em> α, and the group axis is not a free
+    parameter. At r ≡ 0 (mod 4) both classes are available.
+  </p>
+  <p class="fine" style="margin:0">
+    Verified on 2,443 <code>(K12, m, k)</code> triples: 2,443 confirm, 0 violate. The argument
+    uses only α's sign pattern, so it holds for every α in <code>K12</code>, not only the linear
+    family used here.
+  </p>
+</div>
+
+<p>
+  There is a free corollary. The constant term of the submitted degree-24 polynomial is exactly
+  <code>a₀ = g_α(0) = N(α)</code>, because <code>g_α</code> is monic of even degree. So a single
+  integer square-root test on the first coefficient reads the module class off the page — no
+  factorization, no prime sampling, no threshold.
+</p>
+
+<div class="correction">
+  <span class="lbl">Correction recorded — the unit tradeoff does not exist at odd j</span>
+  <p style="margin-bottom:.6rem">
+    An earlier draft of this section asserted that unit twists (|a₀| = 1, which give the smallest
+    discriminants) are necessarily in the confined class, so that small discriminant and full
+    module were mutually exclusive. <b>Wrong.</b> A unit has N(α) = ±1, not necessarily +1.
+    Combined with the parity law: at odd j, N(α) = −1 for every α including units, and −1 is not
+    a square — so at r ≡ 2 (mod 4) a unit is small-discriminant <em>and</em> non-confined at once.
+  </p>
+  <p style="margin:0">
+    The correct and narrower statement: at <b>even</b> j a unit forces N(α) = +1 and the coupling
+    is real; at odd j there is nothing to give up. The actionable form is the opposite of the
+    original advice — at r = 22, 18, 14, 10, search the required interval for
+    <code>m¹²·g(k/m) = ±1</code> and take the small discriminant for free, since parity has
+    already fixed the module class.
+  </p>
+</div>
+
+<h2>§ 6 · Reading the Group Without a Licence</h2>
+
+<p>
+  Identifying a degree-24 Galois group normally requires Magma. The cheap substitute is
+  Chebotarev: the degrees of the irreducible factors of f mod p are the cycle type of a Frobenius
+  element, so climbing primes samples the group's cycle types. Two fields with different cycle
+  types must have different groups.
+</p>
+
+<p>
+  The temptation is to run that backwards, and it is a trap. This is where the project's largest
+  quantitative error lived.
+</p>
+
+<div class="correction">
+  <span class="lbl">Correction recorded — 195 spectra was not a lower bound</span>
+  <p style="margin-bottom:.6rem">
+    An earlier version of this work reported <b>195 distinct cycle-type spectra</b> across 587
+    fields and concluded, since different spectra force different groups, that 195 was a lower
+    bound on distinct groups. The competition's Magma verifier returned <b>31 distinct labels</b>
+    from those same polynomials. The estimate overcounted by 6.3×.
+  </p>
+  <p style="margin-bottom:.6rem">
+    The premise is true of <em>limiting</em> spectra and false of <em>sampled</em> ones. A
+    spectrum read at 25 primes is a small multinomial sample; two fields with the same group
+    routinely show different observed spectra, so counting observed spectra counts sampling noise
+    as structure. For two samples of size n from one distribution,
+    <code>E[L1] ≈ 1.1284 · S / √n</code> with <code>S = Σ√(pᵢ(1−pᵢ))</code>, so any fixed cutoff
+    splits high-entropy groups apart while merging low-entropy ones.
+  </p>
+  <p style="margin:0">
+    Replacing the fixed cut with a threshold scaling as <code>S/√n</code>, sampling at 1000
+    primes, and calibrating the constant against the returned labels recovers <b>38 of the 39
+    true pairs</b> with every cluster pure. That the qualitative caveat is classical — Dedekind
+    gives containment only — is exactly why the number, not the caveat, is the thing worth
+    reporting.
+  </p>
+</div>
+
+<h2>§ 7 · What the Oracle Returned</h2>
+
+<p>
+  Seven submissions, 1,468 polynomials, all accepted by the official Magma pipeline. Every figure
+  below is the verifier's output, not this project's interpretation of it.
+</p>
+
+<table>
+  <thead><tr><th>Submitted</th><th>Lines</th><th>Labels</th><th>Pairs</th><th>Construction</th></tr></thead>
+  <tbody>
+  <tr><td class="num">15 Aug</td><td class="num">588</td><td class="num">31</td><td class="num">39</td><td>composita, r ∈ {0,2,4,8}</td></tr>
+  <tr><td class="num">16 Aug</td><td class="num">450</td><td class="num">121</td><td class="num">213</td><td>composita, signature sweep</td></tr>
+  <tr><td class="num">16 Aug</td><td class="num">86</td><td class="num">10</td><td class="num">10</td><td>r = 20 composita</td></tr>
+  <tr><td class="num">16 Aug</td><td class="num">43</td><td class="num">7</td><td class="num">7</td><td>r = 20 tower</td></tr>
+  <tr><td class="num">16 Aug</td><td class="num">57</td><td class="num">16</td><td class="num">16</td><td>r = 16 tower</td></tr>
+  <tr><td class="num">16 Aug</td><td class="num">6</td><td class="num">3</td><td class="num">3</td><td>opposite square class</td></tr>
+  <tr><td class="num">16 Aug</td><td class="num">238</td><td class="num">5</td><td class="num">20</td><td>towers, r = 22/18/14/10</td></tr>
+  <tr><td class="num"><b>union</b></td><td class="num"><b>1468</b></td><td class="num"><b>159</b></td><td class="num"><b>304</b></td><td>—</td></tr>
+  </tbody>
+</table>
+
+<p>
+  The last row of the table is the parity law made visible. The 238-line tower submission
+  returned exactly the 20 pairs predicted — but from only <b>five distinct labels</b>, the
+  identical set at every one of r = 22, 18, 14, 10. All four are odd j, so all four were forced
+  into the same module class. Sliding k/m moves the signature and leaves the group where it was.
+</p>
+
+<div class="theorem">
+  <span class="lbl">The result that does not depend on interpretation</span>
+  <p style="margin:0">
+    Of the 588 rows in the first submission, 201 fell on pairs already in the frozen LMFDB
+    baseline. Of those, 112 rows were no-scored as <code>lmfdb_baseline_not_improved</code>; the
+    other <b>89 rows unlocked 16 distinct pairs</b> by exhibiting a strictly smaller exact
+    <code>nfdisc</code> than the baseline's, with margins up to 10¹⁴. That is 112 + 89 = 201, in
+    rows. Sixteen cells of the degree-24 record now have a smaller discriminant than they did,
+    verified by someone else's pipeline. No sampling assumption, no predicted label, nothing that
+    can later turn out to have been an estimate wearing the grammar of a measurement.
+  </p>
+</div>
+
+<p class="fine">
+  Why the discriminants are small is structural, not lucky: composita built from small-conductor
+  pieces, and unit twists over totally real <code>K12</code> where α being a unit makes the
+  relative different divide (2). The smallest lines sit at log₁₀|poldisc| = 36 — a root
+  discriminant near 31.6 at degree 24.
+</p>
+
+<h2>§ 8 · AXLE Cross-Reference, Pedagogy, and Verification Status</h2>
+
+<h3>Where this sits on the ladder</h3>
+
+<table>
+  <thead><tr><th>Chapter</th><th>Supplies</th><th>Direction</th></tr></thead>
+  <tbody>
+  <tr><td>Ch φ · Fibonacci</td><td>n = 2, the one rung whose group is settled by prime degree</td><td>base case</td></tr>
+  <tr><td>Ch η · Tribonacci</td><td>n = 3, η ≈ 1.8393, the DNLS spine — prime degree, group closes</td><td>base case</td></tr>
+  <tr><td><b>Ch Gal · Galois</b></td><td>the group question for all n at once; odd composite n open</td><td>this chapter</td></tr>
+  <tr><td>Ch Δ · Tetranacci</td><td>n = 4 — composite, the obstruction bites</td><td>consumes Γ</td></tr>
+  <tr><td>Ch Σ · Pentanacci</td><td>n = 5 — prime again, closes again</td><td>consumes Γ</td></tr>
+  <tr><td>Ch Ω · Hexabonacci → τ</td><td>n = 6 — composite, open; the limit τ = 2</td><td>consumes Γ</td></tr>
+  <tr><td>Ch A · Autophagy</td><td>the model for a Lean-verified chapter at 0 sorries</td><td>method</td></tr>
+  </tbody>
+</table>
+
+<p>
+  The pattern the ladder exposes: the group closes at prime n and stalls at composite n. φ, η and
+  Σ are settled by the prime-degree argument. Δ and Ω are not, and the τ = 2 limit is approached
+  along a subsequence half of which is out of reach. That is a statement about the ladder, not
+  about the difficulty of any one rung.
+</p>
+
+<h3>Pedagogy — what this chapter teaches that a solved one cannot</h3>
+
+<p>
+  The teachable content here is not the Galois correspondence, which every algebra course covers.
+  It is the discipline of the oracle. Three distinct failure modes appeared in this work, and a
+  student can recognise all three:
+</p>
+
+<table>
+  <thead><tr><th>Failure</th><th>Looked like</th><th>Caught by</th></tr></thead>
+  <tbody>
+  <tr><td>Fabricated citation</td><td>Complete bibliographic fields — title, journal, volume, pages, DOI</td><td>Checking the publisher record before commit</td></tr>
+  <tr><td>Inapplicable hypothesis</td><td>A correctly cited theorem about irreducible trinomials</td><td>Noticing our trinomial is reducible by construction</td></tr>
+  <tr><td>Statistic read as measurement</td><td>195 distinct spectra, correctly computed</td><td>An external verifier returning 31</td></tr>
+  </tbody>
+</table>
+
+<p>
+  All three share a shape: something that looks like evidence and is not. The defence is the same
+  in each case — an oracle outside the work. For a Lean file that oracle is the kernel; for a
+  degree-24 polynomial it is Magma. Neither can be argued with, which is the point.
+</p>
+
+<div class="pull">
+  A green badge asserts that a check passed. The axiom list <em>is</em> the check.
+  These are different objects, and only one of them is evidence.
+  <cite>The standard of claim, applied to both halves of this chapter</cite>
+</div>
+
+<h3>Formal-verification status</h3>
+
+<p>
+  A result counts as proved here only when <code>#print axioms</code> returns
+  <code>[propext, Classical.choice, Quot.sound]</code> and nothing else. If <code>sorryAx</code>
+  appears, the theorem is open regardless of what any README, badge, description or chapter says
+  about it — including this one. The IGP24 half obeys the same rule with a different kernel: the
+  verifier's returned <code>status</code> and <code>scoringStatus</code> columns are the claim,
+  and a locally verified polynomial is a candidate, not a result.
+</p>
+
+<div class="eq">
+lake exe cache get &amp;&amp; lake build
+#print axioms Theorem_Galois          -- expect sorryAx: this theorem is OPEN
+
+python3 tower.py build   j            -- K12(sqrt a), j negative places, r = 24 − 2j
+python3 tower.py profile j            -- Frobenius density profile, 400 primes
+</div>
+
+<p class="fine">
+  Reproducibility mapping, per house rule: each claim in §§ 5–7 traces to a producing script and
+  its verifier output. The parity law → <code>tower.py</code> + the 2,443-triple check; the
+  clustering correction → <code>recluster.py</code>, calibrated against the returned label CSVs;
+  the 16 discriminant records → the competition's own results CSVs, which are the primary
+  record and not reproduced from this end.
+</p>
+
+<h3>What is not claimed</h3>
+
+<p>
+  No new theorem. The tower construction is standard — adjoining a square root with a prescribed
+  sign vector is the ordinary way to build a field of given signature, and <code>g_α(x²)</code>
+  is the definition of the minimal polynomial of a square root, not a discovery. The
+  contribution there is engineering: no traces, no factorization, and it belongs in a
+  reproducibility note rather than an abstract. The parity law, the <code>a₀ = N(α)</code>
+  invariant and the compositum-unreachability of r ∈ {10, 14, 22} are elementary, two-line
+  arguments, and are stated above as lemmas because that is what they are.
+</p>
+
+<p>
+  The quantified clustering correction in § 6 is the one item with genuine novelty risk, and it
+  is <span class="badge b-open">UNRESOLVED</span> pending a literature search — zbMATH Open or
+  MathSciNet, plus the Klüners–Malle database papers and the LMFDB Galois-group methodology
+  notes, since anyone building those tables at scale met this and may have written the correction
+  down without publishing it as a result. Until that search is run, no novelty claim attaches to
+  it. The sixteen discriminant records do not depend on the outcome.
+</p>
+
+<div class="chapend">
+  <a href="chapters-pi-phi-mu-eta-delta-sigma-omega.html#ch-eta">← Ch η · Tribonacci · η = 1.839</a>
+  <a href="chapters.html">Chapter Map →</a>
+</div>
+
+</main>
+
+<footer>
+  Principia Orthogona · Book 3 · The Mini-Beast · Chapter Gal<br>
+  Pablo Nogueira Grossi · G6 LLC · Newark NJ ·
+  ORCID <a href="https://orcid.org/0009-0000-6496-2186">0009-0000-6496-2186</a><br>
+  Series record: <a href="https://zenodo.org/communities/principia-orthogona">Zenodo · Principia Orthogona</a><br>
+  Lean and Python source MIT · prose CC BY-NC-ND 4.0.
+  Independent research, not peer-reviewed. Open steps are marked
+  <span class="badge b-open">OPEN</span>.
+</footer>
+
+</body>
+</html>
