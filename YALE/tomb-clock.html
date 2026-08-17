@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The 55-Minute Hour · The Tomb</title>
+<style>
+  :root{
+    --mortar:#0d0b09;
+    --brass:#b8863b;
+    --brass-l:#e0b163;
+    --bone:#e9e0cc;
+    --bone-dim:#9a9080;
+    --blood:#8c2f28;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:#0a0806}
+  body{
+    min-height:100%;
+    color:var(--bone);
+    font:16px/1.62 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    -webkit-font-smoothing:antialiased;
+    padding:0 22px 76px;
+    overflow-x:hidden;
+    position:relative;
+    background:
+      radial-gradient(760px 420px at 12% 5%, rgba(255,140,46,.17), transparent 62%),
+      radial-gradient(760px 420px at 88% 5%, rgba(255,140,46,.17), transparent 62%),
+      radial-gradient(1000px 700px at 50% 44%, rgba(255,160,70,.06), transparent 68%),
+      repeating-linear-gradient(180deg, var(--mortar) 0 2px, transparent 2px 92px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.55) 0 2px, transparent 2px 168px),
+      linear-gradient(180deg,#1b1712 0%, #241f19 40%, #17130f 100%);
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:repeating-linear-gradient(90deg, rgba(0,0,0,.55) 0 2px, transparent 2px 168px);
+    background-position:84px 0;
+    -webkit-mask-image:repeating-linear-gradient(180deg, #000 0 92px, transparent 92px 184px);
+    mask-image:repeating-linear-gradient(180deg, #000 0 92px, transparent 92px 184px);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+    background:radial-gradient(122% 92% at 50% 32%, transparent 40%, rgba(0,0,0,.76) 100%);
+  }
+  .grain{
+    position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;
+    mix-blend-mode:overlay;
+  }
+
+  .sconce{position:fixed;top:0;width:120px;height:250px;pointer-events:none;z-index:2}
+  .sconce.l{left:max(10px,2.5vw)} .sconce.r{right:max(10px,2.5vw)}
+  .bracket{position:absolute;left:50%;top:56px;width:12px;height:64px;margin-left:-6px;
+    background:linear-gradient(180deg,#4a3d2c,#241d15);border-radius:2px;
+    box-shadow:0 2px 6px rgba(0,0,0,.7)}
+  .cup{position:absolute;left:50%;top:48px;width:34px;height:16px;margin-left:-17px;
+    background:linear-gradient(180deg,#6b5637,#33291c);border-radius:4px 4px 9px 9px;
+    box-shadow:inset 0 1px 0 rgba(255,210,150,.25)}
+  .flame{
+    position:absolute;left:50%;top:14px;width:24px;height:42px;margin-left:-12px;
+    background:radial-gradient(50% 58% at 50% 74%, #fff3c8 0%, #ffb347 32%, #ff7518 60%, rgba(140,47,40,0) 78%);
+    border-radius:50% 50% 44% 44%;filter:blur(1.3px);
+    animation:flick 2.4s ease-in-out infinite;transform-origin:50% 100%;
+  }
+  .halo{
+    position:absolute;left:50%;top:-32px;width:210px;height:210px;margin-left:-105px;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,140,46,.26), transparent 66%);
+    animation:flick 2.4s ease-in-out infinite;
+  }
+  @keyframes flick{
+    0%,100%{transform:scale(1) skewX(0deg);opacity:.92}
+    28%{transform:scale(1.07,.94) skewX(-2.5deg);opacity:1}
+    52%{transform:scale(.93,1.07) skewX(2deg);opacity:.8}
+    76%{transform:scale(1.03,.98) skewX(-1deg);opacity:.97}
+  }
+  .mote{position:fixed;width:2px;height:2px;border-radius:50%;background:#ffd9a0;
+        box-shadow:0 0 6px 1px rgba(255,180,90,.45);pointer-events:none;z-index:2;opacity:0}
+
+  .wrap{max-width:1060px;margin:0 auto;position:relative;z-index:3}
+  header{text-align:center;padding:112px 0 46px}
+  .eyebrow{
+    font:600 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--brass);margin-bottom:20px;
+  }
+  h1{
+    font-size:clamp(36px,6.6vw,60px);font-weight:600;line-height:1.03;
+    color:#c9be a5;color:#c9bea5;
+    text-shadow:0 1px 0 rgba(0,0,0,.95), 0 -1px 0 rgba(255,200,140,.14), 0 0 48px rgba(255,140,46,.15);
+    margin-bottom:16px;
+  }
+  .sub{color:var(--bone-dim);font-size:16px;max-width:56ch;margin:0 auto;font-style:italic}
+
+  .slab{
+    background:linear-gradient(180deg, rgba(255,220,170,.05), transparent 26%),
+               linear-gradient(180deg,#251f19,#1b1712);
+    border:1px solid #3a3128;border-radius:3px;
+    box-shadow:inset 0 1px 0 rgba(255,214,160,.10),
+               inset 0 -3px 8px rgba(0,0,0,.65),
+               0 18px 46px rgba(0,0,0,.6);
+    position:relative;
+  }
+  .slab::before{content:"";position:absolute;inset:7px;border:1px solid rgba(184,134,59,.15);
+    border-radius:2px;pointer-events:none}
+
+  .dials{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-bottom:30px}
+  @media(max-width:780px){.dials{grid-template-columns:1fr}}
+  .dial{padding:30px 22px 26px;text-align:center}
+  .dial h2{font:600 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--bone-dim)}
+  .dial.lit h2{color:var(--brass-l)}
+  .dial .note{font-size:12.5px;color:var(--bone-dim);opacity:.72;margin:10px 0 16px;
+    min-height:2.6em;font-style:italic}
+  svg.face{width:100%;height:auto;max-width:300px}
+  .readout{font:600 32px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.04em;margin-top:16px;font-variant-numeric:tabular-nums;color:#cdc2a8}
+  .lit .readout{color:var(--brass-l);text-shadow:0 0 24px rgba(224,177,99,.42)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:30px}
+  @media(max-width:780px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{padding:16px 18px}
+  .stat .k{font:600 10px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--bone-dim);opacity:.8;margin-bottom:9px}
+  .stat .v{font:600 20px/1.1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-variant-numeric:tabular-nums;color:var(--brass-l)}
+  .stat .d{font-size:12px;color:var(--bone-dim);opacity:.72;margin-top:6px;font-style:italic}
+  .stat.omen{border-color:rgba(140,47,40,.85)}
+  .stat.omen .v{color:#e06a58;text-shadow:0 0 20px rgba(140,47,40,.75)}
+  .stat.omen .d{color:#cf9186;opacity:.95}
+
+  .controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:34px}
+  button{
+    background:linear-gradient(180deg,#2c251c,#1e1a14);color:#cdc2a8;
+    border:1px solid #3f362b;border-radius:2px;padding:11px 18px;
+    font:15px/1 "Iowan Old Style",Palatino,Georgia,serif;cursor:pointer;
+    box-shadow:inset 0 1px 0 rgba(255,214,160,.09),0 3px 10px rgba(0,0,0,.55);transition:.16s;
+  }
+  button:hover{border-color:var(--brass);color:var(--brass-l)}
+  button.on{border-color:var(--brass);color:#1a1208;
+    background:linear-gradient(180deg,var(--brass-l),var(--brass));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 0 22px rgba(184,134,59,.28)}
+
+  .math{padding:32px 34px}
+  .math h3{font:600 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--brass);margin-bottom:20px}
+  .math p{margin-bottom:14px;font-size:16px;color:#c4baa5}
+  .math p:last-of-type{margin-bottom:0}
+  code{font:14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    background:rgba(184,134,59,.11);padding:2px 7px;border-radius:2px;color:var(--brass-l);
+    border:1px solid rgba(184,134,59,.2)}
+  .caveat{margin-top:22px;padding-top:18px;border-top:1px solid #352c23;
+    font-size:14px;color:var(--bone-dim);font-style:italic}
+
+  .plaque{margin:34px auto 0;max-width:340px;text-align:center;padding:18px 20px;
+    background:linear-gradient(180deg,#221d17,#191510);border:1px solid #3a3128;border-radius:2px;
+    box-shadow:inset 0 1px 0 rgba(255,214,160,.08),0 10px 26px rgba(0,0,0,.55)}
+  .plaque .n{font:600 30px/1 "Iowan Old Style",Palatino,Georgia,serif;letter-spacing:.18em;color:#8a7e66;
+    text-shadow:0 1px 0 rgba(255,210,150,.15),0 -1px 1px rgba(0,0,0,.95)}
+  .plaque .c{font-size:11.5px;color:var(--bone-dim);opacity:.65;margin-top:9px;font-style:italic}
+  footer{text-align:center;margin-top:26px;font-size:12.5px;color:var(--bone-dim);opacity:.55;font-style:italic}
+</style>
+</head>
+<body>
+
+<svg class="grain" xmlns="http://www.w3.org/2000/svg">
+  <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/>
+  <feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#g)" opacity="0.32"/>
+</svg>
+
+<div class="sconce l"><div class="halo"></div><div class="bracket"></div><div class="cup"></div><div class="flame"></div></div>
+<div class="sconce r"><div class="halo"></div><div class="bracket"></div><div class="cup"></div><div class="flame" style="animation-delay:-1.1s"></div></div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Summerween in the Tomb</div>
+    <h1>The 55-Minute Hour</h1>
+    <p class="sub">A clock whose hour is fifty-five minutes long, set against an ordinary one. Same seconds, same minutes — only the hour is re-cut.</p>
+  </header>
+
+  <div class="dials">
+    <div class="dial slab">
+      <h2>Ordinary</h2>
+      <p class="note">sixty-minute hour · twelve-hour revolution</p>
+      <svg class="face" id="civil" viewBox="0 0 220 220" aria-label="Ordinary clock"></svg>
+      <div class="readout" id="civilRead">--:--:--</div>
+    </div>
+    <div class="dial slab lit">
+      <h2>Fifty-Five</h2>
+      <p class="note" id="modeNote">fifty-five-minute hour · the hour hand laps in eleven real hours</p>
+      <svg class="face" id="bones" viewBox="0 0 220 220" aria-label="55-minute clock"></svg>
+      <div class="readout" id="bonesRead">--:--:--</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat slab"><div class="k">Rate</div><div class="v" id="rate">12 / 11</div><div class="d" id="rateD">1.0909… × ordinary</div></div>
+    <div class="stat slab"><div class="k">Hour-hand drift</div><div class="v" id="drift">0m 00s</div><div class="d">gains 60/11 ≈ 5m 27s an hour</div></div>
+    <div class="stat slab"><div class="k">Realigns in</div><div class="v" id="realign">--</div><div class="d">every 132 hours — five and a half days</div></div>
+    <div class="stat slab" id="syncStat"><div class="k">Synced at</div><div class="v" id="syncedAt">--:--</div><div class="d" id="syncNote">wound at 3:22, then left</div></div>
+  </div>
+
+  <div class="controls">
+    <button id="btnRate" class="on">Rate — 55-minute hour</button>
+    <button id="btnOffset">Offset — fixed +5 min</button>
+    <button id="btnPin" class="on">Wound at 3:22</button>
+    <button id="btnSync">Re-sync to now</button>
+    <button id="btnFast">Fast-forward ×600</button>
+  </div>
+
+  <div class="math slab">
+    <h3>What it is doing</h3>
+    <p>The second and the minute are untouched — a minute here is a real minute. Only the hour is redefined as <code>55</code> minutes instead of <code>60</code>. The minute hand sweeps at ordinary speed but wraps at 55, and the hour hand completes its twelve-hour revolution in <code>12 × 55 = 660</code> minutes, which is <code>11</code> real hours.</p>
+    <p>That ratio is the whole object: <code>60/55 = 12/11 ≈ 1.0909</code>. Two different "gains" fall out of it, and they are easy to conflate. The <em>readout</em> rolls its hour over five minutes early, so read naively as h:mm it advances 1h05m per real hour. The <em>hour hand</em> is the honest measure: it sweeps <code>1/11</code> of a revolution per real hour against the ordinary <code>1/12</code>, so it gains <code>1/132</code> of a revolution — <code>60/11 ≈ 5 min 27 s</code> — every hour, and <code>1440/11 ≈ 2 h 11 m</code> a day.</p>
+    <p>It cannot be a day system. <code>1440 = 2⁵ · 3² · 5</code> has no factor of 11, and <code>55 = 5 · 11</code>, so no whole number of 55-minute hours tiles a day — 26.18… of them fit. It works only as a <em>rate</em>, running against a reference clock, which is what the five-minutes-ahead story actually describes.</p>
+    <p>The hour hands align again when that gap closes a whole revolution: <code>1 ÷ (1/11 − 1/12) = 132</code> hours — <strong>five and a half days</strong>. Not six: that figure comes from dividing 720 by the readout's five minutes, which measures the wrong thing.</p>
+    <div class="caveat">Offset mode is the rival reading: a clock set five minutes ahead and left alone. It never drifts, and it is not a 55-minute hour at all. The toggle exists because the two get conflated — one is a rate, the other a constant.</div>
+  </div>
+
+  <div class="plaque">
+    <div class="n">3 2 2</div>
+    <div class="c">Both dials are wound here, so every drift on this page is measured from 3:22. The number sets the origin. It does not touch the arithmetic.</div>
+  </div>
+
+  <footer>Seconds sweep in sixtieths against a dial cut in fifty-fifths. That mismatch is the point, not a defect.</footer>
+</div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const CX=110, CY=110;
+
+  for(let i=0;i<18;i++){
+    const m=document.createElement("div");
+    m.className="mote"; document.body.appendChild(m);
+    const ax=4+((i*41)%92), ay=24+((i*57)%62);
+    m.animate([
+      {transform:`translate(${ax}vw, ${ay}vh)`,opacity:0},
+      {opacity:.65,offset:.25},
+      {opacity:.18,offset:.7},
+      {transform:`translate(${ax+(i%2?5:-5)}vw, ${ay-16}vh)`,opacity:0}
+    ],{duration:12000+i*1100,delay:i*640,iterations:Infinity,easing:"ease-in-out"});
+  }
+
+  /* ---------- skull: anatomical, grinning because it has no lips ---------- */
+  function skull(g,x,y,s,fill,id){
+    const sk=document.createElementNS(NS,"g");
+    sk.setAttribute("transform",`translate(${x} ${y}) scale(${s})`);
+
+    const defs=document.createElementNS(NS,"defs");
+    const grad=document.createElementNS(NS,"radialGradient");
+    grad.setAttribute("id","skullG"+id);
+    grad.setAttribute("cx","36%"); grad.setAttribute("cy","22%"); grad.setAttribute("r","80%");
+    [["0%","#fbf5e6"],["46%",fill],["100%","#9d9078"]].forEach(([o,c])=>{
+      const st=document.createElementNS(NS,"stop");
+      st.setAttribute("offset",o); st.setAttribute("stop-color",c); grad.appendChild(st);
+    });
+    defs.appendChild(grad);
+    const sock=document.createElementNS(NS,"radialGradient");
+    sock.setAttribute("id","sockG"+id);
+    sock.setAttribute("cx","50%"); sock.setAttribute("cy","34%"); sock.setAttribute("r","72%");
+    [["0%","#000"],["66%","#0e0906"],["100%","#241a12"]].forEach(([o,c])=>{
+      const st=document.createElementNS(NS,"stop");
+      st.setAttribute("offset",o); st.setAttribute("stop-color",c); sock.appendChild(st);
+    });
+    defs.appendChild(sock);
+    sk.appendChild(defs);
+
+    const cr=document.createElementNS(NS,"path");
+    cr.setAttribute("d",
+      "M -11.6,-2.0 C -11.6,-11.6 -6.6,-16.2 0,-16.2 C 6.6,-16.2 11.6,-11.6 11.6,-2.0 "+
+      "C 11.6,1.8 10.7,4.2 9.2,5.6 C 8.6,6.1 8.3,6.8 8.2,7.6 "+
+      "L 7.7,10.2 C 7.4,11.6 6.2,12.4 4.6,12.6 L -4.6,12.6 "+
+      "C -6.2,12.4 -7.4,11.6 -7.7,10.2 L -8.2,7.6 C -8.3,6.8 -8.6,6.1 -9.2,5.6 "+
+      "C -10.7,4.2 -11.6,1.8 -11.6,-2.0 Z");
+    cr.setAttribute("fill","url(#skullG"+id+")");
+    sk.appendChild(cr);
+
+    const sh=document.createElementNS(NS,"path");
+    sh.setAttribute("d","M 6.6,-13.8 C 10.5,-11.0 11.6,-6.4 11.6,-2.0 C 11.6,1.8 10.7,4.2 9.2,5.6 L 8.2,7.6 L 7.7,10.2 C 7.5,11.4 6.6,12.2 5.2,12.5 L 3.0,12.6 C 5.4,11.4 6.2,8.6 6.0,5.2 C 8.5,1.8 8.8,-6.8 6.6,-13.8 Z");
+    sh.setAttribute("fill","#000"); sh.setAttribute("opacity",".14");
+    sk.appendChild(sh);
+
+    [[-1,-5.2],[1,5.2]].forEach(([dir,ex])=>{
+      const o=document.createElementNS(NS,"path");
+      o.setAttribute("d",
+        "M -3.8,-5.5 C -1.2,-6.8 1.8,-5.9 3.0,-3.4 "+
+        "C 4.0,-1.3 3.6,1.2 1.9,2.5 C 0.8,3.4 -0.4,3.1 -1.1,2.2 "+
+        "C -2.0,1.0 -3.2,0.5 -3.9,-0.8 C -4.7,-2.3 -4.9,-4.3 -3.8,-5.5 Z");
+      o.setAttribute("fill","url(#sockG"+id+")");
+      o.setAttribute("transform",`translate(${ex} -1.9) scale(${dir} 1)`);
+      sk.appendChild(o);
+      const br=document.createElementNS(NS,"path");
+      br.setAttribute("d","M -4.2,-6.1 C -1.3,-7.5 2.1,-6.6 3.4,-3.9");
+      br.setAttribute("fill","none"); br.setAttribute("stroke","#000");
+      br.setAttribute("stroke-opacity",".24"); br.setAttribute("stroke-width","1.1");
+      br.setAttribute("transform",`translate(${ex} -1.9) scale(${dir} 1)`);
+      sk.appendChild(br);
+    });
+
+    const nz=document.createElementNS(NS,"path");
+    nz.setAttribute("d","M 0,3.2 C 2.1,5.5 2.8,7.7 1.6,8.9 C 0.85,9.6 0.3,8.8 0,7.9 C -0.3,8.8 -0.85,9.6 -1.6,8.9 C -2.8,7.7 -2.1,5.5 0,3.2 Z");
+    nz.setAttribute("fill","url(#sockG"+id+")");
+    sk.appendChild(nz);
+
+    [[-1,-8.4],[1,8.4]].forEach(([dir,zx])=>{
+      const z=document.createElementNS(NS,"path");
+      z.setAttribute("d","M 0,0 C 1.5,1.0 1.9,3.0 1.3,4.4");
+      z.setAttribute("fill","none"); z.setAttribute("stroke","#000");
+      z.setAttribute("stroke-opacity",".18"); z.setAttribute("stroke-width","1.2");
+      z.setAttribute("stroke-linecap","round");
+      z.setAttribute("transform",`translate(${zx} 0.9) scale(${dir} 1)`);
+      sk.appendChild(z);
+    });
+
+    /* ---- the grin: arcades curved UP at the corners ---- */
+    const dark=document.createElementNS(NS,"path");
+    dark.setAttribute("d","M -6.9,8.9 C -3.5,10.7 3.5,10.7 6.9,8.9 L 6.1,16.2 C 3.2,18.6 -3.2,18.6 -6.1,16.2 Z");
+    dark.setAttribute("fill","#0b0705"); dark.setAttribute("opacity",".93");
+    sk.appendChild(dark);
+
+    // a tooth sits on the arc and tilts with it
+    const tooth=(dx,w,h,baseY,k,rx)=>{
+      const yTop=baseY-k*dx*dx;
+      const ang=dx*1.9;
+      const g2=document.createElementNS(NS,"g");
+      g2.setAttribute("transform","rotate("+ang+" "+dx+" "+yTop+")");
+      const t=document.createElementNS(NS,"rect");
+      t.setAttribute("x",dx-w/2); t.setAttribute("y",yTop);
+      t.setAttribute("width",w); t.setAttribute("height",h);
+      t.setAttribute("rx",rx); t.setAttribute("fill","#f0e8d5");
+      g2.appendChild(t);
+      const sd=document.createElementNS(NS,"rect");
+      sd.setAttribute("x",dx-w/2); sd.setAttribute("y",yTop);
+      sd.setAttribute("width",w*0.24); sd.setAttribute("height",h);
+      sd.setAttribute("rx",rx); sd.setAttribute("fill","#000"); sd.setAttribute("opacity",".17");
+      g2.appendChild(sd);
+      sk.appendChild(g2);
+    };
+
+    // maxillary arcade — central incisors lowest and widest, rising toward the molars
+    [[0.72,1.46,3.3],[2.02,1.26,3.1],[3.16,1.14,2.9],[4.16,1.04,2.7],[5.02,0.94,2.5]]
+      .forEach(([dx,w,h])=>{ tooth(dx,w,h,10.45,0.048,0.30); tooth(-dx,w,h,10.45,0.048,0.30); });
+
+    // mandible, its rim curved up to match
+    const mand=document.createElementNS(NS,"path");
+    mand.setAttribute("d","M -6.2,12.5 C -3.3,14.6 3.3,14.6 6.2,12.5 C 6.0,17.3 3.2,19.3 0,19.3 C -3.2,19.3 -6.0,17.3 -6.2,12.5 Z");
+    mand.setAttribute("fill","url(#skullG"+id+")");
+    sk.appendChild(mand);
+    [[0.66,1.30,2.6],[1.90,1.14,2.5],[2.98,1.04,2.3],[3.92,0.96,2.1]]
+      .forEach(([dx,w,h])=>{ tooth(dx,w,h,14.05,0.046,0.28); tooth(-dx,w,h,14.05,0.046,0.28); });
+
+    const ms=document.createElementNS(NS,"path");
+    ms.setAttribute("d","M 3.4,13.4 C 5.2,13.1 6.0,12.8 6.2,12.6 C 6.0,17.2 3.5,19.2 0.7,19.3 C 3.5,18.2 4.6,16.0 4.5,13.5 Z");
+    ms.setAttribute("fill","#000"); ms.setAttribute("opacity",".17");
+    sk.appendChild(ms);
+
+    g.appendChild(sk);
+  }
+
+  /* ---------- skeleton arm ---------- */
+  function skeletonArm(len,w,fill){
+    const g=document.createElementNS(NS,"g");
+    const y=t=>CY-t*len;
+    const put=e=>{g.appendChild(e);return e;};
+    const rr=(cx,t0,t1,ww,r,f,op)=>{
+      const e=document.createElementNS(NS,"rect");
+      e.setAttribute("x",CX+cx-ww/2); e.setAttribute("y",y(t1));
+      e.setAttribute("width",ww); e.setAttribute("height",(t1-t0)*len);
+      e.setAttribute("rx",r); e.setAttribute("fill",f||fill);
+      if(op!=null) e.setAttribute("opacity",op);
+      return put(e);
+    };
+    const ci=(cx,t,r,f,op)=>{
+      const e=document.createElementNS(NS,"circle");
+      e.setAttribute("cx",CX+cx); e.setAttribute("cy",y(t));
+      e.setAttribute("r",r); e.setAttribute("fill",f||fill);
+      if(op!=null) e.setAttribute("opacity",op);
+      return put(e);
+    };
+    ci(0,0.012,w*1.00);
+    rr(0,0.03,0.355,w*0.84,w*0.42);
+    ci(-w*0.40,0.375,w*0.42);
+    ci( w*0.40,0.375,w*0.42);
+    ci(0,0.360,w*0.50);
+    rr(-w*0.36,0.400,0.645,w*0.42,w*0.21);
+    rr( w*0.36,0.400,0.645,w*0.42,w*0.21);
+    ci(-w*0.36,0.655,w*0.26);
+    ci( w*0.36,0.655,w*0.26);
+    rr(0,0.655,0.790,w*1.50,w*0.34);
+    ci(-w*0.62,0.788,w*0.30);
+    ci( w*0.62,0.782,w*0.29);
+    ci(-w*0.66,0.836,w*0.27); ci(-w*0.58,0.874,w*0.22);
+    ci( w*0.66,0.828,w*0.26); ci( w*0.58,0.866,w*0.21);
+    ci( w*0.86,0.726,w*0.27);
+    rr( w*0.74,0.700,0.760,w*0.34,w*0.17);
+    rr(0,0.790,0.884,w*0.42,w*0.21);
+    ci(0,0.880,w*0.25);
+    rr(0,0.876,0.948,w*0.34,w*0.17);
+    ci(0,0.944,w*0.21);
+    const tip=document.createElementNS(NS,"path");
+    tip.setAttribute("d",
+      "M "+(CX-w*0.19)+" "+y(0.940)+
+      " L "+(CX+w*0.19)+" "+y(0.940)+
+      " Q "+(CX+w*0.13)+" "+y(0.990)+" "+CX+" "+y(1.0)+
+      " Q "+(CX-w*0.13)+" "+y(0.990)+" "+(CX-w*0.19)+" "+y(0.940)+" Z");
+    tip.setAttribute("fill",fill);
+    put(tip);
+    rr(w*0.30,0.04,0.64,w*0.22,w*0.11,"#000",".14");
+    rr(w*0.42,0.66,0.785,w*0.30,w*0.15,"#000",".12");
+    return g;
+  }
+
+  /* ---------- dial ---------- */
+  function buildDial(svg,marks,accent){
+    svg.innerHTML="";
+    const plate=document.createElementNS(NS,"circle");
+    plate.setAttribute("cx",CX); plate.setAttribute("cy",CY); plate.setAttribute("r",103);
+    plate.setAttribute("fill","#100e0a");
+    plate.setAttribute("stroke",accent?"#b8863b":"#4a4136");
+    plate.setAttribute("stroke-width",2.2);
+    svg.appendChild(plate);
+    const inner=document.createElementNS(NS,"circle");
+    inner.setAttribute("cx",CX); inner.setAttribute("cy",CY); inner.setAttribute("r",96);
+    inner.setAttribute("fill","none");
+    inner.setAttribute("stroke",accent?"rgba(184,134,59,.32)":"rgba(120,108,90,.28)");
+    inner.setAttribute("stroke-width",.8);
+    svg.appendChild(inner);
+
+    const cross=document.createElementNS(NS,"g");
+    cross.setAttribute("opacity",accent?".16":".10");
+    [45,-45].forEach(rot=>{
+      const b=document.createElementNS(NS,"g");
+      b.setAttribute("transform",`rotate(${rot} ${CX} ${CY})`);
+      const r=document.createElementNS(NS,"rect");
+      r.setAttribute("x",CX-72); r.setAttribute("y",CY-5.5);
+      r.setAttribute("width",144); r.setAttribute("height",11);
+      r.setAttribute("rx",5.5); r.setAttribute("fill",accent?"#d8b477":"#9a8f7c");
+      b.appendChild(r);
+      [[-72,-8],[-72,8],[72,-8],[72,8]].forEach(([dx,dy])=>{
+        const c=document.createElementNS(NS,"circle");
+        c.setAttribute("cx",CX+dx); c.setAttribute("cy",CY+dy); c.setAttribute("r",8.5);
+        c.setAttribute("fill",accent?"#d8b477":"#9a8f7c");
+        b.appendChild(c);
+      });
+      cross.appendChild(b);
+    });
+    svg.appendChild(cross);
+
+    const step=Math.max(1,Math.round(marks/12));
+    for(let i=0;i<marks;i++){
+      const major=(i%step===0);
+      const a=(i/marks)*2*Math.PI-Math.PI/2;
+      const r1=major?86:92, r2=95;
+      const l=document.createElementNS(NS,"line");
+      l.setAttribute("x1",CX+Math.cos(a)*r1); l.setAttribute("y1",CY+Math.sin(a)*r1);
+      l.setAttribute("x2",CX+Math.cos(a)*r2); l.setAttribute("y2",CY+Math.sin(a)*r2);
+      l.setAttribute("stroke",major?(accent?"#e0b163":"#a3977f"):(accent?"rgba(184,134,59,.45)":"rgba(120,108,90,.5)"));
+      l.setAttribute("stroke-width",major?2.4:1);
+      l.setAttribute("stroke-linecap","round");
+      svg.appendChild(l);
+    }
+    const roman=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+    for(let h=1;h<=12;h++){
+      const a=(h/12)*2*Math.PI-Math.PI/2;
+      const t=document.createElementNS(NS,"text");
+      t.setAttribute("x",CX+Math.cos(a)*72); t.setAttribute("y",CY+Math.sin(a)*72+4.6);
+      t.setAttribute("text-anchor","middle");
+      t.setAttribute("fill",accent?"#cbb894":"#8f8574");
+      t.setAttribute("font-size","11.5");
+      t.setAttribute("font-family","'Iowan Old Style',Palatino,Georgia,serif");
+      t.textContent=roman[h-1];
+      svg.appendChild(t);
+    }
+
+    const bone=accent?"#f2ead6":"#ded5c1";
+    const hour=skeletonArm(50,9.5,bone);
+    const minute=skeletonArm(76,6.8,bone);
+    svg.appendChild(hour); svg.appendChild(minute);
+
+    const sec=document.createElementNS(NS,"line");
+    sec.setAttribute("x1",CX); sec.setAttribute("y1",CY+16);
+    sec.setAttribute("x2",CX); sec.setAttribute("y2",CY-80);
+    sec.setAttribute("stroke",accent?"#c2603f":"#7d4231");
+    sec.setAttribute("stroke-width",1.4); sec.setAttribute("stroke-linecap","round");
+    svg.appendChild(sec);
+
+    const hub=document.createElementNS(NS,"g");
+    svg.appendChild(hub);
+    skull(hub,CX,CY,1.12,bone,accent?"a":"b");
+    return {hour,minute,second:sec};
+  }
+
+  const civilHands=buildDial(document.getElementById("civil"),60,false);
+  const bonesHands=buildDial(document.getElementById("bones"),55,true);
+  const setHand=(h,turns)=>h.setAttribute("transform","rotate("+(turns*360)+" "+CX+" "+CY+")");
+  const pad=n=>String(Math.floor(n)).padStart(2,"0");
+
+  let mode="rate", warp=1, warpBase=Date.now(), warpAccum=0;
+  const simNow=()=>warpBase+warpAccum+(Date.now()-warpBase)*warp;
+  let syncEpoch=Date.now(), syncClock=new Date();
+  const syncMinuteOfDay=()=>syncClock.getHours()*55+syncClock.getMinutes()+syncClock.getSeconds()/60;
+
+  function fmtDur(ms){
+    const s=Math.floor(ms/1000);
+    const d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),sec=s%60;
+    if(d>0) return d+"d "+h+"h "+pad(m)+"m";
+    if(h>0) return h+"h "+pad(m)+"m "+pad(sec)+"s";
+    return m+"m "+pad(sec)+"s";
+  }
+
+  function tick(){
+    const now=simNow(), d=new Date(now);
+    const cs=d.getSeconds()+d.getMilliseconds()/1000;
+    const cm=d.getMinutes()+cs/60;
+    const ch=(d.getHours()%12)+cm/60;
+    setHand(civilHands.second,cs/60);
+    setHand(civilHands.minute,cm/60);
+    setHand(civilHands.hour,ch/12);
+    document.getElementById("civilRead").textContent=
+      pad(d.getHours()%12===0?12:d.getHours()%12)+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+
+    if(mode==="offset"){
+      const o=new Date(now+5*60000);
+      const os=o.getSeconds()+o.getMilliseconds()/1000;
+      const om=o.getMinutes()+os/60;
+      setHand(bonesHands.second,os/60);
+      setHand(bonesHands.minute,om/60);
+      setHand(bonesHands.hour,((o.getHours()%12)+om/60)/12);
+      document.getElementById("bonesRead").textContent=
+        pad(o.getHours()%12===0?12:o.getHours()%12)+":"+pad(o.getMinutes())+":"+pad(o.getSeconds());
+      document.getElementById("drift").textContent="5m 00s";
+      document.getElementById("realign").textContent="never";
+      document.getElementById("rate").textContent="1 / 1";
+      document.getElementById("rateD").textContent="a constant five minutes";
+      document.getElementById("modeNote").textContent="sixty-minute hour, set five minutes ahead";
+      return;
+    }
+
+    const totalMin=(now-syncEpoch)/60000+syncMinuteOfDay();
+    const bMin=((totalMin%55)+55)%55;
+    const bHrs=Math.floor(totalMin/55);
+    const bSec=(bMin-Math.floor(bMin))*60;
+    setHand(bonesHands.second,bSec/60);
+    setHand(bonesHands.minute,bMin/55);
+    setHand(bonesHands.hour,((((bHrs%12)+12)%12)+bMin/55)/12);
+    const disp=((bHrs%12)+12)%12;
+    document.getElementById("bonesRead").textContent=
+      pad(disp===0?12:disp)+":"+pad(bMin)+":"+pad(bSec);
+
+    document.getElementById("drift").textContent=fmtDur((now-syncEpoch)/11);
+    const cyc=132*3600*1000;
+    document.getElementById("realign").textContent=fmtDur(cyc-((((now-syncEpoch)%cyc)+cyc)%cyc));
+    document.getElementById("rate").textContent="12 / 11";
+    document.getElementById("rateD").textContent="1.0909… × ordinary";
+    document.getElementById("modeNote").textContent="fifty-five-minute hour · the hour hand laps in eleven real hours";
+  }
+
+  let pinned=true;
+
+  // the most recent real 3:22 — today's 15:22, else today's 03:22, else yesterday's 15:22
+  function lastThreeTwentyTwo(now){
+    const d=new Date(now);
+    const at=(dayOffset,hour)=>{
+      const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+dayOffset,hour,22,0,0);
+      return x.getTime();
+    };
+    const cands=[at(0,15),at(0,3),at(-1,15),at(-1,3)];
+    for(const c of cands) if(c<=now) return c;
+    return cands[cands.length-1];
+  }
+
+  function applySync(epoch,isPinned){
+    pinned=isPinned;
+    syncEpoch=epoch; syncClock=new Date(epoch);
+    const hh=syncClock.getHours(), mm=syncClock.getMinutes();
+    document.getElementById("syncedAt").textContent=pad(hh)+":"+pad(mm);
+    const three=(hh%12===3 && mm===22);
+    document.getElementById("syncStat").classList.toggle("omen",three);
+    document.getElementById("syncNote").textContent=
+      pinned ? "wound at 3:22, then left"
+             : (three ? "3:22 — coincidence, not design" : "both dials agreed");
+    document.getElementById("btnPin").classList.toggle("on",pinned);
+  }
+
+  function doSync(){ applySync(simNow(),false); }
+  function doPin(){ applySync(lastThreeTwentyTwo(simNow()),true); }
+
+  const bRate=document.getElementById("btnRate"),
+        bOff=document.getElementById("btnOffset"),
+        bFast=document.getElementById("btnFast");
+  bRate.onclick=()=>{mode="rate";bRate.classList.add("on");bOff.classList.remove("on");};
+  bOff.onclick=()=>{mode="offset";bOff.classList.add("on");bRate.classList.remove("on");};
+  document.getElementById("btnSync").onclick=doSync;
+  document.getElementById("btnPin").onclick=doPin;
+  bFast.onclick=()=>{
+    warpAccum+=(Date.now()-warpBase)*warp; warpBase=Date.now();
+    warp=(warp===1)?600:1;
+    bFast.classList.toggle("on",warp!==1);
+    bFast.textContent=(warp===1)?"Fast-forward ×600":"Back to real time";
+  };
+
+  doPin(); tick(); setInterval(tick,50);
+})();
+</script>
+</body>
+</html>
