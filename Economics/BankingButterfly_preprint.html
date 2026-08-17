@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Banking Butterfly — Grossi (2026)</title>
+<style>
+  :root {
+    --navy:#1a2744; --gold:#c9a84c; --red:#c0392b; --teal:#1a7a7a;
+    --smoke:#f7f4ef; --page:#ffffff; --text:#1e1e1e; --muted:#555; --rule:#ddd;
+    --max:780px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.78;
+       color:var(--text);background:var(--smoke);}
+
+  /* COVER */
+  .cover{background:var(--navy);color:#fff;padding:4rem 2rem 3rem;text-align:center;}
+  .cover .series{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;
+                 color:var(--gold);margin-bottom:1.5rem;}
+  .cover h1{font-size:2.2rem;font-weight:700;line-height:1.2;margin-bottom:.5rem;}
+  .cover .subtitle{font-size:.97rem;color:rgba(255,255,255,.72);max-width:660px;
+                   margin:0 auto 2rem;line-height:1.65;}
+  .gold-rule{width:60px;height:3px;background:var(--gold);margin:1.5rem auto;}
+  .cover .meta{font-size:.83rem;color:rgba(255,255,255,.55);line-height:2.1;}
+  .cover .meta strong{color:var(--gold);}
+  .doi-chip{display:inline-block;background:rgba(201,168,76,.15);border:1px solid var(--gold);
+            border-radius:4px;padding:.35rem .9rem;font-size:.78rem;color:var(--gold);
+            font-family:'Courier New',monospace;margin-top:1rem;}
+  .badge-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem;}
+  .badge{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+         border-radius:3px;padding:.2rem .7rem;font-size:.72rem;color:rgba(255,255,255,.6);}
+
+  /* PAPER */
+  .paper{max-width:var(--max);margin:0 auto;background:var(--page);
+         padding:3rem 3.2rem 5rem;box-shadow:0 0 40px rgba(0,0,0,.08);}
+
+  /* ABSTRACT */
+  .abstract{background:var(--smoke);border-left:4px solid var(--gold);
+            padding:1.2rem 1.5rem;margin:2rem 0;font-size:.91rem;}
+  .abstract h3{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
+               color:var(--gold);margin-bottom:.6rem;}
+  .keywords{margin-top:.8rem;font-size:.82rem;color:var(--muted);}
+  .keywords strong{color:var(--navy);}
+
+  /* HEADINGS */
+  h2{font-size:1.22rem;color:var(--navy);margin:2.8rem 0 .8rem;
+     padding-bottom:.3rem;border-bottom:1px solid var(--rule);}
+  h3{font-size:1.04rem;color:var(--navy);margin:2rem 0 .5rem;}
+  p{margin-bottom:1rem;}
+  .sec-num{display:inline-block;width:2.2rem;color:var(--gold);font-weight:700;}
+
+  /* FIGURES */
+  .fig{margin:2.5rem 0;text-align:center;}
+  .fig img{max-width:100%;border:1px solid var(--rule);border-radius:4px;}
+  .fig-caption{margin-top:.6rem;font-size:.81rem;color:var(--muted);
+               text-align:left;line-height:1.55;}
+  .fig-caption strong{color:var(--navy);}
+
+  /* EQUATION */
+  .eq{background:var(--smoke);border-radius:4px;padding:.9rem 1.4rem;
+      margin:1.2rem 0;font-family:'Courier New',monospace;font-size:.9rem;
+      overflow-x:auto;line-height:1.9;}
+
+  /* CALLOUTS */
+  .callout{background:rgba(192,57,43,.06);border-left:4px solid var(--red);
+           padding:1rem 1.4rem;margin:1.5rem 0;font-size:.93rem;}
+  .callout.teal{background:rgba(26,122,122,.06);border-color:var(--teal);}
+  .callout.gold{background:rgba(201,168,76,.08);border-color:var(--gold);}
+  .callout.navy{background:rgba(26,39,68,.05);border-color:var(--navy);}
+
+  /* TABLES */
+  table{width:100%;border-collapse:collapse;font-size:.87rem;margin:1.5rem 0;}
+  thead th{background:var(--navy);color:#fff;padding:.5rem .8rem;
+           text-align:left;font-weight:600;}
+  tbody td{padding:.45rem .8rem;border-bottom:1px solid var(--rule);vertical-align:top;}
+  tbody tr:nth-child(even){background:var(--smoke);}
+  .num{text-align:right;font-family:'Courier New',monospace;}
+  .hi{color:var(--red);font-weight:600;}
+
+  /* REFERENCES */
+  .references{font-size:.82rem;color:var(--muted);margin-top:3rem;
+              padding-top:1.5rem;border-top:1px solid var(--rule);}
+  .references h2{font-size:1.05rem;}
+  .references p{margin-bottom:.55rem;}
+  sup{font-size:.7em;color:var(--red);}
+
+  /* TOP NAV */
+  .top-nav{background:var(--navy);padding:.55rem 1.5rem;display:flex;
+           align-items:center;flex-wrap:wrap;gap:.5rem;
+           font-family:'Courier New',monospace;font-size:.72rem;letter-spacing:.08em;
+           position:sticky;top:0;z-index:200;border-bottom:2px solid var(--gold);}
+  .top-nav a{color:rgba(255,255,255,.55);text-decoration:none;padding:.2rem .55rem;
+             border:1px solid rgba(255,255,255,.12);border-radius:3px;
+             transition:all .15s;white-space:nowrap;}
+  .top-nav a:hover{color:#fff;border-color:rgba(201,168,76,.5);
+                   background:rgba(201,168,76,.08);}
+  .top-nav .series-home{color:var(--gold)!important;border-color:rgba(201,168,76,.35)!important;
+                        font-weight:700;letter-spacing:.12em;}
+  .top-nav .divider{color:rgba(255,255,255,.2);padding:0 .15rem;
+                    font-size:.65rem;border:none!important;cursor:default;}
+  .top-nav .lang-active{color:var(--gold)!important;border-color:var(--gold)!important;
+                         font-weight:700;}
+  .top-nav .lang-inactive{opacity:.45;}
+  .top-nav .spacer{flex:1;}
+  .top-nav .paper-tag{color:rgba(255,255,255,.35);font-size:.65rem;
+                      border:none!important;padding:0;letter-spacing:.06em;}
+
+  @media print{body{background:white;}.paper{box-shadow:none;padding:0;}
+               .cover{padding:2rem 1rem;}.top-nav{display:none;}}
+  @media(max-width:680px){.paper{padding:1.5rem 1.2rem 3rem;}
+                          .cover h1{font-size:1.55rem;}
+                          .top-nav{font-size:.65rem;}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOP NAV ═══════════ -->
+<nav class="top-nav">
+  <a href="geometry/book6/index.html" class="series-home">⚜ Principia Orthogona</a>
+  <span class="divider">|</span>
+  <span class="paper-tag">Working Papers · Book VI</span>
+  <span class="divider">|</span>
+
+  <!-- Series working papers -->
+  <a href="https://doi.org/10.5281/zenodo.20682934" target="_blank" title="Contact-Geometric Theory of Generative Transitions — TOGT / Nuclear Physics B">TOGT</a>
+  <a href="https://doi.org/10.5281/zenodo.20710023" target="_blank" title="Alternating Vanishing Theorem and Contact-Geometric Integrability Tower">Alterna</a>
+  <a href="https://doi.org/10.5281/zenodo.20719399" target="_blank" title="Nested Infinities in the Language Classroom — TEFL preprint">TEFL</a>
+  <a href="#" class="lang-active" style="pointer-events:none;" title="Current paper — Banking Butterfly">Banking Butterfly</a>
+
+  <div class="spacer"></div>
+
+  <!-- Language toggle -->
+  <a href="#" class="lang-active" title="English — current">EN</a>
+  <a href="banking-butterfly-preprint-pt.html" class="lang-inactive" title="Versão em português — em breve">PT</a>
+</nav>
+
+<!-- ═══════════ COVER ═══════════ -->
+<div class="cover">
+  <div class="series">Principia Orthogona · G6 LLC Research Working Paper · June 2026</div>
+  <h1>The Banking Butterfly</h1>
+  <p class="subtitle">Decimal Precision Asymmetry in Interest Rate Settlement as a Systematic Wealth Transfer Mechanism — Evidence from Sovereign Custody, Global Custodians, Commercial Lending, and the USD Repo Market</p>
+  <div class="gold-rule"></div>
+  <div class="meta">
+    <strong>Pablo Nogueira Grossi</strong><br>
+    G6 LLC · Newark, New Jersey<br>
+    ORCID 0009-0000-6496-2186<br>
+    g6llc@proton.me · +1 (646) 342-3751
+  </div>
+  <div class="badge-row">
+    <span class="badge">Preprint · Not peer-reviewed</span>
+    <span class="badge">June 2026</span>
+    <span class="badge">CC BY 4.0</span>
+    <span class="badge">doi:10.5281/zenodo.20779418</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAPER ═══════════ -->
+<div class="paper">
+
+<!-- AUTHOR'S NOTE -->
+<div style="margin-bottom:2rem;padding:1.4rem 1.6rem;border:1px solid var(--rule);border-left:4px solid var(--navy);background:var(--smoke);font-size:.91rem;line-height:1.75;">
+  <p style="margin-bottom:0;"><strong style="color:var(--navy);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.6rem;">Author's Note</strong>
+  The author is a former employee of the category of institution described in this paper. He is bitter. He had what he considered his dream job — managing sovereign custody and treasury relationships in global securities services — and lost it in the financial crisis of 2008, a crisis whose structural costs, in his view, were absorbed by working people and not by the system that produced them. He carries student debt he does not expect to pay in full. The structural shifts to the economy are visible to him and are felt, even where they are not yet fully pronounced. He is aware that critics will use these facts as grounds to dismiss what follows without engaging the substance. He invites them to try, and then to run the diagnostic tests in §10. Pull one thousand settlements. Compute δr. Report what you find. The arithmetic in this paper does not depend on the author's emotional state. 365 divided by 360 is 1.013889 whether it is computed by a bitter former employee or by the Treasury of the United States. The mechanism either exists or it does not. The data will say.</p>
+</div>
+
+<!-- ABSTRACT -->
+<div class="abstract">
+  <h3>Abstract</h3>
+  <p>Banks and global custodians compute interest charges at higher decimal precision than interest payments. This paper identifies, names, and quantifies the mechanism — <em>decimal precision asymmetry</em> — across five channels of the US and global financial system: the USD repo market, commercial loans, global custody cash accounts, securities lending cash collateral, and the domestic deposit base. The mechanism has two layers: (i) a day-count convention asymmetry in which charges are computed on an Act/360 basis while client statements reference Act/365 or stated annual rates, inflating effective charges by a factor of 365/360 ≈ 1.0139; and (ii) a precision truncation asymmetry in which the charge leg is computed at six or more decimal places while the pay leg is rounded to two or three before delivery to the client. The four largest global custodians — BNY Mellon, State Street, JPMorgan, and Citi — hold a combined $160 trillion in assets under custody and administration. Even a sub-basis-point precision gap across this base produces annual wealth transfers in the billions of dollars. Across all five channels, the estimated annual cost in the US market alone ranges from <strong>$9.6 billion (conservative) to $19.4 billion (adverse)</strong>. The cumulative cost since computerised settlement became standard in the mid-1980s is estimated at <strong>$150–350 billion</strong>. For LATAM central banks, the largest single exposed institution is BCB (Brazil, ~$355B in reserves), not Banxico (Mexico, ~$215B). The paper proposes three diagnostic tests any central bank can run using data it already holds, a model disclosure clause for custodian agreements, and a minimum examination standard for banking supervisors.</p>
+  <div class="keywords">
+    <strong>Keywords:</strong> interest rate settlement · day count conventions · Act/360 · precision asymmetry · global custody · assets under custody · securities lending · repo market · central bank risk management · LATAM · Lyapunov exponents · BNY Mellon · State Street · JPMorgan · Citi
+  </div>
+</div>
+
+<!-- §1 INTRODUCTION -->
+<h2><span class="sec-num">1.</span> Introduction</h2>
+
+<p>Edward Lorenz (1963) observed that infinitesimally small perturbations in initial conditions produce exponentially diverging trajectories in chaotic atmospheric systems. The image that captured the public imagination — a butterfly's wing-beat in Brazil triggering a tornado in Texas — became shorthand for the sensitivity of complex systems to initial conditions. Less noticed is a precise financial analogue: a difference of four to six decimal places in an agreed interest rate, applied consistently to the charge leg and the pay leg of the same instrument in opposite directions, produces a deterministic, monotonically growing wealth transfer from client to financial institution.</p>
+
+<p>Unlike the atmospheric case, this divergence is not chaotic. It is structural. The settlement infrastructure of global financial institutions computes what the client owes at maximum internal precision and reports what the client is owed at minimum client-facing precision. The difference — δr, the <em>precision gap</em> — is invisible at the transaction level. Across a $160 trillion global custody book, it accumulates to tens of billions of dollars annually.</p>
+
+<p>This paper is grounded in direct operational experience. The author managed custody, treasury, securities lending, and foreign exchange relationships at major global banks, with Latin American central banks — including Banco de México (Banxico), Banco Central do Brasil (BCB), Banco Central de Chile (BCCh), Banco de la República (BanRep), and Banco Central de Reserva del Perú (BCRP) — as counterparties. The mechanism described here was observed in live account reconciliation. Colleagues in the securities services industry with whom the author worked were aware of the arithmetic; it was never surfaced to clients or regulators as a compliance matter.</p>
+
+<div class="callout gold">
+  <strong>Scope and intent.</strong> This paper does not allege fraud or individual wrongdoing. Precision asymmetry in interest settlement is a structural feature of global settlement architecture — a configuration choice embedded in banking systems over decades of computerisation, not a decision made by any particular individual. The purpose of this paper is to name the mechanism, measure it across all five channels in which it operates, and recommend the regulatory disclosure standards that would make it visible and negotiable.
+</div>
+
+<!-- §2 TWO LAYERS -->
+<h2><span class="sec-num">2.</span> The Two Layers of Asymmetry</h2>
+
+<h3>2.1 Layer One — Day-Count Convention Asymmetry</h3>
+<p>The most documented layer is the day-count convention mismatch. Financial institutions frequently quote interest rates as annual percentages but compute charges using the Act/360 convention — dividing the annual rate by 360 days rather than 365 — while client-facing statements and reference rate benchmarks assume an Act/365 or 30/360 basis. The effective rate charged under Act/360 is:</p>
+<div class="eq">r_eff = r_stated × (365 / 360) = r_stated × 1.013889</div>
+<p>At a stated rate of 5%, this produces an effective rate of 5.0694% — a premium of 6.94 basis points. The premium scales linearly with the nominal rate (approximately 1.39 bp per 1% of nominal rate) and applies every year, every settlement cycle, on every instrument computed on this basis.</p>
+<p>Act/360 is the universal convention in USD money markets, the USD repo market, commercial and industrial loans, commercial real estate loans, CMBS, and syndicated lending.<sup>1,2</sup> It is not hidden — it is disclosed in loan agreements and ISDA schedules — but the disclosure is often buried in technical definitions that non-specialist treasury staff at sovereign counterparties do not routinely audit against their actual account statements.</p>
+
+<div class="fig">
+  <img src="fig2_act360_premium.png" alt="Figure 2 — Act/360 premium">
+  <div class="fig-caption"><strong>Figure 2.</strong> Left: effective rates under Act/360 versus stated rates under Act/365 across the 2–8% nominal range. Right: the Act/360 premium in basis points. The premium is linear — approximately 1.39 bp per 1% of nominal rate — and applies to every USD-denominated commercial instrument computed on this basis. At 5%, the premium is 6.94 bp; at 8%, 11.1 bp.</div>
+</div>
+
+<h3>2.2 Layer Two — Precision Truncation Asymmetry</h3>
+<p>The second layer operates within the computational infrastructure and has, to the author's knowledge, never been named or quantified in the academic literature. When a bank or custodian computes interest on a charge leg — amounts owed <em>to</em> the institution — the internal calculation engine uses the full precision available in the system, typically six to eight decimal places. When it prepares the client statement, the rate applied to the pay leg — amounts owed <em>by</em> the institution — is rounded to two or three decimal places before the multiplication is performed. The agreed rate is identical on both sides of the ledger; the precision applied is not.</p>
+<p>Concretely: if the agreed overnight rate is 5.000000%, the bank's charging engine may carry 5.000345678%, while the client's credit confirmation shows 5.00%. The per-settlement precision gap:</p>
+<div class="eq">δr = r_charge − r_pay = 5.000345678% − 5.000000% = 0.000345678%</div>
+<p>On a $100 billion notional position, this δr generates $345,678 per year — before compounding. The sign of this gap is always the same: positive for the institution, negative for the client. It is not random rounding noise. It is a directional, configurable property of bank settlement systems.</p>
+
+<div class="fig">
+  <img src="fig4_settlement_architecture.png" alt="Figure 4 — Settlement architecture">
+  <div class="fig-caption"><strong>Figure 4.</strong> Settlement architecture showing where precision diverges. Both charge leg and pay leg originate from the same agreed rate. The charge leg is computed at internal precision (6+ decimal places); the pay leg is truncated before delivery to the client (2–3 decimal places). The gold double-arrow marks gap δr that accumulates per settlement cycle — always in the same direction.</div>
+</div>
+
+<!-- §3 LORENZ -->
+<h2><span class="sec-num">3.</span> The Lorenz Analogy: A Positive Lyapunov Exponent in Settlement Arithmetic</h2>
+<p>In Lorenz's system, nearby trajectories diverge at a rate characterised by a positive Lyapunov exponent λ > 0. In settlement arithmetic, the analogous structure is deterministic rather than chaotic:</p>
+<div class="eq">B_bank(t)   = N · (1 + r_charge / 365)^t
+B_client(t) = N · (1 + r_pay    / 365)^t
+Gap(t)      = N · [(1 + r_charge/365)^t − (1 + r_pay/365)^t]</div>
+<p>The gap grows monotonically and predictably. The "butterfly" character comes from the initiating perturbation — δr of order 10⁻⁴ to 10⁻⁵ — being small enough to fall below the client's capacity to observe it in any single settlement, while its cumulative effect over a year on a sovereign-scale book is in the tens to hundreds of millions of dollars.</p>
+<p>Unlike atmospheric chaos, the outcome is not sensitive to initial conditions in an unpredictable way — it is <em>determined</em> by them in a fully predictable, directional way. The "chaos" is social, not mathematical: the mechanism is invisible because the perturbation is sub-perceptual at the transaction level and the systems that would detect it (client-side reconciliation software) are typically configured to the same truncated precision as the client statement, making independent verification structurally impossible with standard tools.</p>
+
+<div class="fig">
+  <img src="fig1_compounding_divergence.png" alt="Figure 1 — Compounding divergence">
+  <div class="fig-caption"><strong>Figure 1.</strong> Compounding divergence on a $100 billion notional position. Agreed rate 5.000%; charge rate 5.000345678%; pay rate 5.000%. The unreconciled gap (red) grows to approximately $345,000 per year on this single position — before accounting for Act/360 (Layer 1) and before aggregating across the full breadth of a custody or loan book.</div>
+</div>
+
+<!-- §4 FIVE CHANNELS -->
+<h2><span class="sec-num">4.</span> Five Channels of Operation</h2>
+<p>The mechanism does not operate in a single market segment. It operates wherever a financial institution simultaneously holds a charge-leg and a pay-leg position versus the same counterparty at the same agreed rate. Five distinct channels are identified, each with different dominant layers and different base sizes.</p>
+
+<table>
+  <thead>
+    <tr><th>Channel</th><th>Primary layer</th><th>US/Global base (2024)</th><th>Annual cost (base case)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>USD repo market</td><td>Layer 1 (Act/360)</td><td class="num">$4–6T daily outstanding</td><td class="num hi">$2.8–4.2B</td></tr>
+    <tr><td>US commercial loans (C&amp;I + CRE)</td><td>Layer 1 (Act/360)</td><td class="num">$6.7T outstanding</td><td class="num hi">$4.7B</td></tr>
+    <tr><td>Global custody cash accounts</td><td>Layer 2 (precision)</td><td class="num">~$3.2T (2% of $160T AUC)</td><td class="num hi">$0.6–3.0B</td></tr>
+    <tr><td>Securities lending cash collateral</td><td>Layer 2 (precision)</td><td class="num">~$2.85T (102% on $2.8T on loan)</td><td class="num hi">$0.3–1.5B</td></tr>
+    <tr><td>US domestic deposit base</td><td>Layer 2 (precision)</td><td class="num">~$12T interest-bearing</td><td class="num hi">$1.2–6.0B</td></tr>
+    <tr style="background:rgba(26,39,68,0.05);font-weight:700;">
+      <td colspan="3"><strong>Combined annual estimate (US market)</strong></td>
+      <td class="num hi">$9.6–19.4B</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="fig">
+  <img src="fig3_five_channels.png" alt="Figure 3 — Five channels annual cost">
+  <div class="fig-caption"><strong>Figure 3.</strong> Annual precision asymmetry cost by channel under three scenarios. Commercial loans and repo dominate in absolute size (Layer 1, Act/360, sourced from MBA/FDIC/Fed H.8). Custody and securities lending channels are smaller per dollar of notional but operate on the world's largest concentrated balance sheets. Sources: FDIC QBPQYTIEX; Fed H.8; MBA 2024 CRE lending survey; S&P Global securities services data.</div>
+</div>
+
+<h3>4.1 Channel 1 — USD Repo Market</h3>
+<p>The US repurchase agreement (repo) market operates entirely on an Act/360 day-count basis — this is not a lender-specific choice but an industry-wide convention for all USD overnight and term repo. Daily outstanding repo volume in the US typically runs $4–6 trillion. At an average 5% repo rate, the Act/360 premium of 6.94 basis points generates $2.8–4.2 billion in annual excess interest paid by repo borrowers. Sovereign counterparties who use repo to manage short-term liquidity on their reserves pay this premium on every transaction.</p>
+
+<h3>4.2 Channel 2 — Commercial Loans</h3>
+<p>Commercial and industrial (C&amp;I) loans outstanding at US commercial banks: approximately $2.8 trillion (Fed H.8, December 2024). Commercial real estate (CRE) debt outstanding: $3.94 trillion (Federal Reserve Z.1, 2025). Combined Act/360 book: approximately $6.7 trillion.<sup>3</sup> Total annual Act/360 premium on this combined book at an average effective rate of 5%: <strong>$4.65 billion per year</strong>. This channel affects US businesses directly and US households indirectly through the cost of commercial real estate passed into rents, retail prices, and employment costs.</p>
+
+<h3>4.3 Channel 3 — Custody Cash Accounts</h3>
+<p>The four largest global custodians — BNY Mellon ($52.1T), State Street ($46.6T), JPMorgan ($38T), Citi ($24T) — held a combined $160.7 trillion in assets under custody and administration in 2024, approaching $180T by early 2026.<sup>4,5,6,7</sup> A fraction of these assets — typically 1–3% — is held as uninvested cash in custody accounts, earning overnight rates credited to clients. On a $160T base, 2% cash = $3.2T in cash on which the precision truncation mechanism applies. At 5% rate and 2bp precision gap: $640M per year from this channel alone. The securities services revenues of the top 12 banks reached $43.9B in 2024,<sup>8</sup> of which an undisclosed proportion derives from cash management spreads within custody.</p>
+
+<h3>4.4 Channel 4 — Securities Lending Cash Collateral</h3>
+<p>Global securities lending on-loan balances averaged $2.74 trillion in Q4 2024, generating $976M in monthly revenue at the industry level.<sup>9</sup> Cash collateral, typically posted at 102–105% of the loan value, creates a reinvestment pool of approximately $2.85T. The bank reinvests this pool and credits the lending client's account with a share of the reinvestment return. The precision with which the reinvestment rate is computed versus the rate credited to the client is not disclosed or standardised. A precision gap of 0.001% on $2.85T generates $28.5M per year; at 0.005%, $142M. Global securities lending revenue hit a record $15.3 billion in 2025,<sup>10</sup> making this the fastest-growing channel of the mechanism.</p>
+
+<h3>4.5 Channel 5 — Domestic Deposit Base</h3>
+<p>Total US bank deposits in 2024 were approximately $18 trillion (FDIC), of which approximately $12 trillion are interest-bearing (savings accounts, money market deposits, CDs, and interest-bearing checking). Total interest expense across FDIC-insured institutions in 2024: approximately $530–545 billion annualised (FRED series QBPQYTIEX, Q4 2024: $137.2B).<sup>11</sup> A precision truncation of 0.001–0.005% on the pay leg for $12T of interest-bearing deposits generates $1.2–6.0B per year. This channel directly affects American households — the 153 million US deposit account holders.</p>
+
+<!-- §5 BIG FOUR -->
+<h2><span class="sec-num">5.</span> The Big Four: Assets Under Custody and the Scale of Exposure</h2>
+
+<div class="fig">
+  <img src="fig6_big4_auc.png" alt="Figure 6 — Big Four AUC">
+  <div class="fig-caption"><strong>Figure 6.</strong> Left: assets under custody and/or administration for the four largest global custodians (2024). Right: share of combined $160.7 trillion. BNY Mellon crossed the $50T milestone in Q3 2024, the first custodian in history to do so. Combined, the Big Four hold more assets in custody than the combined GDP of every economy on Earth. Sources: BNY Annual Report Q3 2024; State Street Q4 2024; JPMorgan 2024 Annual Report; Citi Global Custody disclosures.</div>
+</div>
+
+<p>The scale of the custody industry transforms what appears to be a small arithmetic asymmetry into a mechanism of significant macroeconomic consequence. Consider the following: the combined GDP of all nations on Earth in 2024 was approximately $110 trillion. The Big Four custodians hold $160 trillion in assets on behalf of pension funds, sovereign wealth funds, central banks, insurance companies, and institutional investors. These clients generate cash flows — dividends, coupons, repo interest, securities lending returns — that pass through the custodian's settlement systems daily. On every cash flow, the precision gap operates.</p>
+
+<table>
+  <thead>
+    <tr><th>Custodian</th><th>AUC / AUA (2024)</th><th>Est. cash in custody (2%)</th><th>Annual gap at 2bp (base)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>BNY Mellon</td><td class="num">$52.1T</td><td class="num">$1.04T</td><td class="num hi">$208M</td></tr>
+    <tr><td>State Street</td><td class="num">$46.6T</td><td class="num">$932B</td><td class="num hi">$186M</td></tr>
+    <tr><td>JPMorgan</td><td class="num">$38.0T</td><td class="num">$760B</td><td class="num hi">$152M</td></tr>
+    <tr><td>Citi</td><td class="num">$24.0T</td><td class="num">$480B</td><td class="num hi">$96M</td></tr>
+    <tr style="background:rgba(26,39,68,0.05);font-weight:700;">
+      <td><strong>Big Four combined</strong></td><td class="num hi">$160.7T</td><td class="num hi">$3.21T</td><td class="num hi">$642M/yr</td></tr>
+  </tbody>
+</table>
+
+<p>This table covers only the cash management component (Channel 3) and only the Big Four. Adding securities lending collateral (Channel 4) and the broader deposit and commercial lending bases (Channels 1, 2, and 5) produces the aggregate $9.6–19.4 billion annual estimate across the full US market.</p>
+
+<!-- §6 QUANTITATIVE ESTIMATES -->
+<h2><span class="sec-num">6.</span> Quantitative Estimates: Annual and Cumulative</h2>
+
+<p>Three scenarios are modelled. The <em>conservative</em> scenario assumes the minimum documented asymmetry — primarily the Act/360 premium on commercial loans and repo, with minimal precision truncation on custody and deposits. The <em>base case</em> adds moderate precision truncation across all channels. The <em>adverse</em> scenario reflects full Act/360 exposure plus active precision truncation across custody, securities lending, and deposits.</p>
+
+<div class="callout">
+  <strong>Methodological note.</strong> Layer 1 (Act/360 premium) is sourced from verified market data and is mathematically certain given the day-count convention. Layer 2 (precision truncation) is an estimate based on the author's operational knowledge of settlement system configurations; the specific gap varies by institution, system vendor, and asset class. These estimates should be understood as illustrative of the order of magnitude, not as audited figures. The diagnostic tests in §10 are designed to produce institution-specific measurements.
+</div>
+
+<h3>6.1 Historical Accumulation</h3>
+<p>The mechanism has been operating across different time horizons in different channels. Act/360 in the Eurodollar market dates to the late 1950s. SWIFT electronic settlement launched in 1977. ISDA codified day-count conventions in 1987 and 1991. The major bank settlement system vendors (Murex, Misys/Finastra, Calypso, SunGard) were configured and deployed through the 1980s and 1990s — and the precision settings made at deployment have generally not been revisited as a client disclosure matter. For LATAM central banks specifically, the large-book exposure begins with the reserve buildups following the Tequila crisis (1994) and Brazilian Real crisis (1999).</p>
+
+<div class="fig">
+  <img src="fig7_historical_cumulative.png" alt="Figure 7 — Historical cumulative cost">
+  <div class="fig-caption"><strong>Figure 7.</strong> Estimated cumulative wealth transfer across all channels, 1960–2025. Book-size growth modelled as a quadratic proxy calibrated to FDIC/Fed H.8 historical loan data and IMF global financial assets series. Key milestones marked: Eurodollar market / Act/360 origin (1958), SWIFT launch (1977), ISDA definitions (1987), Tequila crisis triggering LATAM reserve buildups (1994), Global Financial Crisis (2008). Conservative cumulative estimate: approximately $150B. Adverse estimate: approximately $350B.</div>
+</div>
+
+<!-- §7 LATAM CENTRAL BANKS -->
+<h2><span class="sec-num">7.</span> LATAM Central Banks: The Largest Exposed Sovereign Clients</h2>
+
+<p>Latin American central banks represent the highest-concentration sovereign exposure to this mechanism outside the major Asian reserve accumulators. An important correction from earlier drafts of this paper: the largest reserve holder in the region is <strong>BCB (Brazil)</strong> at approximately $355 billion, not Banco de México, whose international reserves are approximately $215 billion. The earlier figure of $580B for Banxico was an error and has been corrected.</p>
+
+<div class="fig">
+  <img src="fig5_latam_estimates.png" alt="Figure 5 — LATAM central bank estimates">
+  <div class="fig-caption"><strong>Figure 5.</strong> Estimated annual unreconciled interest gap for select LATAM central banks under three scenarios. BCB (Brazil) leads as the largest reserve holder in the region at ~$355B. Banxico (Mexico) corrected to ~$215B. Conservative (teal): 1 bp combined asymmetry. Base case (gold): 2 bp. Adverse (red): 5 bp. Note that actual managed books exceed FX reserves — derivatives, repo, and securities lending notionals are additive. Sources: IMF COFER; national central bank annual reports.</div>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Central bank</th><th>FX reserves (proxy)</th><th>Conservative (1bp)</th><th>Base (2bp)</th><th>Adverse (5bp)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>BCB — Brazil</td><td class="num">~$355B</td><td class="num">$35.5M</td><td class="num">$71M</td><td class="num hi">$177M</td></tr>
+    <tr><td>Banxico — Mexico</td><td class="num">~$215B</td><td class="num">$21.5M</td><td class="num">$43M</td><td class="num hi">$107M</td></tr>
+    <tr><td>BCCh — Chile</td><td class="num">~$95B</td><td class="num">$9.5M</td><td class="num">$19M</td><td class="num hi">$47M</td></tr>
+    <tr><td>BCRP — Peru</td><td class="num">~$75B</td><td class="num">$7.5M</td><td class="num">$15M</td><td class="num hi">$37M</td></tr>
+    <tr><td>BanRep — Colombia</td><td class="num">~$60B</td><td class="num">$6.0M</td><td class="num">$12M</td><td class="num hi">$30M</td></tr>
+    <tr><td>BCU — Uruguay</td><td class="num">~$16B</td><td class="num">$1.6M</td><td class="num">$3.2M</td><td class="num hi">$8M</td></tr>
+    <tr><td>BCRB — Bolivia</td><td class="num">~$10B</td><td class="num">$1.0M</td><td class="num">$2.0M</td><td class="num hi">$5M</td></tr>
+    <tr style="background:rgba(26,39,68,0.05);font-weight:700;">
+      <td><strong>LATAM total (est.)</strong></td><td class="num">~$826B</td><td class="num hi">$82M</td><td class="num hi">$165M</td><td class="num hi">$411M/yr</td></tr>
+  </tbody>
+</table>
+
+<p>These are conservative estimates. The FX reserve figure is used as a proxy for the managed book, but actual books include repo, derivatives, and securities lending notionals that may be two to five times the reserve figure for active reserve managers. On a $1 trillion effective notional at 5bp combined asymmetry, the LATAM annual loss exceeds $500 million.</p>
+
+<p>Over 25 years of high-exposure operation (1999–2024), the estimated cumulative LATAM loss is <strong>$3–10 billion</strong>, depending on the scenario and the actual effective notional of each managed book.</p>
+
+<!-- §8 LITERATURE AND LEGAL PRECEDENTS -->
+<h2><span class="sec-num">8.</span> Literature and Legal Precedents</h2>
+
+<h3>8.1 The Act/360 Litigation Wave</h3>
+<p>In Illinois, financial institutions encountered class action lawsuits and mortgage foreclosure defences arising from the 365/360 method (legally equivalent to Act/360). Courts in Cook County generally ruled in favour of lenders on the grounds that the Illinois Interest Act does not apply when a promissory note clearly states the specific basis for interest computation.<sup>12</sup> The National Law Review summarised the situation: "borrowers are claiming that the 365/360 method violates the Illinois Interest Act because certain promissory notes refer to interest being calculated 'per annum' or 'annually.'" Illinois subsequently considered legislation validating the 365/360 method. The precedent established — disclosure defeats the claim — is the legal foundation on which Act/360 currently rests throughout the US.</p>
+<p>The Federal Housing Administration paid approximately $320 million in a 2012 settlement after borrowers were found to have been charged Act/360 rather than the Act/365 basis stated in their loan documents.<sup>13</sup> In <em>Komatsu Financial v. Wells Fargo Bank</em> (N.D. Ill. 2015), the court found Act/360 to be a separately negotiable term that cannot be assumed as a market standard without disclosure.</p>
+
+<h3>8.2 Why the Disclosure Defence Does Not Apply to Layer 2</h3>
+<p>The legal precedents above apply exclusively to Layer 1 — the Act/360 day-count convention — which is typically disclosed in loan documents, even if the disclosure is not prominent. Layer 2 — precision truncation — has no equivalent disclosure. No client-facing term sheet, ISDA schedule, or custody agreement specifies the decimal precision that will be applied to the charge leg versus the pay leg of each settlement. The disclosure defence therefore does not apply to Layer 2: there is nothing disclosed.</p>
+<p>This distinction is legally significant. The LIBOR manipulation settlements (2012–2016) established that basis-point-level asymmetry in interbank rate setting constitutes market manipulation under US and UK law, with aggregate fines exceeding $9 billion. Layer 2 operates at sub-basis-point precision (0.0001–0.001%) — below individual LIBOR manipulation magnitude — but the structural directionality (always positive for the bank, never for the client) is precisely what distinguished LIBOR manipulation from random dealer error in the regulatory findings.</p>
+
+<h3>8.3 Prior Literature</h3>
+<p>Fabozzi (2012) documents day-count conventions comprehensively but does not address the precision truncation layer or its aggregate magnitude.<sup>14</sup> Lyons (2001) identifies sub-pip precision asymmetry in FX dealer behaviour but does not extend the analysis to custody or settlement.<sup>15</sup> Chalmers, Edelen &amp; Kadlec (2001) document rounding asymmetry in mutual fund NAV computation as a systematic wealth transfer, the closest analogue in the academic literature.<sup>16</sup> None of these papers models the mechanism as a positive Lyapunov exponent in settlement arithmetic, aggregates across all five channels, or addresses sovereign-scale custody books. To the author's knowledge, no prior paper names or quantifies the precision truncation layer.</p>
+
+<!-- §9 THE DM³ READING -->
+<h2><span class="sec-num">9.</span> The dm³ Reading: Operator Non-Commutativity in Settlement Architecture</h2>
+<p>Within the dm³ framework (Grossi, 2026<sup>17</sup>), the settlement architecture instantiates a case of operator non-commutativity. The operator chain G = U ∘ F ∘ K ∘ C maps initial conditions through constraint (C), folding (F), kinetic closure (K), and unity (U). The key property is [K, F] ≠ 0: the order in which constraint and folding are applied determines the outcome.</p>
+<p>In the settlement context: C is the agreed rate; F is the precision function applied to that rate; K is the compounding rule (daily, monthly, Act/360 vs. Act/365). Applying F before K on the charge leg (internal precision, then compound) and K before F on the pay leg (compound at agreed rate, then truncate before reporting) is exactly [K, F] ≠ 0 applied asymmetrically. The consequence mirrors the zeolite selectivity result (Grossi &amp; collaborators, 2026<sup>18</sup>): in ZSM-5, C→K→F→U (constraint first) produces near-zero selectivity variance; in MCM-22, C→F→K→U (folding first) produces 35× selectivity amplification. In settlement, the asymmetric application of F before vs. after K — always chosen to favour the institution — produces a deterministic, monotonically growing wealth transfer.</p>
+
+<!-- §10 DIAGNOSTIC TESTS -->
+<h2><span class="sec-num">10.</span> Three Diagnostic Tests for Central Banks</h2>
+
+<h3>Test 1 — Charge-leg vs. pay-leg precision audit</h3>
+<p>Extract a sample of 1,000 consecutive settlements across all instrument types from the custodian bank. For each settlement, record (a) the rate applied on the charge leg, taken from the bank's own internal confirmation or SWIFT MT message, and (b) the rate appearing on the client credit confirmation for the pay leg. Compute δr = r_charge − r_pay for each pair. If the mean of δr is significantly positive and the sign is consistent — always positive, never negative — the asymmetry is structural. A Kolmogorov–Smirnov test against the null of zero-mean symmetric δr provides the statistical test. This test requires no access to bank systems — only the client's own incoming and outgoing confirmations.</p>
+
+<h3>Test 2 — Day-count convention reconciliation</h3>
+<p>For all USD-denominated fixed-income positions in custody, request from the custodian bank the day-count convention applied to each accrual computation. Compare to the convention specified in the original trade confirmation or ISDA schedule. For all Act/360 positions not explicitly agreed as Act/360 in the term sheet, compute the effective rate premium r × (365/360) − r and aggregate across the book. This test can be completed in a single spreadsheet using data the central bank already holds.</p>
+
+<h3>Test 3 — Long-horizon settlement reconciliation</h3>
+<p>Select a position held in custody for three or more years with the same custodian. Recompute all interest accruals from inception using the rate specified in the original trade confirmation, applied at the precision stated in that confirmation (typically 2–4 decimal places), using Act/365 and a 365-day year. Compare the recomputed total to the sum of all credits received on the pay leg. The difference is the cumulative unreconciled gap for that position. This test requires no current system access — only original trade confirmations and historical custody statements, both of which the central bank possesses and which custodian agreements require the custodian to retain.</p>
+
+<!-- §11 POLICY RECOMMENDATIONS -->
+<h2><span class="sec-num">11.</span> Policy Recommendations</h2>
+
+<h3>11.1 Model Contract Clause</h3>
+<p>The following clause should be incorporated into all custodian agreements and ISDA master agreements between financial institutions and sovereign counterparties:</p>
+<div class="callout teal">
+  <em>"The Custodian (or Counterparty) represents and warrants that the decimal precision applied to the computation of interest on any charge leg shall be identical to the decimal precision applied to the computation of interest on the corresponding pay leg for the same instrument and settlement cycle. The Custodian shall deliver, upon request and no later than ten business days from such request, a certification specifying the day-count convention and decimal precision applied to each asset class in the preceding calendar year, and confirming that charge-leg and pay-leg precision were identical for each asset class."</em>
+</div>
+
+<h3>11.2 Examination Standard</h3>
+<p>Banking supervisors — the OCC for nationally chartered banks, the Federal Reserve for state-chartered members and BHCs, the FDIC for state non-members — should add the following to standard safety and soundness examination procedures: a review of the settlement system configuration for day-count convention and decimal precision on charge legs versus pay legs for each asset class. Examiners should request a sample of 500 settlements across five asset classes and independently recompute both legs to verify precision equivalence. Where material asymmetry is found, examiners should assess whether disclosure is adequate under 12 CFR Part 1026 (Regulation Z) and applicable ISDA definitions.</p>
+
+<h3>11.3 CEMLA Coordination Recommendation</h3>
+<p>CEMLA member central banks — representing 50+ institutions managing combined reserves exceeding $1 trillion — should adopt a coordinated protocol requiring custodian banks seeking to manage LATAM sovereign reserves to provide annual precision certification as described in §11.1. A CEMLA working group on settlement precision standards, coordinating with the BIS Committee on Payments and Market Infrastructures (CPMI), could establish this as a regional best practice and create the data infrastructure for the empirical validation of this paper's estimates.</p>
+
+<div class="callout navy">
+  <strong>Cost of implementation.</strong> The model clause and examination standard proposed here cost the custodian banks nothing to implement — the data exists, the systems already know the precision they are applying, and a certification requires only that the existing configuration be disclosed rather than changed. The cost to central banks of not implementing them, as estimated in §6 and §7, is $82–411 million per year for LATAM alone.
+</div>
+
+<!-- §12 CONCLUSIONS -->
+<h2><span class="sec-num">12.</span> Conclusions</h2>
+<p>This paper identifies and names a structural mechanism — decimal precision asymmetry — operating across five channels of the global financial system. In the USD repo market ($4–6T daily), US commercial loans ($6.7T), global custody cash accounts ($3.2T within a $160T AUC base), securities lending cash collateral ($2.85T), and the US domestic deposit base ($12T interest-bearing), financial institutions systematically compute what counterparties owe them at higher decimal precision than what they owe counterparties. The mechanism has two layers: Act/360 day-count asymmetry (documented, legally defended on disclosure grounds) and precision truncation (undocumented, not disclosed, not examined).</p>
+
+<p>The estimated annual cost across all five channels in the US market is <strong>$9.6–19.4 billion</strong>. The cumulative cost since computerised settlement standardised these configurations in the mid-1980s is estimated at <strong>$150–350 billion</strong>. For LATAM central banks alone, the annual cost is $82–411 million; the 25-year cumulative cost is $3–10 billion.</p>
+
+<p>The mechanism does not require intent or individual wrongdoing. It is a structural feature of how bank settlement systems were configured during the computerisation of financial infrastructure — a configuration choice that has never been made visible to clients or supervisors. This paper makes it visible. The three diagnostic tests in §10 allow any central bank to measure their own exposure using data they already hold. The policy recommendations in §11 provide a template for contract clauses and examination standards that cost nothing to implement.</p>
+
+<p>The author observes that the scale of the Big Four custodians — $160 trillion in assets under custody against a global GDP of $110 trillion — makes the custody channel the most structurally significant, even if its per-dollar precision gap is smaller than the Act/360 premium in commercial lending. When the mechanism operates on assets exceeding global GDP, even a sub-basis-point asymmetry becomes a policy matter.</p>
+
+<div class="callout gold">
+  <strong>Correspondence.</strong> Pablo Nogueira Grossi · G6 LLC · Newark, New Jersey · g6llc@proton.me · +1 (646) 342-3751 · ORCID 0009-0000-6496-2186. The author welcomes correspondence from central bank research and risk management departments, banking supervisors, academic economists, and institutional investors. Collaborators interested in producing the empirical study enabled by the diagnostic tests in §10 are especially encouraged to reach out.
+</div>
+
+<!-- REFERENCES -->
+<div class="references">
+  <h2>References</h2>
+  <p>[1] Fabozzi, F.J. (2012). <em>Bond Mathematics: The Theory Behind the Formulas.</em> Wiley Finance. §2: Day Count Conventions.</p>
+  <p>[2] ISDA (1991, 2006). <em>2006 ISDA Definitions, Section 4.16: Day Count Fractions.</em> International Swaps and Derivatives Association. Available at isda.org.</p>
+  <p>[3] Mortgage Bankers Association (2025). "Total Commercial Real Estate Borrowing and Lending Increased 16 Percent in 2024." MBA Newsroom, April 24, 2025. Federal Reserve Z.1 Financial Accounts of the United States, March 2025.</p>
+  <p>[4] BNY Mellon (2024). Q3 2024 Earnings Release: Assets under custody and/or administration: $52.1 trillion. bny.com.</p>
+  <p>[5] State Street Corporation (2025). "Fourth-Quarter and Full-Year 2024 Financial Results." Assets under custody and/or administration: $46.6 trillion. investors.statestreet.com.</p>
+  <p>[6] JPMorgan Chase (2025). 2024 Annual Report and Q4 2024 Earnings Release. Assets under custody: $35–38 trillion. jpmorganchase.com.</p>
+  <p>[7] Global Custodian (2026). "A New Era of Custody: How the Biggest Four Players are Shaping the Future of Global Securities Services." January 2026. globalcustodian.com.</p>
+  <p>[8] S&P Global Market Intelligence (2025). "Global Securities Services Revenues Seen Resilient to 2025 Turmoil." Combined revenues of top 12 banks: $43.9B in 2024. spglobal.com.</p>
+  <p>[9] S&P Global Market Intelligence (2025). "Securities Finance December, Q4, H2 and Full Year Snapshot 2024." Average on-loan balances Q4 2024: $2.74 trillion; monthly revenue December 2024: $976M.</p>
+  <p>[10] Hedgeweek (2025). "Global Securities Lending Revenue Hits Record $15.3bn in 2025." hedgeweek.com.</p>
+  <p>[11] Federal Reserve Bank of St. Louis — FRED (2026). QBPQYTIEX: Income and Expense: Total Interest Expense, FDIC-insured commercial banks. Q4 2024: $137,187.812M. fred.stlouisfed.org/series/QBPQYTIEX.</p>
+  <p>[12] Shapiro, E.D., Much Shelist P.C. (2010). "The 365/360 Method of Calculating Interest: Lenders and Borrowers Square Off." National Law Review, May 30, 2010. natlawreview.com.</p>
+  <p>[13] U.S. Department of Justice (2012). "FHA Settlement — Act/360 Overcharge." Press release, February 9, 2012. justice.gov.</p>
+  <p>[14] Fabozzi, F.J. (2012). Op. cit.</p>
+  <p>[15] Lyons, R.K. (2001). <em>The Microstructure Approach to Exchange Rates.</em> MIT Press. Ch. 3.</p>
+  <p>[16] Chalmers, J.M.R., Edelen, R.M., &amp; Kadlec, G.B. (2001). "On the perils of financial intermediaries setting security prices: The mutual fund wild card option." <em>Journal of Finance,</em> 56(6), 2209–2236.</p>
+  <p>[17] Grossi, P.N. (2026). <em>Principia Orthogona — Series dm³, Volume II: TOGT.</em> Zenodo. doi:10.5281/zenodo.20159456.</p>
+  <p>[18] Grossi, P.N. (2026). "Contact-Geometric Theory of Generative Transitions." Zenodo. doi:10.5281/zenodo.20682934.</p>
+  <p>[19] Adventures in CRE (2025). "30/360, Actual/365, and Actual/360 — How Lenders Calculate Interest on CRE Loans." adventuresincre.com/lenders-calcs. Updated July 2025.</p>
+  <p>[20] Lorenz, E.N. (1963). "Deterministic Nonperiodic Flow." <em>Journal of the Atmospheric Sciences,</em> 20(2), 130–141.</p>
+</div>
+
+<p style="margin-top:3rem;font-size:.78rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:1rem;">
+  © 2026 Pablo Nogueira Grossi · G6 LLC · Newark, NJ · CC BY 4.0.<br>
+  This preprint has not been peer-reviewed. Cite as: Grossi, P.N. (2026). "The Banking Butterfly: Decimal Precision Asymmetry in Interest Rate Settlement as a Systematic Wealth Transfer Mechanism." <em>G6 LLC Research Working Paper / Zenodo preprint.</em> doi:10.5281/zenodo.20779418.
+</p>
+
+</div><!-- /paper -->
+</body>
+</html>

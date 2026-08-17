@@ -12,6 +12,43 @@ Contact: g6llc@proton.me · G6 LLC · Newark, NJ
 
 ---
 
+## Applied lines — economics, finance, and AI systems
+
+The framework is not confined to mathematical physics. Several lines apply it directly to markets,
+credit, and multi-agent AI, under the same discipline as the rest of the repository: reproducible
+pipelines, machine-checked constants, and open problems stated rather than hidden.
+
+### Economics and finance
+
+| Work | Location | What it is |
+|---|---|---|
+| **The Response Gap** | [`Economics/`](Economics) | Algorithmic credit and automated liquidation treated as an auditable governance object; proposes response-time budgets and epistemic-disclosure standards for underwriting models. [doi:10.5281/zenodo.21752834](https://doi.org/10.5281/zenodo.21752834) |
+| **The Forced Urgency Gap** (WP-32) | [`Economics/`](Economics) | Non-identification of loss aversion under latent liquidity constraints. Reproducible FRED / Federal Reserve Z.1 pipeline (Python, 1971–2026) with the 2020 and 2022 liquidity shocks as natural experiments. Six-theorem Lean core, kernel-verified, no `sorryAx`. |
+| **The Banking Butterfly** | [`Economics/`](Economics) | Precision asymmetry in Brazilian retail banking: the spread between rates for borrowers with alternatives and borrowers without. |
+| **Positional Dominance under Non-Contestability** | [`NetworkGamesJOMO/`](NetworkGamesJOMO) | Two-player stochastic network game: hub control dominates velocity investment above a threshold σ\* ≈ 1/3. Associated constants machine-checked in Lean 4. |
+| **The One-Third Invariant** (companion) | [`NetworkGamesJOMO/`](NetworkGamesJOMO) | Companion paper on the 1/3 threshold shared with the dm³ stability radius ε₀. |
+| **WorldQuant International Quant Championship 2026** | [`NetworkGamesJOMO/`](NetworkGamesJOMO) | Gold, Silver, and Bronze certificates. |
+| **CapitalGuard Trader** | [`Finance/`](Finance) | Risk-first single-name trading system — ATR trailing stops, 0.75% max risk per trade, hard daily loss limit — with backtests, a paper-trading bot, and live setup dashboards. |
+| **Grid-bot backtest (BTC/ETH)** | [`Finance/`](Finance) | Backtest of a grid strategy across two crypto pairs. |
+| **Ponte Nova** | [`Finance/fednow-margin.html`](Finance/fednow-margin.html) | Instant-payments concept built on FedNow settlement timing, aimed at users underserved by existing rails. |
+
+### AI and multi-agent systems
+
+| Work | Location | What it is |
+|---|---|---|
+| **SwarmSimulator** | [`Intelligence/`](Intelligence) · [`SWARM/`](SWARM) | Multi-agent convergence under the dm³ operators — Lean 4 formalization, Python simulator, contraction-region and convergence figures, and a standing open-questions log. |
+| **Multi-Agent TOGT** | [`BioPhysics/`](BioPhysics) · [`FruitFly/`](FruitFly) | Multi-agent instantiation with a Lean companion (`MultiAgentTogt.lean`), simulation code, and agent-trajectory figures. |
+| **Contact No-Go API** | [`nogo-api/`](nogo-api) | Flask service exposing transverse-stability and cosmological no-go results as HTTP endpoints. Every route computes something backed by a named theorem — a thin numeric wrapper over proved math, not a black box. |
+| **RAG & Context Engineering** | [`AULA/rag-course/`](AULA/rag-course) | Full eight-week course worked end to end: retrieval decisions, classical retrieval, evaluation, and a production RAG capstone, with per-week labs and build scripts. |
+
+**Why these sit in a formal-verification repository.** A margin call, a liquidation cascade, and a
+swarm of agents settling into consensus are one object at different scales: a system iterating under
+constraint toward a fixed point, with a threshold separating stable from degenerate behaviour. That
+threshold is ε₀ = 1/3 in the dm³ core and σ\* ≈ 1/3 in the network game. The economics lines are
+where the framework meets data that fights back.
+
+---
+
 ## Series and Zenodo
 
 | Record | DOI | Contents |
@@ -79,6 +116,15 @@ AXLE/
 │ ├── sample-chapter-tubulin.html Ch. T
 │ ├── sample-chapter-wigner.html Ch. W
 │ └── living-book.html
+│
+├── Applied lines
+│ ├── Economics/ Response Gap, Forced Urgency (WP-32), Banking Butterfly
+│ ├── NetworkGamesJOMO/ Positional dominance, one-third invariant, IQC certificates
+│ ├── Finance/ CapitalGuard Trader, backtests, dashboards, Ponte Nova
+│ ├── Intelligence/ · SWARM/ SwarmSimulator — multi-agent convergence
+│ ├── BioPhysics/ Multi-Agent TOGT (Lean + simulation)
+│ ├── AULA/rag-course/ RAG and context-engineering course
+│ └── nogo-api/ Contact No-Go API (Flask, theorem-backed endpoints)
 │
 ├── Domain folders
 │ ├── AnuclearPhysics/ Nuclear Physics B materials
