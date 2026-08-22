@@ -77,6 +77,28 @@ table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabula
   .nav button{padding:8px 12px;font-size:12px;}
   .fol{min-width:0;font-size:10px;}
 }
+
+/* ── navigation, reworked ───────────────────────── */
+.nav{position:sticky;bottom:0;z-index:60;display:flex;align-items:center;justify-content:center;
+     gap:8px;flex-wrap:wrap;background:#fdfdfb;border-top:1px solid #16161a;
+     box-shadow:0 -2px 8px rgba(22,22,26,.10);padding:8px 10px;margin-top:14px;}
+.nav button{font-family:inherit;font-size:12px;padding:5px 10px;border:1px solid #16161a;
+     background:#fdfdfb;color:#16161a;cursor:pointer;}
+.nav button:disabled{opacity:.32;cursor:default;}
+.nav .fol{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#3a3a40;margin:0 4px;}
+#pgnums{display:flex;gap:4px;flex-wrap:wrap;}
+button.pgnum{min-width:26px;padding:4px 7px;font-size:12px;}
+button.pgnum.on{background:#16161a;color:#fdfdfb;font-weight:bold;}
+.nav .hint{font-size:9.5px;color:#6a6a70;width:100%;text-align:center;}
+@media (max-width:760px){ .nav .hint{display:none;} .nav button{font-size:11px;padding:4px 8px;} }
+
+/* ── root cause: the active page must own its own height ──
+   .pg is absolutely positioned and .pgs was sized by JS after load.
+   When MathJax re-rendered, the page outgrew the stale height and
+   overflowed on top of the nav strip. Letting the active page sit in
+   normal flow makes the container grow with it and removes the sync. */
+#pgs .pg.is-active{position:relative;}
+#pgs{min-height:0;}
 </style>
 </head>
 <body>
@@ -88,7 +110,7 @@ table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabula
     <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding-bottom:6px;">
       <div style="border:1px solid #16161a;padding:5px 8px;font-size:9px;max-width:158px;"><b style="font-size:8px;">THE MOTTO</b><br><span style="font-style:italic;">&#8220;i, the rotation; o, the point it turns about.&#8221;</span></div>
       <div style="text-align:center;" class="kick">Vol. &#937; &#183; No. 5<br>The Generative Science Journal</div>
-      <div style="text-align:right;" class="kick">Newark, N.J.<br>Free &#183; CC BY-NC-ND<br><a href="vol4.html" style="color:#16161a;">&#8592; No. 4</a></div>
+      <div style="text-align:right;" class="kick">Newark, N.J.<br>Free &#183; CC BY-NC-ND<br><a href="vol4.html" style="color:#16161a;">&#8592; No. 4</a> &#183; <a href="vol6.html" style="color:#16161a;">No. 6 &#8594;</a></div>
     </div>
     <div style="text-align:center;border-top:1px solid #16161a;border-bottom:1px solid #16161a;padding:8px 0 6px;"><div style="font-family:'UnifrakturMaguntia',serif;font-size:clamp(34px,7vw,60px);line-height:1;">Imaginary Origin</div></div>
     <div style="display:flex;justify-content:space-between;align-items:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#3a3a40;border-bottom:1px solid #16161a;padding:4px 1px;"><span>Saturday, August 22, 2026</span><span style="text-transform:none;font-size:12px;">emblem: <span class="emblem">$g^6$</span></span><span>Morning Edition</span></div>
@@ -309,27 +331,29 @@ table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabula
   </section>
 
 </div>
-<div class="nav"><button id="prev">&#8249;&nbsp;Previous</button><span class="fol" id="fol">Page 1 of 5</span><button id="next">Next&nbsp;&#8250;</button></div>
+<div class="nav"><button id="prev">&#8249;&nbsp;Prev</button><span id="pgnums"></span><button id="next">Next&nbsp;&#8250;</button><span class="fol" id="fol"></span><span class="hint">&#8592; &#8594; arrow keys also turn the page</span></div>
 <div class="colophon">
   &#169; 2026 Pablo Nogueira Grossi &#183; G6 LLC &#183; Newark, NJ 07104, USA &#183; g6llc@proton.me &#183; ORCID 0009-0000-6496-2186<br>
   Imaginary Origin &#183; The Generative Science Journal &#183; Vol. &#937; No. 5 &#183; <a href="https://zenodo.org/communities/principia-orthogona">Zenodo: Principia Orthogona</a> &#183; Licensed <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a><br>
-  <a href="vol4.html">&#8592; No. 4</a> &#183; <span style="font-style:italic;color:#3a3a40;">A Newsletter Opens, and Chladni Plates Go to the Classroom</span> &#183; <a href="https://totogt.github.io/AXLE/">&#8592; AXLE home</a>
+  <a href="vol4.html">&#8592; No. 4</a> &#183; <a href="vol6.html">No. 6 &#8594;</a> &#183; <span style="font-style:italic;color:#3a3a40;">Seven Ways a Proof Can Be True and Useless</span> &#183; <span style="font-style:italic;color:#3a3a40;">A Newsletter Opens, and Chladni Plates Go to the Classroom</span> &#183; <a href="https://totogt.github.io/AXLE/">&#8592; AXLE home</a>
 </div>
 </div>
 <script>
 (function(){
   var pgs=Array.prototype.slice.call(document.querySelectorAll('#pgs .pg'));
   var cur=0,fol=document.getElementById('fol'),prev=document.getElementById('prev'),next=document.getElementById('next');
-  var stage=document.getElementById('pgs');
-  function sizeStage(){ if(pgs[cur]) stage.style.height = pgs[cur].offsetHeight + 'px'; }
-  function render(){pgs.forEach(function(p,i){p.className='pg '+(i===cur?'is-active':(i<cur?'is-left':'is-right'));});fol.textContent='Page '+(cur+1)+' of '+pgs.length;prev.disabled=(cur===0);next.disabled=(cur===pgs.length-1);sizeStage();}
+  var stage=document.getElementById('pgs');var nums=document.getElementById('pgnums');
+  function top(){window.scrollTo({top:0,behavior:'smooth'});}
+  pgs.forEach(function(p,i){var b=document.createElement('button');b.className='pgnum';b.textContent=i+1;b.setAttribute('aria-label','Go to page '+(i+1));b.addEventListener('click',function(){cur=i;render();top();});nums.appendChild(b);});
+  function sizeStage(){ stage.style.height=''; }
+  function render(){pgs.forEach(function(p,i){p.className='pg '+(i===cur?'is-active':(i<cur?'is-left':'is-right'));});fol.textContent='Page '+(cur+1)+' of '+pgs.length;prev.disabled=(cur===0);next.disabled=(cur===pgs.length-1);Array.prototype.forEach.call(nums.children,function(b,i){b.className='pgnum'+(i===cur?' on':'');});sizeStage();}
   window.addEventListener('resize',sizeStage);
   window.addEventListener('load',sizeStage);
   if(window.MathJax&&MathJax.startup&&MathJax.startup.promise){MathJax.startup.promise.then(sizeStage);}
-  next.addEventListener('click',function(){if(cur<pgs.length-1){cur++;render();}});
-  prev.addEventListener('click',function(){if(cur>0){cur--;render();}});
+  next.addEventListener('click',function(){if(cur<pgs.length-1){cur++;render();top();}});
+  prev.addEventListener('click',function(){if(cur>0){cur--;render();top();}});
   document.querySelectorAll('.jump').forEach(function(b){b.addEventListener('click',function(){cur=+b.getAttribute('data-goto');render();window.scrollTo({top:0,behavior:'smooth'});});});
-  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pgs.length-1){cur++;render();}if(e.key==='ArrowLeft'&&cur>0){cur--;render();}});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pgs.length-1){cur++;render();top();}if(e.key==='ArrowLeft'&&cur>0){cur--;render();top();}});
   render();
 })();
 </script>
