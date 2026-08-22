@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaginary Origin — The Generative Science Journal — Vol. Ω No. 6 — Seven Ways a Proof Can Be True and Useless</title>
+<meta name="description" content="Imaginary Origin, Vol. Ω No. 6 (29 August 2026). A week auditing this desk's own machine-checked claims: seven failure classes, five theorems filed under claims they do not support, and the one class no checker can ever catch.">
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:#dedcd3;color:#16161a;font-family:'Libre Caslon Text',Georgia,serif;line-height:1.42;padding:20px 14px 30px;}
+a{color:#16161a;}
+.stage{perspective:2200px;position:relative;max-width:920px;margin:0 auto;}
+.pgs{position:relative;min-height:620px;}
+.pg{position:absolute;top:0;left:0;width:100%;background:#fdfdfb;padding:26px 30px;transform-origin:left center;transition:transform .6s cubic-bezier(.2,.7,.2,1),opacity .5s ease;backface-visibility:hidden;box-shadow:0 2px 6px rgba(0,0,0,.16);}
+.pg.is-left{transform:rotateY(40deg) translateX(-40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-right{transform:rotateY(-40deg) translateX(40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-active{transform:none;opacity:1;z-index:2;}
+.hd{font-family:'Libre Caslon Display',Georgia,serif;line-height:1.08;}
+.kick{font-size:8.5px;text-transform:uppercase;letter-spacing:.12em;color:#56565c;}
+.pg p{font-size:12.5px;text-align:justify;margin:0 0 8px;}
+.runhead{display:flex;justify-content:space-between;align-items:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#56565c;border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:12px;}
+.emblem{border:1.5px solid #16161a;border-radius:7px;padding:.05em .32em;font-size:.86em;}
+.lead a,.pg .rl a{color:#16161a;text-decoration:none;border-bottom:1px solid #b9b9b0;}
+.pg .rl a:hover,.lead a:hover{border-bottom-color:#16161a;}
+.rl{font-size:12px;}
+.jump{background:none;border:none;padding:0;margin:0;font-family:inherit;font-size:11.5px;color:#16161a;cursor:pointer;text-align:left;border-bottom:1px solid #b9b9b0;}
+.jump:hover{border-bottom-color:#16161a;}
+.nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px auto 0;max-width:920px;}
+.nav button{font-family:'Libre Caslon Text',Georgia,serif;font-size:13px;background:#fdfdfb;border:1px solid #16161a;padding:6px 18px;cursor:pointer;color:#16161a;}
+.nav button:hover{background:#efece2;}
+.nav button:disabled{opacity:.35;cursor:default;}
+.fol{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#3a3a40;min-width:96px;text-align:center;}
+.colophon{max-width:920px;margin:14px auto 0;font-size:10px;color:#5a5a56;text-align:center;line-height:1.7;}
+.colophon a{color:#5a5a56;}
+.tag{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;border:1px solid #16161a;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle;}
+table.led{width:100%;border-collapse:collapse;font-size:11.5px;margin:6px 0 4px;}
+table.led th{text-align:left;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#56565c;border-bottom:1px solid #16161a;padding:3px 6px 4px;}
+table.led td{border-bottom:1px solid #e2e0d8;padding:5px 6px;vertical-align:top;}
+table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.pull{border-left:2px solid #16161a;padding:2px 0 2px 12px;margin:10px 0;font-style:italic;color:#3a3a40;font-size:12px;}
+.stat{border:1px solid #16161a;padding:9px 11px;background:#fbfbf8;}
+.stat b{display:block;font-family:'Libre Caslon Display',Georgia,serif;font-size:21px;line-height:1.1;}
+.open{display:inline-block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;border:1px solid #8a2f2f;color:#8a2f2f;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
+.pt{background:#f6f4ec;border-left:2px solid #b9b9b0;padding:8px 12px;margin-top:10px;}
+.pt p{font-size:11.5px;color:#3a3a40;}
+
+/* ── mobile ─────────────────────────────────────── */
+@media (max-width:760px){
+  body{padding:10px 8px 22px;}
+  .pg{padding:16px 15px;}
+  .pgs{min-height:0;}
+  /* every two-column layout collapses */
+  .lead{grid-template-columns:1fr !important;gap:12px !important;}
+  .lead > div{border-right:0 !important;padding-right:0 !important;}
+  .pg .rl[style*="grid"]{display:block !important;}
+  .pg .rl[style*="grid"] > div{border-right:0 !important;padding-right:0 !important;margin-bottom:14px;}
+  .pg > div[style*="grid-template-columns"]{grid-template-columns:1fr !important;}
+  /* masthead */
+  .pg > div[style*="1fr auto 1fr"]{grid-template-columns:1fr !important;text-align:center;gap:6px;}
+  .pg > div[style*="1fr auto 1fr"] > div{text-align:center !important;max-width:none !important;}
+  /* running heads and date strip wrap instead of squashing */
+  .runhead{flex-wrap:wrap;gap:4px;}
+  /* tables: tighter, allow wrap */
+  table.led{font-size:10.5px;}
+  table.led td,table.led th{padding:4px 3px;word-break:break-word;}
+  table.led td.num{text-align:left;}
+  /* type */
+  .pg p{font-size:13px;text-align:left;}
+  .rl{font-size:12.5px;}
+  .stat b{font-size:19px;}
+  .nav{gap:8px;}
+  .nav button{padding:8px 12px;font-size:12px;}
+  .fol{min-width:0;font-size:10px;}
+}
+</style>
+</head>
+<body>
+
+<div class="stage"><div class="pgs" id="pgs">
+
+  <!-- ══════════════ PAGE 1 — FRONT ══════════════ -->
+    <section class="pg is-active">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding-bottom:6px;">
+      <div style="border:1px solid #16161a;padding:5px 8px;font-size:9px;max-width:158px;"><b style="font-size:8px;">THE MOTTO</b><br><span style="font-style:italic;">&#8220;i, the rotation; o, the point it turns about.&#8221;</span></div>
+      <div style="text-align:center;" class="kick">Vol. &#937; &#183; No. 6<br>The Generative Science Journal</div>
+      <div style="text-align:right;" class="kick">Newark, N.J.<br>Free &#183; CC BY-NC-ND<br><a href="vol5.html" style="color:#16161a;">&#8592; No. 5</a></div>
+    </div>
+    <div style="text-align:center;border-top:1px solid #16161a;border-bottom:1px solid #16161a;padding:8px 0 6px;"><div style="font-family:'UnifrakturMaguntia',serif;font-size:clamp(34px,7vw,60px);line-height:1;">Imaginary Origin</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#3a3a40;border-bottom:1px solid #16161a;padding:4px 1px;"><span>Saturday, August 29, 2026</span><span style="text-transform:none;font-size:12px;">emblem: <span class="emblem">$g^6$</span></span><span>Morning Edition</span></div>
+
+    <div class="lead" style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:14px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:16px;">
+        <div class="hd" style="font-size:clamp(22px,3.6vw,30px);">The Repair That Was Reported and Never Made</div>
+        <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 9px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">An errata told a federal agency that a defective statement had been deleted. Three days later it was still in the file. The scan that found it had been written that morning, for something else</div>
+
+        <p>On 18 August this desk issued an errata correcting its response to NASA&#8217;s Moon Base request for information. The errata quoted the offending line &#8212; a theorem whose entire content was <code>True</code>, which compiles, contains no <code>sorry</code>, and passes every axiom check ever written &#8212; and stated that such statements had been <em>deleted rather than converted to</em> <code>sorry</code>.</p>
+
+        <p>On 21 August the statement was still there. The correction had been made in a working session and never committed: the document reported the repair, the repository never received it, and both halves were written in good faith. No layer could see the gap. Not the compiler, not the kernel, not continuous integration, and not the person who wrote the errata.</p>
+
+        <div class="pull">A verification stack can certify that a proof supports a statement. It can never certify that a statement supports a claim &#8212; because one side of that comparison is a sentence in English.</div>
+
+        <p>What followed was a week of pointing the checkers at the corpus that built them. Seven distinct ways a check can pass while the claim behind it fails are set out on <button class="jump" data-goto="1">Page 2</button>, with the date each was closed. Six are now mechanical. The seventh is not, and this desk does not believe it ever will be.</p>
+
+        <p>Of twelve theorems filed against NASA functional gap codes, all twelve are true, all twelve are proved, and <b>five prove something other than what they are filed as</b>. One establishes that a colony&#8217;s seed cells survive <em>n</em> growth steps and is recorded as a proof of reachability &#8212; the opposite inclusion. No axiom check can see this, because the defect is in neither the mathematics nor the prose but in the join between them, and every layer inspects one side.</p>
+
+        <p>The remedy is not another tool. It is a habit, and habits are taught: the classroom arm of this desk now runs it as a ninety-minute lesson, described on <button class="jump" data-goto="2">Page 3</button> along with what the word <em>generative</em> is doing in this journal&#8217;s masthead, given what has happened to that adjective since 2022.</p>
+
+        <p style="font-size:11px;">Every defect named in this issue is this desk&#8217;s own, and each is recorded in the repository with the date it was closed. The runs are public and re-runnable.</p>
+      </div>
+
+      <div>
+        <div class="kick" style="border-bottom:1px solid #16161a;padding-bottom:3px;margin-bottom:8px;">In This Issue</div>
+        <div class="rl" style="line-height:1.5;">
+          <p style="font-size:11.5px;margin-bottom:7px;">&#9656; <button class="jump" data-goto="1"><b>The Ledger</b></button><br><span style="color:#3a3a40;">Seven ways a proof can be true and useless, six of them now gated &#8212; and the five theorems filed under claims they do not support.</span></p>
+          <p style="font-size:11.5px;margin-bottom:7px;">&#9656; <button class="jump" data-goto="2"><b>The Desk</b></button><br><span style="color:#3a3a40;">What generative science is, what this opus does, and the warrant ladder the volumes climb. With four lessons a teacher can run on Monday.</span></p>
+          <p style="font-size:11.5px;margin-bottom:7px;">&#9656; <button class="jump" data-goto="3"><b>The Submissions</b></button><br><span style="color:#3a3a40;">Five Notices of Intent filed with NASA on 20 August, none of them asking for money &#8212; and why the barrier to filing one is far lower than almost anyone believes.</span></p>
+          <p style="font-size:11.5px;">&#9656; <button class="jump" data-goto="4"><b>The Reading Room</b></button><br><span style="color:#3a3a40;"><em>Pierre et Mademoiselle</em>, No. 1: Toulouse, 1653, and a death reported a week too early.</span></p>
+        </div>
+        <div class="stat" style="margin-top:12px;">
+          <span class="kick">Kernel-checked this week</span>
+          <b>17 theorems</b>
+          <span style="font-size:10px;color:#3a3a40;">Asked for by name on a public runner, none resting on an admitted proof. Worth exactly what the reader can see it does not cover.</span>
+        </div>
+        <div class="stat" style="margin-top:10px;">
+          <span class="kick">Failure classes, of seven</span>
+          <b>6 closed &#183; 1 open</b>
+          <span style="font-size:10px;color:#3a3a40;">The open one is undecidable, not unfinished.</span>
+        </div>
+        <p style="font-size:10.5px;margin-top:10px;color:#3a3a40;font-style:italic;">A framework that will not publish its own defect list has not earned the rest of the page.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ PAGE — THE LEDGER: SEVEN WAYS A CHECK CAN PASS ══════════════ -->
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; The Ledger</span><span>Page 2</span></div>
+    <div class="hd" style="font-size:26px;margin-bottom:2px;">Seven Ways a Proof Can Be True and Useless</div>
+    <div style="font-size:12px;font-style:italic;color:#3a3a40;border-bottom:1px solid #d0d0c8;padding-bottom:8px;margin-bottom:10px;">A week spent auditing this desk&#8217;s own machine-checked claims. Every defect below was found in this repository, by this repository, and is recorded with the date it was closed.</div>
+
+    <p style="margin-top:0;">On 18 August this desk sent NASA an errata correcting its response to the Moon Base RFI. The errata quoted an offending line &#8212; a theorem whose entire content was <code>True</code> &#8212; and stated that such statements had been <em>deleted rather than converted to</em> <code>sorry</code>, on the reasoning that a retracted claim is not an open one.</p>
+
+    <p>On 21 August the statement was still in the file. A scan written that same morning, for a different purpose, printed it on its first run.</p>
+
+    <p>The correction had been made in a previous working session and never committed. The document reported the repair; the repository never received it. Both halves were sincere and the gap between them was invisible to every layer &#8212; to the compiler, to the kernel, to continuous integration, and to the person who wrote the errata.</p>
+
+    <table class="led">
+      <tr><th>Failure class</th><th>Question it asks</th><th>What detects it</th><th style="text-align:right;">Status</th></tr>
+      <tr><td><b>MISMATCH</b></td><td>Is this the artifact that was checked?</td><td>Content hash</td><td class="num">closed</td></tr>
+      <tr><td><b>STALE</b></td><td>Is this the environment it was checked in?</td><td>Environment probe</td><td class="num">closed</td></tr>
+      <tr><td><b>FAIL</b></td><td>Does the check still pass?</td><td>Re-run</td><td class="num">closed</td></tr>
+      <tr><td><b>FALSE</b></td><td>Is the statement true at all?</td><td>Elaboration &#8212; only if a build target reaches the file</td><td class="num">closed</td></tr>
+      <tr><td><b>VACUOUS</b></td><td>Does the statement have content?</td><td>Declared-baseline scan</td><td class="num">closed 21 Aug</td></tr>
+      <tr><td><b>UNTRUSTED</b></td><td>Does the proof rest on the kernel?</td><td>Axiom allowlist</td><td class="num">closed 22 Aug</td></tr>
+      <tr><td><b>MISATTRIBUTED</b></td><td>Does the statement support the claim made from it?</td><td><b>Nothing, and nothing can</b></td><td class="num"><b>open</b></td></tr>
+    </table>
+
+    <div class="rl" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:18px;">
+        <div class="hd" style="font-size:16px;">The five that were filed wrong</div>
+        <p style="margin-top:4px;">Twelve theorems in this repository are indexed against NASA functional gap codes. All twelve are true, all twelve are proved, and every one reports only the standard axioms. Reading the statements against the codes they answer, <b>five prove something other than what they are filed as</b>.</p>
+        <p>One asserts that the seed cells of a colony survive <em>n</em> growth steps, and is filed as a proof of reachability &#8212; which is the opposite inclusion. One proves that adjacency is symmetric and is filed as proving that neighbours share exactly one interface. One proves <code>n_layers = 6</code> by unfolding a definition, and is filed under a claim about processed regolith.</p>
+        <p>No axiom check can see any of this, because the defect is not in the Lean and not in the prose. It is in the join between them, and every layer inspects one side.</p>
+      </div>
+      <div>
+        <div class="hd" style="font-size:16px;">The ceiling, stated as a ceiling</div>
+        <p style="margin-top:4px;">The first six classes are mechanical: both sides of each comparison are machine-readable. The seventh is not, and will not become so.</p>
+        <div class="stat" style="margin:8px 0;">
+          <span class="kick">What a verification stack can certify</span>
+          <b>that a proof supports a statement</b>
+          <span style="font-size:10px;color:#3a3a40;">and never that a statement supports a claim &#8212; because one side of that comparison is an English sentence.</span>
+        </div>
+        <p>What remains mechanisable is the bookkeeping, not the judgement: require every theorem cited in a claims table to carry an identifier, require every identifier in the prose to resolve to exactly one theorem, fail on either side unmatched. That catches drift. It catches nothing about whether the pairing was ever warranted.</p>
+        <p style="margin-bottom:0;">The residue is a signed three-column table &#8212; statement as written, what it strictly licenses, what is claimed from it &#8212; and a person is the only thing that can produce it.</p>
+      </div>
+    </div>
+
+    <div class="rl" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px;border-top:1px solid #d0d0c8;padding-top:10px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:18px;">
+        <div class="hd" style="font-size:16px;">Closed this week</div>
+        <p style="margin-top:4px;"><b>The vacuity gate.</b> Six statements of the form <code>: True := trivial</code> are declared in a baseline file; an undeclared seventh fails the job. It caught one on its first run &#8212; the one the errata had reported deleted.</p>
+        <p><b>The axiom gate.</b> One of the twelve rested on <code>native_decide</code>, an axiom emitted when a goal is discharged by compiled code rather than by the kernel, inside a step named <em>Kernel axiom check</em>. Rather than permit the axiom, the proof was rebuilt with <code>decide</code>: the kernel now reduces the goal itself.</p>
+        <p style="margin-bottom:0;"><b>The vocabulary gate.</b> A search engine&#8217;s generated summary described this corpus as using a &#8220;Log-Psi Recurrence Operator&#8221; and &#8220;Harmonic Resonance Bands (HRB).&#8221; Neither term occurs anywhere in it. A 148-term declared baseline now fails on any coined term that appears undeclared.</p>
+      </div>
+      <div>
+        <div class="hd" style="font-size:16px;">The week&#8217;s own coincidence</div>
+        <p style="margin-top:4px;">On the same night, two working sessions with no contact between them diagnosed the same problem in the same file &#8212; a 168&nbsp;KB instruction document, most of it closed history, loaded in full at the start of every session &#8212; and both split it, one into <code>CLAUDE-ARCHIVE.md</code> and one into <code>docs/audit-log.md</code>.</p>
+        <p>Same diagnosis, same remedy, different filename, arrived at independently. The merge that reunited them conflicted on exactly that file and nothing else.</p>
+        <p style="margin-bottom:0;">It is a small instance of a large claim this desk has been arguing elsewhere all week: that where a problem admits few solutions, unconnected parties will arrive at the same one, and the arrival is evidence about the problem rather than about the parties.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:12px;border-top:1px solid #d0d0c8;padding-top:8px;color:#3a3a40;font-style:italic;">Why print the defect list rather than the green badge: because seventeen theorems now pass a kernel check that asks for them by name, and that sentence is worth exactly as much as the reader&#8217;s ability to see what it does not cover. The run is public and re-runnable. So is the list of what it cannot see.</p>
+  
+    <div class="jump" style="margin-top:14px;border-top:2px solid #16161a;padding-top:10px;">
+      <span class="kick">Next in The Reading Room</span>
+      <div class="hd" style="font-size:18px;margin:2px 0 4px;">Pierre et Mademoiselle &#183; No. 2 &#183; The Commission</div>
+      <p style="margin:0;font-style:italic;">Toulouse, 1665 &#8212; some months before the world was told he was dead.</p>
+      <p style="margin:6px 0 0;">He was sixty-four, and he had begun, privately, to keep two sets of books. The serial continues; the note on fact &amp; fiction stands, and the false report of Fermat&#8217;s death in 1653 &#8212; Bernard Medon&#8217;s letter, and its retraction a week later &#8212; is the documented part.</p>
+    </div>
+</section>
+
+  <!-- ══════════════ PAGE — WHAT GENERATIVE SCIENCE IS ══════════════ -->
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; The Desk</span><span>Page 3</span></div>
+    <div class="hd" style="font-size:26px;margin-bottom:2px;">What Generative Science Is, and What This Opus Does</div>
+    <div style="font-size:12px;font-style:italic;color:#3a3a40;border-bottom:1px solid #d0d0c8;padding-bottom:8px;margin-bottom:10px;">Printed because the adjective has been taken. A reader arriving in 2026 assumes we mean machine text generation. We do not, and the older sense is worth defending.</div>
+
+    <p style="margin-top:0;"><b>Generative</b> here is the sense Joshua Epstein put in one line: <em>if you didn&#8217;t grow it, you didn&#8217;t explain it.</em> An explanation is generative when it exhibits a rule you can run, whose repeated application produces the structure you set out to account for. Not a correlation. Not a fitted curve. A mechanism, and the discipline of watching what it does.</p>
+
+    <p>The lineage is older than the phrase. P&#257;&#7751;ini&#8217;s grammar of Sanskrit, around 400 BCE, is a finite rule set generating an unbounded set of well-formed forms &#8212; and generating no others. That last clause is the whole idea. A generative system is as much a boundary as an engine, which is why this desk treats grammars, growth laws and operator algebras as one kind of object.</p>
+
+    <p><b>This journal&#8217;s addition</b> is narrow and it is the part open to attack. Where the generative tradition builds a purpose-made model per phenomenon and demonstrates sufficiency by running it, this series claims <em>one</em> operator algebra across unrelated domains, establishes sufficiency by machine-checked theorem rather than by simulation, and adds what a simulation cannot supply: a rate at which deviations decay, a radius beyond which they do not, and a limit the sequence approaches. Sufficiency is a weaker claim than inevitability. We are making the stronger one, and it is correspondingly easier to break.</p>
+
+    <div class="rl" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:18px;">
+        <div class="hd" style="font-size:16px;">The ladder the volumes climb</div>
+        <p style="margin-top:4px;">The series is often read as running from abstract to applied. It is better read as a schedule of what each step <em>spends</em>.</p>
+        <table class="led" style="margin-top:8px;">
+          <tr><th>Rung</th><th>What is added</th><th style="text-align:right;">Warrant</th></tr>
+          <tr><td><b>Mathematics</b></td><td>nothing &#8212; the structure alone</td><td class="num">unconditional</td></tr>
+          <tr><td><b>Physics</b></td><td>&#8220;this system is that structure&#8221;</td><td class="num">conditional</td></tr>
+          <tr><td><b>Chemical eng.</b></td><td>real materials, real vessels, scale</td><td class="num">weaker</td></tr>
+          <tr><td><b>Biology</b></td><td>heterogeneity, history, contingency</td><td class="num">weakest</td></tr>
+          <tr><td><b>Omega</b></td><td>meaning; no bridge to measurement</td><td class="num">held</td></tr>
+        </table>
+        <p style="margin-bottom:0;">The trade runs the uncomfortable way. Nobody&#8217;s life turns on Hille&#8211;Yosida; the delirium burden is where it would matter. <b>Warrant weakens exactly as consequence strengthens</b>, and that is why the tags on every claim in this series are not decoration. They record which bridge a sentence has already crossed.</p>
+      </div>
+      <div>
+        <div class="hd" style="font-size:16px;">What the opus actually does</div>
+        <p style="margin-top:4px;">Four things, and it is worth being plain about which is which.</p>
+        <p><b>1 &#183; It states one algebra</b> &#8212; four operators, compression, coherence, fold, union &#8212; and applies it in catalysis, the atmosphere, molecular biology and household finance without changing it between domains.</p>
+        <p><b>2 &#183; It proves what it can.</b> Seventeen theorems are asked of the Lean kernel by name on a public runner, and none rests on an admitted proof. That sentence is worth exactly what the reader can see it does not cover.</p>
+        <p><b>3 &#183; It publishes its own defects.</b> Every failed check, with the date it was fixed, including an errata to a federal agency that reported a deletion which had not happened. Nothing here has ever been corrected quietly.</p>
+        <p style="margin-bottom:0;"><b>4 &#183; It marks what it has not earned.</b> Five tags, from <em>verified</em> to <em>held</em>, applied per claim rather than per volume &#8212; which is the only honest way to publish a framework that reaches from a theorem to a hospital.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:14px;border-top:2px solid #16161a;padding-top:10px;">
+      <span class="kick">For teachers &#183; deployable Monday</span>
+      <div class="hd" style="font-size:18px;margin:2px 0 6px;">The classroom arm, and where to start</div>
+      <p style="margin-top:0;">Hour House runs this material as lessons in Newark, for students continuing after ESL. The lessons are free, self-contained, and require no mathematics from the teacher.</p>
+      <table class="led">
+        <tr><th>Lesson</th><th>What it teaches</th><th>Bring</th></tr>
+        <tr><td><b>05 &#183; Saying How You Know</b><br><span style="color:#56565c;">new this week</span></td><td>The five tags as five registers of English: modality, conditionals, evidential verbs. Critical thinking and academic writing taught as one skill, on real published claims &#8212; several of them this desk&#8217;s own errors.</td><td>One AI-generated paragraph per student</td></tr>
+        <tr><td><b>02 &#183; The Cajueiro Principle</b></td><td>Growth through contact and adaptation until a form persists. The operator C, taught through one tree.</td><td>Nothing</td></tr>
+        <tr><td><b>01 &#183; The Vitruvian Approximation</b></td><td>Proportion, measurement, and what a canon of the body does and does not establish.</td><td>Tape measure</td></tr>
+        <tr><td><b>03b &#183; Chladni Plates</b></td><td>Standing waves made visible: constraint selecting form, with no intention anywhere in the apparatus.</td><td>Speaker, plate, sand</td></tr>
+      </table>
+      <p style="margin-bottom:0;font-style:italic;color:#3a3a40;">Lesson 05 is the one to run first if you have a multilingual room. Ask the class, before teaching anything, whether their language <em>makes</em> them say how they know &#8212; Turkish does, Quechua does, English does not. The student whose grammar forces the distinction is ahead of the lesson, and should be the one explaining it.</p>
+    </div>
+
+    <p style="margin-top:12px;border-top:1px solid #d0d0c8;padding-top:8px;color:#3a3a40;font-style:italic;">Why a research desk runs a classroom: because the gap this series spends its time on &#8212; between what was proved and what gets claimed &#8212; lives in ordinary sentences, and no machine can close it. The only available repair is a generation that writes carefully. That is a teaching problem, and it always was.</p>
+  </section>
+
+  <!-- ══════════════ PAGE 4 — THE SUBMISSIONS ══════════════ -->
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; The Desk</span><span>Page 4</span></div>
+    <div class="hd" style="font-size:26px;margin-bottom:2px;">Five Answers Nobody Asked This Desk For</div>
+    <div style="font-size:12px;font-style:italic;color:#3a3a40;border-bottom:1px solid #d0d0c8;padding-bottom:8px;margin-bottom:10px;">On 20 August this desk filed five Notices of Intent with NASA. No budget was requested in any of them. This page is here because the barrier to doing the same is far lower than almost anyone believes, and the agency is the party asking.</div>
+
+    <p style="margin-top:0;">A Request for Information is not a grant competition and not a solicitation. It is an agency writing down, in public, that it does not know something and would like to be told. NNJ26ZSA003L asks: <em>what can we learn about human health and performance from astronauts living and working on a Moon Base?</em> That question was open. Anyone could answer it. Almost nobody does.</p>
+
+    <table class="led">
+      <tr><th>NOI</th><th>What it says is missing</th><th style="text-align:right;">Programme</th></tr>
+      <tr><td><b>0045</b><br><span style="color:#56565c;">Threshold- and kinetics-governed lunar surface risks</span></td><td>Bone loss is threshold-governed and dust toxicity is kinetics-governed, yet both are monitored in variables that cannot see them &#8212; cumulative time, inhaled mass. Measure the variable that governs the risk, not the one that is easy to log.</td><td class="num">HRP</td></tr>
+      <tr><td><b>0042</b><br><span style="color:#56565c;">Convergent oxidative insult</span></td><td>Ionising radiation and freshly fractured, reactivity-renewed regolith are studied as separate hazards. On a surface they arrive together, and the combination is not what either alone predicts.</td><td class="num">HRP</td></tr>
+      <tr><td><b>0044</b><br><span style="color:#56565c;">Procedure-set coverage</span></td><td>A measurable gap in the Earth-Independent Human-System Operations and Behavioural risk plans: how much of what a crew will actually have to do is covered by a written procedure at all.</td><td class="num">HRP</td></tr>
+      <tr><td><b>0043</b><br><span style="color:#56565c;">Compliance-gated countermeasure efficacy</span></td><td>A countermeasure&#8217;s real-world effect is bounded by adherence. Efficacy measured under supervision is an upper bound, and the gap between it and the delivered effect is itself a research object.</td><td class="num">HRP</td></tr>
+      <tr><td><b>0333</b><br><span style="color:#56565c;">Airborne lidar constraint on boundary-layer control</span></td><td>Surface aerosol exposure during wildfire smoke intrusions is governed by the depth of the mixed layer, which the surface network does not observe. Lidar constrains the variable the forecast most often gets wrong.</td><td class="num">A.14 Earth Sci.</td></tr>
+    </table>
+
+    <div class="rl" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:18px;">
+        <div class="hd" style="font-size:16px;">Where the gaps came from</div>
+        <p style="margin-top:4px;">Not from a laboratory. From reading, closely, twelve documents the agency published in June and left on the open web &#8212; the Human Research Program&#8217;s Risk Approach Plans, one per risk, each with its knowledge gaps, deliverables and dates.</p>
+        <p>Read as a set rather than one at a time, the distribution is informative. Behavioural Health carries nine numbered deliverables; Earth-Independent Operations, Team and Carcinogenesis carry eight apiece. <b>Bone carries one</b>, printed identically in both the characterisation and countermeasure columns. Venous Thrombosis splits its work into 0-G and partial-G with separate dates; EVA does the same. Bone does not &#8212; although bone is the risk where a sixth of Earth&#8217;s gravity should matter most. And there is no dust plan in the set of twelve at all.</p>
+        <p style="margin-bottom:0;">That is a weekend of careful reading, and it produced five specific, checkable proposals. The document is public. The copy this desk worked from is archived with its checksum beside the paper that uses it.</p>
+      </div>
+      <div>
+        <div class="hd" style="font-size:16px;">Why you should file one</div>
+        <p style="margin-top:4px;"><b>The cost is a form.</b> An NOI is form NRESS-300.1: title, contact, dates, organisation. It says on its own face that it is not binding. Two pages.</p>
+        <p><b>The money barrier is imaginary.</b> All five of these request <b>zero dollars</b>. You are not asking to be paid; you are offering a reading. Nothing about an RFI requires a budget, a laboratory or an institution.</p>
+        <p><b>The credential barrier is a registration.</b> A UEI and a CAGE code, obtained free through SAM.gov. That is the whole gate, and it is administrative rather than academic.</p>
+        <div class="stat" style="margin:8px 0;">
+          <span class="kick">The real cost of not filing</span>
+          <b>silence reads as assent</b>
+          <span style="font-size:10px;color:#3a3a40;">An agency that receives no objection records that it received no objection. Absence of comment is entered as agreement, and the people best placed to notice a gap are usually the ones who assume the room is not for them.</span>
+        </div>
+        <p style="margin-bottom:0;">If you have read a public document closely enough to see something missing in it, you already have the only qualification the process actually requires.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;border-top:1px solid #d0d0c8;padding-top:10px;">
+      <div class="hd" style="font-size:16px;">What a Notice of Intent is not</div>
+      <p style="margin-top:4px;">Stated plainly, because this journal has spent the rest of the issue on claims that outran their evidence. An NOI is <em>not</em> an award, not a grant, not a review, and not an endorsement of anything in it. NASA has agreed to nothing by receiving one. Nobody who files one may describe themselves as working with the agency, funded by it, or affiliated to it, and this desk does not.</p>
+      <p style="margin-bottom:0;">What it is: a filing that puts a specific, falsifiable observation into a public record on the date it was made. That is worth doing on its own terms, and it is worth doing whether or not anything follows.</p>
+    </div>
+
+    <p style="margin-top:12px;border-top:1px solid #d0d0c8;padding-top:8px;color:#3a3a40;font-style:italic;">The deadlines are published, the forms are free, and the questions are genuinely open. If this page persuades one reader to spend a weekend with a set of public plans and then file two pages about what is missing from them, it will have been the most useful thing in the issue.</p>
+  </section>
+
+<section class="pg is-right"><div class="runhead"><span>Imaginary Origin &#183; The Reading Room</span><span>Page 5</span></div><p>Column block missing.</p></section>
+
+
+</div>
+<div class="nav"><button id="prev">&#8249;&nbsp;Previous</button><span class="fol" id="fol">Page 1 of 5</span><button id="next">Next&nbsp;&#8250;</button></div>
+<div class="colophon">
+  &#169; 2026 Pablo Nogueira Grossi &#183; G6 LLC &#183; Newark, NJ 07104, USA &#183; g6llc@proton.me &#183; ORCID 0009-0000-6496-2186<br>
+  Imaginary Origin &#183; The Generative Science Journal &#183; Vol. &#937; No. 5 &#183; <a href="https://zenodo.org/communities/principia-orthogona">Zenodo: Principia Orthogona</a> &#183; Licensed <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a><br>
+  <a href="vol4.html">&#8592; No. 4</a> &#183; <span style="font-style:italic;color:#3a3a40;">A Newsletter Opens, and Chladni Plates Go to the Classroom</span> &#183; <a href="https://totogt.github.io/AXLE/">&#8592; AXLE home</a>
+</div>
+</div>
+<script>
+(function(){
+  var pgs=Array.prototype.slice.call(document.querySelectorAll('#pgs .pg'));
+  var cur=0,fol=document.getElementById('fol'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  var stage=document.getElementById('pgs');
+  function sizeStage(){ if(pgs[cur]) stage.style.height = pgs[cur].offsetHeight + 'px'; }
+  function render(){pgs.forEach(function(p,i){p.className='pg '+(i===cur?'is-active':(i<cur?'is-left':'is-right'));});fol.textContent='Page '+(cur+1)+' of '+pgs.length;prev.disabled=(cur===0);next.disabled=(cur===pgs.length-1);sizeStage();}
+  window.addEventListener('resize',sizeStage);
+  window.addEventListener('load',sizeStage);
+  if(window.MathJax&&MathJax.startup&&MathJax.startup.promise){MathJax.startup.promise.then(sizeStage);}
+  next.addEventListener('click',function(){if(cur<pgs.length-1){cur++;render();}});
+  prev.addEventListener('click',function(){if(cur>0){cur--;render();}});
+  document.querySelectorAll('.jump').forEach(function(b){b.addEventListener('click',function(){cur=+b.getAttribute('data-goto');render();window.scrollTo({top:0,behavior:'smooth'});});});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pgs.length-1){cur++;render();}if(e.key==='ArrowLeft'&&cur>0){cur--;render();}});
+  render();
+})();
+</script>
+
+<script src="newsletter.js" data-source="Imaginary Origin No. 5"></script>
+
+          <div id="nl-signup" style="border:1px solid #16161a;padding:11px 13px;margin:14px 0 4px;background:#fbfbf8;">
+            <div style="font-size:9.5px;letter-spacing:.10em;text-transform:uppercase;color:#3a3a40;margin-bottom:6px;">The Newsletter &#183; Opt-in</div>
+            <p style="font-size:11.5px;margin:0 0 8px;">Each issue, when it goes out. No list bought, harvested, or lifted from a conference roster. Unsubscribe by replying with the word <em>stop</em>.</p>
+            <form id="nl-form" style="display:flex;gap:5px;flex-wrap:wrap;">
+              <input type="email" id="nl-email" name="email" required autocomplete="email" placeholder="you@university.edu"
+                style="flex:1;min-width:170px;border:1px solid #16161a;padding:6px 7px;font-size:12px;font-family:inherit;background:#fff;">
+              <input type="text" id="nl-hp" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+              <button type="submit" id="nl-btn"
+                style="border:1px solid #16161a;background:#16161a;color:#fff;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 12px;cursor:pointer;font-family:inherit;">Subscribe</button>
+            </form>
+            <div id="nl-msg" style="font-size:11px;color:#3a3a40;margin-top:7px;min-height:1em;"></div>
+          </div>
+</body>
+</html>
