@@ -230,7 +230,7 @@ def render(story: str, path: Path, n: int, seq: int, total: int) -> str:
     </div>
     <div style="font-family:Georgia,serif;font-size:10px;color:{ROSE};text-align:right;
          letter-spacing:.04em;padding-bottom:3px;white-space:nowrap;">
-      A Serial &#183; One Part Each Issue<br>{issue_date(n).strftime("Week of %B %-d, %Y")}
+      A Serial in 18 Parts &#183; {"Begins Here" if seq==1 else f"No.&#8202;{seq}"}<br>{issue_date(n).strftime("Week of %B %-d, %Y")}
     </div>
   </div>
   <div style="padding:0 18px;">{_supplement_rule()}</div>
