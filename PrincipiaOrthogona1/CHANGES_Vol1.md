@@ -1,6 +1,69 @@
 # Principia Orthogona, Volume I — Version History
 
-## Version 3 (May 2026) — Current
+## Version 7 (August 24, 2026) — Current
+
+**DOI:** {V7_DOI}
+
+### Why V7 exists
+
+V7 is a correction release. It does not change the mathematics of the paper. It
+corrects what the deposit said about the machine verification of that mathematics.
+
+**1. The Lean file had never been compiled.** V3 through V6 described
+`PrincipiaVol1.lean` as *"30+ facts proved, 1 sorry (clearly scoped), 0 axioms beyond
+Mathlib4."* The first real build of it — 24 August 2026, under Lean v4.14.0 and Mathlib
+v4.14.0 rev 4bbdccd9c5f8, the toolchain the deposit itself names — reported **81
+errors**. The faults were mechanical: structure fields separated by `;` (so `Dm3Triple`
+had one field and every `canonicalTriple.mu_max` was an unknown field), a `MetricSpace`
+passed where a `Dist` was expected, `(0 : Fin n)` with no `[NeZero n]`, four Ordinal
+lemmas that do not exist under those names, a carrier type that never unfolded to `ℤ`.
+Mechanical, but the consequence was not: nothing V3–V6 claimed about that file had been
+checked by anything.
+
+The verbatim build log ships in this deposit as `v6-build-errors.txt`, and the V6 file
+ships unchanged as `PrincipiaVol1-V6-as-deposited.lean.txt`, so the two can be diffed.
+
+**2. The separation theorem was false as stated.** V3–V6 carried it with one `sorry`
+attributed to a missing Mathlib eigenvalue API (O1, AXLE issue #12). The deposited
+hypothesis `IsDm3Stable` bounds only the transverse diagonal and says nothing about
+`M 0 0`; at `n = 1` it is vacuous and the 1×1 matrix `(33)` has trace 33. The refutation
+is now proved in Lean and kept in the file as `v6_separation_statement_is_false`.
+
+The underlying result is real. Book 2 Theorem 12.2 and both ancestor files in AXLE state
+**Tr(M⁶) ≠ 33** — the sixth power, which the deposit had dropped. At the first power the
+intended bound is numerically false (31·e⁻² ≈ 4.195, not < 1); at the sixth it holds with
+wide margin (31·e⁻¹² ≈ 1.9·10⁻⁴). O1 has been re-diagnosed accordingly: what is genuinely
+open is the spectral reduction Tr(M⁶) = Σ λᵢ⁶ for a general real M, not an API gap.
+
+### What V7 adds
+
+- `PrincipiaVol1.lean` rebuilt: **49 theorems, 0 sorry**, no axiom beyond `propext`,
+  `Classical.choice`, `Quot.sound`. Every mechanical repair is marked `V7 FIX` in place.
+- §9 rewritten: nine theorems including the spectral form, the diagonal-matrix form, a
+  first-power form carrying the normalisation V6 omitted, a sharpness witness at n = 33,
+  a non-vacuity witness, and the refutation of the V6 statement.
+- §14 (Theorem 5.3 concrete instances) was labelled "NOT MACHINE-CHECKED". It is now.
+- `v6-build-errors.txt` and `PrincipiaVol1-V6-as-deposited.lean.txt` added.
+- `OPEN_QUESTIONS.md` rewritten against a kernel run rather than against the file's own
+  comments.
+- **`vol1-proofs`** published — a small repository holding this one file and a three-stage
+  verifier (`lake build` → `#print axioms` over all 49 theorems → a gate that refuses on
+  `sorryAx` or an off-allowlist axiom). AXLE is too large to build for one check; this is
+  the check.
+- Toolchain and Mathlib revision now pinned and stated. "Current stable" is not a
+  checkable dependency, and a floating one is how this went unnoticed for four versions.
+
+### Withdrawn in V7
+
+- Every provenance line of the form *"Source: `X.lean` — 0 sorry"* in the Lean file's
+  section banners. Those files have not been built either. The claim returns per file, as
+  each one goes green.
+- The sorry-count sentence in the deposit description. The correct figure is 0, and the
+  earlier figure of 1 was not a measurement.
+
+---
+
+## Version 3 (May 2026)
 **DOI:** 10.5281/zenodo.20237688 (concept, resolves to latest)
 
 ### What V3 adds relative to V2:

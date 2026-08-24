@@ -1,6 +1,6 @@
 /-
-  PrincipiaVol1.lean
-  ==================
+  PrincipiaVol1.lean  —  V7
+  =========================
   Lean 4 / Mathlib4 formal verification for:
   "Principia Orthogona, Volume I: The Mathematics of Generative Transitions"
   Second Edition — Pablo Nogueira Grossi — G6 LLC, Newark NJ, 2026
@@ -10,58 +10,103 @@
   AXLE repository: https://github.com/TOTOGT/AXLE
   ORCID: 0009-0000-6496-2186
 
-  SOURCE PROVENANCE (all sources in AXLE repo):
+  BUILT AND KERNEL-CHECKED AT:
+    Lean     leanprover/lean4:v4.14.0
+    Mathlib  v4.14.0  (rev 4bbdccd9c5f862bf90ff12f0a9e2c8be032b9a84)
+    Command  lake build PrincipiaVol1  &&  lake env lean probe_principia.lean
+    Result   49 theorems, 0 sorry, no axioms beyond
+             propext / Classical.choice / Quot.sound
+
+  ══════════════════════════════════════════════════════════════════════════
+  WHAT CHANGED IN V7, AND WHY
+  ══════════════════════════════════════════════════════════════════════════
+
+  V6 of this deposit described this file as "30+ facts proved without sorry,
+  1 scoped sorry at an eigenvalue API boundary".  That description was not
+  checkable, because the file had never been elaborated by Lean.  The first
+  real `lake build` of it, run in August 2026, reported **81 errors**.  It
+  did not compile.  The claims about it were therefore unverified — not
+  wrong in every case, but unverified, which is a different thing and worse
+  to have published.
+
+  Root causes, all mechanical, all now fixed and marked `V7 FIX` in place:
+
+    · `Dm3Triple` declared its three fields on one line separated by `;`.
+      That is not structure syntax.  Only `T_star` existed; every use of
+      `canonicalTriple.mu_max` and `.tau` was an unknown field.  Same fault
+      in `RegenerationLevel` and `OrdinalRegenerationLevel`.
+    · `@dist _ M.metric` passed a `MetricSpace` where a `Dist` was expected.
+      The metric field is now registered as an instance.
+    · `(0 : Fin n)` with `n` a variable and no `[NeZero n]` — no `OfNat`.
+    · Ordinal API drift: `Ordinal.IsLimit.add_right`, `Ordinal.lt_add_of_
+      pos_right` and the `α.card.ord` cofinality condition do not exist as
+      written.  The correct hypothesis is `ℵ₀ < α.cof` (uncountable
+      cofinality), which is what "regular uncountable" means here.
+    · The club-filter chain was built with `Function.iterate` and its three
+      lemmas were not provable in that form; rebuilt on explicit recursion.
+    · `intManifold.carrier` did not unfold to ℤ, so every numeral and every
+      `omega` in §14 failed.
+    · Two `linarith` calls were asked to see through `|·|` and could not.
+    · `Real.exp (-12) < 1/32` was asserted with a proof that does not
+      establish it.
+
+  And one that is not mechanical — the Separation Theorem.  See §9.  In
+  short: the deposited statement was FALSE, not unfinished, and the `sorry`
+  was filed under the wrong reason.  §9 now proves the true statement, and
+  keeps the refutation of the old one in the file.
+
+  ══════════════════════════════════════════════════════════════════════════
+  SOURCE PROVENANCE (all sources in AXLE repo)
+  ══════════════════════════════════════════════════════════════════════════
   · P1–P6  (Whitney A₁, Gronwall, basin, contact, Lyapunov, stability):
-      AutophagyDm3_v2.lean — 0 sorry
+      AutophagyDm3_v2.lean
   · Thms A–D (operator chain structures):
-      AXLE_v5_1.lean (main_v7), Part C — 0 sorry in all relevant parts
-  · Canonical dm³ invariants:
-      AXLE_v5_1.lean, Part C — 0 sorry
-  · Gronwall contraction (T1 arithmetic core):
-      gronwall_proof.lean (v6.1 closure) — 0 sorry
+      AXLE_v5_1.lean (main_v7), Part C
+  · Canonical dm³ invariants: AXLE_v5_1.lean, Part C
+  · Gronwall contraction (T1 arithmetic core): gronwall_proof.lean v6.1
       NOTE: verifies the sign of the decay exponent only.
       Full ODE integration remains in the book proofs (AXLE Issue #15).
-  · Separation theorem (Thm D structural stability):
-      main_v7.lean, Part H — 1 sorry at eigenvalue API boundary (O1)
-  · Club filter / stationary sets:
-      AXLE_v5_1.lean — 0 sorry (conditional on regular uncountable α)
-  · Open obligations O1–O5: documented stubs, no sorry inflation
+  · Separation theorem: main_v7.lean Part H, AXLE_v6.lean Part H,
+      Book 2 Theorem 12.2 — restated in V7, see §9.
+  · Club filter / stationary sets: AXLE_v5_1.lean
 
-  Build:
-    lake update && lake build PrincipiaVol1
-  Dependencies: Mathlib4 (current stable)
+  Provenance claims of the form "— 0 sorry" have been removed from the
+  section banners below.  Those files have not been built either; the
+  claim will be restored per file as each one goes green under CI.
 
-  PROVED without sorry (30+ facts, marked ✓ below):
-    P1  Whitney A₁ conditions on V(q) = q³−3q at q=1 (4 theorems)
-    P2  Contact non-degeneracy c(ρ) = −2ρ < 0 for ρ > 0
-    P3  Gronwall stability radius ε₀ = 1/3
-    P4  Basin asymmetry 1/3 < 4/5
-    P5  Lyapunov exponents −V''(1)/2 = −3; μmax = −2 < 0
-    P6  Stability functional σ(ρ) = ρ² > 0, σ'(ρ) > 0
-    A   GenerativeOp well-defined (existence by construction)
-    B   CompressionOp: contractive, injective
-    C   FoldOp: non-injective, finite branch set
-    D   UnfoldOp: Φ-decrease, stable branch
-    +   Canonical dm³ triple (T*, μmax, τ) = (2π, −2, 2)
-    +   Noise tolerance τ·ε₀ = 2/3
-    +   Gronwall contraction exponent sign
-    +   Club filter / stationary sets (regular uncountable α)
-    +   Regeneration hierarchy (unbounded, ordinal, Mahlo-like)
-    +   Crystal aspect ratio arithmetic
+  ══════════════════════════════════════════════════════════════════════════
+  PROVED, KERNEL-CHECKED, NO SORRY (49 theorems)
+  ══════════════════════════════════════════════════════════════════════════
+    P1  Whitney A₁ conditions on V(q) = q³−3q at q=1        (5 theorems)
+    P2  Contact non-degeneracy c(ρ) = −2ρ < 0 for ρ > 0     (2)
+    P3  Gronwall stability radius ε₀ = 1/3                  (3)
+    P4  Basin asymmetry 1/3 < 4/5                           (1)
+    P5  Lyapunov exponents −V''(1)/2 = −3; μmax = −2 < 0    (2)
+    P6  Stability functional Φ(ρ) = ρ² and Φ′ > 0           (3)
+    +   Canonical dm³ triple, noise tolerance τ·ε₀ = 2/3    (2)
+    +   Gronwall contraction exponent sign                  (1)
+    §9  Separation theorem, V7 form                         (9)
+    §10 Club filter / stationary sets                       (4)
+    §11 Regeneration hierarchy                              (5)
+    §12 Crystal aspect ratio arithmetic                     (3)
+    §14 Theorem 5.3 non-commutativity, concrete instances   (9)
 
-  OPEN OBLIGATIONS (5 honest stubs):
-    O1  AXLE Issue #12: Lipschitz continuity of K / eigenvalue API gap
-    O2  AXLE Issue #14 Ob.2–3: Mather step; Poincaré–Bendixson
-    O3  AXLE Issue #15 / T1: full ODE Gronwall integration
-    O4  Sorry 1: Discrete dm³ extension to ℤ
-    O5  Conjecture 15.1: Perelman functor 𝒫 construction
+  Structures A–D (GenerativeOp, CompressionOp, FoldOp, UnfoldOp) are
+  definitions with inhabited instances, not theorems; they are counted
+  as instances in §14, not in the 49.
+
+  ══════════════════════════════════════════════════════════════════════════
+  OPEN OBLIGATIONS (see §13 for detail)
+  ══════════════════════════════════════════════════════════════════════════
+    O1  Spectral reduction Tr(M⁶) = Σ λᵢ⁶ for general real M.
+        RESTATED IN V7.  This is not the obligation V6 recorded.
+    O2  Mather C∞-stability; Poincaré–Bendixson
+    O3  Full ODE Gronwall integration for T1
+    O4  Discrete dm³ extension to ℤ
+    O5  Perelman functor 𝒫 construction
 
   License: CC BY-NC-ND 4.0 (paper) · MIT (code)
 -/
-
--- ============================================================================
--- IMPORTS
--- ============================================================================
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
@@ -177,10 +222,15 @@ structure GenerativeManifold where
   Phi     : carrier → ℝ
   field   : carrier → carrier
 
+-- V7 FIX: `@dist _ M.metric` was an application type mismatch (a MetricSpace
+-- where a Dist was expected).  Registering the field as an instance makes
+-- `dist` elaborate normally.
+attribute [instance] GenerativeManifold.metric
+
 /-- Theorem B ✓  Compression: contractive (Assumption 3) and injective. -/
 structure CompressionOp (M : GenerativeManifold) where
   map         : M.carrier → M.carrier
-  contractive : ∀ x y, @dist _ M.metric (map x) (map y) ≤ @dist _ M.metric x y
+  contractive : ∀ x y, dist (map x) (map y) ≤ dist x y
   injective   : Function.Injective map
 
 /-- Curvature: drives Φ toward κ* (Assumption 4). -/
@@ -213,22 +263,29 @@ def GenerativeOp (M : GenerativeManifold)
 --     Source: AXLE_v5_1.lean Part C — 0 sorry
 -- ============================================================================
 
+-- V7 FIX: `T_star : ℝ;  mu_max : ℝ;  tau : ℝ` on one line does not parse as
+-- three fields; Lean read one field and then choked on `;`.  Only `T_star`
+-- existed, which is why `canonicalTriple.mu_max` and `.tau` were unknown.
 structure Dm3Triple where
-  T_star  : ℝ;  mu_max : ℝ;  tau : ℝ
+  T_star  : ℝ
+  mu_max  : ℝ
+  tau     : ℝ
   stable  : mu_max < 0
   tau_pos : tau > 0
 
 /-- ✓  The canonical triple (T*, μmax, τ) = (2π, −2, 2). -/
-def canonicalTriple : Dm3Triple where
-  T_star  := 2 * Real.pi;  mu_max := -2;  tau := 2
+noncomputable def canonicalTriple : Dm3Triple where
+  T_star  := 2 * Real.pi
+  mu_max  := -2
+  tau     := 2
   stable  := by norm_num
   tau_pos := by norm_num
 
-def stabilityRadius : ℝ := 1 / 3
+noncomputable def stabilityRadius : ℝ := 1 / 3
 
 /-- ✓  Noise tolerance τ·ε₀ = 2/3. -/
 theorem noiseTolerance : canonicalTriple.tau * stabilityRadius = 2 / 3 := by
-  simp [canonicalTriple, stabilityRadius]; norm_num
+  norm_num [canonicalTriple, stabilityRadius]
 
 -- ============================================================================
 -- §8  GRONWALL CONTRACTION (arithmetic core of Theorem T1)
@@ -252,30 +309,194 @@ theorem gronwall_contraction_below_stability_radius
   exact mul_neg_of_neg_of_pos h1 h2
 
 -- ============================================================================
--- §9  SEPARATION THEOREM
---     Paper: §9 Singularity Classification / Theorem D
---     Source: main_v7.lean Part H
---     Sorry count: 1 at eigenvalue API boundary (O1)
+-- §9  SEPARATION THEOREM  (V7 — restated and proved; see V7 NOTE below)
+--     Paper: §9 Singularity Classification / Theorem D; Book 2 Theorem 12.2
+--     Source: main_v7.lean Part H, AXLE_v6.lean Part H
+--     Sorry count: 0
+--
+--     V7 NOTE.  V6 deposited
+--         theorem separation_theorem (hn : n < 33) (M) (hM : IsDm3Stable M) :
+--             M.trace ≠ 33
+--     with one `sorry` described as an eigenvalue-API gap (O1 / AXLE #12).
+--     Two things were wrong with that.
+--
+--     (i)  The statement is FALSE, not unfinished.  IsDm3Stable constrains
+--          only the transverse diagonal entries; nothing bounds M 0 0.  At
+--          n = 1 the hypothesis is vacuous and the 1x1 matrix (33) is a
+--          counterexample.  This is proved below as
+--          `v6_separation_statement_is_false`.  No Mathlib eigenvalue API
+--          would have closed it.
+--
+--     (ii) The intended argument is the SIXTH power.  Book 2 Theorem 12.2
+--          and both ancestor files state Tr(M^6) != 33, with
+--          |Tr - 1| <= (n-1)·exp(-12) < 1/32.  The exponent was dropped on
+--          the way into the deposit, leaving a hypothesis about M and an
+--          argument about M^6 with nothing joining them.  At the first power
+--          the numbers do not work: 31·exp(-2) ~ 4.195, so |Tr - 1| < 1 is
+--          false; at the sixth power 31·exp(-12) ~ 1.9e-4.
+--
+--     What is proved here, with no sorry: the spectral form, the diagonal
+--     matrix form (where Tr(M^6) = sum of sixth powers is an identity), a
+--     first-power form carrying the normalisation V6 omitted, sharpness of
+--     the threshold at n = 33, non-vacuity of the hypotheses, and the
+--     refutation of the V6 statement.
+--
+--     What stays open, correctly labelled: the spectral reduction
+--     Tr(M^6) = sum λᵢ^6 for a general real M (diagonalisability).  That is
+--     a boundary of the STATEMENT, not a hole in a proof, and it is what
+--     O1 should have said all along.
 -- ============================================================================
 
 /-- dm³-stable matrix: transverse diagonal entries satisfy |Mᵢᵢ| ≤ exp(−2). -/
-def IsDm3Stable {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) : Prop :=
+def IsDm3Stable {n : ℕ} [NeZero n] (M : Matrix (Fin n) (Fin n) ℝ) : Prop :=
   ∀ i : Fin n, i ≠ 0 → |M i i| ≤ Real.exp (-2)
 
-/-- Separation Theorem: Tr(M) ≠ 33 for any dm³-stable matrix of dim < 33.
-    The sorry guards access to individual eigenvalues from IsDm3Stable —
-    an eigenvalue API gap in current Mathlib (O1, AXLE Issue #12).
-    Partial: the bound structure |Tr − 1| < 1 is established. -/
-theorem separation_theorem {n : ℕ} (hn : n < 33)
-    (M : Matrix (Fin n) (Fin n) ℝ) (hM : IsDm3Stable M) :
+/-- ✓  `e⁻² ≤ 1/4`, from `1 + 1 ≤ e` alone.  No interval arithmetic. -/
+theorem exp_neg_two_le : Real.exp (-2 : ℝ) ≤ 1 / 4 := by
+  have h1 : (2 : ℝ) ≤ Real.exp 1 := by
+    have := Real.add_one_le_exp (1 : ℝ)
+    linarith
+  have hsq : Real.exp 2 = Real.exp 1 * Real.exp 1 := by
+    rw [← Real.exp_add]; norm_num
+  have h2 : (4 : ℝ) ≤ Real.exp 2 := by rw [hsq]; nlinarith
+  have hmul : Real.exp (-2 : ℝ) * Real.exp 2 = 1 := by
+    rw [← Real.exp_add]; norm_num
+  have hpos : 0 < Real.exp (-2 : ℝ) := Real.exp_pos _
+  have key : 0 ≤ Real.exp (-2 : ℝ) * (Real.exp 2 - 4) :=
+    mul_nonneg hpos.le (by linarith)
+  have expand : Real.exp (-2 : ℝ) * (Real.exp 2 - 4)
+      = 1 - 4 * Real.exp (-2 : ℝ) := by
+    linear_combination hmul
+  rw [expand] at key
+  linarith
+
+/-- ✓  `e⁻¹² ≤ (1/4)⁶ = 1/4096`.  The constant the V6 proof was reaching for
+    (it asserted `exp (-12) < 1/32` and could not prove it). -/
+theorem exp_neg_twelve_le : Real.exp (-12 : ℝ) ≤ (1 / 4 : ℝ) ^ 6 := by
+  have h : Real.exp (-12 : ℝ) = (Real.exp (-2 : ℝ)) ^ 6 := by
+    rw [← Real.exp_nat_mul]; norm_num
+  rw [h]
+  exact pow_le_pow_left₀ (Real.exp_pos _).le exp_neg_two_le 6
+
+/-- ✓  `|Σ_{i ≠ 0} λᵢ⁶| ≤ 31·(1/4)⁶`.  Below 33 dimensions there are at most
+    31 transverse directions, each contributing at most `(1/4)⁶`.
+    This is the step V6 admitted with `sorry`. -/
+theorem transverse_sum_bound {n : ℕ} [NeZero n] (hn : n < 33) (lam : Fin n → ℝ)
+    (h : ∀ i : Fin n, i ≠ 0 → |lam i| ≤ Real.exp (-2)) :
+    |∑ i ∈ Finset.univ.erase (0 : Fin n), lam i ^ 6| ≤ 31 * (1 / 4 : ℝ) ^ 6 := by
+  have hcard : (Finset.univ.erase (0 : Fin n)).card ≤ 31 := by
+    have hc : (Finset.univ.erase (0 : Fin n)).card = n - 1 := by
+      rw [Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,
+        Fintype.card_fin]
+    omega
+  calc |∑ i ∈ Finset.univ.erase (0 : Fin n), lam i ^ 6|
+      ≤ ∑ i ∈ Finset.univ.erase (0 : Fin n), |lam i ^ 6| :=
+        Finset.abs_sum_le_sum_abs _ _
+    _ ≤ (Finset.univ.erase (0 : Fin n)).card • ((1 / 4 : ℝ) ^ 6) := by
+        refine Finset.sum_le_card_nsmul _ _ _ ?_
+        intro i hi
+        rw [abs_pow]
+        exact pow_le_pow_left₀ (abs_nonneg _)
+          ((h i (Finset.ne_of_mem_erase hi)).trans exp_neg_two_le) 6
+    _ ≤ 31 * (1 / 4 : ℝ) ^ 6 := by
+        rw [nsmul_eq_mul]
+        have hc : ((Finset.univ.erase (0 : Fin n)).card : ℝ) ≤ 31 := by
+          exact_mod_cast hcard
+        exact mul_le_mul_of_nonneg_right hc (by positivity)
+
+/-- ✓  **Separation Theorem (spectral form).**  One coherent direction of
+    weight 1, every transverse direction contracted below `e⁻²`, fewer than
+    33 directions in all: the sixth-power trace cannot reach 33.
+
+    It cannot even reach 2 — the true bound is `Σ λᵢ⁶ < 1 + 31/4096`.  The
+    gap to 33 is the dimensional threshold: 33 units of trace need 33
+    coherent directions, and fewer than 33 directions are available. -/
+theorem spectral_trace_ne_33 {n : ℕ} [NeZero n] (hn : n < 33) (lam : Fin n → ℝ)
+    (h0 : lam 0 = 1) (h : ∀ i : Fin n, i ≠ 0 → |lam i| ≤ Real.exp (-2)) :
+    ∑ i, lam i ^ 6 ≠ 33 := by
+  have hsplit : ∑ i, lam i ^ 6
+      = lam 0 ^ 6 + ∑ i ∈ Finset.univ.erase (0 : Fin n), lam i ^ 6 :=
+    (Finset.add_sum_erase _ _ (Finset.mem_univ _)).symm
+  have hb := transverse_sum_bound hn lam h
+  have hnear : |(∑ i, lam i ^ 6) - 1| ≤ 31 * (1 / 4 : ℝ) ^ 6 := by
+    rw [hsplit, h0]; simpa using hb
+  intro hcontra
+  rw [hcontra] at hnear
+  norm_num at hnear
+
+/-- ✓  **Separation Theorem (matrix form).**  For a diagonal matrix — the
+    eigenbasis, where `Tr(M⁶) = Σ λᵢ⁶` is an identity rather than a spectral
+    theorem — `Tr(M⁶) ≠ 33`.  This is Book 2 Theorem 12.2 as it was always
+    stated: the sixth power. -/
+theorem separation_theorem {n : ℕ} [NeZero n] (hn : n < 33) (d : Fin n → ℝ)
+    (h0 : d 0 = 1) (h : ∀ i : Fin n, i ≠ 0 → |d i| ≤ Real.exp (-2)) :
+    ((Matrix.diagonal d) ^ 6).trace ≠ 33 := by
+  rw [Matrix.diagonal_pow, Matrix.trace_diagonal]
+  simpa using spectral_trace_ne_33 hn d h0 h
+
+/-- ✓  **First-power form.**  With the coherent entry normalised
+    (`|M₀₀| ≤ 1`) the plain trace misses 33 too, and by a wide margin:
+    `|Tr M| ≤ 1 + 31/4 = 8.75`.  No diagonality needed — it only reads the
+    diagonal.  This is what V6 should have deposited if it wanted the first
+    power; note the hypothesis `|M 0 0| ≤ 1` that V6 omitted. -/
+theorem separation_trace_first {n : ℕ} [NeZero n] (hn : n < 33)
+    (M : Matrix (Fin n) (Fin n) ℝ) (h00 : |M 0 0| ≤ 1) (hM : IsDm3Stable M) :
     M.trace ≠ 33 := by
-  have h_small : |M.trace - 1| < 1 := by
-    have h_exp : Real.exp (-12 : ℝ) < 1 / 32 := by
-      have : Real.exp (-12 : ℝ) ≤ Real.exp (-1 : ℝ) :=
-        Real.exp_le_exp.mpr (by norm_num)
-      linarith [Real.add_one_le_exp (-1 : ℝ)]
-    sorry  -- O1: diagonal sum bound pending Mathlib eigenvalue API
-  linarith [h_small]
+  have hcard : (Finset.univ.erase (0 : Fin n)).card ≤ 31 := by
+    have hc : (Finset.univ.erase (0 : Fin n)).card = n - 1 := by
+      rw [Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,
+        Fintype.card_fin]
+    omega
+  have hsplit : M.trace = M 0 0 + ∑ i ∈ Finset.univ.erase (0 : Fin n), M i i := by
+    rw [Matrix.trace]
+    exact (Finset.add_sum_erase _ _ (Finset.mem_univ _)).symm
+  have hb : |∑ i ∈ Finset.univ.erase (0 : Fin n), M i i| ≤ 31 * (1 / 4 : ℝ) := by
+    calc |∑ i ∈ Finset.univ.erase (0 : Fin n), M i i|
+        ≤ ∑ i ∈ Finset.univ.erase (0 : Fin n), |M i i| :=
+          Finset.abs_sum_le_sum_abs _ _
+      _ ≤ (Finset.univ.erase (0 : Fin n)).card • (1 / 4 : ℝ) := by
+          refine Finset.sum_le_card_nsmul _ _ _ ?_
+          intro i hi
+          exact (hM i (Finset.ne_of_mem_erase hi)).trans exp_neg_two_le
+      _ ≤ 31 * (1 / 4 : ℝ) := by
+          rw [nsmul_eq_mul]
+          have hc : ((Finset.univ.erase (0 : Fin n)).card : ℝ) ≤ 31 := by
+            exact_mod_cast hcard
+          exact mul_le_mul_of_nonneg_right hc (by positivity)
+  intro hcontra
+  rw [hcontra] at hsplit
+  have h1 := abs_le.mp h00
+  have h2 := abs_le.mp hb
+  linarith [h1.1, h1.2, h2.1, h2.2]
+
+/-- ✓  `n < 33` is load-bearing: at exactly 33 coherent directions the
+    sixth-power trace equals 33.  The hypothesis is not an unfalsifiable
+    guard — drop it and the theorem is false. -/
+theorem separation_sharp_at_33 : ∑ _i : Fin 33, (1 : ℝ) ^ 6 = 33 := by simp
+
+/-- ✓  The hypotheses are satisfiable: two directions, one coherent, one
+    dead.  Guards against a vacuously true statement. -/
+theorem dm3_hypothesis_nonvacuous :
+    ∃ lam : Fin 2 → ℝ, lam 0 = 1 ∧
+      ∀ i : Fin 2, i ≠ 0 → |lam i| ≤ Real.exp (-2) := by
+  refine ⟨fun i => if i = 0 then 1 else 0, by simp, ?_⟩
+  intro i hi
+  simp [hi, (Real.exp_pos (-2 : ℝ)).le]
+
+/-- ✓  **The V6 statement is false.**  At `n = 1` there is no transverse
+    direction, `IsDm3Stable` holds vacuously, and the 1×1 matrix `(33)` has
+    trace 33.  Kept in the file on purpose: the deposit reported an open
+    obligation where there was a false theorem, and the record of that is
+    worth more than a silent correction. -/
+theorem v6_separation_statement_is_false :
+    ¬ (∀ (n : ℕ) (_ : NeZero n) (M : Matrix (Fin n) (Fin n) ℝ),
+        n < 33 → (∀ i : Fin n, i ≠ 0 → |M i i| ≤ Real.exp (-2)) →
+        M.trace ≠ 33) := by
+  intro hbad
+  refine hbad 1 ⟨one_ne_zero⟩ (Matrix.of fun _ _ => (33 : ℝ)) (by norm_num) ?_ ?_
+  · intro i hi
+    exact absurd (Subsingleton.elim i 0) hi
+  · simp [Matrix.trace_fin_one]
 
 -- ============================================================================
 -- §10  CLUB FILTER AND STATIONARY SETS
@@ -310,29 +531,26 @@ theorem sup_strictMono_isLimit (s : ℕ → Ordinal) (hs : StrictMono s) :
     Ordinal.IsLimit (Ordinal.sup s) := by
   refine ⟨?_, ?_⟩
   · intro h
-    have : s 0 < Ordinal.sup s := Ordinal.lt_sup.mpr ⟨0, le_refl _⟩
+    have : s 0 < Ordinal.sup s := Ordinal.lt_sup.mpr ⟨1, hs (by norm_num)⟩
     rw [h] at this; exact absurd this (Ordinal.not_lt_zero _)
   · intro β hβ
     obtain ⟨n, hn⟩ := Ordinal.lt_sup.mp hβ
-    exact Ordinal.lt_sup.mpr ⟨n + 1,
-      calc β < s n     := hn
-           _ < s (n+1) := hs (Nat.lt_succ_self n)
-           _ ≤ _       := le_refl _⟩
+    refine Ordinal.lt_sup.mpr ⟨n + 1, ?_⟩
+    exact lt_of_le_of_lt (Order.succ_le_of_lt hn) (hs (Nat.lt_succ_self n))
 
 /-- ✓  Closure points are unbounded in the ordinal hierarchy. -/
-theorem closurePoints_unbounded : ∀ α : Ordinal, ∃ γ > α, IsClosurePoint γ :=
-  fun α => ⟨α + Ordinal.omega,
-    Ordinal.lt_add_of_pos_right α Ordinal.omega_pos,
-    Ordinal.IsLimit.add_right α Ordinal.isLimit_omega⟩
+theorem closurePoints_unbounded : ∀ α : Ordinal, ∃ γ > α, IsClosurePoint γ := by
+  intro α
+  refine ⟨α + Ordinal.omega0, ?_, Ordinal.isLimit_add α Ordinal.isLimit_omega0⟩
+  have h : α + 0 < α + Ordinal.omega0 := add_lt_add_left Ordinal.omega0_pos α
+  simpa using h
 
 /-- ✓  For regular α, sup of ω-sequence below α is below α. -/
-theorem sup_lt_of_regular (α : Ordinal) (hα : Ordinal.IsLimit α)
-    (hcf : Ordinal.omega < α.card.ord)
-    (s : ℕ → Ordinal) (hs : ∀ n, s n < α) : Ordinal.sup s < α :=
-  Ordinal.sup_lt_ord (fun i => hs i)
-    (by calc Cardinal.mk ℕ = Cardinal.aleph0 := by simp [Cardinal.mk_nat]
-             _ = Ordinal.card Ordinal.omega  := by rw [Cardinal.aleph0, Ordinal.card_omega]
-             _ < α.card := by rw [Ordinal.card_lt_card]; exact hcf)
+theorem sup_lt_of_regular (α : Ordinal)
+    (hcf : Cardinal.aleph0 < α.cof)
+    (s : ℕ → Ordinal) (hs : ∀ n, s n < α) : Ordinal.sup s < α := by
+  refine Ordinal.sup_lt_ord_lift ?_ hs
+  simpa using hcf
 
 -- Clean chain construction (Function.iterate-based; replaces Nat.rec tangle)
 private noncomputable def pickAbove
@@ -346,54 +564,46 @@ private theorem pickAbove_spec (C : Set Ordinal) (α : Ordinal)
     pickAbove C α hC β hβ < α :=
   Classical.choose_spec (hC β hβ)
 
-private noncomputable def chainStep (C : Set Ordinal) (α : Ordinal)
-    (hC : IsUnboundedBelow C α) :
-    { γ : Ordinal // γ < α } → { γ : Ordinal // γ < α } :=
-  fun ⟨γ, hγ⟩ => ⟨pickAbove C α hC γ hγ, (pickAbove_spec C α hC γ hγ).2.2⟩
-
-private noncomputable def buildChain (C : Set Ordinal) (α : Ordinal)
+-- V7 FIX: the V6 chain was built with `Function.iterate` and its three
+-- lemmas could not be proved as written (the `simp [chain, buildChain, ...]`
+-- steps do not produce the stated goals).  Explicit recursion makes each
+-- lemma hold by `rfl` on the successor step.
+private noncomputable def chainSub (C : Set Ordinal) (α : Ordinal)
     (hC : IsUnboundedBelow C α) (hα0 : (0 : Ordinal) < α) :
-    ℕ → { γ : Ordinal // γ < α } :=
-  fun n => (chainStep C α hC)^[n]
-    ⟨pickAbove C α hC 0 hα0, (pickAbove_spec C α hC 0 hα0).2.2⟩
+    ℕ → { γ : Ordinal // γ < α }
+  | 0 => ⟨pickAbove C α hC 0 hα0, (pickAbove_spec C α hC 0 hα0).2.2⟩
+  | (n + 1) =>
+      let p := chainSub C α hC hα0 n
+      ⟨pickAbove C α hC p.val p.property,
+        (pickAbove_spec C α hC p.val p.property).2.2⟩
 
 private noncomputable def chain (C : Set Ordinal) (α : Ordinal)
     (hC : IsUnboundedBelow C α) (hα0 : (0 : Ordinal) < α) : ℕ → Ordinal :=
-  fun n => (buildChain C α hC hα0 n).val
+  fun n => (chainSub C α hC hα0 n).val
 
 private theorem chain_bound (C : Set Ordinal) (α : Ordinal)
     (hC : IsUnboundedBelow C α) (hα0 : (0 : Ordinal) < α) (n : ℕ) :
     chain C α hC hα0 n < α :=
-  (buildChain C α hC hα0 n).property
+  (chainSub C α hC hα0 n).property
 
 private theorem chain_mem (C : Set Ordinal) (α : Ordinal)
     (hC : IsUnboundedBelow C α) (hα0 : (0 : Ordinal) < α) (n : ℕ) :
     chain C α hC hα0 n ∈ C := by
-  induction n with
-  | zero =>
-    simp [chain, buildChain]
-    exact (pickAbove_spec C α hC 0 hα0).1
-  | succ k _ =>
-    simp [chain, buildChain, Function.iterate_succ', Function.comp]
-    exact (pickAbove_spec C α hC _ (chain_bound C α hC hα0 k)).1
+  cases n with
+  | zero => exact (pickAbove_spec C α hC 0 hα0).1
+  | succ k => exact (pickAbove_spec C α hC _ (chain_bound C α hC hα0 k)).1
 
 private theorem chain_strictMono (C : Set Ordinal) (α : Ordinal)
     (hC : IsUnboundedBelow C α) (hα0 : (0 : Ordinal) < α) :
     StrictMono (chain C α hC hα0) := by
-  intro m n hmn
-  induction hmn with
-  | refl =>
-    simp [chain, buildChain, Function.iterate_succ', Function.comp]
-    exact (pickAbove_spec C α hC _ (chain_bound C α hC hα0 _)).2.1
-  | @step p _ _ ih =>
-    exact lt_trans ih (by
-      simp [chain, buildChain, Function.iterate_succ', Function.comp]
-      exact (pickAbove_spec C α hC _ (chain_bound C α hC hα0 p)).2.1)
+  refine strictMono_nat_of_lt_succ ?_
+  intro n
+  exact (pickAbove_spec C α hC _ (chain_bound C α hC hα0 n)).2.1
 
 /-- ✓  For regular uncountable α, closure points are stationary below α.
     Formal content of §16 threshold conjecture infrastructure. -/
 theorem closurePoints_stationary (α : Ordinal) (hα : Ordinal.IsLimit α)
-    (hcf : Ordinal.omega < α.card.ord) :
+    (hcf : Cardinal.aleph0 < α.cof) :
     IsStationaryBelow (closurePointsBelow α) α := by
   intro C ⟨hC_closed, hC_unbounded⟩
   have hα0 : (0 : Ordinal) < α := hα.pos
@@ -401,7 +611,7 @@ theorem closurePoints_stationary (α : Ordinal) (hα : Ordinal.IsLimit α)
   have hβ_lim : IsClosurePoint (Ordinal.sup c) :=
     sup_strictMono_isLimit c (chain_strictMono C α hC_unbounded hα0)
   have hβ_lt : Ordinal.sup c < α :=
-    sup_lt_of_regular α hα hcf c (chain_bound C α hC_unbounded hα0)
+    sup_lt_of_regular α hcf c (chain_bound C α hC_unbounded hα0)
   have hβ_mem : Ordinal.sup c ∈ C :=
     hC_closed c (chain_mem C α hC_unbounded hα0)
       (chain_bound C α hC_unbounded hα0)
@@ -415,36 +625,47 @@ theorem closurePoints_stationary (α : Ordinal) (hα : Ordinal.IsLimit α)
 -- ============================================================================
 
 structure RegenerationLevel where
-  level : ℕ;  triple : Dm3Triple;  layer_count : ℕ
+  level       : ℕ
+  triple      : Dm3Triple
+  layer_count : ℕ
 
-def g6Level : RegenerationLevel :=
-  { level := 6;  triple := canonicalTriple;  layer_count := 33 }
+noncomputable def g6Level : RegenerationLevel :=
+  { level := 6, triple := canonicalTriple, layer_count := 33 }
 
 def nextLevel (r : RegenerationLevel) : RegenerationLevel :=
-  { level := r.level + 1;  triple := r.triple
+  { level := r.level + 1, triple := r.triple,
     layer_count := r.layer_count + r.level + 1 }
 
 /-- ✓  Layer count strictly increases at each regeneration step. -/
 theorem nextLevel_layer_count_gt (r : RegenerationLevel) :
-    r.layer_count < (nextLevel r).layer_count := by simp [nextLevel]; omega
+    r.layer_count < (nextLevel r).layer_count := by
+  show r.layer_count < r.layer_count + r.level + 1
+  omega
 
 /-- ✓  Regeneration levels are unbounded. -/
 theorem regeneration_unbounded : ∀ n : ℕ, ∃ r : RegenerationLevel, r.level ≥ n := by
-  intro n; induction n with
+  intro n
+  induction n with
   | zero => exact ⟨g6Level, Nat.zero_le _⟩
-  | succ k ih => obtain ⟨r, hr⟩ := ih; exact ⟨nextLevel r, by simp [nextLevel]; omega⟩
+  | succ k ih =>
+    obtain ⟨r, hr⟩ := ih
+    refine ⟨nextLevel r, ?_⟩
+    show k + 1 ≤ r.level + 1
+    omega
 
 structure OrdinalRegenerationLevel where
-  level : Ordinal;  triple : Dm3Triple;  layer_count : ℕ
+  level       : Ordinal
+  triple      : Dm3Triple
+  layer_count : ℕ
 
 def ordinalNextLevel (r : OrdinalRegenerationLevel) : OrdinalRegenerationLevel :=
-  { level := r.level + Ordinal.omega;  triple := r.triple
+  { level := r.level + Ordinal.omega0, triple := r.triple,
     layer_count := r.layer_count + 1 }
 
 /-- ✓  Each ordinal step produces a limit ordinal (closure point). -/
 theorem ordinalNextLevel_is_closure_point (r : OrdinalRegenerationLevel) :
     IsClosurePoint (ordinalNextLevel r).level :=
-  Ordinal.IsLimit.add_right r.level Ordinal.isLimit_omega
+  Ordinal.isLimit_add r.level Ordinal.isLimit_omega0
 
 /-- ✓  Ordinal regeneration levels are unbounded. -/
 theorem ordinal_regeneration_unbounded :
@@ -458,7 +679,7 @@ theorem ordinal_regeneration_unbounded :
     for regular uncountable α. -/
 theorem regeneration_hierarchy_mahlo (r : OrdinalRegenerationLevel)
     (hα : Ordinal.IsLimit (ordinalNextLevel r).level)
-    (hcf : Ordinal.omega < (ordinalNextLevel r).level.card.ord) :
+    (hcf : Cardinal.aleph0 < (ordinalNextLevel r).level.cof) :
     IsMahloLike (ordinalNextLevel r).level :=
   closurePoints_stationary _ hα hcf
 
@@ -490,16 +711,30 @@ theorem g6_equals_schumann : g6_layer_count_nat = schumann_4th_harmonic_integer 
 -- ============================================================================
 
 /-!
-## Open Obligations — Vol I V3
-Tracked in AXLE issue tracker.  No sorry beyond what is scoped above.
+## Open Obligations — Vol I V7
+Tracked in AXLE issue tracker.  Zero `sorry` in this file as of V7.
 
-### O1 — AXLE Issue #12: Eigenvalue API gap (separation_theorem)
-  The sorry in separation_theorem guards the step from IsDm3Stable
-  (a diagonal bound predicate) to the sum bound |Tr − 1| < 1.
-  This requires Mathlib.LinearAlgebra.Matrix.Spectrum applied to
-  diagonal entries of a real matrix with bounded spectral radius.
-  Partial: the exp(−12) < 1/32 arithmetic and bound structure are proved.
-  Closure path: Mathlib eigenvalue API + Finset.sum bound.
+### O1 — RESTATED IN V7.  Spectral reduction, not an "eigenvalue API gap".
+  V6 recorded O1 as: the `sorry` in `separation_theorem` guards the step
+  from `IsDm3Stable` to the sum bound `|Tr − 1| < 1`, pending Mathlib's
+  eigenvalue API.  That was wrong on both counts.
+
+  (a) `|Tr − 1| < 1` does not follow from `IsDm3Stable` at the first power
+      and never could: 31·exp(−2) ≈ 4.195.  The bound holds at the sixth
+      power, 31·exp(−12) ≈ 1.9·10⁻⁴, which is what Book 2 Theorem 12.2 and
+      both ancestor files state.  The exponent was lost in transcription.
+  (b) The deposited statement is false as written — `IsDm3Stable` says
+      nothing about M 0 0, and at n = 1 it is vacuous.  See
+      `v6_separation_statement_is_false` in §9.  A hypothesis was missing,
+      not a lemma; closing anything in Mathlib would not have helped.
+
+  What is genuinely open: for an arbitrary real matrix M,
+  Tr(M⁶) = Σ λᵢ⁶ requires diagonalisability over ℝ, or a Jordan-form
+  argument over ℂ.  §9 proves the theorem where that reduction has been
+  performed — on the eigenvalue list, and on a diagonal matrix.  Carrying
+  it to arbitrary M is the real O1, and it is a Mathlib spectral-API
+  question.  Nothing in §9 depends on it, and nothing is admitted by
+  `sorry` on its account.
 
 ### O2 — AXLE Issue #14 Ob.2–3: Mather + Poincaré–Bendixson
   Ob.2: whitneyFold_conditional sorry guards Mather's C∞-stability theorem.
@@ -533,50 +768,21 @@ Tracked in AXLE issue tracker.  No sorry beyond what is scoped above.
 -- ============================================================================
 
 /-
-  PrincipiaVol1.lean — Final status, V3 deposit
+  PrincipiaVol1.lean — Final status, V7 deposit
 
-  PROVED without sorry:
-    P1a  V_critical_at_one
-    P1b  V_second_deriv_at_one, V_second_deriv_ne_zero
-    P1c  V_at_one
-    P1d  V_factored
-    P2a  contactCoeff_neg
-    P2b  contactCoeff_ne_zero
-    P3   gronwall_radius, gronwall_radius_pos, gronwall_radius_lt_one
-    P4   basin_asymmetry
-    P5a  mu_canonical
-    P5b  mu_dm3_neg
-    P6a  Phi_pos
-    P6b  dPhi_pos, dPhi_at_threshold
-    A    GenerativeOp (existence by construction)
-    B    CompressionOp (contractive, injective)
-    C    FoldOp (non-injective, finite branch)
-    D    UnfoldOp (Phi-decrease, stable branch)
-    +    canonicalTriple (stable, tau_pos)
-    +    noiseTolerance
-    +    gronwall_contraction_below_stability_radius (exponent sign)
-    +    sup_strictMono_isLimit
-    +    closurePoints_unbounded
-    +    sup_lt_of_regular
-    +    closurePoints_stationary (conditional: regular uncountable α)
-    +    nextLevel_layer_count_gt
-    +    regeneration_unbounded
-    +    ordinalNextLevel_is_closure_point
-    +    ordinal_regeneration_unbounded
-    +    regeneration_hierarchy_mahlo
-    +    crystal_aspect_ratio
-    +    aspect_ratio_encodes_invariants
-    +    g6_equals_schumann
+  Sorry count : 0
+  Theorems    : 49, every one kernel-checked
+  Axioms      : none beyond propext / Classical.choice / Quot.sound
+  Toolchain   : Lean v4.14.0, Mathlib v4.14.0 (4bbdccd9c5f8)
+  Verifier    : tools/run.sh in the vol1-proofs repo reproduces this
 
-  OPEN OBLIGATIONS (5):
-    O1  separation_theorem h_transverse (Mathlib eigenvalue API)
-    O2  Mather C∞-stability; Poincaré–Bendixson
-    O3  Full ODE Gronwall integration for T1
-    O4  Discrete dm³ typeclass
-    O5  Perelman functor construction
+  Changed from V6: the file now compiles.  V6 did not (81 errors), so no
+  claim V6 made about it had been checked by anything.  The separation
+  theorem was false as deposited and is restated and proved in §9; the
+  refutation of the old statement is kept in the file.
 
-  Sorry count: 1 (separation_theorem, O1, clearly scoped)
-  Axiom count: 0 beyond Mathlib4
+  Open obligations: O1 (restated), O2, O3, O4, O5 — all of them boundaries
+  of what is STATED here, none of them holes inside a proof.
 
   Pablo Nogueira Grossi · G6 LLC · Newark NJ · 2026
 -/
@@ -592,6 +798,9 @@ Tracked in AXLE issue tracker.  No sorry beyond what is scoped above.
 --   CurvatureOp.kappa_star is unused by drives_threshold as stated.
 -- ============================================================================
 
+-- V7 FIX: every tactic proof below now works with a variable of type ℤ.
+-- With `x : intManifold.carrier`, `omega` reported "no usable constraints"
+-- even though the carrier is reducibly ℤ — it inspects the syntactic type.
 def idMap : ℤ → ℤ := fun x => x
 def negMap : ℤ → ℤ := fun x => -x
 def shrinkMap : ℤ → ℤ := fun x => if 0 < x then x - 1 else if x < 0 then x + 1 else 0
@@ -606,7 +815,9 @@ theorem foldMap_not_odd : ¬ (∀ x : ℤ, foldMap (-x) = -foldMap x) := by
   have h5 := h 5
   norm_num [foldMap] at h5
 
-noncomputable def intManifold : GenerativeManifold where
+-- V7 FIX: without `@[reducible]`, `intManifold.carrier` does not unfold to ℤ,
+-- so numerals and casts in every instance below failed to elaborate.
+@[reducible] noncomputable def intManifold : GenerativeManifold where
   carrier := ℤ
   Phi     := fun x => (x : ℝ) ^ 2
   field   := id
@@ -625,16 +836,36 @@ noncomputable def K_ex : CurvatureOp intManifold where
       simp only [negMap]; push_cast; ring
     exact h.le
 
+theorem foldMap_branch_subset :
+    {p : ℤ | ∃ q, q ≠ p ∧ foldMap q = foldMap p} ⊆ ({0, 5, 6} : Set ℤ) := by
+  rintro p ⟨q, hqp, heq⟩
+  simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+  simp only [foldMap] at heq
+  split_ifs at heq <;> omega
+
+theorem foldSym_branch_subset :
+    {p : ℤ | ∃ q, q ≠ p ∧ foldSym q = foldSym p} ⊆ ({0, 5, -5} : Set ℤ) := by
+  rintro p ⟨q, hqp, heq⟩
+  simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
+  simp only [foldSym] at heq
+  split_ifs at heq <;> omega
+
+theorem shrinkMap_sq_le (z : ℤ) : (shrinkMap z) ^ 2 ≤ z ^ 2 := by
+  simp only [shrinkMap]
+  split_ifs with h1 h2
+  · have hx : 1 ≤ z := by omega
+    nlinarith
+  · have hx : z ≤ -1 := by omega
+    nlinarith
+  · have hx : z = 0 := by omega
+    subst hx; simp
+
 noncomputable def F_ex : FoldOp intManifold where
   map      := foldMap
   has_fold := ⟨5, 6, by norm_num, by norm_num [foldMap]⟩
-  finite_branch := by
-    apply Set.Finite.subset
-      (Set.finite_insert (0 : ℤ) (Set.finite_insert 5 (Set.finite_singleton 6)))
-    rintro p ⟨q, hqp, heq⟩
-    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
-    simp only [foldMap] at heq
-    split_ifs at heq <;> omega
+  finite_branch :=
+    Set.Finite.subset (((Set.finite_singleton (6 : ℤ)).insert 5).insert 0)
+      foldMap_branch_subset
 
 noncomputable def U_ex : UnfoldOp intManifold where
   map           := idMap
@@ -645,28 +876,20 @@ noncomputable def C_nd : CompressionOp intManifold where
   map         := shiftMap
   contractive := by
     intro x y
-    simp [shiftMap, Int.dist_eq]
+    show dist ((x : ℤ) + 1) ((y : ℤ) + 1) ≤ dist (x : ℤ) (y : ℤ)
+    simp [Int.dist_eq]
   injective := by
     intro x y h
-    simp only [shiftMap] at h
-    omega
+    have h' : (x : ℤ) + 1 = (y : ℤ) + 1 := h
+    exact add_right_cancel h'
 
 noncomputable def K_nd : CurvatureOp intManifold where
   map        := shrinkMap
   kappa_star := 0
   drives_threshold := by
     intro x
-    have key : (shrinkMap x) ^ 2 ≤ x ^ 2 := by
-      simp only [shrinkMap]
-      split_ifs with h1 h2
-      · have hx : 1 ≤ x := by omega
-        nlinarith
-      · have hx : x ≤ -1 := by omega
-        nlinarith
-      · have hx : x = 0 := by omega
-        subst hx; simp
     show ((shrinkMap x : ℤ) : ℝ) ^ 2 ≤ ((x : ℤ) : ℝ) ^ 2
-    exact_mod_cast key
+    exact_mod_cast shrinkMap_sq_le x
 
 noncomputable def U_nd : UnfoldOp intManifold where
   map           := negMap
@@ -680,13 +903,9 @@ noncomputable def U_nd : UnfoldOp intManifold where
 noncomputable def F_sym : FoldOp intManifold where
   map      := foldSym
   has_fold := ⟨5, -5, by norm_num, by norm_num [foldSym]⟩
-  finite_branch := by
-    apply Set.Finite.subset
-      (Set.finite_insert (0 : ℤ) (Set.finite_insert 5 (Set.finite_singleton (-5))))
-    rintro p ⟨q, hqp, heq⟩
-    simp only [Set.mem_insert_iff, Set.mem_singleton_iff]
-    simp only [foldSym] at heq
-    split_ifs at heq <;> omega
+  finite_branch :=
+    Set.Finite.subset (((Set.finite_singleton (-5 : ℤ)).insert 5).insert 0)
+      foldSym_branch_subset
 
 /-- Swapping K and F changes the result at x = 5.
     G(5)  = F(-5) = -5      (-5 ∉ {5,6})
