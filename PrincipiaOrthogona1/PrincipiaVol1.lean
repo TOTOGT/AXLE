@@ -16,7 +16,7 @@
     Lean     leanprover/lean4:v4.14.0
     Mathlib  v4.14.0  (rev 4bbdccd9c5f862bf90ff12f0a9e2c8be032b9a84)
     Command  lake build PrincipiaVol1  &&  lake env lean probe_principia.lean
-    Result   49 theorems, 0 sorry, no axioms beyond
+    Result   58 theorems, 0 sorry, no axioms beyond
              propext / Classical.choice / Quot.sound
 
   ══════════════════════════════════════════════════════════════════════════
@@ -24,14 +24,24 @@
   ══════════════════════════════════════════════════════════════════════════
 
   V6 of this deposit described this file as "30+ facts proved without sorry,
-  1 scoped sorry at an eigenvalue API boundary".  That description was not
-  checkable, because the file had never been elaborated by Lean.  The first
-  real `lake build` of it, run in August 2026, reported **81 errors**.  It
-  did not compile.  The claims about it were therefore unverified — not
-  wrong in every case, but unverified, which is a different thing and worse
-  to have published.
+  1 scoped sorry at an eigenvalue API boundary".  Building it in August 2026
+  against the revision this repository pins — Mathlib v4.14.0, December 2024
+  — produced 81 errors.
 
-  Root causes, all mechanical, all now fixed and marked `V7 FIX` in place:
+  WHAT THAT MEANS, PRECISELY.  It does not mean the file was never built.
+  The error profile says the opposite: it is the fingerprint of Mathlib
+  moving underneath code that was written and run against an earlier
+  revision.  `Ordinal.sup` and `Ordinal.lt_sup` were deprecated 2024-08-27;
+  `Ordinal.IsLimit.add_right` was renamed `isLimit_add` 2024-10-11;
+  `Set.finite_insert` is the Mathlib-3-era spelling of `Set.Finite.insert`.
+  Those are the names the file uses.  It compiled when they were current.
+
+  What is true is narrower and still worth fixing: the deposit's pin is
+  newer than its code, some later hand-edits were never rebuilt, and nothing
+  re-runs the build — AXLE has no CI — so the drift was silent.  V7 brings
+  the file up to the pin and adds a runner so the next drift is not silent.
+
+  Root causes, all now fixed and marked `V7 FIX` in place:
 
     · `Dm3Triple` declared its three fields on one line separated by `;`.
       That is not structure syntax.  Only `T_star` existed; every use of
@@ -77,25 +87,35 @@
   claim will be restored per file as each one goes green under CI.
 
   ══════════════════════════════════════════════════════════════════════════
-  PROVED, KERNEL-CHECKED, NO SORRY (49 theorems)
+  PROVED, KERNEL-CHECKED, NO SORRY (58 theorems)
   ══════════════════════════════════════════════════════════════════════════
-    P1  Whitney A₁ conditions on V(q) = q³−3q at q=1        (5 theorems)
-    P2  Contact non-degeneracy c(ρ) = −2ρ < 0 for ρ > 0     (2)
-    P3  Gronwall stability radius ε₀ = 1/3                  (3)
-    P4  Basin asymmetry 1/3 < 4/5                           (1)
-    P5  Lyapunov exponents −V''(1)/2 = −3; μmax = −2 < 0    (2)
-    P6  Stability functional Φ(ρ) = ρ² and Φ′ > 0           (3)
-    +   Canonical dm³ triple, noise tolerance τ·ε₀ = 2/3    (2)
-    +   Gronwall contraction exponent sign                  (1)
-    §9  Separation theorem, V7 form                         (9)
-    §10 Club filter / stationary sets                       (4)
-    §11 Regeneration hierarchy                              (5)
-    §12 Crystal aspect ratio arithmetic                     (3)
-    §14 Theorem 5.3 non-commutativity, concrete instances   (9)
+    §1   P1  Whitney A₁ conditions on V(q) = q³−3q at q=1      5
+    §2   P2  Contact non-degeneracy c(ρ) = −2ρ < 0 for ρ > 0   2
+    §3   P3–P4  Gronwall radius ε₀ = 1/3, and what forces it   8
+    §4   P5  Lyapunov exponent μmax = −2; L₂ = −V''(1)/2 = −3  2
+    §5   P6  Stability functional Φ(ρ) = ρ², Φ′ > 0            3
+    §7       Noise tolerance τ·ε₀ = 2/3                        1
+    §8       Gronwall contraction exponent sign                1
+    §9       Separation theorem, V7 form                      13
+    §10     Club filter / stationary sets                      4
+    §11     Regeneration hierarchy                             5
+    §12     Crystal aspect ratio arithmetic                    2
+    §14     Theorem 5.3 instances, and two vacuity witnesses  12
+                                                              ─────────
+                                                                   58
 
-  Structures A–D (GenerativeOp, CompressionOp, FoldOp, UnfoldOp) are
-  definitions with inhabited instances, not theorems; they are counted
-  as instances in §14, not in the 49.
+  These counts are produced by tools/counts.py, not typed.  An earlier
+  draft typed them and carried two compensating errors that happened to
+  sum to the right total.
+
+  Structures A–D (CompressionOp, CurvatureOp, FoldOp, UnfoldOp) are
+  DEFINITIONS — bundles of hypotheses — and GenerativeOp is a `def`.  None
+  is a theorem and none is counted above.  What is machine-checked about
+  them is that they are inhabited (§14) and, in two cases, that a field is
+  weaker than its name: `unfold_stable_branch_is_vacuous` shows Theorem D's
+  `stable_branch` holds for every map on every type, and
+  `compression_permits_identity` shows `contractive` only means
+  non-expansive.
 
   ══════════════════════════════════════════════════════════════════════════
   OPEN OBLIGATIONS (see §13 for detail)
@@ -106,6 +126,14 @@
     O3  Full ODE Gronwall integration for T1
     O4  Discrete dm³ extension to ℤ
     O5  Perelman functor 𝒫 construction
+    O6  Conjecture 16.1, dimensional threshold N = 3 (§10 infrastructure
+        is checked; the conjecture is not)
+    O7  NEW IN V7.  The ε₀ instantiation.  §22 of the paper states the
+        formula ε₀ = |μmax|/[2(1+sup‖Hess V‖)], instantiates it at
+        sup‖Hess V‖ = |L₂| = 3, and computes 2/(2·3) = 1/3.  Those three
+        cannot hold together: the formula at H = 3 gives 1/4.  See
+        `epsilon0_of_eq_third_iff`.  Deciding it is a question about the
+        Hessian bound, not about Lean.
 
   License: CC BY-NC-ND 4.0 (paper) · MIT (code)
 -/
@@ -118,6 +146,7 @@ import Mathlib.Dynamics.FixedPoints.Basic
 import Mathlib.SetTheory.Ordinal.Basic
 import Mathlib.SetTheory.Ordinal.Arithmetic
 import Mathlib.SetTheory.Cardinal.Cofinality
+import Mathlib.Data.Complex.ExponentialBounds  -- V7: Real.exp_one_lt_d9
 
 -- ============================================================================
 -- NAMESPACE
@@ -174,13 +203,75 @@ theorem contactCoeff_ne_zero (ρ : ℝ) (hρ : 0 < ρ) : contactCoeff ρ ≠ 0 :
 --     Source: AutophagyDm3_v2.lean — 0 sorry
 -- ============================================================================
 
-/-- P3 ✓  ε₀ = |μmax| / [2·(1 + sup‖Hess V‖)] = 2/(2·3) = 1/3. -/
+/-- P3 ✓  The arithmetic the deposit actually checks: 2/(2·(1+2)) = 1/3.
+
+    READ THE INSTANTIATION CAREFULLY.  This is
+    `ε₀ = |μmax| / [2(1 + H)]` at **H = 2**, not at H = 3.  See
+    `epsilon0_of_eq_third_iff` immediately below, and the V7 note there. -/
 theorem gronwall_radius : (2 : ℝ) / (2 * (1 + 2)) = 1 / 3 := by norm_num
+
+/-- The Gronwall radius as a function of the Hessian bound `H`,
+    exactly as the formula is printed in the paper:
+    `ε₀(H) = |μmax| / [2(1 + H)]` with `|μmax| = 2`. -/
+noncomputable def epsilon0_of (H : ℝ) : ℝ := 2 / (2 * (1 + H))
+
+/-- ✓  At H = 2 the printed formula gives 1/3. -/
+theorem epsilon0_of_two : epsilon0_of 2 = 1 / 3 := by
+  unfold epsilon0_of; norm_num
+
+/-- ✓  At H = 3 the printed formula gives **1/4**, not 1/3. -/
+theorem epsilon0_of_three : epsilon0_of 3 = 1 / 4 := by
+  unfold epsilon0_of; norm_num
+
+/-- ✓  **The instantiation is forced.**  For `H ≥ 0`, the printed formula
+    yields 1/3 for exactly one value of the Hessian bound: `H = 2`.
+
+    V7 NOTE — an inconsistency this settles.  §22 of the paper reads
+
+        ε₀ = |μmax| / [2(1 + sup‖Hess V‖)] = 2/(2·3) = 1/3,
+        where sup‖Hess V‖ = |L₂| = 3.
+
+    Three statements, and they cannot all hold.  The printed formula at
+    H = 3 gives 2/(2·4) = 1/4 (`epsilon0_of_three`).  The printed
+    arithmetic `2/(2·3)` corresponds to `1 + H = 3`, i.e. H = 2.  The Lean
+    line `2/(2*(1+2))` also uses H = 2.  So the formula and the Lean agree
+    with each other and disagree with the sentence that names the constant:
+    reaching 1/3 through this formula requires the Hessian bound to be 2,
+    and the paper says it is 3.
+
+    This theorem does not decide which of the two is the physics.  It
+    decides that they are not both available, and it puts the choice on the
+    record instead of leaving it to whichever line a reader happens to
+    check.  Tracked as O7 in §13. -/
+theorem epsilon0_of_eq_third_iff {H : ℝ} (hH : 0 ≤ H) :
+    epsilon0_of H = 1 / 3 ↔ H = 2 := by
+  unfold epsilon0_of
+  constructor
+  · intro h
+    have hne : (1 : ℝ) + H ≠ 0 := by linarith
+    field_simp at h
+    linarith
+  · rintro rfl
+    norm_num
 theorem gronwall_radius_pos    : (0 : ℝ) < 1 / 3 := by norm_num
 theorem gronwall_radius_lt_one : (1 : ℝ) / 3 < 1 := by norm_num
 
-/-- P4 ✓  Gronwall radius lies strictly inside the numerical inner boundary. -/
+/-- P4 ✓  Gronwall radius lies strictly inside the numerical inner boundary.
+
+    NOTE ON THE NUMBER.  4/5 is not the inner boundary; the corpus's
+    canonical value is r★ = 0.77594059, and 4/5 = 0.8 is 3% above it.
+    Earlier versions wrote "1/3 < 4/5 ≈ r★", which reads as an
+    identification and is not one.  `basin_asymmetry_at_canonical_r_star`
+    below states the comparison against the value the corpus actually
+    uses.  Both are arithmetic; neither verifies r★ itself, which is a
+    numerical result imported from the dm³ integration. -/
 theorem basin_asymmetry : (1 : ℝ) / 3 < 4 / 5 := by norm_num
+
+/-- P4′ ✓  ε₀ = 1/3 lies strictly inside the canonical inner boundary
+    r★ = 0.77594059.  The value of r★ is numerical input, not a theorem;
+    what is checked here is the comparison. -/
+theorem basin_asymmetry_at_canonical_r_star :
+    (1 : ℝ) / 3 < 0.77594059 := by norm_num
 
 -- ============================================================================
 -- §4  P5 — Lyapunov exponents
@@ -471,10 +562,129 @@ theorem separation_trace_first {n : ℕ} [NeZero n] (hn : n < 33)
   have h2 := abs_le.mp hb
   linarith [h1.1, h1.2, h2.1, h2.2]
 
-/-- ✓  `n < 33` is load-bearing: at exactly 33 coherent directions the
-    sixth-power trace equals 33.  The hypothesis is not an unfalsifiable
-    guard — drop it and the theorem is false. -/
-theorem separation_sharp_at_33 : ∑ _i : Fin 33, (1 : ℝ) ^ 6 = 33 := by simp
+/-- ✓  Thirty-three COHERENT directions realise 33.
+    This is a statement about the coherent count, not about `n`.
+
+    V7 CORRECTION.  An earlier draft of this file named this theorem
+    `separation_sharp_at_33` and read it as a sharpness witness for the
+    hypothesis `n < 33`.  It is not one, and the reading was wrong.  The
+    witness here has every `λᵢ = 1`, which violates the transverse
+    hypothesis `|λᵢ| ≤ e⁻²` of `spectral_trace_ne_33`; under that
+    hypothesis the trace at n = 33 is within 32/4096 of 1, not 33.
+    What 33 is the threshold for is the number of directions that are NOT
+    contracted.  See `spectral_trace_ne_33_upto` for what the dimension
+    hypothesis is actually worth. -/
+theorem coherent_directions_realise_33 : ∑ _i : Fin 33, (1 : ℝ) ^ 6 = 33 := by simp
+
+/-- ✓  The transverse bound, with no dimension hypothesis at all. -/
+theorem transverse_sum_bound_general {n : ℕ} [NeZero n] (lam : Fin n → ℝ)
+    (h : ∀ i : Fin n, i ≠ 0 → |lam i| ≤ Real.exp (-2)) :
+    |∑ i ∈ Finset.univ.erase (0 : Fin n), lam i ^ 6|
+      ≤ ((Finset.univ.erase (0 : Fin n)).card : ℝ) * (1 / 4 : ℝ) ^ 6 := by
+  calc |∑ i ∈ Finset.univ.erase (0 : Fin n), lam i ^ 6|
+      ≤ ∑ i ∈ Finset.univ.erase (0 : Fin n), |lam i ^ 6| :=
+        Finset.abs_sum_le_sum_abs _ _
+    _ ≤ (Finset.univ.erase (0 : Fin n)).card • ((1 / 4 : ℝ) ^ 6) := by
+        refine Finset.sum_le_card_nsmul _ _ _ ?_
+        intro i hi
+        rw [abs_pow]
+        exact pow_le_pow_left₀ (abs_nonneg _)
+          ((h i (Finset.ne_of_mem_erase hi)).trans exp_neg_two_le) 6
+    _ = _ := by rw [nsmul_eq_mul]
+
+/-- ✓  **How much the dimension hypothesis is actually worth.**
+    The argument behind `spectral_trace_ne_33` does not stop at 33.  It
+    carries the same conclusion to `n = 131072 = 32 · 4⁶`.
+
+    So `n < 33` is SUFFICIENT and very far from necessary.  It is inherited
+    from the dm³ dimensional threshold, not forced by this bound, and any
+    claim that the theorem is sharp at 33 is false.  Stated as a theorem so
+    that the point cannot be quietly dropped. -/
+theorem spectral_trace_ne_33_upto {n : ℕ} [NeZero n] (hn : n ≤ 131072)
+    (lam : Fin n → ℝ) (h0 : lam 0 = 1)
+    (h : ∀ i : Fin n, i ≠ 0 → |lam i| ≤ Real.exp (-2)) :
+    ∑ i, lam i ^ 6 ≠ 33 := by
+  have hcard : (Finset.univ.erase (0 : Fin n)).card ≤ 131071 := by
+    have hc : (Finset.univ.erase (0 : Fin n)).card = n - 1 := by
+      rw [Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,
+        Fintype.card_fin]
+    omega
+  have hcR : ((Finset.univ.erase (0 : Fin n)).card : ℝ) ≤ 131071 := by
+    exact_mod_cast hcard
+  have hb := transverse_sum_bound_general lam h
+  have hsplit : ∑ i, lam i ^ 6
+      = lam 0 ^ 6 + ∑ i ∈ Finset.univ.erase (0 : Fin n), lam i ^ 6 :=
+    (Finset.add_sum_erase _ _ (Finset.mem_univ _)).symm
+  have hnear : |(∑ i, lam i ^ 6) - 1|
+      ≤ ((Finset.univ.erase (0 : Fin n)).card : ℝ) * (1 / 4 : ℝ) ^ 6 := by
+    rw [hsplit, h0]; simpa using hb
+  intro hcontra
+  rw [hcontra] at hnear
+  have : (32 : ℝ) ≤ ((Finset.univ.erase (0 : Fin n)).card : ℝ) * (1 / 4 : ℝ) ^ 6 := by
+    norm_num at hnear ⊢; linarith
+  nlinarith [hcR]
+
+/-- ✓  **But the dimension hypothesis cannot be dropped altogether.**
+    With enough transverse directions — each contracted to exactly `e⁻²`,
+    so the hypothesis holds on the nose — the sixth-power trace exceeds 33.
+
+    This is the honest counterpart to `coherent_directions_realise_33`:
+    the threshold is real, it just does not sit at 33.  It sits somewhere
+    between 131 073 and 32·e¹² + 1 ≈ 5.21 · 10⁶.
+
+    Indexed over `ℕ` with an explicit `Finset.range` rather than over
+    `Fin 17006114`: Lean's code generator overflows its stack building a
+    `Fin` type at a ten-million literal, and a theorem should not depend on
+    that. -/
+theorem separation_fails_in_high_dimension :
+    ∃ (m : ℕ) (lam : ℕ → ℝ),
+      lam 0 = 1 ∧ (∀ i : ℕ, i ≠ 0 → |lam i| ≤ Real.exp (-2)) ∧
+      33 < ∑ i ∈ Finset.range m, lam i ^ 6 := by
+  classical
+  refine ⟨17006114, fun i => if i = 0 then 1 else Real.exp (-2), by simp, ?_, ?_⟩
+  · intro i hi
+    simp only [if_neg hi, abs_of_pos (Real.exp_pos _)]
+    exact le_refl _
+  · have hmem : (0 : ℕ) ∈ Finset.range 17006114 := by
+      simp
+    have hcard : ((Finset.range 17006114).erase 0).card = 17006113 := by
+      rw [Finset.card_erase_of_mem hmem, Finset.card_range]
+    have hsplit :
+        ∑ i ∈ Finset.range 17006114, (if i = 0 then (1 : ℝ) else Real.exp (-2)) ^ 6
+          = (if (0 : ℕ) = 0 then (1 : ℝ) else Real.exp (-2)) ^ 6
+            + ∑ i ∈ (Finset.range 17006114).erase 0,
+                (if i = 0 then (1 : ℝ) else Real.exp (-2)) ^ 6 :=
+      (Finset.add_sum_erase _ _ hmem).symm
+    have hconst : ∀ i ∈ (Finset.range 17006114).erase 0,
+        (if i = 0 then (1 : ℝ) else Real.exp (-2)) ^ 6 = Real.exp (-12) := by
+      intro i hi
+      rw [if_neg (Finset.ne_of_mem_erase hi), ← Real.exp_nat_mul]
+      norm_num
+    rw [hsplit, Finset.sum_congr rfl hconst, Finset.sum_const, hcard,
+      nsmul_eq_mul, if_pos rfl]
+    -- 1 + 17 006 113 · e⁻¹² > 33, because e¹² < 3¹² = 531 441
+    have he3 : Real.exp 1 < 3 := by
+      have := Real.exp_one_lt_d9
+      linarith
+    have h12 : Real.exp 12 < 531441 := by
+      have hpow : Real.exp 12 = (Real.exp 1) ^ 12 := by
+        rw [← Real.exp_nat_mul]; norm_num
+      rw [hpow]
+      calc (Real.exp 1) ^ 12 < 3 ^ 12 :=
+            pow_lt_pow_left₀ he3 (Real.exp_pos 1).le (by norm_num)
+        _ = 531441 := by norm_num
+    have hmul : Real.exp (-12 : ℝ) * Real.exp 12 = 1 := by
+      rw [← Real.exp_add]; norm_num
+    have hpos : 0 < Real.exp (-12 : ℝ) := Real.exp_pos _
+    have key : 0 < Real.exp (-12 : ℝ) * (531441 - Real.exp 12) :=
+      mul_pos hpos (by linarith)
+    have expand : Real.exp (-12 : ℝ) * (531441 - Real.exp 12)
+        = 531441 * Real.exp (-12 : ℝ) - 1 := by
+      linear_combination -hmul
+    rw [expand] at key
+    -- 17 006 113 · e⁻¹² > 17 006 113 / 531 441 > 32
+    push_cast
+    linarith
 
 /-- ✓  The hypotheses are satisfiable: two directions, one coherent, one
     dead.  Guards against a vacuously true statement. -/
@@ -499,6 +709,21 @@ theorem v6_separation_statement_is_false :
   · intro i hi
     exact absurd (Subsingleton.elim i 0) hi
   · simp [Matrix.trace_fin_one]
+
+/-- ✓  And the refutation is not an artefact of dimension 1.  At n = 5,
+    `diag(33, 0, 0, 0, 0)` satisfies V6's hypothesis on the nose — every
+    transverse entry is 0, comfortably inside `e⁻²` — and has trace 33.
+    The missing hypothesis is a bound on the coherent entry `M 0 0`, at
+    every dimension, not a degenerate-case technicality. -/
+theorem v6_statement_false_at_dimension_five :
+    ∃ M : Matrix (Fin 5) (Fin 5) ℝ,
+      (∀ i : Fin 5, i ≠ 0 → |M i i| ≤ Real.exp (-2)) ∧ M.trace = 33 := by
+  refine ⟨Matrix.diagonal ![33, 0, 0, 0, 0], ?_, ?_⟩
+  · intro i hi
+    rw [Matrix.diagonal_apply_eq]
+    fin_cases i <;> simp_all [(Real.exp_pos (-2 : ℝ)).le]
+  · rw [Matrix.trace_diagonal]
+    simp [Fin.sum_univ_five]
 
 -- ============================================================================
 -- §10  CLUB FILTER AND STATIONARY SETS
@@ -699,14 +924,30 @@ theorem crystal_aspect_ratio :
     crystal_apex_cubits / crystal_base_cubits = 66 := by
   simp [crystal_apex_cubits, crystal_base_cubits, g6_layer_count_nat]
 
-/-- ✓  Aspect ratio encodes both locked invariants simultaneously. -/
+/-- ✓  Aspect ratio encodes both locked invariants simultaneously.
+    Read this for exactly what it is: arithmetic over the two definitions
+    above (apex = 33 · 1000, base = 500), i.e. 1000/500 = 2 = τ.  It is not
+    evidence for the crystal geometry; it is bookkeeping that the two
+    constants are consistent with each other. -/
 theorem aspect_ratio_encodes_invariants :
     (crystal_apex_cubits / crystal_base_cubits : ℕ) = g6_layer_count_nat * 2 := by
   simp [crystal_aspect_ratio, g6_layer_count_nat]
 
-/-- ✓  g⁶ = 33 equals the Schumann coupling integer. -/
-def schumann_4th_harmonic_integer : ℕ := 33
-theorem g6_equals_schumann : g6_layer_count_nat = schumann_4th_harmonic_integer := rfl
+-- V7 WITHDRAWN.  This section previously ended with
+--
+--     def schumann_4th_harmonic_integer : ℕ := 33
+--     theorem g6_equals_schumann :
+--         g6_layer_count_nat = schumann_4th_harmonic_integer := rfl
+--
+-- and counted it among the machine-checked facts.  It is `33 = 33`.  Both
+-- sides are definitions equal to 33, so the theorem cannot fail; it is an
+-- UNFALSIFIABLE GUARD in the sense of the corpus defect ledger, and the
+-- ledger already records the Schumann-harmonic identification itself as
+-- only partly supported ("four carriers claimed; two are real").  A kernel
+-- cannot check a claim about the ionosphere, and dressing one as `rfl`
+-- makes an empirical assertion look verified.  Withdrawn, not repaired:
+-- the theorem count drops by one and the claim moves to the prose, where
+-- it can be argued and challenged.
 
 -- ============================================================================
 -- §13  OPEN OBLIGATIONS (documented stubs)
@@ -757,6 +998,21 @@ Tracked in AXLE issue tracker.  Zero `sorry` in this file as of V7.
   motivation.  Formal equivalence requires the typeclass and intertwining lemma.
   Closure path: define DynSys typeclass, prove embedding ℕ → PhaseVector.
 
+### O7 — NEW IN V7.  The ε₀ instantiation is inconsistent as printed.
+  §22 of the paper (Proof VII) states
+      ε₀ = |μmax| / [2(1 + sup‖Hess V‖)] = 2/(2·3) = 1/3,
+      where sup‖Hess V‖ = |L₂| = 3.
+  The formula at H = 3 gives 2/(2·4) = 1/4, not 1/3 (`epsilon0_of_three`).
+  The printed arithmetic 2/(2·3) corresponds to 1 + H = 3, i.e. H = 2, and
+  the Lean line `2/(2*(1+2))` uses H = 2 as well.  So formula and Lean
+  agree with each other, and the sentence naming the constant disagrees
+  with both.  `epsilon0_of_eq_third_iff` proves the choice is forced: under
+  the printed formula, ε₀ = 1/3 iff H = 2.
+  Closure path: decide, in the paper, whether the Hessian bound entering
+  the Gronwall estimate is 2 or 3, and correct whichever of the three lines
+  is wrong.  ε₀ = 1/3 is load-bearing throughout the corpus, so this is not
+  cosmetic.  It is not a Lean question.
+
 ### O5 — Conjecture 15.1: Perelman functor 𝒫 : dm³ → RicciFlow
   Term-by-term structural correspondence is argued in §15 of the paper.
   Formal construction requires: (a) contact morphisms as morphisms in dm³
@@ -803,6 +1059,19 @@ Tracked in AXLE issue tracker.  Zero `sorry` in this file as of V7.
 -- V7 FIX: every tactic proof below now works with a variable of type ℤ.
 -- With `x : intManifold.carrier`, `omega` reported "no usable constraints"
 -- even though the carrier is reducibly ℤ — it inspects the syntactic type.
+/-- ✓  **`UnfoldOp.stable_branch` is vacuous.**  Taking `n = 0` gives
+    `f^[0] = id`, and every point is a fixed point of the identity — so the
+    field is satisfied by every map on every type and constrains nothing.
+    Theorem D therefore carries no content beyond `decreases_Phi`.
+
+    The V6 file recorded this in a comment.  V7 proves it, so the weakness
+    is a checked fact that a reader can act on rather than a remark that can
+    be skipped.  Closing it means strengthening the structure (for instance
+    to `∃ n > 0, IsFixedPt (map^[n]) (map x)`, or to convergence of the
+    orbit), which changes what the deposit claims and is left for V8. -/
+theorem unfold_stable_branch_is_vacuous {α : Type*} (f : α → α) (x : α) :
+    ∃ n : ℕ, Function.IsFixedPt (f^[n]) (f x) := ⟨0, rfl⟩
+
 def idMap : ℤ → ℤ := fun x => x
 def negMap : ℤ → ℤ := fun x => -x
 def shrinkMap : ℤ → ℤ := fun x => if 0 < x then x - 1 else if x < 0 then x + 1 else 0
@@ -943,6 +1212,16 @@ theorem commuting_instance (x : ℤ) :
   simp only [GenerativeOp, Function.comp_apply, C_ex, K_ex, F_sym, U_ex,
              idMap, negMap, foldSym]
   split_ifs <;> omega
+
+/-- ✓  **`CompressionOp.contractive` is non-expansive, not contractive.**
+    The field says `dist (map x) (map y) ≤ dist x y`, with `≤`, so the
+    identity satisfies it — `C_ex` is exactly that.  A genuinely contractive
+    operator needs `≤ k · dist x y` for some `k < 1`, which the structure
+    does not require and no result below uses.  The paper's word for
+    Assumption 3 should read "non-expansive". -/
+theorem compression_permits_identity :
+    ∃ C : CompressionOp intManifold, ∀ x, C.map x = x :=
+  ⟨C_ex, fun _ => rfl⟩
 
 theorem exists_order_dependent :
     ∃ (M : GenerativeManifold.{0}) (C : CompressionOp M) (K : CurvatureOp M)

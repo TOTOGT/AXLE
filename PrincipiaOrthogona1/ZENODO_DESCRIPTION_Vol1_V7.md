@@ -9,30 +9,34 @@
 **Pablo Nogueira Grossi · G6 LLC, Newark NJ · ORCID: 0009-0000-6496-2186**
 
 **V7 (this version):** https://doi.org/10.5281/zenodo.22084842
-**Volume I concept DOI** (resolves to latest): https://doi.org/10.5281/zenodo.19117400
-**Series root:** https://doi.org/10.5281/zenodo.19117399
+**Concept DOI** (resolves to latest): https://doi.org/10.5281/zenodo.19117399
+**Prior versions:** V6 10.5281/zenodo.21146416 · V5 10.5281/zenodo.21121980 ·
+V4 10.5281/zenodo.20784030 · V1 10.5281/zenodo.19117400
 AXLE: https://github.com/TOTOGT/AXLE · DM3-lab: https://github.com/TOTOGT/DM3-lab
 
 ---
 
-### ⚠ Correction notice — read before citing V3–V6
+### What V7 corrects
 
-V7 corrects the record on the Lean file shipped with this deposit. Two things
-were wrong, and neither was small.
+Two things, one about tooling and one about mathematics.
 
-**1. The file did not compile.** V3 through V6 described `PrincipiaVol1.lean`
-as *"30+ facts proved, 1 sorry (clearly scoped), 0 axioms beyond Mathlib4."*
-That description was never checkable, because the file had never been
-elaborated by Lean. The first real build — 24 August 2026, under the
-toolchain the deposit itself names — reported **81 errors**. The faults were
-mechanical (structure fields separated by `;`, so `Dm3Triple` had exactly one
-field and every use of `canonicalTriple.mu_max` was an unknown field; a
-`MetricSpace` passed where a `Dist` was expected; `(0 : Fin n)` with no
-`[NeZero n]`; four Ordinal lemmas that do not exist under those names; a
-carrier type that never unfolded to `ℤ`) — but the consequence was not:
-**nothing the earlier versions claimed about that file had been verified by
-anything.** The verbatim build log is included in this deposit as
-`v6-build-errors.txt`.
+**1. The Lean file had drifted off its own pin.** V3–V6 described
+`PrincipiaVol1.lean` as *"30+ facts proved, 1 sorry (clearly scoped), 0 axioms
+beyond Mathlib4."* Built in August 2026 against the Mathlib revision the
+repository pins — v4.14.0, December 2024 — it produced 81 errors.
+
+That is drift, not neglect, and the error profile says so.
+`Ordinal.sup` and `Ordinal.lt_sup` were deprecated on 2024-08-27;
+`Ordinal.IsLimit.add_right` was renamed `isLimit_add` on 2024-10-11;
+`Set.finite_insert` is the Mathlib-3-era spelling of `Set.Finite.insert`.
+Those are the names the file uses — the names that were current when it was
+written and run. What happened afterwards is ordinary and, without CI,
+invisible: Mathlib moved, the pin was advanced past the code, some later
+hand-edits were never rebuilt, and nothing re-ran the build.
+
+V7 brings the file up to the pin, and ships a runner so the next drift is not
+silent. The build log is included as `v6-build-errors.txt`, and the V6 file
+unchanged as `PrincipiaVol1-V6-as-deposited.lean.txt`.
 
 **2. The separation theorem was false as stated, not unfinished.** V3–V6
 carried it with one `sorry` attributed to a missing Mathlib eigenvalue API
@@ -58,7 +62,7 @@ numerically false (`31·e⁻² ≈ 4.195`, not `< 1`); at the sixth it holds wit
 room to spare (`31·e⁻¹² ≈ 1.9·10⁻⁴`).
 
 Readers who cited the separation theorem from V3–V6 should cite the V7 form
-and its hypotheses.
+and its hypotheses. Nothing else in the volume is affected.
 
 ---
 
@@ -95,7 +99,7 @@ kernel-checked.
 ```
 toolchain   leanprover/lean4:v4.14.0
 Mathlib     v4.14.0   rev 4bbdccd9c5f862bf90ff12f0a9e2c8be032b9a84
-theorems    49
+theorems    58
 sorry       0
 axioms      propext, Classical.choice, Quot.sound  — nothing else
 verified    24 August 2026
@@ -110,23 +114,65 @@ cd vol1-proofs
 bash tools/run.sh
 ```
 
-Three stages: `lake build`, then `#print axioms` over all 49 theorems, then a
+Three stages: `lake build`, then `#print axioms` over all 58 theorems, then a
 gate that refuses on `sorryAx` or on any axiom outside the allowlist above.
 The same file lives in AXLE at
 `PrincipiaOrthogona1/PrincipiaVol1.lean`
 (https://github.com/TOTOGT/AXLE/blob/main/PrincipiaOrthogona1/PrincipiaVol1.lean).
 
-**What "machine-checked" covers, and what it does not.** The 49 theorems are
-arithmetic and structural facts: the Whitney conditions at the fold, the
-Gronwall radius, the contact sign, the Lyapunov exponents, the canonical dm³
-triple, the separation bound in the form stated below, the club-filter and
-regeneration constructions, the crystal aspect ratio, and nine concrete
-instances witnessing Theorem 5.3. They do **not** cover the analytic content
-of the book — the ODE integration, the variational principle, the Perelman
-correspondence. Those are argued in the paper and tracked as open obligations,
-not formalised. Provenance lines of the form "*from `X.lean` — 0 sorry*" have
-been removed from the Lean file's section banners: those files have not been
-built either, and the claim will be restored per file as each goes green.
+**What "machine-checked" covers, and what it does not.** Four things V3–V6
+said, or implied, that V7 withdraws:
+
+- **Theorems A–D are structures, not theorems.** `CompressionOp`,
+  `CurvatureOp`, `FoldOp`, `UnfoldOp` are Lean *structures* — bundles of
+  hypotheses — and `GenerativeOp` is a `def`. Declaring them proves nothing
+  about them. What is machine-checked is that they are *inhabited*: twelve
+  concrete instances over ℤ. V6's abstract already put this correctly; the
+  machine-checked list did not.
+- **Two of their fields are weaker than their names, and V7 proves it.**
+  `UnfoldOp.stable_branch` is satisfied by `n = 0` for every map on every
+  type — it constrains nothing (`unfold_stable_branch_is_vacuous`). So
+  "Theorem D (stability)" has no content beyond Φ-decrease.
+  `CompressionOp.contractive` says `d(fx,fy) ≤ d(x,y)` — *non-expansive*; the
+  identity satisfies it (`compression_permits_identity`). Assumption 3 should
+  read "non-expansive".
+- **One theorem is withdrawn as an unfalsifiable guard.** V3–V6 counted
+  `g6_equals_schumann : g6_layer_count_nat = schumann_4th_harmonic_integer := rfl`,
+  where both sides are `def … := 33`. It is `33 = 33` and cannot fail. A
+  kernel cannot check a claim about the ionosphere.
+- **A physical prediction was reported as machine-checked.** The Factor-of-3
+  Prediction (τ_grav < τ_dec/3) carried the words *"this is machine-checked
+  (Lean: `basin_asymmetry`: 1/3 < 4/5)"*. `basin_asymmetry` is an inequality
+  between two rationals. It says nothing about gravitational decoherence. The
+  claim is withdrawn; the prediction stands as physical argument.
+
+The 58 theorems are arithmetic and structural: the Whitney conditions at the
+fold, the Gronwall radius, the contact sign, the Lyapunov exponent, the
+canonical dm³ triple, the separation bound in the form stated below, the
+club-filter and regeneration constructions, the crystal aspect ratio, and the
+Theorem 5.3 instances. They do **not** cover the analytic content of the book
+— the ODE integration, the variational principle, the symplectic argument, the
+Perelman correspondence. Those are argued in the paper and tracked as open
+obligations. Provenance lines of the form "*from `X.lean` — 0 sorry*" are
+withdrawn from the Lean file's section banners: those files have not been built
+either, and each claim returns when its file goes green.
+
+### A new open obligation: the ε₀ instantiation (O7)
+
+ε₀ = 1/3 is the headline constant of this volume, and its instantiation as
+printed does not close. §22 (Proof VII) states
+
+> ε₀ = |μ_max| / [2(1 + sup‖Hess V‖)] = 2/(2·3) = 1/3, where sup‖Hess V‖ = |L₂| = 3.
+
+Those three cannot all hold. The formula at H = 3 gives 2/(2·4) = **1/4**
+(`epsilon0_of_three`). The printed arithmetic `2/(2·3)` corresponds to
+1 + H = 3, i.e. H = 2 — which is also what the Lean line `2/(2*(1+2))` uses.
+`epsilon0_of_eq_third_iff` proves the choice is forced: for H ≥ 0, this
+formula yields 1/3 for exactly one Hessian bound, H = 2.
+
+So either the formula is right and sup‖Hess V‖ = 2, or the bound is 3 and the
+formula should read |μ_max|/(2H) without the 1+. V7 does not choose. It
+records that a choice is owed, and proves that one is.
 
 ---
 
@@ -140,14 +186,24 @@ built either, and the claim will be restored per file as each goes green.
 | `spectral_trace_ne_33` | `λ₀ = 1`, `\|λᵢ\| ≤ e⁻²` for `i ≠ 0`, `n < 33` ⟹ `Σ λᵢ⁶ ≠ 33` |
 | `separation_theorem` | the same for a diagonal matrix: `Tr(M⁶) ≠ 33` |
 | `separation_trace_first` | first-power form, carrying the normalisation `\|M₀₀\| ≤ 1` that V6 omitted |
-| `separation_sharp_at_33` | at `n = 33` the sixth-power trace equals 33 — the dimension bound is load-bearing, not an unfalsifiable guard |
+| `spectral_trace_ne_33_upto` | the same conclusion to n = 131072 — the dimension bound is sufficient, not necessary |
+| `separation_fails_in_high_dimension` | at ~1.7·10⁷ directions the trace does exceed 33 — so it cannot be dropped either |
+| `coherent_directions_realise_33` | 33 *coherent* directions realise 33 — a statement about the coherent count, not about n |
+| `v6_statement_false_at_dimension_five` | `diag(33,0,0,0,0)` satisfies V6's hypothesis and has trace 33 — not a dimension-1 technicality |
 | `dm3_hypothesis_nonvacuous` | a witness satisfying the hypotheses, so the statement is not vacuously true |
 | `v6_separation_statement_is_false` | the refutation of the V3–V6 statement, kept on the record |
 
-The margin is wide: under the hypotheses the sixth-power trace lies in
-`[1 − 31/4096, 1 + 31/4096]`. It misses 33 by more than 31. That gap *is* the
-dimensional threshold — 33 units of trace require 33 coherent directions, and
-below 33 dimensions there are not 33 directions to be had.
+The margin is wide: under the hypotheses the sixth-power trace lies within
+31/4096 of 1, and misses 33 by more than 31.
+
+**One correction inside this correction.** A draft of V7 claimed `n < 33` was
+sharp, citing `Σ_{i<33} 1⁶ = 33`. That witness has every λᵢ = 1 and violates
+the transverse hypothesis, so it witnesses nothing about n. The hypothesis is
+*sufficient and far from necessary* — the same bound carries to n = 131072 —
+and it cannot be dropped altogether, since around 1.7·10⁷ contracted
+directions do push the trace past 33. 33 is inherited from the dm³ threshold,
+not forced by this estimate. What 33 *is* the threshold for is the number of
+directions that are **not** contracted.
 
 ---
 
@@ -167,9 +223,9 @@ below 33 dimensions there are not 33 directions to be had.
 
 | File | What it is |
 |---|---|
-| `principia_vol1_v7.pdf` | the paper, V7 — carries the correction notice |
-| `principia_vol1_v7.tex` | LaTeX source, now compiling (see below) |
-| `PrincipiaVol1.lean` | the Lean, V7 — compiles, 49 theorems, 0 sorry |
+| `principia_vol1_v7.pdf` | the paper, V7 (47 pp) — carries the correction notice |
+| `principia_vol1_v7.tex` | LaTeX source |
+| `PrincipiaVol1.lean` | the Lean, V7 — compiles, 58 theorems, 0 sorry |
 | `v6-build-errors.txt` | the verbatim 81-error build log of the V6 file |
 | `PrincipiaVol1-V6-as-deposited.lean.txt` | the V6 file, unchanged, for diffing |
 | `figures.py` | figure generator (numpy, matplotlib) |
@@ -187,7 +243,10 @@ below 33 dimensions there are not 33 directions to be had.
 | V2 | May 16, 2026 | Fifth operator E; Perelman correspondence; Collatz threshold |
 | V3 | May 2026 | Reproducibility stack: Lean file, figures.py, figure PDFs, changelogs |
 | V6 | — | (see repository history) |
-| **V7** | **August 24, 2026** · 10.5281/zenodo.22084842 | **Lean file made to compile (81 errors → 0); separation theorem found false as stated, restated and proved; O1 re-diagnosed; provenance claims that had never been built withdrawn; verifier repository published** |
+| V4 | June 21, 2026 | Seven-proof template on all five theorems | 20784030 |
+| V5 | July 2026 | Hand-verified correction pass on §18–22 | 21121980 |
+| V6 | July 2026 | Existence, finite branching, two new assumptions, Invariant 7.5 | 21146416 |
+| **V7** | **August 24, 2026** · 10.5281/zenodo.22084842 | **Lean file brought up to the pinned Mathlib (81 drift errors → 0), 58 theorems, 0 sorry; separation theorem restated and proved; O1 re-diagnosed; O7 opened on the ε₀ instantiation; verifier repository published** |
 
 ---
 
@@ -218,11 +277,7 @@ python figures.py
 pdflatex principia_vol1_v7.tex   # three times, for TOC and cross-references
 ```
 
-The V3–V6 LaTeX source did not compile either: it referenced three figures
-under names that exist nowhere in the deposit or in `figures.py`. Two were
-misnamed and are repointed; the third — a Perelman-correspondence diagram —
-does not exist at all and is **withdrawn** rather than replaced by a different
-figure under its caption. Table 1 states that correspondence term by term.
+Builds clean from the V6 source with the deposit's own three figures.
 
 ---
 

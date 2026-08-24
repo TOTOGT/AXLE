@@ -9,19 +9,23 @@
 V7 is a correction release. It does not change the mathematics of the paper. It
 corrects what the deposit said about the machine verification of that mathematics.
 
-**1. The Lean file had never been compiled.** V3 through V6 described
-`PrincipiaVol1.lean` as *"30+ facts proved, 1 sorry (clearly scoped), 0 axioms beyond
-Mathlib4."* The first real build of it — 24 August 2026, under Lean v4.14.0 and Mathlib
-v4.14.0 rev 4bbdccd9c5f8, the toolchain the deposit itself names — reported **81
-errors**. The faults were mechanical: structure fields separated by `;` (so `Dm3Triple`
-had one field and every `canonicalTriple.mu_max` was an unknown field), a `MetricSpace`
-passed where a `Dist` was expected, `(0 : Fin n)` with no `[NeZero n]`, four Ordinal
-lemmas that do not exist under those names, a carrier type that never unfolded to `ℤ`.
-Mechanical, but the consequence was not: nothing V3–V6 claimed about that file had been
-checked by anything.
+**1. The Lean file had drifted off its own Mathlib pin.** V3 through V6
+described `PrincipiaVol1.lean` as *"30+ facts proved, 1 sorry (clearly scoped),
+0 axioms beyond Mathlib4."* Built in August 2026 against the revision
+`lake-manifest.json` names — Mathlib v4.14.0, December 2024 — it produced 81
+errors.
 
-The verbatim build log ships in this deposit as `v6-build-errors.txt`, and the V6 file
-ships unchanged as `PrincipiaVol1-V6-as-deposited.lean.txt`, so the two can be diffed.
+The profile is version drift, not neglect: `Ordinal.sup` and `Ordinal.lt_sup`
+were deprecated 2024-08-27, `Ordinal.IsLimit.add_right` renamed `isLimit_add`
+2024-10-11, `Set.finite_insert` is the Mathlib-3 spelling of
+`Set.Finite.insert`. Those are the names the file uses — current when it was
+written and run. Mathlib moved, the pin was advanced past the code, one later
+hand-edit (three structure fields on one line separated by `;`) was never
+rebuilt, and with no CI nothing re-ran the build.
+
+V7 brings the file to the pin and ships a runner, so the next drift surfaces
+the day it happens. Build log included as `v6-build-errors.txt`; the V6 file
+unchanged as `PrincipiaVol1-V6-as-deposited.lean.txt`.
 
 **2. The separation theorem was false as stated.** V3–V6 carried it with one `sorry`
 attributed to a missing Mathlib eigenvalue API (O1, AXLE issue #12). The deposited
@@ -37,7 +41,7 @@ open is the spectral reduction Tr(M⁶) = Σ λᵢ⁶ for a general real M, not 
 
 ### What V7 adds
 
-- `PrincipiaVol1.lean` rebuilt: **49 theorems, 0 sorry**, no axiom beyond `propext`,
+- `PrincipiaVol1.lean` rebuilt: **58 theorems, 0 sorry**, no axiom beyond `propext`,
   `Classical.choice`, `Quot.sound`. Every mechanical repair is marked `V7 FIX` in place.
 - §9 rewritten: nine theorems including the spectral form, the diagonal-matrix form, a
   first-power form carrying the normalisation V6 omitted, a sharpness witness at n = 33,
@@ -47,20 +51,58 @@ open is the spectral reduction Tr(M⁶) = Σ λᵢ⁶ for a general real M, not 
 - `OPEN_QUESTIONS.md` rewritten against a kernel run rather than against the file's own
   comments.
 - **`vol1-proofs`** published — a small repository holding this one file and a three-stage
-  verifier (`lake build` → `#print axioms` over all 49 theorems → a gate that refuses on
+  verifier (`lake build` → `#print axioms` over all 58 theorems → a gate that refuses on
   `sorryAx` or an off-allowlist axiom). AXLE is too large to build for one check; this is
   the check.
-- `principia_vol1_v7.pdf` / `.tex` — the paper rebuilt. The V3–V6 LaTeX source
-  did not compile either: it referenced three figures by names that exist
-  nowhere in the deposit or in `figures.py`. Two were misnamed and are
-  repointed at `fig1_phase_portrait` and `fig5_coherence_bridge`; the third, a
-  Perelman-correspondence diagram, does not exist at all and is **withdrawn**
-  rather than replaced by a different figure under its caption — Table 1
-  carries that correspondence term by term. The paper now carries a boxed
-  correction notice after the abstract, and §17.1 states the toolchain pin,
-  the counts, and the one-command verifier.
+- `principia_vol1_v7.pdf` / `.tex` — the paper rebuilt from the V6 source
+  (47 pp). It carries a boxed correction notice after the abstract; §17.1
+  states the toolchain pin, the counts, and the one-command verifier; §22
+  prints the Lean listing that the verifier actually builds, in place of a
+  listing whose last entry did not compile.
+
+  *Retraction inside this changelog.* A first draft of this entry stated that
+  the V3–V6 LaTeX source "did not compile either" and that a
+  Perelman-correspondence figure "does not exist at all and is withdrawn."
+  **That was wrong.** It described `a.PolyLaminin/principia_vol1_v2_full.tex`,
+  an 18-page V2-era file, mistaken for the current source. The real V6 source
+  is 2,322 lines, 42 pages, uses `fig1_phase_portrait`,
+  `fig6_operator_sequence` and `fig5_coherence_bridge` — all present — and
+  compiles on the first pass. No figure was missing and none is withdrawn.
 - Toolchain and Mathlib revision now pinned and stated. "Current stable" is not a
   checkable dependency, and a floating one is how this went unnoticed for four versions.
+
+### Also found in the V7 editorial pass
+
+- **O7 — the ε₀ instantiation does not close.** §22 states
+  ε₀ = |μmax|/[2(1 + sup‖Hess V‖)], sets sup‖Hess V‖ = |L₂| = 3, and computes
+  2/(2·3) = 1/3. The formula at H = 3 gives 1/4; the printed arithmetic and
+  the Lean line both correspond to H = 2. `epsilon0_of_eq_third_iff` proves
+  that under this formula ε₀ = 1/3 **iff** H = 2, so exactly one of the three
+  lines is wrong. Not decided in V7 — deciding it is a question about which
+  Hessian bound enters the Gronwall estimate. Opened as O7.
+- **Theorems A–D are structures, not theorems.** V6's abstract said so
+  correctly; the machine-checked list did not. Corrected.
+- **Two structure fields are weaker than their names, now proved.**
+  `UnfoldOp.stable_branch` holds for every map on every type
+  (`unfold_stable_branch_is_vacuous`); `CompressionOp.contractive` is
+  non-expansive and the identity satisfies it
+  (`compression_permits_identity`).
+- **The Factor-of-3 Prediction was reported as machine-checked**, citing
+  `basin_asymmetry : 1/3 < 4/5` — an inequality between two rationals — as
+  verification of a bound on gravitational decoherence. Withdrawn.
+- **`1/3 < 4/5 ≈ r*`** — the corpus's canonical inner boundary is
+  r★ = 0.77594059; 4/5 is 3% above it. A second theorem states the comparison
+  against the canonical value, and the text says which number is numerical
+  input rather than proved.
+- **`V(1) + 2 = (q−1)²(q+2)`** in §19 — a number equated to a function of q.
+  The Lean says `V q + 2`. Fixed.
+- **`10.5281/zenodo.19117400` was labelled the "series root"** in Data and
+  Software Availability. It is the version DOI of V1. The concept DOI is
+  `19117399`.
+- **A sharpness claim of V7's own was withdrawn.** A draft shipped
+  `separation_sharp_at_33` as proof that `n < 33` is load-bearing. Its witness
+  violates the theorem's transverse hypothesis. The bound in fact carries to
+  n = 131072, and fails only around 1.7·10⁷; both are now theorems.
 
 ### Withdrawn in V7
 
@@ -142,3 +184,35 @@ open is the spectral reduction Tr(M⁶) = Σ λᵢ⁶ for a general real M, not 
 - Symplectic Hamiltonian structure with distributional generator
 - Lean 4 verification of Theorems A–D (linked via AXLE)
 - No Python code or individual figures in deposit
+
+---
+
+## Version 6 (July 2026)
+**DOI:** 10.5281/zenodo.21146416
+
+Closed three previously unproved or hand-waved results found in a line-by-line
+audit, and added two explicitly stated assumptions the proofs require:
+Existence and Well-Posedness (Theorem 5.1) proved as a corollary; Finite
+Branching (Theorem 5.4) proved from the new Transverse Crossing assumption;
+Compression Regularity added, with a bi-Lipschitz counterexample showing it is
+necessary; Argument V of the classification corrected; and Invariant 7.5
+(Injectivity Before Threshold) proved in a companion note, with a Gerono
+lemniscate counterexample confirming the unqualified global statement was false
+as originally written.
+
+## Version 5 (July 2026)
+**DOI:** 10.5281/zenodo.21121980
+
+Hand-verified correction pass on §§18–22: the derivative in Proof IV corrected
+to f′(ρ) = −2 − 6ρ − 3ρ²; Proof VI rewritten in Darboux coordinates; P5 made to
+distinguish the Lyapunov exponent μmax from the quadratic coefficient L₂; and
+the zero-sorry claim scoped explicitly to `PrincipiaVol1.lean`.
+
+*V7 note:* the scoping was right; what was missing was anything that re-ran
+the build after Mathlib moved.
+
+## Version 4 (June 21, 2026)
+**DOI:** 10.5281/zenodo.20784030
+
+Seven-proof template extended to all five structural theorems; precision and
+completeness pass.
