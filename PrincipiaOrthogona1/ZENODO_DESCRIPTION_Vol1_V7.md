@@ -1,6 +1,5 @@
 # ZENODO_DESCRIPTION_Vol1_V7.md
 # Copy this text into the Zenodo description field for the V7 upload.
-# Replace {V7_DOI} once Zenodo mints it.
 
 ---
 
@@ -9,9 +8,9 @@
 
 **Pablo Nogueira Grossi · G6 LLC, Newark NJ · ORCID: 0009-0000-6496-2186**
 
-Concept DOI (resolves to latest): https://doi.org/10.5281/zenodo.19117399
-This deposit: https://doi.org/10.5281/zenodo.19117400
-V7 DOI: {V7_DOI}
+**V7 (this version):** https://doi.org/10.5281/zenodo.22084842
+**Volume I concept DOI** (resolves to latest): https://doi.org/10.5281/zenodo.19117400
+**Series root:** https://doi.org/10.5281/zenodo.19117399
 AXLE: https://github.com/TOTOGT/AXLE · DM3-lab: https://github.com/TOTOGT/DM3-lab
 
 ---
@@ -168,6 +167,8 @@ below 33 dimensions there are not 33 directions to be had.
 
 | File | What it is |
 |---|---|
+| `principia_vol1_v7.pdf` | the paper, V7 — carries the correction notice |
+| `principia_vol1_v7.tex` | LaTeX source, now compiling (see below) |
 | `PrincipiaVol1.lean` | the Lean, V7 — compiles, 49 theorems, 0 sorry |
 | `v6-build-errors.txt` | the verbatim 81-error build log of the V6 file |
 | `PrincipiaVol1-V6-as-deposited.lean.txt` | the V6 file, unchanged, for diffing |
@@ -186,7 +187,7 @@ below 33 dimensions there are not 33 directions to be had.
 | V2 | May 16, 2026 | Fifth operator E; Perelman correspondence; Collatz threshold |
 | V3 | May 2026 | Reproducibility stack: Lean file, figures.py, figure PDFs, changelogs |
 | V6 | — | (see repository history) |
-| **V7** | **August 24, 2026** | **Lean file made to compile (81 errors → 0); separation theorem found false as stated, restated and proved; O1 re-diagnosed; provenance claims that had never been built withdrawn; verifier repository published** |
+| **V7** | **August 24, 2026** · 10.5281/zenodo.22084842 | **Lean file made to compile (81 errors → 0); separation theorem found false as stated, restated and proved; O1 re-diagnosed; provenance claims that had never been built withdrawn; verifier repository published** |
 
 ---
 
@@ -214,8 +215,14 @@ python figures.py
 **Paper:**
 
 ```
-pdflatex principia_vol1_v2_full.tex   # twice, for cross-references
+pdflatex principia_vol1_v7.tex   # three times, for TOC and cross-references
 ```
+
+The V3–V6 LaTeX source did not compile either: it referenced three figures
+under names that exist nowhere in the deposit or in `figures.py`. Two were
+misnamed and are repointed; the third — a Perelman-correspondence diagram —
+does not exist at all and is **withdrawn** rather than replaced by a different
+figure under its caption. Table 1 states that correspondence term by term.
 
 ---
 
@@ -224,7 +231,8 @@ pdflatex principia_vol1_v2_full.tex   # twice, for cross-references
 | Role | DOI |
 |------|-----|
 | Series root / concept DOI | 10.5281/zenodo.19117399 |
-| Volume I (this deposit) | 10.5281/zenodo.19117400 |
+| Volume I — concept DOI | 10.5281/zenodo.19117400 |
+| Volume I — V7 (this version) | 10.5281/zenodo.22084842 |
 | Volume II (contact geometry) | 10.5281/zenodo.19379473 |
 | GCM paper (dm³ toy model) | 10.5281/zenodo.19379385 |
 | G6 Crystal (lunar architecture) | 10.5281/zenodo.19162013 |

@@ -2,6 +2,7 @@
 
 Status as of **Version 7, 24 August 2026**.
 Tracked in AXLE issue tracker: https://github.com/TOTOGT/AXLE
+Deposit: https://doi.org/10.5281/zenodo.22084842 (V7)
 Verifier: https://github.com/TOTOGT/vol1-proofs — `bash tools/run.sh`
 
 ## What V7 changed in this table

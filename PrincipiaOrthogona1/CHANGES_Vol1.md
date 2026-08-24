@@ -2,7 +2,7 @@
 
 ## Version 7 (August 24, 2026) — Current
 
-**DOI:** {V7_DOI}
+**DOI:** 10.5281/zenodo.22084842
 
 ### Why V7 exists
 
@@ -50,6 +50,15 @@ open is the spectral reduction Tr(M⁶) = Σ λᵢ⁶ for a general real M, not 
   verifier (`lake build` → `#print axioms` over all 49 theorems → a gate that refuses on
   `sorryAx` or an off-allowlist axiom). AXLE is too large to build for one check; this is
   the check.
+- `principia_vol1_v7.pdf` / `.tex` — the paper rebuilt. The V3–V6 LaTeX source
+  did not compile either: it referenced three figures by names that exist
+  nowhere in the deposit or in `figures.py`. Two were misnamed and are
+  repointed at `fig1_phase_portrait` and `fig5_coherence_bridge`; the third, a
+  Perelman-correspondence diagram, does not exist at all and is **withdrawn**
+  rather than replaced by a different figure under its caption — Table 1
+  carries that correspondence term by term. The paper now carries a boxed
+  correction notice after the abstract, and §17.1 states the toolchain pin,
+  the counts, and the one-command verifier.
 - Toolchain and Mathlib revision now pinned and stated. "Current stable" is not a
   checkable dependency, and a floating one is how this went unnoticed for four versions.
 

@@ -6,7 +6,9 @@
   Second Edition — Pablo Nogueira Grossi — G6 LLC, Newark NJ, 2026
 
   Zenodo (series root): https://doi.org/10.5281/zenodo.19117399
-  Zenodo (this deposit): https://doi.org/10.5281/zenodo.19117400
+  Zenodo (concept DOI, this deposit): https://doi.org/10.5281/zenodo.19117400
+  Zenodo (this version, V7): https://doi.org/10.5281/zenodo.22084842
+  Verifier: https://github.com/TOTOGT/vol1-proofs  —  bash tools/run.sh
   AXLE repository: https://github.com/TOTOGT/AXLE
   ORCID: 0009-0000-6496-2186
 
