@@ -93,6 +93,22 @@ name = "PrincipiaVol1"
 roots = ["PrincipiaOrthogona1.PrincipiaVol1"]
 
 
-[[lean_lib]]
-name = "Theorem53"
-roots = ["PrincipiaOrthogona1.Theorem53NonCommutativity"]
+# Theorem53 target removed 2026-08-25.
+#
+# PrincipiaOrthogona1/Theorem53NonCommutativity.lean was a stale copy of what
+# PrincipiaVol1.lean section 14 already proves: the same seven propositions --
+# foldMap_not_odd, nonCommutativity_instance, nonCommutativity_nondegenerate,
+# commuting_instance, exists_order_dependent, not_forall_order_dependent,
+# thm_5_3_is_exactly_existential -- over the same intManifold and the same
+# operator instances, alongside five more that section 14 carries and it does
+# not. It did not build: intManifold was a plain `noncomputable def`, and
+# typeclass search uses restricted transparency, so intManifold.carrier never
+# reduced to Z and every Dist/OfNat/HPow synthesis failed. That is the failure
+# the vol1-proofs CI hit on 2026-08-25, and the same one io drove to ground
+# with @[reducible] over three runs in July.
+#
+# Theorem 5.3 is verified in two places, both of which are actually built:
+#   - PrincipiaVol1.lean section 14, gated by github.com/TOTOGT/vol1-proofs
+#   - io's standalone copy, gated by io's own kernel check
+# A third copy that nothing builds is not redundancy, it is the V6 defect.
+# File moved to Desktop/_to_delete/; this bridge cannot unlink.
