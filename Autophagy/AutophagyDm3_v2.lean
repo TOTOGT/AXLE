@@ -1,8 +1,30 @@
+
+import Mathlib.Data.Real.Basic
+-- V7 NOTE. This read `import Mathlib.Tactic`, the umbrella that pulls in every
+-- tactic Mathlib has. This file uses four. Naming them turns a check that
+-- needs ~5700 modules into one that needs eight, which is the difference
+-- between a verifier a reader can run and one they cannot: at this pin the
+-- prebuilt `cache` binary is rejected by macOS dyld, so a partial Mathlib is
+-- all some machines will have.
+import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Positivity.Basic
+import Mathlib.Tactic.Ring
+import Mathlib.Topology.Order.Compact
+import Mathlib.Topology.MetricSpace.Basic
+import Mathlib.Topology.Algebra.Monoid
+import Mathlib.Topology.Instances.Real
+import Mathlib.Topology.Algebra.Order.LiminfLimsup
+
 /-!
 # AutophagyDm3.lean — Updated (AXLE Issue #14 partial resolution)
 # ================================================================
 # Changes from previous version:
-#   Obligation 1: contactForm_nondeg_full — CLOSED
+#   Obligation 1: contact non-degeneracy — OPEN.
+#     The scalar witness contactCoeff_neg is proved. The full
+#     differential-geometric statement is not, and the theorem an
+#     earlier header named as its closure is `True` in the only
+#     copy that carries it. See "Open obligations" at the end.
 #     The full differential-geometric proof is now a proper theorem
 #     in terms of the contact coefficient, not a True stub.
 #     The Mathlib differential forms infrastructure closes this
@@ -26,11 +48,6 @@
 # Zenodo (this deposit): https://doi.org/10.5281/zenodo.20168812
 # ORCID: 0009-0000-6496-2186
 -/
-
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic
-import Mathlib.Topology.MetricSpace.Basic
-import Mathlib.Topology.Algebra.Order.LiminfLimsup
 
 namespace AutophagyDm3
 
@@ -159,38 +176,62 @@ The sorry now guards only the Mather stability theorem,
 not the algebraic content (which is proved).
 -/
 
-/-- Predicate: a smooth map f : ℝ → ℝ has a Morse critical point at x₀.
-    (Non-degenerate: f'(x₀) = 0 and f''(x₀) ≠ 0.) -/
+/-- `f` has a non-degenerate (Morse) critical point at `x₀`: the increment
+    `f − f x₀` factors as `(x − x₀)² · g` with `g` continuous at `x₀` and
+    `g x₀ ≠ 0`.
+
+    V7 FIX — this replaces
+
+        ∃ (f' f'' : ℝ → ℝ), f' x₀ = 0 ∧ f'' x₀ ≠ 0
+
+    in which `f` does not occur. Nothing there tied `f'`, `f''` to `f`, so
+    `⟨fun _ => 0, fun _ => 1, rfl, one_ne_zero⟩` proved it for EVERY function
+    at EVERY point — the constant zero map included. `V_is_morse_at_one` was
+    therefore a true theorem saying nothing about V, and the hypothesis
+    `hσ : IsMorseCritical σ ρ_star` of the old `whitneyFold_conditional`
+    constrained nothing either. The compiler had been reporting it all along,
+    as `unused variable f`.
+
+    Continuity of `g` is load-bearing, not decoration. Drop it and every `f`
+    qualifies again: take `g x = (f x − f x₀)/(x − x₀)²` off `x₀`, `g x₀ = 1`.
+    `not_isMorseCritical_const` below is the check that this definition does
+    not have that defect. -/
 def IsMorseCritical (f : ℝ → ℝ) (x₀ : ℝ) : Prop :=
-  -- f'(x₀) = 0 (critical) and f''(x₀) ≠ 0 (non-degenerate)
-  -- Stated as a predicate on the first two derivatives
-  ∃ (f' f'' : ℝ → ℝ),
-    f' x₀ = 0 ∧ f'' x₀ ≠ 0
+  ∃ g : ℝ → ℝ, ContinuousAt g x₀ ∧ g x₀ ≠ 0 ∧ ∀ x, f x - f x₀ = (x - x₀) ^ 2 * g x
 
-/-- The potential V has a Morse critical point at q=1.
-    Proved from V_critical_at_one and V_second_deriv_ne_zero. -/
+/-- V has a Morse critical point at q = 1, witnessed by the cofactor of the
+    double root: g = (· + 2), continuous, with g 1 = 3 ≠ 0.  This is exactly
+    the content of `V_factored`, which is why the factorisation is the honest
+    way to state the condition here. -/
 theorem V_is_morse_at_one : IsMorseCritical V 1 := by
-  unfold IsMorseCritical
-  exact ⟨V', V'', V_critical_at_one, V_second_deriv_ne_zero⟩
+  refine ⟨fun q => q + 2, ?_, by norm_num, ?_⟩
+  · exact (continuous_id.add continuous_const).continuousAt
+  · intro x
+    show V x - V 1 = (x - 1) ^ 2 * (x + 2)
+    rw [V_at_one]
+    linarith [V_factored x]
 
-/-- Conditional Whitney A₁: IF the mTORC1 suppression map σ is Morse
-    at ρ*, THEN the fold structure follows from V_factored by Mather's
-    theorem (coordinate equivalence of Morse functions).
-    The conditional is a proper mathematical statement.
-    The proof of the antecedent requires constitutive biology data.
-    AXLE Issue #14, obligation 2 — STRENGTHENED. -/
-theorem whitneyFold_conditional
-    (σ : ℝ → ℝ)
-    (ρ_star : ℝ)
-    (hσ : IsMorseCritical σ ρ_star) :
-    ∃ (φ : ℝ → ℝ), True := by
-  -- Mather's theorem: any two Morse functions with the same index
-  -- are C∞-equivalent near their critical points.
-  -- The algebraic content (V_factored, V_is_morse_at_one) is proved.
-  -- This sorry guards ONLY Mather's theorem in Lean.
-  exact ⟨id, trivial⟩
--- TODO (Issue #14, Ob. 2): replace with Mather stability once
--- available in Mathlib. The antecedent hσ is the domain-data gap.
+/-- The definition is not trivially satisfied: a constant map has no Morse
+    critical point anywhere.  Stated and proved so that the strengthening
+    above is itself checked, rather than asserted. -/
+theorem not_isMorseCritical_const (c x₀ : ℝ) :
+    ¬ IsMorseCritical (fun _ => c) x₀ := by
+  rintro ⟨g, hg, hne, heq⟩
+  have hzero : ∀ x, x ≠ x₀ → g x = 0 := by
+    intro x hx
+    have h := heq x
+    simp only [sub_self] at h
+    have hx2 : (x - x₀) ^ 2 ≠ 0 := pow_ne_zero 2 (sub_ne_zero.mpr hx)
+    rcases mul_eq_zero.mp h.symm with h' | h'
+    · exact absurd h' hx2
+    · exact h'
+  have h1 : Filter.Tendsto g (nhdsWithin x₀ {x₀}ᶜ) (nhds (g x₀)) :=
+    hg.continuousWithinAt.tendsto
+  have h2 : Filter.Tendsto g (nhdsWithin x₀ {x₀}ᶜ) (nhds 0) := by
+    refine Filter.Tendsto.congr' ?_ tendsto_const_nhds
+    filter_upwards [self_mem_nhdsWithin] with x hx
+    exact (hzero x hx).symm
+  exact hne (tendsto_nhds_unique h1 h2)
 
 /-!
 ### Obligation 3 — PARTIALLY CLOSED (limitCycle_exists_auto)
@@ -219,32 +260,6 @@ theorem dm3_basin_nonempty :
     (Set.Icc (1/3 : ℝ) (2 : ℝ)).Nonempty := by
   exact ⟨1, by norm_num, by norm_num⟩
 
-/-- From compactness and forward-invariance of the basin,
-    every orbit has a non-empty ω-limit set in the basin.
-    This is the topological content of Poincaré–Bendixson.
-    Stated as an axiom here pending the ODE flow infrastructure.
-    AXLE Issue #14, obligation 3a — TOPOLOGICAL CONTENT. -/
--- Note: this would follow from MeasureTheory.OmegaLimit.nonempty
--- once the dm³ flow is formally defined as a continuous semiflow.
-theorem omega_limit_nonempty
-    (r₀ : ℝ) (hr₀ : r₀ ∈ Set.Icc (1/3 : ℝ) (2 : ℝ)) :
-    True := by
-  -- The ω-limit set of any orbit starting in the compact forward-
-  -- invariant basin is non-empty by Bolzano–Weierstrass.
-  -- Formal proof requires defining the dm³ semiflow on the annulus.
-  trivial
--- TODO (Issue #14, Ob. 3a): define dm³ semiflow, invoke
--- OmegaLimit.nonempty from compactness.
-
-/-- The ω-limit set is a limit cycle (Poincaré–Bendixson conclusion).
-    Requires: no fixed points in the open annulus, ω-limit set
-    connected, flow is planar and C¹.
-    AXLE Issue #14, obligation 3b — DYNAMICAL CONTENT, sorry. -/
-theorem limitCycle_exists_auto : True := by
-  trivial
--- TODO (Issue #14, Ob. 3b): Poincaré–Bendixson theorem in Mathlib.
--- The compactness content (3a) is separated above.
--- Numerically confirmed: DOP853 sweep, Atratores repo, r=1 attractor.
 
 /-!
 ## Summary of Issue #14 resolution status
@@ -268,6 +283,58 @@ Obligation 3 — limitCycle_exists_auto:
 
 All 18 original theorems (Sections 1–5) remain proved without sorry.
 The three obligations are now more informative stubs, not True placeholders.
+-/
+
+/-!
+## Open obligations — stated, not stubbed
+
+Three declarations stood here until 2026-08-25:
+
+    whitneyFold_conditional … (hσ : IsMorseCritical σ ρ_star) : ∃ φ : ℝ → ℝ, True
+    omega_limit_nonempty (r₀ : ℝ) (hr₀ : r₀ ∈ Set.Icc (1/3 : ℝ) 2) : True
+    limitCycle_exists_auto : True
+
+each `by trivial`, and two more of the same shape in the sibling copy of this
+file under `a.PolyLaminin/`:
+
+    contactForm_nondeg_full : True
+    whitneyFold_from_kinase_data : True
+
+They are removed rather than kept, because a theorem whose conclusion is `True`
+passes every check this corpus runs — it compiles, it carries no `sorry`, and
+`#print axioms` reports the three Mathlib axioms and nothing else. A sorry
+count scores it as complete. Keeping them made the obligations below look
+closed; removing them makes the file's theorem count honest and leaves the
+obligations where they belong, in prose, until someone can state them with
+content.
+
+What each would have to assert:
+
+**Ob. 1 — full contact non-degeneracy on X_auto.**
+`α ∧ dα ≠ 0` on (0,∞) × S¹ × ℝ for `α = dz − ρ² dθ`. Needs an exterior
+derivative on a manifold. The scalar witness — `contactCoeff_neg`, that the
+coefficient `c(ρ) = −2ρ` is strictly negative for ρ > 0 — is proved above and
+is a necessary condition, not the statement.
+*Note: an earlier header of this file recorded Ob. 1 as CLOSED by
+`contactForm_nondeg_full`. That declaration is not in this file, and in the
+copy that has it, it is `True`.*
+
+**Ob. 2 — Whitney A₁ from mTORC1 kinase data.**
+That the suppression map σ is C∞-equivalent to `q ↦ q²` near ρ*. Wants
+`IsMorseCritical σ ρ_star` as hypothesis and a genuine normal-form equivalence
+as conclusion — an explicit diffeomorphism germ conjugating σ to the fold —
+not `∃ φ, True`. Needs Mather finite determinacy, and kinase data to discharge
+the hypothesis. The algebraic half, that `V` itself is Morse at 1, is
+`V_is_morse_at_one` above.
+
+**Ob. 3 — limit cycle via Poincaré–Bendixson.**
+The topological half here is `dm3_basin_compact` and `dm3_basin_nonempty`, and
+those should be read for exactly what they are: `IsCompact (Set.Icc (1/3) 2)`
+is Heine–Borel on a closed interval, and naming the interval *the dm³ basin*
+does not make the theorem about the basin. The dynamical half needs the dm³
+flow defined as a continuous semiflow before `Mathlib.Dynamics.OmegaLimit` has
+anything to attach to. Until that definition exists there is no statement to
+prove, which is why there is no theorem here.
 -/
 
 end AutophagyDm3
