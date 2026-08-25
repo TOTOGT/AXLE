@@ -24,8 +24,8 @@ below and §9 of the Lean file.
 | ID | Description | Status (V7) | Lean file | Closure path |
 |----|-------------|-------------|-----------|--------------|
 | O1 | **Re-diagnosed.** V3–V6 recorded this as "eigenvalue API gap in `separation_theorem`, 1 scoped sorry". Two corrections: (a) the deposited statement is *false* — `IsDm3Stable` bounds only the transverse diagonal, so at `n = 1` it is vacuous and `(33)` is a counterexample; (b) the intended bound is the **sixth** power (`\|Tr − 1\| ≤ 31·e⁻¹²`), as in Book 2 Thm 12.2 and both ancestor files; at the first power it is numerically false (`31·e⁻² ≈ 4.195`). What is actually open is the **spectral reduction** `Tr(M⁶) = Σ λᵢ⁶` for a general real `M`. | **Open, restated** — 0 sorry. V7 proves the theorem on the eigenvalue list and on a diagonal matrix, where the reduction is an identity. The refutation of the old statement is proved and kept (`v6_separation_statement_is_false`). | `PrincipiaVol1.lean` §9 | Diagonalisability over ℝ, or Jordan form over ℂ; `Mathlib.LinearAlgebra.Matrix.Spectrum` |
-| O2a | **AXLE Issue #14 Ob.2** — Whitney fold from mTORC1 kinase data: `whitneyFold_conditional` sorry guards Mather's C∞-stability theorem. Antecedent requires constitutive biology data. | **Open** — the algebraic content (`V_factored`) is kernel-checked in `PrincipiaVol1.lean`; the conditional Prop lives in `AutophagyDm3_v2.lean`, **which has not been built**. Its status is claimed, not verified. | `AutophagyDm3_v2.lean` | Mather stability once in Mathlib; biology data gap is domain-side |
-| O2b | **AXLE Issue #14 Ob.3** — Limit cycle existence via Poincaré–Bendixson. Compactness content claimed proved (`dm3_basin_compact`). | **Open** — same caveat: `AutophagyDm3_v2.lean` has not been built. | `AutophagyDm3_v2.lean` | `Mathlib.Dynamics.OmegaLimit` + Poincaré–Bendixson |
+| O2a | **AXLE Issue #14 Ob.2** — Whitney fold from mTORC1 kinase data. | **Open, and weaker than recorded.** `AutophagyDm3_v2.lean` builds and is kernel-checked; V3–V6 described this obligation as *"strengthened — proper conditional Prop replaces True stub; sorry guards Mather only"*. The declaration reads `whitneyFold_conditional (σ) (ρ_star) (hσ : IsMorseCritical σ ρ_star) : ∃ φ : ℝ → ℝ, True`. The consequent is `True`, so `φ = id` discharges it for every hypothesis: it is a True stub with a quantifier in front, and it carries no `sorry` to guard anything. The algebraic content that *is* real — `V_is_morse_at_one`, `V_factored` — is kernel-checked here and in `PrincipiaVol1.lean`. | `AutophagyDm3_v2.lean` | State a consequent with content (an actual normal-form equivalence), then Mather |
+| O2b | **AXLE Issue #14 Ob.3** — Limit cycle existence via Poincaré–Bendixson. | **Open, and weaker than recorded.** Recorded as *"split: compactness proved; PB sorry"*. Both halves need restating. The compactness half is `dm3_basin_compact : IsCompact (Set.Icc (1/3 : ℝ) 2)` and `dm3_basin_nonempty : (Set.Icc (1/3 : ℝ) 2).Nonempty` — true, kernel-checked, and about a closed interval in ℝ. They are Heine–Borel and `⟨1, _, _⟩`; naming the interval *the dm³ basin* does not make them about the basin. The PB half is `omega_limit_nonempty (r₀) (hr₀) : True` and `limitCycle_exists_auto : True`, both `by trivial`. No `sorry` guards them because there is nothing to guard. | `AutophagyDm3_v2.lean` | Define the dm³ semiflow, then `Mathlib.Dynamics.OmegaLimit` + Poincaré–Bendixson |
 | O3 | **AXLE Issue #15 / Theorem T1** — Global monotonicity of z(t) in the Gronwall basin. Full ODE integration `‖δxₜ‖ ≤ ‖δx₀‖·exp((μmax+3ε)t)` pending. | **Partially closed, now verified** — `gronwall_contraction_below_stability_radius` is kernel-checked: it proves the *sign* of the decay exponent and nothing more. The ODE application is open. | `PrincipiaVol1.lean` §8 | Define the dm³ semiflow formally; invoke `Mathlib.Analysis.ODE.Gronwall` |
 | O4 | **Discrete dm³ extension to ℤ.** Requires a DynamicalSystem typeclass for discrete maps. | **Open** | `discreteDm3.lean` (AXLE root, not built) | Define `DynSys`; prove the embedding ℕ → PhaseVector and the intertwining lemma |
 | O5 | **Conjecture 15.1** — Perelman functor 𝒫 : dm³ → RicciFlow. | **Open** — argued in §15, explicitly a conjecture | none | `CategoryTheory.Functor`, once RicciFlow is in Mathlib |
@@ -41,10 +41,32 @@ theorems. No `sorryAx`. No axiom beyond `propext`, `Classical.choice`,
 The V3–V6 figure in this position was 1 sorry against 30+ theorems. It is
 now 0 against 58, checked at a stated pin.
 
-`AutophagyDm3_v2.lean` is reported to contain 2 sorry instances (O2a, O2b).
-That file has no runner yet, so its count is carried rather than re-checked
-here — the same caveat that applied to this file before V7, and the reason
-each file gets a runner rather than a claim.
+### On `AutophagyDm3_v2.lean`, and on what a sorry count is worth
+
+That file builds and is kernel-checked, and its sorry count for O2a and O2b is
+**zero** — lower than the 2 the earlier tables recorded. That is not an
+improvement. Three of the declarations those obligations rest on are
+
+```lean
+whitneyFold_conditional … (hσ : IsMorseCritical σ ρ_star) : ∃ φ : ℝ → ℝ, True
+omega_limit_nonempty (r₀ : ℝ) (hr₀ : r₀ ∈ Set.Icc (1/3 : ℝ) 2) : True
+limitCycle_exists_auto : True
+```
+
+all proved by `trivial`. They carry no `sorry` because they assert nothing, so
+counting sorries scores them as complete.
+
+**A kernel check certifies the proof, not the interest of the statement.** It
+answers "does this proof establish this proposition" and cannot answer "does
+this proposition say anything". The corpus registry already carries the
+converse caveat — *"not a kernel check… an honest inventory, not a proof of
+verification"* — and this is the other direction of the same gap. It is the
+VACUOUS class, and the first row of the defect ledger
+(`hexgrid_collapse_resistance_superior : True := trivial`) is the same shape.
+
+The count that matters for this file is therefore not sorries but statements
+with content. What a runner should gate here is not `sorryAx` — it would pass
+— but a check that no theorem's conclusion is `True` or `∃ _, True`.
 
 ## What is verified, precisely
 
@@ -76,8 +98,8 @@ table summed to 48 while claiming 49.
 |------------|-------|-----------------|---------------|
 | The Lean file itself | not in deposit | "30+ facts, 1 sorry, 0 axioms" | drifted off the pinned Mathlib; rebuilt to the pin, 58 theorems, 0 sorry, with a runner |
 | O1 (separation) | not in deposit | 1 scoped sorry, "eigenvalue API gap" | statement was false; restated and proved; real gap is the spectral reduction |
-| O2a (Mather) | True stub | proper conditional | unverified — host file never built |
-| O2b (PB) | True stub | compactness proved | unverified — host file never built |
+| O2a (Mather) | True stub | "proper conditional" | still a True stub: `∃ φ, True` |
+| O2b (PB) | True stub | compactness proved | compactness real but it is Heine–Borel; PB half is `True := trivial` |
 | O3 (Gronwall T1) | not in deposit | exponent sign proved | exponent sign **verified**; integration open |
 | O4 (discrete dm³) | not in deposit | documented stub | unchanged |
 | O5 (Perelman) | conjecture | conjecture | unchanged |
