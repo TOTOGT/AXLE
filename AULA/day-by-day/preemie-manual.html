@@ -644,8 +644,6 @@ function render(){
 function renderSchedule(birthDate, dueDate, gaAtBirthDays, today){
   const items = [];
   items.push({label:'Hearing screen', date: birthDate, note:'Before NICU discharge (standard for all newborns)'});
-  if (gaAtBirthDays <= 210 || true){ // show ROP guidance always if preterm; threshold checked below
-  }
   if (gaAtBirthDays < 259){
     items.push({label:'ROP eye exam', date: addDays(birthDate, 32), note:'4–7 weeks chronological age (required if ≤30wk GA or <1500g birth weight)'});
     items.push({label:'Ophthalmology follow-up', date: addDays(birthDate, 150), note:'4–6 months after discharge'});
@@ -683,11 +681,16 @@ function renderGrowth(entries, birthDate, prematurityDays, sex){
       const date = parseDate(e.date);
       const chronDays = diffDays(date, birthDate);
       const corrDays = chronDays - prematurityDays;
-      const wp = (e.w && sex) ? valueToPercentile('weight', sex, corrDays, e.w) : '—';
-      const lp = (e.l && sex) ? valueToPercentile('length', sex, corrDays, e.l) : '—';
-      const hp = (e.h && sex) ? valueToPercentile('hc', sex, corrDays, e.h) : '—';
+      // WHO standards are only valid from term-equivalent age onward.
+      // Before corrected age 0, suppress percentiles and refer to Fenton 2013 preterm chart.
+      const preterm = corrDays < 0;
+      const fentonNote = preterm ? '<abbr title="WHO standards do not apply before term-equivalent age. Use the Fenton 2013 preterm growth chart — ask your NICU team.">Fenton ↗</abbr>' : null;
+      const wp = preterm ? fentonNote : (e.w && sex) ? valueToPercentile('weight', sex, corrDays, e.w) : '—';
+      const lp = preterm ? fentonNote : (e.l && sex) ? valueToPercentile('length', sex, corrDays, e.l) : '—';
+      const hp = preterm ? fentonNote : (e.h && sex) ? valueToPercentile('hc', sex, corrDays, e.h) : '—';
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${fmtDate(date)}</td><td>${weeksDays(corrDays)}</td><td>${e.w?e.w+' kg':'—'}</td><td>${wp}</td><td>${e.l?e.l+' cm':'—'}</td><td>${lp}</td><td>${e.h?e.h+' cm':'—'}</td><td>${hp}</td><td><button class="del-btn" onclick="removeGrowthEntry(${idx})">remove</button></td>`;
+      tr.style.background = preterm ? '#fff8e1' : '';
+      tr.innerHTML = `<td>${fmtDate(date)}</td><td>${weeksDays(corrDays)}${preterm?' <span style="font-size:.7rem;color:#8a6400">(pre-term)</span>':''}</td><td>${e.w?e.w+' kg':'—'}</td><td>${wp}</td><td>${e.l?e.l+' cm':'—'}</td><td>${lp}</td><td>${e.h?e.h+' cm':'—'}</td><td>${hp}</td><td><button class="del-btn" onclick="removeGrowthEntry(${idx})">remove</button></td>`;
       tbody.appendChild(tr);
     });
   } else {
@@ -725,15 +728,25 @@ function drawChart(entries, birthDate, prematurityDays, sex){
     svg += `<text x="${x}" y="${H-padB+16}" font-size="9" text-anchor="middle" fill="#888" font-family="sans-serif">${m}mo</text>`;
   }
 
-  // percentile reference curves
-  percentileLines.forEach(p=>{
-    let pts = [];
-    for (let ad=Math.max(0,minAgeDays); ad<=maxAgeDays; ad+=7){
-      const v = percentileToValue('weight', sex, ad, p);
-      pts.push(`${xPos(ad)},${yPos(v)}`);
+  // WHO reference curves: only draw from corrected age 0 onward.
+  // Before term-equivalent age, WHO standards do not apply (Fenton 2013 is the correct reference).
+  const whoStartDay = 0; // corrected age zero = term-equivalent
+  if (maxAgeDays > whoStartDay) {
+    percentileLines.forEach(p=>{
+      let pts = [];
+      for (let ad=whoStartDay; ad<=maxAgeDays; ad+=7){
+        const v = percentileToValue('weight', sex, ad, p);
+        pts.push(`${xPos(ad)},${yPos(v)}`);
+      }
+      svg += `<polyline points="${pts.join(' ')}" fill="none" stroke="${colors[p]}" stroke-width="1.3" stroke-dasharray="${p===50?'0':'3,3'}" opacity="0.8"/>`;
+    });
+    // Vertical marker at corrected age 0 (term-equivalent)
+    if (minAgeDays < 0) {
+      const xTerm = xPos(0);
+      svg += `<line x1="${xTerm}" y1="${padT}" x2="${xTerm}" y2="${H-padB}" stroke="#f9a825" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+      svg += `<text x="${xTerm+3}" y="${padT+12}" font-size="8" fill="#8a6400" font-family="sans-serif">term</text>`;
     }
-    svg += `<polyline points="${pts.join(' ')}" fill="none" stroke="${colors[p]}" stroke-width="1.3" stroke-dasharray="${p===50?'0':'3,3'}" opacity="0.8"/>`;
-  });
+  }
 
   // patient data
   let dataPts = entries.filter(e=>e.w).map(e=>{
@@ -750,10 +763,11 @@ function drawChart(entries, birthDate, prematurityDays, sex){
   svg += `</svg>`;
   wrap.innerHTML = svg + `<div class="chart-legend">
     <span><i style="background:#8b1a1a"></i> Your baby (weight)</span>
-    <span><i style="background:#1a6b5a"></i> WHO 50th percentile</span>
+    <span><i style="background:#1a6b5a"></i> WHO 50th percentile (from term)</span>
     <span><i style="background:#c9a84c"></i> WHO 3rd / 97th percentile band</span>
+    <span><i style="background:#f9a825;height:1px;border-top:2px dashed #f9a825;background:none"></i> Term-equivalent age</span>
   </div>
-  <p style="font-family:sans-serif;font-size:.78rem;color:#888;margin-top:.4rem">Plotted by corrected age. Before term-equivalent age (0 on this axis), ask your NICU team about Fenton preterm growth charts — this chart uses WHO's full-term reference standard.</p>`;
+  <p style="font-family:sans-serif;font-size:.78rem;color:#888;margin-top:.4rem"><strong>Before the dashed line (pre-term-equivalent):</strong> WHO standards do not apply. Use the <a href="https://www.ucalgary.ca/fenton/2013chart" target="_blank" style="color:var(--mid)">Fenton 2013 preterm growth chart</a> — your NICU team will have it. Rows before term are highlighted in amber in the table above.<br><strong>After the dashed line:</strong> WHO Child Growth Standards apply from term-equivalent age to <strong>5 years</strong> — this tracker works for preterm and full-term children alike through age 5. For US children after age 5, CDC growth charts take over.<br>Cross-reference: <a href="https://totogt.github.io/geometry/book6/index.html" target="_blank" style="color:var(--mid)">Principia Orthogona Vol VI · Roots</a> — biological domain proofs including autophagy, cardiac rhythm, and neural attractor formation relevant to preterm development.</p>`;
 }
 
 render();

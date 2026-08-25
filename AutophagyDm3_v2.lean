@@ -17,32 +17,36 @@ import Mathlib.Topology.Instances.Real
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
 
 /-!
-# AutophagyDm3.lean — Updated (AXLE Issue #14 partial resolution)
-# ================================================================
-# Changes from previous version:
-#   Obligation 1: contact non-degeneracy — OPEN.
-#     The scalar witness contactCoeff_neg is proved. The full
-#     differential-geometric statement is not, and the theorem an
-#     earlier header named as its closure is `True` in the only
-#     copy that carries it. See "Open obligations" at the end.
-#     The full differential-geometric proof is now a proper theorem
-#     in terms of the contact coefficient, not a True stub.
-#     The Mathlib differential forms infrastructure closes this
-#     at the level of the scalar determinant argument.
-#
-#   Obligation 2: whitneyFold_from_kinase_data — STRENGTHENED
-#     Replaced True stub with a proper conditional Prop.
-#     The statement is now precise: given that the mTORC1 suppression
-#     map σ is Morse at ρ*, the Whitney A₁ fold follows from V_factored.
-#     The proof remains sorry pending Mather's theorem in Mathlib.
-#
-#   Obligation 3: limitCycle_exists_auto — PARTIALLY CLOSED
-#     Replaced True stub with a weaker but honest theorem:
-#     the dm³ flow on the compact annulus {r ∈ [ε₀, r_max]} has
-#     a non-empty ω-limit set. This is a real theorem (not a stub)
-#     proved from compactness. The full limit cycle claim remains
-#     as a separate sorry pending Poincaré–Bendixson in Mathlib.
-#
+# AutophagyDm3.lean — AXLE Issue #14
+
+## State as of 2026-08-25
+
+24 theorems, no `sorry`, no axiom beyond `propext`, `Classical.choice`,
+`Quot.sound`, and no theorem whose conclusion is `True`.
+
+All three Issue #14 obligations are **OPEN**. None is stubbed. What each would
+have to assert, and what is proved in its neighbourhood, is set out under
+"Open obligations" at the end of this file — in prose, because a statement
+nobody can yet write down does not belong in the theorem count.
+
+  Ob. 1  full contact non-degeneracy on X_auto.  Scalar witness
+         `contactCoeff_neg` is proved and is necessary, not sufficient.
+  Ob. 2  Whitney A₁ from mTORC1 kinase data.  Algebraic half
+         `V_is_morse_at_one` is proved.
+  Ob. 3  limit cycle via Poincaré–Bendixson.  `dm3_basin_compact` and
+         `dm3_basin_nonempty` are proved and are Heine–Borel on a closed
+         interval — naming that interval "the dm³ basin" does not make them
+         about the basin.
+
+CORRECTION 2026-08-25. Earlier revisions of this header recorded Ob. 1 as
+closed by `contactForm_nondeg_full`, Ob. 2 as strengthened with a proof
+"remaining sorry pending Mather", and Ob. 3 as partially closed. Ob. 1's
+named closure is not a declaration in this file, and in the sibling copy that
+carries it, it is `True`. The sorries referred to are not in this file either.
+The three declarations that stood for these obligations were removed the same
+day; the header had described the file it was attached to rather than being
+checked against it.
+
 # Repository: https://github.com/TOTOGT/AXLE
 # Zenodo (series): https://doi.org/10.5281/zenodo.19117400
 # Zenodo (this deposit): https://doi.org/10.5281/zenodo.20168812
@@ -262,27 +266,15 @@ theorem dm3_basin_nonempty :
 
 
 /-!
-## Summary of Issue #14 resolution status
+## Section 6 status — superseded 2026-08-25
 
-Obligation 1 — contactForm_nondeg_full:
-  Previous: True := by trivial  (stub)
-  Now: contactForm_nondeg_scalar + contactForm_orientation  ✓ CLOSED
-  These are real theorems proved from contactCoeff_neg.
+A block here recorded Obligation 1 as CLOSED, Obligation 2 as STRENGTHENED and
+Obligation 3 as PARTIAL, and closed with "the three obligations are now more
+informative stubs, not True placeholders". The declarations it credited were
+`True`, and are gone. Read "Open obligations" below instead; all three are open.
 
-Obligation 2 — whitneyFold_from_kinase_data:
-  Previous: True := by trivial  (stub)
-  Now: whitneyFold_conditional — proper conditional Prop  ✓ STRENGTHENED
-  The sorry guards only Mather's theorem; antecedent is precise.
-  V_is_morse_at_one proved: V is the correct local model.
-
-Obligation 3 — limitCycle_exists_auto:
-  Previous: True := by trivial  (stub)
-  Now: split into 3a (compactness, closed) + 3b (PB, sorry)  ✓ PARTIAL
-  dm3_basin_compact and dm3_basin_nonempty proved without sorry.
-  The sorry now guards only the Poincaré–Bendixson step.
-
-All 18 original theorems (Sections 1–5) remain proved without sorry.
-The three obligations are now more informative stubs, not True placeholders.
+What survives from that block and is accurate: the 18 theorems of Sections 1–5
+are proved without `sorry`, as are the six added since.
 -/
 
 /-!
