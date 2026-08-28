@@ -2,7 +2,7 @@
 /-
   AXLE — Algebraic eXpression Language for Evaluation
   Principia Orthogona · G⁵ · Complete Completeness
-  Version 8.1 — All type errors fixed; 5 honest admits remain
+  Version 8.1 — All type errors fixed; 6 honest admits remain (kernel-checked)
 
   Foundational volumes (Principia Orthogona series):
   1. 10.5281/zenodo.19117399
@@ -18,15 +18,48 @@
 -/
 -- ============================================================================
 
-import Mathlib.Order.Ordinal.Basic
-import Mathlib.SetTheory.Cardinal.Cofinality
-import Mathlib.Topology.MetricSpace.Basic
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+-- Runnable copy of `main/axle_v8.1`, which is Lean source carrying a version number
+-- where its extension should be: `lake` cannot build it, no census counts it, and a
+-- citation to "AXLE_v8.1.lean" resolves to nothing.
+--
+-- VERIFIED 2026-08-28.  Elaborates with zero errors under Lean 4.32.0 against the
+-- Mathlib built in the geometry repository.  Six `sorry` warnings, six declarations,
+-- six `sorryAx`.  Reproduce with:
+--     cd ~/Desktop/geometry && lake env lean ~/Desktop/AXLE/main/AXLE_v8_1.lean
+--
+-- Before that run the file did not elaborate at all: twelve errors of Mathlib API
+-- drift from the v4.14 it was written against.  Statements, not just proofs, were
+-- affected -- `closurePoints_stationary_regular` had `hreg : sorry` as its hypothesis
+-- because `Ordinal.IsLimit` no longer resolved, so its `sorryAx` was reporting a
+-- broken statement rather than an honest admit.  Fixed:
+--     Ordinal.sup          -> iSup            Ordinal.omega -> Ordinal.omega0
+--     Ordinal.IsLimit      -> Order.IsSuccLimit  (4 sites)
+--     (n % 12).toReal      -> ((n % 12 : Nat) : Real)
+--     `lambda` as a binder name -> beta   (a parse error, and never legal)
+--     weight / applyG / simpleEmbedding / G6Ordinal marked noncomputable
+-- Nothing in the mathematical content was changed: six admits before, six after.
+--
+-- The nine original imports were pinned to Mathlib v4.14.0 and do not all resolve
+-- under the v4.32.0 that geometry has built.  Each was checked against the Mathlib
+-- actually on disk at geometry/.lake/packages/mathlib rather than assumed:
+--     Mathlib.Order.Ordinal.Basic          -> Mathlib.SetTheory.Ordinal.Basic
+--     Mathlib.GroupTheory.DihedralGroup    -> Mathlib.GroupTheory.SpecificGroups.Dihedral
+--     Mathlib.SetTheory.ClubFilter.Basic   -> absent, and not needed: this file defines
+--     Mathlib.SetTheory.StationarySet.Basic   IsClubBelow / IsStationaryBelow itself
+--     Mathlib.MeasureTheory.Measure.MeasureSpace -> dropped, unreferenced
+--     Mathlib.Topology.MetricSpace.Basic         -> dropped, unreferenced
+--
+-- A bare `import Mathlib` was tried first and is version-independent, but it pulls the
+-- whole library: minutes of cold load and several GB, which reads as a hang.  A narrow
+-- import that is short a name fails in seconds with an unknown identifier, which is the
+-- better failure.
+import Mathlib.SetTheory.Ordinal.Basic
+import Mathlib.Order.Cofinal
+import Mathlib.SetTheory.Cardinal.Arithmetic
+import Mathlib.SetTheory.Ordinal.FixedPoint
 import Mathlib.Data.Matrix.Basic
-import Mathlib.MeasureTheory.Measure.MeasureSpace
-import Mathlib.GroupTheory.DihedralGroup
-import Mathlib.SetTheory.ClubFilter.Basic
-import Mathlib.SetTheory.StationarySet.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.GroupTheory.SpecificGroups.Dihedral
 
 namespace TOGT
 
@@ -42,19 +75,19 @@ def IsUnboundedBelow (S : Set Ordinal) (α : Ordinal) : Prop :=
 def IsOmegaClosedBelow (S : Set Ordinal) (α : Ordinal) : Prop :=
   ∀ c : ℕ → Ordinal,
     (∀ n, c n ∈ S) → (∀ n, c n < α) → StrictMono c →
-    Ordinal.sup c ∈ S
+    (⨆ n, c n) ∈ S
 
 def IsClubBelow (S : Set Ordinal) (α : Ordinal) : Prop :=
   IsUnboundedBelow S α ∧ IsOmegaClosedBelow S α
 
 def IsStationaryBelow (S : Set Ordinal) (α : Ordinal) : Prop :=
-  ∀ C : Set Ordinal, IsClubBelow C α → ∃ λ ∈ C, λ ∈ S
+  ∀ C : Set Ordinal, IsClubBelow C α → ∃ β ∈ C, β ∈ S
 
 def closurePointsBelow (α : Ordinal) : Set Ordinal :=
-  { β | β < α ∧ β.IsLimit }
+  { β | β < α ∧ Order.IsSuccLimit β }
 
 theorem closurePoints_stationary_regular
-    (α : Ordinal) (hreg : α.IsLimit ∧ α.card.ord = α) :
+    (α : Ordinal) (hreg : Order.IsSuccLimit α ∧ α.card.ord = α) :
     IsStationaryBelow (closurePointsBelow α) α := by
   intro C hC
   classical
@@ -65,7 +98,7 @@ theorem closurePoints_stationary_regular
 -- ============================================================================
 
 def η : ℝ := 1.839286755214161
-def weight (k : ℕ) : ℝ := (η : ℝ)⁻¹ ^ k
+noncomputable def weight (k : ℕ) : ℝ := (η : ℝ)⁻¹ ^ k
 
 def PhaseVector := Fin 12 → ℝ
 
@@ -86,7 +119,7 @@ def isCrystalSaturated (v : PhaseVector) : Prop :=
   orthogonalStepping v ∧
   ∑ i, v i ^ 2 * weight i = 1
 
-def applyG (v : PhaseVector) : PhaseVector :=
+noncomputable def applyG (v : PhaseVector) : PhaseVector :=
   λ i => weight (i + 1) * (if i % 2 = 0 then v (i / 2) else 3 * v i + 1)
 
 theorem crystal_lockin (v : PhaseVector) :
@@ -103,7 +136,7 @@ theorem d6_lockin (v : PhaseVector) :
   sorry
 
 def IsRegular (α : Ordinal) : Prop :=
-  α.IsLimit ∧ α.card.ord = α
+  Order.IsSuccLimit α ∧ α.card.ord = α
 
 def IsClub (C : Set Ordinal) (α : Ordinal) : Prop :=
   IsUnboundedBelow C α ∧ IsOmegaClosedBelow C α
@@ -112,9 +145,9 @@ def IsStationary (S : Set Ordinal) (α : Ordinal) : Prop :=
   ∀ C : Set Ordinal, IsClub C α → ∃ β < α, β ∈ C ∧ β ∈ S
 
 def closurePoints (α : Ordinal) : Set Ordinal :=
-  {β | β < α ∧ β.IsLimit}
+  {β | β < α ∧ Order.IsSuccLimit β}
 
-def G6Ordinal : Ordinal := Ordinal.omega ^ Ordinal.omega
+noncomputable def G6Ordinal : Ordinal := Ordinal.omega0 ^ Ordinal.omega0
 
 theorem g6_unconditional_closure (v : PhaseVector) :
   ∃ m ≤ 33, isCrystalSaturated (applyG^[m] v) ∧
@@ -127,8 +160,8 @@ theorem g6_unconditional_closure (v : PhaseVector) :
 
 def dm3Orbit (n : ℕ) (m : ℕ) : ℕ := Nat.iterate (fun k => if k % 2 = 0 then k / 2 else 3 * k + 1) m n
 
-def simpleEmbedding (n : ℕ) : PhaseVector :=
-  fun i => if i.val % 2 = 0 then (n % 12).toReal / 12 else 0
+noncomputable def simpleEmbedding (n : ℕ) : PhaseVector :=
+  fun i => if i.val % 2 = 0 then ((n % 12 : ℕ) : ℝ) / 12 else 0
 
 theorem embedding_intertwining (n : ℕ) :
   ∃ m, applyG^[m] (simpleEmbedding n) = simpleEmbedding (dm3Orbit n m) := by
@@ -185,7 +218,43 @@ g6_unconditional_closure — open
 closurePoints_stationary_regular — open (standard ordinal argument)
 collatz_conjecture_via_dm3_gqm — open (equivalent to Collatz)
 
-There are now five honest open admits, none provably false. That is the correct and transparent state for a public release.
+embedding_intertwining — open (carries a sorry; omitted from the list above until 2026-08-28)
+
+There are six honest open admits, none provably false. That is the correct and transparent
+state for a public release. The count was five here until the kernel probe at the foot of
+this file was run: it reports sorryAx on all six declarations, and embedding_intertwining
+was the one this list did not name.
 -/
 
 end TOGT
+
+/-
+  KERNEL AUDIT. Compiling is not proving: `sorry` is a warning, not an error, so this
+  file compiles whether or not anything in it is proved. These six lines ask the kernel
+  what each theorem actually rests on.
+
+  EXPECTED HERE: `sorryAx` on all six. That is not a failure — it is the file's own
+  disclosure, confirmed. The header block claimed "five honest open admits" and named
+  five; the sixth, `embedding_intertwining`, carries a `sorry` as well. Six is the
+  number the kernel reports, and the header and the list above were corrected to six
+  on 2026-08-28. Left here as the record of what the probe caught.
+
+  Nothing in this file is a proved theorem. `η` is a `def` — a literal, not a result.
+
+  ONE ASYMMETRY WORTH READING.  Five of the six report
+      [propext, sorryAx, Classical.choice, Quot.sound]
+  and `collatz_conjecture_via_dm3_gqm` reports `[sorryAx]` alone.  The other three
+  axioms enter through the mathematical structure a statement actually touches --
+  ordinals, reals, quotients.  A statement that reaches none of it, and whose proof
+  is `sorry`, leaves the kernel nothing else to name.  That is what the bare
+  `[sorryAx]` is telling you, and it is a stronger signal than the sorry itself.
+
+  Run from the geometry repository root, which already has Mathlib built:
+      cd ~/Desktop/geometry && lake env lean ~/Desktop/AXLE/main/AXLE_v8_1.lean
+-/
+#print axioms TOGT.closurePoints_stationary_regular
+#print axioms TOGT.crystal_lockin
+#print axioms TOGT.d6_lockin
+#print axioms TOGT.g6_unconditional_closure
+#print axioms TOGT.embedding_intertwining
+#print axioms TOGT.collatz_conjecture_via_dm3_gqm
