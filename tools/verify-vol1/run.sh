@@ -8,9 +8,18 @@
 #     git clone https://github.com/TOTOGT/vol1-proofs
 #     cd vol1-proofs && bash tools/run.sh
 #
-# What that runs: lake build → `#print axioms` over all 49 theorems in
-# PrincipiaOrthogona1/PrincipiaVol1.lean → a gate that refuses on sorryAx or on
-# any axiom outside {propext, Classical.choice, Quot.sound}.
+# What that runs, as of 2026-08-27: gate self-test → lake build → `#print axioms`
+# over 82 declarations (PrincipiaVol1.lean 58 + AutophagyDm3_v2.lean 24) → a gate
+# that refuses on sorryAx or on any axiom outside
+# {propext, Classical.choice, Quot.sound} → a vacuity scan whose fixtures must
+# fire, since a silent detector is worse than none.
+#
+# The last recorded run (tools/axioms.txt, 2026-08-25) is clean: zero sorryAx,
+# 76 declarations on the standard trio, 2 on [propext, Quot.sound], 3 on
+# [propext] alone.
+#
+# This comment said "49 theorems" until 2026-08-27. Both files are probed, and
+# both counts belong here: 49 was neither.
 #
 # Pinned to Lean v4.14.0 and Mathlib v4.14.0 (rev 4bbdccd9c5f8). The pin is part
 # of the claim.
