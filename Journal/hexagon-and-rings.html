@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hexagon &amp; Rings — one planet, two mechanisms</title>
+<meta name="description" content="An exhibition piece: ambient sound reorganises Saturn's polar hexagon and leaves the rings untouched. One is a standing wave. The other is not.">
+<style>
+:root{
+  --void:#04060d; --panel:rgba(255,255,255,0.03); --hair:rgba(201,168,76,0.18);
+  --hair-lo:rgba(255,255,255,0.08); --gold:#c9a84c; --gold-hi:#e7cd7c;
+  --cyan:#56c8d8; --dim:#7b8798; --cream:#ece9e0; --muted:rgba(236,233,224,0.56);
+  --faint:rgba(236,233,224,0.34); --mono:'Courier New',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--void);color:var(--cream);font-family:Georgia,serif;line-height:1.6}
+a{color:var(--gold);text-decoration:none}
+code{font-family:var(--mono);color:rgba(236,233,224,0.82);font-size:0.92em}
+
+header{border-bottom:1px solid var(--hair-lo);padding:1.5rem 1.4rem 1.2rem;text-align:center}
+.kicker{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.26em;color:var(--gold);text-transform:uppercase}
+h1{font-size:clamp(1.3rem,3.2vw,1.9rem);font-weight:normal;margin:0.6rem 0 0.4rem;letter-spacing:0.02em}
+.sub{font-size:0.88rem;color:var(--muted);max-width:60ch;margin:0 auto}
+
+.stage{max-width:1080px;margin:0 auto;padding:1.6rem 1.2rem 0;display:grid;
+       grid-template-columns:minmax(0,1.35fr) minmax(260px,1fr);gap:1.4rem;align-items:start}
+.scene{position:relative;background:radial-gradient(ellipse at 50% 40%,rgba(139,123,240,0.07),transparent 70%),#02040a;
+       border:1px solid var(--hair-lo);border-radius:10px;overflow:hidden}
+canvas{display:block;width:100%;height:auto}
+
+.side{display:flex;flex-direction:column;gap:0.9rem}
+.card{background:var(--panel);border:1px solid var(--hair-lo);border-radius:9px;padding:1rem 1.1rem}
+.card.live{border-color:var(--hair)}
+.card.inert{border-color:rgba(123,135,152,0.22)}
+.card-h{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;
+        color:var(--gold);margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:baseline;gap:0.5rem}
+.card.inert .card-h{color:var(--dim)}
+.readout{font-family:var(--mono);font-size:1.7rem;font-weight:bold;color:var(--gold-hi);line-height:1.1}
+.card.inert .readout{color:var(--dim)}
+.readout small{font-size:0.62rem;font-weight:normal;letter-spacing:0.1em;color:var(--faint);display:block;margin-top:0.3rem}
+.card p{font-size:0.76rem;color:var(--faint);line-height:1.65;margin-top:0.55rem}
+
+.controls{display:flex;flex-wrap:wrap;gap:0.6rem;align-items:center;margin-top:0.2rem}
+button{font-family:var(--mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;
+       background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--hair);
+       padding:0.5rem 0.9rem;border-radius:4px;cursor:pointer;transition:all .15s}
+button:hover{background:rgba(201,168,76,0.2);color:var(--gold-hi)}
+button.on{background:var(--gold);color:#06080f}
+.slider-wrap{display:flex;align-items:center;gap:0.6rem;flex:1;min-width:200px;
+             font-family:var(--mono);font-size:0.62rem;color:var(--faint)}
+input[type=range]{flex:1;accent-color:var(--gold);min-width:110px}
+.mic-note{font-family:var(--mono);font-size:0.58rem;color:var(--faint);line-height:1.7;margin-top:0.5rem}
+
+.meter{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:0.6rem}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:width .1s}
+
+main{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 4rem}
+.section-title{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.22em;color:var(--gold);
+               text-transform:uppercase;margin:2.4rem 0 1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--hair)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.2rem}
+.mech{background:var(--panel);border:1px solid var(--hair-lo);border-radius:9px;padding:1.2rem 1.3rem}
+.mech h3{font-size:0.95rem;font-weight:normal;color:var(--cream);margin-bottom:0.2rem}
+.mech .tag{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.7rem}
+.mech.wave .tag{color:var(--gold)} .mech.flat .tag{color:var(--cyan)}
+.mech p{font-size:0.82rem;color:var(--muted);line-height:1.75}
+.mech ul{list-style:none;margin-top:0.7rem;font-size:0.78rem;color:var(--faint)}
+.mech li{padding:0.3rem 0;border-top:1px solid var(--hair-lo)}
+.mech li b{color:var(--muted);font-weight:normal}
+
+.ledger{background:rgba(201,168,76,0.045);border-left:2px solid var(--gold);padding:1rem 1.2rem;
+        font-size:0.81rem;color:var(--muted);line-height:1.8}
+.ledger b{color:var(--gold);font-family:var(--mono);font-size:0.9em}
+.ledger .no{color:var(--dim)}
+footer{border-top:1px solid var(--hair-lo);margin-top:3rem;padding:1.4rem 1.2rem;text-align:center;
+       font-family:var(--mono);font-size:0.6rem;color:var(--faint);letter-spacing:0.08em;line-height:2}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Cimática com Máquinas · Station 2</div>
+  <h1>Hexagon &amp; Rings — one planet, two mechanisms</h1>
+  <p class="sub">Make a sound. The pole reorganises. The rings do not.
+  That difference is the whole exhibit.</p>
+</header>
+
+<div class="stage">
+  <div class="scene"><canvas id="cv" width="1200" height="900"></canvas></div>
+
+  <div class="side">
+    <div class="card live">
+      <div class="card-h"><span>Polar jet · responds</span><span id="respTag">—</span></div>
+      <div class="readout"><span id="kOut">6</span><small>azimuthal wavenumber k</small></div>
+      <div class="meter"><i id="lvl"></i></div>
+      <p>A standing wave in the polar jet stream. It has a mode number, so it has
+      something to change when the driving changes.</p>
+    </div>
+
+    <div class="card inert">
+      <div class="card-h"><span>Ring plane · inert</span><span>fixed</span></div>
+      <div class="readout">—<small>no mode number exists</small></div>
+      <p>Matter that lost its vertical motion to collisions and fell flat. Radially
+      neutral: no restoring force picks a radius, so the debris fills every radius
+      it is allowed to occupy. Nothing here is oscillating, so nothing here can
+      be driven.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><span>Drive</span></div>
+      <div class="controls">
+        <button id="micBtn">Click to listen</button>
+        <div class="slider-wrap">
+          <span>manual</span>
+          <input type="range" id="freqSlider" min="80" max="2000" value="480" step="5">
+          <span id="fOut">480 Hz</span>
+        </div>
+      </div>
+      <p class="mic-note">Microphone audio is analysed in this browser and never leaves
+      the page. The slider works if you decline, or if the room is too quiet.</p>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <div class="section-title">Why one moves and the other doesn't</div>
+  <div class="two">
+    <div class="mech wave">
+      <div class="tag">Standing wave · has a mode</div>
+      <h3>The polar hexagon</h3>
+      <p>A jet stream at about 78° N carrying azimuthal wavenumber 6, stable for
+      four decades. This is the same eigenvalue problem as a Chladni plate: a
+      boundary condition, a mode number, nodal lines where the pattern crosses
+      zero. Change the driving and the mode number changes with it. Chladni is
+      not a metaphor here — it is the same mathematics.</p>
+      <ul>
+        <li><b>Set by</b> — an eigenmode of the jet</li>
+        <li><b>Indexed by</b> — integer k</li>
+        <li><b>Nodal set</b> — 2k radial lines</li>
+        <li><b>Responds to driving</b> — yes</li>
+      </ul>
+    </div>
+    <div class="mech flat">
+      <div class="tag">Dissipative collapse · no mode</div>
+      <h3>The ring plane</h3>
+      <p>Every orbit about a centre is a great circle, and any two such orbits must
+      cross. Collisions at those crossings drain vertical motion until the whole
+      family lies in one plane — the plane perpendicular to the total angular
+      momentum. Ten metres thick across a hundred thousand kilometres. There is no
+      frequency in this story and no integer to change.</p>
+      <ul>
+        <li><b>Set by</b> — collisions + conserved <b>L</b></li>
+        <li><b>Indexed by</b> — nothing</li>
+        <li><b>Nodal set</b> — the equatorial plane</li>
+        <li><b>Responds to driving</b> — no</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">The gaps are not nodal circles</div>
+  <div class="ledger">
+    A Chladni disc driven at k = 0 produces concentric rings at the zeros of J₀. It is
+    tempting, and it is wrong. Saturn's divisions are not mode zeros — each one has a
+    body attached to it, at a radius that body determines:<br><br>
+    <b>Cassini Division</b> · 2:1 resonance with Mimas &nbsp;·&nbsp;
+    <b>A ring outer edge</b> · 7:6 with Janus and Epimetheus &nbsp;·&nbsp;
+    <b>Encke Gap</b> · Pan, orbiting inside it &nbsp;·&nbsp;
+    <b>Keeler Gap</b> · Daphnis, orbiting inside it<br><br>
+    A mode number predicts a spacing law. The moons predict specific radii, and the
+    moons are what is measured. The rings in the scene above are drawn at their real
+    radii in units of Saturn's equatorial radius, not at Bessel zeros.
+  </div>
+
+  <div class="section-title">What the Lean does and does not establish</div>
+  <div class="ledger">
+    Stated here because the wall text should not say more than the files do.<br><br>
+    <b>EMMEs/PolarVortex.lean</b> formalises a <span class="no">model</span> of the polar
+    region — a <code>PolarVortex</code> structure with fields for the hexagon and vortex
+    angular velocities — and proves consequences within it: <code>vortex_hexagon_decoupled</code>,
+    <code>spatial_separation</code>, <code>limit_cycle_is_fixed_point</code>,
+    <code>interior_flows_outward</code>, <code>exterior_flows_inward</code>. These are true
+    of the model. They are not measurements of Saturn.<br><br>
+    <b>WaveNumber6/Wavenumber6.lean</b> proves arithmetic about the number six —
+    <code>2 * 3 = 6</code>, <code>6 ≠ 4</code>, <code>6 ≠ 8</code>, <code>6 % 6 = 0</code>.
+    Sorry-free, and true. <span class="no">They do not verify that Saturn's jet carries
+    wavenumber 6.</span> That is an observation, from Voyager and Cassini, and no
+    formalisation in this repository replaces it. Any caption reading
+    &ldquo;six-fold symmetry verified in Lean&rdquo; is claiming more than the file delivers.
+  </div>
+
+</main>
+
+<footer>
+  Principia Orthogona · G6 LLC, Newark NJ ·
+  <a href="../SBM/nodal-sets.html">Nodal Sets</a> ·
+  <a href="../SBM/maquinas.html">Cimática com Máquinas</a><br>
+  Ring radii: D 1.11–1.24, C 1.24–1.53, B 1.53–1.95, Cassini 1.95–2.03, A 2.03–2.27, F 2.32 R<sub>S</sub>
+</footer>
+
+<script>
+(function(){
+'use strict';
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+const W=cv.width, H=cv.height;
+const TILT=27*Math.PI/180, ST=Math.sin(TILT), CT=Math.cos(TILT);
+const CX=W/2, CY=H*0.52, RP=Math.min(W,H)*0.20;   // planet radius on screen
+
+/* Real ring geometry, in units of Saturn's equatorial radius.
+   [inner, outer, opacity] — gaps are the intervals left out. */
+const RINGS=[
+  [1.110,1.236,0.10],  // D
+  [1.239,1.527,0.26],  // C
+  [1.527,1.951,0.72],  // B
+                       // 1.951-2.025 Cassini Division (Mimas 2:1)
+  [2.025,2.214,0.50],  // A, inner
+                       // 2.214 Encke Gap (Pan)
+  [2.220,2.263,0.46],  // A, outer
+                       // 2.265 Keeler Gap (Daphnis)
+  [2.267,2.269,0.40],  // A, edge (Janus/Epimetheus 7:6)
+  [2.324,2.327,0.22]   // F
+];
+
+const HEX_LAT=78*Math.PI/180;     // the jet's latitude
+const HEX_AMP=0.013;              // lobe depth, in radians of latitude
+
+let k=6, kShown=6, level=0, phase=0;
+
+/* sphere point -> screen, plus a visibility flag */
+function sph(latitude, longitude, R){
+  const cl=Math.cos(latitude), x=R*cl*Math.cos(longitude),
+        y=R*cl*Math.sin(longitude), z=R*Math.sin(latitude);
+  return { x:CX+x, y:CY+(y*ST-z*CT), vis:(-cl*Math.sin(longitude)*CT+Math.sin(latitude)*ST)>0 };
+}
+/* equatorial-plane point (rings) -> screen; front = y>0 */
+function eq(r,th){
+  const x=r*RP*Math.cos(th), y=r*RP*Math.sin(th);
+  return { x:CX+x, y:CY+y*ST, front:y>0 };
+}
+
+function ringArc(band, front){
+  const [ri,ro,a]=band, steps=180;
+  ctx.beginPath();
+  for(let i=0;i<=steps;i++){
+    const th=(front? 0:Math.PI)+Math.PI*i/steps;
+    const p=eq(ro,th); i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);
+  }
+  for(let i=steps;i>=0;i--){
+    const th=(front? 0:Math.PI)+Math.PI*i/steps;
+    const p=eq(ri,th); ctx.lineTo(p.x,p.y);
+  }
+  ctx.closePath();
+  const g=ctx.createLinearGradient(CX-ro*RP,0,CX+ro*RP,0);
+  g.addColorStop(0,'rgba(201,168,76,'+(a*0.5)+')');
+  g.addColorStop(0.5,'rgba(230,214,170,'+(a*0.88)+')');
+  g.addColorStop(1,'rgba(201,168,76,'+(a*0.5)+')');
+  ctx.fillStyle=g; ctx.fill();
+}
+
+function drawPlanet(){
+  const g=ctx.createRadialGradient(CX-RP*0.35,CY-RP*0.4,RP*0.1,CX,CY,RP*1.05);
+  g.addColorStop(0,'#8a7a58'); g.addColorStop(0.5,'#54492f'); g.addColorStop(1,'#17130d');
+  ctx.beginPath(); ctx.arc(CX,CY,RP,0,6.2832); ctx.fillStyle=g; ctx.fill();
+  /* banding */
+  ctx.save(); ctx.beginPath(); ctx.arc(CX,CY,RP,0,6.2832); ctx.clip();
+  for(let d=-78;d<=78;d+=6){
+    const lat=d*Math.PI/180, cl=Math.cos(lat);
+    ctx.beginPath();
+    ctx.ellipse(CX, CY-RP*Math.sin(lat)*CT, RP*cl, RP*cl*ST, 0, 0, 6.2832);
+    ctx.strokeStyle='rgba(60,48,28,'+(0.30+0.18*Math.cos(3*lat))+')';
+    ctx.lineWidth=RP*0.045; ctx.stroke();
+  }
+  ctx.restore();
+  ctx.beginPath(); ctx.arc(CX,CY,RP,0,6.2832);
+  ctx.strokeStyle='rgba(201,168,76,0.20)'; ctx.lineWidth=1.2; ctx.stroke();
+}
+
+/* the jet: latitude modulated as lat0 + A cos(k * longitude) */
+function drawJet(){
+  const glow=0.25+0.55*Math.min(level*2.2,1);
+  for(const pass of [{w:11,a:0.13*glow},{w:4.2,a:0.55*glow},{w:1.7,a:glow}]){
+    ctx.beginPath();
+    let started=false;
+    for(let i=0;i<=240;i++){
+      const lon=phase+2*Math.PI*i/240;
+      const lat=HEX_LAT+HEX_AMP*Math.cos(k*lon);
+      const p=sph(lat,lon,RP*1.002);
+      if(!started){ctx.moveTo(p.x,p.y);started=true;} else ctx.lineTo(p.x,p.y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(231,205,124,'+pass.a+')';
+    ctx.lineWidth=pass.w; ctx.lineJoin='round'; ctx.stroke();
+  }
+  /* the pole marker */
+  const pole=sph(Math.PI/2,0,RP*1.002);
+  ctx.beginPath(); ctx.arc(pole.x,pole.y,2.4,0,6.2832);
+  ctx.fillStyle='rgba(86,200,216,0.75)'; ctx.fill();
+}
+
+function label(text,x,y,color,align){
+  ctx.font='500 17px "Courier New",monospace';
+  ctx.fillStyle=color; ctx.textAlign=align||'left'; ctx.fillText(text,x,y);
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#02040a'; ctx.fillRect(0,0,W,H);
+
+  /* stars */
+  ctx.fillStyle='rgba(236,233,224,0.16)';
+  for(let i=0;i<90;i++){
+    const sx=((i*137.5)%W), sy=((i*263.1)%H);
+    ctx.fillRect(sx,sy,1,1);
+  }
+
+  RINGS.forEach(b=>ringArc(b,false));   // behind
+  drawPlanet();
+  drawJet();
+  RINGS.forEach(b=>ringArc(b,true));    // in front
+
+  label('k = '+k+'  ·  responding', CX, CY-RP*1.55, 'rgba(231,205,124,0.95)', 'center');
+  label('no mode  ·  inert', CX+RP*1.85, CY+RP*1.35, 'rgba(123,135,152,0.9)', 'left');
+  ctx.beginPath();
+  ctx.moveTo(CX+RP*1.72,CY+RP*0.60); ctx.lineTo(CX+RP*1.80,CY+RP*1.24);
+  ctx.strokeStyle='rgba(123,135,152,0.4)'; ctx.lineWidth=1; ctx.stroke();
+}
+
+/* ── driving ─────────────────────────────────────────── */
+function freqToK(f){
+  const t=(Math.log2(Math.max(f,60)/110))/3.6;          // ~0..1 over 110 Hz..1.6 kHz
+  return Math.max(3,Math.min(9,Math.round(3+t*6)));
+}
+function setK(nk,f){
+  k=nk;
+  document.getElementById('kOut').textContent=k;
+  document.getElementById('respTag').textContent=(k===6?'Saturn':'k='+k);
+  if(f) document.getElementById('fOut').textContent=Math.round(f)+' Hz';
+}
+
+const slider=document.getElementById('freqSlider');
+slider.addEventListener('input',()=>{ level=0.45; setK(freqToK(+slider.value),+slider.value); });
+
+let actx=null,analyser=null,buf=null,micOn=false;
+document.getElementById('micBtn').addEventListener('click',async function(){
+  if(micOn) return;
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    actx=new (window.AudioContext||window.webkitAudioContext)();
+    analyser=actx.createAnalyser(); analyser.fftSize=2048;
+    analyser.smoothingTimeConstant=0.85;
+    actx.createMediaStreamSource(stream).connect(analyser);
+    buf=new Uint8Array(analyser.frequencyBinCount);
+    micOn=true; this.classList.add('on'); this.textContent='Listening';
+  }catch(e){
+    this.textContent='Mic declined — use the slider';
+  }
+});
+
+function listen(){
+  if(micOn&&analyser){
+    analyser.getByteFrequencyData(buf);
+    let peak=0,idx=0,sum=0;
+    for(let i=2;i<buf.length;i++){ sum+=buf[i]; if(buf[i]>peak){peak=buf[i];idx=i;} }
+    level=Math.min((sum/buf.length)/70,1);
+    if(peak>28){
+      const f=idx*actx.sampleRate/analyser.fftSize;
+      setK(freqToK(f),f);
+    }
+    document.getElementById('lvl').style.width=(level*100)+'%';
+  }else{
+    level*=0.94;
+    document.getElementById('lvl').style.width=(level*100)+'%';
+  }
+}
+
+let last=0;
+function loop(ts){
+  if(ts-last>16){ phase+=0.0016; listen(); draw(); last=ts; }
+  requestAnimationFrame(loop);
+}
+setK(6,480); draw(); requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
