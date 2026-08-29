@@ -4,232 +4,398 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>dm&#xB3; Geometry &middot; GOMC Science &middot; Pablo Nogueira Grossi</title>
+<meta name="description" content="dm&#xB3; Geometry — a contact-geometric operator chain for irreversible threshold-crossings. Formal-verification counts published with the tool that produces them.">
+<link rel="icon" href="data:image/png;base64,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">
 <style>
 :root {
-  --navy: #1a2744;
-  --gold: #c9a84c;
-  --cream: #faf7f0;
-  --smoke: #f0ece4;
-  --green: #155724;
-  --mid: #3a4f7a;
-  --mono: 'Courier New', monospace;
+  --void:    #04060d;
+  --deep:    #080d1a;
+  --panel:   rgba(255,255,255,0.028);
+  --hair:    rgba(201,168,76,0.16);
+  --hair-lo: rgba(255,255,255,0.07);
+  --gold:    #c9a84c;
+  --gold-hi: #e7cd7c;
+  --cyan:    #56c8d8;
+  --violet:  #8b7bf0;
+  --cream:   #ece9e0;
+  --muted:   rgba(236,233,224,0.56);
+  --faint:   rgba(236,233,224,0.34);
+  --mono: 'Courier New', ui-monospace, monospace;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--cream); font-family: Georgia, serif; color: #1c1c1c; }
-a { color: var(--mid); text-decoration: none; }
-a:hover { color: var(--gold); }
-
-nav {
-  background: var(--navy);
-  padding: 0.5rem 1.4rem;
-  display: flex; gap: 1.6rem;
-  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
-  align-items: center; flex-wrap: wrap;
+body {
+  background: var(--void);
+  font-family: Georgia, 'Times New Roman', serif;
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
-nav a { color: rgba(255,255,255,0.6); }
-nav a:first-child { color: var(--gold); }
+a { color: var(--gold); text-decoration: none; transition: color .15s; }
+a:hover { color: var(--gold-hi); }
+code { font-family: var(--mono); color: rgba(236,233,224,0.82); }
+
+/* ── NAV ───────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(4,6,13,0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hair-lo);
+  padding: 0.55rem 1.4rem;
+  display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em;
+}
+nav a { color: rgba(236,233,224,0.5); }
 nav a:hover { color: var(--gold); }
 
-/*
-  BRAND STRUCTURE:
-  ┌────────────────────────────────┐
-  │  dm  ³ ≋≋≋≋≋≋≋              │
-  │      ↑ ↑ travelling sine wave  │
-  │      │ └─ SVG animated wave    │
-  │      └── true superscript      │
-  └────────────────────────────────┘
-
-  .dm3-brand is an inline-flex container.
-  .dm = large base letters
-  .sup-and-wave = inline-block, positions ³ and wave together
-  .cube = the ³ superscript (font-size 60%, vertical-align super)
-  .wave-svg = SVG whose path is animated by JS as a travelling sine
-*/
+/* ── dm³ BRAND MARK ────────────────────────────── */
+/* The mark: a travelling sine wave riding ABOVE the dm, ³ as true
+   superscript. The wave is the dynamical system — dr/dt = r(1−r²),
+   dθ/dt = ω — drawn as its own signature. */
 .dm3-brand {
-  display: inline-flex;
-  align-items: baseline;
-  font-family: Georgia, serif;
-  font-weight: bold;
-  color: var(--gold);
-  line-height: 1;
-  cursor: default;
-  position: relative;
+  display: inline-flex; align-items: baseline;
+  font-family: Georgia, serif; font-weight: bold;
+  color: var(--gold); line-height: 1; cursor: default;
+  padding-top: 0.42em;            /* headroom for the wave */
 }
-
-.dm3-brand .dm {
-  font-size: 1em;
-  letter-spacing: -0.02em;
-  display: inline-block;
-}
-
-/* ³ and wave sit together as a unit */
-.dm3-brand .exponent-wake {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.05em;
-  /* shift the whole unit up to superscript position */
-  vertical-align: super;
-  font-size: 0.62em;
-  line-height: 1;
-}
-
-.dm3-brand .cube {
-  font-size: 1em;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-/* The animated wave SVG — sized in em so it scales */
+.dm3-brand .dm-wrap { position: relative; display: inline-block; }
+.dm3-brand .dm { font-size: 1em; letter-spacing: -0.02em; display: inline-block; }
 .dm3-brand .wave-svg {
-  display: inline-block;
-  /* width generous enough for a visible wave */
-  width: 2em;
-  height: 1em;
-  overflow: visible;
-  flex-shrink: 0;
-  /* align wave vertically to mid of superscript */
-  align-self: center;
+  position: absolute;
+  left: -0.02em; right: -0.02em; bottom: 100%;
+  width: auto; height: 0.34em;
+  margin-bottom: 0.06em;
+  overflow: visible; pointer-events: none;
 }
-
-/* Size variants */
-.dm3-brand.hero-size { font-size: 3.6rem; }
+.dm3-brand .cube {
+  font-size: 0.6em; line-height: 1;
+  align-self: flex-start; margin-left: 0.02em;
+}
+.dm3-brand.hero-size { font-size: clamp(3rem, 9vw, 4.6rem); text-shadow: 0 0 38px rgba(201,168,76,0.4); }
 .dm3-brand.nav-size  { font-size: 0.88rem; }
 .dm3-brand.card-size { font-size: 2rem; }
 
-/* ── REST OF PAGE ── */
-.hero { background: var(--navy); color: var(--cream); text-align: center; padding: 4rem 1.5rem 3rem; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%); pointer-events: none; }
-.hero-brand { display: flex; justify-content: center; margin-bottom: 1.2rem; }
-.hero-sub { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.24em; color: var(--gold); text-transform: uppercase; margin-bottom: 1rem; }
-.hero h1 { font-size: clamp(1.4rem, 3vw, 2.2rem); font-weight: normal; letter-spacing: 0.02em; margin-bottom: 0.6rem; color: var(--cream); }
-.hero-tagline { font-size: clamp(0.85rem, 1.6vw, 1.05rem); color: rgba(250,247,240,0.72); max-width: 640px; margin: 0 auto 2rem; line-height: 1.7; }
-.gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1.6rem auto 0; border-radius: 1px; }
-.stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 2.4rem; padding: 2rem 1.5rem; background: var(--navy); border-top: 1px solid rgba(201,168,76,0.2); }
-.stat-item { text-align: center; }
-.stat-num { font-family: var(--mono); font-size: 2rem; font-weight: bold; color: var(--gold); display: block; }
-.stat-label { font-family: sans-serif; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,247,240,0.55); margin-top: 0.2rem; }
-.stats-note { flex-basis: 100%; max-width: 68ch; margin: 0.6rem auto 0; text-align: center; font-family: var(--mono); font-size: 0.62rem; line-height: 1.7; color: rgba(250,247,240,0.5); }
-.stats-note a { color: var(--gold); }
-.stats-note code { color: rgba(250,247,240,0.78); }
-.proof-bar-note { font-family: var(--mono); font-size: 0.62rem; line-height: 1.6; color: #777; margin-top: 0.9rem; }
-main { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
-.section-title { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 1.2rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(201,168,76,0.25); }
-.operator-chain { background: var(--navy); color: var(--cream); border-radius: 8px; padding: 2rem 2.2rem; margin-bottom: 3rem; text-align: center; position: relative; overflow: hidden; }
-.operator-chain::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%); pointer-events: none; }
-.op-formula { font-family: var(--mono); font-size: clamp(1rem, 2.5vw, 1.5rem); color: var(--gold); letter-spacing: 0.05em; margin-bottom: 0.8rem; }
-.op-sub { font-size: 0.78rem; color: rgba(250,247,240,0.6); font-style: italic; }
-.op-labels { display: flex; justify-content: center; gap: 3rem; margin-top: 1.4rem; flex-wrap: wrap; }
-.op-label { text-align: center; font-family: sans-serif; }
-.op-letter { display: block; font-family: var(--mono); font-size: 1.1rem; color: var(--gold); font-weight: bold; }
-.op-name { display: block; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(250,247,240,0.5); margin-top: 0.2rem; }
-.constants-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
-.const-card { background: white; border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 1.2rem 1.4rem; border-left: 3px solid var(--gold); }
-.const-eq { font-family: var(--mono); font-size: 1.05rem; color: var(--navy); font-weight: bold; margin-bottom: 0.3rem; }
-.const-desc { font-size: 0.75rem; color: #666; line-height: 1.5; }
-.volumes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; margin-bottom: 3rem; }
-.vol-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.6rem; transition: transform 0.15s, box-shadow 0.15s; }
-.vol-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,39,68,0.1); }
-.vol-card.featured { border-color: var(--gold); border-width: 2px; }
-.vol-num { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.5rem; }
-.vol-title { font-size: 1rem; font-weight: bold; color: var(--navy); margin-bottom: 0.6rem; line-height: 1.35; }
-.vol-desc { font-size: 0.8rem; color: #555; line-height: 1.65; margin-bottom: 1rem; }
-.vol-link { font-family: var(--mono); font-size: 0.68rem; color: var(--mid); letter-spacing: 0.05em; border: 1px solid var(--mid); padding: 0.25rem 0.6rem; border-radius: 3px; display: inline-block; transition: background 0.12s, color 0.12s; }
-.vol-link:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
-.free-badge { display: inline-block; font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; background: #e8f5e9; color: var(--green); border: 1px solid #c3e6cb; padding: 0.15rem 0.45rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; text-transform: uppercase; }
-.proof-bar-wrap { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 1.6rem; margin-bottom: 3rem; }
-.proof-bar-label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.72rem; color: #555; margin-bottom: 0.6rem; }
-.proof-bar-track { height: 10px; background: var(--smoke); border-radius: 5px; overflow: hidden; }
-.proof-bar-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--gold)); border-radius: 5px; width: 0%; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); }
-.proof-repos { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-.repo-badge { font-family: var(--mono); font-size: 0.68rem; background: var(--smoke); color: var(--navy); padding: 0.2rem 0.55rem; border-radius: 3px; border: 1px solid #ddd; }
+/* ── HERO / PHASE PORTRAIT ─────────────────────── */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 5.5rem 1.5rem 4.5rem; text-align: center;
+  border-bottom: 1px solid var(--hair-lo);
+}
+#field { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, rgba(201,168,76,0.10) 0%, transparent 72%),
+    radial-gradient(ellipse 90% 70% at 18% 88%, rgba(139,123,240,0.10) 0%, transparent 70%),
+    linear-gradient(to bottom, transparent 60%, var(--void) 100%);
+}
+.hero > * { position: relative; z-index: 2; }
+.hero-sub {
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.26em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 1.4rem;
+}
+.hero-brand { display: flex; justify-content: center; margin-bottom: 0.9rem; }
+.hero h1 {
+  font-size: clamp(1.3rem, 3vw, 2rem); font-weight: normal;
+  letter-spacing: 0.06em; color: var(--cream); margin-bottom: 1rem;
+}
+.hero-tagline {
+  font-size: clamp(0.88rem, 1.6vw, 1.04rem); color: var(--muted);
+  max-width: 620px; margin: 0 auto; line-height: 1.8;
+}
+.gold-rule { width: 54px; height: 1px; background: var(--gold); margin: 2rem auto 0; opacity: 0.75; }
+
+/* ── LAYOUT ────────────────────────────────────── */
+main { max-width: 1080px; margin: 0 auto; padding: 4rem 1.5rem 5rem; }
+.section-title {
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.24em;
+  color: var(--gold); text-transform: uppercase;
+  margin: 3.6rem 0 1.3rem; padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--hair);
+}
+.section-title:first-child { margin-top: 0; }
+
+/* ── THE LADDER (the honest count) ─────────────── */
+.ladder { background: var(--panel); border: 1px solid var(--hair-lo); border-radius: 10px; padding: 1.8rem 1.7rem 1.5rem; }
+.ladder-lede { font-size: 0.9rem; color: var(--muted); line-height: 1.75; max-width: 62ch; margin-bottom: 2rem; }
+.ladder-lede strong { color: var(--cream); font-weight: normal; border-bottom: 1px solid var(--hair); }
+.rung { margin-bottom: 1.5rem; }
+.rung-head { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.45rem; }
+.rung-n {
+  font-family: var(--mono); font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: bold; color: var(--gold); line-height: 1;
+}
+.rung-n.dim { color: rgba(236,233,224,0.42); }
+.rung-n.peak { color: var(--gold-hi); text-shadow: 0 0 22px rgba(231,205,124,0.42); }
+.rung-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--cream); }
+.rung-pct { font-family: var(--mono); font-size: 0.66rem; color: var(--faint); margin-left: auto; }
+.rung-track { height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+.rung-fill { height: 100%; width: 0; border-radius: 3px; transition: width 1.5s cubic-bezier(0.22,1,0.36,1); }
+.f-raw     { background: linear-gradient(90deg, rgba(139,123,240,0.55), rgba(139,123,240,0.2)); }
+.f-grouped { background: linear-gradient(90deg, rgba(86,200,216,0.6), rgba(86,200,216,0.2)); }
+.f-sorry   { background: linear-gradient(90deg, var(--gold), rgba(201,168,76,0.25)); }
+.f-kernel  { background: linear-gradient(90deg, var(--gold-hi), var(--gold)); box-shadow: 0 0 16px rgba(231,205,124,0.55); }
+.rung-note { font-size: 0.78rem; color: var(--faint); line-height: 1.65; margin-top: 0.5rem; max-width: 68ch; }
+.rung-note code { color: var(--muted); }
+
+.aside-axiom {
+  margin-top: 2rem; padding: 0.95rem 1.1rem;
+  border-left: 2px solid var(--gold); background: rgba(201,168,76,0.05);
+  font-size: 0.8rem; color: var(--muted); line-height: 1.7;
+}
+.aside-axiom b { color: var(--gold); font-family: var(--mono); }
+
+.provenance {
+  margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid var(--hair-lo);
+  font-family: var(--mono); font-size: 0.63rem; line-height: 1.85; color: var(--faint);
+}
+.provenance .cmd {
+  display: block; margin: 0.55rem 0 0.8rem; padding: 0.6rem 0.8rem;
+  background: rgba(0,0,0,0.4); border: 1px solid var(--hair-lo); border-radius: 5px;
+  color: var(--gold); overflow-x: auto; white-space: pre;
+}
+.repos { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+.repo-badge {
+  font-family: var(--mono); font-size: 0.63rem;
+  background: rgba(255,255,255,0.035); border: 1px solid var(--hair-lo);
+  color: var(--muted); padding: 0.2rem 0.5rem; border-radius: 3px;
+}
 .repo-badge span { color: var(--gold); font-weight: bold; }
-.pred-list { list-style: none; margin-bottom: 3rem; }
-.pred-list li { display: flex; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--smoke); align-items: baseline; font-size: 0.88rem; line-height: 1.6; }
-.pred-tag { font-family: var(--mono); font-size: 0.65rem; background: var(--navy); color: var(--gold); padding: 0.15rem 0.45rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
-.about-block { background: var(--navy); color: var(--cream); border-radius: 8px; padding: 2rem 2.2rem; margin-bottom: 3rem; display: flex; gap: 2rem; flex-wrap: wrap; align-items: center; }
-.about-brand { flex-shrink: 0; }
-.about-text h2 { font-size: 1rem; color: var(--gold); font-weight: normal; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
-.about-text p { font-size: 0.85rem; color: rgba(250,247,240,0.72); line-height: 1.8; }
-.about-text a { color: var(--gold); }
-footer { background: var(--navy); color: rgba(250,247,240,0.45); font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; text-align: center; padding: 1.2rem; border-top: 1px solid rgba(201,168,76,0.15); }
-footer a { color: var(--gold); opacity: 0.7; }
-footer a:hover { opacity: 1; }
-@media (max-width: 600px) { .op-labels { gap: 1.5rem; } .about-block { flex-direction: column; } }
+
+/* ── OPERATOR CHAIN ────────────────────────────── */
+.operator-chain {
+  background: linear-gradient(150deg, rgba(139,123,240,0.07), rgba(4,6,13,0) 60%), var(--panel);
+  border: 1px solid var(--hair-lo); border-radius: 10px;
+  padding: 2.2rem; text-align: center; position: relative; overflow: hidden;
+}
+.op-formula { font-family: var(--mono); font-size: clamp(1.05rem, 2.6vw, 1.55rem); color: var(--gold); letter-spacing: 0.06em; margin-bottom: 0.7rem; }
+.op-sub { font-size: 0.8rem; color: var(--faint); font-style: italic; }
+.op-labels { display: flex; justify-content: center; gap: 3rem; margin-top: 1.7rem; flex-wrap: wrap; }
+.op-letter { display: block; font-family: var(--mono); font-size: 1.15rem; color: var(--gold); font-weight: bold; }
+.op-name { display: block; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); margin-top: 0.3rem; }
+
+/* ── CARDS ─────────────────────────────────────── */
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.9rem; }
+.const-card {
+  background: var(--panel); border: 1px solid var(--hair-lo);
+  border-left: 2px solid var(--gold); border-radius: 6px; padding: 1.1rem 1.3rem;
+}
+.const-eq { font-family: var(--mono); font-size: 1.02rem; color: var(--gold); font-weight: bold; margin-bottom: 0.35rem; }
+.const-desc { font-size: 0.76rem; color: var(--faint); line-height: 1.6; }
+
+.volumes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr)); gap: 1.1rem; }
+.vol-card {
+  background: var(--panel); border: 1px solid var(--hair-lo); border-radius: 9px;
+  padding: 1.5rem; transition: transform .18s, border-color .18s, box-shadow .18s;
+}
+.vol-card:hover { transform: translateY(-3px); border-color: var(--hair); box-shadow: 0 10px 34px rgba(0,0,0,0.55); }
+.vol-card.featured { border-color: var(--hair); box-shadow: inset 0 0 40px rgba(201,168,76,0.05); }
+.vol-num { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.55rem; }
+.vol-title { font-size: 1rem; color: var(--cream); margin-bottom: 0.55rem; line-height: 1.4; }
+.vol-desc { font-size: 0.79rem; color: var(--faint); line-height: 1.7; margin-bottom: 1rem; }
+.vol-link {
+  font-family: var(--mono); font-size: 0.64rem; color: var(--muted);
+  border: 1px solid var(--hair-lo); padding: 0.25rem 0.6rem; border-radius: 3px;
+  display: inline-block; transition: all .15s;
+}
+.vol-link:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.07); }
+.free-badge {
+  font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.1em;
+  background: rgba(86,200,216,0.1); color: var(--cyan);
+  border: 1px solid rgba(86,200,216,0.28); padding: 0.13rem 0.42rem;
+  border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; text-transform: uppercase;
+}
+
+/* ── PREDICTIONS ───────────────────────────────── */
+.pred-list { list-style: none; }
+.pred-list li {
+  display: flex; gap: 1rem; padding: 0.85rem 0;
+  border-bottom: 1px solid var(--hair-lo); align-items: baseline;
+  font-size: 0.87rem; line-height: 1.65; color: var(--muted);
+}
+.pred-tag {
+  font-family: var(--mono); font-size: 0.62rem; background: rgba(201,168,76,0.1);
+  color: var(--gold); border: 1px solid var(--hair);
+  padding: 0.15rem 0.45rem; border-radius: 3px; white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── ABOUT / FOOTER ────────────────────────────── */
+.about-block {
+  background: linear-gradient(150deg, rgba(201,168,76,0.06), rgba(4,6,13,0) 62%), var(--panel);
+  border: 1px solid var(--hair-lo); border-radius: 10px; padding: 2rem 2.1rem;
+  display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;
+}
+.about-text h2 { font-size: 1rem; color: var(--gold); font-weight: normal; letter-spacing: 0.05em; margin-bottom: 0.7rem; }
+.about-text p { font-size: 0.85rem; color: var(--muted); line-height: 1.85; }
+footer {
+  border-top: 1px solid var(--hair-lo); color: var(--faint);
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em;
+  text-align: center; padding: 1.6rem 1.2rem; line-height: 2;
+}
+
+@media (max-width: 600px) {
+  .op-labels { gap: 1.6rem; }
+  .about-block { flex-direction: column; text-align: center; }
+  .rung-pct { margin-left: 0; flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
 </style>
 </head>
 <body>
 
-<!-- BRAND MACRO — used in nav, hero, about -->
-<!-- Structure: dm [superscript: 3 + animated-sine-wave] -->
-
 <nav>
   <a href="#" class="dm3-brand nav-size" title="dm&#xB3; Geometry — GOMC Science">
-    <span class="dm">dm</span>
-    <span class="exponent-wake">
-      <span class="cube">3</span>
-      <svg class="wave-svg" data-wave="true" viewBox="0 0 40 10" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <path class="wave-path" stroke="url(#wg1)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <span class="dm-wrap">
+      <svg class="wave-svg" data-wave="true" viewBox="0 0 100 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.35"/>
+          <stop offset="45%" stop-color="#c9a84c" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.55"/>
+        </linearGradient></defs>
+        <path class="wave-path" stroke="url(#wg1)" stroke-width="3.4" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
       </svg>
-    </span>
+      <span class="dm">dm</span>
+    </span><span class="cube">3</span>
   </a>
-  <a href="https://sluing.github.io/neuro/SBM/1080.html" target="_blank">AXLE &#8599;</a>
-  <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub &#8599;</a>
-  <a href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a>
-  <a href="https://totogt.github.io/AXLE/" target="_blank">Lean 4 &#8599;</a>
-  <a href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Series Hub &#8599;</a>
+  <a href="#count">The Count &#8595;</a>
+  <a href="https://sluing.github.io/neuro/SBM/1080.html" target="_blank" rel="noopener">Registry &#8599;</a>
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank" rel="noopener">GitHub &#8599;</a>
+  <a href="https://zenodo.org/records/20975648" target="_blank" rel="noopener">Zenodo &#8599;</a>
+  <a href="https://totogt.github.io/geometry/series-hub.html" target="_blank" rel="noopener">Series Hub &#8599;</a>
 </nav>
 
 <div class="hero">
+  <canvas id="field" aria-hidden="true"></canvas>
   <div class="hero-sub">GOMC Science &middot; Generative Orthogonal Matrix Contact</div>
   <div class="hero-brand">
     <div class="dm3-brand hero-size">
+    <span class="dm-wrap">
+      <svg class="wave-svg" data-wave="true" viewBox="0 0 100 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.35"/>
+          <stop offset="45%" stop-color="#c9a84c" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.55"/>
+        </linearGradient></defs>
+        <path class="wave-path" stroke="url(#wg2)" stroke-width="3.4" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      </svg>
       <span class="dm">dm</span>
-      <span class="exponent-wake">
-        <span class="cube">3</span>
-        <svg class="wave-svg" data-wave="true" viewBox="0 0 40 10" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
-              <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path class="wave-path" stroke="url(#wg2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        </svg>
-      </span>
-    </div>
+    </span><span class="cube">3</span>
+  </div>
   </div>
   <h1>Geometry</h1>
   <p class="hero-tagline">
-    A formally verified science of irreversible threshold-crossings &mdash;
-    one contact-geometric operator chain unifying astrophysics, biology,
-    planetary architecture, and number theory.
+    One contact-geometric operator chain for irreversible threshold-crossings &mdash;
+    across astrophysics, biology, planetary architecture, and number theory.
   </p>
   <div class="gold-rule"></div>
 </div>
 
-<div class="stats">
-  <div class="stat-item"><span class="stat-num" data-target="1165">0</span><span class="stat-label">Tier 3 &middot; Formalized</span></div>
-  <div class="stat-item"><span class="stat-num" data-target="1004">0</span><span class="stat-label">Tier 2 &middot; Sorry-free</span></div>
-  <div class="stat-item"><span class="stat-num" data-target="30" style="color:#c9a84c;">0</span><span class="stat-label">&#10003; Tier 1 &middot; Kernel-audited</span></div>
-  <div class="stat-item"><span class="stat-num" data-target="62">0</span><span class="stat-label">Axiom declarations</span></div>
-  <div class="stat-item"><span class="stat-num" data-target="9">0</span><span class="stat-label">Volumes</span></div>
-  <p class="stats-note">
-    Tier 3 &mdash; the statement is written in Lean 4. Tier 2 &mdash; the proof body carries no <code>sorry</code>,
-    which is not the same as proved. Tier 1 &mdash; elaborated through Lean&#8217;s kernel with a per-declaration
-    <code>#print axioms</code> confirming exactly <code>[propext, Classical.choice, Quot.sound]</code>.
-    The 62 <code>axiom</code> declarations are disclosed in the registry and are not part of any tier.
-    Source: <a href="https://sluing.github.io/neuro/SBM/1080.html" target="_blank">AXLE Theorem Registry</a>, rebuilt 15 August 2026.
-  </p>
-</div>
-
 <main>
+
+  <div class="section-title" id="count">The Count &mdash; four numbers, four different questions</div>
+  <div class="ladder">
+    <p class="ladder-lede">
+      A single &ldquo;theorems proved&rdquo; figure would be easier to read and would not be true.
+      These are four distinct claims of decreasing strength, and only the last one is
+      <strong>proved</strong> in the sense a referee means. Each is regenerable from the
+      command below.
+    </p>
+
+    <div class="rung">
+      <div class="rung-head">
+        <span class="rung-n dim" data-target="2667">0</span>
+        <span class="rung-label">Declarations written &middot; raw</span>
+        <span class="rung-pct">100%</span>
+      </div>
+      <div class="rung-track"><div class="rung-fill f-raw" data-w="100"></div></div>
+      <p class="rung-note">
+        Every <code>theorem</code> / <code>lemma</code> in a git-tracked <code>.lean</code> file across ten
+        repositories &mdash; 259 files. <code>example</code> is anonymous and not counted; comments and
+        docstrings are stripped before matching, so a theorem named in prose is prose.
+      </p>
+    </div>
+
+    <div class="rung">
+      <div class="rung-head">
+        <span class="rung-n dim" data-target="1889">0</span>
+        <span class="rung-label">&hellip; after grouping version duplicates</span>
+        <span class="rung-pct">70.8%</span>
+      </div>
+      <div class="rung-track"><div class="rung-fill f-grouped" data-w="70.8"></div></div>
+      <p class="rung-note">
+        40 groups of version-suffixed siblings (<code>AXLE.lean</code>, <code>AXLE_v5_1.lean</code>,
+        <code>AXLE_v6.lean</code>, <code>AXLE_V8.lean</code>&hellip;) collapse to one. The 778-declaration gap is
+        unreconciled duplication in the repositories &mdash; open housekeeping, not lost work.
+        Every figure below is read against this denominator.
+      </p>
+    </div>
+
+    <div class="rung">
+      <div class="rung-head">
+        <span class="rung-n" data-target="1709">0</span>
+        <span class="rung-label">Sorry-free in source</span>
+        <span class="rung-pct">90.5% of 1,889</span>
+      </div>
+      <div class="rung-track"><div class="rung-fill f-sorry" data-w="90.5"></div></div>
+      <p class="rung-note">
+        The proof body contains no <code>sorry</code>. <b>This is not the same as proved.</b>
+        <code>theorem X : True := by trivial</code> is sorry-free and vacuous. 180 grouped
+        declarations (269 raw) are admitted and are disclosed, never dropped.
+      </p>
+    </div>
+
+    <div class="rung">
+      <div class="rung-head">
+        <span class="rung-n peak" data-target="30">0</span>
+        <span class="rung-label">&#10003; Kernel-audited</span>
+        <span class="rung-pct">1.6% of 1,889</span>
+      </div>
+      <div class="rung-track"><div class="rung-fill f-kernel" data-w="1.6"></div></div>
+      <p class="rung-note">
+        Elaborated through Lean&#8217;s kernel with a per-declaration <code>#print axioms</code>
+        reporting exactly <code>[propext, Classical.choice, Quot.sound]</code> &mdash; no
+        <code>sorryAx</code>, no <code>native_decide</code>. This is the only tier that means
+        <em>verified</em>. Source:
+        <a href="https://sluing.github.io/neuro/SBM/1080.html" target="_blank" rel="noopener">AXLE Theorem Registry</a>,
+        rebuilt 15 August 2026.
+      </p>
+    </div>
+
+    <div class="aside-axiom">
+      <b>53 axiom declarations</b> across the same corpus. An <code>axiom</code> is an assumption, not a
+      proof; these are counted separately and belong to no tier. The &ldquo;zero extra axioms&rdquo; claim
+      is true of the 30 kernel-audited results, which were probed individually. It has never been
+      established for the corpus as a whole, and this page does not assert it.
+    </div>
+
+    <div class="provenance">
+      Regenerated 29 August 2026 by <code>tools/theorem_census.py</code> &mdash; scope: git-tracked
+      <code>.lean</code> only, one checkout per distinct git remote. A copy of the tool and its root
+      list ships beside this page; the canonical home is
+      <a href="https://github.com/TOTOGT/geometry" target="_blank" rel="noopener">TOTOGT/geometry</a> at
+      <code>tools/theorem_census.py</code>.
+      <span class="cmd">git clone https://github.com/TOTOGT/geometry
+cd geometry
+python3 tools/theorem_census.py --selftest
+python3 tools/theorem_census.py --corpus --tracked</span>
+      Per-repository declarations written (raw), summing to 2,667:
+      <div class="repos">
+        <span class="repo-badge">AXLE <span>1403</span></span>
+        <span class="repo-badge">geometry <span>287</span></span>
+        <span class="repo-badge">Atratores <span>171</span></span>
+        <span class="repo-badge">g6 <span>163</span></span>
+        <span class="repo-badge">dnls <span>152</span></span>
+        <span class="repo-badge">GTCT <span>148</span></span>
+        <span class="repo-badge">cajueiro <span>142</span></span>
+        <span class="repo-badge">vol1-proofs <span>140</span></span>
+        <span class="repo-badge">3M <span>58</span></span>
+        <span class="repo-badge">b3s <span>3</span></span>
+      </div>
+    </div>
+  </div>
 
   <div class="section-title">The Operator Chain</div>
   <div class="operator-chain">
@@ -243,8 +409,8 @@ footer a:hover { opacity: 1; }
     </div>
   </div>
 
-  <div class="section-title">Certified Constants &mdash; Machine-Verified in Lean 4 / AXLE</div>
-  <div class="constants-grid">
+  <div class="section-title">Constants &mdash; kernel-audited in Lean 4 / AXLE</div>
+  <div class="grid-4">
     <div class="const-card"><div class="const-eq">&epsilon;&#x2080; = 1/3</div><div class="const-desc">Gronwall stability radius &mdash; outer basin of attraction</div></div>
     <div class="const-card"><div class="const-eq">&tau; = 2</div><div class="const-desc">Embodiment threshold &mdash; curvature / noise ratio at crossing</div></div>
     <div class="const-card"><div class="const-eq">&eta; &asymp; 1.839</div><div class="const-desc">Tribonacci constant &mdash; dominant root of &lambda;&sup3;&minus;&lambda;&sup2;&minus;&lambda;&minus;1=0</div></div>
@@ -253,43 +419,15 @@ footer a:hover { opacity: 1; }
 
   <div class="section-title">All Volumes &mdash; dm&#xB3; Geometry &middot; All Free &middot; All Live <span class="free-badge">Free</span></div>
   <div class="volumes-grid">
-    <div class="vol-card"><div class="vol-num">&#x211D; &middot; Vol I &middot; Operator Algebra</div><div class="vol-title">GOMC &mdash; The Mathematics of Generative Transitions</div><div class="vol-desc">G-chain &middot; Whitney singularities &middot; Symplectic preservation &middot; Invariant triple (T*,&mu;,&tau;)=(2&pi;,&minus;2,2) &middot; Five theorems, seven proofs each.</div><a class="vol-link" href="https://zenodo.org/records/20784030" target="_blank">Zenodo &#8599;</a></div>
-    <div class="vol-card"><div class="vol-num">&#x211D;&sup2; &middot; Vol II &middot; Contact Geometry</div><div class="vol-title">TOGT &mdash; Contact Realization of Generative Transitions</div><div class="vol-desc">Reeb orbits &middot; dm&sup3; contact manifold &middot; GCM Theorems A&ndash;D &middot; RK4 toy model &middot; &epsilon;&#x2080; = 1/3 &middot; Lean 4 verified.</div><a class="vol-link" href="https://zenodo.org/records/21148424" target="_blank">Zenodo &#8599;</a></div>
-    <div class="vol-card featured"><div class="vol-num">&#x211D;&sup3; &middot; Vol III &middot; Biology &middot; Physics &middot; Language</div><div class="vol-title">The Mini-Beast &mdash; 121+ Living Chapters</div><div class="vol-desc">121+ HTML chapters &middot; CEFR A2&ndash;C1 &middot; 17 orders of magnitude &middot; The Cajueiro Principle. Updates weekly.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live Book &#8599;</a></div>
-    <div class="vol-card"><div class="vol-num">&#x2102; &middot; Vol IV &middot; Formal Theory</div><div class="vol-title">GTCT &mdash; Generative Temporal Contact Theory</div><div class="vol-desc">9 axioms &middot; 12 operators &middot; [F,T]=iJ &middot; 0 sorry &middot; g&#x2083;&#x2083; = 33 &middot; Lean 4 + Mathlib4 &middot; SBM Bienal 2026.</div><a class="vol-link" href="https://github.com/TOTOGT/GTCT" target="_blank">Lean 4 &#8599;</a></div>
-    <div class="vol-card"><div class="vol-num">&#x210D;&rarr;&#x1D546; &middot; Vol V &middot; Higher Dimensions</div><div class="vol-title">Dimensional Theory &mdash; Quaternionic &amp; Octonionic dm&sup3;</div><div class="vol-desc">Non-commutative &amp; non-associative &middot; G&#x210D;, G&#x1D546; &middot; E&#x2088; first appears &middot; Cayley-Dickson ladder.</div><a class="vol-link" href="https://zenodo.org/records/21148424" target="_blank">Zenodo &#8599;</a></div>
-    <div class="vol-card"><div class="vol-num">E&#x2088; &middot; Vol VI &middot; Exceptional Algebras</div><div class="vol-title">Explicit Operators &mdash; E&#x2088; Dynkin = G-chain</div><div class="vol-desc">G = U&#x2218;F&#x2218;K&#x2218;C IS the Dynkin diagram of E&#x2088; &middot; 240 roots &middot; Division is lost here.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a></div>
-    <div class="vol-card"><div class="vol-num">&#x1D544; &middot; Vol VII &middot; Moonshine</div><div class="vol-title">Monster Group &amp; Moonshine</div><div class="vol-desc">dm&sup3; as organizing principle for the Monster &middot; g-series g&#x2070;&rarr;g&#x2076;&#x2074; &middot; g&#x2086; = 33 &middot; g&#x2086;&#x2084; = 2&#x2076;.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank">Live &#8599;</a></div>
-    <div class="vol-card featured"><div class="vol-num">&#x211D;&sup3; &middot; Astrophysics &middot; Gravitational Lensing</div><div class="vol-title">Sub-Halo Anomalies &mdash; Contact Geometry &amp; GGSL</div><div class="vol-desc">2.1&times; CDM enhancement &middot; &chi;&sup2;/n=2.3 (p=0.044) &middot; Zero free parameters &middot; Six JWST testable predictions.</div><a class="vol-link" href="https://zenodo.org/records/20975648" target="_blank">Zenodo &#8599;</a></div>
-    <div class="vol-card"><div class="vol-num">&#x2119; &middot; Planetary Architecture &middot; NASA</div><div class="vol-title">Orthogenesis &mdash; Moon Base Colony Geometry</div><div class="vol-desc">Lunar hex-grid colony &middot; 50+ NASA gap closures &middot; Colony.expand = U&#x2218;F&#x2218;K&#x2218;C &middot; Mars &amp; Moon scaling.</div><a class="vol-link" href="https://github.com/TOTOGT/geometry" target="_blank">GitHub &#8599;</a></div>
-  </div>
-
-  <div class="section-title">Formal Verification Coverage &mdash; AXLE</div>
-  <div class="proof-bar-wrap">
-    <div class="proof-bar-label"><span>1,004 / 1,165 declarations sorry-free in source (Tier 2)</span><span style="color:var(--gold);font-weight:bold;">86.2%</span></div>
-    <div class="proof-bar-track"><div class="proof-bar-fill" id="proofFill"></div></div>
-    <div class="proof-bar-label" style="margin-top:0.9rem;"><span>30 / 1,165 kernel-audited, <code>#print axioms</code> clean (Tier 1)</span><span style="color:var(--gold);font-weight:bold;">2.6%</span></div>
-    <div class="proof-bar-track"><div class="proof-bar-fill" id="kernelFill"></div></div>
-    <div class="proof-repos">
-      <span class="repo-badge">AXLE <span>1369</span></span>
-      <span class="repo-badge">geometry <span>263</span></span>
-      <span class="repo-badge">Atratores <span>171</span></span>
-      <span class="repo-badge">g6 <span>163</span></span>
-      <span class="repo-badge">dnls <span>152</span></span>
-      <span class="repo-badge">GTCT <span>148</span></span>
-      <span class="repo-badge">cajueiro <span>142</span></span>
-      <span class="repo-badge">vol1-proofs <span>140</span></span>
-      <span class="repo-badge">3M <span>58</span></span>
-      <span class="repo-badge">io <span>19</span></span>
-      <span class="repo-badge">b3s <span>3</span></span>
-    </div>
-    <div class="proof-bar-note">
-      Declarations <em>written</em> (<code>theorem</code> / <code>lemma</code>), git-tracked files only, one checkout per
-      remote &mdash; 2,628 across eleven repositories, regenerated 27 August 2026 by
-      <code>tools/theorem_census.py --corpus --tracked</code>. Version-suffixed siblings are not collapsed here, so treat
-      it as an upper bound. It exceeds the registry&#8217;s 1,165 because reconciling the registry against the
-      repositories is open work &mdash; not because more has been proved.
-    </div>
+    <div class="vol-card"><div class="vol-num">&#x211D; &middot; Vol I &middot; Operator Algebra</div><div class="vol-title">GOMC &mdash; The Mathematics of Generative Transitions</div><div class="vol-desc">G-chain &middot; Whitney singularities &middot; Symplectic preservation &middot; Invariant triple (T*,&mu;,&tau;)=(2&pi;,&minus;2,2) &middot; Five theorems, seven proofs each.</div><a class="vol-link" href="https://zenodo.org/records/20784030" target="_blank" rel="noopener">Zenodo &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x211D;&sup2; &middot; Vol II &middot; Contact Geometry</div><div class="vol-title">TOGT &mdash; Contact Realization of Generative Transitions</div><div class="vol-desc">Reeb orbits &middot; dm&sup3; contact manifold &middot; GCM Theorems A&ndash;D &middot; RK4 toy model &middot; &epsilon;&#x2080; = 1/3 &middot; Lean 4 formalized.</div><a class="vol-link" href="https://zenodo.org/records/21148424" target="_blank" rel="noopener">Zenodo &#8599;</a></div>
+    <div class="vol-card featured"><div class="vol-num">&#x211D;&sup3; &middot; Vol III &middot; Biology &middot; Physics &middot; Language</div><div class="vol-title">The Mini-Beast &mdash; 121+ Living Chapters</div><div class="vol-desc">121+ HTML chapters &middot; CEFR A2&ndash;C1 &middot; 17 orders of magnitude &middot; The Cajueiro Principle. Updates weekly.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank" rel="noopener">Live Book &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x2102; &middot; Vol IV &middot; Formal Theory</div><div class="vol-title">GTCT &mdash; Generative Temporal Contact Theory</div><div class="vol-desc">9 axioms &middot; 12 operators &middot; [F,T]=iJ &middot; g&#x2083;&#x2083; = 33 &middot; Lean 4 + Mathlib4 &middot; 148 declarations written &middot; SBM Bienal 2026.</div><a class="vol-link" href="https://github.com/TOTOGT/GTCT" target="_blank" rel="noopener">Lean 4 &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x210D;&rarr;&#x1D546; &middot; Vol V &middot; Higher Dimensions</div><div class="vol-title">Dimensional Theory &mdash; Quaternionic &amp; Octonionic dm&sup3;</div><div class="vol-desc">Non-commutative &amp; non-associative &middot; G&#x210D;, G&#x1D546; &middot; E&#x2088; first appears &middot; Cayley-Dickson ladder.</div><a class="vol-link" href="https://zenodo.org/records/21148424" target="_blank" rel="noopener">Zenodo &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">E&#x2088; &middot; Vol VI &middot; Exceptional Algebras</div><div class="vol-title">Explicit Operators &mdash; E&#x2088; Dynkin = G-chain</div><div class="vol-desc">G = U&#x2218;F&#x2218;K&#x2218;C IS the Dynkin diagram of E&#x2088; &middot; 240 roots &middot; Division is lost here.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank" rel="noopener">Live &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x1D544; &middot; Vol VII &middot; Moonshine</div><div class="vol-title">Monster Group &amp; Moonshine</div><div class="vol-desc">dm&sup3; as organizing principle for the Monster &middot; g-series g&#x2070;&rarr;g&#x2076;&#x2074; &middot; g&#x2086; = 33 &middot; g&#x2086;&#x2084; = 2&#x2076;.</div><a class="vol-link" href="https://totogt.github.io/geometry/series-hub.html" target="_blank" rel="noopener">Live &#8599;</a></div>
+    <div class="vol-card featured"><div class="vol-num">&#x211D;&sup3; &middot; Astrophysics &middot; Gravitational Lensing</div><div class="vol-title">Sub-Halo Anomalies &mdash; Contact Geometry &amp; GGSL</div><div class="vol-desc">2.1&times; CDM enhancement &middot; &chi;&sup2;/n=2.3 (p=0.044) &middot; Zero free parameters &middot; Six JWST testable predictions.</div><a class="vol-link" href="https://zenodo.org/records/20975648" target="_blank" rel="noopener">Zenodo &#8599;</a></div>
+    <div class="vol-card"><div class="vol-num">&#x2119; &middot; Planetary Architecture &middot; NASA</div><div class="vol-title">Orthogenesis &mdash; Moon Base Colony Geometry</div><div class="vol-desc">Lunar hex-grid colony &middot; 50+ NASA gap closures &middot; Colony.expand = U&#x2218;F&#x2218;K&#x2218;C &middot; Mars &amp; Moon scaling.</div><a class="vol-link" href="https://github.com/TOTOGT/geometry" target="_blank" rel="noopener">GitHub &#8599;</a></div>
   </div>
 
   <div class="section-title">Six Falsifiable Predictions &mdash; JWST Testable</div>
@@ -302,28 +440,27 @@ footer a:hover { opacity: 1; }
     <li><span class="pred-tag">F6</span> Broken power-law kink at r~0.01R&#x2082;&#x2080;&#x2080; &mdash; JWST NIRCam 3&ndash;10 kpc</li>
   </ul>
 
+  <div class="section-title">&nbsp;</div>
   <div class="about-block">
     <div class="about-brand">
       <div class="dm3-brand card-size">
-        <span class="dm">dm</span>
-        <span class="exponent-wake">
-          <span class="cube">3</span>
-          <svg class="wave-svg" data-wave="true" viewBox="0 0 40 10" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="wg3" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#c9a84c" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path class="wave-path" stroke="url(#wg3)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          </svg>
-        </span>
-      </div>
+    <span class="dm-wrap">
+      <svg class="wave-svg" data-wave="true" viewBox="0 0 100 20" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="wg3" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.35"/>
+          <stop offset="45%" stop-color="#c9a84c" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.55"/>
+        </linearGradient></defs>
+        <path class="wave-path" stroke="url(#wg3)" stroke-width="3.4" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <span class="dm">dm</span>
+    </span><span class="cube">3</span>
+  </div>
     </div>
     <div class="about-text">
       <h2>Pablo Nogueira Grossi &middot; G6 LLC</h2>
-      <p>Newark, NJ &middot; ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">0009-0000-6496-2186</a> &middot; <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br><br>
-      The dm&#xB3; framework is a formally verified science of generative transitions &mdash; threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy clusters, and the growth phases of a lunar colony.</p>
+      <p>Newark, NJ &middot; ORCID <a href="https://orcid.org/0009-0000-6496-2186" target="_blank" rel="noopener">0009-0000-6496-2186</a> &middot; <a href="mailto:g6llc@proton.me">g6llc@proton.me</a><br><br>
+      The dm&#xB3; framework is a science of generative transitions &mdash; threshold-crossings that cannot be undone. The same four-operator contact-geometric sequence describes helium ignition in stars, autophagy in cells, sub-halo lensing anomalies in galaxy clusters, and the growth phases of a lunar colony.</p>
     </div>
   </div>
 
@@ -331,83 +468,164 @@ footer a:hover { opacity: 1; }
 
 <footer>
   dm&#xB3; Geometry &middot; GOMC Science &middot; &copy; 2026 Pablo Nogueira Grossi, G6 LLC &middot;
-  <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE</a> &middot;
-  <a href="https://zenodo.org/communities/principia-orthogona" target="_blank" rel="noopener">Principia Orthogona</a> &middot;
-  CC BY 4.0 &middot; MIT &middot; All volumes free
+  <a href="https://github.com/TOTOGT/AXLE" target="_blank" rel="noopener">AXLE</a> &middot;
+  <a href="https://zenodo.org/communities/principia-orthogona" target="_blank" rel="noopener">Principia Orthogona</a><br>
+  CC BY 4.0 &middot; MIT &middot; All volumes free &middot; Counts regenerated 29 August 2026 by <code>tools/theorem_census.py</code>
 </footer>
 
 <script>
-// ── TRAVELLING SINE WAVE ANIMATOR ──
-// For each .wave-svg[data-wave], animate the <path> as a travelling
-// sine wave using requestAnimationFrame.
-// The wave moves left-to-right (phase increases with time),
-// creating the impression of a wake flowing away from the ³.
-
-(function() {
-  const STEPS = 40;       // number of points sampled along the wave
-  const W = 40;           // viewBox width
-  const CY = 5;           // vertical center of viewBox
-  const AMP = 3.2;        // amplitude of the wave (half-height of viewBox = 5)
-  const FREQ = 1.5;       // number of full cycles across the wave
-  const SPEED = 2.5;      // radians per second (travelling speed)
-  // Amplitude envelope: full at x=0 (near the 3), fading to 0 at x=W
-  // This makes the wave look like it dissipates as it trails away
-  function envelope(t) { return 1 - t; }  // t in [0,1]
-
-  let startTime = null;
-
+/* ── TRAVELLING SINE WAVE (the dm³ wake) ───────────────── */
+(function () {
+  var STEPS = 64, W = 100, CY = 10, AMP = 6.2, FREQ = 1.15, SPEED = 2.2, start = null;
   function buildPath(phase) {
-    // Sample STEPS+1 points from x=0 to x=W
-    const pts = [];
-    for (let i = 0; i <= STEPS; i++) {
-      const t = i / STEPS;           // normalized x position [0,1]
-      const x = t * W;
-      const env = envelope(t);       // amplitude envelope
-      // Travelling sine: y = CY + AMP * env * sin(2π*freq*t - phase)
-      const y = CY + AMP * env * Math.sin(2 * Math.PI * FREQ * t - phase);
-      pts.push([x.toFixed(2), y.toFixed(2)]);
+    var pts = [], i, t, env, y;
+    for (i = 0; i <= STEPS; i++) {
+      t = i / STEPS;
+      env = Math.sin(Math.PI * t);            /* taper to zero at both ends */
+      y = CY + AMP * env * Math.sin(2 * Math.PI * FREQ * t - phase);
+      pts.push([(t * W).toFixed(2), y.toFixed(2)]);
     }
-    // Build SVG path as polyline (M + L commands)
-    return 'M' + pts[0].join(',') + pts.slice(1).map(p => 'L' + p.join(',')).join('');
+    return 'M' + pts[0].join(',') + pts.slice(1).map(function (p) { return 'L' + p.join(','); }).join('');
   }
-
-  const svgs = document.querySelectorAll('.wave-svg[data-wave]');
-  const paths = Array.from(svgs).map(s => s.querySelector('.wave-path'));
-
-  function animate(ts) {
-    if (!startTime) startTime = ts;
-    const elapsed = (ts - startTime) / 1000;  // seconds
-    const phase = elapsed * SPEED;             // travelling phase
-    const d = buildPath(phase);
-    paths.forEach(p => p.setAttribute('d', d));
-    requestAnimationFrame(animate);
+  var paths = Array.prototype.map.call(
+    document.querySelectorAll('.wave-svg[data-wave]'),
+    function (s) { return s.querySelector('.wave-path'); }
+  );
+  if (!paths.length) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var d0 = buildPath(0); paths.forEach(function (p) { p.setAttribute('d', d0); }); return;
   }
-
-  if (paths.length > 0) requestAnimationFrame(animate);
+  (function loop(ts) {
+    if (!start) start = ts;
+    var d = buildPath((ts - start) / 1000 * SPEED);
+    paths.forEach(function (p) { p.setAttribute('d', d); });
+    requestAnimationFrame(loop);
+  })(performance.now());
 })();
 
-// ── STAT COUNTERS ──
-function animateCounter(el) {
-  const target = parseInt(el.dataset.target);
-  if (isNaN(target)) return;
-  const dur = 1600, start = performance.now();
-  function step(now) {
-    const p = Math.min((now - start) / dur, 1);
-    const ease = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(ease * target).toLocaleString();
-    if (p < 1) requestAnimationFrame(step);
+/* ── HERO FIELD: starfield + phase portrait ────────────────
+   The trajectories integrate the polar system
+
+       dr/dt = r(1 - r²)      dθ/dt = ω
+
+   whose unit circle is an attracting limit cycle — the same
+   object the transverse Lyapunov exponent μmax = −2 measures.
+   Orbits started inside and outside both wind onto it.        */
+(function () {
+  var cv = document.getElementById('field');
+  if (!cv) return;
+  var ctx = cv.getContext('2d'), w = 0, h = 0, dpr = 1;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stars = [], orbits = [];
+
+  function seed() {
+    stars = [];
+    var n = Math.min(170, Math.round(w * h / 9000));
+    for (var i = 0; i < n; i++) {
+      stars.push({ x: Math.random() * w, y: Math.random() * h,
+                   r: Math.random() * 1.05 + 0.2,
+                   a: Math.random() * 0.45 + 0.12,
+                   tw: Math.random() * 6.28, sp: Math.random() * 0.8 + 0.25 });
+    }
+    orbits = [];
+    for (var k = 0; k < 26; k++) {
+      var inside = k % 2 === 0;
+      orbits.push({
+        r: inside ? 0.06 + Math.random() * 0.34 : 1.35 + Math.random() * 1.25,
+        th: Math.random() * 6.28,
+        w: 0.34 + Math.random() * 0.30,
+        hue: k % 3,
+        a: 0.16 + Math.random() * 0.30
+      });
+    }
   }
-  requestAnimationFrame(step);
-}
-function animateBar() { setTimeout(() => {
-  document.getElementById('proofFill').style.width = '86.2%';
-  const k = document.getElementById('kernelFill'); if (k) k.style.width = '2.6%';
-}, 400); }
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { document.querySelectorAll('[data-target]').forEach(animateCounter); animateBar(); obs.disconnect(); } });
-}, { threshold: 0.2 });
-const statsEl = document.querySelector('.stats');
-if (statsEl) obs.observe(statsEl);
+
+  function resize() {
+    var rect = cv.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = rect.width; h = rect.height;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    seed();
+    ctx.fillStyle = '#04060d'; ctx.fillRect(0, 0, w, h);
+  }
+
+  var COLORS = ['201,168,76', '86,200,216', '139,123,240'];
+  var last = 0;
+
+  function frame(ts) {
+    var dt = Math.min((ts - last) / 1000, 0.05); last = ts;
+
+    /* motion-blur wash leaves the orbit trails behind */
+    ctx.fillStyle = 'rgba(4,6,13,0.13)';
+    ctx.fillRect(0, 0, w, h);
+
+    var cx = w * 0.5, cy = h * 0.46;
+    var R = Math.min(w, h) * 0.30;
+
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      s.tw += dt * s.sp;
+      var a = s.a * (0.62 + 0.38 * Math.sin(s.tw));
+      ctx.fillStyle = 'rgba(236,233,224,' + a.toFixed(3) + ')';
+      ctx.fillRect(s.x, s.y, s.r, s.r);
+    }
+
+    for (var j = 0; j < orbits.length; j++) {
+      var o = orbits[j];
+      /* one explicit Euler step of the limit-cycle flow */
+      o.r += o.r * (1 - o.r * o.r) * dt * 0.85;
+      o.th += o.w * dt;
+      var px = cx + Math.cos(o.th) * o.r * R;
+      var py = cy + Math.sin(o.th) * o.r * R * 0.52;
+      ctx.beginPath();
+      ctx.arc(px, py, 1.25, 0, 6.2832);
+      ctx.fillStyle = 'rgba(' + COLORS[o.hue] + ',' + o.a.toFixed(3) + ')';
+      ctx.fill();
+    }
+
+    /* the attractor itself */
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, R, R * 0.52, 0, 0, 6.2832);
+    ctx.strokeStyle = 'rgba(201,168,76,0.13)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  if (!reduce) requestAnimationFrame(function (t) { last = t; frame(t); });
+})();
+
+/* ── LADDER: count up, bars out ────────────────────────── */
+(function () {
+  var ladder = document.querySelector('.ladder');
+  if (!ladder) return;
+  function run() {
+    document.querySelectorAll('[data-target]').forEach(function (el) {
+      var target = parseInt(el.dataset.target, 10);
+      if (isNaN(target)) return;
+      var dur = 1500, t0 = performance.now();
+      (function step(now) {
+        var p = Math.min((now - t0) / dur, 1);
+        el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target).toLocaleString();
+        if (p < 1) requestAnimationFrame(step);
+      })(t0);
+    });
+    setTimeout(function () {
+      document.querySelectorAll('.rung-fill').forEach(function (f) {
+        f.style.width = f.dataset.w + '%';
+      });
+    }, 260);
+  }
+  if (!('IntersectionObserver' in window)) { run(); return; }
+  var obs = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { run(); obs.disconnect(); } });
+  }, { threshold: 0.15 });
+  obs.observe(ladder);
+})();
 </script>
 </body>
 </html>
