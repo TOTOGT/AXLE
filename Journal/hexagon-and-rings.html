@@ -67,6 +67,12 @@ main{max-width:1080px;margin:0 auto;padding:2rem 1.2rem 4rem}
 .mech li{padding:0.3rem 0;border-top:1px solid var(--hair-lo)}
 .mech li b{color:var(--muted);font-weight:normal}
 
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1rem}
+.fig{background:var(--panel);border:1px solid var(--hair-lo);border-radius:9px;overflow:hidden}
+.fig img{display:block;width:100%;height:auto}
+.fig figcaption{font-family:var(--mono);font-size:0.62rem;line-height:1.8;color:var(--faint);
+                padding:0.7rem 0.9rem;border-top:1px solid var(--hair-lo)}
+.fig figcaption b{color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;font-size:0.95em}
 .ledger{background:rgba(201,168,76,0.045);border-left:2px solid var(--gold);padding:1rem 1.2rem;
         font-size:0.81rem;color:var(--muted);line-height:1.8}
 .ledger b{color:var(--gold);font-family:var(--mono);font-size:0.9em}
@@ -159,6 +165,24 @@ footer{border-top:1px solid var(--hair-lo);margin-top:3rem;padding:1.4rem 1.2rem
     </div>
   </div>
 
+  <div class="section-title">The photograph and the model</div>
+  <div class="figs">
+    <figure class="fig">
+      <img src="saturn-cassini-nasa.png" alt="Cassini view of Saturn from above the north pole, showing the polar hexagon and ring shadows.">
+      <figcaption><b>The planet</b><br>
+        Cassini, north-polar view. The hexagon is the grey-green cap; the dark bands across the
+        northern hemisphere are the rings&rsquo; own shadow. Image: NASA / JPL-Caltech / Space
+        Science Institute &mdash; public domain.</figcaption>
+    </figure>
+    <figure class="fig">
+      <img src="hexagon-rings-model.png" alt="Schematic of the same scene: hexagonal polar jet, banded planet, ring annulus with real gaps.">
+      <figcaption><b>The model</b><br>
+        The scene above, drawn from the stated radii and a wavenumber-k jet. Everything here is
+        a claim you can check against the photograph beside it &mdash; which is the point of
+        putting them next to each other.</figcaption>
+    </figure>
+  </div>
+
   <div class="section-title">The gaps are not nodal circles</div>
   <div class="ledger">
     A Chladni disc driven at k = 0 produces concentric rings at the zeros of J₀. It is
@@ -188,6 +212,29 @@ footer{border-top:1px solid var(--hair-lo);margin-top:3rem;padding:1.4rem 1.2rem
     wavenumber 6.</span> That is an observation, from Voyager and Cassini, and no
     formalisation in this repository replaces it. Any caption reading
     &ldquo;six-fold symmetry verified in Lean&rdquo; is claiming more than the file delivers.
+  </div>
+
+  <div class="section-title">The attractor, and where it is written down</div>
+  <div class="ledger">
+    The ring plane in this page is the r = 1 limit cycle of the radial law
+    <code>&#7771; = r(1 &minus; r&sup2;)</code> &mdash; the same object
+    <a href="https://totogt.github.io/3M/law3m.html">LAW3M</a> is built on, where it is called a
+    <em>logistic contraction</em>. That word is exact, and now checked:<br><br>
+    <b><a href="https://github.com/TOTOGT/3M/blob/main/LogisticRadial.lean">LogisticRadial.lean</a></b>
+    proves that in u = r&sup2; the law becomes the logistic equation
+    <code>u&#775; = 2u(1 &minus; u)</code>; that linearising at the cycle gives exactly
+    <b>&minus;2</b>, the transverse Lyapunov exponent, <em>derived rather than declared</em>; and that
+    <code>1/(1 + e<sup>&minus;2t</sup>)</code> solves it &mdash; so the sigmoid sits in this framework
+    as the <em>time course</em> of the approach to the ring, not as an operator.<br><br>
+    Ten declarations, compiled against Mathlib (lean4 v4.33.1), each probed with
+    <code>#print axioms</code> and reporting exactly
+    <code>[propext, Classical.choice, Quot.sound]</code>. No <code>sorryAx</code>, no
+    <code>native_decide</code>. The file also records, in its own header, what it does
+    <span class="no">not</span> establish.<br><br>
+    Further: <a href="https://totogt.github.io/3M/">3M index</a> &middot;
+    <a href="https://totogt.github.io/3M/law3m.html">LAW3M</a> &middot;
+    <a href="../SBM/nodal-sets.html">Nodal Sets</a> &middot;
+    <a href="../SBM/maquinas.html">Cimática com Máquinas</a>
   </div>
 
 </main>
