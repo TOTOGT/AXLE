@@ -42,7 +42,7 @@ All built on Web Audio API. No licenses. No fees.
 ## We are raising money to acquire a 15,000 sq ft historic estate in Forest Hill, Newark — to establish a free community wellness center for Newark residents.
 
 **Buy the draft manuscript → fund the building:**
-[ebay.com/itm/336530438926](https://www.ebay.com/itm/336530438926)
+
 
 **Campaign page:**
 [totogt.github.io/AXLE/newark-wellness.html](https://totogt.github.io/AXLE/newark-wellness.html)
