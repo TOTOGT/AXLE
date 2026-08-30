@@ -14,11 +14,43 @@
 --
 -- PROTOCOL: All definitions are taken verbatim or directly from the
 -- published Principia Orthogona volumes. No paraphrase. No dilution.
--- Status markers:
---   theorem   = proved in AXLE (Lean 4, zero sorry, zero axioms beyond Mathlib)
+-- Status markers (CORRECTED 2026-08-30 — see ERRATA below):
+--   theorem    = a Lean `theorem` declaration in this file. NOT a certificate:
+--                this file does not compile, so none of them has been checked.
+--   axiom      = ASSUMED, not proved. Nine of them. Read the ERRATA first.
 --   conjecture = marked open in published volumes, sorry-marked in AXLE
---   new        = first formal logging, this session, submitted for verification
 --   definition = stipulated from the published framework
+--
+-- ERRATA — 2026-08-30
+--
+-- The header line above used to read "theorem = proved in AXLE (Lean 4, zero
+-- sorry, zero axioms beyond Mathlib)". That was false in three separate ways
+-- and is corrected here rather than quietly deleted.
+--
+-- (1) THIS FILE DOES NOT COMPILE. It has zero `import` lines, so `Matrix` and
+--     `Float.pi` are unknown identifiers. Checked against Lean 4.32.0 /
+--     Mathlib v4.32.0 on 2026-08-30: 5 errors. Nothing in it has ever been
+--     machine-checked, and no ✓ anywhere may be justified by citing it.
+--
+-- (2) IT DECLARES NINE AXIOMS, not zero. An `axiom` is an assumption. It is
+--     the strongest thing you can write and the weakest thing you can claim.
+--
+-- (3) THREE OF THOSE AXIOMS ARE FALSE AS STATED, which makes the file
+--     logically inconsistent — from any one of them `False` is derivable, and
+--     from `False` every theorem below follows regardless of its proof. The
+--     refutations are machine-checked; see the notes at each site. This is
+--     strictly worse than a `sorry`: a `sorry` fails loudly, a false axiom
+--     silently proves everything.
+--
+--     The corpus already knew about one of these. Main_v6.lean carries the
+--     note "Without this hypothesis the original theorem is FALSE" against
+--     dm3_volume_invariant and adds the hypothesis. That fix never reached
+--     this file. The same repair is applied below to all three.
+--
+-- (4) FOUR MORE AXIOMS HAVE THE BODY `True`. They assume nothing and prove
+--     nothing; the content is in the comment beside them. Marked VACUOUS.
+--
+-- This file is a LOG of published claims. It is not evidence for them.
 -- ============================================================================
 
 namespace TOGT
@@ -67,11 +99,22 @@ structure UnfoldOp (α : Type) where
     Exact statement: read ∘ regenerate ∘ hyper-regenerate = id
     Verified for all g⁶ and g⁵-hyper-Mahlo cases in March 2026 AXLE proofs.
     Status: theorem (proved for finite cases; general case open — Issue 6) -/
+-- FALSE AS ORIGINALLY STATED. The old form quantified over ARBITRARY
+-- read/regenerate/hyper_regenerate and asserted the round trip is the
+-- identity. Counterexample, machine-checked 2026-08-30 against Mathlib
+-- v4.32.0: take α = Bool, x = true, and all three maps = fun _ => false;
+-- then the left side is false and the right side is true. Asserting it as
+-- an axiom made this file inconsistent.
+--
+-- Corrected: the round trip is the identity exactly when the composite is.
+-- That hypothesis IS the claim — Book 2 §3.2 asserts the operators are built
+-- so that it holds, and that is what remains to be proved for general n.
 axiom regeneration_loop_invariant :
   ∀ (α : Type) (x : α)
     (read : α → α)
     (regenerate : α → α)
     (hyper_regenerate : α → α),
+    (read ∘ regenerate ∘ hyper_regenerate = id) →
     read (regenerate (hyper_regenerate x)) = x
 -- Note: proved for all concrete n ≤ 5 in AXLE March 2026.
 -- General case for all n is sorry-marked pending Issue 6.
@@ -108,9 +151,14 @@ theorem tau_embodiment_threshold : tau ^ 6 = 2 ^ 6 := by decide
     Exact statement: χ(CurvatureOp(CompressionOp(M))) = χ(M)
     for any dm3 object M.
     Status: theorem (proved in AXLE via Mathlib simplicial-complex library) -/
+-- FALSE AS ORIGINALLY STATED, same shape as above and machine-checked the
+-- same way: take α = Bool, chi = (if · then 1 else 0), M = true, and both
+-- operators constant false. Corrected by carrying the homotopy-invariance
+-- hypothesis that the published proof actually relies on.
 axiom dm3_euler_preservation :
   ∀ (α : Type) (chi : α → Int) (M : α)
     (C : CompressionOp α) (K : CurvatureOp α),
+    (∀ N, chi (K.reweight (C.compress N)) = chi N) →
     chi (K.reweight (C.compress M)) = chi M
 
 /-- dm3 Volume Invariant.
@@ -118,9 +166,15 @@ axiom dm3_euler_preservation :
     Exact statement: vol(UnfoldOp(FoldOp(M))) = vol(M)
     for any dm3 object M and any sequence of FoldOp and UnfoldOp applications.
     Status: theorem (proved in AXLE) -/
+-- FALSE AS ORIGINALLY STATED. Main_v6.lean already records the reason:
+-- "Without this hypothesis the original theorem is FALSE (counterexample:
+-- vol(Y) := 2·outer_measure(Y) is not preserved by any non-identity map)."
+-- That fix is applied here too. The hypothesis encodes the real physical
+-- claim: F is fold-collapsing, U is atom-inserting, and the two compensate.
 axiom dm3_volume_invariant :
   ∀ (α : Type) (vol : α → Float) (M : α)
     (F : FoldOp α) (U : UnfoldOp α),
+    (∀ N, vol (U.unfold (F.fold N)) = vol N) →
     vol (U.unfold (F.fold M)) = vol M
 
 -- ── 3. THE SEPARATION THEOREM ────────────────────────────────────────────────
@@ -213,6 +267,8 @@ axiom regeneration_hierarchy_mahlo :
     Let Sκ = {λ < κ | λ is regular}. Then Sκ is stationary in κ.
     Status: theorem (proved in AXLE via Mathlib Ordinal.isRegular and
     club filter lemmas) -/
+-- VACUOUS: body is `True`. Assumes nothing, proves nothing.
+-- The content is in the comment, not in the logic.
 axiom stationary_closure_points :
   ∀ (κ : Nat),  -- regular uncountable cardinal
     True  -- Sκ = {λ < κ | λ regular} is stationary in κ
@@ -224,6 +280,8 @@ axiom stationary_closure_points :
     Exact statement: For any G6 crystal g and any GenerativeOp,
     GenerativeOp(g) ∈ BravaisLatticeClass G6.
     Status: theorem (proved in Crystal.G6 module of AXLE) -/
+-- VACUOUS: body is `True`. Assumes nothing, proves nothing.
+-- The content is in the comment, not in the logic.
 axiom g6_lattice_invariant :
   ∀ (α : Type) (g : α) (gen_op : α → α),
     True  -- GenerativeOp(g) ∈ BravaisLatticeClass G6
@@ -232,6 +290,8 @@ axiom g6_lattice_invariant :
     Source: Book 2, Theorem 2.5.2 (partial — theorem continues beyond
     extracted text).
     Status: theorem (proved in AXLE Crystal.G6 module) -/
+-- VACUOUS: body is `True`. Assumes nothing, proves nothing.
+-- The content is in the comment, not in the logic.
 axiom g6_symmetry_preservation :
   ∀ (α : Type) (g : α) (C : CompressionOp α),
     True  -- symmetry group preserved under CompressionOp
