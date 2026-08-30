@@ -4,7 +4,7 @@
 --   import Mathlib.Data.Int.Basic
 -- no longer exist in Mathlib v4.14.0 (the toolchain this repo is pinned
 -- to). Replaced with the umbrella `import Mathlib`.
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Toy Riemann Hypothesis via zero-line convergence (Kakeya-style, fully proved)

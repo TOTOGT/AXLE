@@ -3,7 +3,7 @@
 --   import Mathlib.Init.Function
 -- no longer exist in Mathlib v4.14.0 (the toolchain this repo is pinned
 -- to). Replaced with the umbrella `import Mathlib`.
-import Mathlib
+import Mathlib.Tactic
 
 /-!
 # Toy Navier–Stokes via discrete energy dissipation (Kakeya-style, fully proved)

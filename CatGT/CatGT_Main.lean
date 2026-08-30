@@ -44,7 +44,7 @@
   Full continuous DNLS norm conservation (ODE) — open, awaits Mathlib ODE.
 -/
 
-import Mathlib
+import Mathlib.Tactic
 
 open BigOperators Real Complex
 
