@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaginary Origin — The Generative Science Journal — Vol. Ω No. 9 — Two Instruments, Thirty Years, Neither Quoted</title>
+<meta name="description" content="Vol. Ω No. 9, 19 September 2026. Lean prints the axioms a proof rests on; Isabelle has printed them for thirty years. Neither community quotes the answer. Plus: a corpus of eleven repositories measured end to end, and the Gauss map put back into projective duality.">
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:#dedcd3;color:#16161a;font-family:'Libre Caslon Text',Georgia,serif;line-height:1.42;padding:20px 14px 30px;}
+a{color:#16161a;}
+.stage{perspective:2200px;position:relative;max-width:920px;margin:0 auto;}
+.pgs{position:relative;min-height:620px;}
+.pg{position:absolute;top:0;left:0;width:100%;background:#fdfdfb;padding:26px 30px;transform-origin:left center;transition:transform .6s cubic-bezier(.2,.7,.2,1),opacity .5s ease;backface-visibility:hidden;box-shadow:0 2px 6px rgba(0,0,0,.16);}
+.pg.is-left{transform:rotateY(40deg) translateX(-40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-right{transform:rotateY(-40deg) translateX(40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-active{transform:none;opacity:1;z-index:2;}
+.hd{font-family:'Libre Caslon Display',Georgia,serif;line-height:1.08;}
+.kick{font-size:8.5px;text-transform:uppercase;letter-spacing:.12em;color:#56565c;}
+.pg p{font-size:12.5px;text-align:justify;margin:0 0 8px;}
+.runhead{display:flex;justify-content:space-between;align-items:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#56565c;border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:12px;}
+.emblem{border:1.5px solid #16161a;border-radius:7px;padding:.05em .32em;font-size:.86em;}
+.lead a,.pg .rl a{color:#16161a;text-decoration:none;border-bottom:1px solid #b9b9b0;}
+.pg .rl a:hover,.lead a:hover{border-bottom-color:#16161a;}
+.rl{font-size:12px;}
+.jump{background:none;border:none;padding:0;margin:0;font-family:inherit;font-size:11.5px;color:#16161a;cursor:pointer;text-align:left;border-bottom:1px solid #b9b9b0;}
+.jump:hover{border-bottom-color:#16161a;}
+.nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px auto 0;max-width:920px;}
+.nav button{font-family:'Libre Caslon Text',Georgia,serif;font-size:13px;background:#fdfdfb;border:1px solid #16161a;padding:6px 18px;cursor:pointer;color:#16161a;}
+.nav button:hover{background:#efece2;}
+.nav button:disabled{opacity:.35;cursor:default;}
+.fol{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#3a3a40;min-width:96px;text-align:center;}
+.colophon{max-width:920px;margin:14px auto 0;font-size:10px;color:#5a5a56;text-align:center;line-height:1.7;}
+.colophon a{color:#5a5a56;}
+.tag{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;border:1px solid #16161a;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle;}
+table.led{width:100%;border-collapse:collapse;font-size:11.5px;margin:6px 0 4px;}
+table.led th{text-align:left;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#56565c;border-bottom:1px solid #16161a;padding:3px 6px 4px;}
+table.led td{border-bottom:1px solid #e2e0d8;padding:5px 6px;vertical-align:top;}
+table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.pull{border-left:2px solid #16161a;padding:2px 0 2px 12px;margin:10px 0;font-style:italic;color:#3a3a40;font-size:12px;}
+.stat{border:1px solid #16161a;padding:9px 11px;background:#fbfbf8;}
+.stat b{display:block;font-family:'Libre Caslon Display',Georgia,serif;font-size:21px;line-height:1.1;}
+.open{display:inline-block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;border:1px solid #8a2f2f;color:#8a2f2f;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
+.pt{background:#f6f4ec;border-left:2px solid #b9b9b0;padding:8px 12px;margin-top:10px;}
+.pt p{font-size:11.5px;color:#3a3a40;}
+
+/* ── mobile ─────────────────────────────────────── */
+@media (max-width:760px){
+  body{padding:10px 8px 22px;}
+  .pg{padding:16px 15px;}
+  .pgs{min-height:0;}
+  /* every two-column layout collapses */
+  .lead{grid-template-columns:1fr !important;gap:12px !important;}
+  .lead > div{border-right:0 !important;padding-right:0 !important;}
+  .pg .rl[style*="grid"]{display:block !important;}
+  .pg .rl[style*="grid"] > div{border-right:0 !important;padding-right:0 !important;margin-bottom:14px;}
+  .pg > div[style*="grid-template-columns"]{grid-template-columns:1fr !important;}
+  /* masthead */
+  .pg > div[style*="1fr auto 1fr"]{grid-template-columns:1fr !important;text-align:center;gap:6px;}
+  .pg > div[style*="1fr auto 1fr"] > div{text-align:center !important;max-width:none !important;}
+  /* running heads and date strip wrap instead of squashing */
+  .runhead{flex-wrap:wrap;gap:4px;}
+  /* tables: tighter, allow wrap */
+  table.led{font-size:10.5px;}
+  table.led td,table.led th{padding:4px 3px;word-break:break-word;}
+  table.led td.num{text-align:left;}
+  /* type */
+  .pg p{font-size:13px;text-align:left;}
+  .rl{font-size:12.5px;}
+  .stat b{font-size:19px;}
+  .nav{gap:8px;}
+  .nav button{padding:8px 12px;font-size:12px;}
+  .fol{min-width:0;font-size:10px;}
+}
+
+/* ── navigation, reworked ───────────────────────── */
+.nav{position:sticky;bottom:0;z-index:60;display:flex;align-items:center;justify-content:center;
+     gap:8px;flex-wrap:wrap;background:#fdfdfb;border-top:1px solid #16161a;
+     box-shadow:0 -2px 8px rgba(22,22,26,.10);padding:8px 10px;margin-top:14px;}
+.nav button{font-family:inherit;font-size:12px;padding:5px 10px;border:1px solid #16161a;
+     background:#fdfdfb;color:#16161a;cursor:pointer;}
+.nav button:disabled{opacity:.32;cursor:default;}
+.nav .fol{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#3a3a40;margin:0 4px;}
+#pgnums{display:flex;gap:4px;flex-wrap:wrap;}
+button.pgnum{min-width:26px;padding:4px 7px;font-size:12px;}
+button.pgnum.on{background:#16161a;color:#fdfdfb;font-weight:bold;}
+.nav .hint{font-size:9.5px;color:#6a6a70;width:100%;text-align:center;}
+@media (max-width:760px){ .nav .hint{display:none;} .nav button{font-size:11px;padding:4px 8px;} }
+
+/* ── root cause: the active page must own its own height ──
+   .pg is absolutely positioned and .pgs was sized by JS after load.
+   When MathJax re-rendered, the page outgrew the stale height and
+   overflowed on top of the nav strip. Letting the active page sit in
+   normal flow makes the container grow with it and removes the sync. */
+#pgs .pg.is-active{position:relative;}
+#pgs{min-height:0;}
+</style>
+</head>
+<body>
+
+<div class="stage"><div class="pgs" id="pgs">
+
+  <!-- ══════════════ PAGE 1 — FRONT ══════════════ -->
+    <section class="pg is-active">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding-bottom:6px;">
+      <div style="border:1px solid #16161a;padding:5px 8px;font-size:9px;max-width:158px;"><b style="font-size:8px;">THE MOTTO</b><br><span style="font-style:italic;">&#8220;i, the rotation; o, the point it turns about.&#8221;</span></div>
+      <div style="text-align:center;" class="kick">Vol. &#937; &#183; No. 9<br>The Generative Science Journal</div>
+      <div style="text-align:right;" class="kick">Newark, N.J.<br>Free &#183; CC BY-NC-ND<br><a href="vol8.html" style="color:#16161a;">&#8592; No. 8</a></div>
+    </div>
+    <div style="text-align:center;border-top:1px solid #16161a;border-bottom:1px solid #16161a;padding:8px 0 6px;"><div style="font-family:'UnifrakturMaguntia',serif;font-size:clamp(34px,7vw,60px);line-height:1;">Imaginary Origin</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#3a3a40;border-bottom:1px solid #16161a;padding:4px 1px;"><span>Saturday, September 19, 2026</span><span style="text-transform:none;font-size:12px;">emblem: <span class="emblem">$g^9$</span></span><span>Morning Edition</span></div>
+
+    <div class="lead" style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:14px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:16px;">
+        <div class="hd" style="font-size:clamp(22px,3.6vw,30px);">Two Instruments, Thirty Years, Neither Quoted</div>
+        <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 9px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">Both major proof assistants ship a command that reports exactly what a proof rests on. Neither community formed the habit of printing the answer &#8212; so the failure is not a young field&#8217;s, and not one system&#8217;s</div>
+
+        <p>A formal proof is not self-describing. It compiles against a library, and somewhere in that library sit assumptions the machine never verified: axioms taken as given, results proved elsewhere by hand, numerical bounds established by computation the kernel never saw. A reader who wants to know what a development actually assumes needs that list.</p>
+
+        <p>Lean has printed it from the beginning. <code>#print axioms</code> takes one declaration and returns every axiom it depends on, transitively, in a form a machine can compare. It is one line. It is almost never quoted in a paper.</p>
+
+        <p>The obvious diagnosis is that formal mathematics is young and its conventions have not settled. This desk probed that diagnosis on 4 September and it does not survive. Isabelle ships <code>thm_oracles</code>, which answers the same question about the same kind of object, and it is roughly thirty years older. It is quoted less.</p>
+
+        <div class="pull">Two adequate instruments, two communities, and the same habit failing to form in both. That is not a quirk of one system, and it is not a young field.</div>
+
+        <p>What is missing is not the measurement. It is a vocabulary for what the measurement returns. A result proved by Deligne in 1974 and a numerical bound the authors established themselves last month both appear as <code>axiom</code>, and they print identically. Until there is a word for the difference there is no sentence to put in a paper, and a one-line command with no sentence around it does not get run.</p>
+
+        <p>This desk spent the week proposing that word and then withdrawing the proposal. Isabelle&#8217;s manual already carries a noun for the object &#8212; <code>oracle</code> &#8212; machine-checkable and three decades in use. A coinage that must unseat an incumbent term with tooling behind it is a weaker claim than the one worth making: that the existing instruments should be run and their output printed. The note now says so.</p>
+
+        <div class="hd" style="font-size:19px;margin:14px 0 4px;">The instrument, and what it returned</div>
+
+        <p>Rather than argue for the missing measurement, this desk built it. A census now runs over eleven repositories and 264 tracked files and reports what is written, what is free of <code>sorry</code>, what the kernel has audited under a pinned toolchain, and what is taken as an axiom &#8212; in two columns, raw and de-duplicated, with the convention printed beside the number. <b>1,963</b> declarations, <b>1,783</b> of them free of <code>sorry</code>, <b>173</b> kernel-audited, <b>53</b> axioms disclosed. The full table is on <b>Page&nbsp;2</b>.</p>
+
+        <p>Its first run was against the corpus that built it, and that is the run worth reporting. A working document had put the clean core at 134 theorems. The census returned 86: three files &#8212; a working copy, a draft and a self-check &#8212; hold the same twenty-four, and each had been counted whole. The mathematics did not move. The denominator did.</p>
+
+        <p>Which is what an instrument is for, and the reason to run one before publishing rather than after. The script is committed in the repository it counts, so a reader who disagrees with the convention can recompute the answer under their own.</p>
+
+        <p>Alongside it, one new chapter went out this week: <a href="https://totogt.github.io/geometry/book4/ch21-gauss-map.html">Book&nbsp;4, Chapter&nbsp;21</a>, which puts the Gauss map back between the contact chapters and projective duality. It is the subject of <b>Page&nbsp;3</b>, and the week&#8217;s reading list is at the foot of that page.</p>
+      </div>
+
+      <div>
+        <div class="kick" style="border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:8px;">The instruments</div>
+        <div class="stat" style="margin-bottom:8px;"><b>#print axioms</b><span style="font-size:10.5px;">Lean 4. Returns the transitive axiom dependencies of a declaration. One line, machine-readable, present since the beginning</span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>thm_oracles</b><span style="font-size:10.5px;">Isabelle. Same question, same kind of answer, roughly thirty years older &#8212; and quoted less</span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>53</b><span style="font-size:10.5px;">axiom declarations across eleven repositories, disclosed here for the first time. Corpora of this size do not usually publish the number, because nothing obliges them to and no vocabulary exists for reading it</span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>1,783 / 1,963</b><span style="font-size:10.5px;">declarations free of <code>sorry</code> across the measured corpus &#8212; ninety-one per cent, de-duplicated, convention stated</span></div>
+        <div class="pt" style="margin-top:10px;"><p><b>What a count owes.</b> Two figures computed on different denominators can both be correct and still describe a corpus that does not exist. The rule this desk now works to: print the convention beside the number, or do not print the number.</p></div>
+      </div>
+    </div>
+</section>
+<section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; Vol. &#937; No. 9</span><span>Page 2 &#183; The Ledger</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">The Corpus, Measured End to End for the First Time</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">Eleven repositories, 264 files, one instrument, one convention, printed. Every figure below is reproducible from a script committed in the repository it counts</div>
+
+    <p>A formalization corpus is usually described rather than measured. This one is now measured. The census runs over a declared list of repository roots, reads every tracked <code>.lean</code> file, and reports two columns &#8212; raw, and de-duplicated across version-suffixed copies &#8212; because those are two different questions and the difference is where most published formalization figures go wrong.</p>
+
+    <table class="led">
+      <thead><tr><th>Measured 4 September</th><th class="num">raw</th><th class="num">de-duplicated</th></tr></thead>
+      <tbody>
+      <tr><td>Repositories in the census</td><td class="num">&#8212;</td><td class="num"><b>11</b></td></tr>
+      <tr><td>Tracked <code>.lean</code> files</td><td class="num">&#8212;</td><td class="num"><b>264</b></td></tr>
+      <tr><td>Declarations written</td><td class="num">2,751</td><td class="num"><b>1,963</b></td></tr>
+      <tr><td>Free of <code>sorry</code></td><td class="num">2,481</td><td class="num"><b>1,783</b></td></tr>
+      <tr><td>Admitted, carrying <code>sorry</code></td><td class="num">270</td><td class="num">180</td></tr>
+      <tr><td>Kernel-audited under a pinned toolchain</td><td class="num">&#8212;</td><td class="num"><b>173</b></td></tr>
+      <tr><td>Axiom declarations, disclosed</td><td class="num">&#8212;</td><td class="num"><b>53</b></td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:11px;color:#4a4a44;">De-duplication collapses version-suffixed copies of the same file; 41 such groups exist. Ninety-one per cent of the de-duplicated corpus carries no <code>sorry</code>. The convention is stated because a count without one is not a measurement.</p>
+
+    <div class="pull">The fifty-three axioms are printed here rather than left implicit. A corpus that discloses its own assumptions is making a smaller claim than one that does not, and a checkable one.</div>
+
+    <div class="hd" style="font-size:16px;margin-top:14px;">What went out this cycle</div>
+
+    <table class="led">
+      <thead><tr><th>Delivered</th><th>Standing</th><th class="num">Date</th></tr></thead>
+      <tbody>
+      <tr><td><b>Volume I proofs</b> released under licence &#8212; MIT for the code, CC BY for the prose</td><td>86 theorems, <b>0</b> admitted, <b>0</b> added axioms, verified file by file</td><td class="num">4 Sept</td></tr>
+      <tr><td><b>Reflection file</b>, Riemann arc, Book 4</td><td>11 theorems, 10 kernel-checked against the allowlist, 1 admitted &#8212; and the admitted one now carries its four hypotheses explicitly</td><td class="num">2 Sept</td></tr>
+      <tr><td><b><a href="https://totogt.github.io/geometry/book4/ch21-gauss-map.html">Chapter 21</a></b>, the Gauss map and the conormal variety, with three constructed diagrams</td><td>Closes the gap between the contact chapters and projective duality. <b>Page&nbsp;3</b></td><td class="num">5 Sept</td></tr>
+      <tr><td><b>Census instrument</b>, run over all eleven roots</td><td>Committed beside the corpus it counts; a reader may disagree with the convention and recompute</td><td class="num">4 Sept</td></tr>
+      <tr><td><b>Two federal research elements</b> in preparation, both under dual-anonymous review</td><td>Neither is described here, for that reason. A third notice of intent is on file and accepted</td><td class="num">Sept</td></tr>
+      <tr><td><b>XIII LAW3M</b> package lodged &#8212; abstract, technical brief, certification script, two posters, prototype schematics</td><td>Natal, 19&#8211;23 October</td><td class="num">Aug</td></tr>
+      </tbody>
+    </table>
+
+    <div class="hd" style="font-size:16px;margin-top:14px;">The instrument found something in its own repository</div>
+
+    <p>Run against the corpus that built it, the census returned 86 theorems in the clean core where a working document had claimed 134. Three files &#8212; a working copy, a draft and a self-check &#8212; hold the same twenty-four theorems, and each had been counted whole. The mathematics did not move; the denominator did.</p>
+
+    <p>That is the case for the instrument, made at its own expense and worth more than a clean bill would have been. Every serious formalization effort has this failure mode. Almost none of them has run the check, and none of them publishes the number that comes back.</p>
+
+    <div class="pt" style="margin-top:12px;">
+      <p style="font-weight:bold;margin-bottom:4px;">Corrections</p>
+      <p style="margin-bottom:4px;"><b>Two pages of Book 4</b> and one section of the reflection note recorded <code>chiLog_real_on_critical_line</code> as admitted. It was proved and kernel-audited on 30 August. The file consulted was a retired snapshot in an evidence directory. Corrected 2 September; the live path is now the only path a claim is read from.</p>
+      <p style="margin-bottom:4px;"><b>Three working documents</b> reported a solicitation document as missing. It was on disk, one directory from where the search ran. Corrected 2 September.</p>
+      <p style="margin:0;"><b>A researcher identifier</b> was transcribed from memory and was wrong in two digits. The correct value occurs 1,250 times in the corpus. Corrected 2 September.</p>
+    </div>
+</section>
+<section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; Vol. &#937; No. 9</span><span>Page 3 &#183; The Mathematics</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">The Rung That Was Missing</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">A series in this corpus climbs from contact geometry to projective duality and arrives without having passed through Gauss. Put the Gauss map back and the duality stops being an analogy: the object that carries it <em>is</em> the closure of a graph</div>
+
+    <p>The chapters run: a contact form on a three-dimensional space, Legendrian submanifolds, then &#8212; some pages later &#8212; a projective variety and its dual. Each step is defensible. The passage between them was a leap, and the missing rung has a name. The new chapter is <a href="https://totogt.github.io/geometry/book4/ch21-gauss-map.html">Book&nbsp;4, Chapter&nbsp;21: The Gauss Map and the Conormal Variety</a>, published this week.</p>
+
+    <p><b>Gauss, 1827.</b> For a surface $X \subset \mathbb{R}^3$ the Gauss map $N : X \to S^2$ sends a point to its unit normal. Its derivative is the shape operator, and the theorem that made the subject is that</p>
+
+    <div style="text-align:center;font-size:15px;margin:8px 0;">$K = \det dN$</div>
+
+    <p>is <em>intrinsic</em>: computable from measurements made inside the surface, with no reference to the ambient space at all. That is the <i>Theorema Egregium</i>, and its content is that a map to an auxiliary space &#8212; the sphere of directions &#8212; recovers something that never mentioned the auxiliary space. Gauss&#8211;Bonnet then integrates it, $\int_X K\,dA = 2\pi\chi(X)$: a local differential quantity summing to a number that only counts holes.</p>
+
+    <div class="hd" style="font-size:16px;margin-top:12px;">Replace the sphere with the dual space</div>
+
+    <p>A projective variety has no unit normal &#8212; there is no metric to take one from. What it has is a tangent space at each smooth point, and in $\mathbb{P}^n$ that tangent space spans an embedded tangent hyperplane. So the auxiliary space is not $S^2$ but the space of hyperplanes, $(\mathbb{P}^n)^\vee$, and the map</p>
+
+    <div style="text-align:center;font-size:15px;margin:8px 0;">$\gamma : X \dashrightarrow (\mathbb{P}^n)^\vee, \qquad x \mapsto \mathbb{T}_x X$</div>
+
+    <p>is the Gauss map of algebraic geometry, defined wherever $X$ is smooth. For a hypersurface it is written down directly: $\gamma = [\partial_0 F : \cdots : \partial_n F]$, the gradient of the defining equation, which is a morphism exactly off the singular locus.</p>
+
+    <div class="pull">The dual variety $X^\vee$ &#8212; the hyperplanes tangent somewhere &#8212; is the closure of the image of $\gamma$. Not an object built by analogy with duality. The image of a Gauss map.</div>
+
+    <div class="hd" style="font-size:16px;margin-top:12px;">And the conormal variety is its graph</div>
+
+    <p>This is the identity the series was missing. Inside $\mathbb{P}T^*\mathbb{P}^n$ &#8212; the projectivised cotangent bundle, whose points are pairs (point of $\mathbb{P}^n$, hyperplane through it) &#8212; sits</p>
+
+    <div style="text-align:center;font-size:14px;margin:8px 0;">$\mathrm{Con}(X) \;=\; \overline{\{\,(x, H)\;:\; x \in X_{\mathrm{sm}},\; \mathbb{T}_x X \subseteq H \,\}}$</div>
+
+    <p>For a hypersurface the condition $\mathbb{T}_x X \subseteq H$ forces $H = \gamma(x)$, and $\mathrm{Con}(X)$ is <b>literally the closure of the graph of the Gauss map</b>. In general it is the conormal, and the graph statement holds after replacing $\gamma$ by the map to the relevant Grassmannian. Either way $\dim \mathrm{Con}(X) = n-1$, whatever the dimension of $X$ &#8212; which is the first sign that the right object is the graph and not either projection.</p>
+
+    <div style="border:1px solid #16161a;background:#fbfbf8;padding:10px 8px 6px;margin:10px 0 8px;">
+      <svg viewBox="0 0 440 190" width="100%" style="max-width:420px;display:block;margin:0 auto;" role="img" aria-label="Correspondence triangle: the conormal variety projecting to X and to its dual">
+        <g fill="none" stroke="#16161a" stroke-width="1.2">
+          <rect x="148" y="10" width="146" height="34" rx="3"/>
+          <rect x="8"   y="126" width="150" height="34" rx="3"/>
+          <rect x="284" y="126" width="150" height="34" rx="3"/>
+          <path d="M170 48 L 96 122"/>
+          <path d="M272 48 L 346 122"/>
+        </g>
+        <g fill="#16161a" stroke="none">
+          <path d="M96 126 l 7 -11 l -12 3 z"/>
+          <path d="M346 126 l -7 -11 l 12 3 z"/>
+        </g>
+        <g fill="#16161a" font-family="Georgia,serif" font-size="14" text-anchor="middle">
+          <text x="221" y="32">Con(X) &#8834; &#8473;T*&#8473;&#8319;</text>
+          <text x="83"  y="148">X &#8834; &#8473;&#8319;</text>
+          <text x="359" y="148">X&#8250; &#8834; (&#8473;&#8319;)&#8250;</text>
+        </g>
+        <g fill="#56565c" font-family="Georgia,serif" font-size="10.5">
+          <text x="104" y="86" text-anchor="end">&#960;&#8321;</text>
+          <text x="338" y="86">&#960;&#8322;</text>
+          <text x="150" y="58" text-anchor="start" font-size="9.5">graph of &#947;, closed up</text>
+          <text x="292" y="58" text-anchor="end" font-size="9.5">image of &#947;, closed up</text>
+          <text x="221" y="180" text-anchor="middle" font-size="9.5">Legendrian for the canonical contact structure &#183; dim n&#8722;1 &#183; swapping the factors exchanges &#960;&#8321; and &#960;&#8322;</text>
+        </g>
+      </svg>
+    </div>
+
+    <p>$\mathbb{P}T^*\mathbb{P}^n$ carries a canonical contact structure of dimension $2n-1$, and $\mathrm{Con}(X)$ is Legendrian in it &#8212; maximal isotropic, dimension $n-1$, exactly half of $2n-2$. The contact geometry of the earlier chapters is therefore not a motivating picture placed alongside the algebra. It is the ambient category the duality lives in, and the Legendrian condition is what makes the correspondence symmetric.</p>
+
+    <div class="hd" style="font-size:16px;margin-top:12px;">Biduality, and the reason it is a theorem</div>
+
+    <p>The canonical isomorphism $\mathbb{P}T^*\mathbb{P}^n \cong \mathbb{P}T^*(\mathbb{P}^n)^\vee$ exchanges the two projections. Under it $\mathrm{Con}(X) = \mathrm{Con}(X^\vee)$, and therefore</p>
+
+    <div style="text-align:center;font-size:15px;margin:8px 0;">$(X^\vee)^\vee = X.$</div>
+
+    <p>It would be easy to file that as a formality. It is not, and the way to see that it is not is that <b>it fails in characteristic $p$</b>. There the Gauss map can be inseparable &#8212; in characteristic two every tangent line of a smooth conic passes through a single point, so the dual degenerates and the second dual does not return. Biduality is a characteristic-zero theorem with a stated hypothesis and a known counterexample outside it, which is the only kind of statement worth putting at the top of a ladder.</p>
+
+    <div class="hd" style="font-size:16px;margin-top:12px;">What the picture predicts, and what is still open</div>
+
+    <p>Two consequences are checkable and were checked. The Gauss map has a degree, and for a smooth plane curve of degree $d$ the dual has degree $d(d-1)$ &#8212; the number of tangent lines through a general point. And the singularities of $\gamma$ are, generically, folds and cusps, which is why $X^\vee$ acquires cusps and nodes and why the Pl&#252;cker formulas take the shape they do. The analogy with $\int K\,dA = 2\pi\chi$ is a heuristic, not a derivation, and the degree formula is the theorem; the paper says so in those words.</p>
+
+    <p>One row of the chapter&#8217;s inventory is marked open and stays that way. The contact form this corpus actually uses, $\alpha = dz - r^2\,d\theta$, is written on a real three-manifold. Whether it arises as the pullback of the canonical form on $\mathbb{P}T^*\mathbb{P}^2$ under any algebraic map is not established here, and until it is, the ladder connects two subjects rather than one. <span class="open">open</span></p>
+
+    <div class="hd" style="font-size:16px;margin-top:16px;border-top:1px solid #16161a;padding-top:10px;">This week in the books</div>
+    <div class="rl" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-top:6px;">
+      <div><a href="https://totogt.github.io/geometry/book4/ch21-gauss-map.html">Ch.&nbsp;21 &#183; The Gauss Map and the Conormal Variety</a><br><span style="font-size:10.5px;color:#56565c;">New. Theorema Egregium through to biduality; three diagrams; one row left open</span></div>
+      <div><a href="https://totogt.github.io/geometry/book4/ch12.html">Ch.&nbsp;12 &#183; The Reflection Law</a><br><span style="font-size:10.5px;color:#56565c;">Revised. The proved and the admitted theorems now listed by name and status</span></div>
+      <div><a href="https://totogt.github.io/geometry/book4/ch13.html">Ch.&nbsp;13 &#183; The Contact Structure of the Critical Line</a><br><span style="font-size:10.5px;color:#56565c;">Revised. Degeneracy condition and the proof ladder corrected</span></div>
+      <div><a href="https://totogt.github.io/geometry/book4/ch14.html">Ch.&nbsp;14 &#183; The Explicit Formula</a><br><span style="font-size:10.5px;color:#56565c;">Revised. Weil&#8217;s formula restated in full; the Euler product claim repaired</span></div>
+      <div style="grid-column:1/-1;font-size:10.5px;color:#56565c;border-top:1px solid #e2e0d8;padding-top:5px;">Book&nbsp;4 index: <a href="https://totogt.github.io/geometry/book4/index.html">totogt.github.io/geometry/book4/</a> &#183; all volumes: <a href="https://totogt.github.io/geometry/">totogt.github.io/geometry</a> &#183; deposits: <a href="https://zenodo.org/communities/principia-orthogona">Zenodo</a></div>
+    </div>
+</section>
+<section class="pg is-right" style="background:#f0e6d2;">
+    <div class="runhead" style="padding:6px 18px 0;"><span>Imaginary Origin &#183; Vol. &#937; No. 9</span><span>Page 4 &#183; Notices</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">Situations Wanted</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #16161a;">The editor of this paper is looking for his next problem. Newark, New Jersey; remote, or the New York&#8211;New Jersey metropolitan area</div>
+
+    <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:18px;">
+      <div style="border-right:1px solid #c8bfa8;padding-right:18px;">
+        <p><b>Pablo Nogueira Grossi.</b> Eleven years in banking &#8212; Banco do Brasil (2003&#8211;2014) and JPMorgan (2006&#8211;2009) &#8212; and, since, a decade in SEVP/F-1 education running the full ladder from classroom teaching through curriculum administration, programme director and school director.</p>
+
+        <p><b>Recently.</b> Gold, Silver and Bronze medals, WorldQuant International Quant Championship 2026, and a consulting engagement with WorldQuant BRAIN signed 28 August. Forty-three open-access deposits. Presenting at the XIII LAW3M, Natal, 19&#8211;23 October 2026.</p>
+
+        <p><b>Three earned bachelor&#8217;s degrees.</b> B.B.A. in Finance &amp; Economics, Baruch College, CUNY (2015). B.A. in Economics &amp; Computer Information Systems, Baruch College, CUNY (2013). Both completed on study leave granted by Banco do Brasil headquarters. Bacharelado em Turismo, UPIS, Bras&#237;lia (1999&#8211;2003, Class President), with credit from the Universidade de Bras&#237;lia, where the geology came from.</p>
+
+        <p><b>M.S. in Computer Science</b>, University of the People &#8212; in progress.</p>
+
+        <p><b>Works in</b> SQL, Python, Lean 4, retrieval-augmented generation, machine learning, and dashboards built from scratch in Excel. Reads and writes English, Portuguese and Spanish.</p>
+
+        
+
+        <p><b>What he is looking for.</b> Colleagues who are excellent at something he is not, and a problem worth being wrong about in public.</p>
+
+        <p style="font-size:11px;color:#4a4a44;">G6 LLC is a small research entity. This paper is unpaid and so is everything it reports on.</p>
+      </div>
+
+      <div>
+        <div class="kick" style="border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:8px;">What this paper is the evidence for</div>
+        <p style="font-size:11.5px;">A weekly that states its results in a form that could have come out otherwise, and checks them before printing. That <b>twelve</b> is the unique sampling rate at which the hexagonal mode coincides with the folding frequency &#8212; tested against nine candidate rates, and true of none of the others. That a growth constant used throughout this corpus is the Tribonacci root to sixteen decimal digits, and is <i>not</i> the LAW3M ratio it was nearly merged with; the two stand 5.23 per cent apart. That an operator chain written unbracketed for three years associates strictly at two levels of abstraction and only up to isomorphism at the third &#8212; kernel-checked, and invisible in prose.</p>
+        <p style="font-size:11.5px;">Errors go dated into the corrections column, which is where they belong and where they stay. What is offered here is the other column: results, stated so that someone else can knock them down, by someone who tried first.</p>
+        <div class="stat" style="margin-top:10px;"><b>g6llc@proton.me</b><span style="font-size:10.5px;">ORCID 0009-0000-6496-2186 &#183; Newark, New Jersey &#183; enquiries welcome, including the sceptical kind</span></div>
+      </div>
+    </div>
+
+    <div class="hd" style="font-size:16px;margin-top:16px;border-top:1px solid #16161a;padding-top:10px;">Announcements</div>
+    <p style="font-size:11.5px;"><b>XIII LAW3M &#8212; Natal, Brazil, 19&#8211;23 October 2026.</b> Submission package lodged: abstract, technical brief, the certification script for the inner basin boundary, two posters and prototype schematics. A month out at the time of writing.</p>
+    <p style="font-size:11.5px;"><b>Volume I proofs released.</b> The Lean development is now licensed and public &#8212; MIT for the code, CC BY 4.0 for the accompanying prose. Eighty-six theorems, none admitted, no axioms beyond the three the standard library itself assumes. It is the part of this corpus a reader can check without taking anything on trust, and it is the part offered first.</p>
+    <p style="font-size:11.5px;"><b>The census is public too.</b> <a href="https://github.com/TOTOGT/geometry/blob/main/tools/theorem_census.py">theorem_census.py</a> runs over a declared list of repository roots and prints the table on Page&nbsp;2 in both columns. Every figure this paper quotes about its own corpus comes from it, and disagreement with a convention is settled by re-running it rather than by argument.</p>
+    <p style="font-size:11.5px;"><b>Corrections</b> for this issue are on Page&nbsp;2, dated, with the correction date beside each. Three items, all closed. This paper runs its corrections in every issue on the same page and in the same form, whether or not there is anything else to report that week.</p>
+</section>
+
+<section class="pg is-right" style="background:#f0e6d2;">
+  <div class="runhead" style="padding:6px 18px 0;"><span>Imaginary Origin &#183; The Reading Room</span><span>Page 5</span></div>
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;
+       padding:12px 18px 0;">
+    <div style="font-family:Georgia,'Iowan Old Style',serif;line-height:.86;color:#221a14;">
+      <span style="font-size:12px;letter-spacing:.02em;">The</span>
+      <span style="font-size:30px;letter-spacing:-.02em;">Reading Room</span>
+    </div>
+    <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;text-align:right;
+         letter-spacing:.04em;padding-bottom:3px;white-space:nowrap;">
+      A Serial in 18 Parts &#183; Part 4<br>Week of September 19, 2026
+    </div>
+  </div>
+  <div style="padding:0 18px;"><div aria-hidden="true" style="border-top:2px solid #221a14;border-bottom:1px solid #221a14;height:3px;margin:0 0 10px;"></div></div>
+
+  <div style="padding:0 18px 16px;">
+    <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;">Castres and Paris, January 1665</div>
+    <div style="font-family:Georgia,'Iowan Old Style',serif;font-size:26px;line-height:1.1;color:#221a14;margin-bottom:2px;">No.&#8202;4&#8194;The Month the Journals Began</div>
+    <div style="font-family:Georgia,serif;font-style:italic;font-size:12.5px;color:#3a3a40;margin-bottom:10px;">
+      Pierre et Mademoiselle, by Pablo Nogueira Grossi &#8194;&#183;&#8194;
+      <span style="font-size:11px;">See the note on fact &amp; fiction, below</span></div>
+
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;"><span style="float:left;font-family:Georgia,serif;font-size:34px;line-height:.8;padding:2px 6px 0 0;">T</span>he road south took eleven days, and she spent most of them thinking about a problem that had nothing to do with the road.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">The case held letters. Not the great ones &#8212; those had gone to Paris and Toulouse years before, to Mersenne while he lived and to Carcavi after &#8212; but the working ones: half-arguments, a claim set down and then crossed through, and in three places a result stated flatly with the words <em>I have a demonstration</em> and no demonstration anywhere near it. She had read them all. She could not tell, in any of the three cases, whether the demonstration had existed and been left out, or had never existed at all. Nothing in the letters distinguished the two, and their author had never thought to make the distinction visible, because he was writing to men who would simply have asked.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">That was the thing she kept returning to as the country turned from grey to ochre. Not whether he was right. Whether anyone, holding only the paper, could ever <em>establish</em> that he was right &#8212; and the answer, plainly, was no, and it was not a failure of the mathematics.</p>
+    <div style="text-align:center;color:#b5321f;margin:10px 0;">&#8258;</div>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He died at Castres on the twelfth of January, two days after signing his last act as a councillor of the parlement. She arrived to a house already sorting itself into piles, and to a son who understood exactly what he was holding and had no idea yet what to do with it.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">What neither of them could have known, standing in that room, was that seven days earlier and four hundred miles north a printer in Paris had put out twelve pages under the title <i>Le Journal des s&#231;avans</i> &#8212; a thing that had not previously existed anywhere in Europe: a periodical whose entire purpose was to print what learned men had found, on a schedule, whether or not it was finished. In March a second one began in London.</p>
+    <div class="pull" style="border-left-color:#b5321f;color:#3a3a40;">For forty years the answer to <em>where does one put a result</em> had been: in a letter, to a man who will ask you the follow-up question. Within eight weeks of his death the answer was: on a page, to strangers, who cannot.</div>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Which changes what a result has to carry. A letter may say <em>I have a demonstration</em>, because the reader is a person who will write back. A page may not, because the reader is nobody in particular, at an unknown distance, holding nothing but the page. Everything the author knew and did not write down is, for that reader, simply not there &#8212; and there is no way for the reader to tell an omission from an absence.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">She said something of this to the son, badly, in a room full of paper. He was thirty-two and grieving and did not answer. But five years later he printed his father&#x27;s observations into the margins of a new edition of Diophantus, and fourteen years after that he printed the collected works, and both times he printed the claims <em>with</em> the gaps still in them, marked, rather than quietly smoothing them shut.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">One of those gaps held for three hundred and twenty-four years. It held in public, legible, and correctly labelled as unproved for every day of it &#8212; which is the only reason anyone could work on it.</p>
+
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 8px;"></div>
+    <p style="font-size:10.5px;color:#3a3a40;font-style:italic;margin:0 0 10px;">Part 4 of 18
+    &#8194;&#183;&#8194; Fiction, drawn from the documented record; what is invented and what is not
+    is set out in the series&#8217; own note on fact and fiction. &#169; 2026 Pablo Nogueira Grossi
+    &#183; G6 LLC.</p>
+
+    <div style="border:1px solid #c9b9a0;background:#f7f0e2;padding:10px 12px;">
+      <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;">Fact &amp; Fiction &#183; the ledger for No.&#8202;4</div>
+      <p style="font-size:11px;margin:0 0 7px;"><b>Documented.</b> Fermat died at <b>Castres on 12 January 1665</b>, having signed a final act as councillor two days earlier. <i>Le Journal des s&#231;avans</i> published its first issue in Paris on <b>5 January 1665</b>, and the Royal Society&#x27;s <i>Philosophical Transactions</i> its first on <b>6 March 1665</b> &#8212; the first two scientific periodicals in Europe, both within eight weeks of his death. He published almost nothing in his lifetime; his results circulated in correspondence, much of it through Mersenne (d. 1648) and later Carcavi. His son <b>Cl&#233;ment-Samuel</b> printed the observations into a new edition of Diophantus&#x27;s <i>Arithmetica</i> in <b>1670</b>, and the <i>Varia opera mathematica</i> in <b>1679</b>. The marginal claim printed there stood unproved until <b>1994</b> &#8212; three hundred and twenty-four years.</p>
+      <p style="font-size:11px;margin:0;"><b>Invented.</b> Marie, the case of working letters, the eleven-day road, the conversation in the room. The three unsupported claims she reads are a composite; Fermat left many.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+<div class="nav"><button id="prev">&#8249;&nbsp;Prev</button><span id="pgnums"></span><button id="next">Next&nbsp;&#8250;</button><span class="fol" id="fol"></span><span class="hint">&#8592; &#8594; arrow keys also turn the page</span></div>
+<div class="colophon">
+  &#169; 2026 Pablo Nogueira Grossi &#183; G6 LLC &#183; Newark, NJ 07104, USA &#183; g6llc@proton.me &#183; ORCID 0009-0000-6496-2186<br>
+  Imaginary Origin &#183; The Generative Science Journal &#183; Vol. &#937; No. 9 &#183; <a href="https://zenodo.org/communities/principia-orthogona">Zenodo: Principia Orthogona</a> &#183; Licensed <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a><br>
+  <a href="vol8.html">&#8592; No. 8</a> &#183; <span style="font-style:italic;color:#3a3a40;">The One Instrument Ever Pointed at Nepal</span> &#183; <a href="https://totogt.github.io/AXLE/">&#8592; AXLE home</a>
+</div>
+</div>
+<script>
+(function(){
+  var pgs=Array.prototype.slice.call(document.querySelectorAll('#pgs .pg'));
+  var cur=0,fol=document.getElementById('fol'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  var stage=document.getElementById('pgs');var nums=document.getElementById('pgnums');
+  function top(){window.scrollTo({top:0,behavior:'smooth'});}
+  pgs.forEach(function(p,i){var b=document.createElement('button');b.className='pgnum';b.textContent=i+1;b.setAttribute('aria-label','Go to page '+(i+1));b.addEventListener('click',function(){cur=i;render();top();});nums.appendChild(b);});
+  function sizeStage(){ stage.style.height=''; }
+  function render(){pgs.forEach(function(p,i){p.className='pg '+(i===cur?'is-active':(i<cur?'is-left':'is-right'));});fol.textContent='Page '+(cur+1)+' of '+pgs.length;prev.disabled=(cur===0);next.disabled=(cur===pgs.length-1);Array.prototype.forEach.call(nums.children,function(b,i){b.className='pgnum'+(i===cur?' on':'');});sizeStage();}
+  window.addEventListener('resize',sizeStage);
+  window.addEventListener('load',sizeStage);
+  if(window.MathJax&&MathJax.startup&&MathJax.startup.promise){MathJax.startup.promise.then(sizeStage);}
+  next.addEventListener('click',function(){if(cur<pgs.length-1){cur++;render();top();}});
+  prev.addEventListener('click',function(){if(cur>0){cur--;render();top();}});
+  document.querySelectorAll('.jump').forEach(function(b){b.addEventListener('click',function(){cur=+b.getAttribute('data-goto');render();window.scrollTo({top:0,behavior:'smooth'});});});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pgs.length-1){cur++;render();top();}if(e.key==='ArrowLeft'&&cur>0){cur--;render();top();}});
+  render();
+})();
+</script>
+
+<script src="newsletter.js" data-source="Imaginary Origin No. 9"></script>
+
+          <div id="nl-signup" style="border:1px solid #16161a;padding:11px 13px;margin:14px 0 4px;background:#fbfbf8;">
+            <div style="font-size:9.5px;letter-spacing:.10em;text-transform:uppercase;color:#3a3a40;margin-bottom:6px;">The Newsletter &#183; Opt-in</div>
+            <p style="font-size:11.5px;margin:0 0 8px;">Each issue, when it goes out. No list bought, harvested, or lifted from a conference roster. Unsubscribe by replying with the word <em>stop</em>.</p>
+            <form id="nl-form" style="display:flex;gap:5px;flex-wrap:wrap;">
+              <input type="email" id="nl-email" name="email" required autocomplete="email" placeholder="you@university.edu"
+                style="flex:1;min-width:170px;border:1px solid #16161a;padding:6px 7px;font-size:12px;font-family:inherit;background:#fff;">
+              <input type="text" id="nl-hp" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+              <button type="submit" id="nl-btn"
+                style="border:1px solid #16161a;background:#16161a;color:#fff;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 12px;cursor:pointer;font-family:inherit;">Subscribe</button>
+            </form>
+            <div id="nl-msg" style="font-size:11px;color:#3a3a40;margin-top:7px;min-height:1em;"></div>
+          </div>
+
+<div style="max-width:47rem;margin:2rem auto 0;padding:1rem 1.2rem;border-top:1px solid #d9d3c4;font-family:'Courier New',monospace;font-size:11px;line-height:2;color:#3a3a40;">
+  <div style="letter-spacing:.14em;text-transform:uppercase;color:#8a7a3c;margin-bottom:.5rem;">Filed since this issue &#183; 29 August 2026</div>
+  <a href="../AAlpha_Linkedin/dm3brand.html">dm&#179; brand page</a> &#8212; four tiers instead of one: 2,667 raw / 1,889 grouped written, 1,709 sorry-free, 30 kernel-audited, 53 axiom declarations. The census tool now ships in the same folder, so the number and its basis travel together.<br>
+  <a href="hexagon-and-rings.html">Hexagon &amp; Rings</a> &#8212; the polar jet answers the room; the ring plane does not. One planet, two mechanisms, and the demonstration is the thing that fails to move.<br>
+  <a href="../SBM/maquinas.html">Cimática com Máquinas</a> and <a href="../SBM/bienal.html">Bienal</a> &#8212; captions corrected. The six-fold symmetry of Saturn&#8217;s jet is <em>observed</em>, by Voyager and Cassini. The Lean behind the old claim proved that 2 &#215; 3 = 6.<br>
+  <a href="https://github.com/TOTOGT/3M/blob/main/LogisticRadial.lean">LogisticRadial.lean</a> and <a href="https://totogt.github.io/3M/law3m.html">LAW3M</a> &#8212; &#956;<sub>max</sub> = &#8722;2 derived rather than declared; ten declarations on <code>[propext, Classical.choice, Quot.sound]</code>, no <code>sorryAx</code>.<br>
+  <a href="https://github.com/TOTOGT/geometry/blob/main/tools/theorem_census.py">tools/theorem_census.py</a> &#8212; the reconciliation tool, with <code>corpus_roots.txt</code> beside it. Ten checkouts, git-tracked only, raw and grouped reported separately.
+</div>
+</body>
+</html>
