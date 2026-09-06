@@ -16,6 +16,7 @@ _CENSUS = os.environ.get('GEOMETRY_TOOLS',
 sys.path.insert(0, _CENSUS)
 try:
     import theorem_census as TC
+    import axiom_gate as AG
 except ImportError:
     sys.exit(f'theorem_census.py not found under {_CENSUS}. '
              'Set GEOMETRY_TOOLS to the geometry repo tools directory.')
@@ -93,10 +94,17 @@ def kernel_tier():
         if skip.search(rep):
             continue
         txt = open(rep, encoding='utf-8', errors='replace').read()
-        names = re.findall(r"^'([^']+)' (?:depends on axioms|does not depend)",
-                           txt, re.M)
-        clean = [n for n in names
-                 if 'sorryAx' not in txt.split(n, 1)[-1].split('\n', 1)[0]]
+        # Parsed by tools/axiom_gate.py, never by a local regex. It rejoins
+        # Lean's wrapped pretty-printer output, reads BOTH forms (a proof
+        # resting on nothing reports `does not depend on any axioms`, and that
+        # is the strongest result there is), and holds the allowlist. The
+        # previous filter here was a sorryAx grep -- the forbidden-list shape
+        # WP-73 §6 rejects, which cannot see Lean.ofReduceBool or a
+        # native_decide axiom and would credit a declaration the kernel never
+        # checked. Permitted three in, everything else out.
+        recs, _unparsed = AG.parse(txt)
+        allowed = set(AG.DEFAULT_ALLOWED)
+        clean = [n for n, ax in recs if set(ax) <= allowed]
         if not clean:
             continue
         for n in clean:
