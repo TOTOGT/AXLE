@@ -84,7 +84,9 @@ def kernel_tier():
     """
     seen, sources = {}, []
     shapes = ['tools/verify-*/axioms*.txt', 'tools/axioms*.txt',
-              'CS/verify-stamp/axioms*.txt']
+              'CS/verify-stamp/axioms*.txt',
+              # dated per-file reports from `leancheck.sh --audit`
+              'tools/verify-audit/*/*.axioms.txt']
     skip = re.compile(r'(^|/)(_?to_delete|ml-evidence|\.lake)(/|$)')
     reports = []
     for root in _corpus_roots():
