@@ -2,27 +2,131 @@
 """Regenerate theorem-registry.html from the live .lean files.
 Honest text-scan (same heuristic as theorem_tracker.py; NOT a kernel check).
 Core = top-level files (trusted). Extended = subfolders (hold known duplicates/orphans)."""
-import re, html, datetime
+import re, os, sys, glob, html, datetime
 from pathlib import Path
-DECL=re.compile(r"^(theorem|lemma)\s+([A-Za-z_][\w.']*)",re.M)
-BOUND=re.compile(r"^(theorem|lemma|def|noncomputable def|instance|abbrev|structure|class|namespace|end|section|variable)\b",re.M)
-AX=re.compile(r"^\s*axiom\s+[A-Za-z_]",re.M)
-root=Path('.')
-def files(rec): return sorted(p for p in root.rglob('*.lean') if '.lake' not in p.parts) if rec else sorted(root.glob('*.lean'))
+
+# ONE scan method for the whole corpus. This script used to carry its own regex,
+# which matched only line-initial `^(theorem|lemma)` -- missing `private theorem`
+# and anything under an `@[simp]` -- and did not strip comments, so a declaration
+# named in a docstring counted as a declaration. Two errors in opposite directions,
+# which is why its totals never reconciled with tools/theorem_census.py. It now
+# delegates, so there is one method and one place to fix it.
+_CENSUS = os.environ.get('GEOMETRY_TOOLS',
+                         os.path.expanduser('~/Desktop/geometry/tools'))
+sys.path.insert(0, _CENSUS)
+try:
+    import theorem_census as TC
+except ImportError:
+    sys.exit(f'theorem_census.py not found under {_CENSUS}. '
+             'Set GEOMETRY_TOOLS to the geometry repo tools directory.')
+
+AX = re.compile(r"^\s*axiom\s+[A-Za-z_]", re.M)
+root = Path('.')
+
+
+def files(rec):
+    return (sorted(p for p in root.rglob('*.lean') if '.lake' not in p.parts)
+            if rec else sorted(root.glob('*.lean')))
+
+
 def scan(fs):
-    ents=[]; ax=0
+    """(entries, axiom_count) using theorem_census's comment-stripped method."""
+    ents = []
+    ax = 0
     for f in fs:
-        t=f.read_text(errors='ignore'); ax+=len(AX.findall(t)); ms=list(DECL.finditer(t))
-        for i,m in enumerate(ms):
-            nb=BOUND.search(t,m.end()); body=t[m.end():(nb.start() if nb else len(t))]
-            ents.append((str(f).lstrip('./'), m.group(2), 'sorry' if re.search(r'\bsorry\b',body) else 'proved'))
-    return ents,ax
-cf=files(False); rf=files(True)
-core,cax=scan(cf); rec,rax=scan(rf)
-cpaths={str(f).lstrip('./') for f in cf}; ext=[e for e in rec if e[0] not in cpaths]
-def c(es): return sum(e[2]=='proved' for e in es), sum(e[2]=='sorry' for e in es)
-cp,cs=c(core); rp,rs=c(rec); ep,es=c(ext)
-today=datetime.date(2026,7,16).strftime('%B %-d, %Y')
+        src = TC.strip_comments(f.read_text(errors='ignore'))
+        ax += len(AX.findall(src))
+        ms = list(TC.DECL.finditer(src))
+        for i, m in enumerate(ms):
+            end = ms[i + 1].start() if i + 1 < len(ms) else len(src)
+            st = 'sorry' if re.search(r'\bsorry\b', src[m.start():end]) else 'proved'
+            ents.append((str(f).lstrip('./'), m.group(2), st))
+    return ents, ax
+
+
+def _corpus_roots():
+    """The same root set every other published number uses.
+
+    Reads geometry/tools/corpus_roots.txt rather than carrying its own list,
+    because two lists of roots is two corpora and only one of them gets updated.
+    """
+    f = os.path.join(os.path.dirname(_CENSUS), 'tools', 'corpus_roots.txt')
+    roots = []
+    if os.path.exists(f):
+        for line in open(f, encoding='utf-8'):
+            line = line.split('#')[0].strip()
+            if line:
+                roots.append(os.path.expanduser(line))
+    here = os.path.abspath('.')
+    if here not in roots:
+        roots.append(here)
+    return roots
+
+
+def kernel_tier():
+    """Tier 1: declarations a gate actually ran `#print axioms` on.
+
+    Read out of the axioms.txt files the gates write, so this number cannot be
+    typed -- it exists only if a probe produced it. A declaration whose report
+    line contains sorryAx contributes nothing: admitted is disclosed, not audited.
+
+    UNDERCOUNT FIXED 2026-09-06. This used to glob two hardcoded shapes -- the
+    cwd's own tools/verify-*/ and geometry's. That missed every gate report
+    living anywhere else in the corpus, most importantly vol1-proofs/tools/
+    axioms.txt, which alone holds 82 audited declarations. Tier 1 read 32 when
+    the true figure was 133: a four-fold undercount, and it was in this glob,
+    not in the Lean. It now sweeps every corpus root.
+
+    Deposit copies under docs/ml-evidence/ and anything under a to_delete path
+    are excluded on purpose: a deposit copy is evidence, not a source, and
+    counting it would double a report already counted at its origin.
+    """
+    seen, sources = {}, []
+    shapes = ['tools/verify-*/axioms*.txt', 'tools/axioms*.txt',
+              'CS/verify-stamp/axioms*.txt']
+    skip = re.compile(r'(^|/)(_?to_delete|ml-evidence|\.lake)(/|$)')
+    reports = []
+    for root in _corpus_roots():
+        for shape in shapes:
+            reports += glob.glob(os.path.join(root, shape))
+    for rep in sorted(set(os.path.realpath(r) for r in reports)):
+        if skip.search(rep):
+            continue
+        txt = open(rep, encoding='utf-8', errors='replace').read()
+        names = re.findall(r"^'([^']+)' (?:depends on axioms|does not depend)",
+                           txt, re.M)
+        clean = [n for n in names
+                 if 'sorryAx' not in txt.split(n, 1)[-1].split('\n', 1)[0]]
+        if not clean:
+            continue
+        for n in clean:
+            seen.setdefault(n, rep)
+        mt = datetime.date.fromtimestamp(os.path.getmtime(rep))
+        label = os.path.relpath(rep, os.path.dirname(os.path.dirname(_CENSUS)))
+        sources.append((label, len(clean), mt.isoformat()))
+    return sorted(seen), sources
+
+cf = files(False)
+rf = files(True)
+core, cax = scan(cf)
+rec, rax = scan(rf)
+cpaths = {str(f).lstrip('./') for f in cf}
+ext = [e for e in rec if e[0] not in cpaths]
+
+
+def c(es):
+    return sum(e[2] == 'proved' for e in es), sum(e[2] == 'sorry' for e in es)
+
+
+cp, cs = c(core)
+rp, rs = c(rec)
+ep, es = c(ext)
+
+k_names, k_sources = kernel_tier()
+kn = len(k_names)
+# was datetime.date(2026,7,16) -- a hardcoded literal, so every regeneration
+# restamped the same July date and the page looked stale whenever it was not.
+today=datetime.date.today().strftime('%B %-d, %Y')
 def rows(ents):
     out=[]; last=None
     for path,name,st in sorted(ents):
@@ -66,7 +170,13 @@ footer a{{color:var(--gold);}}
   <div class="card"><span class="n">{cax}</span><span class="l">Core axioms</span></div>
   <div class="card"><span class="n">{len(cf)}</span><span class="l">Core files</span></div>
 </div>
-<div class="note"><b>Two tiers, reported honestly.</b> The <b>core</b> figures above are the {len(cf)} top-level Lean files the tracker trusts: <b>{cp} proved · {cs} open <code>sorry</code> · {cax} explicit axioms beyond Mathlib4</b>. The full <b>recursive</b> scan over every folder reports <b>{rp} proved · {rs} sorry</b> ({rax} axiom declarations), but includes the subfolders&#8217; unresolved duplicate/orphan copies — so the extended list below is shown separately and should not be read as {rp} distinct results.</div>
+<div class="note"><b>Tier 1 &mdash; kernel-audited: {kn}.</b> Not a scan. These are the declarations a
+gate actually ran <code>#print axioms</code> on, read out of the <code>axioms.txt</code> each
+<code>tools/verify-*/run.sh</code> writes, so the figure cannot be typed &mdash; it exists only if a
+probe produced it. An admitted declaration contributes nothing here: <code>sorryAx</code> means
+disclosed, not audited. Sources: {" &middot; ".join(f"{p} ({n}, {d})" for p,n,d in k_sources) or "none yet"}.
+<br><br>
+<b>Tiers 2 and 3 are text-scan, reported honestly.</b> The <b>core</b> figures above are the {len(cf)} top-level Lean files the tracker trusts: <b>{cp} proved · {cs} open <code>sorry</code> · {cax} explicit axioms beyond Mathlib4</b>. The full <b>recursive</b> scan over every folder reports <b>{rp} proved · {rs} sorry</b> ({rax} axiom declarations), but includes the subfolders&#8217; unresolved duplicate/orphan copies — so the extended list below is shown separately and should not be read as {rp} distinct results.</div>
 <div class="note caveat"><b>Not a kernel check.</b> This registry is a text/regex scan (the same heuristic as <code>scripts/theorem_tracker.py</code>): it classifies a declaration as open when its body contains the <code>sorry</code> tactic. It does not run Lean and cannot certify that a file compiles. Treat it as an honest inventory, not a proof of verification.</div>
 
 <div class="controls">
