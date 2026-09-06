@@ -176,23 +176,39 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--light);font-f
   (Jobe &amp; Ikegami 1987; Whitsett &amp; Weaver 2015, <em>New England Journal of Medicine</em>)
 </p>
 
-<h3>dm³ mapping</h3>
+<h3>dm³ mapping — phenomenological only</h3>
 <p>
-  In dm³ terms: the TTF-1/SP-B/SP-C synthesis cascade is a candidate for the same fold
-  structure as the autophagy switch. The C operator is the hormonal and mechanical
-  compression of fetal breathing movements and glucocorticoid signaling; K is the
-  TTF-1 activation threshold; F is the fold at which lamellar body formation commits;
-  U is sustained surfactant secretion. <span class="tag model">model</span>
+  In dm³ terms: the TTF-1/SP-B/SP-C synthesis cascade is a phenomenological analogue of
+  the autophagy fold. The C operator is the hormonal and mechanical compression of fetal
+  breathing movements and glucocorticoid signaling; K is the TTF-1 activation threshold;
+  F is the fold at which lamellar body formation commits; U is sustained surfactant
+  secretion. <span class="tag model">model</span>
+</p>
+<p>
+  The contact morphism to X<sub>auto</sub> is <strong>not supported</strong> by CRNT
+  topology. <span class="tag open">closed — negative</span>
 </p>
 
-<div class="obligation">
-  <strong>Lean obligation [LEAN-NEEDED-1]:</strong> Does the TTF-1/NKX2-1 → SP-B/SP-C
-  transcription network have CRNT deficiency δ = 2? If yes, the contact morphism to
-  X<sub>auto</sub> is supportable on topological grounds. If no, the fold claim must be
-  downgraded to phenomenological analogy only.<br><br>
-  The network to check: TTF-1 autoregulation loop + SP-B/SP-C feedback on lamellar body
-  maturation. Relevant literature for network topology: Whitsett et al. 2010
-  (<em>Physiological Reviews</em>), Xu et al. 2012 (<em>Journal of Biological Chemistry</em>).
+<div class="obligation" style="background:#fdecea;border-color:#c62828">
+  <strong>[LEAN-NEEDED-1] — closed, negative result (2026-09-06):</strong><br><br>
+  CRNT deficiency analysis of the TTF-1/NKX2-1 → SP-B/SP-C network was performed
+  using the same method as WP-31C (stoichiometric matrix, complex graph, linkage classes).<br><br>
+  <strong>Network analyzed</strong> (9 reactions, 5 species + ∅):<br>
+  R1: S₁→S₂ (activation) · R2: S₂→S₁ (deactivation) ·
+  R3: ∅→S₃ catalyzed by S₂ (SP-B transcription) ·
+  R4: S₃→S₄ (translation) · R5: S₄→S₅ (lamellar body commitment) ·
+  R6: ∅→S₂ catalyzed by S₂ (TTF-1 autoregulation, de novo) ·
+  R7: S₃→∅ · R8: S₄→∅ · R9: S₅→∅ (degradation sinks)<br><br>
+  <strong>Result:</strong> n=6, l=2, s=5 → δ = 6−2−5 = −1.<br>
+  An earlier formulation returned δ = −2. Both are invalid (δ must be ≥ 0),
+  indicating the network topology does not support a well-formed CRNT deficiency
+  calculation under biologically honest modeling constraints.<br><br>
+  <strong>Conclusion:</strong> The contact morphism claim from the surfactant network
+  to X<sub>auto</sub> is not supportable on topological grounds. Adjusting the network
+  to force δ = 2 was considered and rejected — fitting topology to a target value
+  invalidates the proof model. The surfactant threshold remains real and
+  clinically documented; the dm³ structural analogy remains phenomenological only.
+  <span class="tag open">not upgradeable without a different network formulation</span>
 </div>
 
 <h3>Clinical correlate</h3>
@@ -352,10 +368,16 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--light);font-f
     <tr>
       <td>Pulmonary</td>
       <td>Surfactant synthesis (TTF-1/SP-B/SP-C)</td>
-      <td>C = glucocorticoid/mechanical; K = TTF-1 threshold; F = lamellar body commitment; U = secretion</td>
+      <td>C = glucocorticoid/mechanical; K = TTF-1 threshold; F = lamellar body commitment; U = secretion — phenomenological only</td>
       <td>SP-B absent before ~26wk; RDS near-universal below threshold</td>
-      <td><span class="tag documented">documented</span> (threshold); dm³ mapping <span class="tag model">model</span>; CRNT δ=2 <span class="tag lean-needed">lean-needed-1</span></td>
-      <td>No current Vol VI chapter — this paper is the first mapping</td>
+      <td>
+        <span class="tag documented">documented</span> (clinical threshold) ·
+        dm³ mapping <span class="tag model">model</span> (phenomenological analogy only) ·
+        CRNT δ=2 <span class="tag open">closed negative 2026-09-06</span> —
+        network analysis returned δ &lt; 0 under biologically honest constraints;
+        contact morphism to X<sub>auto</sub> not supportable
+      </td>
+      <td>No Vol VI chapter — first mapping; contact morphism claim withdrawn</td>
     </tr>
     <tr>
       <td>Cardiac</td>
@@ -402,11 +424,16 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--light);font-f
 
 <h2>8. Open Obligations</h2>
 
-<div class="obligation">
-  <strong>[LEAN-NEEDED-1]</strong> — Surfactant network CRNT deficiency.<br>
-  Check TTF-1/NKX2-1 → SP-B/SP-C network for δ = 2 using the same method as AutophagyDm3.lean.
-  If confirmed, surfactant synthesis can be stated as a contact morphism of the autophagy fold.
-  If not confirmed, §2 of this paper is downgraded to phenomenological.
+<div class="obligation" style="background:#f5f5f5;border-color:#999">
+  <strong>[LEAN-NEEDED-1] — closed, negative result (2026-09-06).</strong><br>
+  CRNT deficiency analysis of the TTF-1/NKX2-1 → SP-B/SP-C network (9 reactions,
+  5 species + ∅, including degradation sinks and biologically honest autoregulation)
+  returned δ &lt; 0 under two independent formulations. Valid CRNT deficiency requires
+  δ ≥ 0. Adjusting the network to force δ = 2 was considered and rejected as
+  reverse-engineering. §2 of this paper is accordingly downgraded to phenomenological
+  analogy. The surfactant threshold is real and clinically documented; the contact
+  morphism to X<sub>auto</sub> is not supportable by CRNT topology and is withdrawn.
+  No SurfactantDm3.lean will be written on this basis.
 </div>
 
 <div class="obligation">
@@ -491,10 +518,12 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--light);font-f
   2026-08-25. Three Lean obligations remain open (manifold non-degeneracy, kinase data,
   semiflow definition).<br>
   SymPy-verified anchor: CRNT deficiency δ=2 (WP-31C) — separate tool, different result.<br>
-  Open Lean obligations: [LEAN-NEEDED-1] surfactant network CRNT deficiency;
-  [LEAN-NEEDED-2] thymic selection topology.<br>
-  These must be discharged before contact morphism claims in §§2–5 can be upgraded
-  from <em>model</em> to <em>kernel-verified</em>.
+  [LEAN-NEEDED-1] closed negative (2026-09-06): TTF-1/SP-B/SP-C network CRNT analysis
+  returned δ &lt; 0 under biologically honest constraints. Contact morphism claim withdrawn.
+  §2 downgraded to phenomenological analogy. No SurfactantDm3.lean.<br>
+  [LEAN-NEEDED-2] still open: thymic selection CRNT or equivalent topology check.<br>
+  Remaining open obligations [OPEN-1] HRV Lyapunov fitting, [OPEN-2] neural attractor
+  calibration — unchanged.
 </footer>
 
 </body>
