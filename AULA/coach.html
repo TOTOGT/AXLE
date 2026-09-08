@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coach — a self-guided maths coach</title>
+<meta name="description" content="It asks you questions. It never does the maths for you. No model, no chatbot, no network: fifty questions written by a person, and nothing else in the page.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{--navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;--mid:#3a4f7a;
+--rule:#8a7340;--text:#1c1c1c;--light:#e8e2d4;--muted:#7a756c;--teal:#1a5c5c;--red:#8b1a1a;--green:#2d5a27;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Georgia','Times New Roman',serif;color:var(--text);background:var(--cream);line-height:1.72;}
+nav{background:var(--navy);padding:.75rem 1.6rem;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;}
+nav a{color:#cfc9bb;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;}
+nav a:hover{color:var(--gold);}
+nav .brand{color:var(--gold);font-weight:700;letter-spacing:.16em;}
+.wrap{max-width:780px;margin:0 auto;padding:0 1.5rem;}
+header.hero{background:var(--navy);color:var(--cream);padding:3.4rem 0 3rem;}
+.hero h1{font-size:clamp(2rem,6vw,3.1rem);font-weight:400;letter-spacing:.02em;color:var(--gold);margin-bottom:.5rem;}
+.hero .tag{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.05em;color:#cfc9bb;margin-bottom:1.5rem;}
+.hero .promise{font-size:1.12rem;font-style:italic;color:#f2eee2;border-left:2px solid var(--gold);padding-left:1.1rem;}
+.hero .from{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:#8f8a7e;margin-top:1.6rem;}
+.hero .from a{color:var(--gold);}
+section{padding:2.6rem 0;border-bottom:1px solid var(--light);}
+h2{font-size:1.32rem;font-weight:400;color:var(--navy);margin-bottom:.9rem;letter-spacing:.01em;}
+h2 .num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--rule);letter-spacing:.16em;display:block;margin-bottom:.3rem;}
+p{margin-bottom:1rem;}
+.lede{font-size:1.06rem;color:#3a3a3a;}
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:.5rem;margin:1.6rem 0 1.2rem;}
+button.stage{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;padding:.75rem .5rem;background:#fff;border:1px solid var(--light);color:var(--mid);cursor:pointer;transition:.15s;line-height:1.5;}
+button.stage:hover{border-color:var(--gold);color:var(--navy);}
+button.stage[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--gold);}
+button.stage small{display:block;font-size:.58rem;letter-spacing:.04em;text-transform:none;opacity:.75;margin-top:.25rem;}
+.asker{background:#fff;border:1px solid var(--light);border-left:3px solid var(--gold);padding:1.6rem 1.5rem;min-height:11rem;display:flex;flex-direction:column;justify-content:space-between;}
+.asker .who{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--rule);margin-bottom:.8rem;}
+.asker .q{font-size:1.24rem;line-height:1.6;color:var(--navy);}
+.asker .q.placeholder{color:var(--muted);font-style:italic;font-size:1.02rem;}
+.askerbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.4rem;flex-wrap:wrap;}
+button.next{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;padding:.6rem 1.15rem;background:var(--navy);color:var(--gold);border:0;cursor:pointer;}
+button.next:hover{background:var(--mid);}
+button.next[disabled]{background:var(--light);color:var(--muted);cursor:default;}
+.count{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.06em;color:var(--muted);}
+.box{background:var(--smoke);border-left:3px solid var(--navy);padding:1.1rem 1.25rem;margin:1.4rem 0;font-size:.97rem;}
+.box.warn{border-left-color:var(--red);background:#f9f0ee;}
+.box.ok{border-left-color:var(--green);background:#eef3ec;}
+.box .lbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--rule);display:block;margin-bottom:.5rem;}
+.box.warn .lbl{color:var(--red);}
+.box.ok .lbl{color:var(--green);}
+code,.mono{font-family:'JetBrains Mono',monospace;font-size:.86em;background:#fff;border:1px solid var(--light);padding:.08rem .32rem;}
+pre{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--navy);color:#e8e2d4;padding:.9rem 1.1rem;overflow-x:auto;margin:1rem 0;line-height:1.65;}
+ul,ol{margin:0 0 1rem 1.3rem;}
+li{margin-bottom:.5rem;}
+table{width:100%;border-collapse:collapse;margin:1.3rem 0;font-family:'JetBrains Mono',monospace;font-size:.72rem;}
+th{text-align:left;color:var(--navy);border-bottom:2px solid var(--gold);padding:.5rem .55rem;}
+td{padding:.5rem .55rem;border-bottom:1px solid var(--light);vertical-align:top;}
+footer{background:var(--navy);color:#a8a294;padding:2.4rem 0;font-family:'JetBrains Mono',monospace;font-size:.64rem;letter-spacing:.06em;line-height:1.9;}
+footer a{color:var(--gold);text-decoration:none;}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="brand">HOUR HOUSE · AULA</a>
+  <span style="display:flex;gap:1.3rem;flex-wrap:wrap">
+    <a href="zero-sorries.html">Zero Sorries</a>
+    <a href="classroom-index.html">Classroom</a>
+    <a href="https://2123got-it.github.io/writer/coach">Writer ↗</a>
+  </span>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Coach</h1>
+    <div class="tag">a self-guided maths coach &nbsp;·&nbsp; it asks, you answer</div>
+    <p class="promise">I'll ask you questions. I'll never do the maths for you. The steps are always yours.</p>
+    <div class="from">The shape of this page is <a href="https://2123got-it.github.io/writer/coach">Writer</a>, by David &mdash; a self-guided writing coach. Coach asks of a step what Writer asks of a sentence.</div>
+  </div>
+</header>
+<div class="wrap">
+
+<section>
+  <h2><span class="num">01</span>What got banned, and what didn't</h2>
+  <p class="lede">On 2 September 2026 New York City Public Schools restricted student-facing generative AI for grades 2-K through 8. The rule names chatbots and AI tutors. If your idea was a set of prompts you paste into a chatbot, the rule reached it before you got to show anyone.</p>
+
+  <p>So read the rule closely, because it is narrower than the panic around it. It does not say <em>no computers</em>. It does not say <em>no mathematics done with machines</em>. It names one category of tool: <strong>the kind that produces an answer you have no way to check.</strong></p>
+
+  <div class="box ok">
+    <span class="lbl">The thing worth noticing</span>
+    Writer's promise is <em>"I'll ask you questions. I'll never write it for you. The words are always yours."</em> A tool that refuses to produce the work is not the tool the rule is about. It is the opposite tool. The idea was never the problem.
+  </div>
+
+  <p>What <em>was</em> the problem is the delivery. The questions were good; they just arrived through a chatbot, and the chatbot is what the rule names. That is a fixable engineering fact, not a verdict on the idea.</p>
+
+  <p><strong>The fix: take the model out.</strong> The coaching was never in the model. It was in the questions — and someone wrote those. If the questions are a fixed, finite, authored list, then the thing asking them generates nothing, predicts nothing, and cannot be talked into agreeing with you. It is a deck of cards that happens to be a web page.</p>
+
+  <p>Everything below this line is that. There is no AI in this page. There is no network call in this page. There are fifty questions, written by a person, and a button that shows you the next one.</p>
+</section>
+
+<section>
+  <h2><span class="num">02</span>If the rule felt like it was about you</h2>
+  <p class="lede">It wasn't. It was written for a real and specific problem: work handed in that a machine wrote, by students who could not have checked it and did not try. That problem exists, and a school is right to care about it.</p>
+
+  <p>Your idea got caught because it travelled down the same pipe. Not because of what it did &mdash; because of what it ran on. Being caught by a rule you were never the target of is a different thing from being told you were wrong, and at eleven those two feel identical. They are not. Learn to tell them apart now and it will save you a great deal later, because it will keep happening.</p>
+
+  <p>But there is a cost here that is worth naming out loud, because the people who wrote the rule were not thinking about it.</p>
+
+  <div class="box warn">
+    <span class="lbl">The expensive part</span>
+    In a lot of schools, a fair number of the people around you have already decided, quietly, that college is not for people like them. Nobody announces it. It just settles. And a rule that lands on a kid <em>at the exact moment he is excited about learning</em> does not only stop one project &mdash; it can help settle that question years before it should have been asked.
+    <br><br>
+    Excitement is the scarce thing here. Not talent, and not intelligence. Those are much more common than anybody admits. What is rare is a person who is currently, actively interested, and that state is fragile in a way nobody warns you about.
+  </div>
+
+  <p><strong>So the counter-move is deliberately unsentimental: get something nobody can revoke.</strong></p>
+
+  <p>Encouragement is worth very little, and you should be suspicious of adults who offer only that. A transcript is worth a lot. Three college credits is not somebody's opinion about your potential &mdash; it is a record, held by an institution, that says you already did the thing. A policy can change next term. A teacher can move schools. A passed exam cannot be un-passed. That is why the credit section further down is not a bonus at the end of this page. It is the reason the page exists.</p>
+
+  <p>And notice what none of it requires. Lean is free, public, and runs in a browser. CLEP has no minimum age. Neither of them needs a school to say yes first, and neither of them will ask you where you live or what your cousins think.</p>
+
+  <div class="box">
+    <span class="lbl">Related, and more careful than this page can be</span>
+    The longer argument &mdash; that a door being open is not the same as a door being reachable, and that access is a question of <em>how many doors, how wide, and how far from where you live</em> &mdash; is in <em>What a Child Can Enter</em>, Book 7 of Principia Orthogona. This page does not claim a credit fixes any of that. It claims a credit is one thing that becomes yours and stays yours, which is not nothing.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">03</span>Coach</h2>
+  <p>Pick where you are. Answer on paper, out loud, or to somebody. Then press for the next question. Coach never tells you whether you are right &mdash; that is a different machine's job, and it is in the next section.</p>
+
+  <div class="stages" id="stages"></div>
+
+  <div class="asker">
+    <div>
+      <div class="who" id="who">Coach</div>
+      <div class="q placeholder" id="q">Choose a stage above and I'll start asking.</div>
+    </div>
+    <div class="askerbar">
+      <button class="next" id="next" disabled>Next question</button>
+      <span class="count" id="count">50 questions in this page &middot; 0 asked</span>
+    </div>
+  </div>
+
+  <div class="box">
+    <span class="lbl">How to tell this is not a chatbot</span>
+    Press <em>Next question</em> fifty-one times. The fifty-first is one you have already seen. A chatbot would have made you a new one, and that is precisely the property that makes a chatbot unable to promise you anything. You can read every question this page will ever ask by viewing its source &mdash; and you should, because that is what makes it inspectable in a way the other kind is not.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span>The other machine &mdash; one that can say no</h2>
+  <p class="lede">Coach asks. It does not judge. For judging you want a machine that has exactly two things to say and no opinions at all, and that machine exists, is free, runs in a browser, and is used by professional mathematicians this year.</p>
+
+  <p>It is called a proof assistant. The one this course uses is <strong>Lean 4</strong>, at <span class="mono">live.lean-lang.org</span>. Nothing to install. Open it and type this:</p>
+
+  <pre>theorem easy : 2 + 2 = 4 := by decide</pre>
+
+  <p>Nothing happens. That is the answer. <strong>This machine says yes by saying nothing.</strong> No praise, no green tick, no "Great job!". Silence is the whole of its approval, and most people find that much more interesting than they expect to.</p>
+
+  <p>Now break it on purpose:</p>
+
+  <pre>theorem wrong : 2 + 2 = 5 := by decide</pre>
+
+  <p>Red. Copy the error down word for word. Then break it a second, different way:</p>
+
+  <pre>theorem alsowrong : 2 + 2 = 4 := by rfl2</pre>
+
+  <p>A different error. Two kinds of no &mdash; one where the statement is false, one where you asked for a tool that does not exist &mdash; and telling those apart is most of what learning to prove things is.</p>
+
+  <p>Then the command that makes this a course about AI rather than a course about typing. Ask the machine what your theorem <em>stood on</em>:</p>
+
+  <pre>#print axioms easy</pre>
+
+  <p>It lists what you assumed without noticing. Every proof rests on something. Mathematicians call those axioms, and until you ask, you do not know which ones you borrowed.</p>
+
+  <div class="box ok">
+    <span class="lbl">Why this counts as AI for mathematics, and is not a dodge</span>
+    Machines are producing real mathematics right now, and the hard question in the field is not <em>can a machine prove things</em> &mdash; it is <em>what did the machine assume</em>. <span class="mono">#print axioms</span> is the command that answers it. You would be doing, at nine or eleven or thirteen, the exact check that the published results this year were criticised for not printing. That is not a junior version of the field. It is the field's open question, and it fits on one line.
+  </div>
+
+  <div class="box">
+    <span class="lbl">Use them together</span>
+    <strong>Coach asks. Lean answers. You do the maths.</strong> Neither machine produces a step, so there is no version of this where the work is not yours. Show that pairing to any teacher who is worried, and the worry has somewhere to go.
+  </div>
+</section>
+<section>
+  <h2><span class="num">05</span>And the work is worth college credit</h2>
+  <p class="lede">This is the part nobody tells you at ten. There is a test called CLEP. It takes about ninety minutes. If you pass it, roughly 2,900 colleges give you credit for a class you never sat in &mdash; real credit, on a real transcript, that transfers.</p>
+
+  <p>There is <strong>no minimum age</strong>. Not thirteen, not sixteen, not eighteen. None.</p>
+
+  <p>The one that fits this course is <strong>College Algebra</strong>: three credits, one exam. And here is the thing about doing it at nine or eleven rather than eighteen &mdash; the credit is only the receipt. What you actually get is that <em>you have already done it</em>. College stops being a wall somewhere ahead of you that you are supposed to be nervous about, and becomes a place you have already been once, on a Tuesday, and it was fine. That fear never gets a chance to form. And maths is the right lever for it, because maths is the subject where a machine can tell you that you are right without anyone's permission.</p>
+
+  <table>
+    <caption style="caption-side:top;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:#8a7340;padding-bottom:.6rem">The three routes, checked 8 September 2026</caption>
+    <tr><th>route</th><th>age floor</th><th>cost</th><th>what you get</th></tr>
+    <tr>
+      <td><strong>CLEP College Algebra</strong><br>College Board</td>
+      <td>none stated</td>
+      <td>$97 + the test centre's own administration fee</td>
+      <td>3 credits, honoured at about 2,900 colleges</td>
+    </tr>
+    <tr>
+      <td><strong>Modern States</strong><br>free prep + exam voucher</td>
+      <td><strong>13</strong> to hold an account</td>
+      <td>$0 for the exam fee &mdash; but <em>not</em> the centre's administration fee</td>
+      <td>the same CLEP credit, paid for by a non-profit</td>
+    </tr>
+    <tr>
+      <td><strong>ASU Universal Learner</strong><br>a real ASU freshman course</td>
+      <td>none stated</td>
+      <td>$25 to take it; $400 more only if you want the grade kept</td>
+      <td>credit on an Arizona State transcript; up to a year to decide</td>
+    </tr>
+  </table>
+
+  <div class="box warn">
+    <span class="lbl">A correction to the version going around</span>
+    The advice circulating says the free route has no age limit and that under-13s get in through "testing accommodations". Both are wrong, and one of them matters. <strong>Modern States requires the account holder to be 13</strong> &mdash; so at nine or eleven the free voucher is not open to you yet. And the under-13 mechanism for CLEP is not accommodations; it is consent: a parent downloads the <em>CLEP Account Creation Consent Form</em>, signs it, and emails it to <span class="mono">accountrequest@collegeboard.org</span>, and College Board writes back with instructions. That is the whole gate.
+    <br><br>
+    Which gives a clean plan rather than a disappointment: <strong>do the work now, pay the $97 now if you want the credit now &mdash; or do the work now and take the exam free the month you turn thirteen.</strong> The maths does not expire.
+  </div>
+
+  <div class="box">
+    <span class="lbl">Two more things worth knowing before you book anything</span>
+    <ul style="margin-bottom:0">
+      <li>You cannot retake the same CLEP title within <strong>three months</strong>. So it is worth being ready rather than curious.</li>
+      <li>New Jersey has its own state Modern States portal at <span class="mono">nj.modernstates.org</span>, from a 2021 partnership with the Office of the Secretary of Higher Education. Mercer County Community College, Thomas Edison State University and Centenary University were named as accepting the credit. Check your own target school's transfer registry before you assume &mdash; every college publishes one.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>What to do this week</h2>
+  <ol>
+    <li><strong>Open <span class="mono">live.lean-lang.org</span> and type the three lines in section 04.</strong> Twenty minutes. You will have seen a machine say yes by saying nothing, and two different kinds of no.</li>
+    <li><strong>Run <span class="mono">#print axioms</span> on your own theorem</strong> and write down what it says, exactly, in a notebook you keep.</li>
+    <li><strong>Use Coach on something you are actually stuck on</strong> &mdash; not a maths exercise, anything. The stages work on an essay too; that is where they came from.</li>
+    <li><strong>Look up one CLEP College Algebra practice question</strong> and see how close you already are. That is the whole diagnostic. If it is close, you are further along than the timetable says you should be.</li>
+    <li><strong>Show a teacher the pairing</strong>, not the tools separately: a coach that only asks, and a checker that only answers yes or no. Nobody has to take your word for what it does &mdash; both are inspectable.</li>
+  </ol>
+  <div class="box">
+    <span class="lbl">And the part that compounds</span>
+    Maths first is not an arbitrary order. It is the subject with the shortest distance between "I think this is right" and "something outside my own head agrees". Get used to that gap being closeable, and every other subject afterwards is a subject where you already know what it feels like to be sure &mdash; and where you already know that being sure is a thing you have to earn rather than a thing you feel.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">07</span>Where this came from, and what it does not claim</h2>
+  <p>The shape of this page &mdash; a coach that asks, stages you choose between, prompts you can read in full &mdash; is <a href="https://2123got-it.github.io/writer/coach" style="color:var(--rule)">Writer</a>, by David. Coach is that idea moved from sentences to steps, with the model taken out so a school policy has nothing to object to. The proof-checker course is <a href="zero-sorries.html" style="color:var(--rule)">Zero Sorries</a>, eight sessions, in this same folder.</p>
+
+  <div class="box warn">
+    <span class="lbl">Not claimed</span>
+    <ul style="margin-bottom:0">
+      <li><strong>That any school will accept this.</strong> The NYC rule names a category and this page is designed to sit outside it, but whether a particular school agrees is that school's decision and not a thing this page can settle.</li>
+      <li><strong>That a nine-year-old will pass College Algebra.</strong> Some will. The claim is only that nothing in the rules stops them from trying, which most people do not know.</li>
+      <li><strong>That credit-by-exam is better than school.</strong> It is a different thing, useful for a specific reason stated above, and it is not a substitute for being taught.</li>
+      <li><strong>That the figures below stay true.</strong> Fees and policies change. Every number here was checked on 8 September 2026 against the source next to it, and you should re-check before spending anything.</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <span class="lbl">Sources, checked 8 September 2026</span>
+    <ul style="margin-bottom:0;font-size:.9rem">
+      <li>CLEP fee $97 plus test-centre administration fee &mdash; <span class="mono">clep.collegeboard.org/register-for-an-exam</span></li>
+      <li>Under-13 registration by parent consent form to <span class="mono">accountrequest@collegeboard.org</span> &mdash; <span class="mono">clep.collegeboard.org/help-center</span></li>
+      <li>Three-month retake rule &mdash; <span class="mono">clep.collegeboard.org/clep-exam-policies</span></li>
+      <li>Modern States: 13+ to hold an account; voucher covers the exam fee, not the centre's administration fee; voucher earned at 75% on quizzes and 75% on the final &mdash; <span class="mono">modernstates.org/faq</span></li>
+      <li>New Jersey partnership, 34 exams, 2,900+ colleges, NJ institutions named &mdash; <span class="mono">nj.gov/highereducation</span> press release, 5 April 2021</li>
+      <li>ASU Universal Learner: $25 enrolment, $400 credit conversion, one year to decide &mdash; <span class="mono">ulc.asu.edu/how-to-enroll/pricing</span></li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    Coach &middot; AXLE / AULA &middot; Hour House &middot; Newark NJ<br>
+    Built on <a href="https://2123got-it.github.io/writer/coach">Writer</a> by David &middot; pairs with <a href="zero-sorries.html">Zero Sorries</a><br>
+    No model, no network, no data leaves this page. Fifty questions, written by a person, all of them in the source.<br>
+    &copy; 2026 Pablo Nogueira Grossi &middot; G6 LLC &middot; <a href="mailto:g6llc@proton.me">g6llc@proton.me</a> &middot; CC BY-NC-ND 4.0
+  </div>
+</footer>
+<script>
+/* Coach — every question this page can ever ask is in this array.
+   No model. No network. No storage. Read it; that is the point. */
+const STAGES = [
+  { key:"understand", name:"Understand", hint:"what is it asking?", qs:[
+    "Say the question back to me without using any of its words.",
+    "What are you being asked to find — a number, a rule, or a reason?",
+    "Which words here are doing real work, and which are decoration?",
+    "What would a correct answer look like, before you have one?",
+    "Is there a smallest case of this you could write down completely?",
+    "What is given, and what is only assumed by you?",
+    "If somebody handed you the answer, how would you tell whether it was right?",
+    "Does anything you already know have the same shape as this?",
+    "Name one thing this question is not asking.",
+    "Draw it. What did you have to decide in order to draw it?"
+  ]},
+  { key:"attempt", name:"Attempt", hint:"start, badly, on purpose", qs:[
+    "What is the first thing you can write down that is definitely true?",
+    "What did you try, and where exactly did it stop?",
+    "Which step are you least sure of? Say why in one sentence.",
+    "Try the smallest case. Does it work?",
+    "Try one more case. Does the reason still work, or only the answer?",
+    "What are you doing on purpose, and what are you doing out of habit?",
+    "Is there a step you skipped because it felt obvious? Write it out.",
+    "If this is a rule: does it hold at zero? At one? At a negative?",
+    "What would somebody have to tell you to finish this in one more line?",
+    "Write your attempt so a stranger could follow it. What did you have to add?"
+  ]},
+  { key:"stuck", name:"Stuck", hint:"and staying there", qs:[
+    "What exactly are you allowed to assume here?",
+    "Is this stuck-because-you-don't-know, or stuck-because-it's-false?",
+    "Spend two minutes trying to prove the opposite. What happened?",
+    "Which word in the problem do you not actually have a definition for?",
+    "What is the simplest version of this that you still could not do?",
+    "If you had to bet: is the missing piece a fact, or a method?",
+    "What is still in your head that you have not written down?",
+    "Change one number. Is it still hard? Which number was carrying it?",
+    "What could tell you yes or no here — and have you asked it yet?",
+    "Leave the hard part as a hole and finish the rest. Now: what is the hole?"
+  ]},
+  { key:"check", name:"Check", hint:"try to break your own thing", qs:[
+    "What would make this wrong? Name one concrete case.",
+    "Now test that case. What happened?",
+    "Where did you use each thing you were given? Is anything left over?",
+    "If something is left over — did you prove something weaker than you meant to?",
+    "Does your argument use a fact you never actually checked?",
+    "Does the reason work, or only the answer?",
+    "What did the machine say, and what had you expected it to say?",
+    "Run #print axioms. What did you stand on that you had not named?",
+    "Is there an edge you skipped — zero, one, empty, negative?",
+    "Rewrite your claim so it is exactly as strong as what you proved. No stronger."
+  ]},
+  { key:"defend", name:"Defend", hint:"say it to a sceptic", qs:[
+    "State your claim in one sentence, with no 'probably' in it.",
+    "Which single step would somebody attack first?",
+    "Defend that step — without simply repeating it louder.",
+    "What does your proof assume that a stranger might not grant?",
+    "Where does your argument stop being true?",
+    "Say out loud what you did not prove.",
+    "If you are wrong, which line is the wrong one?",
+    "Explain it to somebody who knows less than you. What did you have to fix?",
+    "What is the shortest honest version of this?",
+    "Would you sign it?"
+  ]}
+];
+
+const TOTAL = STAGES.reduce((n,s)=>n+s.qs.length,0);
+const elStages=document.getElementById("stages"), elQ=document.getElementById("q"),
+      elWho=document.getElementById("who"), elNext=document.getElementById("next"),
+      elCount=document.getElementById("count");
+let cur=null, i=0, asked=0;
+
+STAGES.forEach((s,n)=>{
+  const b=document.createElement("button");
+  b.className="stage"; b.type="button"; b.setAttribute("aria-pressed","false");
+  b.innerHTML = s.name + "<small>" + s.hint + "</small>";
+  b.addEventListener("click",()=>{
+    [...elStages.children].forEach(c=>c.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true");
+    cur=n; i=0; elNext.disabled=false;
+    elWho.textContent = "Coach · " + s.name + " · " + s.qs.length + " questions";
+    show();
+  });
+  elStages.appendChild(b);
+});
+
+function show(){
+  const s=STAGES[cur];
+  elQ.classList.remove("placeholder");
+  elQ.textContent = s.qs[i % s.qs.length];
+  asked++;
+  elCount.textContent = TOTAL + " questions in this page · " + asked + " asked · "
+    + ((i % s.qs.length)+1) + " of " + s.qs.length + " in " + s.name;
+}
+elNext.addEventListener("click",()=>{ if(cur===null) return; i++; show(); });
+elCount.textContent = TOTAL + " questions in this page · 0 asked";
+</script>
+</body>
+</html>
