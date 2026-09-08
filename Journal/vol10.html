@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaginary Origin — The Generative Science Journal — Vol. Ω No. 10 — The Identity That Is Not in the Library</title>
+<meta name="description" content="Vol. &#937; No. 10, 26 September 2026. Mathlib carries the functional equation of the Riemann zeta function in three forms and carries no result at all about its logarithmic derivative — the one identity an admitted statement here needs. Plus: p-adic contact geometry, a field that does not exist, and what checking whether it should have cost; and nine discriminants that agreed with a closed form published in 2024.">
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:#dedcd3;color:#16161a;font-family:'Libre Caslon Text',Georgia,serif;line-height:1.42;padding:20px 14px 30px;}
+a{color:#16161a;}
+.stage{perspective:2200px;position:relative;max-width:920px;margin:0 auto;}
+.pgs{position:relative;min-height:620px;}
+.pg{position:absolute;top:0;left:0;width:100%;background:#fdfdfb;padding:26px 30px;transform-origin:left center;transition:transform .6s cubic-bezier(.2,.7,.2,1),opacity .5s ease;backface-visibility:hidden;box-shadow:0 2px 6px rgba(0,0,0,.16);}
+.pg.is-left{transform:rotateY(40deg) translateX(-40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-right{transform:rotateY(-40deg) translateX(40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-active{transform:none;opacity:1;z-index:2;}
+.hd{font-family:'Libre Caslon Display',Georgia,serif;line-height:1.08;}
+.kick{font-size:8.5px;text-transform:uppercase;letter-spacing:.12em;color:#56565c;}
+.pg p{font-size:12.5px;text-align:justify;margin:0 0 8px;}
+.runhead{display:flex;justify-content:space-between;align-items:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#56565c;border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:12px;}
+.emblem{border:1.5px solid #16161a;border-radius:7px;padding:.05em .32em;font-size:.86em;}
+.lead a,.pg .rl a{color:#16161a;text-decoration:none;border-bottom:1px solid #b9b9b0;}
+.pg .rl a:hover,.lead a:hover{border-bottom-color:#16161a;}
+.rl{font-size:12px;}
+.jump{background:none;border:none;padding:0;margin:0;font-family:inherit;font-size:11.5px;color:#16161a;cursor:pointer;text-align:left;border-bottom:1px solid #b9b9b0;}
+.jump:hover{border-bottom-color:#16161a;}
+.nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px auto 0;max-width:920px;}
+.nav button{font-family:'Libre Caslon Text',Georgia,serif;font-size:13px;background:#fdfdfb;border:1px solid #16161a;padding:6px 18px;cursor:pointer;color:#16161a;}
+.nav button:hover{background:#efece2;}
+.nav button:disabled{opacity:.35;cursor:default;}
+.fol{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#3a3a40;min-width:96px;text-align:center;}
+.colophon{max-width:920px;margin:14px auto 0;font-size:10px;color:#5a5a56;text-align:center;line-height:1.7;}
+.colophon a{color:#5a5a56;}
+.tag{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;border:1px solid #16161a;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle;}
+table.led{width:100%;border-collapse:collapse;font-size:11.5px;margin:6px 0 4px;}
+table.led th{text-align:left;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#56565c;border-bottom:1px solid #16161a;padding:3px 6px 4px;}
+table.led td{border-bottom:1px solid #e2e0d8;padding:5px 6px;vertical-align:top;}
+table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.pull{border-left:2px solid #16161a;padding:2px 0 2px 12px;margin:10px 0;font-style:italic;color:#3a3a40;font-size:12px;}
+.stat{border:1px solid #16161a;padding:9px 11px;background:#fbfbf8;}
+.stat b{display:block;font-family:'Libre Caslon Display',Georgia,serif;font-size:21px;line-height:1.1;}
+.open{display:inline-block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;border:1px solid #8a2f2f;color:#8a2f2f;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
+.pt{background:#f6f4ec;border-left:2px solid #b9b9b0;padding:8px 12px;margin-top:10px;}
+.pt p{font-size:11.5px;color:#3a3a40;}
+
+/* ── mobile ─────────────────────────────────────── */
+@media (max-width:760px){
+  body{padding:10px 8px 22px;}
+  .pg{padding:16px 15px;}
+  .pgs{min-height:0;}
+  /* every two-column layout collapses */
+  .lead{grid-template-columns:1fr !important;gap:12px !important;}
+  .lead > div{border-right:0 !important;padding-right:0 !important;}
+  .pg .rl[style*="grid"]{display:block !important;}
+  .pg .rl[style*="grid"] > div{border-right:0 !important;padding-right:0 !important;margin-bottom:14px;}
+  .pg > div[style*="grid-template-columns"]{grid-template-columns:1fr !important;}
+  /* masthead */
+  .pg > div[style*="1fr auto 1fr"]{grid-template-columns:1fr !important;text-align:center;gap:6px;}
+  .pg > div[style*="1fr auto 1fr"] > div{text-align:center !important;max-width:none !important;}
+  /* running heads and date strip wrap instead of squashing */
+  .runhead{flex-wrap:wrap;gap:4px;}
+  /* tables: tighter, allow wrap */
+  table.led{font-size:10.5px;}
+  table.led td,table.led th{padding:4px 3px;word-break:break-word;}
+  table.led td.num{text-align:left;}
+  /* type */
+  .pg p{font-size:13px;text-align:left;}
+  .rl{font-size:12.5px;}
+  .stat b{font-size:19px;}
+  .nav{gap:8px;}
+  .nav button{padding:8px 12px;font-size:12px;}
+  .fol{min-width:0;font-size:10px;}
+}
+
+/* ── navigation, reworked ───────────────────────── */
+.nav{position:sticky;bottom:0;z-index:60;display:flex;align-items:center;justify-content:center;
+     gap:8px;flex-wrap:wrap;background:#fdfdfb;border-top:1px solid #16161a;
+     box-shadow:0 -2px 8px rgba(22,22,26,.10);padding:8px 10px;margin-top:14px;}
+.nav button{font-family:inherit;font-size:12px;padding:5px 10px;border:1px solid #16161a;
+     background:#fdfdfb;color:#16161a;cursor:pointer;}
+.nav button:disabled{opacity:.32;cursor:default;}
+.nav .fol{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#3a3a40;margin:0 4px;}
+#pgnums{display:flex;gap:4px;flex-wrap:wrap;}
+button.pgnum{min-width:26px;padding:4px 7px;font-size:12px;}
+button.pgnum.on{background:#16161a;color:#fdfdfb;font-weight:bold;}
+.nav .hint{font-size:9.5px;color:#6a6a70;width:100%;text-align:center;}
+@media (max-width:760px){ .nav .hint{display:none;} .nav button{font-size:11px;padding:4px 8px;} }
+
+/* ── root cause: the active page must own its own height ──
+   .pg is absolutely positioned and .pgs was sized by JS after load.
+   When MathJax re-rendered, the page outgrew the stale height and
+   overflowed on top of the nav strip. Letting the active page sit in
+   normal flow makes the container grow with it and removes the sync. */
+#pgs .pg.is-active{position:relative;}
+#pgs{min-height:0;}
+</style>
+</head>
+<body>
+
+<div class="stage"><div class="pgs" id="pgs">  <!-- ══════════════ PAGE 1 — FRONT ══════════════ -->
+    <section class="pg is-active">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding-bottom:6px;">
+      <div style="border:1px solid #16161a;padding:5px 8px;font-size:9px;max-width:158px;"><b style="font-size:8px;">THE MOTTO</b><br><span style="font-style:italic;">&#8220;i, the rotation; o, the point it turns about.&#8221;</span></div>
+      <div style="text-align:center;" class="kick">Vol. &#937; &#183; No. 10<br>The Generative Science Journal</div>
+      <div style="text-align:right;" class="kick">Newark, N.J.<br>Free &#183; CC BY 4.0<br>serial excepted<br><a href="vol9.html" style="color:#16161a;">&#8592; No. 9</a></div>
+    </div>
+    <div style="text-align:center;border-top:1px solid #16161a;border-bottom:1px solid #16161a;padding:8px 0 6px;"><div style="font-family:'UnifrakturMaguntia',serif;font-size:clamp(34px,7vw,60px);line-height:1;">Imaginary Origin</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#3a3a40;border-bottom:1px solid #16161a;padding:4px 1px;"><span>Saturday, September 26, 2026</span><span style="text-transform:none;font-size:12px;">emblem: <span class="emblem">$g^{10}$</span></span><span>Morning Edition</span></div>
+
+    <div class="lead" style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:14px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:16px;">
+        <div class="hd" style="font-size:clamp(22px,3.6vw,30px);">The Identity That Is Not in the Library</div>
+        <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 9px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">Mathlib carries the functional equation of the Riemann zeta function in three forms and carries nothing at all about its logarithmic derivative. One admitted statement in this desk&#8217;s files needs exactly the missing line &#8212; which makes closing a local gap and contributing to the library the same piece of work</div>
+
+        <p>A formalization has a boundary, and the useful question is never how large the formalized part is. It is which single statement, if it were proved, would move the boundary furthest. In the zeta files at this desk that statement has a name, and this week it became clear that it has a second address.</p>
+
+        <p>The file is <code>book4/ZetaReflection.lean</code>. It holds twelve declarations, of which eleven are proved and kernel-checked on Lean&#8217;s three standard axioms. The twelfth is <code>Zlog_add_Zlog_one_sub</code>, and it says that off the zeros of &#950; and the poles of the two &#915; factors, the logarithmic derivative and its reflection add up to the gamma-factor defect:</p>
+
+        <div class="pull" style="font-family:'Courier New',monospace;font-size:12.5px;">&#950;&#8242;/&#950;(s) &nbsp;+&nbsp; &#950;&#8242;/&#950;(1&#8722;s) &nbsp;=&nbsp; log&#8201;&#960; &#8722; &#189;&#8201;&#968;(s/2) &#8722; &#189;&#8201;&#968;((1&#8722;s)/2)</div>
+
+        <p>It is stated with four hypotheses and admitted with <code>sorry</code>. Everything else in the file is proved <em>from</em> it rather than around it, which is the discipline that makes an admitted statement useful instead of contagious: the transformation law that Book&nbsp;4 Chapter&nbsp;12 actually uses is a theorem, and the one thing it consumes is named and isolated.</p>
+
+        <div class="hd" style="font-size:19px;margin:14px 0 4px;">Why it cannot simply be looked up</div>
+
+        <p>The obvious move is to reach for the functional equation, which Mathlib has. It has three forms of it &#8212; <code>completedRiemannZeta&#8320;_one_sub</code>, <code>completedRiemannZeta_one_sub</code> and <code>riemannZeta_one_sub</code> &#8212; and their logarithmic derivative is not among them, because Mathlib has <em>no</em> results about the logarithmic derivative of &#950; at all.</p>
+
+        <p>The operation exists: <code>logDeriv</code> is a general Mathlib definition, and this desk&#8217;s own <code>Zlog</code> is literally <code>logDeriv riemannZeta</code>. What is absent is any theorem about that composite. The declaration list of Mathlib&#8217;s <code>RiemannZeta</code> file carries the definition, the differentiability results, the three functional equations, the special values, the Dirichlet series, the residue at 1, and the statement of the Riemann Hypothesis. It carries no log-derivative anything. The 2025 survey of what has been formalized in this area agrees: the log derivative, Hadamard factorization, zero-free regions beyond &#8476;&#8201;s&nbsp;&#8805;&nbsp;1, and the explicit formula are all outside.</p>
+
+        <div class="pull">So the missing line is not a gap in one desk&#8217;s files. It is a gap in the library, and the same proof closes both.</div>
+
+        <div class="hd" style="font-size:19px;margin:14px 0 4px;">What the route already cost, and what it records</div>
+
+        <p>The docstring of the admitted statement carries the route, and two traps found by checking advice rather than taking it. The first: go via <code>completedRiemannZeta_one_sub</code>, the symmetric form &#923;(1&#8722;s)&nbsp;=&nbsp;&#923;(s), and <em>not</em> via <code>riemannZeta_one_sub</code>, which is the asymmetric form carrying cos(&#960;s/2) &#8212; converting that one into the gamma-factor defect costs the Legendre duplication formula and Euler&#8217;s reflection formula on top of the work. The second is a fact about the library rather than about mathematics: <b>Mathlib encodes the poles of &#915; as zeros</b>. So &#915;(s/2)&nbsp;&#8800;&nbsp;0 is not free, and the hypotheses have to carry it. That is why the statement has four side conditions and not two.</p>
+
+        <p>Without those conditions the identity would assert an equality of junk values at the zeros of &#950;, and whether it held would depend on where those zeros are &#8212; which is the thing nobody knows. An admitted statement whose truth is entangled with the open problem it sits next to is not an input. It is a wish. These four hypotheses are what stop it being one.</p>
+
+        <div class="hd" style="font-size:19px;margin:14px 0 4px;">A caveat that belongs on the front page</div>
+
+        <p>&#8220;Not in Mathlib&#8221; is a claim this desk has checked and prints. &#8220;Nobody has formalized this&#8221; is a different and larger claim, and it is <b>not</b> made here. The PNT+ project is separately working toward the Prime Number Theorem with classical error term, which cannot be done without handling &#950;&#8242;/&#950; in some form. Anyone intending to claim priority reads that blueprint first. The claim worth making is the modest one: the statement is not in the library that everything else here builds on, and putting it there is a contribution whose value does not depend on being first.</p>
+
+        <p>Elsewhere in this issue: <b>Page&nbsp;2</b> sets out what the library has and has not, line by line. <b>Page&nbsp;3</b> reports a field that turns out not to exist, and what was found by checking whether it should. <b>Page&nbsp;4</b> is about a table of nine numbers that agreed with a formula published in a journal this desk had not read.</p>
+      </div>
+
+      <div>
+        <div class="kick" style="border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:8px;">The one statement</div>
+        <div class="stat" style="margin-bottom:8px;"><b>1 of 12</b><span style="font-size:10.5px;">declarations in <code>ZetaReflection.lean</code> admitted. The other eleven are kernel-checked on <code>propext</code>, <code>Classical.choice</code>, <code>Quot.sound</code></span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>4</b><span style="font-size:10.5px;">hypotheses it carries: <em>s</em> and 1&#8722;<em>s</em> off the poles of the two &#915; factors, and &#950; nonvanishing at both. Drop them and the identity asserts equality of junk values at the zeros</span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>30 digits</b><span style="font-size:10.5px;">the numerical verification recorded in the docstring, at three interior points, by mpmath. Numerically confirmed is not proved, and the file says so in the same sentence</span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>0</b><span style="font-size:10.5px;">results about <code>logDeriv riemannZeta</code> in Mathlib. The operation is there; the theorems are not</span></div>
+        <div class="stat" style="margin-bottom:8px;"><b>3</b><span style="font-size:10.5px;">forms of the functional equation Mathlib does carry &#8212; for &#923;&#8320;, for &#923;, and for &#950; itself. None of them is differentiated</span></div>
+        <div class="pt" style="margin-top:10px;"><p><b>Where a boundary should be drawn.</b> An admitted statement is worth having only if it is stated with the side conditions that make it true, isolated so that nothing proves itself through it twice, and small enough that a reader can see what would close it. Three tests, and a <code>sorry</code> that fails any of them is not a boundary but a hole.</p></div>
+      </div>
+    </div>
+</section>
+
+<section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; Vol. &#937; No. 10</span><span>Page 2 &#183; The Ledger</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">What the Library Has, and What It Has Not</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">Read off the declaration list of Mathlib&#8217;s <code>NumberTheory.LSeries.RiemannZeta</code> and cross-checked against the 2025 survey of zeta and L-function formalization. A boundary is only useful when it is printed</div>
+
+    <p>The reason to publish a table like this is that a boundary nobody prints gets re-discovered by everyone who approaches it, each at their own cost. Below is what a Lean development can currently reach for, and what it has to prove itself.</p>
+
+    <table class="led">
+      <thead><tr><th>Statement about &#950;</th><th class="num">in Mathlib</th></tr></thead>
+      <tbody>
+      <tr><td>Definition, analytic continuation, differentiability</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Euler product</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Functional equation, completed form &#923;&#8320;(1&#8722;s) = &#923;&#8320;(s)</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Functional equation, completed form &#923;(1&#8722;s) = &#923;(s)</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Functional equation, asymmetric form for &#950;</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Non-vanishing on the closed half-plane &#8476;&#8201;s &#8805; 1</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Residue at s = 1; special values; Dirichlet series</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Statement of the Riemann Hypothesis</td><td class="num"><b>yes</b></td></tr>
+      <tr><td><code>logDeriv</code> as a general operation</td><td class="num"><b>yes</b></td></tr>
+      <tr><td>Any theorem about <code>logDeriv riemannZeta</code></td><td class="num"><b>no</b></td></tr>
+      <tr><td>Log-derivative form of the functional equation</td><td class="num"><b>no</b></td></tr>
+      <tr><td>Hadamard factorization</td><td class="num"><b>no</b></td></tr>
+      <tr><td>Zero-free regions beyond &#8476;&#8201;s &#8805; 1</td><td class="num"><b>no</b></td></tr>
+      <tr><td>The explicit formula</td><td class="num"><b>no</b></td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:11.5px;color:#3a3a40;">The last four rows are the ones a reader should treat as dated rather than permanent. Libraries move, and the PNT+ project is working in exactly that territory; the honest reading of this table is &#8220;as of the version pinned here&#8221;, not &#8220;as of always&#8221;.</p>
+
+    <div class="hd" style="font-size:19px;margin:16px 0 4px;">The bridge that must not move</div>
+
+    <p>One declaration in the same file does the work that makes the rest mean anything: <code>lseries_vonMangoldt_eq_neg_Zlog</code>, which says that for &#8476;&#8201;s&nbsp;&gt;&nbsp;1 the von Mangoldt Dirichlet series <em>is</em> &#8722;&#950;&#8242;/&#950;. That is what ties the two coefficients of Chapter&nbsp;12 &#8212; the cosine one and the sine one &#8212; to the primes rather than to a definition invented to suit them.</p>
+
+    <p>The file carries an instruction about it that is worth quoting as a general rule: if that declaration ever shows up in the audit report as resting on <code>sorryAx</code>, <em>the bridge has broken and nothing above it means anything</em>. An audit expectation written into the file, moving in the same edit as the declarations it counts. An expectation that lags the artifact is not a check; it is a second claim to audit.</p>
+
+    <div class="hd" style="font-size:19px;margin:16px 0 4px;">Two numbers that do not agree, printed rather than reconciled</div>
+
+    <p>The Lean docstring records the numerical verification as <b>30 digits at three interior points</b>. The status table of the accompanying preprint records it as <b>30 digits at seven points</b>. Both cannot be the artifact&#8217;s own number. Neither is load-bearing &#8212; the statement is admitted either way, and numerical agreement is not proof at three points or at seven &#8212; but a corpus that lets two figures for the same measurement stand in two places has, by that fact, stopped being able to tell which one came from a run.</p>
+
+    <p style="font-size:11.5px;color:#3a3a40;">Recorded here rather than quietly corrected, because the correction is cheap and the habit that produces the discrepancy is not. The rule this desk works to: print the convention beside the number, or do not print the number.</p>
+</section>
+
+<section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; Vol. &#937; No. 10</span><span>Page 3 &#183; The Mathematics</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">A Field That Does Not Exist, and What Checking Cost</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;"><em>p</em>-adic symplectic geometry became a subject in 2024. Its odd-dimensional half has nobody in it. Before writing the first line of one, the question worth answering is whether the arithmetic has anywhere to go &#8212; and the answer is no at a point, and yes on a lattice</div>
+
+    <p>Between 2024 and the end of 2025, Luis Crespo and &#193;lvaro Pelayo built <em>p</em>-adic symplectic geometry from almost nothing: a <em>p</em>-adic Jaynes&#8211;Cummings model, integrable systems and Weierstrass&#8211;Williamson theory, Darboux&#8217;s theorem, and group actions. Across all of it there is no contact structure, no Reeb field, no Legendrian submanifold, and no odd dimension. The programme is even-dimensional and is carried out that way.</p>
+
+    <p>An empty shelf invites two mistakes: assuming it is empty because the objects do not exist, and assuming it is empty because nobody got round to it. Here it is the second. The interesting part is where the arithmetic turns out to live once one looks.</p>
+
+    <div class="hd" style="font-size:19px;margin:14px 0 4px;">Two things survive the change of field</div>
+
+    <p>The contact condition &#945;&#8201;&#8743;&#8201;(d&#945;)<sup>n</sup>&nbsp;&#8800;&nbsp;0 is an open algebraic condition, so a form that satisfies it over &#8474; satisfies it over every completion. No place is excluded. And the Reeb field is a linear solve, which no field cares about: for the prototype form d<em>z</em>&nbsp;&#8722;&nbsp;<em>r</em>&#178;d&#952; it returns &#8706;/&#8706;<em>z</em> over every &#8474;<sub><em>p</em></sub>, the same answer the smooth computation gives.</p>
+
+    <p>What does not survive is the question one asks next. Over &#8477; the Reeb field integrates to a flow and the subject is <em>closed orbits</em> &#8212; Weinstein&#8217;s conjecture, Taubes&#8217; theorem in dimension three. &#8474;<sub><em>p</em></sub> has no &#8477; acting on it, and a <em>p</em>-adic analytic vector field integrates only on a ball of bounded radius. <b>&#8220;Closed Reeb orbit&#8221; has no <em>p</em>-adic meaning as stated.</b> That is a gap in a vocabulary, which is weaker than a theorem, and it is reported as the weaker thing.</p>
+
+    <div class="hd" style="font-size:19px;margin:14px 0 4px;">The negative result, which is the load-bearing one</div>
+
+    <p>The natural hope is that a contact structure over &#8474;<sub><em>p</em></sub> splits into arithmetic classes the way a quadratic form does. Quadratic forms over &#8474;<sub><em>p</em></sub> genuinely do: the square classes are four for odd <em>p</em> and eight for <em>p</em>=&nbsp;2, and they separate &#10216;1,1&#10217; from &#10216;1,<em>u</em>&#10217;. That is why <em>p</em>-adic orthogonal geometry is rich.</p>
+
+    <p>Alternating forms carry no such invariant, and the failure is explicit rather than an absence of proof. A contact structure puts a symplectic form <em>up to scale</em> on ker&#8201;&#945;, so the question is whether the scale is an invariant. It is not: the similitude diag(&#955;,&#8230;,&#955;,1,&#8230;,1) realises every multiplier, and one writes it down. Checked for <em>n</em>&nbsp;=&nbsp;1,&nbsp;2,&nbsp;3 against every square class at <em>p</em>&nbsp;=&nbsp;2,&nbsp;3,&nbsp;5,&nbsp;7 &#8212; sixty cases, all solved.</p>
+
+    <div class="pull">So <em>p</em>-adic contact linear algebra is exactly as rigid as real contact linear algebra. Any hope of arithmetic <em>at a point</em> closes there, permanently &#8212; which is what stops the next paragraph being read as more than it is.</div>
+
+    <div class="hd" style="font-size:19px;margin:14px 0 4px;">Where it does live, and one place where it shows</div>
+
+    <p>The arithmetic appears one level up, on the &#8484;<sub><em>p</em></sub>-lattice model. There d&#945; restricted to ker&#8201;&#945; is an alternating form over &#8484;<sub><em>p</em></sub>, and alternating forms over &#8484;<sub><em>p</em></sub> have elementary divisors &#8212; Shimura, 1963. Coordinate changes have unit Jacobian and cannot move them; rescaling &#945; shifts them all together. The coarse shadow is one integer per place, <b>&#948;<sub><em>p</em></sub>(&#945;)&nbsp;=&nbsp;<em>v<sub>p</sub></em>(&#945;&#8201;&#8743;&#8201;(d&#945;)<sup>n</sup>)&nbsp;mod&nbsp;(<em>n</em>+1)</b>.</p>
+
+    <p>Run against this desk&#8217;s own prototype it returns 1 at <em>p</em>&nbsp;=&nbsp;2 and 0 at 3, 5, 7, 11. The prototype is &#8484;<sub><em>p</em></sub>-isomorphic to the standard contact model at every odd place and is not at <em>p</em>&nbsp;=&nbsp;2. The invariant is not what convinces; the witness is: over &#8477; the substitution <em>z</em>&#8242;&nbsp;=&nbsp;<em>z</em>&nbsp;+&nbsp;<em>xy</em>, <em>x</em>&#8242;&nbsp;=&nbsp;2<em>x</em> standardises the form, and it has determinant 2 &#8212; invertible over &#8484;<sub><em>p</em></sub> for odd <em>p</em> and not over &#8484;<sub>2</sub>.</p>
+
+    <p>The 2 comes from writing <em>r</em>&#178;d&#952; antisymmetrically. There is no hidden content in it, and a form written the other way would return 0. That is a fact about a chart, which is precisely why the number is an invariant of a <em>model</em> and never of a manifold &#8212; and saying so is the difference between an invariant and a coincidence with a name.</p>
+
+    <div class="hd" style="font-size:19px;margin:14px 0 4px;">What it does not say</div>
+
+    <p>None of it applies to the adele class space, which is not a <em>p</em>-adic analytic manifold but the non-Hausdorff quotient that motivated the noncommutative treatment in the first place. And it points against the hope it was checked for: if the contact analogue of Crespo and Pelayo&#8217;s global classification holds &#8212; every second-countable <em>p</em>-adic symplectic manifold is a union of balls determined by volume alone &#8212; then there is <b>no tight/overtwisted dichotomy over &#8474;<sub><em>p</em></sub></b>, and &#8220;the arithmetic contact form is tight&#8221; has no content at the finite places. A question answered in the negative is still answered, and it is better than a question left in a form that cannot come back either way.</p>
+</section>
+
+<section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin &#183; Vol. &#937; No. 10</span><span>Page 4 &#183; The Arithmetic</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">Nine Numbers, Two Sources, One Formula</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">A table of discriminants computed in August turned out to be a special case of a closed form published in a journal in 2024. Both agree at every entry. The interesting part is the second reference on the same page</div>
+
+    <p>The n-bonacci characteristic polynomials <em>q<sub>n</sub></em>(x)&nbsp;=&nbsp;x<sup>n</sup>&nbsp;&#8722;&nbsp;x<sup>n&#8722;1</sup>&nbsp;&#8722;&nbsp;&#8230;&nbsp;&#8722;&nbsp;1 collapse under multiplication by (x&nbsp;&#8722;&nbsp;1) to a single one-parameter family, x<sup>n+1</sup>&nbsp;&#8722;&nbsp;2x<sup>n</sup>&nbsp;+&nbsp;1, and the 2 in the middle is not chosen &#8212; it is what the telescoping leaves. A working note of 23 August recorded that, together with an exact identity: if <em>r<sub>n</sub></em> is the root in (1,&nbsp;2), then <b>2&nbsp;&#8722;&nbsp;<em>r<sub>n</sub></em>&nbsp;=&nbsp;<em>r<sub>n</sub></em><sup>&#8722;n</sup></b>, not asymptotically but exactly. The note also printed nine discriminants, computed.</p>
+
+    <p>Luca, in <i>The Fibonacci Quarterly</i> 62:3 (2024), gives those discriminants in closed form for every <em>k</em>. The formula reproduces all nine entries. The table was computed before the formula was known to the note, so the agreement is a cross-check running in both directions rather than one source restating another &#8212; which is the only kind of agreement worth printing.</p>
+
+    <div class="hd" style="font-size:19px;margin:14px 0 4px;">The reference that changes a status column</div>
+
+    <p>On the same page of the same journal sits a citation to Martin, <i>The Galois group of</i> x<sup>n</sup>&nbsp;&#8722;&nbsp;x<sup>n&#8722;1</sup>&nbsp;&#8722;&nbsp;&#8230;&nbsp;&#8722;&nbsp;1 (2004) &#8212; a paper about exactly this family&#8217;s Galois group. The August note had a section on that group: rigorous through <em>n</em>&nbsp;=&nbsp;7 by Jordan&#8217;s theorem, and sampling evidence at 8, 9 and 10, with the transposition at <em>n</em>&nbsp;=&nbsp;8 first appearing at the prime 17,921 after two thousand failed primes.</p>
+
+    <p>The status column read &#8220;evidence, not proof&#8221;. It now reads <b>&#8220;not proved here&#8221;</b>, and <em>here</em> is doing real work in that sentence. It records what one computation established. It is not a report on the state of knowledge, and it was never entitled to be one.</p>
+
+    <div class="pull">A computation reported as evidence beside a theorem that already exists is not a finding. The difference between the two sentences is a literature search, and the search is cheaper than the computation was.</div>
+
+    <div class="hd" style="font-size:19px;margin:14px 0 4px;">Two defects in the instrument, found by building it</div>
+
+    <p>The note had printed its code and shipped no runnable companion, which fails this desk&#8217;s own rule that a published number must be regenerable by a tool. Writing the tool found two faults, both in the tool:</p>
+
+    <p>The ladder root was being taken as the last entry of a root-finding call, which does not order its output. For several <em>n</em> that returns a different root, and it made a check pass for the wrong reason: the note&#8217;s deliberately flagged near-miss at <em>n</em>&nbsp;=&nbsp;5, where <em>h</em>&nbsp;=&nbsp;17.000510 and the whole point is that it is <em>not</em> 17, was being confirmed against a number near 2.13. A check that passes for the wrong reason is worse than one that fails, because nothing draws attention to it. The root is now selected by the property that defines it, 1&nbsp;&lt;&nbsp;<em>r</em>&nbsp;&lt;&nbsp;2, and asserted unique.</p>
+
+    <p>The second was a perfect-square test calling a library method that does not exist &#8212; which at least fails loudly, and is the kind of defect one is glad to have.</p>
+
+    <p style="font-size:11.5px;color:#3a3a40;">Everything above is reproducible: <code>book4/ladder-polynomials-verify.py</code> regenerates the collapse, the exact identity to fifty digits, the Pisot check, the ADE threshold, the single coincidence below <em>n</em>&nbsp;=&nbsp;40, the discriminants, the Galois orders for <em>n</em>&nbsp;=&nbsp;2&#8230;6, both transposition witnesses, and the cross-check against the closed form.</p>
+</section>
+
+<section class="pg is-right">
+    <div class="runhead" style="padding:6px 18px 0;"><span>Imaginary Origin &#183; Vol. &#937; No. 10</span><span>Page 5 &#183; Notices</span></div>
+    <div class="hd" style="font-size:clamp(19px,3vw,25px);">Notices, and the Week&#8217;s Reading</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 10px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">What shipped, what is open, and the standing rules this desk works to</div>
+
+    <div class="hd" style="font-size:17px;margin:12px 0 4px;">Shipped this week</div>
+    <p style="font-size:12px;"><a href="https://totogt.github.io/geometry/book6/wp106-the-arithmetic-is-in-the-lattice.html">WP-106 &#183; The Arithmetic Is in the Lattice</a> &#8212; contact geometry over &#8474;<sub>p</sub>, the subject of Page&nbsp;3. Novelty is claimed in one section and nowhere else, and &#8220;unwritten&#8221; is recorded as a literature search rather than a difficulty. Companion script, exact arithmetic, all checks pass.<br>
+    <a href="https://totogt.github.io/geometry/book4/ladder-polynomials.html">The Ladder Polynomials</a> &#8212; &#167;&#8201;7 added, placing the note against Luca (2024) and Martin (2004), with a companion script it should have had in August. Page&nbsp;4.<br>
+    <a href="https://totogt.github.io/geometry/book4/rh-paper.html">The Riemann Hypothesis as Non-Integrability of an Arithmetic Contact Structure</a> &#8212; version 3, generated from its manuscript by a tool that exits non-zero when the two disagree, so the rendered edition cannot drift from the source.</p>
+
+    <div class="hd" style="font-size:17px;margin:14px 0 4px;">Open, and stated as such</div>
+    <p style="font-size:12px;"><b>The log-derivative identity.</b> Page&nbsp;1. One admitted statement, four hypotheses, a route written down, and a second address in a library that does not have it.<br>
+    <b>Contact Darboux over &#8474;<sub>p</sub>.</b> The tool exists &#8212; a <em>p</em>-adic Moser method with a strengthened vanishing hypothesis &#8212; and the classical proof of contact Darboux should transfer under it. Until it does, the lattice classification of Page&nbsp;3 covers models and not germs.<br>
+    <b>The global question.</b> Whether every second-countable <em>p</em>-adic contact manifold is standard. That is the statement that would settle what Page&nbsp;3 ends on, and it is the one worth the effort.</p>
+
+    <div class="hd" style="font-size:17px;margin:14px 0 4px;">The standing rules</div>
+    <p style="font-size:12px;"><b>Print the convention beside the number, or do not print the number.</b> Two figures computed on different denominators can both be correct and still describe a corpus that does not exist.<br>
+    <b>The gate is the axiom report, not a clean compile.</b> A file that compiles has said nothing about what it rests on.<br>
+    <b>An instrument must not count its own echo.</b> A file carrying its own audit block gets probed twice by the tool that probes it.<br>
+    <b>Superseded work is evidence.</b> Retired drafts, wrong turns and replaced files are kept and filed, not discarded. A corpus that deletes its mistakes cannot later say how it learned anything, and the record of how a result was reached is part of the result.</p>
+
+    <div style="border:1px solid #c9b9a0;background:#f7f0e2;padding:10px 12px;margin-top:14px;">
+      <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;">Ledger &#183; what is claimed in No.&#8202;10</div>
+      <p style="font-size:11px;margin:0 0 7px;"><b>Checked against a source.</b> Mathlib&#8217;s declaration list for &#950; and the 2025 formalization survey (Page&nbsp;1&#8211;2). The four hypotheses, the definition of the gamma-factor defect, and the one-of-twelve count, read from the Lean file itself. Crespo and Pelayo&#8217;s four papers and their publication list (Page&nbsp;3). Luca&#8217;s closed form and its citation of Martin (Page&nbsp;4).</p>
+      <p style="font-size:11px;margin:0 0 7px;"><b>Computed here.</b> The sixty similitude cases, the elementary-divisor valuations, &#948;<sub>p</sub> at five primes, and everything on Page&nbsp;4 &#8212; all in exact arithmetic, all reproducible from committed scripts.</p>
+      <p style="font-size:11px;margin:0;"><b>Not claimed.</b> That nobody anywhere has formalized &#950;&#8242;/&#950; &#8212; PNT+ is working in that territory and has not been read. That Martin&#8217;s theorem says any particular thing &#8212; the paper is cited, not summarised. That anything in No.&#8202;10 bears on the Riemann Hypothesis. It does not, and no page here says otherwise.</p>
+    </div>
+</section>
+
+</div>
+<div class="nav"><button id="prev">&#8249;&nbsp;Prev</button><span id="pgnums"></span><button id="next">Next&nbsp;&#8250;</button><span class="fol" id="fol"></span><span class="hint">&#8592; &#8594; arrow keys also turn the page</span></div>
+<div class="colophon">
+  &#169; 2026 Pablo Nogueira Grossi &#183; G6 LLC &#183; Newark, NJ 07104, USA &#183; g6llc@proton.me &#183; ORCID 0009-0000-6496-2186<br>
+  Imaginary Origin &#183; The Generative Science Journal &#183; Vol. &#937; No. 10 &#183; <a href="https://zenodo.org/communities/principia-orthogona">Zenodo: Principia Orthogona</a> &#183; Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, <b>except <i>Pierre et Mademoiselle</i> (The Reading Room), all rights reserved</b><br>
+  <a href="vol9.html">&#8592; No. 9</a> &#183; <span style="font-style:italic;color:#3a3a40;">Two Instruments, Thirty Years, Neither Quoted</span> &#183; <a href="https://totogt.github.io/AXLE/">&#8592; AXLE home</a>
+</div>
+</div>
+<script>
+(function(){
+  var pgs=Array.prototype.slice.call(document.querySelectorAll('#pgs .pg'));
+  var cur=0,fol=document.getElementById('fol'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  var stage=document.getElementById('pgs');var nums=document.getElementById('pgnums');
+  function top(){window.scrollTo({top:0,behavior:'smooth'});}
+  pgs.forEach(function(p,i){var b=document.createElement('button');b.className='pgnum';b.textContent=i+1;b.setAttribute('aria-label','Go to page '+(i+1));b.addEventListener('click',function(){cur=i;render();top();});nums.appendChild(b);});
+  function sizeStage(){ stage.style.height=''; }
+  function render(){pgs.forEach(function(p,i){p.className='pg '+(i===cur?'is-active':(i<cur?'is-left':'is-right'));});fol.textContent='Page '+(cur+1)+' of '+pgs.length;prev.disabled=(cur===0);next.disabled=(cur===pgs.length-1);Array.prototype.forEach.call(nums.children,function(b,i){b.className='pgnum'+(i===cur?' on':'');});sizeStage();}
+  window.addEventListener('resize',sizeStage);
+  window.addEventListener('load',sizeStage);
+  if(window.MathJax&&MathJax.startup&&MathJax.startup.promise){MathJax.startup.promise.then(sizeStage);}
+  next.addEventListener('click',function(){if(cur<pgs.length-1){cur++;render();top();}});
+  prev.addEventListener('click',function(){if(cur>0){cur--;render();top();}});
+  document.querySelectorAll('.jump').forEach(function(b){b.addEventListener('click',function(){cur=+b.getAttribute('data-goto');render();window.scrollTo({top:0,behavior:'smooth'});});});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pgs.length-1){cur++;render();top();}if(e.key==='ArrowLeft'&&cur>0){cur--;render();top();}});
+  render();
+})();
+</script>
+
+<script src="newsletter.js" data-source="Imaginary Origin No. 10"></script>
+
+          <div id="nl-signup" style="border:1px solid #16161a;padding:11px 13px;margin:14px 0 4px;background:#fbfbf8;">
+            <div style="font-size:9.5px;letter-spacing:.10em;text-transform:uppercase;color:#3a3a40;margin-bottom:6px;">The Newsletter &#183; Opt-in</div>
+            <p style="font-size:11.5px;margin:0 0 8px;">Each issue, when it goes out. No list bought, harvested, or lifted from a conference roster. Unsubscribe by replying with the word <em>stop</em>.</p>
+            <form id="nl-form" style="display:flex;gap:5px;flex-wrap:wrap;">
+              <input type="email" id="nl-email" name="email" required autocomplete="email" placeholder="you@university.edu"
+                style="flex:1;min-width:170px;border:1px solid #16161a;padding:6px 7px;font-size:12px;font-family:inherit;background:#fff;">
+              <input type="text" id="nl-hp" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+              <button type="submit" id="nl-btn"
+                style="border:1px solid #16161a;background:#16161a;color:#fff;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 12px;cursor:pointer;font-family:inherit;">Subscribe</button>
+            </form>
+            <div id="nl-msg" style="font-size:11px;color:#3a3a40;margin-top:7px;min-height:1em;"></div>
+          </div>
+
+<div style="max-width:47rem;margin:2rem auto 0;padding:1rem 1.2rem;border-top:1px solid #d9d3c4;font-family:'Courier New',monospace;font-size:11px;line-height:2;color:#3a3a40;">
+  <div style="letter-spacing:.14em;text-transform:uppercase;color:#8a7a3c;margin-bottom:.5rem;">Filed since this issue &#183; 19 September 2026</div>
+  <a href="https://totogt.github.io/geometry/book6/wp106-the-arithmetic-is-in-the-lattice.html">WP-106 &#183; The Arithmetic Is in the Lattice</a> &#8212; contact geometry over &#8474;<sub>p</sub>. No arithmetic invariant at a point, sixty similitude cases; the elementary-divisor invariant on the &#8484;<sub>p</sub>-lattice; the prototype non-standard at p = 2 and nowhere else.<br>
+  <a href="https://totogt.github.io/geometry/book4/ladder-polynomials.html">The Ladder Polynomials &#183; &#167;&#8201;7</a> &#8212; Luca (2024) reproduces all nine computed discriminants; Martin (2004) is the reference for the Galois group, and the status column is rescoped to say what this desk established rather than what is open.<br>
+  <code>book4/ladder-polynomials-verify.py</code> &#8212; the companion the August note shipped without. Two defects in it found and fixed before it shipped, one of which had a check passing for the wrong reason.<br>
+  <a href="https://totogt.github.io/geometry/book4/rh-paper.html">rh-paper.html</a> &#8212; version 3, generated from the manuscript by a tool that exits non-zero when the two disagree.
+</div>
+</body>
+</html>
