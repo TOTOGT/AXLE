@@ -146,7 +146,7 @@ import Mathlib.Dynamics.FixedPoints.Basic
 import Mathlib.SetTheory.Ordinal.Basic
 import Mathlib.SetTheory.Ordinal.Arithmetic
 import Mathlib.SetTheory.Cardinal.Cofinality
-import Mathlib.Data.Complex.ExponentialBounds  -- V7: Real.exp_one_lt_d9
+import Mathlib.Analysis.Complex.ExponentialBounds  -- V7: Real.exp_one_lt_d9
 
 -- ============================================================================
 -- NAMESPACE
