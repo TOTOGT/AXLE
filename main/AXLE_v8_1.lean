@@ -1,3 +1,5 @@
+-- GATE-DECLARE: sorries = TOGT.closurePoints_stationary_regular, TOGT.crystal_lockin, TOGT.d6_lockin, TOGT.g6_unconditional_closure, TOGT.embedding_intertwining, TOGT.collatz_conjecture_via_dm3_gqm
+-- GATE-REASON: Issue 6 and its supports, per this file's own Status block. g6_unconditional_closure is named for what it will assert once closed, not for what it currently proves.
 -- ============================================================================
 /-
   AXLE — Algebraic eXpression Language for Evaluation

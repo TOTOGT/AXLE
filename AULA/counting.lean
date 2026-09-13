@@ -1,3 +1,5 @@
+-- GATE-DECLARE: sorries = claim2, claim4, claim6
+-- GATE-REASON: Zero Sorries teaching file. The admitted claims are the exercise; closing them is the student's work.
 -- Zero Sorries · Session 4 · counting.lean
 -- Count the word "sorry" in this file. Write your number down.
 -- Then count it again a different way. Then a third way.
