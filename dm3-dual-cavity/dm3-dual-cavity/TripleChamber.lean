@@ -13,12 +13,19 @@
   The plasmapause is realised as a Whitney A₁ fold (F-operator).
   Coupling strengths: κ₁₂ = ε₀ = 1/3,  κ₂₃ = ε₀² = 1/9.
 
-  All 9 theorems proved without sorry.
+  STATUS (2026-09-24): no `sorry`, but this file has never been built (AXLE has
+  no build target for it), so nothing here is kernel-checked. The first theorem,
+  `triple_chamber_strictAnti_in_κ` (strict decrease over all of ℝ), is FALSE.
+  The kernel-checked port is TOTOGT/geometry
+  Orthogenesis/Resonance/TripleChamber.lean (2026-09-15, Lean v4.32.0), which
+  proves `published_T1_is_false` and the κ ≥ 0 version
+  `triple_chamber_strictAntiOn_nonneg`. Cite that file, not this one.
 
   Author : Pablo Nogueira Grossi, G6 LLC, Newark NJ
   ORCID  : 0009-0000-6496-2186
   Date   : June 2026
-  DOI    : 10.5281/zenodo.20682934
+  DOI    : none. (10.5281/zenodo.20682934, cited here before, is TOGT V1, a
+           different work; the dual-cavity package has no Zenodo deposit.)
 -/
 
 import Mathlib.Analysis.SpecialFunctions.Pow.Real

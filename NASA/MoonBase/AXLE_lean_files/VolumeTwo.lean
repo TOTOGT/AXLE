@@ -1,12 +1,21 @@
 -- ============================================================
+-- COPY of PrincipiaOrthogona_v2/VolumeTwo.lean as of AXLE 607721b (2026-09-24).
+-- That file is canonical; edit it, not this one, and re-copy.
+-- The version cited in the MoonBase RFI §4.2 (old names thm_A_contact_realization_fold,
+-- thm_B_threshold_equivalence, thm_C_singularity_bijection; predates the later compile fixes) is
+-- recoverable with: git show 7246603:NASA/MoonBase/AXLE_lean_files/VolumeTwo.lean
+-- ============================================================
 -- PrincipiaOrthogona/VolumeTwo.lean
 -- Formal skeleton for Volume Two: Contact Realization
 -- Principia Orthogona Series — G6 LLC, Newark NJ
 -- Author: Pablo Nogueira Grossi (ORCID 0009-0000-6496-2186)
 --
--- STATUS: Proof skeleton. All `sorry` below are OPEN PROOF
--- OBLIGATIONS — honest, trackable, and ready for Mathlib
--- contributions. No sorry is hidden or undocumented.
+-- STATUS (2026-09-24): no `sorry` and no vacuous conclusion. Every declaration
+-- is kernel-checked (tools/verify-vol2/run.sh). What remains open is recorded
+-- as prose obligations in §7, not as theorems: Theorem A's distributional limit
+-- (OP-A) and Theorem B's full chain |κ|↑κ* ⟺ μ_max < 0 ⟺ τ ∈ (0,∞) (OP-B).
+-- Volume II V5 (10.5281/zenodo.22117968) cites commit e44e8d1, where the
+-- withdrawn declarations below still exist under their old names.
 --
 -- Mathlib dependencies: ContactGeometry (pending upstream),
 --   Analysis.ODE.Gronwall, MeasureTheory.Measure.GaussianMeasure
@@ -21,8 +30,10 @@ import Mathlib.MeasureTheory.Measure.MeasureSpace
 
 namespace PrincipiaOrthogona.VolumeTwo
 
-/-- The contact manifold M = X × ℝ. We model X as a smooth manifold; here
-    abstracted as a metric space with extra structure. -/
+/- The contact manifold M = X × ℝ. We model X as a smooth manifold; here
+   abstracted as a metric space with extra structure.
+   (A `/-- -/` doc comment cannot attach to `variable`; that was the parse error
+   at 25:57, "unexpected token 'variable'; expected 'lemma'".) -/
 variable {X : Type*} [MetricSpace X]
 
 /-- Contact variable z ∈ ℝ records accumulated action (dissipation). -/
@@ -72,11 +83,10 @@ theorem embodimentThreshold_pos (c κ_noise : ℝ) (hc : 0 < c) (hk : 0 < κ_noi
 theorem toyModel_tau :
     embodimentThreshold 4 1 (by norm_num) (by norm_num) = 2 := by
   unfold embodimentThreshold
-  norm_num
-  -- √4 = 2
-  rw [show (4 : ℝ) / 1 = 4 by ring]
-  rw [Real.sqrt_eq_iff_sq_eq (by norm_num) (by norm_num)]
-  norm_num
+  -- The previous proof ran `norm_num` first, which already rewrote 4 / 1, so the
+  -- following `rw [show (4:ℝ)/1 = 4 ..]` had no pattern left to match.
+  rw [show (4 : ℝ) / 1 = 2 ^ 2 by norm_num]
+  exact Real.sqrt_sq (by norm_num)
 
 -- ── §2 Transverse Eigenvalue — Proposition 4.2 ────────────────────────────────
 
@@ -96,9 +106,11 @@ theorem eigenvalue_neg_pos_z (sys : DM3System) (z : ℝ) (hz : 0 < z) :
     transverseEigenvalue sys z < 0 := by
   unfold transverseEigenvalue
   apply mul_neg_of_neg_of_pos sys.mu_neg
-  have hexp : Real.exp (- sys.beta * z) < 1 := by
-    apply Real.exp_lt_one_of_neg
-    exact mul_neg_of_pos_of_neg sys.beta_pos (neg_of_neg_pos (neg_pos.mpr hz))
+  -- `Real.exp_lt_one_of_neg` is not a Mathlib constant. Use strict monotonicity
+  -- of exp against exp 0 = 1.
+  have hbz : -sys.beta * z < 0 := by nlinarith [sys.beta_pos]
+  have hexp : Real.exp (- sys.beta * z) < Real.exp 0 := Real.exp_lt_exp.mpr hbz
+  rw [Real.exp_zero] at hexp
   linarith
 
 /-- λ(z) → μ_max as z → ∞ (full dm³ contraction rate). -/
@@ -106,15 +118,17 @@ theorem eigenvalue_limit (sys : DM3System) :
     Filter.Tendsto (transverseEigenvalue sys)
                    Filter.atTop
                    (nhds sys.mu_max) := by
-  simp only [transverseEigenvalue]
+  -- `simp only [transverseEigenvalue]` makes no progress here: the constant
+  -- occurs unapplied, so there is nothing for the equation lemma to rewrite.
+  have hfun : transverseEigenvalue sys
+      = fun z : ℝ => sys.mu_max * (1 - Real.exp (-sys.beta * z)) := rfl
+  rw [hfun]
   -- Step 1: −β·z → −∞  (β > 0, so −β < 0, and z → +∞)
-  have h_lin : Filter.Tendsto (fun z : ℝ => -sys.beta * z) Filter.atTop Filter.atBot := by
-    rw [Filter.tendsto_atBot]
-    intro b
-    rw [Filter.eventually_atTop]
-    -- Need z ≥ −b/β + 1  ⟹  −β·z ≤ b   (valid since β > 0)
-    exact ⟨-b / sys.beta + 1,
-      fun z hz => by nlinarith [sys.beta_pos]⟩
+  -- The hand-rolled witness −b/β + 1 defeated `nlinarith`: it cannot see
+  -- β · (b/β) = b, so the division blocked the contradiction. Mathlib already
+  -- has the fact.
+  have h_lin : Filter.Tendsto (fun z : ℝ => -sys.beta * z) Filter.atTop Filter.atBot :=
+    Filter.Tendsto.const_mul_atTop_of_neg (by linarith [sys.beta_pos]) Filter.tendsto_id
   -- Step 2: exp(−β·z) → 0  via  Real.tendsto_exp_atBot ∘ h_lin
   have h_exp : Filter.Tendsto (fun z : ℝ => Real.exp (-sys.beta * z))
       Filter.atTop (nhds 0) :=
@@ -179,7 +193,7 @@ theorem entropy_lyapunov_duality :
 
 -- ── §4 Theorem A: Contact Realization of the Fold (Proof Skeleton) ────────────
 
-/-- THEOREM A (Volume Two, §2): The fold operator F is the piecewise-smooth,
+/- (withdrawn; kept for the record) THEOREM A (Volume Two, §2): The fold operator F is the piecewise-smooth,
     pre-contact limit of the dm³ operator A_{dm³} = φ^{T*/4}.
 
     Current status: structural proof sketch only.
@@ -193,26 +207,16 @@ theorem entropy_lyapunov_duality :
       - Prove Proposition 2.1 (regularization) as filter limit
       - Deduce Theorem A from Table 1 (correspondence table)
 -/
-theorem thm_A_contact_realization_fold
-    (sys : DM3System)
-    -- The fold generator S approximated by H_diss as β→∞
-    (S : ℝ → ℝ)        -- distributional generator
-    (H_diss : ℝ → ℝ)   -- contact Hamiltonian correction
-    (hS : ∀ z, S z = sys.mu_max * if z ≥ 0 then 1 else 0)  -- step function
-    (hH : ∀ z, H_diss z = - sys.mu_max * Real.exp (- sys.beta * z)) :
-    -- H_diss converges to S as beta → ∞ (in distributional sense)
-    True := by
-  trivial
-  -- OPEN: Replace `True` with actual convergence statement.
-  -- OPEN PROOF OBLIGATIONS:
-  --   A1. Define distributional convergence framework in Lean 4
-  --   A2. Show exp(-beta*z) → Θ(z=0) in distributions as beta→∞
-  --   A3. Conclude fold impulse = contact correction in the limit
-  -- Estimated difficulty: ★★★★☆ (4/5 — requires distribution theory in Mathlib)
+-- WITHDRAWN 2026-09-24: `thm_A_contact_realization_fold`. Its conclusion was
+-- `True` (`:= by trivial`), so it passed every axiom check and established
+-- nothing; Volume II V5, Appendix A note 1, already said so. The statement it
+-- stood for is recorded as open obligation OP-A in §7. What is provable of
+-- Theorem A without distribution theory is in §6d:
+-- `thm_A_regularization_pointwise`, `thm_A_regularization_at_fold`.
 
 -- ── §5 Theorem B: Threshold Equivalence (Proof Skeleton) ─────────────────────
 
-/-- THEOREM B (Volume Two, §3): The geometric threshold κ* and the stochastic
+/- (withdrawn; kept for the record) THEOREM B (Volume Two, §3): The geometric threshold κ* and the stochastic
     embodiment threshold τ are equivalent:
       |κ| ↑ κ* ⟺ μ_max < 0 ⟺ τ ∈ (0, ∞)
 
@@ -220,22 +224,12 @@ theorem thm_A_contact_realization_fold
       - Forward: Lemma 3.1 (fold → hyperbolicity) + Theorem 3.2 (Itô correction)
       - Backward: Lemma 3.3 (finite τ → μ_max < 0) + Theorem 3.4 (contradiction)
 -/
-theorem thm_B_threshold_equivalence
-    (c κ_noise : ℝ) (hc : 0 < c) (hk : 0 < κ_noise)
-    (sys : DM3System) :
-    -- μ_max < 0 ↔ τ > 0 (middle ↔ right of the chain)
-    sys.mu_max < 0 ↔ 0 < embodimentThreshold c κ_noise hc hk := by
-  constructor
-  · intro _
-    exact embodimentThreshold_pos c κ_noise hc hk
-  · intro _
-    exact sys.mu_neg
-  -- NOTE: This proves only the μ_max ↔ τ link.
-  -- OPEN: The full chain |κ|↑κ* ↔ μ_max < 0 requires:
-  --   B1. Formalize Floquet theory in Lean / Mathlib
-  --   B2. Prove rank-1 Jacobian loss ↔ μ_max < 0 (Lemma 3.1)
-  --   B3. Itô correction term: need stochastic ODE framework
-  -- Estimated difficulty: ★★★★★ (5/5 — Floquet + SDE in Lean is frontier work)
+-- WITHDRAWN 2026-09-24: `thm_B_threshold_equivalence`. It proved
+-- `sys.mu_max < 0 ↔ 0 < embodimentThreshold c κ_noise hc hk`, but the left side
+-- is a field of `DM3System` (`mu_neg`) and the right side is
+-- `embodimentThreshold_pos`, so both hold by hypothesis and the arrow carries
+-- nothing (Volume II V5, Appendix A note 2). The real content, τ > 0, remains
+-- as `embodimentThreshold_pos`; the full chain is open obligation OP-B in §7.
 
 -- ── §6 Theorem C: Singularity–Bifurcation Correspondence (Skeleton) ──────────
 
@@ -259,9 +253,10 @@ def singularityCorrespondence : DM3Bifurcation → WhitneySingularity
   | DM3Bifurcation.neimark_sacker => WhitneySingularity.A2
   | DM3Bifurcation.slow_fast      => WhitneySingularity.A3
 
-/-- THEOREM C: The correspondence is well-defined and covers A1–A3.
-    (Injectivity on A2, A3; surjectivity on A1 via two bifurcations.) -/
-theorem thm_C_singularity_bijection :
+/-- THEOREM C, part: `A₂` and `A₃` each have exactly one preimage.
+    Renamed 2026-09-24 from `thm_C_singularity_bijection` (the map is not a
+    bijection: see `thm_C_not_bijective`; surjectivity is `thm_C_A1_surjective`). -/
+theorem thm_C_unique_preimages_A2_A3 :
     -- A2 and A3 have unique preimages
     (∀ b : DM3Bifurcation,
       singularityCorrespondence b = WhitneySingularity.A2 →
@@ -346,9 +341,9 @@ theorem Theorem_15_2_integrability
     Lean path: AlternatingMap.map_linearDependent (Mathlib)
                LinearIndependent.fintype_card_le_finrank -/
 theorem alternating_vanishes_beyond_dim
-    {R : Type*} [CommRing R]
+    {R : Type*} [CommRing R] [StrongRankCondition R]
     {V : Type*} [AddCommGroup V] [Module R V] [Module.Finite R V]
-    {W : Type*} [AddCommGroup W] [Module R W]
+    {W : Type*} [AddCommGroup W] [Module R W] [NoZeroSMulDivisors R W]
     {m : ℕ}
     (f : AlternatingMap R V W (Fin m))
     (hm : Module.finrank R V < m) :
@@ -366,102 +361,115 @@ theorem alternating_vanishes_beyond_dim
   -- Step 2: alternating maps vanish on linearly dependent inputs
   exact f.map_linearDependent v hdep
 
--- ── Level 2d: symplectic distribution ξ, N_J = 0 from d² = 0 ───────────────
+-- ── Levels 2d and 2d+t: withdrawn 2026-08-26 ────────────────────────────────
+--
+-- The contact-distribution and full-manifold integrability arguments that stood
+-- here proved nothing: the "dΩ = 0" hypothesis was (∀ X Y Z, (0:ℝ) = 0), a
+-- tautology, so the axiom field asserted its own conclusion; one Reeb field was
+-- (fun _ => 0) = (fun _ => 0); one conclusion was True; and the structure did
+-- not parse. The inline summary recorded both levels as "done, closed".
+--
+-- The mathematics is not withdrawn -- only the claim that it was formalised.
+-- N_J(X,Y) = [JX,JY] - J[JX,Y] - J[X,JY] - [X,Y] requires Lie brackets of vector
+-- fields, which a pointwise model on (Fin 2 → ℝ) cannot express, so the
+-- obligation is recorded as OP4 and OP5 in §7 rather than restated as a theorem
+-- whose hypotheses were picked to make it true.
+--
+-- Withdrawn text: PrincipiaOrthogona_v2/to_delete/VolumeTwo_nijenhuis_levels_2026-08-26.lean
+-- Level 1 (Theorem_15_2_integrability, above) is proved and stands.
 
-/-- The contact distribution ξ at a point: a 2-dimensional real symplectic space.
-    We model it as ℝ² with a symplectic form Ω (the restriction of dα).
-    Axioms needed:
-      (J²)     J ∘ J = −id                  (almost complex structure)
-      (Compat) Ω(JX, JY) = Ω(X, Y)          (J preserves Ω)
-      (Closed) dΩ = 0                        (Ω = dα|_ξ, so d(dα) = 0)
-    Key identity (Salamon 1999, Prop 2.53):
-      Ω(N_J(X,Y), Z) = (dΩ)^{0,3}(X,Y,Z) + (dΩ)^{3,0}(X,Y,Z)
-    Since dΩ = 0, all type components vanish, so N_J = 0. -/
-structure ContactDistributionPoint where
-  /-- Symplectic form Ω : ξ × ξ → ℝ  (bilinear, alternating, non-degenerate) -/
-  omega        : (Fin 2 → ℝ) → (Fin 2 → ℝ) → ℝ
-  /-- Almost complex structure J : ξ → ξ -/
-  J            : (Fin 2 → ℝ) → (Fin 2 → ℝ)
-  /-- The Nijenhuis tensor extracted from the (0,3)-component of dΩ.
-      Statement: N_J(X,Y) is proportional to the (0,3)+(3,0) part of dΩ. -/
-  nijenhuis_from_domega :
-      ∀ (X Y : Fin 2 → ℝ),
-        (∀ Z, omega (nijenhuisEval X Y) Z = 0) →
-        nijenhuisEval X Y = 0
-  where
-    nijenhuisEval : (Fin 2 → ℝ) → (Fin 2 → ℝ) → (Fin 2 → ℝ) :=
-      fun X Y => (fun _ => 0)  -- placeholder; see below
+-- ── §6d V5 additions, 2026-08-26 ─────────────────────────────────────────────
+--
+-- Four declarations added while preparing V5. Two of them close rows the V4
+-- Appendix A listed as PROVED against names that did not exist; one gives
+-- Theorem A real content in place of a `True` conclusion; one turns a docstring
+-- caveat into a theorem.
 
-/-- The Nijenhuis tensor on ξ, axiomatised with its relation to dΩ. -/
-structure NijenhuisTensorξ where
-  eval         : (Fin 2 → ℝ) → (Fin 2 → ℝ) → (Fin 2 → ℝ)
-  alternating  : ∀ X, eval X X = 0
-  /-- Key axiom (Salamon Prop 2.53): N_J is determined by the (0,3) part of dΩ.
-      When dΩ = 0, this forces N_J = 0. -/
-  domega_zero_implies_N_zero :
-      (∀ (X Y Z : Fin 2 → ℝ), (0 : ℝ) = 0) →  -- dΩ = 0 (all components)
-      ∀ X Y, eval X Y = 0
+/-- **`thm_C_A1_surjective`** — V4's Appendix A listed this as proved under a name
+    that existed nowhere. It is true and easy, so here it is: every Whitney type in
+    the target is hit. -/
+theorem thm_C_A1_surjective : Function.Surjective singularityCorrespondence := by
+  intro w
+  cases w with
+  | A1 => exact ⟨DM3Bifurcation.contact_hopf, rfl⟩
+  | A2 => exact ⟨DM3Bifurcation.neimark_sacker, rfl⟩
+  | A3 => exact ⟨DM3Bifurcation.slow_fast, rfl⟩
 
-/-- LEVEL 2d: On the contact distribution ξ = (ℝ², dα|_ξ),
-    the Nijenhuis tensor of any compatible J vanishes: N_J|_ξ = 0.
+/-- The correspondence is **not** a bijection, and this is a theorem rather than a
+    remark. Contact Hopf and saddle-node share the `A₁` preimage, so the map from
+    four bifurcations onto three Whitney types is two-to-one there. Versions V2a–V4
+    of Volume II described it as bijective in the abstract and in Proposition 5.1
+    while the table beneath stated the truth. -/
+theorem thm_C_not_bijective : ¬ Function.Bijective singularityCorrespondence := by
+  rintro ⟨hinj, -⟩
+  have heq : singularityCorrespondence DM3Bifurcation.contact_hopf
+           = singularityCorrespondence DM3Bifurcation.saddle_node := rfl
+  have hbad : DM3Bifurcation.contact_hopf = DM3Bifurcation.saddle_node := hinj heq
+  exact DM3Bifurcation.noConfusion hbad
 
-    Proof: Ω = dα|_ξ.  Since d² = 0, dΩ = d(dα)|_ξ = 0.
-    By the Salamon identity, N_J is recovered from the (0,3) component of dΩ.
-    Hence N_J = 0.  This closes the sorry WITHOUT Newlander–Nirenberg:
-    the integrability of J on ξ follows directly from d² = 0 (a tautology). -/
-theorem integrability_on_contact_distribution
-    (N : NijenhuisTensorξ)
-    (domega_closed : ∀ (X Y Z : Fin 2 → ℝ), (0 : ℝ) = 0) :
-    ∀ (X Y : Fin 2 → ℝ), N.eval X Y = 0 :=
-  N.domega_zero_implies_N_zero domega_closed
+/-- **Theorem A, the part that is provable here.** The full statement is a
+    distributional limit and stays open (obligation OP-A in §7; the former
+    placeholder `thm_A_contact_realization_fold`, whose conclusion was `True`,
+    was withdrawn 2026-09-24). What *is* provable without distribution theory is
+    the pointwise skeleton: away from the fold the contact correction vanishes as
+    the regularisation sharpens.
 
--- ── Level 2d+t: full contact 3-manifold M = ξ × ⟨R⟩ ────────────────────────
+    `β` is the regularisation parameter, taken to `∞`. -/
+theorem thm_A_regularization_pointwise (μ : ℝ) {z : ℝ} (hz : 0 < z) :
+    Filter.Tendsto (fun β : ℝ => -μ * Real.exp (-z * β)) Filter.atTop (nhds 0) := by
+  have hlin : Filter.Tendsto (fun β : ℝ => -z * β) Filter.atTop Filter.atBot :=
+    Filter.Tendsto.const_mul_atTop_of_neg (by linarith) Filter.tendsto_id
+  have hexp : Filter.Tendsto (fun β : ℝ => Real.exp (-z * β)) Filter.atTop (nhds 0) :=
+    Real.tendsto_exp_atBot.comp hlin
+  simpa using hexp.const_mul (-μ)
 
-/-- The Reeb vector field R is the unique vector field satisfying
-      α(R) = 1  and  ι_R dα = 0.
-    J is extended from ξ to TM by setting J(R) = 0 (R is J-real). -/
-structure ContactManifoldPoint where
-  /-- Distribution part: inherits from the 2d level -/
-  xi           : NijenhuisTensorξ
-  /-- Reeb direction: R transverse to ξ -/
-  alpha_R      : ℝ                    -- α(R) = 1
-  alpha_R_one  : alpha_R = 1
-  /-- Mixed Nijenhuis terms N_J(R, X) for X ∈ ξ.
-      These vanish by the contact Cartan formula:
-        ι_R dα = 0  ⟹  dα(R, JX) = 0  ⟹  N_J(R, X) = 0. -/
-  N_R_xi_zero  : ∀ (X : Fin 2 → ℝ), (fun _ : Fin 2 => (0 : ℝ)) = (fun _ => 0)
+/-- The other half of the skeleton: **on** the fold the correction does not move
+    with `β` at all. Together with the previous theorem this is the concentration
+    statement — vanishing off `z = 0`, constant on it — of which the distributional
+    limit is the completion. -/
+theorem thm_A_regularization_at_fold (μ β : ℝ) :
+    -μ * Real.exp (-(0 : ℝ) * β) = -μ := by
+  simp
 
-/-- LEVEL 2d+t: On the full contact 3-manifold M = ξ ⊕ ⟨R⟩,
-    the Nijenhuis tensor of J vanishes everywhere: N_J|_M = 0.
-
-    Proof by decomposition of TM = ξ ⊕ ⟨R⟩:
-      (a) N_J|_{ξ×ξ} = 0  by Level 2d  (d² = 0)
-      (b) N_J(R, X) = 0   by ι_R dα = 0  (Cartan / contact condition)
-      (c) N_J(R, R) = 0   by alternating
-
-    All three cases use only d² = 0 and the contact axiom ι_R dα = 0.
-    The full Newlander–Nirenberg theorem (analytic, uses ∂̄) is not needed
-    because M is 3-real-dimensional (not a complex manifold — J lives on ξ). -/
-theorem integrability_on_full_contact_manifold
-    (C : ContactManifoldPoint)
-    (domega_closed : ∀ (X Y Z : Fin 2 → ℝ), (0 : ℝ) = 0) :
-    -- N_J = 0 on all of TM (modelled as ξ-part + Reeb part)
-    (∀ (X Y : Fin 2 → ℝ), C.xi.eval X Y = 0) ∧
-    (∀ (X : Fin 2 → ℝ), True) := by   -- N_J(R, X) = 0: encoded in C.N_R_xi_zero
+/-- **τ = |μ_max| is a coincidence of the canonical value, not an identity.**
+    With the drift coefficient `c = 2|μ|` and `κ_noise = 1`, the embodiment
+    threshold `√(c/κ)` equals `|μ|` exactly when `|μ| = 2` (or `μ = 0`). The
+    docstring of `toyModel_tau` has asserted this since the file was written;
+    it is now a theorem, and it is the reason τ is a scale rather than a
+    parameter-free relation. -/
+theorem tau_eq_abs_mu_iff (μ : ℝ) :
+    Real.sqrt (2 * |μ|) = |μ| ↔ |μ| = 2 ∨ μ = 0 := by
+  have habs : (0 : ℝ) ≤ |μ| := abs_nonneg μ
   constructor
-  · -- Case (a): ξ × ξ — use Level 2d
-    exact integrability_on_contact_distribution C.xi domega_closed
-  · -- Case (b) + (c): Reeb direction — use contact axiom
-    intro _; trivial   -- encoded as axiom in ContactManifoldPoint
-
--- Summary remark (inline):
--- Level 1  (done, closed):   dim-count on TangentΓ = ℝ
--- Level 2d (done, closed):   d² = 0 forces N_J|_ξ = 0  (symplectic argument)
--- Level 2d+t (done, closed): ι_R dα = 0 kills mixed terms; alt kills R×R
--- ────────────────────────────────────────────────────────────────────────────
+  · intro h
+    have hsq : 2 * |μ| = |μ| ^ 2 := by
+      -- do NOT use simp here: it rewrites √(2*|μ|) to √2 * √|μ| before
+      -- Real.sq_sqrt can fire, and turns |μ|^2 into μ^2.
+      have h2 : Real.sqrt (2 * |μ|) ^ 2 = |μ| ^ 2 := by rw [h]
+      rwa [Real.sq_sqrt (by positivity : (0:ℝ) ≤ 2 * |μ|)] at h2
+    have hfac : |μ| * (|μ| - 2) = 0 := by nlinarith [hsq]
+    rcases mul_eq_zero.mp hfac with h0 | h2
+    · exact Or.inr (abs_eq_zero.mp h0)
+    · exact Or.inl (by linarith)
+  · rintro (h2 | h0)
+    · rw [h2]
+      rw [show (2 : ℝ) * 2 = 2 ^ 2 by norm_num]
+      exact Real.sqrt_sq (by norm_num)
+    · simp [h0]
 
 -- ── §7 Open Problems Register ─────────────────────────────────────────────────
 -- This section documents all open proof obligations from §6.3.
+--
+-- OP-A (Theorem A, contact realization of the fold): the contact correction
+--     H_diss(z) = −μ_max e^{−βz} converges, as β → ∞, to the fold generator
+--     S(z) = μ_max Θ(z) in the sense of distributions. Proved here: the pointwise
+--     skeleton (thm_A_regularization_pointwise, thm_A_regularization_at_fold).
+--     Status: OPEN. Requires distribution theory in Mathlib. Difficulty ★★★★.
+--
+-- OP-B (Theorem B, threshold equivalence): |κ| ↑ κ* ⟺ μ_max < 0 ⟺ τ ∈ (0,∞).
+--     Proved here: τ > 0 whenever c, κ_noise > 0 (embodimentThreshold_pos).
+--     Status: OPEN. Requires Floquet theory (rank-1 Jacobian loss ⟺ μ_max < 0)
+--     and an SDE framework (Itô correction). Difficulty ★★★★★.
 --
 -- OP1 (Global Equivalence): Theorem B is local (fold neighborhood).
 --     Global version: every τ-stable dm³ system arises from a fold globally.
@@ -471,6 +479,17 @@ theorem integrability_on_full_contact_manifold
 -- OP2 (Higher Resonances): Systematic k:m correspondence between
 --     higher Ak singularities and higher resonances.
 --     Status: OPEN. Requires: singularity theory beyond A3, Mathlib Morse theory.
+--
+-- OP4 (Integrability on the contact distribution ξ): N_J|_ξ = 0.
+--     Content: the Salamon identity (Salamon 1999, Prop. 2.53) recovers N_J from
+--     the (0,3) and (3,0) components of dΩ; d² = 0 kills them.
+--     Status: OPEN, not yet statable here. Requires Lie brackets of vector
+--     fields and an exterior derivative; a pointwise model on (Fin 2 → ℝ)
+--     cannot express N_J. Difficulty ★★★★.
+--
+-- OP5 (Integrability on the full contact 3-manifold): N_J|_M = 0 on
+--     TM = ξ ⊕ ⟨R⟩, the mixed terms vanishing by ι_R dα = 0.
+--     Status: OPEN, depends on OP4. Difficulty ★★★★.
 --
 -- OP3 (Volume Three Instantiations): Compute κ* and τ from data in
 --     plasma reconnection, market volatility, neural embedding geometry.
