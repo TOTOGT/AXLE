@@ -4,9 +4,12 @@
 -- Principia Orthogona Series — G6 LLC, Newark NJ
 -- Author: Pablo Nogueira Grossi (ORCID 0009-0000-6496-2186)
 --
--- STATUS: Proof skeleton. All `sorry` below are OPEN PROOF
--- OBLIGATIONS — honest, trackable, and ready for Mathlib
--- contributions. No sorry is hidden or undocumented.
+-- STATUS (2026-09-24): no `sorry` and no vacuous conclusion. Every declaration
+-- is kernel-checked (tools/verify-vol2/run.sh). What remains open is recorded
+-- as prose obligations in §7, not as theorems: Theorem A's distributional limit
+-- (OP-A) and Theorem B's full chain |κ|↑κ* ⟺ μ_max < 0 ⟺ τ ∈ (0,∞) (OP-B).
+-- Volume II V5 (10.5281/zenodo.22117968) cites commit e44e8d1, where the
+-- withdrawn declarations below still exist under their old names.
 --
 -- Mathlib dependencies: ContactGeometry (pending upstream),
 --   Analysis.ODE.Gronwall, MeasureTheory.Measure.GaussianMeasure
@@ -184,7 +187,7 @@ theorem entropy_lyapunov_duality :
 
 -- ── §4 Theorem A: Contact Realization of the Fold (Proof Skeleton) ────────────
 
-/-- THEOREM A (Volume Two, §2): The fold operator F is the piecewise-smooth,
+/- (withdrawn; kept for the record) THEOREM A (Volume Two, §2): The fold operator F is the piecewise-smooth,
     pre-contact limit of the dm³ operator A_{dm³} = φ^{T*/4}.
 
     Current status: structural proof sketch only.
@@ -198,26 +201,16 @@ theorem entropy_lyapunov_duality :
       - Prove Proposition 2.1 (regularization) as filter limit
       - Deduce Theorem A from Table 1 (correspondence table)
 -/
-theorem thm_A_contact_realization_fold
-    (sys : DM3System)
-    -- The fold generator S approximated by H_diss as β→∞
-    (S : ℝ → ℝ)        -- distributional generator
-    (H_diss : ℝ → ℝ)   -- contact Hamiltonian correction
-    (hS : ∀ z, S z = sys.mu_max * if z ≥ 0 then 1 else 0)  -- step function
-    (hH : ∀ z, H_diss z = - sys.mu_max * Real.exp (- sys.beta * z)) :
-    -- H_diss converges to S as beta → ∞ (in distributional sense)
-    True := by
-  trivial
-  -- OPEN: Replace `True` with actual convergence statement.
-  -- OPEN PROOF OBLIGATIONS:
-  --   A1. Define distributional convergence framework in Lean 4
-  --   A2. Show exp(-beta*z) → Θ(z=0) in distributions as beta→∞
-  --   A3. Conclude fold impulse = contact correction in the limit
-  -- Estimated difficulty: ★★★★☆ (4/5 — requires distribution theory in Mathlib)
+-- WITHDRAWN 2026-09-24: `thm_A_contact_realization_fold`. Its conclusion was
+-- `True` (`:= by trivial`), so it passed every axiom check and established
+-- nothing; Volume II V5, Appendix A note 1, already said so. The statement it
+-- stood for is recorded as open obligation OP-A in §7. What is provable of
+-- Theorem A without distribution theory is in §6d:
+-- `thm_A_regularization_pointwise`, `thm_A_regularization_at_fold`.
 
 -- ── §5 Theorem B: Threshold Equivalence (Proof Skeleton) ─────────────────────
 
-/-- THEOREM B (Volume Two, §3): The geometric threshold κ* and the stochastic
+/- (withdrawn; kept for the record) THEOREM B (Volume Two, §3): The geometric threshold κ* and the stochastic
     embodiment threshold τ are equivalent:
       |κ| ↑ κ* ⟺ μ_max < 0 ⟺ τ ∈ (0, ∞)
 
@@ -225,22 +218,12 @@ theorem thm_A_contact_realization_fold
       - Forward: Lemma 3.1 (fold → hyperbolicity) + Theorem 3.2 (Itô correction)
       - Backward: Lemma 3.3 (finite τ → μ_max < 0) + Theorem 3.4 (contradiction)
 -/
-theorem thm_B_threshold_equivalence
-    (c κ_noise : ℝ) (hc : 0 < c) (hk : 0 < κ_noise)
-    (sys : DM3System) :
-    -- μ_max < 0 ↔ τ > 0 (middle ↔ right of the chain)
-    sys.mu_max < 0 ↔ 0 < embodimentThreshold c κ_noise hc hk := by
-  constructor
-  · intro _
-    exact embodimentThreshold_pos c κ_noise hc hk
-  · intro _
-    exact sys.mu_neg
-  -- NOTE: This proves only the μ_max ↔ τ link.
-  -- OPEN: The full chain |κ|↑κ* ↔ μ_max < 0 requires:
-  --   B1. Formalize Floquet theory in Lean / Mathlib
-  --   B2. Prove rank-1 Jacobian loss ↔ μ_max < 0 (Lemma 3.1)
-  --   B3. Itô correction term: need stochastic ODE framework
-  -- Estimated difficulty: ★★★★★ (5/5 — Floquet + SDE in Lean is frontier work)
+-- WITHDRAWN 2026-09-24: `thm_B_threshold_equivalence`. It proved
+-- `sys.mu_max < 0 ↔ 0 < embodimentThreshold c κ_noise hc hk`, but the left side
+-- is a field of `DM3System` (`mu_neg`) and the right side is
+-- `embodimentThreshold_pos`, so both hold by hypothesis and the arrow carries
+-- nothing (Volume II V5, Appendix A note 2). The real content, τ > 0, remains
+-- as `embodimentThreshold_pos`; the full chain is open obligation OP-B in §7.
 
 -- ── §6 Theorem C: Singularity–Bifurcation Correspondence (Skeleton) ──────────
 
@@ -264,9 +247,10 @@ def singularityCorrespondence : DM3Bifurcation → WhitneySingularity
   | DM3Bifurcation.neimark_sacker => WhitneySingularity.A2
   | DM3Bifurcation.slow_fast      => WhitneySingularity.A3
 
-/-- THEOREM C: The correspondence is well-defined and covers A1–A3.
-    (Injectivity on A2, A3; surjectivity on A1 via two bifurcations.) -/
-theorem thm_C_singularity_bijection :
+/-- THEOREM C, part: `A₂` and `A₃` each have exactly one preimage.
+    Renamed 2026-09-24 from `thm_C_singularity_bijection` (the map is not a
+    bijection: see `thm_C_not_bijective`; surjectivity is `thm_C_A1_surjective`). -/
+theorem thm_C_unique_preimages_A2_A3 :
     -- A2 and A3 have unique preimages
     (∀ b : DM3Bifurcation,
       singularityCorrespondence b = WhitneySingularity.A2 →
@@ -418,8 +402,9 @@ theorem thm_C_not_bijective : ¬ Function.Bijective singularityCorrespondence :=
   exact DM3Bifurcation.noConfusion hbad
 
 /-- **Theorem A, the part that is provable here.** The full statement is a
-    distributional limit and stays open (see `thm_A_contact_realization_fold`,
-    whose conclusion is `True`). What *is* provable without distribution theory is
+    distributional limit and stays open (obligation OP-A in §7; the former
+    placeholder `thm_A_contact_realization_fold`, whose conclusion was `True`,
+    was withdrawn 2026-09-24). What *is* provable without distribution theory is
     the pointwise skeleton: away from the fold the contact correction vanishes as
     the regularisation sharpens.
 
@@ -468,6 +453,17 @@ theorem tau_eq_abs_mu_iff (μ : ℝ) :
 
 -- ── §7 Open Problems Register ─────────────────────────────────────────────────
 -- This section documents all open proof obligations from §6.3.
+--
+-- OP-A (Theorem A, contact realization of the fold): the contact correction
+--     H_diss(z) = −μ_max e^{−βz} converges, as β → ∞, to the fold generator
+--     S(z) = μ_max Θ(z) in the sense of distributions. Proved here: the pointwise
+--     skeleton (thm_A_regularization_pointwise, thm_A_regularization_at_fold).
+--     Status: OPEN. Requires distribution theory in Mathlib. Difficulty ★★★★.
+--
+-- OP-B (Theorem B, threshold equivalence): |κ| ↑ κ* ⟺ μ_max < 0 ⟺ τ ∈ (0,∞).
+--     Proved here: τ > 0 whenever c, κ_noise > 0 (embodimentThreshold_pos).
+--     Status: OPEN. Requires Floquet theory (rank-1 Jacobian loss ⟺ μ_max < 0)
+--     and an SDE framework (Itô correction). Difficulty ★★★★★.
 --
 -- OP1 (Global Equivalence): Theorem B is local (fold neighborhood).
 --     Global version: every τ-stable dm³ system arises from a fold globally.

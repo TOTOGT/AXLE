@@ -5,11 +5,13 @@
 -- without error, which is the point: compilation is not verification.
 --
 -- WHAT THIS PROBE CANNOT SEE, and why it is not the whole check.
--- `thm_A_contact_realization_fold` has conclusion `True`, and
--- `thm_B_threshold_equivalence` proves its biconditional from assumptions on
--- both sides. Both will appear below on the permitted axioms, because a
--- vacuous theorem is a true theorem. The axiom gate is necessary and not
--- sufficient; see tools/conclusion_scan.lean in the geometry repository.
+-- A vacuous theorem is a true theorem and reports clean axioms. Until
+-- 2026-09-24 this probe listed two: `thm_A_contact_realization_fold`
+-- (conclusion `True`) and `thm_B_threshold_equivalence` (both sides held by
+-- hypothesis). Both were withdrawn from VolumeTwo.lean that day (N 19 -> 17)
+-- and `thm_C_singularity_bijection` was renamed `thm_C_unique_preimages_A2_A3`.
+-- The axiom gate is necessary and not sufficient; see
+-- tools/conclusion_scan.lean in the geometry repository.
 --
 -- Run:  lake env lean tools/verify-vol2/probe_vol2.lean
 
@@ -32,10 +34,8 @@ open PrincipiaOrthogona.VolumeTwo
 #print axioms PrincipiaOrthogona.VolumeTwo.epsilon_zero_waddington
 #print axioms PrincipiaOrthogona.VolumeTwo.entropy_lyapunov_duality
 
--- §4-§6 the three named theorems
-#print axioms PrincipiaOrthogona.VolumeTwo.thm_A_contact_realization_fold
-#print axioms PrincipiaOrthogona.VolumeTwo.thm_B_threshold_equivalence
-#print axioms PrincipiaOrthogona.VolumeTwo.thm_C_singularity_bijection
+-- §6 Theorem C (Theorems A and B: see OP-A, OP-B in VolumeTwo.lean §7)
+#print axioms PrincipiaOrthogona.VolumeTwo.thm_C_unique_preimages_A2_A3
 
 -- §6b integrability, Level 1 only
 #print axioms PrincipiaOrthogona.VolumeTwo.Theorem_15_2_integrability

@@ -1,3 +1,11 @@
+> **Later change (2026-09-24), after the V5 deposit.** The three declarations this
+> appendix flags were dealt with in `VolumeTwo.lean`: `thm_A_contact_realization_fold`
+> (note 1, conclusion `True`) and `thm_B_threshold_equivalence` (note 2, both sides by
+> hypothesis) were withdrawn and recorded as open obligations OP-A and OP-B in §7;
+> `thm_C_singularity_bijection` (note 3) was renamed `thm_C_unique_preimages_A2_A3`.
+> The probe now asks about 17 declarations, not 19. This appendix is the record of
+> commit e44e8d1, which V5 cites, and is otherwise left as written.
+
 # Volume II · Appendix A, corrected
 
 Generated from `PrincipiaOrthogona_v2/VolumeTwo.lean` on 2026-08-26, after the

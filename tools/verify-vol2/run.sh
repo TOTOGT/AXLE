@@ -13,8 +13,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT" || exit 1
 PROBE="tools/verify-vol2/probe_vol2.lean"
 OUT="tools/verify-vol2/axioms.txt"
-N=19                                # counted by: grep -c '#print axioms' "$PROBE"
+N=17                                # counted by: grep -c '#print axioms' "$PROBE"
                                     # 14 through V4 + 5 added for V5 (2026-08-26)
+                                    # - 2 withdrawn (thm_A, thm_B placeholders, 2026-09-24)
 
 command -v lake >/dev/null 2>&1 || { echo "lake not found; install elan first."; exit 127; }
 
