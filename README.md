@@ -195,6 +195,74 @@ Remaining open: `limitCycle_exists_auto` (Poincaré–Bendixson not yet in Mathl
 
 ---
 
+## Build & toolchain
+
+AXLE is pinned to **Lean 4.14.0** (`lean-toolchain`) — deliberately older than `geometry` (the
+*Principia Orthogona* / CatGT formalization repo, pinned to Lean 4.32). `mathlib` has to track a
+revision compatible with 4.14, and it can silently stop doing so.
+
+**Known failure mode.** `lake` can report `manifest out of date: git url of dependency 'mathlib'
+changed; use lake update mathlib`. If that's ignored, the checked-out `mathlib` package can end up
+on a revision meant for a newer toolchain (observed: one matching `geometry`'s 4.32 line, not
+AXLE's 4.14). Two symptoms of this were both seen directly, not inferred: `AXLE_v5_1.lean` failing
+on deprecated `Ordinal` APIs and unknown constants that simply don't exist in 4.14-era mathlib; and
+`lake env lean` on any file importing `Mathlib.Order.Ordinal.Basic` (e.g. `AXLE_v6.lean`) failing
+with `object file '.../Mathlib/Order/Ordinal/Basic.olean' ... does not exist` — a missing build
+artifact, not a bug in the file being compiled.
+
+**Fix.** `lake update mathlib` re-resolves the dependency to the toolchain-matching revision —
+confirmed here by `cat .lake/packages/mathlib/lean-toolchain` reading back `v4.14.0` after running
+it, matching AXLE's own pin. That alone does **not** produce any `.olean` files, though — nothing
+compiles until a full `lake build` actually runs afterward, and it should be treated as a cold
+build (the old revision's `.olean`s are stale) even though the project has built before.
+
+**Status as of 2026-09-23 (updated after the full rebuild finished): two separate
+problems confirmed, not one.**
+
+1. `AXLE_v5_1.lean` has real, pre-existing bugs, unrelated to the mathlib
+revision — the exact same errors, at the exact same lines, appear before and
+after `lake update mathlib`: deprecated `Ordinal.lt_add_of_pos_right` /
+`Ordinal.IsLimit.add_right`, several type mismatches, three literal syntax
+errors (`unexpected token ';'`), and references to struct fields (`mu_max`,
+`tau`, `triple`, `layer_count`) that don't exist on `Dm3Triple` /
+`RegenerationLevel` / `OrdinalRegenerationLevel`. This needs an actual code
+fix in that file. Not attempted here — that's a separate task from Theorem
+Alpha and isn't done unprompted.
+
+2. `finite.lean` (`AXLE/Kakeya/Finite.lean`, pulled in by `AXLE.lean`) is
+**not** a code bug — it's a genuine mathlib-vintage mismatch. The resolved
+mathlib commit (`4bbdccd9c5`, 2024-12-02) correctly matches AXLE's declared
+Lean 4.14.0 toolchain, but at that commit: `Mathlib.Analysis.NormedSpace.FiniteDimensional`
+has been renamed to `Mathlib.Analysis.Normed.Module.FiniteDimension`;
+`Mathlib.MeasureTheory.Measure.Lebesgue` is a folder, not an importable leaf
+module (needs a specific submodule, e.g. `.Basic`); and
+`Mathlib.MeasureTheory.Measure.Haar.AffineSubspace` does not exist anywhere
+in that mathlib snapshot at all — confirmed by a full-repo search, zero
+matches. `finite.lean` was written against a newer mathlib than the
+toolchain this repo is actually pinned to. Fixing it means either updating
+its imports to what 4.14-era mathlib actually offers (and finding a
+substitute for the Haar/affine-subspace result, if one exists at that
+vintage), or bumping the toolchain forward — both real decisions, not made
+here.
+
+Disk space is not the cause: 31 GiB free of 228 GiB at the time of this
+build.
+
+**Update 2026-09-26 — `AXLE_v6.lean` confirmed.** A direct `lake env lean AXLE_v6.lean`
+run on this toolchain gives no errors and no `sorry`, only unused-variable warnings, matching
+the v6.2 audit log in the file. Zero `sorry` is not the same as every theorem being
+substantive: the file's own FINAL STATUS v6.2 lists which results are real and which are
+vacuous (for example, `gtct_t1` returns its own hypothesis). `Dm3Comp.lean`, `Main_v6.lean`
+and `TribonacciRatioConvergence.lean` have not been re-run and remain unconfirmed.
+
+This matters beyond `AXLE_v5_1.lean` itself: `AXLE_v6.lean`, `Dm3Comp.lean`, `Main_v6.lean`, and
+`TribonacciRatioConvergence.lean` are the live corpus backing the `open_sorry_core` pool for
+**Theorem Alpha 50¢** (`~/Desktop/TheoremAlpha50c`), which shells out to `lake env lean` against
+this repo for real kernel verification. A broken toolchain here silently breaks that game's
+verification pipeline too, with no separate warning on the game's side.
+
+---
+
 ## Reproduce figures
 
 ```bash
