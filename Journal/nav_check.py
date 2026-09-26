@@ -19,9 +19,13 @@ This script does the walk. For each issue it checks:
   5. every local href in the file resolves.
 
 It also reports, without failing, the issues that exist on disk but are held
-back from the public chain. Vol. 11 is one: its Reading Room page carries
-"do not publish this page", so nothing in the published run links to it, and a
-script that "helpfully" wired it in would publish an unfinished issue.
+back from the public chain. Vol. 11 was one until 2026-09-26: its Reading Room
+page carried "do not publish this page" while Part 6 was unset, so nothing in
+the published run linked to it, and a script that "helpfully" wired it in would
+have published an unfinished issue. Part 6 is now set from
+b3s/assignments/literature/the_boy_who_carried_nothing.md, the marker is gone,
+and No. 11 has joined RUN. HELD_BACK is empty and stays in the script for the
+next issue that is drafted ahead of its date.
 
 WHY THE FORWARD LINK IS THE ONE THAT ROTS
 Back-links get written when an issue is made, because the previous issue is
@@ -48,9 +52,10 @@ RUN = [
     (7,  "vol7.html",   "Thirteen Months on the Same Stream"),
     (8,  "vol8.html",   "The One Instrument Ever Pointed at Nepal"),
     (9,  "vol9.html",   "Two Instruments, Thirty Years, Neither Quoted"),
-    (10, "vol10.html",  "The Identity That Is Not in the Library"),
+    (10, "vol10.html", "The Identity That Is Not in the Library"),
+    (11, "vol11.html", "The Graph He Never Drew"),
 ]
-HELD_BACK = [(11, "vol11.html", "The Graph He Never Drew")]
+HELD_BACK = []
 
 
 def colophon(t):
