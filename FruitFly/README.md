@@ -11,6 +11,27 @@
 
 ---
 
+## Status note (2026-09-26) — read this first
+
+Checked against `MultiOrbitBioSwarm.lean` and `multi_orbit_bioswarm.py` as they stand:
+
+- **No connectome data is used.** The simulation runs 10–12 abstract agents; nothing is
+  loaded from FlyWire (Dorkenwald et al., *Nature* 2024) or any other connectome. "Fruit-fly
+  connectome" in the title names the motivation, not the input. A model that does run on the
+  real wiring is Shiu et al., *Nature* 2024 (open code).
+- **Of the 16 theorems, 13 are real arithmetic facts** (threshold 1/2, the Lipschitz constant
+  L(α) = 1/2 + |α| and its values, (4/5)^6 < 27/100, the (2π, −2, 2) triple). They are about
+  the formula for L(α), not about a swarm.
+- **The three "obligations" have no `sorry` keyword, but they are not proved either:**
+  `swarm_contraction` and `bio_pitchfork` have conclusion `True`, so they state nothing;
+  `collective_fixed_point` holds only because `applyG` is the identity placeholder
+  (every swarm is its own fixed point). Counting them as proved would be vacuous.
+  Their real statements are in the TODO comments, and all three remain open.
+- The "16 theorems without sorry" line below is therefore accurate about the keyword and
+  misleading about content; read it as "13 arithmetic facts proved, 3 placeholders open".
+
+---
+
 ## What's new in V2
 
 V1 (March 2026) deposited only the 3-page skeleton PDF with no source,
@@ -22,7 +43,7 @@ V2 adds:
 | Addition | Description |
 |----------|-------------|
 | `multi_orbit_bioswarm.tex` | Complete LaTeX source (569 lines) |
-| `lean/MultiOrbitBioSwarm.lean` | Lean 4 / Mathlib4 — 16 theorems without sorry |
+| `lean/MultiOrbitBioSwarm.lean` | Lean 4 / Mathlib4 — 13 arithmetic theorems proved; 3 placeholder statements open (see status note) |
 | `code/multi_orbit_bioswarm.py` | Python simulation: G = U∘F∘K∘C + all 4 figures |
 | `figures/fig1_swarm_trajectories.pdf` | Swarm trajectories at α = 0.3 and α = 0.5 |
 | `figures/fig2_pitchfork_scan.pdf` | Pitchfork bifurcation signature vs α |
@@ -50,7 +71,7 @@ noted explicitly in the abstract.
 multi_orbit_bioswarm.tex          — LaTeX source (this paper)
 multi_orbit_bioswarm_v2.pdf       — compiled PDF
 lean/
-  MultiOrbitBioSwarm.lean         — Lean 4 proofs (16 without sorry, 3 sorry obligations)
+  MultiOrbitBioSwarm.lean         — Lean 4 (13 proved, 3 placeholders stated as True / identity — open)
 code/
   multi_orbit_bioswarm.py         — Python simulation and figure generator
 figures/
@@ -73,7 +94,7 @@ README.md                         — this file
 - `L(0.3) = 4/5`, and `(4/5)^6 < 27/100` (six-iterate bound)
 - dm³ normalisation triple `(2π, −2, 2)` is arithmetically consistent
 
-Sorry obligations (infrastructure gaps, not argument gaps):
+Open obligations (stated as placeholders, not proved; see status note):
 - A: full BioSwarm Lipschitz bound (needs metric instance)
 - B: collective fixed-point (follows from A via Banach)
 - C: dynamical pitchfork (needs Mathlib bifurcation library)
