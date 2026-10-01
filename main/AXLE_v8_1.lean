@@ -1,4 +1,4 @@
--- GATE-DECLARE: sorries = TOGT.closurePoints_stationary_regular, TOGT.crystal_lockin, TOGT.d6_lockin, TOGT.g6_unconditional_closure, TOGT.embedding_intertwining, TOGT.collatz_conjecture_via_dm3_gqm
+-- GATE-DECLARE: sorries = TOGT.crystal_lockin, TOGT.d6_lockin, TOGT.g6_unconditional_closure, TOGT.embedding_intertwining, TOGT.collatz_conjecture_via_dm3_gqm
 -- GATE-REASON: Issue 6 and its supports, per this file's own Status block. g6_unconditional_closure is named for what it will assert once closed, not for what it currently proves.
 -- ============================================================================
 /-
@@ -57,6 +57,7 @@
 -- better failure.
 import Mathlib.SetTheory.Ordinal.Basic
 import Mathlib.Order.Cofinal
+import Mathlib.SetTheory.Cardinal.Cofinality.Ordinal
 import Mathlib.SetTheory.Cardinal.Arithmetic
 import Mathlib.SetTheory.Ordinal.FixedPoint
 import Mathlib.Data.Matrix.Basic
@@ -88,12 +89,65 @@ def IsStationaryBelow (S : Set Ordinal) (α : Ordinal) : Prop :=
 def closurePointsBelow (α : Ordinal) : Set Ordinal :=
   { β | β < α ∧ Order.IsSuccLimit β }
 
+/-- A limit ordinal reached by a strictly increasing ω-sequence below it. -/
+theorem isSuccLimit_of_sequence
+    (α : Ordinal.{0}) (f : ℕ → Ordinal.{0}) (hf : StrictMono f)
+    (hlt : ∀ n, f n < α) (hcof : ∀ β < α, ∃ n, β < f n) :
+    Order.IsSuccLimit α := by
+  refine ⟨?_, ?_⟩
+  · intro hmin
+    exact (not_lt_of_ge (hmin.eq_bot ▸ bot_le : α ≤ f 0)) (hlt 0) |>.elim
+  · intro b hb
+    obtain ⟨n, hn⟩ := hcof b hb.lt
+    exact hb.2 hn (hlt n)
+
+/-- REVISED 2026-10-01. The hypothesis was `α.card.ord = α` (α an initial ordinal),
+    which is not regularity: it fails for α = ω_ω, where the closure points are not
+    stationary, so the `sorry` that stood here could not be filled. The hypothesis is
+    now uncountable cofinality, `ℵ₀ < α.cof`, as in PrincipiaVol1.closurePoints_stationary.
+    The two counterexamples and this proof are compiled in `ClosurePointsCheck.lean`
+    (geometry repository). -/
 theorem closurePoints_stationary_regular
-    (α : Ordinal) (hreg : Order.IsSuccLimit α ∧ α.card.ord = α) :
+    (α : Ordinal.{0}) (hreg : Order.IsSuccLimit α ∧ Cardinal.aleph0 < α.cof) :
     IsStationaryBelow (closurePointsBelow α) α := by
-  intro C hC
   classical
-  sorry  -- honest admit #5
+  obtain ⟨hlim, hcf⟩ := hreg
+  intro C ⟨hunb, hclosed⟩
+  have hα0 : (0 : Ordinal) < α := hlim.bot_lt
+  let nxt : Ordinal → Ordinal := fun β =>
+    if h : β < α then Classical.choose (hunb β h) else 0
+  have hnxt : ∀ β < α, nxt β < α ∧ nxt β ∈ C ∧ β < nxt β := by
+    intro β hβ
+    have := Classical.choose_spec (hunb β hβ)
+    simp only [nxt, dif_pos hβ]
+    exact ⟨this.1, this.2.1, this.2.2⟩
+  let c : ℕ → Ordinal := fun n => nxt^[n + 1] 0
+  have hcα : ∀ n, nxt^[n] 0 < α := by
+    intro n; induction n with
+    | zero => simpa using hα0
+    | succ k ih => rw [Function.iterate_succ_apply']; exact (hnxt _ ih).1
+  have hclt : ∀ n, c n < α := fun n => hcα (n + 1)
+  have hcC : ∀ n, c n ∈ C := by
+    intro n
+    show nxt^[n + 1] 0 ∈ C
+    rw [Function.iterate_succ_apply']
+    exact (hnxt _ (hcα n)).2.1
+  have hcm : StrictMono c := by
+    refine strictMono_nat_of_lt_succ (fun n => ?_)
+    show nxt^[n + 1] 0 < nxt^[n + 1 + 1] 0
+    rw [Function.iterate_succ_apply' nxt (n + 1)]
+    exact (hnxt _ (hcα (n + 1))).2.2
+  have hsup_lt : (⨆ n, c n) < α := by
+    apply Ordinal.iSup_lt_of_lt_cof _ hclt
+    simpa using hcf
+  have hbdd : BddAbove (Set.range c) := Ordinal.bddAbove_of_small
+  have hlimit : Order.IsSuccLimit (⨆ n, c n) := by
+    apply isSuccLimit_of_sequence _ c hcm
+    · intro n
+      exact lt_of_lt_of_le (hcm (Nat.lt_succ_self n)) (le_ciSup hbdd (n + 1))
+    · intro β hβ
+      exact (Ordinal.lt_iSup_iff.mp hβ)
+  exact ⟨⨆ n, c n, hclosed c hcC hclt hcm, hsup_lt, hlimit⟩
 
 -- ============================================================================
 -- PART B–F: dm³ OPERATOR CHAIN & dm³ STRATA
@@ -217,7 +271,7 @@ After this fix:
 crystal_lockin — open (genuine dynamics question)
 d6_lockin — open (no longer blocked by normalization)
 g6_unconditional_closure — open
-closurePoints_stationary_regular — open (standard ordinal argument)
+closurePoints_stationary_regular — PROVED 2026-10-01 (hypothesis corrected to ℵ₀ < α.cof; see its docstring)
 collatz_conjecture_via_dm3_gqm — open (equivalent to Collatz)
 
 embedding_intertwining — open (carries a sorry; omitted from the list above until 2026-08-28)
