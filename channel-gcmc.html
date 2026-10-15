@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>channel-gcmc</title>
+<meta name="description" content="A small grand-canonical Monte Carlo of a lattice gas confined to a channel, checked against exact enumeration. A method check, not a zeolite calculation.">
+<style>
+:root{--paper:#f7f7f4;--ink:#1b2124;--soft:#5a6368;--rule:#d8d8d1;--accent:#4a5d3a;--code:#eceee6;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#15181a;--ink:#e8e8e3;--soft:#9aa3a7;--rule:#2d3336;--accent:#9fba84;--code:#1e2420;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#15181a;--ink:#e8e8e3;--soft:#9aa3a7;--rule:#2d3336;--accent:#9fba84;--code:#1e2420;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:1rem/1.65 "IBM Plex Sans","Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:46rem;margin:0 auto;padding:2.5rem max(16px,env(safe-area-inset-left,0px)) 3rem}
+h1{font:600 clamp(1.8rem,5vw,2.6rem)/1.15 Georgia,"Times New Roman",serif;margin:0 0 .8rem}
+h2{font:500 .74rem/1.4 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:2.4rem 0 .9rem;border-top:1px solid var(--rule);padding-top:1.4rem}
+p{margin:0 0 1rem;max-width:36rem}
+.soft{color:var(--soft)}
+a{color:var(--accent)}
+pre{background:var(--code);border:1px solid var(--rule);padding:1rem;overflow-x:auto;font:.8rem/1.5 ui-monospace,Menlo,Consolas,monospace;margin:0}
+table{border-collapse:collapse;font:.85rem ui-monospace,Menlo,Consolas,monospace;display:block;overflow-x:auto}
+td,th{border:1px solid var(--rule);padding:.35rem .7rem;text-align:left}
+</style>
+</head>
+<body>
+<div class="wrap">
+<p class="soft" style="font:.72rem ui-monospace,Menlo,monospace;letter-spacing:.14em;text-transform:uppercase">G6 LLC &middot; Newark, New Jersey &middot; <a href="g6/company.html">About</a></p>
+<h1>channel-gcmc</h1>
+<p>A small grand-canonical Monte Carlo of molecules on a lattice strip, checked against exact enumeration. It is a method check. It is <b>not</b> a zeolite calculation.</p>
+
+<h2>What it does</h2>
+<p>Sites on a w &times; L strip (periodic along L, walls across w), nearest-neighbour attraction, a chemical potential, all in units of kT. A Metropolis insert/delete sampler reports mean occupancy. Run <code>python3 gcmc_channel_toy.py</code>.</p>
+
+<h2>The control</h2>
+<p>On a tiny strip (w=2, L=4: 8 sites, 256 states) the sampler is compared with exact enumeration of every state. A deliberately wrong acceptance rule must be rejected.</p>
+<table>
+<tr><th>mu</th><th>exact</th><th>sampler</th></tr>
+<tr><td>-3.0</td><td>0.0618</td><td>0.0625</td></tr>
+<tr><td>-1.5</td><td>0.5000</td><td>0.4922</td></tr>
+<tr><td>0.0</td><td>0.9382</td><td>0.9381</td></tr>
+<tr><td>+1.5</td><td>0.9884</td><td>0.9880</td></tr>
+</table>
+<p class="soft" style="margin-top:1rem">The first version of the wrong-rule test used only mu = -1.5, where particle-hole symmetry makes the exact answer 0.5, and the wrong sampler passed by accident. That control was vacuous. It now uses mu = -3.0 and 0.0, where the wrong rule gives 0.50 against exact values of 0.06 and 0.94 and is caught.</p>
+
+<h2>What it is not</h2>
+<p>No zeolite framework, force field or pore size from any real material is used. It says nothing about HZSM-5, HMCM-22, selectivity or coke. In the width scan, occupancy rises with channel width only because wider channels give each molecule more neighbours. It is unrelated to the GOMC (GPU Optimized Monte Carlo) simulation package.</p>
+
+<h2>Source</h2>
+<p><a href="https://github.com/TOTOGT/channel-gcmc">github.com/TOTOGT/channel-gcmc</a></p>
+<pre>&quot;&quot;&quot;Toy grand-canonical Monte Carlo (GCMC) of a lattice gas confined to a channel.
+SCOPE: a METHOD CHECK, not a zeolite calculation. Sites on a w x L strip (periodic along L, walls at the
+ends of w), nearest-neighbour attraction eps, chemical potential mu (all in units of kT=1).
+No zeolite structure, force field, or pore size from any real material is used.
+CONTROL: Metropolis GCMC mean occupancy is compared with exact enumeration of every state on a tiny
+strip (w=2, L=4: 8 sites, 256 states). The check FAILS if the sampler has a wrong acceptance rule
+(demonstrated below by a deliberately wrong rule that must be rejected).
+&quot;&quot;&quot;
+import itertools, math, random, sys
+
+def neighbours(w, L):
+    nb = {}
+    for x in range(L):
+        for y in range(w):
+            s = x*w+y
+            l = []
+            l.append(((x+1) % L)*w+y); l.append(((x-1) % L)*w+y)
+            if y+1 &lt; w: l.append(x*w+y+1)
+            if y-1 &gt;= 0: l.append(x*w+y-1)
+            nb[s] = list(dict.fromkeys(l))     # unique (handles L=2 wrap)
+    return nb
+
+def energy(occ, nb, eps):
+    e = 0.0
+    for s, o in enumerate(occ):
+        if o:
+            for t in nb[s]:
+                if t &gt; s and occ[t]: e -= eps
+    return e
+
+def exact_mean_occupancy(w, L, eps, mu):
+    nb = neighbours(w, L); n = w*L
+    Z = N = 0.0
+    for occ in itertools.product((0, 1), repeat=n):
+        k = sum(occ); wgt = math.exp(-energy(occ, nb, eps) + mu*k)
+        Z += wgt; N += k*wgt
+    return N/Z/n
+
+def gcmc_mean_occupancy(w, L, eps, mu, sweeps=40000, seed=1, wrong=False):
+    rnd = random.Random(seed); nb = neighbours(w, L); n = w*L
+    occ = [0]*n; k = 0; acc = 0.0; cnt = 0
+    for sweep in range(sweeps):
+        for _ in range(n):
+            s = rnd.randrange(n)
+            nn = sum(occ[t] for t in nb[s])
+            if occ[s] == 0:    # try insert: dlnW = eps*nn + mu
+                d = eps*nn + mu
+            else:              # try delete: dlnW = -(eps*nn + mu)
+                d = -(eps*nn + mu)
+            if wrong: d = abs(d)*0 + (eps*nn + mu)      # deliberately wrong: same sign for delete
+            if d &gt;= 0 or rnd.random() &lt; math.exp(d):
+                occ[s] ^= 1; k += 1 if occ[s] else -1
+        if sweep &gt; sweeps//10: acc += k/n; cnt += 1
+    return acc/cnt
+
+if __name__ == &quot;__main__&quot;:
+    eps = 1.0
+    print(&quot;CONTROL: GCMC vs exact enumeration, w=2 L=4, eps=1 kT&quot;)
+    ok = True
+    for mu in (-3.0, -1.5, 0.0, 1.5):
+        ex = exact_mean_occupancy(2, 4, eps, mu); mc = gcmc_mean_occupancy(2, 4, eps, mu)
+        good = abs(ex-mc) &lt; 0.01; ok &amp;= good
+        print(f&quot;  mu={mu:+.1f}  exact={ex:.4f}  GCMC={mc:.4f}  {&#x27;PASS&#x27; if good else &#x27;FAIL&#x27;}&quot;)
+    # The wrong rule must be caught away from the particle-hole symmetric point (mu=-1.5 gives exactly 0.5
+    # for any symmetric-looking sampler; the first version of this control tested only there and was vacuous).
+    caught = True
+    for mu in (-3.0, 0.0):
+        bad = gcmc_mean_occupancy(2, 4, eps, mu, wrong=True); ex = exact_mean_occupancy(2, 4, eps, mu)
+        c = abs(ex-bad) &gt; 0.05; caught &amp;= c
+        print(f&quot;  wrong-rule sampler at mu={mu:+.1f}: GCMC={bad:.4f} vs exact={ex:.4f}  {&#x27;CAUGHT (check can fail)&#x27; if c else &#x27;NOT CAUGHT: check is vacuous&#x27;}&quot;)
+    print(&quot;RESULT:&quot;, &quot;ALL PASS&quot; if ok and caught else &quot;FAIL&quot;)
+    if ok and caught:
+        print(&quot;\nTOY RESULT (method demo only): mean occupancy vs channel width w, L=20, mu=-2.0, eps=1.0&quot;)
+        for w in (1, 2, 3, 4):
+            print(f&quot;  w={w}  occupancy={gcmc_mean_occupancy(w, 20, 1.0, -2.0, sweeps=4000):.3f}&quot;)
+</pre>
+</div>
+</body>
+</html>
