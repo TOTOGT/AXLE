@@ -57,6 +57,7 @@ RUN = [
     (12, "vol12.html", "Ten Pages That Say What They Do Not Check"),
     (13, "vol13.html", "Ten Chapters on a Fifth Dimension"),
     (14, "vol14.html", "Eight Ninths and One Withdrawn Equivalence"),
+    (15, "vol15.html", "Three Tests That Could Have Failed"),
 ]
 HELD_BACK = []
 
