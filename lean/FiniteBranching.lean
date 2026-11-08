@@ -1,4 +1,13 @@
 /-!
+# CORRECTION (2026-11-08) — read before using this file
+`finiteBranching` and `analytic_zeros_isolated` are FALSE as stated: U is not required to be
+connected. Counterexample: U = (−1,2) ∪ (3,4), g = 0 on (−1,2) and 1 on (3,4); g is analytic on U
+and not identically zero there, yet every point of [0,1] is a zero. The suggested shortcut
+"countable + compact ⟹ finite" below is also false ({0} ∪ {1/n} is countable, compact, infinite).
+Repaired and proved statement (U preconnected), the counterexample in Lean, and the event-to-branch
+bridge as an explicit hypothesis: geometry, Orthogenesis/Vol1/FiniteBranchingRepaired.lean.
+This file is kept unchanged below as the record of what was claimed.
+
 # FiniteBranching.lean  (kept, 2026-07-03)
 ## Principia Orthogona, Volume I §5 (V6) — Finite Branching on Compact Intervals
 

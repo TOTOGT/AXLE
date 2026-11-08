@@ -1,4 +1,19 @@
 /-!
+# CORRECTION (2026-11-08) — read before using this file
+1. The files named below as discharging the hypotheses (FoldOperator.lean, ContactStructure.lean,
+   ResamplingKernel.lean) do not exist in AXLE or geometry. The hypotheses are undischarged.
+2. The reasons given are false in general: unique ODE solutions do not make a flow non-expansive
+   (ẋ = x gives x ↦ 2x at t = ln 2); a unique nondegenerate minimiser does not make the selection
+   map non-expansive (argmin of (q − 2x)² is 2x); a fold is not non-expansive (x ↦ x² sends 1, 2 to
+   1, 4). What is needed are quantitative bounds (a one-sided Lipschitz constant ℓ ≤ 0 for the flow;
+   B/m for a minimiser map with D²_qq V ≥ mI and ‖D²_qx V‖ ≤ B), proved for an actual system.
+3. This file composes R ∘ K ∘ F ∘ C; the canonical chain is U ∘ F ∘ K ∘ C (F and K swapped).
+4. The conditional Banach theorem for the canonical order, with no sorry and an explicit
+   n-step bound, is in geometry, Orthogenesis/Vol1/ChainContraction.lean. It is conditional: it
+   does not show that any dm³ construction meets its hypotheses, and it is not Theorem 5.1 as
+   worded on the Volume I page ("well-defined on any piecewise C² trajectory").
+This file is kept unchanged below as the record of what was claimed.
+
 # ExistenceWellPosedness.lean  (rewrite, 2026-07-03)
 ## Principia Orthogona, Volume I §4 (V6) — Existence and Well-Posedness of Φ = R ∘ K ∘ F ∘ C
 
