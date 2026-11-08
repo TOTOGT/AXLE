@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imaginary Origin — The Generative Science Journal — Vol. Ω No. 17 — Duals and the Clock at the Fold</title>
+<meta name="description" content="Vol. &#937; No. 17, 14 November 2026. Book XXIV Chapter 10 on the dual space, bilinear forms and tensor products, checked by exact arithmetic with its Lean file still uncompiled; a lower bound on the time a flow takes to pass a fold, and a numerical check that it is nearly tight. Page 6: The Reading Room, Part 12.">
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:#dedcd3;color:#16161a;font-family:'Libre Caslon Text',Georgia,serif;line-height:1.42;padding:20px 14px 30px;}
+a{color:#16161a;}
+.stage{perspective:2200px;position:relative;max-width:920px;margin:0 auto;}
+.pgs{position:relative;min-height:620px;}
+.pg{position:absolute;top:0;left:0;width:100%;background:#fdfdfb;padding:26px 30px;transform-origin:left center;transition:transform .6s cubic-bezier(.2,.7,.2,1),opacity .5s ease;backface-visibility:hidden;box-shadow:0 2px 6px rgba(0,0,0,.16);}
+.pg.is-left{transform:rotateY(40deg) translateX(-40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-right{transform:rotateY(-40deg) translateX(40px) scale(.95);opacity:0;z-index:1;}
+.pg.is-active{transform:none;opacity:1;z-index:2;}
+.hd{font-family:'Libre Caslon Display',Georgia,serif;line-height:1.08;}
+.kick{font-size:8.5px;text-transform:uppercase;letter-spacing:.12em;color:#56565c;}
+.pg p{font-size:12.5px;text-align:justify;margin:0 0 8px;}
+.runhead{display:flex;justify-content:space-between;align-items:center;font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#56565c;border-bottom:1px solid #16161a;padding-bottom:4px;margin-bottom:12px;}
+.emblem{border:1.5px solid #16161a;border-radius:7px;padding:.05em .32em;font-size:.86em;}
+.lead a,.pg .rl a{color:#16161a;text-decoration:none;border-bottom:1px solid #b9b9b0;}
+.pg .rl a:hover,.lead a:hover{border-bottom-color:#16161a;}
+.rl{font-size:12px;}
+.jump{background:none;border:none;padding:0;margin:0;font-family:inherit;font-size:11.5px;color:#16161a;cursor:pointer;text-align:left;border-bottom:1px solid #b9b9b0;}
+.jump:hover{border-bottom-color:#16161a;}
+.nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:14px auto 0;max-width:920px;}
+.nav button{font-family:'Libre Caslon Text',Georgia,serif;font-size:13px;background:#fdfdfb;border:1px solid #16161a;padding:6px 18px;cursor:pointer;color:#16161a;}
+.nav button:hover{background:#efece2;}
+.nav button:disabled{opacity:.35;cursor:default;}
+.fol{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#3a3a40;min-width:96px;text-align:center;}
+.colophon{max-width:920px;margin:14px auto 0;font-size:10px;color:#5a5a56;text-align:center;line-height:1.7;}
+.colophon a{color:#5a5a56;}
+.tag{display:inline-block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;border:1px solid #16161a;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle;}
+table.led{width:100%;border-collapse:collapse;font-size:11.5px;margin:6px 0 4px;}
+table.led th{text-align:left;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#56565c;border-bottom:1px solid #16161a;padding:3px 6px 4px;}
+table.led td{border-bottom:1px solid #e2e0d8;padding:5px 6px;vertical-align:top;}
+table.led td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.pull{border-left:2px solid #16161a;padding:2px 0 2px 12px;margin:10px 0;font-style:italic;color:#3a3a40;font-size:12px;}
+.stat{border:1px solid #16161a;padding:9px 11px;background:#fbfbf8;}
+.stat b{display:block;font-family:'Libre Caslon Display',Georgia,serif;font-size:21px;line-height:1.1;}
+.open{display:inline-block;font-size:8.5px;text-transform:uppercase;letter-spacing:.07em;border:1px solid #8a2f2f;color:#8a2f2f;border-radius:3px;padding:1px 5px;margin-left:5px;vertical-align:middle;}
+.pt{background:#f6f4ec;border-left:2px solid #b9b9b0;padding:8px 12px;margin-top:10px;}
+.pt p{font-size:11.5px;color:#3a3a40;}
+
+/* ── mobile ─────────────────────────────────────── */
+@media (max-width:760px){
+  body{padding:10px 8px 22px;}
+  .pg{padding:16px 15px;}
+  .pgs{min-height:0;}
+  /* every two-column layout collapses */
+  .lead{grid-template-columns:1fr !important;gap:12px !important;}
+  .lead > div{border-right:0 !important;padding-right:0 !important;}
+  .pg .rl[style*="grid"]{display:block !important;}
+  .pg .rl[style*="grid"] > div{border-right:0 !important;padding-right:0 !important;margin-bottom:14px;}
+  .pg > div[style*="grid-template-columns"]{grid-template-columns:1fr !important;}
+  /* masthead */
+  .pg > div[style*="1fr auto 1fr"]{grid-template-columns:1fr !important;text-align:center;gap:6px;}
+  .pg > div[style*="1fr auto 1fr"] > div{text-align:center !important;max-width:none !important;}
+  /* running heads and date strip wrap instead of squashing */
+  .runhead{flex-wrap:wrap;gap:4px;}
+  /* tables: tighter, allow wrap */
+  table.led{font-size:10.5px;}
+  table.led td,table.led th{padding:4px 3px;word-break:break-word;}
+  table.led td.num{text-align:left;}
+  /* type */
+  .pg p{font-size:13px;text-align:left;}
+  .rl{font-size:12.5px;}
+  .stat b{font-size:19px;}
+  .nav{gap:8px;}
+  .nav button{padding:8px 12px;font-size:12px;}
+  .fol{min-width:0;font-size:10px;}
+}
+
+/* ── navigation, reworked ───────────────────────── */
+.nav{position:sticky;bottom:0;z-index:60;display:flex;align-items:center;justify-content:center;
+     gap:8px;flex-wrap:wrap;background:#fdfdfb;border-top:1px solid #16161a;
+     box-shadow:0 -2px 8px rgba(22,22,26,.10);padding:8px 10px;margin-top:14px;}
+.nav button{font-family:inherit;font-size:12px;padding:5px 10px;border:1px solid #16161a;
+     background:#fdfdfb;color:#16161a;cursor:pointer;}
+.nav button:disabled{opacity:.32;cursor:default;}
+.nav .fol{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#3a3a40;margin:0 4px;}
+#pgnums{display:flex;gap:4px;flex-wrap:wrap;}
+button.pgnum{min-width:26px;padding:4px 7px;font-size:12px;}
+button.pgnum.on{background:#16161a;color:#fdfdfb;font-weight:bold;}
+.nav .hint{font-size:9.5px;color:#6a6a70;width:100%;text-align:center;}
+@media (max-width:760px){ .nav .hint{display:none;} .nav button{font-size:11px;padding:4px 8px;} }
+
+/* ── root cause: the active page must own its own height ──
+   .pg is absolutely positioned and .pgs was sized by JS after load.
+   When MathJax re-rendered, the page outgrew the stale height and
+   overflowed on top of the nav strip. Letting the active page sit in
+   normal flow makes the container grow with it and removes the sync. */
+#pgs .pg.is-active{position:relative;}
+#pgs{min-height:0;}
+</style>
+</head>
+<body>
+
+<div class="stage"><div class="pgs" id="pgs">
+  <section class="pg is-active">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding-bottom:6px;">
+      <div style="border:1px solid #16161a;padding:5px 8px;font-size:9px;max-width:158px;"><b style="font-size:8px;">THE MOTTO</b><br><span style="font-style:italic;">&#8220;i, the rotation; o, the point it turns about.&#8221;</span></div>
+      <div style="text-align:center;" class="kick">Vol. &#937; &#183; No. 17<br>The Generative Science Journal</div>
+      <div style="text-align:right;" class="kick">Newark, N.J.<br>Free &#183; CC BY 4.0<br><a href="vol16.html" style="color:#16161a;">&#8592; No. 16</a> &#183; <a href="vol17.html" style="color:#16161a;">No. 17 &#8594;</a></div>
+    </div>
+    <div style="text-align:center;border-top:1px solid #16161a;border-bottom:1px solid #16161a;padding:8px 0 6px;"><div style="font-family:'UnifrakturMaguntia',serif;font-size:clamp(34px,7vw,60px);line-height:1;">Imaginary Origin</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:#3a3a40;border-bottom:1px solid #16161a;padding:4px 1px;"><span>Saturday, November 14, 2026</span><span style="text-transform:none;font-size:12px;">emblem: <span class="emblem">$g^{17}$</span></span><span>Morning Edition</span></div>
+    <div class="lead" style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:14px;">
+      <div style="border-right:1px solid #d0d0c8;padding-right:16px;">
+        <div class="hd" style="font-size:clamp(22px,3.6vw,30px);">Duals and the Clock at the Fold</div>
+        <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:5px 0 9px;padding-bottom:8px;border-bottom:1px solid #d0d0c8;">Chapter 10 of Book XXIV builds the dual space and uses it to explain why a quadrature rule is exact. A separate result bounds the time a flow takes to pass a fold, and a numerical check says the bound is close to sharp.</div>
+        <p>A linear functional takes a vector and returns a number. Given a basis, the functionals that read off one coordinate each form the dual basis, and when the basis changes by a matrix P they are the rows of P<sup>&#8722;1</sup>. Vectors change by P<sup>&#8722;1</sup>, functionals by P, and bilinear forms by P<sup>T</sup>(&#183;)P. That last rule is why the trace of a form is not meaningful and its signature is. <span class="jump" data-goto="1" style="text-decoration:underline;cursor:pointer;">Page 2</span> lays out the counts and <span class="jump" data-goto="3" style="text-decoration:underline;cursor:pointer;">Page 4</span> the sources and limits.</p>
+        <p>The chapter's worked use is quadrature. A rule that integrates by evaluating at nodes is a functional written in the dual basis of the evaluation functionals, and its weights are the coordinates. Simpson's weights 1/3, 4/3, 1/3 on the nodes &#8722;1, 0, 1 are exact on 1 and t<sup>2</sup> and miss t<sup>4</sup>. The weights 5/9, 8/9, 5/9 on the nodes &#177;&#8730;(3/5) and 0 are exact through t<sup>4</sup> and miss t<sup>6</sup>. Both statements are exact rational arithmetic.</p>
+        <div class="pull">The checks count cases on small grids. They test the statements; the proofs are Lax's. The Lean file for the chapter has not been compiled.</div>
+        <p><span class="jump" data-goto="2" style="text-decoration:underline;cursor:pointer;">Page 3</span> turns to the fold-flow files, where a lower bound on the passage time is proved, and the numerical check on how close that bound is to the real time.</p>
+        <p style="font-size:11.5px;color:#3a3a40;">The Reading Room, <span class="jump" data-goto="5" style="text-decoration:underline;cursor:pointer;">Page 6</span>, carries Part 12 of the serial, set from its source.</p>
+      </div>
+      <div>
+        <div class="kick" style="border-bottom:1px solid #16161a;padding-bottom:3px;margin-bottom:7px;">The one number to carry</div>
+        <p style="font-size:11.5px;">1.006. The measured passage time divided by the proved lower bound is 1.064 at &#949; = 0.1 and 1.006 at &#949; = 10<sup>&#8722;4</sup>. The check is floating point, so it shows the bound is nearly sharp and does not prove it. What is proved is the lower bound alone.</p>
+        <div class="stat" style="margin-top:9px;">
+          <span class="kick">This issue</span>
+          <div style="font-family:'Courier New',monospace;font-size:11.5px;line-height:1.55;">chapters added &#160;&#160;&#160;&#160;&#160;&#160;1<br>verifier sections &#160;&#160;&#160;&#160;&#160;9<br>Lean file, compiled &#160;&#160;&#160;0 of 1<br>serial part &#160;&#160;&#160;&#160;&#160;&#160;&#160;12 of 18</div>
+          <span class="kick">Lean runs are the author&#8217;s</span>
+        </div>
+        <div class="stat" style="margin-top:9px;">
+          <span class="kick">An invitation</span>
+          <div style="font-size:11.5px;line-height:1.5;margin-top:3px;">A math study group meets online, in the library. Everyone is welcome. <span class="jump" data-goto="4" style="text-decoration:underline;cursor:pointer;">Page 5</span> says how to join.</div>
+        </div>
+        <p style="font-size:11px;color:#3a3a40;margin-top:9px;">Chapter 10: <code>book24/ch10-duality.html</code>, with the verifier <code>ch10-verify.py</code> and the Lean file <code>Duality.lean</code> beside it.</p>
+      </div>
+    </div>
+    <span class="kick">Continued on Page 2 &#183; Duality</span>
+  </section>
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin · Vol. Ω No. 17</span><span>Page 2 &#183; Duality</span></div>
+    <div class="hd" style="font-size:clamp(20px,3.2vw,26px);">Counting What Duality Predicts</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:4px 0 10px;">Book XXIV Chapter 10 &#183; Dual space, bilinear forms, tensor products</div>
+    <p>The chapter follows Lax, <i>Linear Algebra and Its Applications</i>, Chapter 2. The verifier opens the held copy of that text and checks that the pages it cites say what the chapter says they say. Each statement below was run over a finite family with exact integer or rational arithmetic, and each has a control built to fail, to show the check can tell the right statement from a wrong one.</p>
+    <table class="led"><tr><th style="width:27%;">Statement</th><th>Cases run, and the control</th></tr>
+      <tr><td>The dual basis is the rows of P<sup>&#8722;1</sup></td><td>All 496 invertible 2&#215;2 integer matrices with entries &#8722;2 to 2. Control: the columns of P<sup>&#8722;1</sup> are not a dual basis in general, and the check fails on them.</td></tr>
+      <tr><td>dim Y + dim Y<sup>&#8869;</sup> = 3, and Y<sup>&#8869;&#8869;</sup> = Y</td><td>All 40 distinct subspaces of Q<sup>3</sup> spanned by vectors with entries &#8722;1, 0, 1 (by dimension 1, 13, 25, 1). Control: the off-by-one claim, that the dimensions add to 4, is false for all 40.</td></tr>
+      <tr><td>Sylvester's law, 2&#215;2</td><td>The signature is unchanged by G &#8594; P<sup>T</sup>GP over 62,000 pairs, G symmetric and P invertible, entries &#8722;2 to 2. Control: the trace is not a congruence invariant; G = I and P = diag(2, 1) give trace 5, not 2.</td></tr>
+      <tr><td>Pure tensors</td><td>A 2&#215;2 array factors as x &#8855; y exactly when its determinant is 0. Of the 625 arrays with entries &#8722;2 to 2, 129 factor and 496 do not.</td></tr>
+      <tr><td>Quadrature</td><td>Simpson and the three-node rule above, exact in rational arithmetic, including the powers where each fails.</td></tr></table>
+    <div class="kick" style="margin:12px 0 4px;">What the checks changed</div>
+    <table class="led"><tr><th style="width:27%;">Where</th><th>What changed before the final run</th></tr>
+      <tr><td>Annihilator control</td><td>The first control, that dim Y<sup>&#8869;</sup> = dim Y, was false for a trivial reason: the ambient dimension is 3, which is odd. It was replaced by the off-by-one control above, which is false for a reason that bears on the theorem.</td></tr>
+      <tr><td>Exercise 5(ii)</td><td>A check that could not fail, because of an <code>or True</code> in it, and that carried the wrong label, was replaced by an exhaustive check over the grid.</td></tr></table>
+    <div style="border:1px solid #16161a;background:#fbfbf8;padding:10px 13px;margin:12px 0 4px;"><div class="kick" style="margin-bottom:5px;">Limits of the numbers</div><p style="font-size:11.5px;margin:0 0 6px;">A finite grid does not prove a theorem for all matrices or all subspaces. The theorems are Lax&#8217;s. The counts show that the statements as the chapter writes them hold on every case tried and fail on the controls.</p><p style="font-size:11.5px;margin:0; color:#3a3a40;">The Sylvester check is for 2&#215;2 forms only. The universal property of the tensor product is described in the chapter and is not checked here.</p></div>
+    <span class="kick">Continued on Page 3 &#183; The Fold</span>
+  </section>
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin · Vol. Ω No. 17</span><span>Page 3 &#183; The Fold</span></div>
+    <div class="hd" style="font-size:clamp(20px,3.2vw,26px);">A Lower Bound on the Time to Pass a Fold</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:4px 0 10px;">Fold-flow files &#183; what is proved, what is only measured</div>
+    <p>The fold-flow file <code>FoldFlowPassage.lean</code> states two results about the time T a trajectory spends passing the fold, for a small parameter &#949; &gt; 0. The first is a lower bound, <b>T &#8805; arctan(&#8730;(3/&#949;)) / &#8730;(3&#949;)</b>. The second is a simpler consequence for 0 &lt; &#949; &#8804; 3, <b>T &#8805; (&#960;/4) / &#8730;(3&#949;)</b>, which grows without bound as &#949; goes to 0. The simpler form gives up about a factor of 2 against the first as &#949; becomes small.</p>
+    <table class="led"><tr><th style="width:30%;">Item</th><th>State, and its limit</th></tr>
+      <tr><td>T1, T2 and the invariance result</td><td>Full <code>lake build</code> clean on the author&#8217;s machine, pushed.</td></tr>
+      <tr><td><code>finite_crossings</code></td><td>Kernel-checked, pushed.</td></tr>
+      <tr><td>T3 &#183; <code>passage_time_lower_bound</code>, <code>passage_time_diverges</code></td><td>Compiled on the author&#8217;s machine, with a deprecation note on <code>push_neg</code> and no error. The full <code>lake build</code> that includes <code>FoldFlowPassage</code> has <b>not yet been run</b>.</td></tr>
+      <tr><td>T4, the case a &lt; 2</td><td>Not derived. The hand derivation comes first, then the Lean.</td></tr></table>
+    <div class="kick" style="margin:12px 0 4px;">How close is the bound?</div>
+    <p>The measured passage time was divided by the arctan bound. The ratio is 1.064 at &#949; = 0.1 and 1.006 at &#949; = 10<sup>&#8722;4</sup>. The bound is therefore close to sharp at the small end of that range. The integration is floating point, so the ratios are measurements and not certified numbers, and only those two values are reported here.</p>
+    <div class="pull">A lower bound says the passage takes at least this long. It does not say how long, and it does not say the trajectory exists.</div>
+    <div style="border:1px solid #16161a;background:#fbfbf8;padding:10px 13px;margin:12px 0 4px;"><div class="kick" style="margin-bottom:5px;">Limits of the result</div><p style="font-size:11.5px;margin:0 0 6px;">The bound is conditional on a solution of the flow existing on the interval in question; the statement does not construct one. Neither form says the time equals the bound.</p><p style="font-size:11.5px;margin:0; color:#3a3a40;">No claim is made that this flow models any physical or catalytic system in this issue.</p></div>
+    <span class="kick">Continued on Page 4 &#183; Sources and How to Read</span>
+  </section>
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin · Vol. Ω No. 17</span><span>Page 4 &#183; Sources and How to Read</span></div>
+    <div class="hd" style="font-size:clamp(20px,3.2vw,26px);">What Was Read, and How to Test It</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:4px 0 10px;">Sources for the polymathy account, and the instruction that goes with the series</div>
+    <p>The series' index now carries a short account of where broad learning has paid and where it has not, from Heraclitus's warning that much learning does not teach understanding, through the encyclopedists and the Victorian generalists, to the present. The argument that a shared description helps a specialist by exposing what two systems have in common is the series&#8217; own. No cited source states it.</p>
+    <table class="led"><tr><th style="width:30%;">Source</th><th>What was read, and its limit</th></tr>
+      <tr><td>Araki (2025)</td><td>Section 1.3 only. The rest of the paper was not read.</td></tr>
+      <tr><td>Cohen (2015), Robinson (2023), the 2024 De Morgan volume</td><td>Read for the passages the index cites. The rest of each was not read. Robinson&#8217;s observation, that very few Nobel laureates in science have been polymaths, is quoted for what it says and is not tested here.</td></tr>
+      <tr><td>The manifesto, <i>Generative Contact Mechanics</i> (Institutional Edition)</td><td>Read, apart from Appendix A, the lexicon, and Appendix C. The term list for a shared language will start from Appendix A, which has not yet been read for that purpose.</td></tr>
+      <tr><td>Lax, Chapter 2</td><td>The verifier checks each cited page in the held copy. Printed page = scan page &#8722; 17.</td></tr></table>
+    <div class="kick" style="margin:12px 0 4px;">How to read the series</div>
+    <p>Do not take the series on trust; test it. Pick a system you already understand, an oscillator, a business cycle, a clock, a catalyst, and describe it in the series&#8217; shared terms. Where the description holds, you have learned what your system has in common with others. Where it breaks, either the description is wrong or your model of the system was, and finding out which is the learning. The manifesto asks for exactly this: use the language, challenge it, and improve it (Nogueira Grossi, 2025, &#167;5.4). A shared description does not replace what a specialist knows (&#167;5.2); the gap between the two is the exercise. The same test applies to the series&#8217; own claims, which is why Vol. VI publishes audits of them (WP-24, WP-28, WP-29, WP-30).</p>
+    <p style="font-size:11.5px;color:#3a3a40;">The manifesto calls itself a language and not a theory of everything (&#167;5.1 to 5.2). This journal reads it that way: a shared form is not a shared invariant until someone derives it.</p>
+    <span class="kick">Continued on Page 5 &#183; Corrections and the Open Desk</span>
+  </section>
+  <section class="pg is-right">
+    <div class="runhead"><span>Imaginary Origin · Vol. Ω No. 17</span><span>Page 5 &#183; Corrections and the Open Desk</span></div>
+    <div class="hd" style="font-size:clamp(20px,3.2vw,26px);">What Was Withdrawn, and What Is Still Unchecked</div>
+    <div style="font-size:12px;color:#3a3a40;font-style:italic;margin:4px 0 10px;">Corrections go inside the page, at the section they change, with a date; each open item is named so none can be mistaken for done</div>
+    <div class="kick" style="margin:6px 0 4px;">Withdrawn or superseded</div>
+    <table class="led"><tr><th style="width:34%;">Where</th><th>What changed</th></tr>
+      <tr><td>Ch 10 &#183; verifier control for the annihilator theorem</td><td>Replaced before the final run: the first control was false only because the dimension 3 is odd.</td></tr>
+      <tr><td>Ch 10 &#183; Exercise 5(ii) check</td><td>Replaced before the final run: the first version could not fail and carried the wrong label.</td></tr></table>
+    <div class="kick" style="margin:12px 0 4px;">The open desk</div>
+    <table class="led"><tr><th style="width:34%;">Item</th><th>State</th></tr>
+      <tr><td><code>book24/Duality.lean</code></td><td>Written this week; <b>not yet compiled</b>. Five of its ten theorems are one-line calls to Mathlib and record the shape of Mathlib&#8217;s statement, not a new proof. The others are exact rational arithmetic. The likeliest to need repair is <code>congruence_not_trace</code>. Nothing is claimed for the file until it has been run and its output read. <span class="open">open</span></td></tr>
+      <tr><td>Sylvester's law and the tensor universal property</td><td>Not stated in Lean. The Sylvester check covers 2&#215;2 forms on a finite grid. <span class="open">open</span></td></tr>
+      <tr><td>Full <code>lake build</code> with <code>FoldFlowPassage</code></td><td>Not yet run. <span class="open">open</span></td></tr>
+      <tr><td>Sharpness of the T3 bound</td><td>Measured in floating point for &#949; between 10<sup>&#8722;4</sup> and 0.1. Not proved. <span class="open">open</span></td></tr>
+      <tr><td>T4, the case a &lt; 2</td><td>Not derived. <span class="open">open</span></td></tr>
+      <tr><td>Appendix A of the manifesto</td><td>Not yet read for the term list. <span class="open">open</span></td></tr>
+      <tr><td>From No. 16: open-set condition for the tent curve, the Hausdorff dimension of the &#960; set, whether m<sup>&#960;</sup> can be a whole number, and <code>book5/ExistenceBanach.lean</code></td><td>Unchanged by this issue. No new result is reported on any of them; the file was last reported as not compiled. <span class="open">open</span></td></tr></table>
+    <div style="border:1px solid #16161a;background:#fbfbf8;padding:10px 13px;margin:12px 0 4px;">
+      <div class="kick" style="margin-bottom:5px;">An invitation &#183; Math study group</div>
+      <p style="font-size:11.5px;margin:0 0 6px;">You are invited to join a math study group that meets online, in the library. Everyone is welcome.</p>
+      <p style="font-size:11.5px;margin:0; color:#3a3a40;">To join, or to ask when it meets, write to <b>g6llc@proton.me</b>.</p>
+    </div>
+    <div class="pull">An open item stays on this page until the check it names has been run and the result written beside it.</div>
+    <p style="font-size:11.5px;color:#3a3a40;">The Reading Room follows on Page 6.</p>
+    <span class="kick">Continued on Page 6 &#183; The Reading Room</span>
+  </section>
+  <section class="pg is-right" style="background:#f0e6d2;">
+  <div class="runhead" style="padding:6px 18px 0;"><span>Imaginary Origin &#183; The Reading Room</span><span>Page 6</span></div>
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:12px 18px 0;">
+    <div style="font-family:Georgia,'Iowan Old Style',serif;line-height:.86;color:#221a14;">
+      <span style="font-size:12px;letter-spacing:.02em;">The</span>
+      <span style="font-size:30px;letter-spacing:-.02em;">Reading Room</span>
+    </div>
+    <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;text-align:right;letter-spacing:.04em;padding-bottom:3px;white-space:nowrap;">
+      A Serial in 18 Parts &#183; Part 12<br>Week of November 14, 2026
+    </div>
+  </div>
+  <div style="padding:0 18px;"><div aria-hidden="true" style="border-top:2px solid #221a14;border-bottom:1px solid #221a14;height:3px;margin:0 0 10px;"></div></div>
+
+  <div style="padding:0 18px 16px;">
+    <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;">The fort, and then the town &#8212; the first four days</div>
+    <div style="font-family:Georgia,'Iowan Old Style',serif;font-size:26px;line-height:1.1;color:#221a14;margin-bottom:2px;">No.&#8202;12&#8194;What the Name Was Still Doing There</div>
+    <div style="font-family:Georgia,serif;font-style:italic;font-size:12.5px;color:#3a3a40;margin-bottom:10px;">
+      Pierre et Mademoiselle, by Pablo Nogueira Grossi &#8194;&#183;&#8194;
+      <span style="font-size:11px;">See the note on fact &amp; fiction, below</span></div>
+
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;"><span style="float:left;font-family:Georgia,serif;font-size:34px;line-height:.8;padding:2px 6px 0 0;">T</span>hey gave Marie a room with a window, which Fermat understood, correctly, to be the most valuable thing anyone in that fort had to give.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">She slept for a day and a half. He sat in the corridor outside it for most of that, upright on a bench built for waiting, refusing three separate invitations to lie down himself, on the grounds &#8212; which he offered to no one and would not have been able to defend &#8212; that he had watched her slide off a buffalo's back once already and did not intend to be elsewhere the next time something took her without warning.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">A garrison surgeon looked at her twice and said, both times, the same word, which Fermat did not know but could translate from the man's face: <i>exhaustion.</i> Not fever. Not the thing everyone in a colonial fort watches for. She had simply run out, five months and a reef and a jungle after she should have, and her body had finally been permitted to say so.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"She will wake hungry," the surgeon said, in slow Portuguese for the foreigner, "and she will be angry about something. That is how you will know."</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">She woke on the second evening, ate everything within reach, and was extremely angry about the state of her hair.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Fermat, sitting on the floor beside the bed because the chair had been given to someone with a better claim, put his head back against the wall and laughed until his ribs hurt.</p>
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 10px;"></div>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">It was in that first day and a half, with nothing to do but sit on a bench and be spoken past, that he heard the name and did not, at first, believe it.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He heard it perhaps a dozen times before it registered &#8212; from the surgeon, from a corporal, from two women carrying water, from a boy who had been sent to tell him something he could not follow &#8212; and each time it went by him as one more unfamiliar sound in a day made entirely of them. <i>S&#227;o Lu&#237;s.</i> It was only when a sergeant said it slowly, twice, pointing at the floor to mean <i>here, this place</i>, that Fermat heard what was inside it.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;"><i>Saint Louis.</i></p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He asked. It took most of an afternoon and three people to assemble the answer, in his bad Portuguese and their worse French, and when he had it he sat with it for a long time.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Frenchmen had built this. Not conquered it, not renamed it &#8212; <i>built</i> it, from nothing, in the year twelve, and had named the fort for the boy who was then king at home. They had held it three years. In the year fifteen the Portuguese had thrown them out, and had kept the harbour, and the fort, and &#8212; for fifty-one years, without apparently finding anything odd in it &#8212; <b>the name.</b></p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Then the Dutch had come, in the year forty-one, with nineteen ships, and had been thrown out in their turn after three years. And the name had survived that too.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;"><i>Two occupations,</i> Fermat thought. <i>Two flags taken down. And the thing that stayed was a word.</i></p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He was a man who had spent his working life on the question of what survives an operation &#8212; what is left invariant when you transform, substitute, reduce. He turned it over on a bench in a corridor eight thousand miles from Toulouse and arrived at something he found genuinely beautiful and did not have anyone to tell.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;"><i>You can expel the men. The men are the removable part.</i></p>
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 10px;"></div>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">The packet had come through the sea because it had been sewn into a coat.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">That was the whole of it. Three ships of livestock, thirty years of quiet transactions, the trunk he had nearly drowned trying to lift &#8212; all of it at the bottom, and the one object that survived was a folded oilcloth against his chest that he had never once thought of as an asset, because it had been the <i>cover</i>, not the cargo.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He opened it on the third night, alone, and spread it on the floor by the window where Marie was sleeping properly for the first time in half a year.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">It was undamaged. The seal was whole. An inspection of French trading interests and remaining colonial claims in the Gr&#227;o-Par&#225; region, a modest retinue, a modest budget, the minister's own hand at the bottom &#8212; a genuine instrument of the French crown, correctly executed, entirely in order.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Made out to a man who had died in Castres in January, and been carried down to the coast in a shuttered carriage with a physician's mark chalked on the door, and put into the sea two hundred yards from where the ship had taken him aboard three days later.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He could present it in the morning. That was the thing he made himself look at squarely, the way he had made himself look at every step of this. He could walk into the governor's rooms and be received &#8212; housed, fed, funded, listened to. A letter of credit drawn on the French crown was the only asset he had left in the world, and it existed entirely because a minister at Versailles believed he was alive.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He would be received once.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">And then a clerk would enter the name in a book, because that is what a clerk is for. And the book would be copied to Bel&#233;m, and to Lisbon, and eventually &#8212; not quickly, nothing crossed that water quickly, but <i>eventually</i>, in the unhurried and entirely reliable way that paper crosses an ocean &#8212; to Paris. Where it would sit in some office, in the same hand, six months after a death notice from Toulouse.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Two entries. One name. Two sides of an ocean.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Duval had understood it better than he had, and had said it plainly at the time without either of them noticing it was the whole doctrine: <i>the safest place to hide two things is in plain sight of each other, where no one thinks to compare them.</i> That worked because a death and a departure three days apart in one port were a single event that nobody had a reason to take apart. Two of the same <i>name</i>, six months and four thousand leagues apart, were not that. They were the other thing.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">They were a pattern. And patterns were the one thing his entire life's work had trained him to notice in other men's mistakes.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He folded the commission back into the oilcloth and did not present it in the morning, or ever, and spent a not inconsiderable part of the next twenty years knowing exactly where it was.</p>
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 10px;"></div>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">So he needed a name, and discovered &#8212; sitting on the floor at four in the morning with the only useful document he owned rendered permanently useless by his own reasoning &#8212; that he had never made one.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">This astonished him. He had solved for the physician, the carter, the barge, the port, the three-day interval, the manifest, the retinue, the cargo, the climate, the season, the plague. He had solved for Agn&#232;s in a good cloak on the Nantes road. He had solved for a hold full of animals against the advice of every man he consulted.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He had not solved for what he would be called.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Because &#8212; he made himself finish the thought, since he had never in his life permitted himself to abandon a line of reasoning simply because he disliked where it was heading &#8212; because some part of him had gone on assuming that the arrangement was temporary. That there would be a version of the future in which the name came back. He had built an irreversible operation and had privately, unexaminedly, declined to believe in it, and it had taken a shipwreck, a jaguar, and a Portuguese sergeant pointing at the floor to make him notice.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">In the morning a corporal asked him, with a wax tablet and the particular patience of a man who has asked several times.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He heard himself say: "Pedro."</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">It was not one of the eleven answers he had ranked off the Canaries. It was simply his own name with the corners taken off &#8212; the smallest possible transformation, the least he could bring himself to do, and the corporal wrote it down without any sign of having witnessed a man give up fifty years of correspondence, four countries' worth of reputation, and the only word that had ever meant <i>him</i>.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Later, he would find this funny. Later, he would tell Marie that he had spent forty years proving that certain forms cannot be reduced, and had folded at the first clerk with a tablet.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Marie, from the bed, said: "And me?"</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He turned around.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He had solved for a woman leaving Versailles in four days instead of six weeks. He had solved for a clerk who could not bathe with the crew and whose hands were wrong. He had stood outside a cabin door for five months inventing commissioner's business, and had never once, in three years of arithmetic, written down what she would be called on the far side of it.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He did not know, even now, whether that was because he had trusted her to choose it herself &#8212; or because some part of him had refused to draft a version of her that was his to draft.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"I don't know," he said. "I never did it. I am sorry."</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">She thought about it for a moment, in the borrowed room, with her hair in a state she had already described at length.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"Maria," she said. "It's the same. I'd rather not learn to answer to something new."</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"That is precisely the reasoning I used, and I called it cowardice."</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"You would." She lay back. "It isn't cowardice, Pierre. It's the only thing either of us brought."</p>
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 10px;"></div>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He went out into the town on the fourth day, because Marie was asleep again and he could not sit on the bench any longer, and because there was a question he had been carrying since the corridor and could not put down.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;"><i>A city named for a French king, in Portuguese hands, for fifty-one years.</i></p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He wanted to know what else had stayed.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">The answer met him at the end of the second street, in the form of a boy of about ten sitting on a low wall with his heels knocking against it, who watched the strange old man come up the road with the frank, unbothered attention of a child who has decided that whatever this is, it is happening in his street and therefore concerns him.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He was Indian. There was nothing in the least European about him &#8212; not the face, not the hair, not the way he sat, not one thing about him that would have made a man in Toulouse look twice at anything except the ordinary strangeness of a boy from the other side of the world.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">His eyes were blue.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Fermat stopped walking.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">The boy said something. It was short, and it went past him entirely, and Fermat &#8212; standing in the middle of a road in a Portuguese colony four thousand leagues from anywhere he had ever been a person, with a name he had invented four days ago and had not yet got used to answering to &#8212; heard himself say, quietly, to nobody, in the language he had not used aloud in eleven days:</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"<i>Qu'est-ce que vous avez dit?</i>"</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He did not decide to say it. That was the part he would turn over for the rest of his life. He had been Pedro for four days, and had been careful for fifty years, and the sentence came out of him without passing through anything that could have stopped it, in the accent of the Parlement of Toulouse, on a street where such a sound had no business existing.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">The boy stopped knocking his heels against the wall.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Then he leaned forward slightly, the way a child does when an adult has finally said something worth attending to, and repeated himself &#8212; patiently, a little louder, in the manner of someone helping out a foreigner who has plainly not been getting much help &#8212;</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">in French.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"<i>C'est &#224; vous, &#231;a?</i>"</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">Fermat stood there for a long moment. Sixty-four years old, four thousand leagues from home, officially dead, holding nothing, having just broken five months of discipline in a single reflex and received it back from a barefoot boy who had never in his life met a Frenchman.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">The vowels were wrong. That was what undid him. They had been somewhere warm for two generations and they had gone soft and long in a way no one in France would have recognised as anything but a mistake &#8212; and it was, unmistakably and completely, French, and it was fifty-one years old, and it had been sitting on this street the entire time waiting for somebody to say the first word.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">He looked past the boy, up the north road, where a very large grey animal was standing in the shade doing nothing whatsoever.</p>
+    <p style="font-size:12.5px;text-align:justify;margin:0 0 8px;">"<i>Oui</i>," he said. "I believe she is. Though I should tell you it is not at all clear that she agrees."</p>
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 10px;"></div>
+    <p style="font-size:11px;font-style:italic;color:#3a3a40;text-align:justify;margin:0 0 6px;">Note for the margin: S&#227;o Lu&#237;s was founded in 1612 by Daniel de La Touche, Sieur de La Ravardi&#232;re, as the seat of la France &#201;quinoxiale, and named for Louis XIII. The Portuguese expelled the French at the end of 1615, after the fighting at Guaxenduba the year before, and kept the name. The Dutch took the city on 25 November 1641 with nineteen ships and two thousand men, and were driven out in 1644. It is the only Brazilian capital founded by Frenchmen, and nobody has ever found it necessary to call it anything else.</p>
+    <p style="font-size:11px;font-style:italic;color:#3a3a40;text-align:justify;margin:0 0 6px;">Both occupations left children. Nobody stayed for them.</p>
+
+    <div style="border-top:1px solid #c9b9a0;margin:12px 0 8px;"></div>
+    <p style="font-size:10.5px;color:#3a3a40;font-style:italic;margin:0 0 10px;">Part 12 of 18 &#8194;&#183;&#8194; Fiction, drawn from the documented world; the ledger below says which is which. Set from its source file, as written.</p>
+    <p style="font-size:10.5px;color:#8a2f2f;margin:0 0 10px;border:1px solid #c9b9a0;background:#fdf6e8;padding:7px 9px;">
+    <b>Rights notice.</b> <i>Pierre et Mademoiselle</i> is <b>not</b> covered by this issue&#8217;s
+    CC&nbsp;BY&nbsp;4.0 licence. The serial and the work it belongs to &#8212; a limited series in
+    development &#8212; are <b>&#169; 2026 Pablo Nogueira Grossi / G6 LLC, all rights reserved</b>.
+    No licence to reproduce, adapt, translate or perform it is granted here.</p>
+
+    <div style="border:1px solid #c9b9a0;background:#f7f0e2;padding:10px 12px;">
+      <div style="font-family:Georgia,serif;font-size:10px;color:#b5321f;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;">Fact &amp; Fiction &#183; the ledger for No.&#8202;12</div>
+      <p style="font-size:11px;margin:0 0 7px;"><b>Documented</b> (series ledger, FACT_AND_FICTION.md): S&#227;o Lu&#237;s was founded in 1612 by Daniel de La Touche, Sieur de La Ravardi&#232;re, as the seat of <i>la France &#201;quinoxiale</i>, and named for Louis XIII. The French were expelled at the end of 1615, after the fighting at Guaxenduba in 1614, and the Portuguese kept the fort, the harbour and the name. The Dutch took the city on 25 November 1641 with nineteen ships and two thousand men and were driven out in 1644. It is the only Brazilian capital founded by Frenchmen. Fermat sat on the Parlement of Toulouse for thirty years and died at Castres on 12 January 1665. The ledger also records a mixed French, Dutch, Portuguese and Tup&#237;nambi&#225; population as a documented consequence of the occupations.</p>
+      <p style="font-size:11px;margin:0 0 7px;"><b>Invented</b>: the days in the fort, the surgeon and Marie&#8217;s waking; the oilcloth packet surviving, and the reasoning that a clerk&#8217;s entry would pair his name with the death notice, which is the author&#8217;s account of how colonial records travelled and is not sourced; the decision never to present the commission (the ledger&#8217;s item 3); the names Pedro and Maria; the boy on the wall and the French he speaks, where the ledger documents a mixed population and not a surviving language. Marie, Duval and Agnès are the ledger&#8217;s item 2, and the fifty-one years the name was kept is the joke the ledger lists as ours (item 6). The staging of the death, recalled here, is its item 1, and the buffalo is the relocation recorded for No.&#8202;8.</p>
+      <p style="font-size:10.5px;margin:0;color:#3a3a40;">Two distances in the text, &#8220;eight thousand miles&#8221; and &#8220;four thousand leagues&#8221;, are given as they stand in the source. Both are larger than the real distance from Toulouse to S&#227;o Lu&#237;s.</p>
+    </div>
+  </div>
+  </section>
+
+
+</div>
+<div class="nav"><button id="prev">&#8249;&nbsp;Prev</button><span id="pgnums"></span><button id="next">Next&nbsp;&#8250;</button><span class="fol" id="fol"></span><span class="hint">&#8592; &#8594; arrow keys also turn the page</span></div>
+<div class="colophon">
+  &#169; 2026 Pablo Nogueira Grossi &#183; G6 LLC &#183; Newark, NJ 07104, USA &#183; g6llc@proton.me &#183; ORCID 0009-0000-6496-2186<br>
+  Imaginary Origin &#183; The Generative Science Journal &#183; ISSN 3144-6787 (Online) &#183; Vol. &#937; No. 17 &#183; <a href="https://zenodo.org/communities/principia-orthogona">Zenodo: Principia Orthogona</a> &#183; Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, <b>except <i>Pierre et Mademoiselle</i> (The Reading Room), all rights reserved</b><br>
+  <a href="vol16.html">&#8592; No. 16</a> &#183; <span style="font-style:italic;color:#3a3a40;">Dimensions Between the Integers</span> &#183; <a href="vol17.html">No. 17 &#8594;</a> &#183; <span style="font-style:italic;color:#3a3a40;">Duals and the Clock at the Fold</span> &#183; <span style="font-style:italic;color:#3a3a40;">Latest issue &#183; the full run is listed on</span> <a href="index.html">No. 2</a> &#183; <a href="https://totogt.github.io/AXLE/">&#8592; AXLE home</a>
+</div>
+</div>
+<script>
+(function(){
+  var pgs=Array.prototype.slice.call(document.querySelectorAll('#pgs .pg'));
+  var cur=0,fol=document.getElementById('fol'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  var stage=document.getElementById('pgs');var nums=document.getElementById('pgnums');
+  function top(){window.scrollTo({top:0,behavior:'smooth'});}
+  pgs.forEach(function(p,i){var b=document.createElement('button');b.className='pgnum';b.textContent=i+1;b.setAttribute('aria-label','Go to page '+(i+1));b.addEventListener('click',function(){cur=i;render();top();});nums.appendChild(b);});
+  function sizeStage(){ stage.style.height=''; }
+  function render(){pgs.forEach(function(p,i){p.className='pg '+(i===cur?'is-active':(i<cur?'is-left':'is-right'));});fol.textContent='Page '+(cur+1)+' of '+pgs.length;prev.disabled=(cur===0);next.disabled=(cur===pgs.length-1);Array.prototype.forEach.call(nums.children,function(b,i){b.className='pgnum'+(i===cur?' on':'');});sizeStage();}
+  window.addEventListener('resize',sizeStage);
+  window.addEventListener('load',sizeStage);
+  if(window.MathJax&&MathJax.startup&&MathJax.startup.promise){MathJax.startup.promise.then(sizeStage);}
+  next.addEventListener('click',function(){if(cur<pgs.length-1){cur++;render();top();}});
+  prev.addEventListener('click',function(){if(cur>0){cur--;render();top();}});
+  document.querySelectorAll('.jump').forEach(function(b){b.addEventListener('click',function(){cur=+b.getAttribute('data-goto');render();window.scrollTo({top:0,behavior:'smooth'});});});
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'&&cur<pgs.length-1){cur++;render();top();}if(e.key==='ArrowLeft'&&cur>0){cur--;render();top();}});
+  render();
+})();
+</script>
+
+<script src="newsletter.js" data-source="Imaginary Origin No. 17"></script>
+
+          <div id="nl-signup" style="border:1px solid #16161a;padding:11px 13px;margin:14px 0 4px;background:#fbfbf8;">
+            <div style="font-size:9.5px;letter-spacing:.10em;text-transform:uppercase;color:#3a3a40;margin-bottom:6px;">The Newsletter &#183; Opt-in</div>
+            <p style="font-size:11.5px;margin:0 0 8px;">Each issue, when it goes out. No list bought, harvested, or lifted from a conference roster. Unsubscribe by replying with the word <em>stop</em>.</p>
+            <form id="nl-form" style="display:flex;gap:5px;flex-wrap:wrap;">
+              <input type="email" id="nl-email" name="email" required autocomplete="email" placeholder="you@university.edu"
+                style="flex:1;min-width:170px;border:1px solid #16161a;padding:6px 7px;font-size:12px;font-family:inherit;background:#fff;">
+              <input type="text" id="nl-hp" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+              <button type="submit" id="nl-btn"
+                style="border:1px solid #16161a;background:#16161a;color:#fff;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 12px;cursor:pointer;font-family:inherit;">Subscribe</button>
+            </form>
+            <div id="nl-msg" style="font-size:11px;color:#3a3a40;margin-top:7px;min-height:1em;"></div>
+          </div>
+
+<div style="max-width:47rem;margin:2rem auto 0;padding:1rem 1.2rem;border-top:1px solid #d9d3c4;font-family:'Courier New',monospace;font-size:11px;line-height:2;color:#3a3a40;">
+  <div style="letter-spacing:.14em;text-transform:uppercase;color:#8a7a3c;margin-bottom:.5rem;">Filed since No. 10 &#183; 26 September 2026</div>
+  <a href="https://totogt.github.io/geometry/book7/ch-euler.html">Book 7 &#183; Euler</a> &#8212; F&#8722;E+V on nine solids and three surfaces; &#967; by two routes on six spaces; why &#967; separates none of three Conley indices; the index of this desk&#8217;s own field, +1 at every radius, and non-vanishing on both invariant circles. 26 checks.<br>
+  <a href="https://totogt.github.io/geometry/book7/ch-conley.html">Book 7 &#183; Conley</a> &#8212; no compact isolating neighbourhood contains any of &#915;; a rescaling moves the multiplier sixty orders of magnitude and leaves the index fixed. Candidate closed. Block&nbsp;[8] compares the published normal form against the section-3b system: identical through first order, &#380;&#775; = &#969; on &#915; in both.<br>
+  <a href="https://totogt.github.io/geometry/book7/ch-smale.html">Book 7 &#183; Smale</a> &#8212; entropy exactly zero for the whole closure family, because dP/dr&#8320; is an exponential of an integral for every f.<br>
+  <a href="https://totogt.github.io/geometry/book7/ch-gelfand.html">Book 7 &#183; Gelfand</a> &#8212; dim C*(K,S) = <i>n</i>&#183;<i>p</i>, (M<sub>p</sub>)<sup>&#8853;n/p</sup>, over all 248 masks for <i>n</i> = 3&#8230;7, no violation.<br>
+  <a href="https://totogt.github.io/geometry/book7/ch-feigin.html">Book 7 &#183; Feigin</a> &#8212; H&#178;(Witt) = 1 computed; the &#8722;m forced by the M&#246;bius sl&#8322;; dual Coxeter numbers for fifteen types from Cartan matrices alone.<br>
+  <a href="https://totogt.github.io/geometry/book7/ch-newton.html">Book 7 &#183; Newton</a> &#8212; a definition names a quantity and fixes its measure; e<sup>&#8722;4&#960;</sup> is an accelerative measure and an index is an absolute one.<br>
+  <a href="https://totogt.github.io/geometry/book7/ch-whitehead-russell.html">Book 7 &#183; Whitehead and Russell</a> &#8212; sixteen of sixteen binary truth functions from the stroke; Nicod&#8217;s single primitive proposition a tautology on all 32 rows.<br>
+  <a href="https://totogt.github.io/geometry/book6/ch-the-present-king-of-france.html">Book 6 &#183; Nine Pages, No Proofs</a> &#8212; Hardy, Ramanujan and the citation whose address will not resolve; the wide-scope rule for writing a retraction.<br>
+  <a href="https://totogt.github.io/geometry/book13/ch-types-the-range-of-a-variable.html">Book 13 &#183; The Range of a Variable</a> &#8212; a type is a range, and a vicious circle is a range containing the quantifier; 57 scripts audited.<br>
+  <code>docs/rh-criteria-check.py</code> &#8212; pre-registered tests of the Lagarias and Robin inequalities, zeros on the line to height 300, and Re(&#958;&#8242;/&#958;) near the zeros; four controls, all fired. Standard library, numpy and mpmath.<br>
+  <code>tools/corpus_count.py</code> &#183; <code>tools/self_reference.py</code> &#8212; entity-aware counting, and the vicious-circle test. Both standard library only.<br>
+  <a href="https://totogt.github.io/geometry/prelude.html">Book 3 &#183; <i>The Mini-Beast</i></a> &#8212; released 26 September 2026: version 1 PDF, <a href="https://doi.org/10.5281/zenodo.22947908">10.5281/zenodo.22947908</a>; version 2 reviewed pre-release on the web, release spring 2027.<br>
+  <a href="https://totogt.github.io/geometry/g-series.html">Book 3 &#183; The g-series</a> &#8212; one canonical page: teaching labels g&#8304;, g&#178;, g&#8310;, g&#179;&#179;, g&#8310;&#8308; and levels numbered apart; the fold proved (FoldHysteresis, FoldScaling); two older axioms refuted (GSeries).<br>
+  <a href="https://totogt.github.io/geometry/chPsi-latent-capacity.html">Book 3 &#183; &#936; &#183; Latent Capacity</a> &#8212; acquired savant syndrome, neurons in a dish, the fly connectome, computronium; a status on every claim.<br>
+  Book 3 &#183; gate files this week &#8212; GSeries, FoldHysteresis, CommitmentThreshold, TubulinChecks, SubcriticalApproach, OcioChecks, EntropyChecks, FoldScaling, ScaleChecks, PolylamininChecks, CollatzChecks, EpilogueChecks, OvertureChecks. Lean&nbsp;4.32, no <code>sorry</code>, standard axioms only.<br>
+  <a href="https://totogt.github.io/geometry/book24/ch10-duality.html">Book 24 &#183; Chapter 10, Duality</a> &#8212; dual space, annihilators, quadrature, congruence, tensor products; verifier all pass; <code>Duality.lean</code> written, <b>not yet compiled</b>. Added with No.&#8202;17.
+</div>
+</body>
+</html>
