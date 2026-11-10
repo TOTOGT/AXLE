@@ -120,7 +120,7 @@ body{background:#07050f;color:#e8e0d0;font-family:'Courier New',monospace;min-he
       AXLE
     </a>
     <div class="nav-right">
-      <span><span class="status-dot"></span><span style="font-size:.68rem;color:#2a4030">paper trading</span></span>
+      <span><span class="status-dot"></span><span style="font-size:.68rem;color:#2a4030">paper trading · static data to 1 Jun 2026 08:23</span></span>
       <a href="https://github.com/TOTOGT/AXLE" target="_blank">AXLE ↗</a>
       <span class="clock-el" id="clock">--:--:--</span>
     </div>
@@ -169,14 +169,14 @@ body{background:#07050f;color:#e8e0d0;font-family:'Courier New',monospace;min-he
     </div>
     <div class="metric" style="--mc:#e05a3a">
       <div class="m-label">Max Drawdown</div>
-      <div class="m-val neg" id="m-dd">−$39.22</div>
-      <div class="m-sub">−19.61% peak</div>
+      <div class="m-val neg" id="m-dd">−$39.42</div>
+      <div class="m-sub">−19.71% of $200 start</div>
     </div>
   </div>
 
   <!-- DIAGNOSIS BANNER -->
   <div class="diag-banner">
-    <div class="diag-title">⚠ Structural diagnosis — three open bridges to profitability</div>
+    <div class="diag-title">⚠ Structural diagnosis — three open bridges to profitability <span style="font-weight:400;font-size:.65rem">(hypotheses from one paper-trading run, not tested conclusions; reported P&amp;L −$39.62 vs bank change −$39.42, $0.20 unreconciled)</span></div>
 
     <div class="gap-card">
       <div class="gap-id">GAP G1 · CRITICAL</div>
@@ -188,8 +188,8 @@ body{background:#07050f;color:#e8e0d0;font-family:'Courier New',monospace;min-he
     <div class="gap-card">
       <div class="gap-id">GAP G2 · CRITICAL</div>
       <div class="gap-head">R:R ratio is inverted — 1:0.14</div>
-      <div class="gap-body">SL loses $0.184 on average. TP gains only $0.027. For a 0% win rate, no R:R saves you — but even at 50% WR this R:R bleeds you dry. The minimum viable ratio at 40% WR needs R:R ≥ 1.5. Current: 0.14.</div>
-      <div class="fix-pill">Fix: widen TP to ≥7× the SL distance, or tighten SL to match TP distance</div>
+      <div class="gap-body">SL exits average −$0.184. TP exits average −$0.027 (still a loss). For a 0% win rate, no R:R saves you — but even at 50% WR this R:R bleeds you dry. The minimum viable ratio at 40% WR needs R:R ≥ 1.5. Current: 0.14.</div>
+      <div class="fix-pill">Fix idea: raise the TP:SL ratio (Fix 02 below proposes ≥3×; untested)</div>
     </div>
 
     <div class="gap-card">
@@ -285,7 +285,7 @@ body{background:#07050f;color:#e8e0d0;font-family:'Courier New',monospace;min-he
       <div class="fix-head">Limit to 5–10 trades per hour maximum</div>
       <div class="fix-body">Current: ~16 trades/hr on average, 21 in the worst hours. Each entry pays spread. At this frequency, spread alone accounts for the majority of losses. Add a cooldown: after any trade, lock the pair for 15 minutes. Target: &lt;8 trades/hr total.</div>
       <div class="fix-eq">cooldown[pair] = now + timedelta(minutes=15)</div>
-      <div class="status-open">Medium impact · eliminates ~60% of spread drag</div>
+      <div class="status-open">Medium impact · untested estimate</div>
     </div>
 
     <div class="fix-card">
@@ -483,8 +483,8 @@ const GRIDCLR='rgba(34,28,56,0.8)', TICKCLR='#2a2040', FONT={size:9,family:'Cour
 // ── HOURLY RANK ────────────────────────────────────────────
 (function(){
   const sorted=[...DATA.hourly].sort((a,b)=>b.pnl-a.pnl);
-  const best3=sorted.slice(-3).reverse();
-  const worst3=sorted.slice(0,3);
+  const best3=sorted.slice(0,3);
+  const worst3=sorted.slice(-3).reverse();
   let html='<div style="color:#2a2040;font-size:.6rem;margin-bottom:6px;letter-spacing:.08em">Least bad hours (UTC)</div>';
   best3.forEach(h=>{
     const pct=(h.pnl/Math.min(...DATA.hourly.map(x=>x.pnl))*100).toFixed(0);
@@ -540,7 +540,7 @@ document.getElementById('csvInput').addEventListener('change',function(e){
       return{num:parseInt(cols[idx('#')])||0,phase:cols[idx('phase')]?.trim().toUpperCase(),pair:cols[idx('pair')]?.trim(),entry:parseFloat(cols[idx('entry')])||0,exit:parseFloat(cols[idx('exit')])||0,size:parseFloat(cols[idx('size')])||0,pnl:parseFloat(cols[idx('pnl')])||0,reason:cols[idx('reason')]?.trim().toUpperCase(),bank:parseFloat(cols[idx('bank')])||200};
     }).filter(t=>t.pair);
     if(!trades.length) return;
-    alert('CSV loaded: '+trades.length+' trades. Reload page to see live data embedded; CSV override coming in v3.');
+    alert('CSV parsed: '+trades.length+' trades. Import is not implemented yet; this page still shows the embedded dataset ending 1 Jun 2026.');
   };
   reader.readAsText(file);
 });
