@@ -5,7 +5,7 @@
 A transparent educational project showing how to grow a small account using **one ticker at a time**, strict risk management, and consistent daily execution.
 
 ### Goal
-Start with **$100** and build consistent profits through small, high-probability trades — with the long-term aim of scaling into meaningful daily income.
+A teaching project about small accounts and risk management. It makes no promise of profit, and most traders lose money.
 
 > **Important**: This is an educational project. Trading involves substantial risk of loss. Past performance is not indicative of future results.
 
@@ -36,17 +36,19 @@ Start with **$100** and build consistent profits through small, high-probability
 
 ---
 
-### Realistic Growth Projection
+### Compounding Arithmetic (Illustration, Not a Forecast)
 
 | Starting Capital | Avg Daily Return | Projected Account (3 Years) |
 |------------------|------------------|-----------------------------|
-| $100             | 1.0%             | ~$38,000                    |
-| $100             | 1.5%             | ~$380,000                   |
-| $100             | 2.0%             | ~$3.4 Million               |
+| $100             | 1.0%             | ~$185,000                   |
+| $100             | 1.5%             | ~$7.7 Million               |
+| $100             | 2.0%             | ~$317 Million               |
 
 *Compounded over ~756 trading days. Results are not guaranteed and depend heavily on execution and market conditions.*
 
-**Interactive Growth Simulator** available in the [GitHub Pages site](https://yourusername.github.io/capitalguard-trader).
+> **Corrected 10 Nov 2026:** an earlier version of this table showed figures that did not match its own arithmetic. The figures above are plain compounding over 756 days. They are illustrations, not forecasts. Sustaining such daily returns is not realistic, and most traders lose money.
+
+**Interactive Growth Simulator**: see `simulator.html` in this folder.
 
 ---
 
@@ -59,7 +61,7 @@ Every trading day, a new ticker + detailed trade plan is posted:
 - Guidance targets (T1, T2, T3)
 - Risk management notes
 
-**Today's Setup** → Check [Daily Setups](daily-setups.md)
+**Today's Setup** → Check [Daily Setups](daily-setups.html)
 
 ---
 
@@ -76,8 +78,8 @@ Every trading day, a new ticker + detailed trade plan is posted:
 
 /
 ├── index.html              # Home page
-├── strategy.md
-├── daily-setups.md         # Latest daily tickers
+├── strategy.html
+├── daily-setups.html         # Latest daily tickers
 ├── simulator.html          # Growth calculator
 ├── journal/                # Trade examples
 ├── assets/
