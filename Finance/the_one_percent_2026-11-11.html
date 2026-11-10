@@ -71,6 +71,14 @@ li{margin:.2rem 0}
 </div>
 
 <div class="card">
+<h2>Safeguards: complete before entering</h2>
+<div class="small">Having an exit point is not the same as having safeguards. Tick each item only when it is written down before the trade. If one cannot be ticked, do not enter.</div>
+<ul style="padding:0;margin:.5rem 0"><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg0" style="width:auto;margin-top:4px"><span>Maximum loss in dollars, written down first</span></label></li><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg1" style="width:auto;margin-top:4px"><span>Exit rule: the price or condition where I leave, and what makes me do it (stop order, alarm, classmate)</span></label></li><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg2" style="width:auto;margin-top:4px"><span>If the stop fails: what I do if the price gaps through my exit</span></label></li><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg3" style="width:auto;margin-top:4px"><span>No adding to a loser: I will not buy more to average down</span></label></li><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg4" style="width:auto;margin-top:4px"><span>Daily stop: after one loss at my limit, I stop for the day</span></label></li><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg5" style="width:auto;margin-top:4px"><span>Time limit: the time I close the trade even if it has not moved</span></label></li><li style="list-style:none;margin:.35rem 0"><label style="display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:.8rem;color:#b8aed0"><input type="checkbox" class="j" id="sg6" style="width:auto;margin-top:4px"><span>Money test: this is an amount I could lose without touching rent, bills or savings</span></label></li></ul>
+<div class="grid"><div><label>My maximum loss today ($)</label><input class="j" id="sg-max" inputmode="decimal"></div>
+<div><label>My exit rule, in one line</label><input class="j" id="sg-exit"></div></div>
+</div>
+
+<div class="card">
 <h2>Worksheet · enter your own numbers</h2>
 <div class="grid">
 <div><label>Account ($)</label><input class="j" id="acct" value="200" inputmode="decimal"></div>
@@ -138,8 +146,8 @@ function calc(){
   notes.innerHTML=w.map(x=>'• '+x).join('<br>');
 }
 document.querySelectorAll('.j').forEach(el=>{
-  try{const v=localStorage.getItem('onepct_'+el.id);if(v!==null&&el.id!=='acct'&&el.id!=='riskpct'&&el.id!=='slip')el.value=v}catch(e){}
-  el.addEventListener('input',()=>{try{localStorage.setItem('onepct_'+el.id,el.value)}catch(e){};calc()});
+  try{const v=localStorage.getItem('onepct_'+el.id);if(v!==null&&el.id!=='acct'&&el.id!=='riskpct'&&el.id!=='slip'){if(el.type==='checkbox')el.checked=(v==='1');else el.value=v}}catch(e){}
+  el.addEventListener('input',()=>{try{localStorage.setItem('onepct_'+el.id,el.type==='checkbox'?(el.checked?'1':'0'):el.value)}catch(e){};calc()});
 });
 calc();
 </script>
