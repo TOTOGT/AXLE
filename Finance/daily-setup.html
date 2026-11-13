@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Set-Up · last close, current price, next trading day</title>
+<style>
+:root{--bg:#09070f;--card:#0c0918;--line:#1e1840;--text:#b8aed0;--muted:#7a6c99;--gold:#d9b45a;--red:#e05a3a;--green:#50c878}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.6 'Courier New',monospace}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
+a{color:var(--gold)}
+h1{font-size:1.4rem;margin:.4rem 0;color:#e8e0f8}
+.tag{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;margin:12px 0}
+.card h2{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.warn{border-color:#4a3a10;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:block;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+input{width:100%;background:#120f22;border:1px solid var(--line);color:#e8e0f8;border-radius:4px;padding:6px;font:inherit}
+.m{background:#120f22;border:1px solid var(--line);border-radius:6px;padding:8px}
+.m b{display:block;font-size:1.05rem;color:#e8e0f8}
+.r{color:var(--red)}.g{color:var(--green)}
+.small{font-size:.72rem;color:var(--muted)}
+ul{margin:.3rem 0;padding-left:1.2rem}
+</style></head><body><div class="wrap">
+<div class="tag">AXLE · Finance · daily set-up</div>
+<h1>Daily Set-Up</h1>
+<div class="card warn"><b>Read first.</b> Information and arithmetic only. It gives no entry, stop or target and is not investment advice. Prices are <b>typed in by you</b> from your own quote; this page does not fetch live data, and it has not been checked against any feed. The author is not a licensed advisor.</div>
+
+<div class="card"><h2>Your quote</h2>
+<div class="grid">
+<div><label for="tk">Ticker</label><input id="tk" class="j" placeholder="e.g. NVDA"></div>
+<div><label for="lc">Last close ($)</label><input id="lc" class="j" inputmode="decimal"></div>
+<div><label for="ld">Close date</label><input id="ld" class="j" type="date"></div>
+<div><label for="cp">Current price ($)</label><input id="cp" class="j" inputmode="decimal"></div>
+<div><label for="src">Where you read it</label><input id="src" class="j" placeholder="broker / site, time"></div>
+</div>
+<div id="chg" class="grid" style="margin-top:10px"></div>
+<div class="small" id="stale"></div></div>
+
+<div class="card"><h2>Next trading day (US equities, regular session)</h2>
+<div id="nxt" class="grid"></div>
+<div class="small" id="nxtnote"></div></div>
+
+<div class="card"><h2>Is trading 24/7?</h2>
+<ul class="small">
+<li>Crypto: yes, around the clock.</li>
+<li>US stocks: the regular session is 9:30 am to 4:00 pm Eastern. Many brokers add pre-market and after-hours, and some offer overnight sessions on weekdays for selected names. Hours, eligible tickers and liquidity differ by broker, so confirm yours.</li>
+<li>Headlines say Nasdaq filed for near 24-hour weekday trading. I read only search results, not the filing, and I have not confirmed approval or a start date. Treat it as not in effect until you confirm.</li>
+</ul></div>
+
+<div class="card"><h2>Status of what is on this page</h2>
+<div class="small">Holiday list below is from the author's knowledge of the NYSE calendar for 2026–27 and is <b>to confirm</b> against the NYSE site. Early closes (1:00 pm ET): 27 Nov 2026 and 24 Dec 2026 (to confirm). Entries are kept only in this browser.</div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const HOL=new Set(['2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-03-26','2027-05-31','2027-06-18','2027-07-05','2027-09-06','2027-11-25','2027-12-24']);
+const EARLY=new Set(['2026-11-27','2026-12-24']);
+const iso=d=>d.toISOString().slice(0,10);
+const isTD=d=>{const w=d.getUTCDay();return w>0&&w<6&&!HOL.has(iso(d))};
+const D=s=>new Date(s+'T12:00:00Z');
+function next(from,strict){let d=D(from);if(strict)d.setUTCDate(d.getUTCDate()+1);let n=0;while(!isTD(d)&&n++<14)d.setUTCDate(d.getUTCDate()+1);return d}
+function prev(from){let d=D(from);d.setUTCDate(d.getUTCDate()-1);let n=0;while(!isTD(d)&&n++<14)d.setUTCDate(d.getUTCDate()-1);return d}
+const fmt=d=>d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',year:'numeric',timeZone:'UTC'});
+function nowET(){return new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}))}
+function calc(){
+  const et=nowET();const today=et.getFullYear()+'-'+String(et.getMonth()+1).padStart(2,'0')+'-'+String(et.getDate()).padStart(2,'0');
+  const mins=et.getHours()*60+et.getMinutes();
+  const open=isTD(D(today)), close=EARLY.has(today)?13*60:16*60;
+  const inSession=open&&mins>=570&&mins<close;
+  const nxt=open&&mins<570?D(today):next(today,true);
+  const lastTD=(open&&mins>=close)?D(today):prev(today);
+  if(!$('ld').value)$('ld').placeholder=iso(lastTD);
+  $('nxt').innerHTML=[['Next regular session',fmt(nxt)],['Opens','9:30 am ET'],['Closes',EARLY.has(iso(nxt))?'1:00 pm ET (early close, to confirm)':'4:00 pm ET'],
+   ['Last completed session',fmt(lastTD)],['Right now (ET)',et.toLocaleString('en-US')+(inSession?' · session open':open?' · outside regular hours':' · market closed today')]]
+   .map(x=>'<div class="m">'+x[0]+'<b>'+x[1]+'</b></div>').join('');
+  $('nxtnote').textContent='Weekends and the listed holidays are skipped.';
+  const lc=parseFloat($('lc').value),cp=parseFloat($('cp').value);
+  const ok=isFinite(lc)&&isFinite(cp)&&lc>0;
+  if(ok){const d=cp-lc,p=d/lc*100,c=d>=0?'g':'r';
+    $('chg').innerHTML='<div class="m">Change vs last close<b class="'+c+'">'+(d>=0?'+':'–')+'$'+Math.abs(d).toFixed(2)+'</b></div><div class="m">Percent<b class="'+c+'">'+(p>=0?'+':'–')+Math.abs(p).toFixed(2)+'%</b></div>';
+  }else $('chg').innerHTML='<div class="small">Enter last close and current price to see the change.</div>';
+  const ld=$('ld').value;
+  $('stale').textContent=(ld&&iso(lastTD)!==ld)?'Your close date ('+ld+') is not the last completed session ('+iso(lastTD)+'). Update it before relying on the numbers.':'';
+}
+document.querySelectorAll('.j').forEach(el=>{
+  try{const v=localStorage.getItem('dsu_'+el.id);if(v!==null)el.value=v}catch(e){}
+  el.addEventListener('input',()=>{try{localStorage.setItem('dsu_'+el.id,el.value)}catch(e){};calc()});
+});
+calc();setInterval(calc,30000);
+</script>
+<p class="small">Educational and entertainment purposes only. Not financial advice. Part of <a href="index.html">AXLE Finance</a> · <a href="daily-setups.html">Daily Setups</a>.</p>
+</div></body></html>
