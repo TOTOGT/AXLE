@@ -60,6 +60,7 @@ RUN = [
     (15, "vol15.html", "Three Tests That Could Have Failed"),
     (16, "vol16.html", "Dimensions Between the Integers"),
     (17, "vol17.html", "Duals and the Clock at the Fold"),
+    (18, "vol18.html", "Two Laws, a Toy, and a Second Reader"),
 ]
 HELD_BACK = []
 
