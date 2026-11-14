@@ -44,6 +44,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 
 # issue number -> filename, and the strapline the run list uses
 RUN = [
+    (1,  "../index.html", "The front page"),   # the AXLE front page carries "Vol. &#937; &#183; No. 1"
     (2,  "index.html",  "Outside Verification"),
     (3,  "vol3.html",   "The Desk Audits Its Own House"),
     (4,  "vol4.html",   "Chladni Plates in the Classroom"),
@@ -67,7 +68,7 @@ HELD_BACK = []
 
 def colophon(t):
     i = t.find('<div class="colophon">')
-    return t[i:i + 2000] if i >= 0 else ""
+    return t[i:i + 2000] if i >= 0 else t   # No. 1 (the AXLE front page) has no colophon div; use the whole file
 
 
 def main():
@@ -75,7 +76,8 @@ def main():
     n = len(RUN)
 
     for idx, (num, fname, strap) in enumerate(RUN):
-        p = HERE / fname
+        p = (HERE / fname).resolve()
+        base = p.parent
         if not p.exists():
             fail.append("No. %d: %s does not exist" % (num, fname))
             continue
@@ -83,16 +85,19 @@ def main():
 
         m = re.search(r"<title>(.*?)</title>", t, re.S)
         title = " ".join(m.group(1).split()) if m else ""
-        if ("No. %d " % num) not in title and ("No. %d" % num) not in title:
+        if num == 1:
+            if not re.search(r"No\. 1(<br>|&#183;|\s)", t):
+                fail.append("No. 1: %s does not carry its issue number" % fname)
+        elif ("No. %d " % num) not in title and ("No. %d" % num) not in title:
             fail.append("No. %d: %s titles itself %r" % (num, fname, title[:70]))
 
-        col = colophon(t)
+        col = t if num == 1 else colophon(t)   # No. 1 is the AXLE front page: its forward link is in the header
         if idx > 0:
-            prev_file = RUN[idx - 1][1]
+            prev_file = os.path.relpath((HERE / RUN[idx - 1][1]).resolve(), base)
             if ('href="%s"' % prev_file) not in col:
                 fail.append("No. %d: no back-link to %s in the colophon" % (num, prev_file))
         if idx < n - 1:
-            next_file = RUN[idx + 1][1]
+            next_file = os.path.relpath((HERE / RUN[idx + 1][1]).resolve(), base)
             if ('href="%s"' % next_file) not in col:
                 fail.append("No. %d: NO FORWARD LINK to %s -- the walk stops here"
                             % (num, next_file))
@@ -103,7 +108,7 @@ def main():
                 fail.append("No. %d is the last issue and does not point back at the archive" % num)
 
         bad = [h for h in re.findall(r'href="([^"#?]+)"', t)
-               if not h.startswith(("http", "mailto", "/")) and not (HERE / h).exists()]
+               if not h.startswith(("http", "mailto", "/")) and not (base / h).exists()]
         if bad:
             fail.append("No. %d: unresolved local links %s" % (num, sorted(set(bad))))
 
@@ -127,11 +132,6 @@ def main():
             note.append("No. %d no longer carries a do-not-publish marker and is still "
                         "outside the run -- add it to RUN when it ships" % num)
 
-    if not (HERE / "vol1.html").exists() and not (HERE / "vol2.html").exists():
-        note.append("There is no file for No. 1. The run as published begins at No. 2, "
-                    "which is index.html. Searched: filenames, page titles, git history "
-                    "for an added vol1/vol2, and the live site. Reported, not invented.")
-
     print()
     for x in note:
         print("  NOTE  " + x)
@@ -139,7 +139,7 @@ def main():
         print("::error::" + f)
     if fail:
         return 1
-    print("the walk runs No. 2 to No. %d without a break." % RUN[-1][0])
+    print("the walk runs No. %d to No. %d without a break." % (RUN[0][0], RUN[-1][0]))
     return 0
 
 
