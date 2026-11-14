@@ -100,9 +100,11 @@ theorem embedding_intertwining (n : ℕ) :
   ∃ m, applyG^[m] (simpleEmbedding n) = simpleEmbedding (dm3Orbit n m) := by
   sorry
 
+-- CORRECTION (2026-11-14): the statement was false at n = 0, because dm3Orbit 0 m = 0 for every m.
+-- Restricted to positive n. The remaining statement is the Collatz conjecture and stays open (sorry).
 theorem collatz_conjecture_via_dm3_gqm :
-  ∀ n : ℕ, ∃ m : ℕ, dm3Orbit n m = 1 := by
-  intro n
+  ∀ n : ℕ, 0 < n → ∃ m : ℕ, dm3Orbit n m = 1 := by
+  intro n hn
   sorry
 
 -- ============================================================================
