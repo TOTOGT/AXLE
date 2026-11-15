@@ -259,7 +259,10 @@ inductive OperatorRole
 def plasmaFiringOrder : List OperatorRole :=
   [.Constrain, .Fold, .Compress, .Stabilise]
 
-/-- There exists a firing order for the plasma system. -/
+/-- There exists a firing order for the plasma system.
+    (Note, 2026-11-14: the statement is `∃ order, order = plasmaFiringOrder`,
+    proved by `rfl`.  It records the definition above; it does not establish
+    that reconnection fires in this order.) -/
 theorem operator_order_plasma :
     ∃ (order : List OperatorRole), order = plasmaFiringOrder :=
   ⟨plasmaFiringOrder, rfl⟩
@@ -284,7 +287,10 @@ We verify the core algebraic identity: r*² = J/λ entails the bridge.
     is preserved by the map, i.e. J/λ = V_A²·L / η = V_A · L · S⁻¹ · (V_A/η·L)⁻¹.
 
     Here we verify the simplified bridge: for any positive J, λ,
-    the identity (√(J/λ))² = J/λ holds — the definitional consistency of r*. -/
+    the identity (√(J/λ))² = J/λ holds — the definitional consistency of r*.
+    (Note, 2026-11-14: this is the square-root identity `Real.sq_sqrt`.  It says
+    nothing about a map between domains; the cross-domain Coherence Bridge
+    identity claim is withdrawn, 0 of 55 pairs similar.) -/
 theorem coherence_bridge_identity
     (J λ : ℝ) (hJ : 0 < J) (hλ : 0 < λ) :
     (Real.sqrt (J / λ)) ^ 2 = J / λ := by
@@ -304,7 +310,11 @@ None are hidden.  Each has a documented path to closing.
     resistive MHD — presently not in Mathlib4.
 
     Path to closing: PDE formalisation in Mathlib (EvolveSheet API);
-    target companion paper Part II. -/
+    target companion paper Part II.
+
+    (Note, 2026-11-14: the Lean statement below is `∃ (_ : Prop), True`, which
+    is provable for any input and says nothing about plasmoids; the real
+    statement is the OPEN obligation described above.) -/
 theorem mhd_fold_operator_formal
     (s : MHDSheet) (h : isPlasmoidUnstable s) :
     ∃ (_ : Prop), True :=
@@ -317,7 +327,11 @@ theorem mhd_fold_operator_formal
 
     This is the plasma analogue of the Global Contactomorphism Conjecture
     in CatGT and is equally open.  Its proof requires connecting the
-    symplectic structure of the MHD phase space to a contact structure. -/
+    symplectic structure of the MHD phase space to a contact structure.
+
+    (Note, 2026-11-14: the Lean statement below is `∃ (_ : Prop), True`, which
+    is provable for any input; the real statement is the OPEN obligation
+    described above.) -/
 theorem plasma_contactomorphism :
     ∃ (_ : Prop), True :=
   ⟨True, trivial⟩

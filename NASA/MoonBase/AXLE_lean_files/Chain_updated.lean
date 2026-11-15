@@ -8,12 +8,14 @@ Authors: Pablo Nogueira Grossi
 -- G = U ∘ F ∘ K ∘ C  (the full operator chain)
 --
 -- AXLE proof obligations status:
---   (a) gronwall_outer          CLOSED — no sorry
---   (b) inner_basin_is_asymmetric  AXIOM — pending dm³ ODE formalisation
---   (c) spiral_return_exists    CLOSED — no sorry
+--   (a) gronwall_outer          sorry-free, but it only compares two real exponentials from its hypothesis;
+--                               it does not mention the dm³ ODE, so it is NOT the outer-basin convergence theorem
+--   (b) inner_basin_is_asymmetric  OPEN — the 2026-04-25 axiom was inconsistent as stated; removed 2026-11-14
+--   (c) spiral_return_exists    sorry-free, but h_second_circuit (G^128 x₀ ≠ x₀) is assumed, not derived;
+--                               it packages the non-return rather than proving it
 --   (d) poincare_collatz        SPLIT:
 --         · contracting case    CLOSED — no sorry
---         · general case        AXIOM  — pending dm³ ODE formalisation
+--         · general case        OPEN — the 2026-04-25 axiom is false as stated; removed 2026-11-14
 
 import Mathlib.Topology.MetricSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
@@ -86,20 +88,23 @@ theorem g33_stability_index : GSeries.cycles .g33 = 33 := rfl
 -- 3.  Asymmetric-basin geometry
 -- ---------------------------------------------------------------------------
 
-noncomputable def r_star : ℝ := 0.8
+noncomputable def r_star : ℝ := 0.77594058  -- numerically computed, not certified (was 0.8 before 2026-11-14)
 lemma r_star_lt_one : r_star < 1 := by unfold r_star; norm_num
 lemma r_star_pos : 0 < r_star := by unfold r_star; norm_num
 
 noncomputable def μ_outer : ℝ := -2
 lemma μ_outer_neg : μ_outer < 0 := by unfold μ_outer; norm_num
 
-axiom inner_basin_is_asymmetric :
-  ∀ (r₀ : ℝ), r₀ < r_star → ∃ (T : ℝ), 0 < T ∧
-    ∀ (z : ℝ → ℝ), (∀ t, 0 ≤ t → z t < 0) →
-    ¬ (∀ t, 0 ≤ t → t < T → True)
+/- Obligation (b), OPEN. The axiom `inner_basin_is_asymmetric` that stood here (2026-04-25) was
+   inconsistent as stated: with r₀ = 0 and z ≡ -1 its conclusion negates a statement that holds
+   for every T, so it implied False. Kernel-checked in geometry (book4/ChainAxiomProbe.lean and
+   Orthogenesis/Taxonomy/GSeries.lean §6, Lean v4.32.0). Removed 2026-11-14. A correct statement
+   needs the dm³ ODE formalised, and no such formalisation exists yet. -/
 
-axiom outer_basin_unbounded :
-  ∀ (M : ℝ), ∃ (r₀ : ℝ), M < r₀ ∧ True
+/-- The outer basin has no finite radius. Declared `axiom` until 2026-11-14; it is provable. -/
+theorem outer_basin_unbounded :
+  ∀ (M : ℝ), ∃ (r₀ : ℝ), M < r₀ ∧ True :=
+  fun M => ⟨M + 1, by linarith, trivial⟩
 
 -- ---------------------------------------------------------------------------
 -- 4.  Gronwall outer-basin bound  [AXLE (a) — CLOSED]
@@ -222,14 +227,11 @@ theorem poincare_collatz_contracting
           ≤ k ^ n * d := iter_consecutive_dist G k hk_nn hk_lip x n
         _ < r_star    := hN₁ n (le_max_right _ _)⟩
 
-/-- **Poincaré-Collatz (general) — axiomatic.**
-    For general GChains without a global contraction hypothesis,
-    this is a conjecture pending dm³ ODE formalisation.
-    The contracting case above is the proved special case. -/
-axiom poincare_collatz
-    {X : Type*} [MetricSpace X] [SeminormedAddCommGroup X]
-    (G : GChain X) (x : X) :
-    ∃ n : ℕ, n ≥ GSeries.cycles .g33 ∧
-      dist (G.iter n x) (G.iter (n + 1) x) < r_star
+/- Poincaré-Collatz (general), OPEN. The axiom `poincare_collatz` that stood here (2026-04-25) is false
+   as stated: on ℝ take C = (x ↦ x/2), K = id, F = (x ↦ x/2, attractor 0), U = (x ↦ 8x, seed 0). The
+   composite is x ↦ 2x, so from x = 1 consecutive iterates are 2ⁿ apart, never below r_star.
+   Kernel-checked in geometry (book4/ChainAxiomProbe.lean and Orthogenesis/Taxonomy/GSeries.lean §5,
+   Lean v4.32.0). Removed 2026-11-14. The contracting case above is the proved special case; a true
+   general statement would need extra hypotheses that nobody has formalised. -/
 
 end GCTC
