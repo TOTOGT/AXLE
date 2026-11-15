@@ -108,14 +108,26 @@ theorem sweetparker_rate_pos (s : MHDSheet) : 0 < sweetParkerRate s := by
   apply rpow_pos_of_pos
   exact lundquist_pos s
 
+/-- Helper (added 2026-11-15; compiled by the author's `lake env lean` run, v4.14.0 pin): S ↦ S^(−1/2) is antitone on S > 0.
+    The earlier proofs used `rpow_le_rpow_of_exponent_ge`, which needs base ≤ 1 and
+    compares exponents, not bases; it does not apply here (compile error, 2026-11-15). -/
+theorem lundquist_rpow_neg_half_antitone (s₁ s₂ : MHDSheet)
+    (hS : lundquist s₁ ≤ lundquist s₂) :
+    (lundquist s₂) ^ (-(1 / 2 : ℝ)) ≤ (lundquist s₁) ^ (-(1 / 2 : ℝ)) := by
+  have h1 := lundquist_pos s₁
+  have h2 := lundquist_pos s₂
+  have key : (lundquist s₁) ^ (1 / 2 : ℝ) ≤ (lundquist s₂) ^ (1 / 2 : ℝ) :=
+    Real.rpow_le_rpow h1.le hS (by norm_num)
+  have hpos : 0 < (lundquist s₁) ^ (1 / 2 : ℝ) := Real.rpow_pos_of_pos h1 _
+  rw [Real.rpow_neg h2.le, Real.rpow_neg h1.le]
+  exact inv_anti₀ hpos key
+
 /-- R_SP decreases as S increases: laminar reconnection slows in better conductors. -/
 theorem sweetparker_rate_antitone (s₁ s₂ : MHDSheet)
     (hS : lundquist s₁ ≤ lundquist s₂) :
     sweetParkerRate s₂ ≤ sweetParkerRate s₁ := by
   unfold sweetParkerRate
-  apply rpow_le_rpow_of_exponent_ge
-    (lundquist_pos s₁) hS
-  norm_num
+  exact lundquist_rpow_neg_half_antitone s₁ s₂ hS
 
 /-!
 ## §2  Plasmoid threshold — the plasma fold operator F
@@ -189,9 +201,7 @@ theorem plasma_r_star_antitone (s₁ s₂ : MHDSheet)
   unfold plasmaAttractorRadius
   rw [← hL]
   apply mul_le_mul_of_nonneg_left _ (le_of_lt s₁.hL)
-  apply rpow_le_rpow_of_exponent_ge
-    (lundquist_pos s₁) hS
-  norm_num
+  exact lundquist_rpow_neg_half_antitone s₁ s₂ hS
 
 /-!
 ## §4  Reconnection rate bounds (MMS observational grounding)
@@ -292,10 +302,12 @@ We verify the core algebraic identity: r*² = J/λ entails the bridge.
     nothing about a map between domains; the cross-domain Coherence Bridge
     identity claim is withdrawn, 0 of 55 pairs similar.) -/
 theorem coherence_bridge_identity
-    (J λ : ℝ) (hJ : 0 < J) (hλ : 0 < λ) :
-    (Real.sqrt (J / λ)) ^ 2 = J / λ := by
+    (J lam : ℝ) (hJ : 0 < J) (hlam : 0 < lam) :
+    (Real.sqrt (J / lam)) ^ 2 = J / lam := by
   rw [Real.sq_sqrt]
-  exact le_of_lt (div_pos hJ hλ)
+  exact le_of_lt (div_pos hJ hlam)
+-- (2026-11-15: binder `λ` renamed `lam`; `λ` is a reserved token in Lean 4 and the
+--  committed file failed to parse at this theorem, so it was not in the environment.)
 
 /-!
 ## §7  Open obligations — honest admits
